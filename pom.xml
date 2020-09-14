@@ -69,7 +69,6 @@
         </profile>
     </profiles>
 
-
     <dependencies>
            
 		<dependency>
@@ -277,7 +276,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=5641403d-9454-412c-a362-ff23d22f02e7</extraJvmArgs>
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=19ca0b31-9b48-4e1d-9fab-1d0187843104</extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>
                     <noServer>true</noServer>
