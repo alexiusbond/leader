@@ -1,0 +1,117 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package kg.alex.spt.dao;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.SystemSettings;
+import kg.alex.spt.i18n.SptMessages;
+
+/**
+ *
+ * @author eldiyar
+ */
+public class DbLog extends BaseDb {
+
+    public DbLog() throws Exception {
+        super();
+    }
+
+    public IndexedContainer execSQLd(MyVaadinUI myUi, int scl_id, int days_interval) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
+        String sql = "SELECT l.id, concat(e.name, ' ', e.surname) as fullname, SUBSTRING_INDEX(l.log, ':;', 1) as log, "
+                + "l.date FROM logs AS l "
+                + "LEFT JOIN employee AS e ON e.id = l.employee_id "
+                + "left join hr_employee_order as eo on eo.employee_id=e.id and eo.to_date IS NULL "
+                + "left join hr_orders as ord on ord.id=eo.hr_orders_id "
+                + "left join school as sch on eo.school_id=sch.id "
+                + "WHERE eo.school_id = ? ";
+        if (days_interval != 0) {
+            sql += "AND l.date >= (CURDATE() - INTERVAL ? DAY) and ord.working_status_id IS NOT NULL ";
+        }
+        sql += "order by l.date desc;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, scl_id);
+        if (days_interval != 0) {
+            stat.setInt(2, days_interval);
+        }
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Employee), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Action), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("l.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(
+                    sysSettings.df.format(result.getDate("l.date")));
+            item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(
+                    result.getString("fullname"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Action)).setValue(
+                    result.getString("log"));
+        }
+        return container;
+    }
+
+    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int days_interval, String logType) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
+        String sql = "select dl.id, concat(e.name, ' ', e.surname) as fullname, dl.table_name, dl.column_name, dl.action, "
+                + "dl.old_field, dl.new_field, "
+                + "dl.datetime from data_log as dl "
+                + "left join employee as e on e.id = dl.employee_id "
+                + "left join hr_employee_order as eo on eo.employee_id=e.id and "
+                + "(eo.to_date IS NULL or date(eo.to_date) >=  date(dl.datetime)) and eo.hr_orders_id = 1 "
+                + "left join hr_orders as ord on ord.id=eo.hr_orders_id "
+                + "left join school as sch on eo.school_id=sch.id "
+                + "where eo.school_id = ? ";
+        if (logType.equals(myUi.getMessage(SptMessages.SystemLogs))) {
+            sql += "and dl.table_name != 'transactions' ";
+        } else {
+            sql += "and dl.table_name = 'transactions' ";
+        }
+        if (days_interval != 0) {
+            sql += "AND dl.datetime >= (CURDATE() - INTERVAL ? DAY) and ord.working_status_id IS NOT NULL ";
+        }
+        sql += "order by dl.datetime desc;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, scl_id);
+        if (days_interval != 0) {
+            stat.setInt(2, days_interval);
+        }
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Employee), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.TableName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.ColumnName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Action), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.OldField), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.NewField), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("dl.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(
+                    sysSettings.df.format(result.getDate("dl.datetime")));
+            item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(
+                    result.getString("fullname"));
+            item.getItemProperty(myUi.getMessage(SptMessages.TableName)).setValue(
+                    result.getString("dl.table_name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.ColumnName)).setValue(
+                    result.getString("dl.column_name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Action)).setValue(
+                    result.getString("dl.action"));
+            item.getItemProperty(myUi.getMessage(SptMessages.OldField)).setValue(
+                    result.getString("dl.old_field"));
+            item.getItemProperty(myUi.getMessage(SptMessages.NewField)).setValue(
+                    result.getString("dl.new_field"));
+        }
+        return container;
+    }
+}

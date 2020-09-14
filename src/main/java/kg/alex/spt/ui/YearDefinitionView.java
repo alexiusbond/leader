@@ -1,0 +1,484 @@
+package kg.alex.spt.ui;
+
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.Sizeable;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import kg.alex.spt.AuthenticatedScreen;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.SystemSettings;
+import kg.alex.spt.dao.DbDefinition;
+import kg.alex.spt.dao.DbYear;
+import kg.alex.spt.domain.Year;
+import kg.alex.spt.i18n.SptMessages;
+import org.apache.logging.log4j.LogManager;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.vaadin.addons.maskedtextfield.MaskedTextField;
+import org.vaadin.dialogs.ConfirmDialog;
+
+public class YearDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
+        Property.ValueChangeListener {
+
+    static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(YearDefinitionView         .class);
+    private MyVaadinUI myUI;
+    private AuthenticatedScreen as;
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
+    private Table dataTable;
+    private MaskedTextField nameTF;
+    private TextField period, periodKg;
+    private DateField start_date, end_date;
+    private boolean isNew;
+    private SystemSettings sysSettings = new SystemSettings();
+    private String[] NATURAL_COL_ORDER;
+    private VerticalLayout settingsLay;
+    private Subject currentUser = SecurityUtils.getSubject();
+
+    public YearDefinitionView(MyVaadinUI myUI, AuthenticatedScreen as) {
+        this.myUI = myUI;
+        this.as = as;
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name), myUI.getMessage(SptMessages.Period),
+            myUI.getMessage(SptMessages.PeriodKg), myUI.getMessage(SptMessages.StartDate), myUI.getMessage(SptMessages.EndDate)};
+        buildSettingsLayout();
+
+        VerticalLayout vl = new VerticalLayout();
+        vl.setSizeFull();
+        vl.setMargin(true);
+        dataTable = new Table();
+        dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        dataTable.setSizeFull();
+        dataTable.setSelectable(true);
+        dataTable.addValueChangeListener(this);
+        try {
+            DbYear dbDef = new DbYear();
+            dbDef.connect();
+            dataTable.setContainerDataSource(dbDef.execSQL(myUI));
+            dbDef.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        if (dataTable.getContainerDataSource().size() != 0) {
+            dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
+        }
+        dataTable.setNullSelectionAllowed(false);
+        vl.addComponent(dataTable);
+
+        this.setSplitPosition(24, Sizeable.Unit.PERCENTAGE);
+        this.setSizeFull();
+        this.setLocked(true);
+        this.setFirstComponent(settingsLay);
+        this.setSecondComponent(vl);
+
+        prepareNormalMode();
+    }
+
+    private void buildSettingsLayout() {
+
+        settingsLay = new VerticalLayout();
+        settingsLay.setMargin(new MarginInfo(true, false, true, true));
+        settingsLay.setSpacing(true);
+        settingsLay.setWidth("100%");
+
+        HorizontalLayout buttonsLay = new HorizontalLayout();
+        buttonsLay.setSpacing(true);
+
+        modifyBtn = new Button();
+        modifyBtn.setEnabled(false);
+        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        modifyBtn.setIcon(FontAwesome.PENCIL);
+        modifyBtn.addClickListener(this);
+        buttonsLay.addComponent(modifyBtn);
+
+        createBtn = new Button();
+        createBtn.setEnabled(false);
+        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        createBtn.setIcon(FontAwesome.FILE_O);
+        createBtn.addClickListener(this);
+        buttonsLay.addComponent(createBtn);
+
+        deleteBtn = new Button();
+        deleteBtn.setEnabled(false);
+        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        deleteBtn.setIcon(FontAwesome.TRASH_O);
+        deleteBtn.addClickListener(this);
+        buttonsLay.addComponent(deleteBtn);
+
+        saveBtn = new Button();
+        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        saveBtn.setIcon(FontAwesome.FLOPPY_O);
+        saveBtn.addClickListener(this);
+        buttonsLay.addComponent(saveBtn);
+
+        cancelBtn = new Button();
+        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        cancelBtn.setIcon(FontAwesome.BAN);
+        cancelBtn.addClickListener(this);
+        buttonsLay.addComponent(cancelBtn);
+        settingsLay.addComponent(buttonsLay);
+
+        nameTF = new MaskedTextField(myUI.getMessage(SptMessages.Name), "####-####");
+        nameTF.setRequired(true);
+        nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameTF.setWidth("100%");
+        nameTF.addValidator(new StringLengthValidator(
+                myUI.getMessage(SptMessages.NotifWrongValue), 9, 9, false));
+        settingsLay.addComponent(nameTF);
+
+        period = new TextField(myUI.getMessage(SptMessages.Period));
+        period.setRequired(true);
+        period.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        period.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        period.setWidth("100%");
+        settingsLay.addComponent(period);
+
+        periodKg = new TextField(myUI.getMessage(SptMessages.PeriodKg));
+        periodKg.setRequired(true);
+        periodKg.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        periodKg.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        periodKg.setWidth("100%");
+        settingsLay.addComponent(periodKg);
+
+        start_date = new DateField(myUI.getMessage(SptMessages.StartDate));
+        start_date.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        start_date.setRequired(true);
+        start_date.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        start_date.setWidth("100%");
+        start_date.setValue(new Date());
+        start_date.setDateFormat(sysSettings.datePattern);
+        settingsLay.addComponent(start_date);
+
+        end_date = new DateField(myUI.getMessage(SptMessages.EndDate));
+        end_date.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        end_date.setRequired(true);
+        end_date.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        end_date.setWidth("100%");
+        end_date.setValue(new Date());
+        end_date.setDateFormat(sysSettings.datePattern);
+        settingsLay.addComponent(end_date);
+
+    }
+
+    @Override
+    public void buttonClick(Button.ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == modifyBtn && dataTable.getValue() != null) {
+            isNew = false;
+            try {
+                fillFields();
+            } catch (ParseException ex) {
+                Logger.getLogger(YearDefinitionView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            prepareModificationMode();
+            nameTF.focus();
+        } else if (source == createBtn) {
+            isNew = true;
+            clearFields();
+            prepareModificationMode();
+            nameTF.focus();
+        } else if (source == deleteBtn && dataTable.getValue() != null) {
+            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                    myUI.getMessage(SptMessages.ConfirmDeletion),
+                    myUI.getMessage(SptMessages.Yes),
+                    myUI.getMessage(SptMessages.No),
+                    new ConfirmDialog.Listener() {
+                @Override
+                public void onClose(ConfirmDialog dialog) {
+                    if (dialog.isConfirmed()) {
+                        execDelete();
+                    }
+                }
+            });
+        } else if (source == saveBtn) {
+            try {
+                if (validate(settingsLay)) {
+                    DbYear dby = new DbYear();
+                    dby.connect();
+                    if (isNew) {
+                        int id = dby.exec_insert(getYearDefinition(0));
+                        if (id != 0) {
+                            addDatacontainerItem(id);
+                            try {
+                                DbDefinition dbd = new DbDefinition();
+                                dbd.connect();
+                                as.yearSelect.removeValueChangeListener(as);
+                                as.yearSelect.setContainerDataSource(dbd.exec_years_for_select(myUI, myUI.getUser().getCurrent_year().getId()));
+                                as.yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+                                as.yearSelect.addValueChangeListener(as);
+                                dbd.close();
+                            } catch (Exception e) {
+                                logger.error(e);
+                                logger.catching(e);
+                            }
+                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                    Notification.Type.HUMANIZED_MESSAGE);
+                        } else {
+                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                    Notification.Type.WARNING_MESSAGE);
+                        }
+                    } else {
+                        int status = 0;
+                        try {
+                            status = dby.exec_update(
+                                    getYearDefinition((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                                            sysSettings.id).getValue()));
+                        } catch (Exception e) {
+                            logger.error(e);
+                            logger.catching(e);
+                        }
+                        if (status != 0) {
+                            updateDatacontainer();
+                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                    Notification.Type.HUMANIZED_MESSAGE);
+                        } else {
+                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                    Notification.Type.WARNING_MESSAGE);
+                        }
+                    }
+                    try {
+                        DbDefinition dbd = new DbDefinition();
+                        dbd.connect();
+                        as.yearSelect.removeValueChangeListener(as);
+                        as.yearSelect.setContainerDataSource(dbd.exec_years_for_select(myUI, myUI.getUser().getCurrent_year().getId()));
+                        as.yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+                        as.yearSelect.addValueChangeListener(as);
+                        dbd.close();
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                    dby.close();
+                    prepareNormalMode();
+                } else {
+                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                            Notification.Type.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        } else if (source == cancelBtn) {
+            if (dataTable.getValue() != null) {
+                try {
+                    fillFields();
+                } catch (ParseException ex) {
+                    Logger.getLogger(YearDefinitionView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            prepareNormalMode();
+        }
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        Property property = event.getProperty();
+        if (property == dataTable) {
+            if (dataTable.getItem(dataTable.getValue()) != null) {
+                try {
+                    fillFields();
+                } catch (ParseException ex) {
+                    Logger.getLogger(YearDefinitionView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
+    private void prepareModificationMode() {
+        modifyBtn.setEnabled(false);
+        createBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+        saveBtn.setEnabled(true);
+        cancelBtn.setEnabled(true);
+        dataTable.setEnabled(false);
+        nameTF.setEnabled(true);
+        period.setEnabled(true);
+        periodKg.setEnabled(true);
+        start_date.setEnabled(true);
+        end_date.setEnabled(true);
+    }
+
+    private void prepareNormalMode() {
+        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actModify)) {
+            modifyBtn.setEnabled(true);
+        }
+        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actAdd)) {
+            createBtn.setEnabled(true);
+        }
+        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actDelete)) {
+            deleteBtn.setEnabled(true);
+        }
+        saveBtn.setEnabled(false);
+        cancelBtn.setEnabled(false);
+        dataTable.setEnabled(true);
+        nameTF.setEnabled(false);
+        period.setEnabled(false);
+        periodKg.setEnabled(false);
+        start_date.setEnabled(false);
+        end_date.setEnabled(false);
+    }
+
+    private void fillFields() throws ParseException {
+        nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Name)).getValue().toString());
+        period.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Period)).getValue().toString());
+        periodKg.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.PeriodKg)).getValue().toString());
+        start_date.setValue(sysSettings.df.parse(dataTable.getContainerProperty(
+                dataTable.getValue(), myUI.getMessage(SptMessages.StartDate))
+                .getValue().toString()));
+        end_date.setValue(sysSettings.df.parse(dataTable.getContainerProperty(
+                dataTable.getValue(), myUI.getMessage(SptMessages.EndDate))
+                .getValue().toString()));
+
+    }
+
+    private void clearFields() {
+        nameTF.setValue("");
+        period.setValue("");
+        periodKg.setValue("");
+        start_date.setValue(null);
+        end_date.setValue(null);
+    }
+
+    private void updateDatacontainer() {
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Period)).setValue(period.getValue());
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.PeriodKg)).setValue(periodKg.getValue());
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.StartDate)).setValue(
+                sysSettings.df.format(start_date.getValue()));
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.EndDate)).setValue(
+                sysSettings.df.format(end_date.getValue()));
+
+    }
+
+    private void addDatacontainerItem(int id) {
+        Item item = ((IndexedContainer) dataTable.getContainerDataSource())
+                .addItemAt(0, id);
+        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+                nameTF.getValue());
+        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(myUI.getMessage(SptMessages.Period)).setValue(
+                period.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.PeriodKg)).setValue(
+                periodKg.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.StartDate)).setValue(
+                sysSettings.df.format(start_date.getValue()));
+        item.getItemProperty(myUI.getMessage(SptMessages.EndDate)).setValue(
+                sysSettings.df.format(end_date.getValue()));
+
+        dataTable.setValue(id);
+    }
+
+    private Year getYearDefinition(int i) {
+        Year y = new Year();
+        y.setName(nameTF.getValue());
+        y.setPeriod(period.getValue());
+        y.setPeriod_kg(periodKg.getValue());
+        y.setStart_date((Date) start_date.getValue());
+        y.setEnd_date((Date) end_date.getValue());
+        y.setId(i);
+        return y;
+    }
+
+    private void execDelete() {
+        if (((Integer) ((IndexedContainer) dataTable.getContainerDataSource()).getIdByIndex(0)).intValue() == ((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                sysSettings.id).getValue()).intValue()) {
+            try {
+                DbDefinition dbDef = new DbDefinition();
+                dbDef.connect();
+                int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                        sysSettings.id).getValue(), sysSettings.dbYear);
+                if (st != 0) {
+                    dataTable.getContainerDataSource().removeItem(dataTable.getValue());
+                    if (dataTable.getContainerDataSource().size() != 0) {
+                        dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
+                    } else {
+                        clearFields();
+                        dataTable.setValue(null);
+                    }
+                    try {
+                        as.yearSelect.removeValueChangeListener(as);
+                        as.yearSelect.setContainerDataSource(dbDef.exec_years_for_select(myUI, myUI.getUser().getCurrent_year().getId()));
+                        as.yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+                        as.yearSelect.addValueChangeListener(as);
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                }
+                dbDef.close();
+            } catch (SQLIntegrityConstraintViolationException e) {
+                Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+                        Notification.Type.WARNING_MESSAGE);
+                logger.error(e);
+                logger.catching(e);
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        } else {
+            Notification.show(myUI.getMessage(SptMessages.CanDeleteOnlyLastItem),
+                    Notification.Type.WARNING_MESSAGE);
+        }
+    }
+
+    private boolean validate(ComponentContainer layout) {
+        boolean result = true;
+        Iterator<Component> i = layout.iterator();
+        while (i.hasNext()) {
+            Component c = i.next();
+            if (c instanceof AbstractField) {
+                try {
+                    ((AbstractField) c).validate();
+                } catch (Exception e) {
+                    //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
+                    result = false;
+                }
+            } else if (c instanceof AbstractComponentContainer) {
+                if (!validate((AbstractComponentContainer) c)) {
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+
+    public Component getNewObj() {
+        return new YearDefinitionView(myUI, as);
+    }
+}

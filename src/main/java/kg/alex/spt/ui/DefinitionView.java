@@ -1,0 +1,422 @@
+package kg.alex.spt.ui;
+
+import kg.alex.spt.utils.ComboBoxMax;
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.server.Sizeable;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Iterator;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.SystemSettings;
+import kg.alex.spt.dao.DbDefinition;
+import kg.alex.spt.domain.Definition;
+import kg.alex.spt.i18n.SptMessages;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.vaadin.dialogs.ConfirmDialog;
+
+public class DefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
+        Property.ValueChangeListener {
+
+    static final Logger logger = LogManager.getLogger(DefinitionView.class);
+    private MyVaadinUI myUI;
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
+    private Table dataTable;
+    private TextField nameTF;
+    private ComboBoxMax statusSelect;
+    private boolean withActivityStatus;
+    private String dbTableName;
+    private boolean isNew;
+    private SystemSettings sysSettings = new SystemSettings();
+    private String[] NATURAL_COL_ORDER;
+    private VerticalLayout settingsLay;
+    private Subject currentUser = SecurityUtils.getSubject();
+    private String permissionView;
+
+    public DefinitionView(MyVaadinUI myUI, String dbTName, boolean withActivityStatus, String permissionView) {
+        this.dbTableName = dbTName;
+        this.myUI = myUI;
+        this.permissionView = permissionView;
+        this.withActivityStatus = withActivityStatus;
+        if (this.withActivityStatus) {
+            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name),
+                myUI.getMessage(SptMessages.Status)};
+        } else {
+            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name)};
+        }
+        buildSettingsLayout();
+
+        VerticalLayout vl = new VerticalLayout();
+        vl.setSizeFull();
+        vl.setMargin(true);
+        dataTable = new Table();
+        dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        dataTable.setSizeFull();
+        dataTable.setSelectable(true);
+        dataTable.addValueChangeListener(this);
+        try {
+            DbDefinition dbDef = new DbDefinition();
+            dbDef.connect();
+            dataTable.setContainerDataSource(
+                    dbDef.execSQL(myUI, dbTableName, this.withActivityStatus, false));
+            dbDef.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        if (dataTable.getContainerDataSource().size() != 0) {
+            dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
+        }
+        dataTable.setNullSelectionAllowed(false);
+        vl.addComponent(dataTable);
+
+        this.setSplitPosition(24, Sizeable.Unit.PERCENTAGE);
+        this.setSizeFull();
+        this.setLocked(true);
+        this.setFirstComponent(settingsLay);
+        this.setSecondComponent(vl);
+
+        prepareNormalMode();
+    }
+
+    private void buildSettingsLayout() {
+
+        settingsLay = new VerticalLayout();
+        settingsLay.setMargin(new MarginInfo(true, false, true, true));
+        settingsLay.setSpacing(true);
+        settingsLay.setWidth("100%");
+
+        HorizontalLayout buttonsLay = new HorizontalLayout();
+        buttonsLay.setSpacing(true);
+
+        modifyBtn = new Button();
+        modifyBtn.setEnabled(false);
+        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        modifyBtn.setIcon(FontAwesome.PENCIL);
+        modifyBtn.addClickListener(this);
+        buttonsLay.addComponent(modifyBtn);
+
+        createBtn = new Button();
+        createBtn.setEnabled(false);
+        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        createBtn.setIcon(FontAwesome.FILE_O);
+        createBtn.addClickListener(this);
+        buttonsLay.addComponent(createBtn);
+
+        deleteBtn = new Button();
+        deleteBtn.setEnabled(false);
+        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        deleteBtn.setIcon(FontAwesome.TRASH_O);
+        deleteBtn.addClickListener(this);
+        buttonsLay.addComponent(deleteBtn);
+
+        saveBtn = new Button();
+        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        saveBtn.setIcon(FontAwesome.FLOPPY_O);
+        saveBtn.addClickListener(this);
+        buttonsLay.addComponent(saveBtn);
+
+        cancelBtn = new Button();
+        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        cancelBtn.setIcon(FontAwesome.BAN);
+        cancelBtn.addClickListener(this);
+        buttonsLay.addComponent(cancelBtn);
+
+        settingsLay.addComponent(buttonsLay);
+
+        nameTF = new TextField(myUI.getMessage(SptMessages.Name));
+        if (dbTableName.equals(sysSettings.classTable)) {
+            nameTF.setPropertyDataSource(new ObjectProperty<Integer>(0));
+            nameTF.setConverter(sysSettings.getStringToIntegerConverter());
+            nameTF.addValidator(new IntegerRangeValidator(
+                    myUI.getMessage(SptMessages.NotifWrongValue), 0, null));
+        } else {
+            nameTF.setPropertyDataSource(new ObjectProperty<String>(""));
+        }
+        nameTF.setNullRepresentation("");
+        nameTF.setNullSettingAllowed(false);
+        nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        nameTF.setRequired(true);
+        nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameTF.setWidth("100%");
+        settingsLay.addComponent(nameTF);
+
+        if (withActivityStatus) {
+            statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+            statusSelect.setNullSelectionAllowed(false);
+            statusSelect.setRequired(true);
+            statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+            statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+            statusSelect.setWidth("100%");
+            statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+            statusSelect.setFilteringMode(FilteringMode.CONTAINS);
+
+            try {
+                DbDefinition dbDef = new DbDefinition();
+                dbDef.connect();
+                statusSelect.setContainerDataSource(
+                        dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                dbDef.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            settingsLay.addComponent(statusSelect);
+        }
+
+    }
+
+    @Override
+    public void buttonClick(Button.ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == modifyBtn && dataTable.getValue() != null) {
+            isNew = false;
+            fillFields();
+            prepareModificationMode();
+            nameTF.focus();
+        } else if (source == createBtn) {
+            isNew = true;
+            clearFields();
+            prepareModificationMode();
+            nameTF.setEnabled(true);
+            nameTF.focus();
+        } else if (source == deleteBtn && dataTable.getValue() != null) {
+            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                    myUI.getMessage(SptMessages.ConfirmDeletion),
+                    myUI.getMessage(SptMessages.Yes),
+                    myUI.getMessage(SptMessages.No),
+                    new ConfirmDialog.Listener() {
+                @Override
+                public void onClose(ConfirmDialog dialog) {
+                    if (dialog.isConfirmed()) {
+                        execDelete();
+                    }
+                }
+            });
+        } else if (source == saveBtn) {
+            try {
+                if (validate(settingsLay)) {
+                    DbDefinition dbDef = new DbDefinition();
+                    dbDef.connect();
+                    if (isNew) {
+                        int id = dbDef.exec_insert(getDefinition(0), dbTableName, withActivityStatus);
+                        if (id != 0) {
+                            addDatacontainerItem(id);
+                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                    Notification.Type.HUMANIZED_MESSAGE);
+                        } else {
+                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                    Notification.Type.WARNING_MESSAGE);
+                        }
+                    } else {
+                        int status = 0;
+                        try {
+                            status = dbDef.exec_update(
+                                    getDefinition(
+                                            (Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                                                    sysSettings.id).getValue()), dbTableName, withActivityStatus);
+                        } catch (Exception e) {
+                            logger.error(e);
+                            logger.catching(e);
+                        }
+                        if (status != 0) {
+                            updateDatacontainer();
+                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                    Notification.Type.HUMANIZED_MESSAGE);
+                        } else {
+                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                    Notification.Type.WARNING_MESSAGE);
+                        }
+                    }
+                    dbDef.close();
+                    prepareNormalMode();
+                } else {
+                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                            Notification.Type.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        } else if (source == cancelBtn) {
+            if (dataTable.getValue() != null) {
+                fillFields();
+            }
+            prepareNormalMode();
+        }
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {
+        Property property = event.getProperty();
+        if (property == dataTable) {
+            if (dataTable.getItem(dataTable.getValue()) != null) {
+                fillFields();
+            }
+        }
+    }
+
+    private void prepareModificationMode() {
+        modifyBtn.setEnabled(false);
+        createBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+        saveBtn.setEnabled(true);
+        cancelBtn.setEnabled(true);
+        dataTable.setEnabled(false);
+        nameTF.setEnabled(true);
+        if (withActivityStatus) {
+            statusSelect.setEnabled(true);
+        }
+    }
+
+    private void prepareNormalMode() {
+        if (currentUser.isPermitted(permissionView + ":" + sysSettings.actModify)) {
+            modifyBtn.setEnabled(true);
+        }
+        if (currentUser.isPermitted(permissionView + ":" + sysSettings.actAdd)) {
+            createBtn.setEnabled(true);
+        }
+        if (currentUser.isPermitted(permissionView + ":" + sysSettings.actDelete)) {
+            deleteBtn.setEnabled(true);
+        }
+        saveBtn.setEnabled(false);
+        cancelBtn.setEnabled(false);
+        dataTable.setEnabled(true);
+        nameTF.setEnabled(false);
+        if (withActivityStatus) {
+            statusSelect.setEnabled(false);
+        }
+    }
+
+    private void fillFields() {
+
+        if (dbTableName.equals(sysSettings.classTable)) {
+            nameTF.getPropertyDataSource().setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
+                    myUI.getMessage(SptMessages.Name)).getValue().toString()));
+        } else {
+            nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                    myUI.getMessage(SptMessages.Name)).getValue().toString());
+        }
+        if (withActivityStatus) {
+            statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                    sysSettings.activity_status_id).getValue());
+        }
+    }
+
+    private void clearFields() {
+        nameTF.setValue("");
+        if (withActivityStatus) {
+            statusSelect.setValue(2);
+        }
+    }
+
+    private void updateDatacontainer() {
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
+        if (withActivityStatus) {
+            dataTable.getContainerProperty(dataTable.getValue(),
+                    myUI.getMessage(SptMessages.Status)).setValue(statusSelect.getItemCaption(statusSelect.getValue()));
+            dataTable.getContainerProperty(dataTable.getValue(),
+                    sysSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
+        }
+    }
+
+    private void addDatacontainerItem(int id) {
+        Item item = ((IndexedContainer) dataTable.getContainerDataSource())
+                .addItemAt(0, id);
+        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+                nameTF.getValue());
+        item.getItemProperty(sysSettings.id).setValue(id);
+        if (withActivityStatus) {
+            item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
+                    statusSelect.getItemCaption(statusSelect.getValue()));
+            item.getItemProperty(sysSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
+        }
+        dataTable.setValue(id);
+    }
+
+    private Definition getDefinition(int id) {
+        Definition d = new Definition();
+        d.setName(nameTF.getPropertyDataSource().getValue().toString());
+        d.setId(id);
+        if (withActivityStatus) {
+            d.setActivity_status_id((Integer) statusSelect.getValue());
+        }
+        return d;
+    }
+
+    private void execDelete() {
+
+        try {
+            DbDefinition dbDef = new DbDefinition();
+            dbDef.connect();
+            int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                    sysSettings.id).getValue(), dbTableName);
+            if (st != 0) {
+                dataTable.getContainerDataSource().removeItem(dataTable.getValue());
+                if (dataTable.getContainerDataSource().size() != 0) {
+                    dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
+                } else {
+                    clearFields();
+                    dataTable.setValue(null);
+                }
+            }
+            dbDef.close();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+                    Notification.Type.WARNING_MESSAGE);
+            logger.error(e);
+            logger.catching(e);
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
+    private boolean validate(ComponentContainer layout) {
+        boolean result = true;
+        Iterator<Component> i = layout.iterator();
+        while (i.hasNext()) {
+            Component c = i.next();
+            if (c instanceof AbstractField) {
+                try {
+                    ((AbstractField) c).validate();
+                } catch (Exception e) {
+                    //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
+                    result = false;
+                }
+            } else if (c instanceof AbstractComponentContainer) {
+                if (!validate((AbstractComponentContainer) c)) {
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+}

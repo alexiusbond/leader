@@ -1,0 +1,142 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package kg.alex.spt.dao;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.SystemSettings;
+import kg.alex.spt.domain.StudRelative;
+import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.ui.StudentDefinitionView;
+
+/**
+ *
+ * @author eldiiar
+ */
+public class DbStudRelative extends BaseDb {
+
+    public DbStudRelative() throws Exception {
+        super();
+    }
+
+    public IndexedContainer execSQL_St_Rel(MyVaadinUI myUi, int stud_id,
+            StudentDefinitionView dw) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
+        String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.work_place, "
+                + "sr.phone, sr.adress, sr.passport, sr.is_main, sr.relatives_id "
+                + "FROM student_relatives as sr where sr.student_id = ?;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, stud_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = dw.prepareRelativesContainer();
+        while (result.next()) {
+            String id = result.getString("sr.id");
+            Item item = container.addItem(id);
+            item.getItemProperty(sysSettings.button).setValue(
+                    dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id, false, false));
+            if (result.getInt("sr.is_main") == 1) {
+                item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+                        dw.createTextfield(result.getString("sr.fullname"),
+                                myUi.getMessage(SptMessages.FullName), id, false, true));
+                item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
+                        dw.createTextfield(result.getString("sr.adress"),
+                                myUi.getMessage(SptMessages.Address), id, true, true));
+                item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+                        dw.createTextfield(result.getString("sr.phone"),
+                                myUi.getMessage(SptMessages.Phone), id, true, true));
+                item.getItemProperty(myUi.getMessage(SptMessages.WorkPlace)).setValue(
+                        dw.createTextfield(result.getString("sr.work_place"),
+                                myUi.getMessage(SptMessages.WorkPlace), id, true, true));
+                item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
+                        dw.createTextfield(result.getString("sr.passport"),
+                                myUi.getMessage(SptMessages.Passport), id, true, true));
+                item.getItemProperty(myUi.getMessage(SptMessages.Responsible)).setValue(
+                        dw.createCheckBox(true, myUi.getMessage(SptMessages.Responsible), id));
+            } else {
+                item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+                        dw.createTextfield(result.getString("sr.fullname"),
+                                myUi.getMessage(SptMessages.FullName), id, false, false));
+                item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
+                        dw.createTextfield(result.getString("sr.adress"),
+                                myUi.getMessage(SptMessages.Address), id, true, false));
+                item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+                        dw.createTextfield(result.getString("sr.phone"),
+                                myUi.getMessage(SptMessages.Phone), id, true, false));
+                item.getItemProperty(myUi.getMessage(SptMessages.WorkPlace)).setValue(
+                        dw.createTextfield(result.getString("sr.work_place"),
+                                myUi.getMessage(SptMessages.WorkPlace), id, true, false));
+                item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
+                        dw.createTextfield(result.getString("sr.passport"),
+                                myUi.getMessage(SptMessages.Passport), id, true, false));
+                item.getItemProperty(myUi.getMessage(SptMessages.Responsible)).setValue(
+                        dw.createCheckBox(false, myUi.getMessage(SptMessages.Responsible), id));
+            }
+            item.getItemProperty(myUi.getMessage(SptMessages.RelativeType)).setValue(
+                    dw.createCombobox(result.getInt("sr.relatives_id"),
+                            myUi.getMessage(SptMessages.RelativeType),
+                            id, sysSettings.dbRelatives, false, false, false, false));
+            item.getItemProperty(sysSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+        }
+        return container;
+    }
+
+    public int exec_insert(StudRelative r) throws SQLException {
+        String sql = "INSERT INTO student_relatives (student_id, fullname, "
+                + "work_place, phone, adress, passport,is_main,relatives_id) "
+                + "VALUES(?,?,?,?,?,?,?,?);";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, r.getStudent_id());
+        stat.setString(2, r.getFullname());
+        stat.setString(3, r.getWork_place());
+        stat.setString(4, r.getPhone());
+        stat.setString(5, r.getAddress());
+        stat.setString(6, r.getPassport());
+        stat.setInt(7, r.getIs_main());
+        stat.setInt(8, r.getRelatives_id());
+        return stat.executeUpdate();
+    }
+
+    public int exec_delete(String id) throws SQLException {
+        String sql = "DELETE FROM student_relatives WHERE id=?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setString(1, id);
+        return stat.executeUpdate();
+    }
+    
+    public int exec_update(StudRelative sr) throws SQLException {
+        String sql = "Update student_relatives set student_id=?, "
+                + "fullname=?, work_place=?, phone=?, adress=?, "
+                + "passport=?, is_main=?, relatives_id=? WHERE id=?;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, sr.getStudent_id());
+        stat.setString(2, sr.getFullname());
+        stat.setString(3, sr.getWork_place());
+        stat.setString(4, sr.getPhone());
+        stat.setString(5, sr.getAddress());
+        stat.setString(6, sr.getPassport());
+        stat.setInt(7, sr.getIs_main());
+        stat.setInt(8, sr.getRelatives_id());
+        stat.setInt(9, sr.getId());
+        return stat.executeUpdate();
+    }
+
+    public String exec_get_who_paid(int stud_id) throws SQLException {
+        String sql = "SELECT fullname FROM student_relatives "
+                + "where student_id = ? and is_main = 1;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, stud_id);
+        ResultSet result = stat.executeQuery();
+        String p = "";
+        if (result.next()) {
+            p = result.getString("fullname");
+        }
+        return p;
+    }
+}

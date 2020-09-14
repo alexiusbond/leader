@@ -1,0 +1,117 @@
+package kg.alex.spt.utils;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Locale;
+
+import org.tepi.filtertable.FilterDecorator;
+import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
+
+import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.datefield.Resolution;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.SystemSettings;
+import kg.alex.spt.i18n.SptMessages;
+
+public class MyFilterDecorator implements FilterDecorator, Serializable {
+
+    private MyVaadinUI myUI;
+    private SystemSettings sysSettings = new SystemSettings();
+
+    public MyFilterDecorator(MyVaadinUI myUi) {
+        myUI = myUi;
+    }
+
+    @Override
+    public String getEnumFilterDisplayName(Object propertyId, Object value) {
+        // returning null will output default value
+        return null;
+    }
+
+    @Override
+    public Resource getEnumFilterIcon(Object propertyId, Object value) {
+        return null;
+    }
+
+    @Override
+    public String getBooleanFilterDisplayName(Object propertyId, boolean value) {
+        // returning null will output default value
+        return null;
+    }
+
+    @Override
+    public Resource getBooleanFilterIcon(Object propertyId, boolean value) {
+        return null;
+    }
+
+    @Override
+    public String getFromCaption() {
+        return myUI.getMessage(SptMessages.StartDate);
+    }
+
+    @Override
+    public String getToCaption() {
+        return myUI.getMessage(SptMessages.EndDate);
+    }
+
+    @Override
+    public String getSetCaption() {
+        // use default caption
+        return myUI.getMessage(SptMessages.Set);
+    }
+
+    @Override
+    public String getClearCaption() {
+        // use default caption
+        return myUI.getMessage(SptMessages.Clear);
+    }
+
+    @Override
+    public boolean isTextFilterImmediate(Object propertyId) {
+        // use text change events for all the text fields
+        return true;
+    }
+
+    @Override
+    public int getTextChangeTimeout(Object propertyId) {
+        // use the same timeout for all the text fields
+        return 500;
+    }
+
+    @Override
+    public String getAllItemsVisibleString() {
+        return myUI.getMessage(SptMessages.Search);
+    }
+
+    @Override
+    public Resolution getDateFieldResolution(Object propertyId) {
+        return Resolution.DAY;
+    }
+
+    public DateFormat getDateFormat(Object propertyId) {
+        return sysSettings.df;
+    }
+
+    @Override
+    public boolean usePopupForNumericProperty(Object propertyId) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public String getDateFormatPattern(Object propertyId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Locale getLocale() {
+        // TODO Auto-generated method stub
+        return myUI.getLocale();
+    }
+
+    @Override
+    public NumberFilterPopupConfig getNumberFilterPopupConfig() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+}

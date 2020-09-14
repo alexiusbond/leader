@@ -1,0 +1,130 @@
+package kg.alex.spt.ui;
+
+import com.vaadin.data.validator.RegexpValidator;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Form;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.dao.DbUserDetails;
+import kg.alex.spt.i18n.SptMessages;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.subject.Subject;
+
+public class ChangeUserData extends VerticalLayout implements Button.ClickListener {
+
+    static final Logger logger = LogManager.getLogger(ChangeUserData.class);
+    private Subject currentUser = SecurityUtils.getSubject();
+    private MyVaadinUI myUI;
+    private FormLayout body;
+    private Form userForm;
+    private String name;
+
+    public ChangeUserData(MyVaadinUI myUI) {
+        this.myUI = myUI;
+
+        name = myUI.getUser().getFullname();
+//        surname = myUI.getUser().getSurname();
+
+        setSpacing(true);
+        buildBody();
+
+    }
+
+    public void buildBody() {
+        body = new FormLayout();
+        body.setWidth("50%");
+        userForm = new Form();
+        ThemeResource iconOK = new ThemeResource("../mytheme/icons/16/ok.png");
+        Button saveButton = new Button(myUI.getMessage(SptMessages.SaveButton));
+        saveButton.setIcon(iconOK);
+        saveButton.addClickListener(this);
+        saveButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+
+        userForm.setCaption(myUI.getMessage(SptMessages.FormCaptionUser) + ": "
+                + currentUser.getPrincipal().toString());
+        userForm.setDescription(myUI.getMessage(SptMessages.FormDescription));
+        userForm.setImmediate(true);
+
+        userForm.addField("name",
+                new TextField(myUI.getMessage(SptMessages.FullName),
+                        name));
+        // userForm.getField("name").setRequired(true);
+        // userForm.getField("name").setRequiredError("Please enter your First Name!");
+        // userForm.getField("name").addValidator(new StringLengthValidator
+        // ("First Name must be 3-25 characters", 3, 25, false));
+        userForm.getField("name").setEnabled(false);
+
+//        userForm.addField("surname",
+//                new TextField(myUI.getMessage(SptMessages.Surname),
+//                        surname));
+        // userForm.getField("surname").setRequired(true);
+        // userForm.getField("surname").setRequiredError("Please enter your Last Name!");
+        // userForm.getField("surname").addValidator(new StringLengthValidator
+        // ("First Name must be 3-50 characters", 3, 50, false));
+//        userForm.getField("surname").setEnabled(false);
+        userForm.addField("pass",
+                new PasswordField(myUI.getMessage(SptMessages.FormFiledCurPassword)));
+        userForm.getField("pass").setRequired(true);
+        userForm.getField("pass").setRequiredError(myUI.getMessage(SptMessages.RequiredErrorCurrPassword));
+
+        userForm.addField("new_pass",
+                new PasswordField(myUI.getMessage(SptMessages.NewPassword)));
+        userForm.getField("new_pass").setRequired(true);
+        userForm.getField("new_pass").setRequiredError(myUI.getMessage(SptMessages.RequiredErrorNewPassword));
+        userForm.getField("new_pass").addValidator(new RegexpValidator("[a-zA-Z0-9!@#$%^&*().,]{6,20}",
+                myUI.getMessage(SptMessages.RegexpValidatorError)));
+
+        userForm.addField("conf_pass",
+                new PasswordField(myUI.getMessage(SptMessages.FormFiledConfPassword)));
+        userForm.getField("conf_pass").setRequired(true);
+        userForm.getField("conf_pass").setRequiredError(myUI.getMessage(SptMessages.RequiredErrorConfPassword));
+        // userForm.getField("conf_pass").addValidator(confPassValidator);
+
+        userForm.getFooter().addComponent(saveButton);
+        body.addComponent(userForm);
+        addComponent(body);
+    }
+
+    public void buttonClick(ClickEvent event) {
+        try {
+            userForm.commit();
+            if (!userForm.getField("new_pass").getValue().equals(
+                    userForm.getField("conf_pass").getValue())) {
+                Notification.show(myUI.getMessage(SptMessages.NotifDontMatch),
+                        Notification.Type.WARNING_MESSAGE);
+            } else {
+                try {
+                    DbUserDetails dbUser = new DbUserDetails();
+                    dbUser.connect();
+                    if (new Sha256Hash(userForm.getField("pass").getValue()).toString().equals(
+                            dbUser.execSQL_pass(currentUser.getPrincipal().toString()))) {
+
+                        dbUser.editPass(currentUser.getPrincipal().toString(),
+                                new Sha256Hash(userForm.getField("new_pass").getValue()).toString());
+                        Notification.show(myUI.getMessage(SptMessages.NotifSuccessfulChange));
+                    } else {
+                        Notification.show(myUI.getMessage(SptMessages.NotifWrongCurrPassword),
+                                Notification.Type.WARNING_MESSAGE);
+                    }
+                    dbUser.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+}

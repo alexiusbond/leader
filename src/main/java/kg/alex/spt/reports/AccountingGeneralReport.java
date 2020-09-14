@@ -1,0 +1,668 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package kg.alex.spt.reports;
+
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.addon.charts.Chart;
+import com.vaadin.addon.charts.model.AxisTitle;
+import com.vaadin.addon.charts.model.ChartType;
+import com.vaadin.addon.charts.model.Configuration;
+import com.vaadin.addon.charts.model.DataLabels;
+import com.vaadin.addon.charts.model.DataSeries;
+import com.vaadin.addon.charts.model.DataSeriesItem;
+import com.vaadin.addon.charts.model.HorizontalAlign;
+import com.vaadin.addon.charts.model.LayoutDirection;
+import com.vaadin.addon.charts.model.Legend;
+import com.vaadin.addon.charts.model.ListSeries;
+import com.vaadin.addon.charts.model.PlotOptionsLine;
+import com.vaadin.addon.charts.model.PlotOptionsPie;
+import com.vaadin.addon.charts.model.Series;
+import com.vaadin.addon.charts.model.VerticalAlign;
+import com.vaadin.addon.charts.model.YAxis;
+import com.vaadin.addon.charts.model.style.SolidColor;
+import com.vaadin.addon.charts.util.SVGGenerator;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.ListSet;
+import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CustomTable;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.SystemSettings;
+import kg.alex.spt.dao.DbAccTransactions;
+import kg.alex.spt.dao.DbDefinition;
+import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.dao.DbStudContract;
+import kg.alex.spt.domain.ContractTotal;
+import kg.alex.spt.domain.SchoolAccounting;
+import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.ComboBoxMax;
+import kg.alex.spt.utils.ComboBoxMultiselectMax;
+import kg.alex.spt.utils.AccountingGeneralReportPdf;
+import kg.alex.spt.utils.FormattedTable;
+import kg.alex.spt.utils.MyFilterDecorator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.tepi.filtertable.FilterTable;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
+
+public class AccountingGeneralReport implements Button.ClickListener,
+        Property.ValueChangeListener {
+
+    static final Logger logger = LogManager.getLogger(AccountingGeneralReport.class);
+    private MyVaadinUI myUI;
+    private Button generateBtn, PDFBtn;
+    private HorizontalSplitPanel spltPanel;
+    private GridLayout leftGrid, totalsGrid;
+    private VerticalLayout rightLay;
+    private FormattedTable transactionsTable, paymentsTable;
+    private FilterTable schoolsTable;
+    private Chart chartDisc, chartPaid, chartPayments;
+    private Configuration confDisc, confPaid, confPayments;
+    private ComboBoxMax yearSelect;
+    private ComboBoxMultiselectMax educationStatusMCB;
+    private SystemSettings sysSettings = new SystemSettings();
+    private Subject currentUser = SecurityUtils.getSubject();
+    private String[] NATURAL_COL_ORDER_TRANSACTIONS;
+    private String[] NATURAL_COL_ORDER_PAYMENTS;
+    private Label outcLastDateLbl, outcTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
+    private SchoolAccounting schoolAcc;
+    private ContractTotal contractTtl;
+    private Calendar prevDayCal;
+
+    public AccountingGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+        this.myUI = ui;
+        this.spltPanel = spltPanel;
+        prevDayCal = Calendar.getInstance();
+        buildLeftPanel();
+        buildRightLayout();
+    }
+
+    private void buildLeftPanel() {
+
+        leftGrid = new GridLayout(4, 4);
+        leftGrid.setWidth("100%");
+        leftGrid.setSpacing(true);
+
+        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect.setNullSelectionAllowed(false);
+        yearSelect.setRequired(true);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setWidth("100%");
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+
+        educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB.setRequired(true);
+        educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        educationStatusMCB.setWidth("100%");
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
+            @Override
+            public boolean isShow(String filter, int page) {
+                return true;
+            }
+        });
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        try {
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            yearSelect.setContainerDataSource(dbd.exec_years_with_dates(myUI));
+            educationStatusMCB.setContainerDataSource(
+                    dbd.exec_for_select(myUI, sysSettings.dbEducationStatus));
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        educationStatusMCB.setValue(sysSettings.convertToSet(
+                educationStatusMCB.getContainerDataSource().getItemIds()));
+        educationStatusMCB.addValueChangeListener(this);
+
+        yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+        yearSelect.addValueChangeListener(this);
+
+        schoolsTable = new FilterTable();
+        schoolsTable.setFilterDecorator(new MyFilterDecorator(myUI));
+        schoolsTable.setStyleName(ValoTheme.TABLE_SMALL);
+        schoolsTable.setSizeFull();
+        schoolsTable.setNullSelectionAllowed(false);
+        schoolsTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
+        schoolsTable.setFilterBarVisible(true);
+        schoolsTable.setFooterVisible(false);
+        schoolsTable.setSelectable(true);
+        schoolsTable.setNullSelectionAllowed(false);
+        schoolsTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
+        schoolsTable.addValueChangeListener(this);
+        try {
+            DbSchool dbs = new DbSchool();
+            dbs.connect();
+            schoolsTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
+            dbs.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Name)});
+
+        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn.setWidth("100%");
+        generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
+        generateBtn.addClickListener(this);
+
+        PDFBtn = new Button();
+        PDFBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        PDFBtn.setWidth("100%");
+        PDFBtn.setEnabled(false);
+        PDFBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        PDFBtn.setIcon(FontAwesome.FILE_PDF_O);
+        PDFBtn.addClickListener(this);
+
+        leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
+        leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
+        if (currentUser.hasRole("admin")) {
+            leftGrid.setSizeFull();
+            leftGrid.addComponent(schoolsTable, 0, 2, 3, 2);
+            leftGrid.setRowExpandRatio(2, 1);
+        } else {
+            schoolsTable.setValue(myUI.getUser().getSchool_id());
+        }
+        leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
+        leftGrid.addComponent(PDFBtn, 3, 3);
+        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+
+    }
+
+    private void buildRightLayout() {
+        // building grid layout and all tables and charts
+        rightLay = new VerticalLayout();
+        rightLay.setMargin(true);
+        rightLay.setWidth("100%");
+        rightLay.setSpacing(true);
+
+        buildSchoolAccounting();
+        buildTransactionsTable();
+        buildTotalContract();
+        buildPaymentsLayout();
+
+        spltPanel.setSecondComponent(rightLay);
+    }
+
+    @Override
+    public void buttonClick(Button.ClickEvent event) {
+        final Button source = event.getButton();
+        if (source == generateBtn) {
+            if (schoolsTable.getValue() != null) {
+                //set datasources to all tables and drawcharts
+                try {
+                    DbAccTransactions dbacc = new DbAccTransactions();
+                    dbacc.connect();
+                    schoolAcc = dbacc.exec_get_ttls((Integer) schoolsTable.getValue(),
+                            new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()).getTime()),
+                            new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()).getTime()), null);
+                    dbacc.close();
+                    setSchoolAccounting(schoolAcc);
+                    DbStudContract dbsc = new DbStudContract();
+                    dbsc.connect();
+                    contractTtl = dbsc.execSQL_totalsByScl(myUI, (Integer) yearSelect.getValue(),
+                            sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            (Integer) schoolsTable.getValue());
+                    dbsc.close();
+                    setTotalContract(contractTtl);
+                    setTransactionTableOptions();
+                    setPaymentsTableOptions();
+                    setPaymentsChartOptions();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            }
+        } else if (source == PDFBtn) {
+            try {
+                String svgPayments = SVGGenerator.getInstance().generate(confPayments);
+                String svgDiscounts = SVGGenerator.getInstance().withWidth(355).withHeight(100).generate(confDisc);
+                String svgPaid = SVGGenerator.getInstance().withWidth(400).withHeight(100).generate(confPaid);
+                new AccountingGeneralReportPdf(myUI, svgPayments, svgPaid, svgDiscounts, schoolAcc,
+                        transactionsTable, contractTtl, paymentsTable, (Integer) schoolsTable.getValue(),
+                        (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Name)).getValue(),
+                        sysSettings.df.format(prevDayCal.getTime()));
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        }
+    }
+
+    @Override
+    public void valueChange(Property.ValueChangeEvent event) {        
+        if (PDFBtn.isEnabled()) {
+            setSchoolAccounting(null);
+            transactionsTable.setContainerDataSource(null);
+            paymentsTable.setContainerDataSource(null);
+            setTotalContract(null);
+            Configuration c = new Configuration();
+            c.getTitle().setText(null);
+            chartDisc.drawChart(c);
+            chartPaid.drawChart(c);
+            chartPayments.getConfiguration().setSeries(new ListSet<Series>());
+            chartPayments.drawChart(c);
+            PDFBtn.setEnabled(false);
+        }
+        if (event.getProperty() == yearSelect) {
+            prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue());
+            prevDayCal.add(Calendar.DAY_OF_MONTH, -1);
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(prevDayCal.getTime()) + "): </b>");
+        }
+    }
+
+    private void buildTotalContract() {
+        //labels
+        totalsGrid = new GridLayout(4, 8);
+        totalsGrid.setWidth("100%");
+
+        Label caption = new Label();
+        caption.setWidth("100%");
+        caption.setContentMode(ContentMode.HTML);
+        caption.setStyleName("tableCpt");
+        caption.setValue(myUI.getMessage(SptMessages.Total));
+
+        Label discountsCaption = new Label();
+        discountsCaption.setWidth("100%");
+        discountsCaption.setContentMode(ContentMode.HTML);
+        discountsCaption.setStyleName("tableCpt");
+        discountsCaption.setValue(myUI.getMessage(SptMessages.Discounts));
+
+        Label paymentsCaption = new Label();
+        paymentsCaption.setWidth("100%");
+        paymentsCaption.setContentMode(ContentMode.HTML);
+        paymentsCaption.setStyleName("tableCpt");
+        paymentsCaption.setValue(myUI.getMessage(SptMessages.Payments));
+
+        Label ttlStudentsLab = new Label();
+        ttlStudentsLab.setWidth("100%");
+        ttlStudentsLab.setContentMode(ContentMode.HTML);
+        ttlStudentsLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlStudentsLab.setValue("<b>" + myUI.getMessage(SptMessages.Students) + ":" + "</b>");
+
+        Label ttlContractLab = new Label();
+        ttlContractLab.setWidth("100%");
+        ttlContractLab.setContentMode(ContentMode.HTML);
+        ttlContractLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlContractLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalContract) + "</b>");
+
+        Label ttlDebtLab = new Label();
+        ttlDebtLab.setWidth("100%");
+        ttlDebtLab.setContentMode(ContentMode.HTML);
+        ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlDebtLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDebt) + "</b>");
+
+        Label ttlDiscLab = new Label();
+        ttlDiscLab.setWidth("100%");
+        ttlDiscLab.setContentMode(ContentMode.HTML);
+        ttlDiscLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlDiscLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDiscount) + "</b>");
+
+        Label ttlNetLab = new Label();
+        ttlNetLab.setWidth("100%");
+        ttlNetLab.setContentMode(ContentMode.HTML);
+        ttlNetLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlNetLab.setValue("<b>" + myUI.getMessage(SptMessages.Net) + ":" + "</b>");
+
+        Label ttlPaymentLab = new Label();
+        ttlPaymentLab.setWidth("100%");
+        ttlPaymentLab.setContentMode(ContentMode.HTML);
+        ttlPaymentLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlPaymentLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalPayment) + "</b>");
+
+        Label ttlLeftLab = new Label();
+        ttlLeftLab.setWidth("100%");
+        ttlLeftLab.setContentMode(ContentMode.HTML);
+        ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlLeftLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalLeft) + "</b>");
+
+        totalsGrid.addComponent(caption, 0, 0, 1, 0);
+        totalsGrid.addComponent(ttlStudentsLab, 0, 1);
+        totalsGrid.addComponent(ttlContractLab, 0, 2);
+        totalsGrid.addComponent(ttlDebtLab, 0, 3);
+        totalsGrid.addComponent(ttlDiscLab, 0, 4);
+        totalsGrid.addComponent(ttlNetLab, 0, 5);
+        totalsGrid.addComponent(ttlPaymentLab, 0, 6);
+        totalsGrid.addComponent(ttlLeftLab, 0, 7);
+        totalsGrid.addComponent(discountsCaption, 2, 0);
+        totalsGrid.addComponent(paymentsCaption, 3, 0);
+
+        //charts 
+        //chart Discount
+        chartDisc = new Chart(ChartType.PIE);
+        chartDisc.setSizeFull();
+
+        confDisc = chartDisc.getConfiguration();
+        confDisc.getTitle().setText(null);
+        confDisc.getChart().setBackgroundColor(new SolidColor(255, 255, 255, 0));
+        confDisc.getTooltip().setEnabled(false);
+
+        PlotOptionsPie plotOptionsDisc = new PlotOptionsPie();
+        plotOptionsDisc.setSize("100%");
+        DataLabels dataLabelsDisc = new DataLabels();
+        dataLabelsDisc.setFormatter("'<b>'+ this.point.name +'</b>'+ this.percentage.toFixed(2) +'%'");
+        plotOptionsDisc.setDataLabels(dataLabelsDisc);
+        confDisc.setPlotOptions(plotOptionsDisc);
+
+        //chart Payment
+        chartPaid = new Chart(ChartType.PIE);
+        chartPaid.setSizeFull();
+
+        confPaid = chartPaid.getConfiguration();
+        confPaid.getTitle().setText(null);
+        confPaid.getChart().setBackgroundColor(new SolidColor(255, 255, 255, 0));
+        confPaid.getTooltip().setEnabled(false);
+
+        PlotOptionsPie plotOptionsPay = new PlotOptionsPie();
+        plotOptionsPay.setSize("100%");
+        DataLabels dataLabelsPay = new DataLabels();
+        dataLabelsPay.setFormatter("'<b>'+ this.point.name +'</b>'+ this.percentage.toFixed(2) +'%'");
+        plotOptionsPay.setDataLabels(dataLabelsPay);
+        confPaid.setPlotOptions(plotOptionsPay);
+
+        totalsGrid.addComponent(chartDisc, 2, 1, 2, 7);
+        totalsGrid.addComponent(chartPaid, 3, 1, 3, 7);
+        totalsGrid.setColumnExpandRatio(0, 1);
+        totalsGrid.setColumnExpandRatio(1, 1);
+        totalsGrid.setColumnExpandRatio(2, 3);
+        totalsGrid.setColumnExpandRatio(3, 3);
+
+        rightLay.addComponent(totalsGrid);
+    }
+
+    private void buildSchoolAccounting() {
+
+        Label caption = new Label();
+        caption.setWidth("100%");
+        caption.setContentMode(ContentMode.HTML);
+        caption.setStyleName("tableCpt");
+        caption.setValue(myUI.getMessage(SptMessages.AccountingInformationCaption));
+
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setWidth("100%");
+
+        incTotalLbl = new Label();
+        incTotalLbl.setContentMode(ContentMode.HTML);
+        incTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
+        hl.addComponent(incTotalLbl);
+
+        incLastDateLbl = new Label();
+        incLastDateLbl.setContentMode(ContentMode.HTML);
+        incLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
+        hl.addComponent(incLastDateLbl);
+
+        outcTotalLbl = new Label();
+        outcTotalLbl.setContentMode(ContentMode.HTML);
+        outcTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
+        hl.addComponent(outcTotalLbl);
+
+        outcLastDateLbl = new Label();
+        outcLastDateLbl.setContentMode(ContentMode.HTML);
+        outcLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
+        hl.addComponent(outcLastDateLbl);
+
+        prevBalanceLbl = new Label();
+        prevBalanceLbl.setContentMode(ContentMode.HTML);
+        prevBalanceLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(prevDayCal.getTime())
+                + "): </b>");
+        hl.addComponent(prevBalanceLbl);
+
+        totalLbl = new Label();
+        totalLbl.setContentMode(ContentMode.HTML);
+        totalLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": </b>");
+        hl.addComponent(totalLbl);
+
+        rightLay.addComponent(caption);
+        rightLay.addComponent(hl);
+    }
+
+    private void buildTransactionsTable() {
+
+        NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(SptMessages.Month),
+            myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
+            myUI.getMessage(SptMessages.Incomes),
+            myUI.getMessage(SptMessages.Outcomes), myUI.getMessage(SptMessages.Difference)};
+
+        Label caption = new Label();
+        caption.setWidth("100%");
+        caption.setContentMode(ContentMode.HTML);
+        caption.setStyleName("tableCpt");
+        caption.setValue(myUI.getMessage(SptMessages.IncomeOutcomeMonthlyCaption));
+
+        transactionsTable = new FormattedTable();
+        transactionsTable.setFooterVisible(true);
+        transactionsTable.setSizeFull();
+        transactionsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        transactionsTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        transactionsTable.addStyleName("noWrapHeader");
+
+        rightLay.addComponent(caption);
+        rightLay.addComponent(transactionsTable);
+    }
+
+    private void buildPaymentsLayout() {
+
+        NATURAL_COL_ORDER_PAYMENTS = new String[]{myUI.getMessage(SptMessages.Month),
+            myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
+            myUI.getMessage(SptMessages.Debt)};
+
+        Label caption = new Label();
+        caption.setWidth("100%");
+        caption.setContentMode(ContentMode.HTML);
+        caption.setStyleName("tableCpt");
+        caption.setValue(myUI.getMessage(SptMessages.PaymentsMonthlyCaption));
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setWidth("100%");
+
+        paymentsTable = new FormattedTable();
+        paymentsTable.setFooterVisible(true);
+        paymentsTable.setSizeFull();
+        paymentsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        paymentsTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        paymentsTable.addStyleName("noWrapHeader");
+
+        chartPayments = new Chart();
+        chartPayments.setSizeFull();
+
+        confPayments = chartPayments.getConfiguration();
+        confPayments.getChart().setType(ChartType.LINE);
+        confPayments.getTitle().setText(null);
+        confPayments.getChart().setBackgroundColor(new SolidColor(255, 255, 255, 0));
+        confPayments.getTooltip().setEnabled(false);
+
+        YAxis yAxis = confPayments.getyAxis();
+        yAxis.setMin(0);
+        yAxis.setTitle(new AxisTitle(null));
+
+        PlotOptionsLine plotOptions = new PlotOptionsLine();
+        plotOptions.getDataLabels().setEnabled(true);
+        confPayments.setPlotOptions(plotOptions);
+
+        Legend legend = confPayments.getLegend();
+        legend.setLayout(LayoutDirection.HORIZONTAL);
+        legend.setAlign(HorizontalAlign.RIGHT);
+        legend.setVerticalAlign(VerticalAlign.TOP);
+        legend.setBorderWidth(0);
+
+        hl.addComponent(paymentsTable);
+        hl.addComponent(chartPayments);
+        hl.setExpandRatio(paymentsTable, 1.2F);
+        hl.setExpandRatio(chartPayments, 1.8F);
+
+        rightLay.addComponent(caption);
+        rightLay.addComponent(hl);
+    }
+
+    private void setSchoolAccounting(SchoolAccounting schoolAcc) {
+        if (schoolAcc != null) {
+            incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal)
+                    + ": </b>" + sysSettings.dFormat.format(schoolAcc.getTotal_income()) + "$");
+            incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate)
+                    + ": </b>" + schoolAcc.getLast_income_date());
+            outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal)
+                    + ": </b>" + sysSettings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
+            outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate)
+                    + ": </b>" + schoolAcc.getLast_outcome_date());
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance)
+                    + " (" + sysSettings.df.format(prevDayCal.getTime())
+                    + "): </b>" + schoolAcc.getPrevious_balance() + "$");
+            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Transactions)
+                    + ": </b>" + sysSettings.dFormat.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
+        } else {
+            incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
+            incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
+            outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
+            outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(prevDayCal.getTime()) + "): </b>");
+            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": </b>");
+        }
+    }
+
+    private void setTotalContract(ContractTotal contractTtl) {
+        if (totalsGrid.getComponent(1, 1) != null) {
+            totalsGrid.removeComponent(1, 1);
+            totalsGrid.removeComponent(1, 2);
+            totalsGrid.removeComponent(1, 3);
+            totalsGrid.removeComponent(1, 4);
+            totalsGrid.removeComponent(1, 5);
+            totalsGrid.removeComponent(1, 6);
+            totalsGrid.removeComponent(1, 7);
+        }
+        if (contractTtl != null) {
+            totalsGrid.addComponent(new Label(contractTtl.getTtl_students() + ""), 1, 1);
+            totalsGrid.addComponent(new Label(sysSettings.dFormat.format(contractTtl.getTtl_contract()) + "$"), 1, 2);
+            totalsGrid.addComponent(new Label(sysSettings.dFormat.format(contractTtl.getTtl_debt()) + "$"), 1, 3);
+            totalsGrid.addComponent(new Label(sysSettings.dFormat.format(contractTtl.getTtl_disc()) + "$"), 1, 4);
+            totalsGrid.addComponent(new Label(sysSettings.dFormat.format(contractTtl.getTtl_net()) + "$"), 1, 5);
+            totalsGrid.addComponent(new Label(sysSettings.dFormat.format(contractTtl.getTtl_payments()) + "$"), 1, 6);
+            totalsGrid.addComponent(new Label(sysSettings.dFormat.format(contractTtl.getTtl_left()) + "$"), 1, 7);
+            //draw discounts chart
+            double totalDisc = contractTtl.getTtl_net() + contractTtl.getTtl_disc();
+            if (totalDisc != 0.0) {
+                final DataSeries series = new DataSeries();
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), sysSettings.round(contractTtl.getTtl_disc() * 100 / totalDisc, 2));
+                discounts.setSliced(true);
+                series.add(discounts);
+                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.Net) + ": ", sysSettings.round(contractTtl.getTtl_net() * 100 / totalDisc, 2)));
+                confDisc.setSeries(series);
+            }
+
+            chartDisc.drawChart(confDisc);
+            //draw Payments chart
+            double totalPay = contractTtl.getTtl_left() + contractTtl.getTtl_payments();
+            if (totalPay != 0.0) {
+                final DataSeries series = new DataSeries();
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), sysSettings.round(contractTtl.getTtl_left() * 100 / totalPay, 2));
+                discounts.setSliced(true);
+                series.add(discounts);
+                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), sysSettings.round(contractTtl.getTtl_payments() * 100 / totalPay, 2)));
+                confPaid.setSeries(series);
+            }
+            chartPaid.drawChart(confPaid);
+        }
+    }
+
+    private void setTransactionTableOptions() {
+        try {
+            DbAccTransactions dbsc = new DbAccTransactions();
+            dbsc.connect();
+            dbsc.execSQL_Plan_Payments(myUI, (Integer) yearSelect.getValue(),
+                    sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                    (Integer) schoolsTable.getValue(),
+                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()).getTime()),
+                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()).getTime()),
+                    transactionsTable);
+            transactionsTable.setVisibleColumns(NATURAL_COL_ORDER_TRANSACTIONS);
+            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Payments), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Incomes), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Outcomes), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Difference), Table.Align.RIGHT);
+            transactionsTable.setPageLength(transactionsTable.size());
+            if (transactionsTable.getContainerDataSource().size() != 0) {
+                PDFBtn.setEnabled(true);
+            }
+            dbsc.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
+    private void setPaymentsTableOptions() {
+        paymentsTable.setContainerDataSource(transactionsTable.getContainerDataSource());
+        paymentsTable.setVisibleColumns(NATURAL_COL_ORDER_PAYMENTS);
+        paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Payments), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
+        paymentsTable.setPageLength(paymentsTable.size());
+        paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan),
+                transactionsTable.getColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan)));
+        paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.Payments),
+                transactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Payments)));
+        paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+                transactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Debt)));
+        if (paymentsTable.getContainerDataSource().size() != 0) {
+            PDFBtn.setEnabled(true);
+        }
+    }
+
+    private void setPaymentsChartOptions() {
+        List<String> months = new ArrayList<>();
+        List<Number> instList = new ArrayList<>();
+        List<Number> paymentsList = new ArrayList<>();
+        Iterator iter = paymentsTable.getItemIds().iterator();
+        while (iter.hasNext()) {
+            Object next = iter.next();
+            months.add(paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Month)).getValue().toString());
+            instList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.InstallmentPlan)).getValue());
+            paymentsList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Payments)).getValue());
+        }
+        confPayments.getxAxis().setCategories(months.toArray(new String[months.size()]));
+        ListSeries ls = new ListSeries();
+        ls.setName(myUI.getMessage(SptMessages.InstallmentPlan));
+        ls.setData(instList);
+        confPayments.addSeries(ls);
+        ls = new ListSeries();
+        ls.setName(myUI.getMessage(SptMessages.Payments));
+        ls.setData(paymentsList);
+        confPayments.addSeries(ls);
+
+        chartPayments.drawChart(confPayments);
+    }
+}
