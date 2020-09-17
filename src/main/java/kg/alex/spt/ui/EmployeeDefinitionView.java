@@ -3017,8 +3017,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     if (delOrderIds.get(i).getOrder_id() == 8) {
                         DbDefinition dbCon = new DbDefinition();
                         dbCon.connect();
-                        System.out.println((Integer) employeesDataTable.getContainerProperty(employee_id,
-                                sysSettings.acc_category_id).getValue());
                         dbCon.exec_delete((Integer) employeesDataTable.getContainerProperty(employee_id,
                                 sysSettings.acc_category_id).getValue(), sysSettings.dbAcc_category);
                         dbCon.close();

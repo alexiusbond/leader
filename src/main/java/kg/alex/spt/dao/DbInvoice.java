@@ -6,46 +6,71 @@
 package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.themes.ValoTheme;
+import kg.alex.spt.AuthenticatedScreen;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Invoice;
 import kg.alex.spt.i18n.SptMessages;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 public class DbInvoice extends BaseDb {
+
+    static final Logger logger = LogManager.getLogger(DbInvoice.class);
 
     public DbInvoice() throws Exception {
         super();
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id) throws SQLException {
+    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id, String viewName, Property.ValueChangeListener listener) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT t.id, LPAD(t.invoice_number, 7, 0) as inv_num, t.creation_date, "
-                + "sum(if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount)) as amount, t.note "
-                + "FROM acc_invoice AS t "
-                + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = t.id "
-                + "WHERE t.school_id = ? and acc_invoice_type_id = ? group by t.id ORDER BY t.invoice_number DESC;";
+        Subject currentUser = SecurityUtils.getSubject();
+        String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
+                + "sum(if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount)) as amount, inv.note "
+                + "FROM acc_invoice AS inv "
+                + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = inv.id "
+                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? group by inv.id ORDER BY inv.invoice_number DESC;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, invoice_type_id);
-        System.out.println(stat.toString());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.InvoiceNumber), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Confirmation), CheckBox.class, null);
 
         while (result.next()) {
-            Item item = container.addItem(result.getInt("t.id"));
+            Item item = container.addItem(result.getInt("inv.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("t.creation_date")));
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
+            CheckBox cb = new CheckBox();
+            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+            cb.setData(result.getInt("inv.id"));
+            if (result.getInt("inv.is_confirmed") == 1) {
+                cb.setValue(true);
+            }
+            if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
+                cb.setEnabled(false);
+            } else {
+                cb.addValueChangeListener(listener);
+            }
+            item.getItemProperty(myUi.getMessage(SptMessages.Confirmation)).setValue(cb);
         }
         return container;
     }
@@ -111,6 +136,15 @@ public class DbInvoice extends BaseDb {
         }
         stat.setInt(3, inv.getEmployee_id());
         stat.setInt(4, inv.getId());
+        int status = stat.executeUpdate();
+        return status;
+    }
+
+    public int exec_update(int id, int is_confirmed) throws SQLException {
+        String sql = "UPDATE acc_invoice SET is_confirmed = ? WHERE id=?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, is_confirmed);
+        stat.setInt(2, id);
         int status = stat.executeUpdate();
         return status;
     }

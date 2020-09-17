@@ -1,5 +1,6 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.ui.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.addon.tableexport.ExcelExport;
@@ -15,27 +16,14 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CustomTable;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccCategory;
@@ -90,9 +78,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         this.acc_category_id = acc_category_id;
         this.acc_invoice_type_id = acc_invoice_type_id;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.InvoiceNumber),
-            myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
-            myUI.getMessage(SptMessages.Note)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Confirmation), myUI.getMessage(SptMessages.InvoiceNumber),
+                myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
+                myUI.getMessage(SptMessages.Note)};
 
         rightLay = new GridLayout(3, 2);
         rightLay.setSpacing(true);
@@ -235,7 +223,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), acc_invoice_type_id));
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), acc_invoice_type_id, viewName, this));
             dbCon.close();
             if (invoicesTable.getContainerDataSource().size() != 0) {
                 invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
@@ -268,13 +256,13 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
                     new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                        @Override
+                        public void onClose(ConfirmDialog dialog) {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay) && validateTable(transfersTable, false)) {
@@ -326,13 +314,13 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                             myUI.getMessage(SptMessages.Yes),
                             myUI.getMessage(SptMessages.No),
                             new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                exec_copy();
-                            }
-                        }
-                    });
+                                @Override
+                                public void onClose(ConfirmDialog dialog) {
+                                    if (dialog.isConfirmed()) {
+                                        exec_copy();
+                                    }
+                                }
+                            });
 
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.NotifWrongValue), Notification.Type.WARNING_MESSAGE);
@@ -417,6 +405,20 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                         myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString());
             }
             invoiceNumberTF.addValueChangeListener(this);
+        } else if (event.getProperty() instanceof CheckBox) {
+            try {
+                int value = 1;
+                if (event.getProperty().getValue() == Boolean.FALSE) {
+                    value = 0;
+                }
+                DbInvoice dbInvoice = new DbInvoice();
+                dbInvoice.connect();
+                dbInvoice.exec_update((Integer) ((CheckBox) event.getProperty()).getData(), value);
+                dbInvoice.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         } else if (event.getProperty() instanceof ComboBoxMax && ((ComboBoxMax) event.getProperty()).getId() != null) {
             ComboBoxMax catCb = (ComboBoxMax) event.getProperty();
             ((ComboBoxMax) transfersTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
@@ -508,8 +510,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     private void addDatacontainerItem(int id, String date) {
-        Item item = ((IndexedContainer) invoicesTable.getContainerDataSource())
-                .addItemAt(0, id);
+        Item item = ((IndexedContainer) invoicesTable.getContainerDataSource()).addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(date);
         try {
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -518,13 +519,21 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             logger.error(e);
             logger.catching(e);
         }
-        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
-                noteTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(noteTF.getValue());
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
             item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
             dbCon.close();
+
+            CheckBox cb = new CheckBox();
+            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+            if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
+                cb.setEnabled(false);
+            } else {
+                cb.addValueChangeListener(this);
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.Confirmation)).setValue(cb);
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -728,11 +737,11 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     private void addTransfersItem() {
         NATURAL_COL_ORDER_TRANSFERS = new String[]{sysSettings.button,
-            myUI.getMessage(SptMessages.Category),
-            myUI.getMessage(SptMessages.Note),
-            myUI.getMessage(SptMessages.Currency),
-            myUI.getMessage(SptMessages.Rate),
-            myUI.getMessage(SptMessages.Amount)};
+                myUI.getMessage(SptMessages.Category),
+                myUI.getMessage(SptMessages.Note),
+                myUI.getMessage(SptMessages.Currency),
+                myUI.getMessage(SptMessages.Rate),
+                myUI.getMessage(SptMessages.Amount)};
         String id = sysSettings.FreshItem + (--r_table_counter);
         if (transfersTable.getContainerDataSource().size() == 0) {
             transfersTable.setContainerDataSource(prepareTransfersContainer());
@@ -783,11 +792,11 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private void setTransfersTable() {
         try {
             NATURAL_COL_ORDER_TRANSFERS = new String[]{sysSettings.button,
-                myUI.getMessage(SptMessages.Category),
-                myUI.getMessage(SptMessages.Note),
-                myUI.getMessage(SptMessages.Currency),
-                myUI.getMessage(SptMessages.Rate),
-                myUI.getMessage(SptMessages.Amount)};
+                    myUI.getMessage(SptMessages.Category),
+                    myUI.getMessage(SptMessages.Note),
+                    myUI.getMessage(SptMessages.Currency),
+                    myUI.getMessage(SptMessages.Rate),
+                    myUI.getMessage(SptMessages.Amount)};
             DbTransfers dbCon = new DbTransfers();
             dbCon.connect();
             transfersTable.setContainerDataSource(dbCon.execSQL(myUI, invID, myUI.getUser().getSchool_id(), this));
@@ -811,9 +820,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 if (((TextField) transfersTable.getItem(next).getItemProperty(
                         myUI.getMessage(SptMessages.Amount)).getValue()).isValid()
                         && ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Rate)).getValue()).isValid()
+                        myUI.getMessage(SptMessages.Rate)).getValue()).isValid()
                         && ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
+                        myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
                     if ((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 2) {
                         total += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
@@ -822,7 +831,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                         total += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue()
                                 / (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
                     }
                 }
             }

@@ -19,7 +19,6 @@ import com.vaadin.server.StreamResource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
@@ -160,7 +159,7 @@ public class DebtsPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountent), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
                     T2.addCell(new Phrase(st.getScl_accountent_fullname(), ordFont));
                     T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));

@@ -30,3 +30,32 @@ INSERT INTO `spt`.`permissions` (`java_class_name`, `caption`, `permissions`) VA
 
 INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('admin', 'ShortTermDebtsView:меню,добавление,изменение,удаление,копирование');
 INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('admin', 'ReturnableAssetsView:меню,добавление,изменение,удаление,копирование');
+
+DROP VIEW view_accurals;
+CREATE
+    ALGORITHM = UNDEFINED
+    DEFINER = root`@`localhost
+    SQL SECURITY DEFINER
+VIEW spt.view_accurals AS
+    SELECT
+        inv.school_id AS school_id,
+        acr.acc_category_id AS acc_category_id,
+        IFNULL(SUM(IF((`acr`.`acc_currency_id` <> 2),
+                    (`acr`.`amount` / acr.`currency_rate`),
+                    acr.`amount`)),
+                0.0) AS amount_usd,
+        IFNULL(SUM(IF((`acr`.`acc_currency_id` <> 1),
+                    (`acr`.`amount` * acr.`currency_rate`),
+                    acr.`amount`)),
+                0.0) AS amount_som,
+        MAX(`inv`.`id`) AS invoice_id
+    FROM
+        (`spt`.`acc_transfers` acr
+        LEFT JOIN spt.acc_invoice inv ON (((`inv`.`id` = acr.`invoice_id`)
+            AND (`inv`.`acc_invoice_type_id` = 1))))
+    GROUP BY inv.school_id , acr.acc_category_id;
+
+ALTER TABLE `spt`.`acc_invoice`
+    ADD COLUMN `is_confirmed` TINYINT(1) NOT NULL DEFAULT '0' AFTER `acc_invoice_type_id`;
+UPDATE `spt`.`user_permission` SET `permissions` = 'ReturnableAssetsView:меню,добавление,изменение,удаление,копирование,контроль подтверждений' WHERE (`role_name` = 'admin') and (`permissions` = 'ReturnableAssetsView:меню,добавление,изменение,удаление,копирование');
+UPDATE `spt`.`user_permission` SET `permissions` = 'ShortTermDebtsView:меню,добавление,изменение,удаление,копирование,контроль подтверждений' WHERE (`role_name` = 'admin') and (`permissions` = 'ShortTermDebtsView:меню,добавление,изменение,удаление,копирование');

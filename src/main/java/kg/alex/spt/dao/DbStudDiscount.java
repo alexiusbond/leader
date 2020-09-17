@@ -336,15 +336,11 @@ public class DbStudDiscount extends BaseDb {
         double totalDiscAmount = 0.0;
         String footerVal = cdr.dataTable.getColumnFooter(myUI.getMessage(SptMessages.Total) + " "
                 + myUI.getMessage(SptMessages.DiscountAmount));
-        System.out.println(footerVal);
         if (footerVal != null) {
             totalDiscAmount = Double.parseDouble(footerVal);
             while (iter.hasNext()) {
                 Object next = iter.next();
-                System.out.println(next);
                 if (totalDiscAmount != 0.0) {
-                    System.out.println((Double) cdr.dataTable.getContainerProperty(next, myUI.getMessage(SptMessages.Total) + " "
-                            + myUI.getMessage(SptMessages.DiscountAmount)).getValue() / (totalDiscAmount / 100));
                     cdr.dataTable.getContainerProperty(next, myUI.getMessage(SptMessages.Total) + " "
                             + myUI.getMessage(SptMessages.Average) + "%").setValue((Double) cdr.dataTable.getContainerProperty(next, myUI.getMessage(SptMessages.Total) + " "
                             + myUI.getMessage(SptMessages.DiscountAmount)).getValue() / (totalDiscAmount / 100));

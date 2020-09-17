@@ -7,9 +7,11 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
@@ -30,11 +32,9 @@ public class DbProductCategories extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
         container.addContainerProperty(sysSettings.acc_category_id, Integer.class, 0);
         while (result.next()) {
-            Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
-                    result.getString("name"));
-            item.getItemProperty(sysSettings.acc_category_id).setValue(
-                    result.getInt("acc_category_id"));
+            Item item = container.addItem(result.getInt("acc_category_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("name"));
+            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("acc_category_id"));
         }
         return container;
     }

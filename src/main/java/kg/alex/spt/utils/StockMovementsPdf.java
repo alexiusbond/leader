@@ -195,7 +195,7 @@ public class StockMovementsPdf {
                     p.add(new Phrase(schoolInfo.getScl_dir_f_name(), ordFont));
                     T2.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(SptMessages.Accountent) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(SptMessages.Accountant) + ": ", ordFontBold));
                     p.add(new Phrase(schoolInfo.getScl_accountent_fullname(), ordFont));
                     T2.addCell(p);
                     document.add(T2);

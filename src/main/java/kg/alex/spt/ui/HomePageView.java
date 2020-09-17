@@ -181,7 +181,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label accountentLabCpt = new Label();
         accountentLabCpt.setContentMode(ContentMode.HTML);
         accountentLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
-        accountentLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.Accountent) + ":</b> ");
+        accountentLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.Accountant) + ":</b> ");
         layout.addComponent(accountentLabCpt);
 
         Label accountentLab = new Label();

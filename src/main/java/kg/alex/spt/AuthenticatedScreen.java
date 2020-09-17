@@ -321,6 +321,18 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (currentUser.isPermitted(sysSettings.cnShortTermDebtsDefinitionView + ":" + sysSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.ShortTermDebtsDefinition), menuCommand);
         }
+        if (currentUser.isPermitted(sysSettings.cnShortTermDebtsView + ":" + sysSettings.prmMenu)
+                || currentUser.isPermitted(sysSettings.cnReturnableAssetsView + ":" + sysSettings.prmMenu)) {
+            if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
+                mi.addSeparator();
+            }
+            if (currentUser.isPermitted(sysSettings.cnReturnableAssetsView + ":" + sysSettings.prmMenu)) {
+                mi.addItem(myUI.getMessage(SptMessages.ReturnableAssets), menuCommand);
+            }
+            if (currentUser.isPermitted(sysSettings.cnShortTermDebtsView + ":" + sysSettings.prmMenu)) {
+                mi.addItem(myUI.getMessage(SptMessages.ShortTermDebts), menuCommand);
+            }
+        }
         if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmMenu)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
                 mi.addSeparator();
@@ -380,6 +392,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         return menubar;
 
     }
+
     private Command menuCommand = new Command() {
 
         @Override
@@ -460,6 +473,12 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Accruals))) {
                     verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
                             sysSettings.cnAccrualsView, 2, 1));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebts))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
+                            sysSettings.cnShortTermDebtsView, 4, 3));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssets))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
+                            sysSettings.cnReturnableAssetsView, 3, 4));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Payouts))) {
                     verticalPanel.setSecondComponent(new PayoutsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StocksDefinition))) {
@@ -505,51 +524,51 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
                         new ConfirmDialog.Listener() {
-                    @Override
-                    public void onClose(ConfirmDialog dialog) {
-                        if (dialog.isConfirmed()) {
-                            int currentDbYear = 0;
-                            try {
-                                scl.setYear_id((Integer) yearSelect.getValue());
-                                scl.setId(myUI.getUser().getSchool_id());
-                                DbSchool dbd = new DbSchool();
-                                dbd.connect();
-                                currentDbYear = dbd.execGetCurrentDbSchoolYear(myUI.getUser().getSchool_id());
-                                if (currentDbYear != (Integer) yearSelect.getValue()) {
-                                    st = dbd.execUpdateYear(scl);
+                            @Override
+                            public void onClose(ConfirmDialog dialog) {
+                                if (dialog.isConfirmed()) {
+                                    int currentDbYear = 0;
+                                    try {
+                                        scl.setYear_id((Integer) yearSelect.getValue());
+                                        scl.setId(myUI.getUser().getSchool_id());
+                                        DbSchool dbd = new DbSchool();
+                                        dbd.connect();
+                                        currentDbYear = dbd.execGetCurrentDbSchoolYear(myUI.getUser().getSchool_id());
+                                        if (currentDbYear != (Integer) yearSelect.getValue()) {
+                                            st = dbd.execUpdateYear(scl);
+                                        } else {
+                                            st = 1;
+                                        }
+                                        dbd.close();
+                                    } catch (Exception e) {
+                                        logger.error(e);
+                                        logger.catching(e);
+                                    }
+                                    if (st != 0) {
+                                        myUI.getUser().getCurrent_year().setId(scl.getYear_id());
+                                        myUI.getUser().getCurrent_year().setName(yearSelect
+                                                .getItemCaption(yearSelect.getValue()));
+                                        Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                                Notification.Type.HUMANIZED_MESSAGE);
+                                        if (currentDbYear != (Integer) yearSelect.getValue()) {
+                                            insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
+                                                    myUI.getUser().getId());
+                                        }
+                                        changeYear((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue());
+                                        yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
+                                        setYearSel(myUI.getUser().getCurrent_year().getId());
+                                        updatePage();
+                                    } else if (st == 0) {
+                                        Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                                Notification.Type.WARNING_MESSAGE);
+                                    }
                                 } else {
-                                    st = 1;
+                                    yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
+                                    yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+                                    yearSelect.addValueChangeListener(AuthenticatedScreen.this);
                                 }
-                                dbd.close();
-                            } catch (Exception e) {
-                                logger.error(e);
-                                logger.catching(e);
                             }
-                            if (st != 0) {
-                                myUI.getUser().getCurrent_year().setId(scl.getYear_id());
-                                myUI.getUser().getCurrent_year().setName(yearSelect
-                                        .getItemCaption(yearSelect.getValue()));
-                                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
-                                        Notification.Type.HUMANIZED_MESSAGE);
-                                if (currentDbYear != (Integer) yearSelect.getValue()) {
-                                    insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
-                                            myUI.getUser().getId());
-                                }
-                                changeYear((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue());
-                                yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
-                                setYearSel(myUI.getUser().getCurrent_year().getId());
-                                updatePage();
-                            } else if (st == 0) {
-                                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
-                                        Notification.Type.WARNING_MESSAGE);
-                            }
-                        } else {
-                            yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
-                            yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
-                            yearSelect.addValueChangeListener(AuthenticatedScreen.this);
-                        }
-                    }
-                });
+                        });
             }
         } else if (property == schoolSelect) {
             if (schoolSelect.getValue() != null) {
@@ -615,7 +634,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals(((String) myUI.getMessage(
                     SptMessages.EmployeeDefinition)).toUpperCase())
                     || header.getValue().equals(((String) myUI.getMessage(
-                            SptMessages.MyInfo)).toUpperCase())) {
+                    SptMessages.MyInfo)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI));
             } else if (header.getValue().equals(((String) myUI.getMessage(
                     SptMessages.SchoolModification)).toUpperCase())) {
@@ -665,6 +684,12 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.Accruals)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
                         sysSettings.cnAccrualsView, 2, 1));
+            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.ShortTermDebts)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
+                        sysSettings.cnShortTermDebtsView, 4, 3));
+            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.ReturnableAssets)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
+                        sysSettings.cnReturnableAssetsView, 3, 4));
             } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.Payouts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new PayoutsView(myUI));
             } else if (header.getValue().equals(((String) myUI.getMessage(

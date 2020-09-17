@@ -355,7 +355,7 @@ public class AccountingDateReport implements Button.ClickListener,
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
 
                                     Cell cell = row.createCell(1);
-                                    cell.setCellValue(myUI.getMessage(SptMessages.Accountent));
+                                    cell.setCellValue(myUI.getMessage(SptMessages.Accountant));
                                     cell.setCellStyle(style);
                                     cell = row.createCell(5);
                                     cell.setCellValue(myUI.getMessage(SptMessages.Director));

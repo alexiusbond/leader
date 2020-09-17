@@ -36,16 +36,9 @@ public class ExistsValidator implements Validator {
 
     private boolean isValid(Object value) {
         Iterator iter = container.getItemIds().iterator();
-        System.out.println("____________");
         while (iter.hasNext()) {
             Object next = iter.next();
-            System.out.println((int) value);
-            System.out.println((int) ((ComboBoxMax) container.getItem(next).getItemProperty(
-                    myUi.getMessage(SptMessages.Category)).getValue()).getValue());
-            System.out.println("Not same " + (comboBox != container.getItem(next).getItemProperty(myUi.getMessage(SptMessages.Category)).getValue()));
-            System.out.println("The exists " + ((int) ((ComboBoxMax) container.getItem(next).getItemProperty(
-                    myUi.getMessage(SptMessages.Category)).getValue()).getValue() == (int) value));
-            if (comboBox != container.getItem(next).getItemProperty(myUi.getMessage(SptMessages.Category)).getValue()
+                        if (comboBox != container.getItem(next).getItemProperty(myUi.getMessage(SptMessages.Category)).getValue()
                     && (int) ((ComboBoxMax) container.getItem(next).getItemProperty(
                             myUi.getMessage(SptMessages.Category)).getValue()).getValue() == (int) value) {
                 return false;
