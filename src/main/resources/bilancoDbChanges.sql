@@ -33,8 +33,8 @@ INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('admin'
 
 DROP VIEW view_accurals;
 CREATE
-    ALGORITHM = UNDEFINED
-    DEFINER = root`@`localhost
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
     SQL SECURITY DEFINER
 VIEW spt.view_accurals AS
     SELECT

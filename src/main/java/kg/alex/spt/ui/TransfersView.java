@@ -77,10 +77,15 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         this.viewName = viewName;
         this.acc_category_id = acc_category_id;
         this.acc_invoice_type_id = acc_invoice_type_id;
-
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Confirmation), myUI.getMessage(SptMessages.InvoiceNumber),
-                myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Note)};
+        if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
+            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Confirmation), myUI.getMessage(SptMessages.InvoiceNumber),
+                    myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Note)};
+        } else {
+            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.InvoiceNumber),
+                    myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Note)};
+        }
 
         rightLay = new GridLayout(3, 2);
         rightLay.setSpacing(true);
@@ -525,15 +530,16 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             dbCon.connect();
             item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
             dbCon.close();
-
-            CheckBox cb = new CheckBox();
-            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
-            if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
-                cb.setEnabled(false);
-            } else {
-                cb.addValueChangeListener(this);
+            if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
+                CheckBox cb = new CheckBox();
+                cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+                if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
+                    cb.setEnabled(false);
+                } else {
+                    cb.addValueChangeListener(this);
+                }
+                item.getItemProperty(myUI.getMessage(SptMessages.Confirmation)).setValue(cb);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Confirmation)).setValue(cb);
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

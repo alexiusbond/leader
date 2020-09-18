@@ -8,15 +8,8 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.themes.ValoTheme;
-import kg.alex.spt.AuthenticatedScreen;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Invoice;
@@ -25,6 +18,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 public class DbInvoice extends BaseDb {
 
@@ -59,18 +57,20 @@ public class DbInvoice extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
-            CheckBox cb = new CheckBox();
-            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
-            cb.setData(result.getInt("inv.id"));
-            if (result.getInt("inv.is_confirmed") == 1) {
-                cb.setValue(true);
+            if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
+                CheckBox cb = new CheckBox();
+                cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+                cb.setData(result.getInt("inv.id"));
+                if (result.getInt("inv.is_confirmed") == 1) {
+                    cb.setValue(true);
+                }
+                if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
+                    cb.setEnabled(false);
+                } else {
+                    cb.addValueChangeListener(listener);
+                }
+                item.getItemProperty(myUi.getMessage(SptMessages.Confirmation)).setValue(cb);
             }
-            if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
-                cb.setEnabled(false);
-            } else {
-                cb.addValueChangeListener(listener);
-            }
-            item.getItemProperty(myUi.getMessage(SptMessages.Confirmation)).setValue(cb);
         }
         return container;
     }
