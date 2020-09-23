@@ -336,8 +336,8 @@ public class AccountingMonthReport implements Button.ClickListener,
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
                                                 + " - " + myUI.getMessage(SptMessages.Total),
                                                 Table.Align.RIGHT);
-                                        SchoolAccounting scAcc = dbTr.exec_get_ttls((Integer) nextSchool, new java.sql.Date(current.getTime().getTime()),
-                                                new java.sql.Date(tillDate.getTime().getTime()), sysSettings.convertCollectionToStr(catIds));
+                                        SchoolAccounting scAcc = dbTr.exec_get_ttls((Integer) nextSchool, current.getTime(),
+                                                tillDate.getTime(), sysSettings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
                                                 + sysSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
@@ -348,8 +348,8 @@ public class AccountingMonthReport implements Button.ClickListener,
                                     }
                                 }
                                 if(!currentUser.hasRole("admin")){
-                                    SchoolAccounting scAcc = dbTr.exec_get_ttls(myUI.getUser().getSchool_id(), new java.sql.Date(current.getTime().getTime()),
-                                            new java.sql.Date(tillDate.getTime().getTime()), sysSettings.convertCollectionToStr(catIds));
+                                    SchoolAccounting scAcc = dbTr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
+                                           tillDate.getTime(), sysSettings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
                                             sysSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
                                             + sysSettings.df.format(prev_date.getTime()) + ") - " + sysSettings.dFormat.format(scAcc.getPrevious_balance())

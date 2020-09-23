@@ -418,7 +418,7 @@ public class ContractLisePdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.1. Бул келишимдин 1.1. пунктуна ылайык, Келишимдин 3.1.1.-3.1.4. пункттарында каралган мөөнөттөрдө, өз убагында окуу акыларын төлөө.", ordFont));
+                    paragraph.add(new Phrase("2.3.1. Бул келишимдин 1.1. пунктуна ылайык, Келишимдин 3.1.1.-3.1.3. пункттарында каралган мөөнөттөрдө, өз убагында окуу акыларын төлөө.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();

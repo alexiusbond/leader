@@ -1015,6 +1015,7 @@ public class DbStudContract extends BaseDb {
     public IndexedContainer execSQL_DebtsByClass(MyVaadinUI myUI, Date from,
             Date till, int year_id, String class_ids, String edu_statuses_ids,
             DebtReport dr) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT st.id, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
                 + "st.name, st.surname, ip_temp.amount AS inst_plan, sp_temp.amount AS paid "
                 + "FROM student AS st LEFT JOIN "
@@ -1048,11 +1049,11 @@ public class DbStudContract extends BaseDb {
                 + "and st.entering_year_id <= ? "
                 + "ORDER BY cnu.id, cna.id, st.name , st.surname;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setDate(1, new java.sql.Date(from.getTime()));
-        stat.setDate(2, new java.sql.Date(till.getTime()));
+        stat.setString(1, sysSettings.mysql_df.format(from));
+        stat.setString(2, sysSettings.mysql_df.format(till));
         stat.setInt(3, year_id);
-        stat.setDate(4, new java.sql.Date(from.getTime()));
-        stat.setDate(5, new java.sql.Date(till.getTime()));
+        stat.setString(4, sysSettings.mysql_df.format(from));
+        stat.setString(5, sysSettings.mysql_df.format(till));
         stat.setInt(6, year_id);
         stat.setInt(7, year_id);
         stat.setInt(8, year_id);

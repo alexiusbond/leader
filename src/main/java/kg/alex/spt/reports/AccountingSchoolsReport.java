@@ -162,7 +162,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
                     dbat.exec_schools_accounting(myUI, sysSettings.convertCollectionToStr((Set<?>) schoolTable.getValue()),
-                            new java.sql.Date(fromDateDF.getValue().getTime()), new java.sql.Date(tillDateDF.getValue().getTime()), this);
+                            fromDateDF.getValue(), tillDateDF.getValue(), this);
 
                     Calendar c = Calendar.getInstance();
                     c.setTime(fromDateDF.getValue());

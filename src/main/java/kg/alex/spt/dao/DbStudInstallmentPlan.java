@@ -58,6 +58,7 @@ public class DbStudInstallmentPlan extends BaseDb {
     }
 
     public int exec_insert(StudInstallmentPlan ip) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO student_installement_plan (student_id, year_id, "
                 + "amount, date_of_payment, is_visible) "
                 + "VALUES(?,?,?,?,1);";
@@ -65,7 +66,7 @@ public class DbStudInstallmentPlan extends BaseDb {
         stat.setInt(1, ip.getStudent_id());
         stat.setInt(2, ip.getYear_id());
         stat.setDouble(3, ip.getAmount());
-        stat.setDate(4, new java.sql.Date(ip.getDate_of_payment().getTime()));
+        stat.setString(4, sysSettings.mysql_df.format(ip.getDate_of_payment()));
         return stat.executeUpdate();
     }
 
@@ -141,8 +142,8 @@ public class DbStudInstallmentPlan extends BaseDb {
                 + "ORDER BY cnu.id, cna.id, st.name, st.surname, ip.is_visible, ip.date_of_payment;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
-        stat.setDate(2, new java.sql.Date(from.getTime()));
-        stat.setDate(3, new java.sql.Date(till.getTime()));
+        stat.setString(2, sysSettings.mysql_df.format(from));
+        stat.setString(3, sysSettings.mysql_df.format(till));
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();

@@ -38,12 +38,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccTransactions;
@@ -223,8 +220,8 @@ public class AccountingGeneralReport implements Button.ClickListener,
                     DbAccTransactions dbacc = new DbAccTransactions();
                     dbacc.connect();
                     schoolAcc = dbacc.exec_get_ttls((Integer) schoolsTable.getValue(),
-                            new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()).getTime()),
-                            new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()).getTime()), null);
+                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()),
+                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()), null);
                     dbacc.close();
                     setSchoolAccounting(schoolAcc);
                     DbStudContract dbsc = new DbStudContract();

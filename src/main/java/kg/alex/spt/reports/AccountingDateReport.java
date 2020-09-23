@@ -297,8 +297,8 @@ public class AccountingDateReport implements Button.ClickListener,
                     try {
                         DbAccTransactions dbtr = new DbAccTransactions();
                         dbtr.connect();
-                        schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), new java.sql.Date(fromDateDF.getValue().getTime()),
-                                new java.sql.Date(tillDateDF.getValue().getTime()), sysSettings.convertCollectionToStr(catIds));
+                        schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), fromDateDF.getValue(),
+                                tillDateDF.getValue(), sysSettings.convertCollectionToStr(catIds));
                         incomeTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
                         expenseTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
                         ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": " + sysSettings.round(

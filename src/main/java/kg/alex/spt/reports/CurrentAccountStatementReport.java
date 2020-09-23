@@ -170,7 +170,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
                     dbat.exec_current_account_state(myUI, (Integer) employeeCategoriesTable.getValue(), fromDateDF.getValue(),
-                            tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue());
+                            tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool_id());
 
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Accrual), Table.Align.RIGHT);

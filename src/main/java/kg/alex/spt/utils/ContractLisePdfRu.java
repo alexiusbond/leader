@@ -500,7 +500,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.1. Своевременно оплачивать родительские взносы, согласно п. 1.1. настоящего Договора, в сроки, оговоренные в пункте 3.1.1. - 3.1.4. настоящего Договора.", ordFont));
+                    paragraph.add(new Phrase("2.3.1. Своевременно оплачивать родительские взносы, согласно п. 1.1. настоящего Договора, в сроки, оговоренные в пункте 3.1.1. - 3.1.3. настоящего Договора.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
