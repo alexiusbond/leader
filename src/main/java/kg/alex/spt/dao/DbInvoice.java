@@ -75,6 +75,36 @@ public class DbInvoice extends BaseDb {
         return container;
     }
 
+
+    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
+        Subject currentUser = SecurityUtils.getSubject();
+        String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
+                + "sum(if(tr.acc_currency_id != 2, tr.amount/tr.currency_rate, tr.amount)) as amount, inv.note "
+                + "FROM acc_invoice AS inv "
+                + "LEFT JOIN acc_transactions AS tr ON tr.acc_invoice_id = inv.id "
+                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? group by inv.id ORDER BY inv.invoice_number DESC;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, scl_id);
+        stat.setInt(2, invoice_type_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("inv.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
+
+        }
+        return container;
+    }
+
     public String execSQL_invoice_number(int id) throws SQLException {
         String sql = "SELECT LPAD(invoice_number, 7, 0) as inv_num FROM acc_invoice WHERE id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);

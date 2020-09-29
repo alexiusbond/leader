@@ -177,7 +177,9 @@ public class DbAccTransactions extends BaseDb {
                     logger.error(e);
                     logger.catching(e);
                 }
+                cb.removeValueChangeListener(dw);
                 cb.setValue(result.getInt("t.from_to_employee_id"));
+                cb.addValueChangeListener(dw);
                 cb.setNullSelectionAllowed(true);
                 cb.setEnabled(!isDisabled);
                 item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(cb);
@@ -207,13 +209,14 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_insert(AccTransaction t, Connection conn) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO acc_transactions "
                 + "(date_time, amount, acc_currency_id, currency_rate, note, "
                 + "acc_category_id, employee_id, school_id, modification_date, dp_invoice_id, student_payments_id, "
                 + "from_to_employee_id, acc_invoice_id) "
                 + "VALUES(?,?,?,?,?,?,?,?,NOW(),?,?,?,?);";
         PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
+        stat.setString(1, sysSettings.mysql_dtsf.format(t.getDate()));
         stat.setDouble(2, t.getAmount());
         if (t.getCurrency_id() != 0) {
             stat.setInt(3, t.getCurrency_id());
@@ -254,11 +257,12 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_update(AccTransaction t) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
         String sql = "Update acc_transactions set date_time=?, "
                 + "amount=?, acc_currency_id=?, currency_rate=?, note=?, acc_category_id=?, "
                 + "employee_id=?, school_id=?, modification_date=NOW(), from_to_employee_id = ? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
+        stat.setString(1, sysSettings.mysql_dtsf.format(t.getDate()));
         stat.setDouble(2, t.getAmount());
         if (t.getCurrency_id() != 0) {
             stat.setInt(3, t.getCurrency_id());

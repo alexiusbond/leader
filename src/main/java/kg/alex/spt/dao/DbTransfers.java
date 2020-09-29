@@ -55,7 +55,7 @@ public class DbTransfers extends BaseDb {
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
-                cb.setContainerDataSource(dbCon.exec_for_select(myUi, v.getAcc_category_id(), school_id, result.getInt("t.acc_category_id")));
+                cb.setContainerDataSource(dbCon.exec_for_select(myUi, v.getAcc_category_type_id(), school_id, result.getInt("t.acc_category_id")));
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);

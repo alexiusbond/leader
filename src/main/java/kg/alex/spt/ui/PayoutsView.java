@@ -230,7 +230,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 2, sysSettings.cnPayoutsView, null));
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 2));
             dbCon.close();
             if (invoicesTable.getContainerDataSource().size() != 0) {
                 invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
@@ -914,7 +914,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     Iterator iter = payoutsTable.getItemIds().iterator();
                     while (iter.hasNext()) {
                         Object next = iter.next();
-                        ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Currency)).getValue();
+                        ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
                         AccTransaction tr = new AccTransaction();
                         tr.setAcc_invoice_id(id);
                         tr.setDate(inv.getCreation_date());

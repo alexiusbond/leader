@@ -7,12 +7,13 @@ package kg.alex.spt.utils;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
+
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.i18n.SptMessages;
 
 /**
- *
  * @author alex
  */
 public class ExistsValidator implements Validator {
@@ -38,9 +39,11 @@ public class ExistsValidator implements Validator {
         Iterator iter = container.getItemIds().iterator();
         while (iter.hasNext()) {
             Object next = iter.next();
-                        if (comboBox != container.getItem(next).getItemProperty(myUi.getMessage(SptMessages.Category)).getValue()
+            if (((ComboBoxMax) container.getItem(next).getItemProperty(
+                    myUi.getMessage(SptMessages.Category)).getValue()).getValue() != null &&
+                    comboBox != container.getItem(next).getItemProperty(myUi.getMessage(SptMessages.Category)).getValue()
                     && (int) ((ComboBoxMax) container.getItem(next).getItemProperty(
-                            myUi.getMessage(SptMessages.Category)).getValue()).getValue() == (int) value) {
+                    myUi.getMessage(SptMessages.Category)).getValue()).getValue() == (int) value) {
                 return false;
             }
         }

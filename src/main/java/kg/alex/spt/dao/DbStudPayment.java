@@ -112,6 +112,7 @@ public class DbStudPayment extends BaseDb {
     }
 
     public int exec_update(StudPayment sp) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
         String sql = "Update student_payments set year_id=?, "
                 + "amount=?, payment_type_id=?, payment_category_id=?, employee_id=?, "
                 + "who_paid=?, note=?, modification_date=?, dollar_rate=? WHERE id=?;";
@@ -123,13 +124,14 @@ public class DbStudPayment extends BaseDb {
         stat.setInt(5, sp.getEmplooyee_id());
         stat.setString(6, sp.getWho_paid());
         stat.setString(7, sp.getNote());
-        stat.setTimestamp(8, new java.sql.Timestamp(sp.getModification_date().getTime()));
+        stat.setString(8, sysSettings.mysql_dtsf.format(sp.getModification_date()));
         stat.setDouble(9, sp.getRate());
         stat.setInt(10, sp.getId());
         return stat.executeUpdate();
     }
 
     public int exec_insert(StudPayment sp, int order_num) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO student_payments (student_id, year_id, "
                 + "amount, payment_type_id, payment_category_id, employee_id, "
                 + "who_paid, order_number, note, modification_date, dollar_rate) "
@@ -144,7 +146,7 @@ public class DbStudPayment extends BaseDb {
         stat.setString(7, sp.getWho_paid());
         stat.setInt(8, order_num);
         stat.setString(9, sp.getNote());
-        stat.setTimestamp(10, new java.sql.Timestamp(sp.getModification_date().getTime()));
+        stat.setString(10, sysSettings.mysql_dtsf.format(sp.getModification_date()));
         stat.setDouble(11, sp.getRate());
         stat.executeUpdate();
         return getLastInsertedId();
@@ -208,8 +210,7 @@ public class DbStudPayment extends BaseDb {
     }
 
     public IndexedContainer execSQL_Payment(MyVaadinUI myUI, int stud_id, int year_id,
-            InstplanPaymentsReport ip)
-            throws SQLException {
+            InstplanPaymentsReport ip)            throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT sp.id, sp.amount, sp.who_paid, sp.modification_date, "
                 + "pc.id, pc.name FROM student_payments as sp "

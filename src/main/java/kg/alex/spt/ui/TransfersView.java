@@ -69,13 +69,13 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private int invID;
     private ExcelExport excelReport;
     private String caption, viewName;
-    private int acc_category_id, acc_invoice_type_id;
+    private int acc_category_type_id, acc_invoice_type_id;
 
-    public TransfersView(MyVaadinUI myUI, String caption, String viewName, int acc_category_id, int acc_invoice_type_id) {
+    public TransfersView(MyVaadinUI myUI, String caption, String viewName, int acc_category_type_id, int acc_invoice_type_id) {
         this.myUI = myUI;
         this.caption = caption;
         this.viewName = viewName;
-        this.acc_category_id = acc_category_id;
+        this.acc_category_type_id = acc_category_type_id;
         this.acc_invoice_type_id = acc_invoice_type_id;
         if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
             NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Confirmation), myUI.getMessage(SptMessages.InvoiceNumber),
@@ -761,7 +761,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            cb.setContainerDataSource(dbCon.exec_for_select(myUI, getAcc_category_id(), myUI.getUser().getSchool_id(), 0));
+            cb.setContainerDataSource(dbCon.exec_for_select(myUI, getAcc_category_type_id(), myUI.getUser().getSchool_id(), 0));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -941,13 +941,13 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     public Component getNewObj() {
-        return new TransfersView(myUI, caption, viewName, getAcc_category_id(), acc_invoice_type_id);
+        return new TransfersView(myUI, caption, viewName, getAcc_category_type_id(), acc_invoice_type_id);
     }
 
     /**
      * @return the acc_category_id
      */
-    public int getAcc_category_id() {
-        return acc_category_id;
+    public int getAcc_category_type_id() {
+        return acc_category_type_id;
     }
 }
