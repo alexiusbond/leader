@@ -2,16 +2,17 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Year;
 import kg.alex.spt.i18n.SptMessages;
 
 /**
- *
  * @author eldiyar
  */
 public class DbYear extends BaseDb {
@@ -65,7 +66,6 @@ public class DbYear extends BaseDb {
 
     public int exec_insert(Year y) throws SQLException {
         int id = getMaxId();
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT IGNORE INTO year (id, name, period,"
                 + "period_kg, start_date, end_date) "
                 + "VALUES(?,?,?,?,?,?);";
@@ -74,8 +74,8 @@ public class DbYear extends BaseDb {
         stat.setString(2, y.getName());
         stat.setString(3, y.getPeriod());
         stat.setString(4, y.getPeriod_kg());
-        stat.setString(5, sysSettings.mysql_df.format(y.getStart_date()));
-        stat.setString(6, sysSettings.mysql_df.format(y.getEnd_date()));
+        stat.setDate(5, new java.sql.Date(y.getStart_date().getTime()));
+        stat.setDate(6, new java.sql.Date(y.getEnd_date().getTime()));
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -86,7 +86,6 @@ public class DbYear extends BaseDb {
     }
 
     public int exec_update(Year y) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "UPDATE year SET name=?, period=?, period_kg=?,"
                 + "start_date=?, end_date=?  "
                 + "WHERE id=?";
@@ -94,8 +93,8 @@ public class DbYear extends BaseDb {
         stat.setString(1, y.getName());
         stat.setString(2, y.getPeriod());
         stat.setString(3, y.getPeriod_kg());
-        stat.setString(4, sysSettings.mysql_df.format(y.getStart_date()));
-        stat.setString(5, sysSettings.mysql_df.format(y.getEnd_date()));
+        stat.setDate(4, new java.sql.Date(y.getStart_date().getTime()));
+        stat.setDate(5, new java.sql.Date(y.getEnd_date().getTime()));
         stat.setInt(6, y.getId());
         int status = stat.executeUpdate();
         return status;

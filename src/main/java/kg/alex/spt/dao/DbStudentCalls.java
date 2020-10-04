@@ -56,7 +56,7 @@ public class DbStudentCalls extends BaseDb {
             item.getItemProperty(sysSettings.button).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    sysSettings.mysql_df.format(result.getDate("sc.modification_date")));
+                    sysSettings.df.format(result.getDate("sc.modification_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
@@ -108,8 +108,8 @@ public class DbStudentCalls extends BaseDb {
                 + "ORDER BY cnu.id, cna.id, st.name, st.surname, sc.modification_date;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
-        stat.setString(2, sysSettings.mysql_df.format(from));
-        stat.setString(3, sysSettings.mysql_df.format(till));
+        stat.setDate(2, new java.sql.Date(from.getTime()));
+        stat.setDate(3, new java.sql.Date(till.getTime()));
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();

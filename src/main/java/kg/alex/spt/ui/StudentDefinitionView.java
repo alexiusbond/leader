@@ -3019,7 +3019,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 callsTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false));
-        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(sysSettings.mysql_df.format(new Date()));
+        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(sysSettings.df.format(new Date()));
         item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(myUI.getUser().getFullname());
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                 createTextfieldNote(null, myUI.getMessage(SptMessages.Note), id));
@@ -3222,7 +3222,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Boolean validateContractsTab(ComponentContainer layout) {
         if (tabs.getSelectedTab() == tabs.getTab(layout).getComponent()) {
             Iterator<Component> it = layout.iterator();
-            ArrayList<String> dates = new ArrayList<String>();
+            ArrayList<String> dates = new ArrayList<>();
             ArrayList<Integer> discount_ids = new ArrayList<Integer>();
             while (it.hasNext()) {
                 Component next = it.next();
@@ -3257,13 +3257,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         }
                         if (((DateField) installmentTable.getItem(obj).getItemProperty(
                                 myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
-                            if (dates.contains(sysSettings.mysql_df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
+                            if (dates.contains(sysSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
                                     myUI.getMessage(SptMessages.Date)).getValue()).getValue()))) {
                                 Notification.show(myUI.getMessage(SptMessages.NotifSameDatesAreNotAllowed),
                                         Notification.Type.WARNING_MESSAGE);
                                 return false;
                             } else {
-                                dates.add(sysSettings.mysql_df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
+                                dates.add(sysSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
                                         myUI.getMessage(SptMessages.Date)).getValue()).getValue()));
                             }
                         }

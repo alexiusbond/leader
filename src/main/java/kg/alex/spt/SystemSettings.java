@@ -41,10 +41,7 @@ public class SystemSettings implements Serializable {
     public final String dateTimeMinPattern = "dd-MM-yyyy HH:mm";
     public final SimpleDateFormat dtsf = new SimpleDateFormat(dateTimeSecPattern);
     public final SimpleDateFormat dtmf = new SimpleDateFormat(dateTimeMinPattern);
-    public final SimpleDateFormat mysql_df = new SimpleDateFormat("yyyy-MM-dd");
-    public final SimpleDateFormat ydf = new SimpleDateFormat("yyyy");
     public final SimpleDateFormat ymdf = new SimpleDateFormat(yearMonthPattern);
-    public final SimpleDateFormat mysql_dtsf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public final String id = "id";
     public final String count = "count";

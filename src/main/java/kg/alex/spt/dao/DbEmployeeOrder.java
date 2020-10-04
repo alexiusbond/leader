@@ -50,7 +50,7 @@ public class DbEmployeeOrder extends BaseDb {
             stat.setNull(5, Types.INTEGER);
         }
         if (eo.getTo_date() != null) {
-            stat.setString(6, sysSettings.mysql_df.format(eo.getTo_date()));
+            stat.setDate(6, new java.sql.Date(eo.getTo_date().getTime()));
         } else {
             stat.setNull(6, Types.DATE);
         }
@@ -60,7 +60,7 @@ public class DbEmployeeOrder extends BaseDb {
             stat.setNull(7, Types.VARCHAR);
         }
         stat.setInt(8, eo.getM_employee_id());
-        stat.setString(9, sysSettings.mysql_df.format(eo.getFrom_date()));
+        stat.setDate(9, new java.sql.Date(eo.getFrom_date().getTime()));
         if (eo.getFrom_to_school_id() != 0) {
             stat.setInt(10, eo.getFrom_to_school_id());
         } else {
@@ -93,9 +93,9 @@ public class DbEmployeeOrder extends BaseDb {
         } else {
             stat.setNull(++counter, Types.INTEGER);
         }
-        stat.setString(++counter, sysSettings.mysql_df.format(eo.getFrom_date()));
+        stat.setDate(++counter, new java.sql.Date(eo.getFrom_date().getTime()));
         if (eo.getTo_date() != null) {
-            stat.setString(++counter, sysSettings.mysql_df.format(eo.getTo_date()));
+            stat.setDate(++counter, new java.sql.Date(eo.getTo_date().getTime()));
         } else {
             stat.setNull(++counter, Types.VARCHAR);
         }
@@ -123,7 +123,7 @@ public class DbEmployeeOrder extends BaseDb {
                 + "WHERE o.working_status_id IS NOT NULL and eo.id!=? and eo.to_date IS NULL and eo.employee_id=? and eo.school_id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eo.getEffected_by_id());
-        stat.setString(2, sysSettings.mysql_df.format(eo.getFrom_date()));
+        stat.setDate(2, new java.sql.Date(eo.getFrom_date().getTime()));
         stat.setInt(3, eo.getEffected_by_id());
         stat.setInt(4, eo.getEmployee_id());
         stat.setInt(5, eo.getSchool_id());
@@ -134,7 +134,7 @@ public class DbEmployeeOrder extends BaseDb {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "update hr_employee_order as eo set eo.to_date=? WHERE eo.effected_by_id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(to_date));
+        stat.setDate(1, new java.sql.Date(to_date.getTime()));
         stat.setInt(2, effected_by_id);
         return stat.executeUpdate();
     }

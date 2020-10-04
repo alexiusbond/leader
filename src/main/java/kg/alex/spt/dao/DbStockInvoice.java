@@ -92,13 +92,12 @@ public class DbStockInvoice extends BaseDb {
     }
 
     public int exec_insert(StockInvoice inv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT IGNORE INTO dp_invoice (invoice_number,creation_date,"
                 + "note,to_stock_id,from_stock_id,from_employee_id,to_employee_id,service_type_id,school_id,employee_id,"
                 + "modification_date,acc_category_id) VALUES(?,?,?,?,?,?,?,?,?,?,NOW(),?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inv.getInvoice_number());
-        stat.setString(2, sysSettings.mysql_dtsf.format(inv.getCreation_date()));
+        stat.setTimestamp(2, new java.sql.Timestamp(inv.getCreation_date().getTime()));
         if (inv.getNote() != null) {
             stat.setString(3, inv.getNote());
         } else {
@@ -127,12 +126,11 @@ public class DbStockInvoice extends BaseDb {
     }
 
     public int exec_update(StockInvoice inv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "UPDATE dp_invoice SET creation_date = ?,"
                 + "note = ?,to_stock_id = ?,from_stock_id = ?,from_employee_id = ?,to_employee_id = ?,service_type_id = ?,employee_id = ?, "
                 + "acc_category_id = ? WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_dtsf.format(inv.getCreation_date()));
+        stat.setTimestamp(1, new java.sql.Timestamp(inv.getCreation_date().getTime()));
         if (inv.getNote() != null) {
             stat.setString(2, inv.getNote());
         } else {

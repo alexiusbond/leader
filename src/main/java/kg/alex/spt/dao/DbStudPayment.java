@@ -13,7 +13,11 @@ import com.vaadin.ui.TextField;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudPayment;
@@ -95,7 +99,8 @@ public class DbStudPayment extends BaseDb {
             tf = dw.createTextfield(result.getString("sp.who_paid"), myUI.getMessage(SptMessages.WhoPaid), id, false, false);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(tf);
-            DateField df = dw.createDateField(result.getTimestamp("sp.modification_date"), myUI.getMessage(SptMessages.Date), id, false, false);
+            DateField df = dw.createDateField(result.getTimestamp("sp.modification_date"),
+                    myUI.getMessage(SptMessages.Date), id, false, false);
             df.setId(myUI.getMessage(SptMessages.Payments));
             df.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
@@ -124,14 +129,13 @@ public class DbStudPayment extends BaseDb {
         stat.setInt(5, sp.getEmplooyee_id());
         stat.setString(6, sp.getWho_paid());
         stat.setString(7, sp.getNote());
-        stat.setString(8, sysSettings.mysql_dtsf.format(sp.getModification_date()));
+        stat.setTimestamp(8, new java.sql.Timestamp(sp.getModification_date().getTime()));
         stat.setDouble(9, sp.getRate());
         stat.setInt(10, sp.getId());
         return stat.executeUpdate();
     }
 
     public int exec_insert(StudPayment sp, int order_num) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO student_payments (student_id, year_id, "
                 + "amount, payment_type_id, payment_category_id, employee_id, "
                 + "who_paid, order_number, note, modification_date, dollar_rate) "
@@ -146,8 +150,9 @@ public class DbStudPayment extends BaseDb {
         stat.setString(7, sp.getWho_paid());
         stat.setInt(8, order_num);
         stat.setString(9, sp.getNote());
-        stat.setString(10, sysSettings.mysql_dtsf.format(sp.getModification_date()));
+        stat.setTimestamp(10, new java.sql.Timestamp(sp.getModification_date().getTime()));
         stat.setDouble(11, sp.getRate());
+        System.out.println(stat.toString());
         stat.executeUpdate();
         return getLastInsertedId();
     }
@@ -274,8 +279,8 @@ public class DbStudPayment extends BaseDb {
                 + "ORDER BY cnu.id, cna.id, st.name, st.surname, sp.modification_date;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
-        stat.setString(2, sysSettings.mysql_df.format(from));
-        stat.setString(3, sysSettings.mysql_df.format(till));
+        stat.setDate(2, new java.sql.Date(from.getTime()));
+        stat.setDate(3, new java.sql.Date(till.getTime()));
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();

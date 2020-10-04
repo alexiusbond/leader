@@ -8,6 +8,8 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,14 +30,13 @@ public class DbEmployeeCertificate extends BaseDb {
     }
 
     public int exec_insert(EmployeeCertificate ec) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO hr_employee_certificate (employee_id,name,given_by,date_of_issue) "
                 + "VALUES(?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         stat.setString(2, ec.getName());
         stat.setString(3, ec.getGiven_by());
-        stat.setString(4, sysSettings.mysql_df.format(ec.getDate_of_issue()));
+        stat.setDate(4, new Date(ec.getDate_of_issue().getTime()));
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -45,13 +46,12 @@ public class DbEmployeeCertificate extends BaseDb {
     }
 
     public int exec_update(EmployeeCertificate ec) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "update hr_employee_certificate set "
                 + "name=?, given_by=?, date_of_issue=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ec.getName());
         stat.setString(2, ec.getGiven_by());
-        stat.setString(3, sysSettings.mysql_df.format(ec.getDate_of_issue()));
+        stat.setDate(3, new Date(ec.getDate_of_issue().getTime()));
         stat.setInt(4, ec.getId());
         return stat.executeUpdate();
     }

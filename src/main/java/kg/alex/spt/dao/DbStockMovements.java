@@ -314,13 +314,13 @@ public class DbStockMovements extends BaseDb {
     }
 
     public double execSQL_remain(int acc_category_id, int measurement_id, int stock_id, Date date) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         String sql = "SELECT SUM(mv.remain) AS remain FROM dp_stock_movements mv "
                 + "LEFT JOIN dp_invoice inv ON inv.id = mv.invoice_id "
                 + "WHERE inv.service_type_id = 1 AND DATE(inv.creation_date) <= ? AND mv.acc_category_id = ? "
                 + "AND mv.dp_measurement_id = ? AND inv.to_stock_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(date));
+        stat.setDate(1, new java.sql.Date(date.getTime()));
         stat.setInt(2, acc_category_id);
         stat.setDouble(3, measurement_id);
         stat.setInt(4, stock_id);
@@ -332,13 +332,13 @@ public class DbStockMovements extends BaseDb {
     }
 
     public boolean execSQL_allowNewInsert(int acc_category_id, int measurement_id, int stock_id, Date date) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         String sql = "SELECT if(mv.remain<mv.amount, 0, 1) AS isOk FROM dp_stock_movements mv "
                 + "LEFT JOIN dp_invoice inv ON inv.id = mv.invoice_id "
                 + "WHERE inv.service_type_id = 1 AND DATE(inv.creation_date) > ? AND mv.acc_category_id = ? "
                 + "AND mv.dp_measurement_id = ? AND inv.to_stock_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(date));
+        stat.setDate(1, new java.sql.Date(date.getTime()));
         stat.setInt(2, acc_category_id);
         stat.setDouble(3, measurement_id);
         stat.setInt(4, stock_id);

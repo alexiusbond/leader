@@ -78,7 +78,6 @@ public class DbInvoice extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
                 + "sum(if(tr.acc_currency_id != 2, tr.amount/tr.currency_rate, tr.amount)) as amount, inv.note "
                 + "FROM acc_invoice AS inv "
@@ -129,13 +128,12 @@ public class DbInvoice extends BaseDb {
     }
 
     public int exec_insert(Invoice inv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT IGNORE INTO acc_invoice (invoice_number,creation_date,note,school_id,employee_id,"
                 + "modification_date,acc_invoice_type_id) "
                 + "VALUES(?,?,?,?,?,NOW(),?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inv.getInvoice_number());
-        stat.setString(2, sysSettings.mysql_dtsf.format(inv.getCreation_date()));
+        stat.setTimestamp(2, new java.sql.Timestamp(inv.getCreation_date().getTime()));
         if (inv.getNote() != null) {
             stat.setString(3, inv.getNote());
         } else {
@@ -154,11 +152,10 @@ public class DbInvoice extends BaseDb {
     }
 
     public int exec_update(Invoice inv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "UPDATE acc_invoice SET creation_date = ?,"
                 + "note = ?,employee_id = ? WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_dtsf.format(inv.getCreation_date()));
+        stat.setTimestamp(1, new java.sql.Timestamp(inv.getCreation_date().getTime()));
         if (inv.getNote() != null) {
             stat.setString(2, inv.getNote());
         } else {

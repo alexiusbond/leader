@@ -8,10 +8,9 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+
+import java.sql.*;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeChildren;
@@ -29,14 +28,13 @@ public class DbEmployeeChildren extends BaseDb {
     }
 
     public int exec_insert(EmployeeChildren ech) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO hr_employee_children (employee_id,fullname,"
                 + "date_of_birth,institution,hr_education_status_id,hr_health_status_id) "
                 + "VALUES(?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ech.getEmployee_id());
         stat.setString(2, ech.getFullname());
-        stat.setString(3, sysSettings.mysql_df.format(ech.getDate_of_birth()));
+        stat.setDate(3, new Date(ech.getDate_of_birth().getTime()));
         if (!ech.getInstitution().equals("") && ech.getInstitution() != null) {
             stat.setString(4, ech.getInstitution());
         } else {
@@ -57,12 +55,11 @@ public class DbEmployeeChildren extends BaseDb {
     }
 
     public int exec_update(EmployeeChildren ech) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "update hr_employee_children set "
                 + "fullname=?, date_of_birth=?, institution=?, hr_education_status_id=?, hr_health_status_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ech.getFullname());
-        stat.setString(2, sysSettings.mysql_df.format(ech.getDate_of_birth()));
+        stat.setDate(2, new Date(ech.getDate_of_birth().getTime()));
         if (!ech.getInstitution().equals("") && ech.getInstitution() != null) {
             stat.setString(3, ech.getInstitution());
         } else {

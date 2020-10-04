@@ -8,6 +8,8 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +30,6 @@ public class DbEmployeeSeminar extends BaseDb {
     }
 
     public int exec_insert(EmployeeSeminar es) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO hr_employee_seminar (employee_id,name,subject,note,date_of_issue) "
                 + "VALUES(?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -36,7 +37,7 @@ public class DbEmployeeSeminar extends BaseDb {
         stat.setString(2, es.getName());
         stat.setString(3, es.getSubject());
         stat.setString(4, es.getNote());
-        stat.setString(5, sysSettings.mysql_df.format(es.getDate_of_issue()));
+        stat.setDate(5, new Date(es.getDate_of_issue().getTime()));
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -46,14 +47,13 @@ public class DbEmployeeSeminar extends BaseDb {
     }
 
     public int exec_update(EmployeeSeminar es) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "update hr_employee_seminar set "
                 + "name=?, subject=?, note=?, date_of_issue=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, es.getName());
         stat.setString(2, es.getSubject());
         stat.setString(3, es.getNote());
-        stat.setString(4, sysSettings.mysql_df.format(es.getDate_of_issue()));
+        stat.setDate(4, new Date(es.getDate_of_issue().getTime()));
         stat.setInt(5, es.getId());
         return stat.executeUpdate();
     }

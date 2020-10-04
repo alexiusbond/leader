@@ -417,7 +417,6 @@ public class DbEmployee extends BaseDb {
     }
 
     public int exec_insert(Employee e) throws SQLException {
-        SystemSettings sysSetting = new SystemSettings();
         String sql = "INSERT ignore INTO employee (login, password, name, "
                 + "surname, middle_name, date_of_birth, photo, gender_id, "
                 + "hr_martial_status_id,nationality_id,employee_id,modification_date) "
@@ -432,7 +431,7 @@ public class DbEmployee extends BaseDb {
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
-        stat.setString(6, sysSetting.mysql_df.format(e.getBirth_date()));
+        stat.setDate(6, new java.sql.Date(e.getBirth_date().getTime()));
         stat.setString(7, e.getPhoto());
         stat.setInt(8, e.getGender_id());
         stat.setInt(9, e.getMartial_status_id());
@@ -448,7 +447,6 @@ public class DbEmployee extends BaseDb {
     }
 
     public int exec_update(Employee e, String pass) throws SQLException {
-        SystemSettings sysSetting = new SystemSettings();
         String sql = "UPDATE employee SET login=?, name=?, surname=?, middle_name=?, ";
         if (pass != null && !pass.equals("")) {
             sql += ("password='" + pass + "',");
@@ -464,7 +462,7 @@ public class DbEmployee extends BaseDb {
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        stat.setString(5, sysSetting.mysql_df.format(e.getBirth_date()));
+        stat.setDate(5, new java.sql.Date(e.getBirth_date().getTime()));
         stat.setInt(6, e.getNationality_id());
         stat.setInt(7, e.getGender_id());
         stat.setInt(8, e.getMartial_status_id());

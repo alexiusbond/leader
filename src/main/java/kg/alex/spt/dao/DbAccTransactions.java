@@ -133,8 +133,8 @@ public class DbAccTransactions extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, incOrOut);
         stat.setInt(2, school_id);
-        stat.setString(3, sysSettings.mysql_df.format(from));
-        stat.setString(4, sysSettings.mysql_df.format(till));
+        stat.setDate(3, new java.sql.Date(from.getTime()));
+        stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container;
 
@@ -209,14 +209,13 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_insert(AccTransaction t, Connection conn) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO acc_transactions "
                 + "(date_time, amount, acc_currency_id, currency_rate, note, "
                 + "acc_category_id, employee_id, school_id, modification_date, dp_invoice_id, student_payments_id, "
                 + "from_to_employee_id, acc_invoice_id) "
                 + "VALUES(?,?,?,?,?,?,?,?,NOW(),?,?,?,?);";
         PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_dtsf.format(t.getDate()));
+        stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
         if (t.getCurrency_id() != 0) {
             stat.setInt(3, t.getCurrency_id());
@@ -257,12 +256,11 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_update(AccTransaction t) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "Update acc_transactions set date_time=?, "
                 + "amount=?, acc_currency_id=?, currency_rate=?, note=?, acc_category_id=?, "
                 + "employee_id=?, school_id=?, modification_date=NOW(), from_to_employee_id = ? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_dtsf.format(t.getDate()));
+        stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
         if (t.getCurrency_id() != 0) {
             stat.setInt(3, t.getCurrency_id());
@@ -284,12 +282,12 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_update(AccTransaction t, String by_column_name, int by_column_value, Connection conn) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         String sql = "update acc_transactions set date_time=?, "
                 + "amount=?, acc_currency_id=?, currency_rate=?, note=?, acc_category_id=?, "
                 + "employee_id=?, modification_date=NOW() WHERE " + by_column_name + "=?;";
         PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(t.getDate()));
+        stat.setDate(1, new java.sql.Date(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
         if (t.getCurrency_id() != 0) {
             stat.setInt(3, t.getCurrency_id());
@@ -374,8 +372,8 @@ public class DbAccTransactions extends BaseDb {
                 + "AND cat.activity_status_id = 2 AND tr.school_id = ? "
                 + "GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time) ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(from.getTime()));
-        stat.setString(2, sysSettings.mysql_df.format(till.getTime()));
+        stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
+        stat.setDate(2, new java.sql.Date(till.getTime().getTime()));
         stat.setInt(3, type_id);
         stat.setInt(4, school_id);
         ResultSet result = stat.executeQuery();
@@ -460,8 +458,8 @@ public class DbAccTransactions extends BaseDb {
                 + sysSettings.convertCollectionToStr(selectedSchoolIds)
                 + ") GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(from.getTime()));
-        stat.setString(2, sysSettings.mysql_df.format(till.getTime()));
+        stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
+        stat.setDate(2, new java.sql.Date(till.getTime().getTime()));
         stat.setInt(3, type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
@@ -577,11 +575,11 @@ public class DbAccTransactions extends BaseDb {
             sql += "and tr.acc_category_id in (" + cat_ids + ")";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(from));
-        stat.setString(2, sysSettings.mysql_df.format(till));
-        stat.setString(3, sysSettings.mysql_df.format(from));
-        stat.setString(4, sysSettings.mysql_df.format(till));
-        stat.setString(5, sysSettings.mysql_df.format(from));
+        stat.setDate(1, new java.sql.Date(from.getTime()));
+        stat.setDate(2, new java.sql.Date(till.getTime()));
+        stat.setDate(3, new java.sql.Date(from.getTime()));
+        stat.setDate(4, new java.sql.Date(till.getTime()));
+        stat.setDate(5, new java.sql.Date(from.getTime()));
         stat.setInt(6, scl_id);
         ResultSet result = stat.executeQuery();
         SchoolAccounting acc = new SchoolAccounting();
@@ -617,11 +615,11 @@ public class DbAccTransactions extends BaseDb {
                 + "WHERE sch.id IN (" + school_ids + ") GROUP BY tr.school_id;";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, sysSettings.mysql_df.format(from_date));
-        stat.setString(2, sysSettings.mysql_df.format(till_date));
-        stat.setString(3, sysSettings.mysql_df.format(from_date));
-        stat.setString(4, sysSettings.mysql_df.format(till_date));
-        stat.setString(5, sysSettings.mysql_df.format(from_date));
+        stat.setDate(1, new java.sql.Date(from_date.getTime()));
+        stat.setDate(2, new java.sql.Date(till_date.getTime()));
+        stat.setDate(3, new java.sql.Date(from_date.getTime()));
+        stat.setDate(4, new java.sql.Date(till_date.getTime()));
+        stat.setDate(5, new java.sql.Date(from_date.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         Calendar c = Calendar.getInstance();
@@ -672,7 +670,7 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public double exec_salary_balance(int school_id, int acc_category_id, Date till) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         String sql = "SELECT "
                 + "(SELECT IFNULL(SUM(IF(acr.acc_currency_id != 2, acr.amount / acr.currency_rate, acr.amount)), 0.0) AS amount "
                 + "FROM acc_transfers AS acr "
@@ -682,10 +680,10 @@ public class DbAccTransactions extends BaseDb {
                 + "FROM acc_transactions AS tr WHERE tr.acc_category_id = ? AND date(tr.date_time) < ? and tr.school_id = ?) as balance;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_category_id);
-        stat.setString(2, sysSettings.mysql_df.format(till));
+        stat.setDate(2, new java.sql.Date(till.getTime()));
         stat.setInt(3, school_id);
         stat.setInt(4, acc_category_id);
-        stat.setString(5, sysSettings.mysql_df.format(till));
+        stat.setDate(5, new java.sql.Date(till.getTime()));
         stat.setInt(6, school_id);
         ResultSet result = stat.executeQuery();
 
@@ -719,14 +717,14 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(1, currency_id);
         stat.setString(2, myUI.getMessage(SptMessages.Accrual));
         stat.setInt(3, acc_category_id);
-        stat.setString(4, sysSettings.mysql_df.format(from));
-        stat.setString(5, sysSettings.mysql_df.format(till));
+        stat.setDate(4, new java.sql.Date(from.getTime()));
+        stat.setDate(5, new java.sql.Date(till.getTime()));
         stat.setInt(6, school_id);
         stat.setInt(7, currency_id);
         stat.setString(8, myUI.getMessage(SptMessages.Payout));
         stat.setInt(9, acc_category_id);
-        stat.setString(10, sysSettings.mysql_df.format(from));
-        stat.setString(11, sysSettings.mysql_df.format(till));
+        stat.setDate(10, new java.sql.Date(from.getTime()));
+        stat.setDate(11, new java.sql.Date(till.getTime()));
         stat.setInt(12, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -889,8 +887,8 @@ public class DbAccTransactions extends BaseDb {
                 + "order by t.date_time asc;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
-        stat.setString(2, sysSettings.mysql_df.format(from_date));
-        stat.setString(3, sysSettings.mysql_df.format(till_date));
+        stat.setDate(2, new java.sql.Date(from_date.getTime()));
+        stat.setDate(3, new java.sql.Date(till_date.getTime()));
         stat.setInt(4, type_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -962,11 +960,11 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(5, year_id);
         stat.setInt(6, school_id);
         stat.setInt(7, school_id);
-        stat.setString(8, sysSettings.mysql_df.format(acad_year_start_date));
-        stat.setString(9, sysSettings.mysql_df.format(acad_year_end_date));
+        stat.setDate(8, new java.sql.Date(acad_year_start_date.getTime()));
+        stat.setDate(9, new java.sql.Date(acad_year_end_date.getTime()));
         stat.setInt(10, school_id);
-        stat.setString(11, sysSettings.mysql_df.format(acad_year_start_date));
-        stat.setString(12, sysSettings.mysql_df.format(acad_year_end_date));
+        stat.setDate(11, new java.sql.Date(acad_year_start_date.getTime()));
+        stat.setDate(12, new java.sql.Date(acad_year_end_date.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Month), String.class, null);
@@ -1011,7 +1009,7 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public double getBalances(int school_id, Date date, boolean isDateIncluded) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         String sql = "SELECT SUM(IF(cat.acc_type_id = 1, tr.amount, - tr.amount)) AS amount FROM acc_transactions AS tr "
                 + "LEFT JOIN acc_category AS cat ON cat.id = tr.acc_category_id where tr.school_id = ? and DATE(tr.date_time) ";
         if (isDateIncluded) {
@@ -1022,7 +1020,7 @@ public class DbAccTransactions extends BaseDb {
         sql += "?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
-        stat.setString(2, sysSettings.mysql_df.format(date));
+        stat.setDate(2, new java.sql.Date(date.getTime()));
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             return result.getDouble("amount");
@@ -1032,7 +1030,7 @@ public class DbAccTransactions extends BaseDb {
 
     public AccTransaction exec_low_balance(Connection conn, int school_id, Date date, double old_amount,
                                            double new_amount, int inOut) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         Date d = exec_nearestDate(conn, school_id, date);
         if (d == null) {
             return null;
@@ -1049,7 +1047,7 @@ public class DbAccTransactions extends BaseDb {
                 + "and round(balances_table.balance,2) + ? + ? < 0;";
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setInt(1, school_id);
-        stat.setString(2, sysSettings.mysql_df.format(d));
+        stat.setDate(2, new java.sql.Date(d.getTime()));
         if (inOut == 1) {
             stat.setDouble(3, -old_amount);
             stat.setDouble(4, new_amount);
@@ -1074,7 +1072,7 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public Date exec_nearestDate(Connection conn, int school_id, Date date) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         String sql = "SELECT balances_table.date_time, balances_table.amount, balances_table.balance FROM "
                 + "(SELECT gr_transactions.date_time AS date_time, gr_transactions.amount AS amount, "
                 + "(@runtot:=gr_transactions.amount + @runtot) AS balance FROM "
@@ -1084,7 +1082,7 @@ public class DbAccTransactions extends BaseDb {
                 + "WHERE balances_table.date_time <= ?;";
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setInt(1, school_id);
-        stat.setString(2, sysSettings.mysql_df.format(date));
+        stat.setDate(2, new java.sql.Date(date.getTime()));
         ResultSet result = stat.executeQuery();
         while (result.last()) {
             return result.getDate("balances_table.date_time");

@@ -9,9 +9,11 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeExam;
@@ -25,14 +27,13 @@ public class DbEmployeeExam extends BaseDb {
     }
 
     public int exec_insert(EmployeeExam ex) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "INSERT INTO hr_employee_exam (employee_id,hr_exam_id,score,date_of_issue) "
                 + "VALUES(?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ex.getEmployee_id());
         stat.setInt(2, ex.getExam_id());
         stat.setDouble(3, ex.getScore());
-        stat.setString(4, sysSettings.mysql_df.format(ex.getDate_of_issue()));
+        stat.setDate(4, new java.sql.Date(ex.getDate_of_issue().getTime()));
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -42,19 +43,18 @@ public class DbEmployeeExam extends BaseDb {
     }
 
     public int exec_update(EmployeeExam ex) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "update hr_employee_exam set "
                 + "hr_exam_id=?, score=?, date_of_issue=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ex.getExam_id());
         stat.setDouble(2, ex.getScore());
-        stat.setString(3, sysSettings.mysql_df.format(ex.getDate_of_issue()));
+        stat.setDate(3, new java.sql.Date(ex.getDate_of_issue().getTime()));
         stat.setInt(4, ex.getId());
         return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-            EmployeeDefinitionView edv) throws SQLException {
+                                    EmployeeDefinitionView edv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT ex.id, ex.hr_exam_id, ex.score, ex.date_of_issue FROM hr_employee_exam as ex "
                 + "where ex.employee_id = ?;";

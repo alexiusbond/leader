@@ -250,7 +250,7 @@ public class DbStudent extends BaseDb {
         stat.setString(3, s.getName());
         stat.setString(4, s.getSur_name());
         stat.setString(5, s.getMiddle_name());
-        stat.setString(6, sysSetting.mysql_df.format(s.getBirth_date()));
+        stat.setDate(6, new java.sql.Date(s.getBirth_date().getTime()));
         stat.setString(7, s.getPhoto());
         stat.setInt(8, s.getSchool_id());
         stat.setInt(9, s.getGender_id());
@@ -268,7 +268,6 @@ public class DbStudent extends BaseDb {
     }
 
     public int exec_update(Student s) throws SQLException {
-        SystemSettings sysSetting = new SystemSettings();
         String sql = "UPDATE student SET login=?, name=?, surname=?, "
                 + "middle_name=?, date_of_birth=?, photo=?, gender_id=?, "
                 + "education_status_id=?, class_name_id=?,employee_id=?,"
@@ -279,7 +278,7 @@ public class DbStudent extends BaseDb {
         stat.setString(2, s.getName());
         stat.setString(3, s.getSur_name());
         stat.setString(4, s.getMiddle_name());
-        stat.setString(5, sysSetting.mysql_df.format(s.getBirth_date()));
+        stat.setDate(5, new java.sql.Date(s.getBirth_date().getTime()));
         stat.setString(6, s.getPhoto());
         stat.setInt(7, s.getGender_id());
         stat.setInt(8, s.getEdu_status_id());
