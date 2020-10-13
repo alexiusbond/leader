@@ -219,6 +219,7 @@ public class SystemSettings implements Serializable {
     public final String prmStatusesReport = "отчет по статусам";
     public final String prmYearMonthReport = "годовой и месячный отчет";
     public final String prmMonthReport = "отчет по месяцам";
+    public final String prmAccountingBalanceReport = "балансовый отчет";
     public final String prmByDateReport = "отчет по датам";
     public final String prmSchoolAccountingReport = "school_accounting_report";
     public final String prmGeneralReport = "общий отчет по бухгалтерии";
@@ -238,7 +239,7 @@ public class SystemSettings implements Serializable {
     public final String prmTabSearch = "вкладка поиска";
     public final String prmChangeYear = "ChangeYear";
     public final String prmChangeSchool = "ChangeSchool";
-    public final String prmBalanceReport = "Отчет по состоянию склада";
+    public final String prmStockBalanceReport = "Отчет по состоянию склада";
     public final String prmMovementsReport = "Отчет по передвижениям склада";
     public final String prmConfirmationControl = "контроль подтверждений";
     public final String button = "##";

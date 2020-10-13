@@ -44,6 +44,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String NotifWrongValueCounter = generateId();
     public static final String NotifWrongPercentValue = generateId();
     public static final String Copy = generateId();
+    public static final String Confirm = generateId();
     public static final String SelectOptions = generateId();
     public static final String Permissions = generateId();
     public static final String Year = generateId();
@@ -92,6 +93,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Answer = generateId();
     public static final String ConfirmChangeYear = generateId();
     public static final String ConfirmDeletion = generateId();
+    public static final String ConfirmConfirmation = generateId();
     public static final String ConfirmSave = generateId();
     public static final String ConfirmDiscountCopy = generateId();
     public static final String ConfirmContractCopy = generateId();
@@ -100,6 +102,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Cancel = generateId();
     public static final String No = generateId();
     public static final String ValueCanNotBeSaved = generateId();
+    public static final String YouCanNotModifyOrDeleteConfirmed = generateId();
     public static final String ValuesCanNotBeCopied = generateId();
     public static final String ValuesCopied = generateId();
     public static final String Number = generateId();
@@ -270,7 +273,6 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Accountant = generateId();
     public static final String NoSchoolLogo = generateId();
     public static final String Difference = generateId();
-    public static final String Confirmation = generateId();
     public static final String Note = generateId();
     public static final String ShortNote = generateId();
     public static final String Insert = generateId();
@@ -316,6 +318,10 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String AllClasses = generateId();
     public static final String AllIncomes = generateId();
     public static final String AllOutcomes = generateId();
+    public static final String AllAsserts = generateId();
+    public static final String AllDebts = generateId();
+    public static final String Asserts = generateId();
+    public static final String Debts = generateId();
     public static final String AllCategories = generateId();
     public static final String AllSchools = generateId();
     public static final String AllBranches = generateId();
@@ -343,7 +349,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Discounted = generateId();
     public static final String YearMonthReport = generateId();
     public static final String MonthReport = generateId();
-    public static final String BalanceReport = generateId();
+    public static final String AccountingBalanceReport = generateId();
+    public static final String StockBalanceReport = generateId();
     public static final String MovementsReport = generateId();
     public static final String SchoolAccountingReport = generateId();
     public static final String GeneralAccountingReport = generateId();
@@ -428,6 +435,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String AttentionLab = generateId();
     public static final String IncomesTotal = generateId();
     public static final String ExpensesTotal = generateId();
+    public static final String AssertsTotal = generateId();
+    public static final String DebtsTotal = generateId();
     public static final String Balance = generateId();
     public static final String LastIncomeDate = generateId();
     public static final String LastExpenseDate = generateId();
@@ -465,6 +474,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ShortTermDebts = generateId();
     public static final String ReturnableAssets = generateId();
     public static final String ExistsNotification = generateId();
+    public static final String ExistsInvoiceNotification = generateId();
 
     private static String generateId() {
         return new Integer(ids++).toString();

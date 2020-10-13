@@ -117,8 +117,7 @@ public class DbStudPayment extends BaseDb {
     }
 
     public int exec_update(StudPayment sp) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
-        String sql = "Update student_payments set year_id=?, "
+        String sql = "update student_payments set year_id=?, "
                 + "amount=?, payment_type_id=?, payment_category_id=?, employee_id=?, "
                 + "who_paid=?, note=?, modification_date=?, dollar_rate=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -152,14 +151,14 @@ public class DbStudPayment extends BaseDb {
         stat.setString(9, sp.getNote());
         stat.setTimestamp(10, new java.sql.Timestamp(sp.getModification_date().getTime()));
         stat.setDouble(11, sp.getRate());
-        System.out.println(stat.toString());
         stat.executeUpdate();
         return getLastInsertedId();
     }
 
     public StudPayment exec_get_init_payment(int st_id, int year_id) throws SQLException {
         StudPayment sp = null;
-        String sql = "SELECT sp.id, sp.amount, sp.modification_date FROM student_payments as sp "
+        String sql = "SELECT sp.id, sp.amount, sp.modification_date, sp.dollar_rate, sp.student_id, sp.year_id, sp.payment_type_id," +
+                "sp.payment_category_id, sp.who_paid, sp.note FROM student_payments as sp "
                 + "where sp.student_id = ? and sp.year_id = ? and sp.payment_category_id = 1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
@@ -170,6 +169,13 @@ public class DbStudPayment extends BaseDb {
             sp.setId(result.getInt("sp.id"));
             sp.setAmount(result.getDouble("sp.amount"));
             sp.setModification_date(result.getTimestamp("sp.modification_date"));
+            sp.setRate(result.getDouble("sp.dollar_rate"));
+            sp.setStudent_id(result.getInt("sp.student_id"));
+            sp.setYear_id(result.getInt("sp.year_id"));
+            sp.setPayment_type_id(result.getInt("sp.payment_type_id"));
+            sp.setPayment_cat_type_id(result.getInt("sp.payment_category_id"));
+            sp.setWho_paid(result.getString("sp.who_paid"));
+            sp.setNote(result.getString("sp.note"));
         }
         return sp;
     }

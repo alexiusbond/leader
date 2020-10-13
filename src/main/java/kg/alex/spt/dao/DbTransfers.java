@@ -6,25 +6,32 @@
 package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.TextField;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.*;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
+import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.domain.Transfer;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.TransfersView;
 import kg.alex.spt.utils.ComboBoxMax;
+import kg.alex.spt.utils.FormattedTreeTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.tepi.filtertable.FilterTreeTable;
 
 public class DbTransfers extends BaseDb {
 
@@ -93,6 +100,109 @@ public class DbTransfers extends BaseDb {
         }
         v.setTransfersFooter(total);
         return container;
+    }
+
+    public void exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, Date from_date, Date till_date,
+                                    FilterTreeTable categoriesTable, FormattedTreeTable t) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
+        Set<Integer> selectedCategoryIds = sysSettings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(),
+                (Set<?>) categoriesTable.getValue());
+        String sql = "SELECT ac.id, concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as category, " +
+                "acu.name, t.acc_currency_id, t.currency_rate, t.amount, t.note, concat(e.name, ' ', e.surname) as fullname " +
+                "FROM acc_transfers as t " +
+                "left join acc_invoice as inv on inv.id = t.invoice_id " +
+                "left join acc_category as ac on ac.id = t.acc_category_id " +
+                "left join acc_currency as acu on acu.id = t.acc_currency_id " +
+                "left join employee as e on e.id = inv.employee_id " +
+                "where inv.school_id = ? and date(inv.creation_date) >= ? and date(inv.creation_date) <= ? " +
+                "and inv.acc_invoice_type_id = ? and t.acc_category_id in ( " +
+                sysSettings.convertCollectionToStr(selectedCategoryIds) + ") and inv.is_confirmed = 1 " +
+                "order by inv.creation_date asc;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, school_id);
+        stat.setDate(2, new java.sql.Date(from_date.getTime()));
+        stat.setDate(3, new java.sql.Date(till_date.getTime()));
+        stat.setInt(4, type_id);
+        ResultSet result = stat.executeQuery();
+        HierarchicalContainer container = new HierarchicalContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, "USD");
+        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        t.setContainerDataSource(container);
+        Iterator itr = categoriesTable.getContainerDataSource().getItemIds().iterator();
+        while (itr.hasNext()) {
+            Object catNext = itr.next();
+            if (selectedCategoryIds.contains(catNext)) {
+                Item item = container.addItem((Integer) catNext);
+                item.getItemProperty(myUI.getMessage(SptMessages.Name))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                container.setChildrenAllowed(catNext, false);
+                Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
+                if (parent != null) {
+                    container.setParent(catNext, parent);
+                }
+                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
+                    container.setChildrenAllowed(catNext, true);
+                    t.setCollapsed(catNext, false);
+                }
+            }
+        }
+        while (result.next()) {
+            Item item = container.getItem(result.getInt("ac.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getString("acu.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(result.getString("fullname"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
+            Integer parent_id = (Integer) container.getParent(result.getInt("ac.id"));
+            while (parent_id != null) {
+                item = container.getItem(parent_id);
+                if (result.getInt("t.acc_currency_id") == 1) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue()
+                                    + result.getDouble("t.amount") / result.getDouble("t.currency_rate"));
+                } else {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue() + result.getDouble("t.amount"));
+                }
+                parent_id = (Integer) container.getParent(parent_id);
+            }
+        }
+    }
+
+    public SchoolAccounting exec_get_ttls(int scl_id, Date from, Date till, String cat_ids) throws SQLException {
+        String sql = "SELECT "
+                + "SUM(IF(cat.acc_type_id = 3 AND DATE(inv.creation_date) >= ? AND DATE(inv.creation_date) <= ?, "
+                + "if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)) , 0.0)) AS assersTtl, "
+                + "SUM(IF(cat.acc_type_id = 4 AND DATE(inv.creation_date) >= ? AND DATE(inv.creation_date) <= ?, "
+                + "if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)), 0.0)) AS debtsTtl, "
+                + "SUM(IF(DATE(inv.creation_date) < ?, IF(cat.acc_type_id = 3, if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)), "
+                + "-(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)))), 0.0)) AS prev_balance "
+                + "FROM acc_transfers AS tr LEFT JOIN acc_category AS cat ON cat.id = tr.acc_category_id "
+                + "LEFT JOIN acc_invoice AS inv ON inv.id = tr.invoice_id "
+                + "WHERE inv.school_id = ? and inv.is_confirmed = 1 ";
+        if (cat_ids != null) {
+            sql += "and tr.acc_category_id in (" + cat_ids + ")";
+        }
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setDate(1, new java.sql.Date(from.getTime()));
+        stat.setDate(2, new java.sql.Date(till.getTime()));
+        stat.setDate(3, new java.sql.Date(from.getTime()));
+        stat.setDate(4, new java.sql.Date(till.getTime()));
+        stat.setDate(5, new java.sql.Date(from.getTime()));
+        stat.setInt(6, scl_id);
+        ResultSet result = stat.executeQuery();
+        SchoolAccounting acc = new SchoolAccounting();
+        while (result.next()) {
+            acc.setTotal_income(result.getDouble("assersTtl"));
+            acc.setTotal_outcome(result.getDouble("debtsTtl"));
+            acc.setPrevious_balance(result.getDouble("prev_balance"));
+        }
+        return acc;
     }
 
     public int exec_insert(Transfer acr) throws SQLException {

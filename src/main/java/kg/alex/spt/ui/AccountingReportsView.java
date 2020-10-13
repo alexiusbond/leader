@@ -1,5 +1,6 @@
 package kg.alex.spt.ui;
 
+import kg.alex.spt.reports.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable;
@@ -11,12 +12,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.AccountingDateReport;
-import kg.alex.spt.reports.AccountingMonthReport;
-import kg.alex.spt.reports.AccountingGeneralReport;
-import kg.alex.spt.reports.AccountingSchoolsReport;
-import kg.alex.spt.reports.CurrentAccountStatementReport;
-import kg.alex.spt.reports.SalariesReport;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -78,6 +73,9 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmSalariesReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.SalariesReport));
         }
+        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmAccountingBalanceReport)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.AccountingBalanceReport));
+        }
         leftGrid.addComponent(repTypeSelect, 0, 0);
     }
 
@@ -99,6 +97,8 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
                 new CurrentAccountStatementReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SalariesReport))) {
                 new SalariesReport(myUI, this);
+            }else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.AccountingBalanceReport))) {
+                new AccountingBalanceReport(myUI, this);
             }
         }
     }

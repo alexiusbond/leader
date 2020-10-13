@@ -19,10 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 
 public class DbInvoice extends BaseDb {
 
@@ -49,13 +46,17 @@ public class DbInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Confirmation), CheckBox.class, null);
+        container.addContainerProperty(sysSettings.button, CheckBox.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("inv.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+            if (invoice_type_id != 1) {
+                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.ymdf.format(result.getTimestamp("inv.creation_date")));
+            } else {
+                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+            }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
             if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
                 CheckBox cb = new CheckBox();
@@ -66,15 +67,31 @@ public class DbInvoice extends BaseDb {
                 }
                 if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
                     cb.setEnabled(false);
-                } else {
-                    cb.addValueChangeListener(listener);
                 }
-                item.getItemProperty(myUi.getMessage(SptMessages.Confirmation)).setValue(cb);
+                cb.addValueChangeListener(listener);
+                item.getItemProperty(sysSettings.button).setValue(cb);
             }
         }
         return container;
     }
 
+    public boolean isExists(int school_id, int invoice_type_id, java.util.Date date, int id) throws SQLException {
+        String sql = "SELECT inv.id FROM acc_invoice AS inv "
+                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? "
+                + "and YEAR(inv.creation_date) = YEAR(?) and MONTH(inv.creation_date) = MONTH(?) and inv.id != ?;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, school_id);
+        stat.setInt(2, invoice_type_id);
+        stat.setDate(3, new Date(date.getTime()));
+        stat.setDate(4, new Date(date.getTime()));
+        stat.setInt(5, id);
+        ResultSet result = stat.executeQuery();
+
+        while (result.next()) {
+            return true;
+        }
+        return false;
+    }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();

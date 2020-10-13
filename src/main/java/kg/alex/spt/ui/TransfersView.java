@@ -1,7 +1,7 @@
 package kg.alex.spt.ui;
 
 import com.vaadin.ui.*;
-import kg.alex.spt.utils.ComboBoxMax;
+import kg.alex.spt.utils.*;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
@@ -19,6 +19,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,10 +34,6 @@ import kg.alex.spt.dao.DbInvoice;
 import kg.alex.spt.domain.Transfer;
 import kg.alex.spt.domain.Invoice;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ExistsValidator;
-import kg.alex.spt.utils.FormattedFilterTable;
-import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -51,7 +48,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     static final Logger logger = LogManager.getLogger(TransfersView.class);
     private MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, excelBtn, copyBtn, addBtn;
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, excelBtn, copyBtn, addBtn, confirmBtn;
     private PopupButton searchBtn;
     private FormattedTable transfersTable;
     private TextField invoiceNumberTF;
@@ -70,6 +67,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private ExcelExport excelReport;
     private String caption, viewName;
     private int acc_category_type_id, acc_invoice_type_id;
+    private SimpleDateFormat df;
 
     public TransfersView(MyVaadinUI myUI, String caption, String viewName, int acc_category_type_id, int acc_invoice_type_id) {
         this.myUI = myUI;
@@ -77,8 +75,13 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         this.viewName = viewName;
         this.acc_category_type_id = acc_category_type_id;
         this.acc_invoice_type_id = acc_invoice_type_id;
+        if (acc_invoice_type_id != 1) {
+            df = sysSettings.ymdf;
+        } else {
+            df = sysSettings.dtmf;
+        }
         if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
-            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Confirmation), myUI.getMessage(SptMessages.InvoiceNumber),
+            NATURAL_COL_ORDER = new String[]{sysSettings.button, myUI.getMessage(SptMessages.InvoiceNumber),
                     myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
                     myUI.getMessage(SptMessages.Note)};
         } else {
@@ -178,6 +181,17 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
         buttonsLay.addComponent(excelBtn);
+
+        if (acc_invoice_type_id != 1) {
+            confirmBtn = new Button();
+            confirmBtn.setDescription(myUI.getMessage(SptMessages.Confirm));
+            confirmBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+            confirmBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+            confirmBtn.setIcon(FontAwesome.CHECK);
+            confirmBtn.setEnabled(false);
+            confirmBtn.addClickListener(this);
+            buttonsLay.addComponent(confirmBtn);
+        }
         settingsLay.addComponent(buttonsLay, 0, 0, 1, 0);
 
         invoiceNumberTF = new TextField(myUI.getMessage(SptMessages.InvoiceNumber));
@@ -196,12 +210,17 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         settingsLay.setComponentAlignment(searchBtn, Alignment.BOTTOM_RIGHT);
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
-        dateDF.setResolution(Resolution.MINUTE);
         dateDF.setWidth("100%");
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        dateDF.setDateFormat(sysSettings.dateTimeMinPattern);
+        if (acc_invoice_type_id != 1) {
+            dateDF.setResolution(Resolution.MONTH);
+            dateDF.setDateFormat(sysSettings.yearMonthPattern);
+        } else {
+            dateDF.setResolution(Resolution.MINUTE);
+            dateDF.setDateFormat(sysSettings.dateTimeMinPattern);
+        }
         dateDF.setValue(new Date());
         settingsLay.addComponent(dateDF, 0, 2, 1, 2);
 
@@ -247,27 +266,35 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == modifyBtn && invoicesTable.getValue() != null) {
-            isNew = false;
-            fillFields();
-            prepareModificationMode();
-            invoiceNumberTF.focus();
+            if (acc_invoice_type_id == 1 || currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl) ||
+                    (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue()).getValue())) {
+                isNew = false;
+                fillFields();
+                prepareModificationMode();
+                invoiceNumberTF.focus();
+            } else {
+                Notification.show(myUI.getMessage(SptMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+            }
         } else if (source == createBtn) {
             isNew = true;
             clearFields();
             prepareModificationMode();
         } else if (source == deleteBtn && invoicesTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
+            if (acc_invoice_type_id == 1 || currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl) ||
+                    (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue()).getValue())) {
+                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                        myUI.getMessage(SptMessages.ConfirmDeletion),
+                        myUI.getMessage(SptMessages.Yes),
+                        myUI.getMessage(SptMessages.No),
+                        new ConfirmDialog.Listener() {
+                            @Override
+                            public void onClose(ConfirmDialog dialog) {
+                                if (dialog.isConfirmed()) {
+                                    execDelete();
+                                }
                             }
-                        }
-                    });
+                        });
+            }
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay) && validateTable(transfersTable, false)) {
@@ -275,32 +302,41 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                     dbCon.connect();
                     if (isNew) {
                         Invoice inv = getInvoice(0);
-                        int id = dbCon.exec_insert(inv);
-                        if (id != 0) {
-                            insertTransfers(id);
-                            addDatacontainerItem(id, sysSettings.dtmf.format(dateDF.getValue()));
-                            invoicesTable.setValue(id);
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
-                            prepareNormalMode();
+                        if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool_id(), acc_invoice_type_id, dateDF.getValue(), 0)) {
+                            int id = dbCon.exec_insert(inv);
+                            if (id != 0) {
+                                insertTransfers(id);
+                                addDatacontainerItem(id, df.format(dateDF.getValue()));
+                                invoicesTable.setValue(id);
+                                Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                prepareNormalMode();
+                            } else {
+                                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                            }
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                            Notification.show(myUI.getMessage(SptMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
-                        int status = 0;
-                        Invoice inv = getInvoice(invID);
-                        try {
-                            status = dbCon.exec_update(inv);
-                        } catch (Exception e) {
-                            logger.error(e);
-                            logger.catching(e);
-                        }
-                        if (status != 0) {
-                            insertTransfers(invID);
-                            updateDatacontainer();
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
-                            prepareNormalMode();
+                        if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool_id(), acc_invoice_type_id, dateDF.getValue(), invID)) {
+                            int status = 0;
+                            Invoice inv = getInvoice(invID);
+                            try {
+                                status = dbCon.exec_update(inv);
+                            } catch (Exception e) {
+                                logger.error(e);
+                                logger.catching(e);
+                            }
+                            if (status != 0) {
+                                insertTransfers(invID);
+                                updateDatacontainer();
+                                setTransfersTable();
+                                Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                prepareNormalMode();
+                            } else {
+                                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                            }
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                            Notification.show(myUI.getMessage(SptMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbCon.close();
@@ -322,11 +358,60 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                                 @Override
                                 public void onClose(ConfirmDialog dialog) {
                                     if (dialog.isConfirmed()) {
-                                        exec_copy();
+                                        try {
+                                            Calendar current = Calendar.getInstance();
+                                            current.setTime(dateDF.getValue());
+                                            current.add(Calendar.MONTH, 1);
+
+                                            DbInvoice dbCon = new DbInvoice();
+                                            dbCon.connect();
+                                            if (acc_invoice_type_id == 1 ||
+                                                    !dbCon.isExists(myUI.getUser().getSchool_id(), acc_invoice_type_id, current.getTime(), 0)) {
+                                                Invoice inv = getInvoice(0);
+                                                inv.setCreation_date(current.getTime());
+                                                int id = dbCon.exec_insert(inv);
+                                                if (id != 0) {
+                                                    DbTransfers dbAcr = new DbTransfers();
+                                                    dbAcr.connect();
+                                                    if (transfersTable.getContainerDataSource().size() > 0) {
+                                                        Iterator iter = transfersTable.getItemIds().iterator();
+                                                        while (iter.hasNext()) {
+                                                            Object next = iter.next();
+                                                            Transfer acr = new Transfer();
+                                                            acr.setInvoice_id(id);
+                                                            acr.setRate((Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                                                    myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue());
+                                                            acr.setAmount((Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                                                    myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+                                                            acr.setNote(((TextField) transfersTable.getItem(next).getItemProperty(
+                                                                    myUI.getMessage(SptMessages.Note)).getValue()).getValue());
+                                                            acr.setAcc_category_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                                                                    myUI.getMessage(SptMessages.Category)).getValue()).getValue());
+                                                            acr.setCurrency_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                                                                    myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                                                            dbAcr.exec_insert(acr);
+                                                        }
+                                                    }
+                                                    dbAcr.close();
+                                                    addDatacontainerItem(id, df.format(inv.getCreation_date()));
+                                                    invoicesTable.setValue(id);
+                                                    Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                                } else {
+                                                    Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                                                }
+                                                prepareNormalMode();
+                                            } else {
+                                                Notification.show(myUI.getMessage(SptMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
+                                            }
+
+                                            dbCon.close();
+                                        } catch (Exception e) {
+                                            logger.error(e);
+                                            logger.catching(e);
+                                        }
                                     }
                                 }
                             });
-
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.NotifWrongValue), Notification.Type.WARNING_MESSAGE);
                 }
@@ -343,10 +428,30 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             prepareNormalMode();
         } else if (source == addBtn) {
             addTransfersItem();
+        } else if (source == confirmBtn) {
+            if (currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
+                CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue();
+                ckb.setValue(true);
+                confirmBtn.setEnabled(false);
+            } else {
+                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                        myUI.getMessage(SptMessages.ConfirmConfirmation),
+                        myUI.getMessage(SptMessages.Yes),
+                        myUI.getMessage(SptMessages.No),
+                        new ConfirmDialog.Listener() {
+                            @Override
+                            public void onClose(ConfirmDialog dialog) {
+                                if (dialog.isConfirmed()) {
+                                    CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue();
+                                    ckb.setValue(true);
+                                }
+                            }
+                        });
+            }
         } else if (source == excelBtn) {
             if (transfersTable.getContainerDataSource().size() != 0) {
                 excelReport = new ExcelExport(transfersTable, caption);
-                excelReport.setReportTitle(caption + " (№" + invoiceNumberTF.getValue() + " - " + sysSettings.df.format(dateDF.getValue()) + ")");
+                excelReport.setReportTitle(caption + " (№" + invoiceNumberTF.getValue() + " - " + df.format(dateDF.getValue()) + ")");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(5).setCellFormula(null);
@@ -418,8 +523,18 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 }
                 DbInvoice dbInvoice = new DbInvoice();
                 dbInvoice.connect();
-                dbInvoice.exec_update((Integer) ((CheckBox) event.getProperty()).getData(), value);
+                int status = dbInvoice.exec_update((Integer) ((CheckBox) event.getProperty()).getData(), value);
                 dbInvoice.close();
+                if (status == 1) {
+                    Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                    if ((int) ((CheckBox) event.getProperty()).getData() == (int) invoicesTable.getValue()) {
+                        if (value == 1) {
+                            confirmBtn.setEnabled(false);
+                        } else {
+                            confirmBtn.setEnabled(true);
+                        }
+                    }
+                }
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -435,6 +550,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     private void prepareModificationMode() {
+        confirmBtn.setEnabled(false);
         modifyBtn.setEnabled(false);
         createBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
@@ -470,13 +586,26 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         dateDF.setEnabled(false);
         noteTF.setEnabled(false);
         rightLay.setEnabled(false);
+
+        if (invoicesTable.getValue() != null && !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue()).getValue()) {
+            confirmBtn.setEnabled(true);
+        } else {
+            confirmBtn.setEnabled(false);
+        }
     }
 
     private void fillFields() {
+        if (invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue() != null) {
+            if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue()).getValue()) {
+                confirmBtn.setEnabled(true);
+            } else {
+                confirmBtn.setEnabled(false);
+            }
+        }
         invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
                 myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString());
         try {
-            dateDF.setValue(sysSettings.dtmf.parse(invoicesTable.getContainerProperty(invoicesTable.getValue(),
+            dateDF.setValue(df.parse(invoicesTable.getContainerProperty(invoicesTable.getValue(),
                     myUI.getMessage(SptMessages.Date)).getValue().toString()));
         } catch (Exception e) {
             logger.error(e);
@@ -502,7 +631,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     private void updateDatacontainer() {
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Date)).setValue(
-                sysSettings.dtmf.format(dateDF.getValue()));
+                df.format(dateDF.getValue()));
         try {
             invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
                     sysSettings.dFormat.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
@@ -538,7 +667,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 } else {
                     cb.addValueChangeListener(this);
                 }
-                item.getItemProperty(myUI.getMessage(SptMessages.Confirmation)).setValue(cb);
+                item.getItemProperty(sysSettings.button).setValue(cb);
             }
         } catch (Exception e) {
             logger.error(e);
@@ -771,7 +900,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         cb.setId(id);
         cb.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(cb);
-        cb = createCombobox(0, myUI.getMessage(SptMessages.Currency), sysSettings.dbAcc_currency, true, false);
+        cb = createCombobox(2, myUI.getMessage(SptMessages.Currency), sysSettings.dbAcc_currency, true, false);
         cb.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
         TextField tf = createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
@@ -792,7 +921,6 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         transfersTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Category), 1);
         transfersTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
         transfersTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
-
     }
 
     private void setTransfersTable() {
@@ -883,53 +1011,6 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             delTransferIds.clear();
             dbCon.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-    }
-
-    private void exec_copy() {
-        try {
-            DbInvoice dbCon = new DbInvoice();
-            dbCon.connect();
-            Invoice inv = getInvoice(0);
-            Calendar current = Calendar.getInstance();
-            current.setTime(inv.getCreation_date());
-            current.add(Calendar.MONTH, 1);
-            inv.setCreation_date(current.getTime());
-            int id = dbCon.exec_insert(inv);
-            if (id != 0) {
-                DbTransfers dbAcr = new DbTransfers();
-                dbAcr.connect();
-                if (transfersTable.getContainerDataSource().size() > 0) {
-                    Iterator iter = transfersTable.getItemIds().iterator();
-                    while (iter.hasNext()) {
-                        Object next = iter.next();
-                        Transfer acr = new Transfer();
-                        acr.setInvoice_id(id);
-                        acr.setRate((Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue());
-                        acr.setAmount((Double) ((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
-                        acr.setNote(((TextField) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
-                        acr.setAcc_category_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Category)).getValue()).getValue());
-                        acr.setCurrency_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
-                        dbAcr.exec_insert(acr);
-                    }
-                }
-                dbAcr.close();
-                addDatacontainerItem(id, sysSettings.dtmf.format(inv.getCreation_date()));
-                invoicesTable.setValue(id);
-                Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
-            } else {
-                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
-            }
-            dbCon.close();
-            prepareNormalMode();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

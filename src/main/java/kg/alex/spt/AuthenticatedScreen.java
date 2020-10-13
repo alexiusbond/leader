@@ -475,10 +475,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                             sysSettings.cnAccrualsView, 2, 1));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebts))) {
                     verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
-                            sysSettings.cnShortTermDebtsView, 4, 3));
+                            sysSettings.cnShortTermDebtsView, 4, 4));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssets))) {
                     verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
-                            sysSettings.cnReturnableAssetsView, 3, 4));
+                            sysSettings.cnReturnableAssetsView, 3, 3));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Payouts))) {
                     verticalPanel.setSecondComponent(new PayoutsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StocksDefinition))) {
@@ -686,10 +686,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         sysSettings.cnAccrualsView, 2, 1));
             } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.ShortTermDebts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
-                        sysSettings.cnShortTermDebtsView, 4, 3));
+                        sysSettings.cnShortTermDebtsView, 4, 4));
             } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.ReturnableAssets)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
-                        sysSettings.cnReturnableAssetsView, 3, 4));
+                        sysSettings.cnReturnableAssetsView, 3, 3));
             } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.Payouts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new PayoutsView(myUI));
             } else if (header.getValue().equals(((String) myUI.getMessage(

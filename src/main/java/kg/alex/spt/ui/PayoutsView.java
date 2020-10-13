@@ -314,6 +314,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             if (status != 0) {
                                 insertPayouts(invID, dbAt);
                                 updateDatacontainer();
+                                setPayoutsTable();
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
                                 prepareNormalMode();

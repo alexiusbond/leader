@@ -34,4 +34,6 @@
     <inherits name="org.tepi.filtertable.gwt.FilterTableWidgetset" /> 
     <inherits name="com.vaadin.addon.charts.Widgetset" />
     <inherits name="org.vaadin.addons.maskedtextfield.MaskedTextFieldWidgetset" />
+
+    
 </module>

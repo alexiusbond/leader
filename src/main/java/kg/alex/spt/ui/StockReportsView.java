@@ -11,11 +11,8 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.AccountingDateReport;
 import kg.alex.spt.reports.AccountingMonthReport;
-import kg.alex.spt.reports.AccountingGeneralReport;
 import kg.alex.spt.reports.AccountingSchoolsReport;
-import kg.alex.spt.reports.CurrentAccountStatementReport;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -59,8 +56,8 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         repTypeSelect.setWidth("100%");
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
-        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmBalanceReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.BalanceReport));
+        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockBalanceReport)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.StockBalanceReport));
         }
         if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmMovementsReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.MovementsReport));
@@ -74,7 +71,7 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         if (property == repTypeSelect) {
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
-            if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.BalanceReport))) {
+            if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockBalanceReport))) {
                 new AccountingMonthReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.MovementsReport))) {
                 new AccountingSchoolsReport(myUI, this);
