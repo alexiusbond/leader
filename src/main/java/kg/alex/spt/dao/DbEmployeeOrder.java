@@ -12,11 +12,13 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeOrder;
@@ -81,7 +83,6 @@ public class DbEmployeeOrder extends BaseDb {
     }
 
     public int exec_update(EmployeeOrder eo) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "update hr_employee_order set school_id=?, hr_position_id=?, class_name_id=?,"
                 + "from_date=?, to_date=?, note=?, modification_date=NOW(), m_employee_id=? where id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -177,7 +178,7 @@ public class DbEmployeeOrder extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id, int school_id, boolean isAdmin, boolean isHR,
-            EmployeeDefinitionView edv) throws SQLException {
+                                    EmployeeDefinitionView edv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT eo.id, o.id, o.name, eo.from_date, eo.to_date, eo.note, eo.effected_by_id, eo.can_not_delete, "
                 + "CASE WHEN o.id IN (1, 2, 7) THEN p.name WHEN o.id = 3 THEN CONCAT(cn.name, ' - ', cln.name) "

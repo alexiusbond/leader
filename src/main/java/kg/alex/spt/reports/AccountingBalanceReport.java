@@ -326,7 +326,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             prev_balanceLab.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.ymdf.format(c.getTime()) + "): "
                                     + schoolAcc.getPrevious_balance() + "$</b>");
                             prev_balanceLab.setData(schoolAcc.getPrevious_balance());
-                            prev_balanceLab.setId(myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime()) + ")");
+                            prev_balanceLab.setId(myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.ymdf.format(c.getTime()) + ")");
                             dbtr.close();
                         } catch (Exception e) {
                             logger.error(e);

@@ -9,12 +9,14 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EducationStatus;
@@ -134,19 +136,19 @@ public class DbStudent extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Relative), String.class, null);
         container.addContainerProperty(
                 myUi.getMessage(SptMessages.FullName) + " ("
-                + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
+                        + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
         container.addContainerProperty(
                 myUi.getMessage(SptMessages.Passport) + " ("
-                + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
+                        + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
         container.addContainerProperty(
                 myUi.getMessage(SptMessages.WorkPlace) + " ("
-                + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
+                        + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
         container.addContainerProperty(
                 myUi.getMessage(SptMessages.Phone) + " ("
-                + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
+                        + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
         container.addContainerProperty(
                 myUi.getMessage(SptMessages.Address) + " ("
-                + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
+                        + myUi.getMessage(SptMessages.Relative) + ")", String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getString("s.login"));
@@ -186,7 +188,7 @@ public class DbStudent extends BaseDb {
     }
 
     public IndexedContainer execSQL_for_orders(MyVaadinUI myUi, int scl_id,
-            IssueOrderView iv) throws SQLException {
+                                               IssueOrderView iv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT s.id, s.login, s.name, s.surname, es.name, s.entering_year_id, "
                 + "concat(cnu.name,' - ',cn.name) as cl_name, s.class_name_id, "
@@ -290,7 +292,7 @@ public class DbStudent extends BaseDb {
     }
 
     public int exec_update(int student_id, int education_status_id, int class_id,
-            int employee_id) throws SQLException {
+                           int employee_id) throws SQLException {
         String sql = "UPDATE student SET education_status_id=?, class_name_id=?, employee_id=?,"
                 + "modification_date=NOW() WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -303,7 +305,7 @@ public class DbStudent extends BaseDb {
     }
 
     public int exec_update(int student_id, int education_status_id,
-            int employee_id) throws SQLException {
+                           int employee_id) throws SQLException {
         String sql = "UPDATE student SET education_status_id=?, employee_id=?,"
                 + "modification_date=NOW() WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -409,13 +411,22 @@ public class DbStudent extends BaseDb {
                 + "left join student_contract as sc on st.id = sc.student_id "
                 + "left join student_installement_plan as ip on st.id = ip.student_id "
                 + "and sc.year_id = ip.year_id AND ip.date_of_payment <= NOW() "
-                + "left join class_name as cna on cna.id = st.class_name_id "
+                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so "
+                + "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
+                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
+                + "LEFT JOIN education_status AS edu ON edu.id = "
+                + "CASE WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
+                + "ELSE stud_o.to_education_status_id END "
+                + "LEFT JOIN class_name AS cna ON cna.id = CASE "
+                + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
+                + "ELSE stud_o.to_class_name_id END "
                 + "left join class_number as cnu on cnu.id = cna.class_number_id "
                 + "where sr.is_main = 1 and sc.year_id = ? "
-                + "and st.class_name_id in(" + class_ids + ") group by st.id having plan_debt > 0 "
+                + "and cna.id in(" + class_ids + ") group by st.id having plan_debt > 0 "
                 + "order by class_name, st.name, st.surname;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
+        stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = cv.prepareContainer();
         while (result.next()) {
@@ -488,7 +499,7 @@ public class DbStudent extends BaseDb {
     }
 
     public void execSQL_Statuses_by_classes(MyVaadinUI myUI, int year_id,
-            StatusesReport sr) throws SQLException {
+                                            StatusesReport sr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT sch.id, sch.name, COUNT(IF(st.entering_year_id<="
                 + year_id + " AND cna.class_number_id IN ("
@@ -537,9 +548,9 @@ public class DbStudent extends BaseDb {
                 {
                     container.addContainerProperty(sr.classTable.getContainerProperty(
                             nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
-                            + myUI.getMessage(SptMessages.ClassName) + " "
-                            + sr.statusMS.getContainerProperty(
-                                    nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
+                                    + myUI.getMessage(SptMessages.ClassName) + " "
+                                    + sr.statusMS.getContainerProperty(
+                            nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
                             Integer.class, 0);
                 }
             }
@@ -564,27 +575,27 @@ public class DbStudent extends BaseDb {
                             nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
                             + myUI.getMessage(SptMessages.ClassName) + " "
                             + sr.statusMS.getContainerProperty(
-                                    nextStatus, myUI.getMessage(SptMessages.Name)).getValue()).setValue(
+                            nextStatus, myUI.getMessage(SptMessages.Name)).getValue()).setValue(
                             result.getInt("quantity" + nextClass + "_" + nextStatus));
                     footerVal = sr.dataTable.getColumnFooter(sr.classTable.getContainerProperty(
                             nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
                             + myUI.getMessage(SptMessages.ClassName) + " "
                             + sr.statusMS.getContainerProperty(
-                                    nextStatus, myUI.getMessage(SptMessages.Name)).getValue());
+                            nextStatus, myUI.getMessage(SptMessages.Name)).getValue());
                     if (counter != 0) {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
                                 nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
-                                + myUI.getMessage(SptMessages.ClassName) + " "
-                                + sr.statusMS.getContainerProperty(
-                                        nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
+                                        + myUI.getMessage(SptMessages.ClassName) + " "
+                                        + sr.statusMS.getContainerProperty(
+                                nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
                                 (Integer.parseInt(footerVal)
-                                + result.getInt("quantity" + nextClass + "_" + nextStatus)) + "");
+                                        + result.getInt("quantity" + nextClass + "_" + nextStatus)) + "");
                     } else {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
                                 nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
-                                + myUI.getMessage(SptMessages.ClassName) + " "
-                                + sr.statusMS.getContainerProperty(
-                                        nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
+                                        + myUI.getMessage(SptMessages.ClassName) + " "
+                                        + sr.statusMS.getContainerProperty(
+                                nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
                                 result.getInt("quantity" + nextClass + "_" + nextStatus) + "");
                     }
                 }
@@ -596,7 +607,7 @@ public class DbStudent extends BaseDb {
             if (counter != 0) {
                 sr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total),
                         (Integer.parseInt(footerVal)
-                        + result.getInt("quantity")) + "");
+                                + result.getInt("quantity")) + "");
             } else {
                 sr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total),
                         result.getInt("quantity") + "");

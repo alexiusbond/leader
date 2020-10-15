@@ -550,7 +550,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     private void prepareModificationMode() {
-        confirmBtn.setEnabled(false);
+        if (acc_invoice_type_id != 1) {
+            confirmBtn.setEnabled(false);
+        }
         modifyBtn.setEnabled(false);
         createBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
@@ -587,19 +589,24 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         noteTF.setEnabled(false);
         rightLay.setEnabled(false);
 
-        if (invoicesTable.getValue() != null && !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue()).getValue()) {
-            confirmBtn.setEnabled(true);
-        } else {
-            confirmBtn.setEnabled(false);
-        }
-    }
-
-    private void fillFields() {
-        if (invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue() != null) {
+        if (acc_invoice_type_id != 1) {
             if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue()).getValue()) {
                 confirmBtn.setEnabled(true);
             } else {
                 confirmBtn.setEnabled(false);
+            }
+        }
+    }
+
+    private void fillFields() {
+
+        if (acc_invoice_type_id != 1) {
+            if (invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue() != null) {
+                if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue()).getValue()) {
+                    confirmBtn.setEnabled(true);
+                } else {
+                    confirmBtn.setEnabled(false);
+                }
             }
         }
         invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
@@ -661,6 +668,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             dbCon.close();
             if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
                 CheckBox cb = new CheckBox();
+                cb.setData(id);
                 cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
                 if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
                     cb.setEnabled(false);

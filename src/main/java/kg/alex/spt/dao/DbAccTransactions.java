@@ -628,10 +628,10 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.School), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.IncomesTotal), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastIncomeDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime()) + ")", Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Transactions), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExpensesTotal), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastExpenseDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime()) + ")", Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Transactions), Double.class, 0.0);
         double ttlInc = 0;
         double ttlExp = 0;
         while (result.next()) {
