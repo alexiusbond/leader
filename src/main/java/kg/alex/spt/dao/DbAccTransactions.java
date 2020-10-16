@@ -76,7 +76,7 @@ public class DbAccTransactions extends BaseDb {
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
-                cb.setContainerDataSource(dbCon.exec_for_select(myUi, 2, school_id, result.getInt("t.acc_category_id")));
+                cb.setContainerDataSource(dbCon.exec_for_select(myUi, 2, school_id, result.getInt("t.acc_category_id"), false));
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);

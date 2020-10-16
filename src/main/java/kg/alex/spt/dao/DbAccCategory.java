@@ -9,10 +9,12 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.TreeTable;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.AccCategory;
@@ -48,15 +50,18 @@ public class DbAccCategory extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, int id) throws SQLException {
+    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, int id, boolean withParents) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code, sc.acc_currency_id, "
                 + "c.employee_id from acc_category as c "
                 + "left join acc_category as cp on cp.id = c.parent_id "
                 + "left join hr_salary_category as sc on sc.acc_category_id = cp.parent_id "
-                + "where c.parent_id is not null and c.acc_type_id = ? and (c.school_id is null or c.school_id = ?) "
-                + "and (c.activity_status_id = 2 or c.id = ?) "
-                + "order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+                + "where c.acc_type_id = ? and (c.school_id is null or c.school_id = ?) "
+                + "and (c.activity_status_id = 2 or c.id = ?) ";
+        if (!withParents) {
+            sql += "and c.parent_id is not null ";
+        }
+        sql += "order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
         stat.setInt(2, school_id);

@@ -271,9 +271,8 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             try {
                                 DbTransfers dbCon = new DbTransfers();
                                 dbCon.connect();
-                                dbCon.exec_report_by_date(myUI, 3,
-                                        myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
-                                        assertsCategoriesTable, assertsDataTable);
+                                dbCon.exec_report_by_date(myUI, 3, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
+                                        assertsDataTable, sysSettings.convertCollectionToStr(catIds));
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (assertsDataTable.getContainerDataSource().size() != 0) {
@@ -292,9 +291,8 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             try {
                                 DbTransfers dbsc = new DbTransfers();
                                 dbsc.connect();
-                                dbsc.exec_report_by_date(myUI, 4,
-                                        myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
-                                        debtsCategoriesTable, debtsDataTable);
+                                dbsc.exec_report_by_date(myUI, 4, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
+                                        debtsDataTable, sysSettings.convertCollectionToStr(catIds));
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (debtsDataTable.getContainerDataSource().size() != 0) {
@@ -480,9 +478,6 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             cell.setCellStyle(cellStyleGreen);
                             cell.setCellValue((Double) labels.get(j).getData());
                             sheet.autoSizeColumn(colNum);
-                            colNum++;
-                            cell = row.createCell(colNum);
-                            cell.setCellStyle(cellStyleGreen);
                             colNum++;
                             cell = row.createCell(colNum);
                             cell.setCellStyle(cellStyleGreen);
