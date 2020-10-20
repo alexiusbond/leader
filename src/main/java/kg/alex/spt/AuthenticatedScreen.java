@@ -242,14 +242,20 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmMenu)) {
             menubar.addItem(myUI.getMessage(SptMessages.Transactions), menuCommand);
         }
-        if (currentUser.isPermitted(sysSettings.cnAccrualsView + ":" + sysSettings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.Accruals), menuCommand);
-        }
-        if (currentUser.isPermitted(sysSettings.cnPayoutsView + ":" + sysSettings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.Payouts), menuCommand);
-        }
+
         if (currentUser.isPermitted(sysSettings.cnReportsView + ":" + sysSettings.prmMenu)) {
             menubar.addItem(myUI.getMessage(SptMessages.Reports), menuCommand);
+        }
+
+        mi = menubar.addItem(myUI.getMessage(SptMessages.Salaries), null);
+        if (currentUser.isPermitted(sysSettings.cnAccrualsView + ":" + sysSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.Accruals), menuCommand);
+        }
+        if (currentUser.isPermitted(sysSettings.cnPayoutsView + ":" + sysSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.Payouts), menuCommand);
+        }
+        if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
+            menubar.removeItem(mi);
         }
 
         mi = menubar.addItem(myUI.getMessage(SptMessages.Definitions), null);

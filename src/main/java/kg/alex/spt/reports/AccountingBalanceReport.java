@@ -51,7 +51,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
     public FormattedTreeTable assertsDataTable, debtsDataTable;
     public FilterTreeTable assertsCategoriesTable, debtsCategoriesTable;
     private SystemSettings sysSettings = new SystemSettings();
-    private Label assertsTtlLab, debtsTtlLab, ttlLab, prev_balanceLab;
+    private Label assertsTtlLab, debtsTtlLab, ttlLab;
     private HorizontalLayout infoLay;
     private SchoolAccounting schoolAcc;
     private TabSheet tabSheet;
@@ -231,13 +231,6 @@ public class AccountingBalanceReport implements Button.ClickListener,
         debtsTtlLab.setWidth("100%");
         infoLay.addComponent(debtsTtlLab);
 
-        prev_balanceLab = new Label();
-        prev_balanceLab.setContentMode(ContentMode.HTML);
-        prev_balanceLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-        prev_balanceLab.setImmediate(true);
-        prev_balanceLab.setSizeFull();
-        infoLay.addComponent(prev_balanceLab);
-
         ttlLab = new Label();
         ttlLab.setContentMode(ContentMode.HTML);
         ttlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -260,7 +253,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                     current.setTime(fromDate.getTime());
                     while (current.before(tillDate)) {
                         end_date.setTime(current.getTime());
-                        end_date.set(Calendar.DAY_OF_MONTH, tillDate.getActualMaximum(Calendar.DAY_OF_MONTH));
+                        end_date.set(Calendar.DAY_OF_MONTH, end_date.getActualMaximum(Calendar.DAY_OF_MONTH));
                         VerticalLayout rightLayout = buildRightLayout();
                         tabSheet.addTab(rightLayout, sysSettings.ymdf.format(current.getTime()));
                         Set<Integer> catIds = new HashSet<>();
@@ -308,7 +301,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             DbTransfers dbtr = new DbTransfers();
                             dbtr.connect();
                             schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
-                                    tillDate.getTime(), sysSettings.convertCollectionToStr(catIds));
+                                    end_date.getTime(), sysSettings.convertCollectionToStr(catIds));
                             assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " + sysSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
                             debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
                             ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + sysSettings.round(
@@ -317,14 +310,6 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             debtsDataTable.setData(schoolAcc.getTotal_outcome());
                             ttlLab.setData(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome());
                             ttlLab.setId(myUI.getMessage(SptMessages.Total));
-
-                            Calendar c = Calendar.getInstance();
-                            c.setTime(current.getTime());
-                            c.add(Calendar.DAY_OF_MONTH, -1);
-                            prev_balanceLab.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.ymdf.format(c.getTime()) + "): "
-                                    + schoolAcc.getPrevious_balance() + "$</b>");
-                            prev_balanceLab.setData(schoolAcc.getPrevious_balance());
-                            prev_balanceLab.setId(myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.ymdf.format(c.getTime()) + ")");
                             dbtr.close();
                         } catch (Exception e) {
                             logger.error(e);
@@ -385,14 +370,14 @@ public class AccountingBalanceReport implements Button.ClickListener,
                 }
                 XSSFSheet sheet = workbook.createSheet(tab.getCaption());
 
-                int rowNum = 1;
+                int rowNum;
                 int colNum;
                 Row row;
                 Cell cell;
 
                 for (int k = 0; k < tables.size(); k++) {
                     rowNum = 1;
-                    colNum = k * 9 + 1;
+                    colNum = k * 6 + 1;
                     if (sheet.getRow(rowNum) != null) {
                         row = sheet.getRow(rowNum);
                     } else {
@@ -412,7 +397,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                         colNum++;
                     }
                     rowNum += 2;
-                    colNum = k * 9 + 1;
+                    colNum = k * 6 + 1;
                     if (sheet.getRow(rowNum) != null) {
                         row = sheet.getRow(rowNum);
                     } else {
@@ -428,7 +413,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                         sheet.autoSizeColumn(colNum);
                         colNum++;
                     }
-                    colNum = k * 9 + 1;
+                    colNum = k * 6 + 1;
                     Iterator itemsIter = tables.get(k).getItemIds().iterator();
                     while (itemsIter.hasNext()) {
                         Object nextItem = itemsIter.next();
@@ -453,10 +438,10 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             sheet.autoSizeColumn(colNum);
                             colNum++;
                         }
-                        colNum = k * 9 + 1;
+                        colNum = k * 6 + 1;
                     }
                     if (k == tables.size() - 1) {
-                        for (int j = 2; j < 4; j++) {
+                        for (int j = 2; j < labels.size(); j++) {
                             rowNum++;
                             if (sheet.getRow(rowNum) != null) {
                                 row = sheet.getRow(rowNum);
@@ -481,12 +466,11 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             colNum++;
                             cell = row.createCell(colNum);
                             cell.setCellStyle(cellStyleGreen);
-                            colNum = k * 9 + 1;
+                            colNum = k * 6 + 1;
                             rowNum++;
                         }
                     }
                 }
-
             }
 
             try {

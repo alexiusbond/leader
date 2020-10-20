@@ -165,6 +165,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String QuantityShort = generateId();
     public static final String Remain = generateId();
     public static final String Salary = generateId();
+    public static final String Salaries = generateId();
     public static final String Ratio = generateId();
     public static final String Price = generateId();
     public static final String Upload = generateId();

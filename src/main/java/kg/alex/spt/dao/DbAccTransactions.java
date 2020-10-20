@@ -124,7 +124,7 @@ public class DbAccTransactions extends BaseDb {
         String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, "
                 + "t.currency_rate, t.amount, t.note, if(t.student_payments_id is not null or t.dp_invoice_id is not null "
                 + "or t.acc_invoice_id is not null,true, false) as isDisabled, "
-                + "if(DATE(t.modification_date) > DATE(DATE_SUB(NOW(), INTERVAL 5 DAY)), true, false) as isNotOld, "
+                + "if(DATE(t.modification_date) > DATE(DATE_SUB(NOW(), INTERVAL 3 DAY)), true, false) as isNotOld, "
                 + "t.from_to_employee_id, concat(e.surname, ' ', e.name) as fullname "
                 + "FROM acc_transactions as t "
                 + "left join acc_category as ac on t.acc_category_id = ac.id "

@@ -123,6 +123,7 @@ public class DbTransfers extends BaseDb {
         stat.setDate(2, new java.sql.Date(from_date.getTime()));
         stat.setDate(3, new java.sql.Date(till_date.getTime()));
         stat.setInt(4, type_id);
+        System.out.println(stat.toString());
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
@@ -143,12 +144,21 @@ public class DbTransfers extends BaseDb {
                 container.setChildrenAllowed(result.getString("ac.id"), true);
                 t.setCollapsed(result.getString("ac.id"), false);
             } else {
-                container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                        (Double) container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue()
-                                + result.getDouble("t.amount"));
+                if (result.getInt("t.acc_currency_id") == 1) {
+                    if (result.getDouble("t.currency_rate") != 0) {
+                        container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                                (Double) container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue()
+                                        + (result.getDouble("t.amount") / result.getDouble("t.currency_rate")));
+                    }
+                } else {
+                    container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                            (Double) container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue()
+                                    + result.getDouble("t.amount"));
+                }
             }
             item = container.addItem(Integer.toString(id));
             container.setChildrenAllowed(Integer.toString(id), false);
+            container.setParent(Integer.toString(id), result.getString("ac.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getString("acu.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));

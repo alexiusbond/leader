@@ -160,6 +160,7 @@ public class SptMessages_ky extends SptMessages {
             {QuantityShort, "Кол-во"},
             {Remain, "Остаток"},
             {Salary, "Ставка"},
+            {Salaries, "Зарплаты"},
             {Ratio, "Коофицент остатка"},
             {Price, "Цена за ед."},
             {FileName, "Имя файла"},
@@ -479,8 +480,8 @@ public class SptMessages_ky extends SptMessages {
             {ReturnableAssetsDefinition, "Определение возвращаемых активов"},
             {ExistsNotification, "Запись данной категории уже сущестует!"},
             {ExistsInvoiceNotification, "Накладная с выбранной датой уже существует!"},
-            {ShortTermDebts, "Краткосрочные задолженности"},
-            {ReturnableAssets, "Возвращаемые активы"},
+            {ShortTermDebts, "Балансовые краткосрочные задолженности"},
+            {ReturnableAssets, "Балансовые возвращаемые активы"},
             {YouCanNotModifyOrDeleteConfirmed, "Вы не можете удалить или изменить подтвержденную накладную!"},};
 
     @Override

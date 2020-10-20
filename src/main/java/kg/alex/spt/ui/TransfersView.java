@@ -296,6 +296,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                                 }
                             }
                         });
+            } else {
+                Notification.show(myUI.getMessage(SptMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == saveBtn) {
             try {
@@ -446,6 +448,19 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                                 if (dialog.isConfirmed()) {
                                     CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), sysSettings.button).getValue();
                                     ckb.setValue(true);
+                                    try {
+                                        DbInvoice dbInvoice = new DbInvoice();
+                                        dbInvoice.connect();
+                                        int status = dbInvoice.exec_update(invID, 1);
+                                        dbInvoice.close();
+                                        if (status == 1) {
+                                            Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                            confirmBtn.setEnabled(false);
+                                        }
+                                    } catch (Exception e) {
+                                        logger.error(e);
+                                        logger.catching(e);
+                                    }
                                 }
                             }
                         });

@@ -160,6 +160,7 @@ public class SptMessages_en extends SptMessages {
             {QuantityShort, "Кол-во"},
             {Remain, "Остаток"},
             {Salary, "Ставка"},
+            {Salaries, "Зарплаты"},
             {Ratio, "Коофицент остатка"},
             {Price, "Цена за ед."},
             {FileName, "Имя файла"},
@@ -479,8 +480,8 @@ public class SptMessages_en extends SptMessages {
             {CannotInsertOrder, "Нельзя добавить новый приказ, сохраните изменения либо удалите приказ о переводе в другую школу!"},
             {ShortTermDebtsDefinition, "Определение краткосрочных задолженностей"},
             {ReturnableAssetsDefinition, "Определение возвращаемых активов"},
-            {ShortTermDebts, "Краткосрочные задолженности"},
-            {ReturnableAssets, "Возвращаемые активы"},
+            {ShortTermDebts, "Балансовые краткосрочные задолженности"},
+            {ReturnableAssets, "Балансовые возвращаемые активы"},
             {ExistsNotification, "Запись данной категории уже сущестует!"},
             {ExistsInvoiceNotification, "Накладная с выбранной датой уже существует!"},
             {YouCanNotModifyOrDeleteConfirmed, "Вы не можете удалить или изменить подтвержденную накладную!"},};
