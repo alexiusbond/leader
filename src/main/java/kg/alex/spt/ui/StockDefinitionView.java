@@ -145,7 +145,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth("100%");
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 15, false));
+                myUI.getMessage(SptMessages.NotifWrongValue), 1, 150, false));
         settingsLay.addComponent(nameTF);
 
         statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));

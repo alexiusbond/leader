@@ -659,7 +659,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     public ComboBoxMax createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isExistsValiator) {
         ComboBoxMax cb = new ComboBoxMax();
         if (isExistsValiator) {
-            cb.addValidator(new ExistsValidator(myUI, payoutsCont, cb));
+            cb.addValidator(new ExistsValidator(myUI, payoutsCont, cb, description));
         }
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);

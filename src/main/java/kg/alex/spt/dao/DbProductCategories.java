@@ -32,7 +32,7 @@ public class DbProductCategories extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
         container.addContainerProperty(sysSettings.acc_category_id, Integer.class, 0);
         while (result.next()) {
-            Item item = container.addItem(result.getInt("acc_category_id"));
+            Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("name"));
             item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("acc_category_id"));
         }

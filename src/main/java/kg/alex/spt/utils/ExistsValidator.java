@@ -21,11 +21,13 @@ public class ExistsValidator implements Validator {
     private Container container;
     private MyVaadinUI myUi;
     private ComboBoxMax comboBox;
+    private String propertyName;
 
-    public ExistsValidator(MyVaadinUI myUi, Container container, ComboBoxMax comboBox) {
+    public ExistsValidator(MyVaadinUI myUi, Container container, ComboBoxMax comboBox, String propertyName) {
         this.myUi = myUi;
         this.container = container;
         this.comboBox = comboBox;
+        this.propertyName = propertyName;
     }
 
     @Override
@@ -40,10 +42,10 @@ public class ExistsValidator implements Validator {
         while (iter.hasNext()) {
             Object next = iter.next();
             if (((ComboBoxMax) container.getItem(next).getItemProperty(
-                    myUi.getMessage(SptMessages.Category)).getValue()).getValue() != null &&
-                    comboBox != container.getItem(next).getItemProperty(myUi.getMessage(SptMessages.Category)).getValue()
+                    propertyName).getValue()).getValue() != null &&
+                    comboBox != container.getItem(next).getItemProperty(propertyName).getValue()
                     && (int) ((ComboBoxMax) container.getItem(next).getItemProperty(
-                    myUi.getMessage(SptMessages.Category)).getValue()).getValue() == (int) value) {
+                    propertyName).getValue()).getValue() == (int) value) {
                 return false;
             }
         }

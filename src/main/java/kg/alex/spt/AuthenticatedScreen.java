@@ -289,23 +289,23 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         mi = menubar.addItem(myUI.getMessage(SptMessages.OtherFunctions), null);
 
-        if (currentUser.isPermitted(sysSettings.cnSchoolModificationView + ":" + sysSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.SchoolModification), menuCommand);
-        }
+        /*if (currentUser.isPermitted(sysSettings.cnImportFromExcelView + ":" + sysSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.ImportStudentsFromExcel), menuCommand);
+        }*/
+        /*if (currentUser.isPermitted(sysSettings.cnMessagesView + ":" + sysSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.MessagesDefinition), menuCommand);
+        }*/
         if (currentUser.isPermitted(sysSettings.cnIssueOrderView + ":" + sysSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.IssueStudentOrder), menuCommand);
         }
-        if (currentUser.isPermitted(sysSettings.cnImportFromExcelView + ":" + sysSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ImportStudentsFromExcel), menuCommand);
+        if (currentUser.isPermitted(sysSettings.cnCallsView + ":" + sysSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.Calls), menuCommand);
         }
-        if (currentUser.isPermitted(sysSettings.cnMessagesView + ":" + sysSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.MessagesDefinition), menuCommand);
+        if (currentUser.isPermitted(sysSettings.cnSchoolModificationView + ":" + sysSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.SchoolModification), menuCommand);
         }
         if (currentUser.isPermitted(sysSettings.cnBackupView + ":" + sysSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.Backup), menuCommand);
-        }
-        if (currentUser.isPermitted(sysSettings.cnCallsView + ":" + sysSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.Calls), menuCommand);
         }
         if (currentUser.isPermitted(sysSettings.cnSettingsView + ":" + sysSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.Settings), menuCommand);

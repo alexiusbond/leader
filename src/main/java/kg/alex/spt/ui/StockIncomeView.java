@@ -390,8 +390,8 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                     at.setCurrency_id(1);
                     at.setEmployee_id(myUI.getUser().getId());
                     at.setSchool_id(myUI.getUser().getSchool_id());
-                    DbAccTransactions dbat = new DbAccTransactions();
-                    dbat.connect();
+                    /*DbAccTransactions dbat = new DbAccTransactions();
+                    dbat.connect();*/
                     if (isNew) {
                         StockInvoice inv = getInvoice(0);
                         int id = dbCon.exec_insert(inv);
@@ -404,7 +404,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                             insertMovements(id);
                             addDatacontainerItem(id);
                             invoicesTable.setValue(id);
-                            dbat.exec_insert(at, dbat.getConnection());
+                            /*dbat.exec_insert(at, dbat.getConnection());*/
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
@@ -426,7 +426,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                         if (status != 0) {
                             insertMovements(invID);
                             updateDatacontainer();
-                            dbat.exec_update(at, sysSettings.db_dp_invoice_id, invID, dbat.getConnection());
+                            /*dbat.exec_update(at, sysSettings.db_dp_invoice_id, invID, dbat.getConnection());*/
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -434,7 +434,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
-                    dbat.close();
+                    /*dbat.close();*/
                     dbCon.close();
                     prepareNormalMode();
                 } else {
@@ -895,12 +895,12 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             dbDef.connect();
             DbStockMovements dbCon = new DbStockMovements();
             dbCon.connect();
-            DbAccTransactions dbAt = new DbAccTransactions();
-            dbAt.connect();
+            /*DbAccTransactions dbAt = new DbAccTransactions();
+            dbAt.connect();*/
             int st = dbCon.exec_delete((Integer) invoicesTable.getValue());
             if (st != 0) {
                 movementsTable.removeAllItems();
-                dbAt.exec_delete(sysSettings.db_dp_invoice_id, invoicesTable.getValue().toString(), dbAt.getConnection());
+                /*dbAt.exec_delete(sysSettings.db_dp_invoice_id, invoicesTable.getValue().toString(), dbAt.getConnection());*/
                 st = dbDef.exec_delete((Integer) invoicesTable.getValue(), sysSettings.db_dp_invoice);
                 if (st != 0) {
                     invoicesTable.getContainerDataSource().removeItem(invoicesTable.getValue());
@@ -913,7 +913,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                     }
                 }
             }
-            dbAt.close();
+            /*dbAt.close();*/
             dbCon.close();
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {

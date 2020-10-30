@@ -305,10 +305,10 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " + sysSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
                             debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
                             ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + sysSettings.round(
-                                    (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$</b>");
+                                    (schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$</b>");
                             assertsDataTable.setData(schoolAcc.getTotal_income());
                             debtsDataTable.setData(schoolAcc.getTotal_outcome());
-                            ttlLab.setData(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome());
+                            ttlLab.setData(schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome());
                             ttlLab.setId(myUI.getMessage(SptMessages.Total));
                             dbtr.close();
                         } catch (Exception e) {
