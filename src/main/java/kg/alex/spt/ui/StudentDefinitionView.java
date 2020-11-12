@@ -3283,7 +3283,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         return false;
                     }
 
-                } else if (next instanceof Table && next != instPlanCont) {
+                } else if (next instanceof Table && next != installmentTable) {
                     Iterator iter = discountsTable.getItemIds().iterator();
                     while (iter.hasNext()) {
                         Object obj = iter.next();

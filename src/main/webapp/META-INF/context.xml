@@ -23,6 +23,6 @@
             org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
               username="spt"
               password="Sa2017paT#"
-              driverClassName="com.mysql.jdbc.Driver"
+              driverClassName="com.mysql.cj.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/spt?sessionVariables=sql_mode='NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'&amp;jdbcCompliantTruncation=false&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useTimezone=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Asia/Bishkek"/>
 </Context>

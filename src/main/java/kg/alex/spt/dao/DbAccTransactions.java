@@ -816,6 +816,7 @@ public class DbAccTransactions extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_som"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_som"));
                 total_remains += result.getDouble("remain_som");
+                System.out.println(result.getDouble("remain_som") + " сом");
                 total_salaries += result.getDouble("salary_som");
                 if (result.getDouble("salary_som") != 0.0) {
                     item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_som") / result.getDouble("salary_som"));
@@ -838,6 +839,7 @@ public class DbAccTransactions extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_usd"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_usd"));
                 total_remains += result.getDouble("remain_usd");
+                System.out.println(result.getDouble("remain_usd") + " USD");
                 total_salaries += result.getDouble("salary_usd");
                 if (result.getDouble("salary_usd") != 0.0) {
                     item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_usd") / result.getDouble("salary_usd"));

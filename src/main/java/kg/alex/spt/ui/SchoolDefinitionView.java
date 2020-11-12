@@ -118,7 +118,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.setNullSelectionAllowed(false);
         vl.addComponent(dataTable);
 
-        this.setSplitPosition(24, Sizeable.Unit.PERCENTAGE);
+        this.setSplitPosition(40, Sizeable.Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(settingsLay);
@@ -728,18 +728,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             }
         }
         return result;
-    }
-
-    public void updateSchoolSel() {
-        try {
-            DbSchool dbs = new DbSchool();
-            dbs.connect();
-            myUI.setSchoolCont(dbs.execSchoolSel(myUI, 0));
-            dbs.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
     }
 
     public class MyReceiver implements Upload.Receiver {

@@ -21,10 +21,9 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccCategory;
@@ -253,6 +252,14 @@ public class AccountingDateReport implements Button.ClickListener,
                     Set<Integer> catIds = new HashSet<>();
                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
+                        Iterator iter = ((Set<Integer>) incomeCategoriesTable.getValue()).iterator();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            if (incomeCategoriesTable.getChildren(next) != null) {
+                                catIds.addAll(new HashSet<Integer>(
+                                        (Collection<Integer>) incomeCategoriesTable.getChildren(next)));
+                            }
+                        }
                         rightLayout.addComponent(incomesDataTable);
                         rightLayout.setExpandRatio(incomesDataTable, 1);
                         try {
@@ -274,6 +281,14 @@ public class AccountingDateReport implements Button.ClickListener,
                     }
                     if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
+                        Iterator iter = ((Set<Integer>) outcomeCategoriesTable.getValue()).iterator();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            if (outcomeCategoriesTable.getChildren(next) != null) {
+                                catIds.addAll(new HashSet<Integer>(
+                                        (Collection<Integer>) outcomeCategoriesTable.getChildren(next)));
+                            }
+                        }
                         rightLayout.addComponent(outcomesDataTable);
                         rightLayout.setExpandRatio(outcomesDataTable, 1);
                         try {

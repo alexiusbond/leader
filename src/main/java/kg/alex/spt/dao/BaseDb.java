@@ -31,7 +31,7 @@ public class BaseDb {
     }
 
     public boolean connect() throws ClassNotFoundException, SQLException, IOException {
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         dbCon = pool.getConnection();
         return true;
     }

@@ -1634,6 +1634,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         salaryCategoryCB.setWidth("100%");
         salaryCategoryCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
         salaryCategoryCB.setFilteringMode(FilteringMode.CONTAINS);
+        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmMenu)) {
+            salaryCategoryCB.setEnabled(false);
+        }
         fieldsLayRight.addComponent(salaryCategoryCB);
 
         try {
@@ -2223,7 +2226,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 eo.setFrom_date(new Date());
                                 eo.setCan_not_delete(1);
                                 insertEmplOrder(eo);
-                                String roleName = roleName = loginTF.getValue();
+                                String roleName = loginTF.getValue();
                                 if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5) {
                                     roleName = "admin";
                                 } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25) {
