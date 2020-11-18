@@ -62,10 +62,10 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.InvoiceNumber),
-            myUI.getMessage(SptMessages.Stock),
-            myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
-            myUI.getMessage(SptMessages.FromEmployee), myUI.getMessage(SptMessages.ToEmployee),
-            myUI.getMessage(SptMessages.Note)};
+                myUI.getMessage(SptMessages.Stock),
+                myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
+                myUI.getMessage(SptMessages.FromEmployee), myUI.getMessage(SptMessages.ToEmployee),
+                myUI.getMessage(SptMessages.Note)};
 
         rightLay = new GridLayout(3, 2);
         rightLay.setSpacing(true);
@@ -247,7 +247,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             dbDef.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
-            getProductCategorySelect().setContainerDataSource(dbpc.execSQL_cont(myUI));
+            productCategorySelect.setContainerDataSource(dbpc.execSQL_cont(myUI));
             dbpc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -325,13 +325,13 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
                     new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                        @Override
+                        public void onClose(ConfirmDialog dialog) {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay) && validateTable(movementsTable, false)) {
@@ -392,9 +392,9 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             if (((ComboBoxMax) movementsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                     && ((ComboBoxMax) movementsTable.getContainerProperty(source.getData(),
-                            myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
+                    myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
                     && ((TextField) movementsTable.getContainerProperty(source.getData(),
-                            myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
+                    myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
                 double quantity = (Double) ((TextField) movementsTable.getContainerProperty(source.getData(),
                         myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue();
                 int acc_category_id = (Integer) ((ComboBoxMax) movementsTable.getContainerProperty(source.getData(),
@@ -457,16 +457,16 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             if (((ComboBoxMax) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                     && ((ComboBoxMax) movementsTable.getContainerProperty(changedItemId,
-                            myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
+                    myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
                     && ((TextField) movementsTable.getContainerProperty(changedItemId,
-                            myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
+                    myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
                 int acc_category_id = (Integer) movementsTable.getContainerProperty(changedItemId, sysSettings.acc_category_id).getValue();
                 int measurement_id = (Integer) movementsTable.getContainerProperty(changedItemId, sysSettings.measurement_id).getValue();
                 if ((int) ((ComboBoxMax) movementsTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Product)).getValue()).getValue()
                         == (int) movementsTable.getContainerProperty(changedItemId, sysSettings.acc_category_id).getValue()
                         && (int) ((ComboBoxMax) movementsTable.getContainerProperty(changedItemId,
-                                myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()
+                        myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()
                         == (int) movementsTable.getContainerProperty(changedItemId, sysSettings.measurement_id).getValue()) {
                     double quantity = (Double) movementsTable.getContainerProperty(changedItemId, sysSettings.quantity_id).getValue();
                     recalculateRemaindersAfterDelete(changedItemId, acc_category_id, measurement_id, quantity);
@@ -504,17 +504,17 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                             if (((ComboBoxMax) movementsTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                                     && ((ComboBoxMax) movementsTable.getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
+                                    myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
                                     && ((TextField) movementsTable.getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
+                                    myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
                                 if ((int) ((ComboBoxMax) movementsTable.getContainerProperty(changedItemId,
                                         myUI.getMessage(SptMessages.Product)).getValue()).getValue()
                                         == (int) ((ComboBoxMax) movementsTable.getContainerProperty(next,
-                                                myUI.getMessage(SptMessages.Product)).getValue()).getValue()
+                                        myUI.getMessage(SptMessages.Product)).getValue()).getValue()
                                         && (int) ((ComboBoxMax) movementsTable.getContainerProperty(changedItemId,
-                                                myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()
+                                        myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()
                                         == (int) ((ComboBoxMax) movementsTable.getContainerProperty(next,
-                                                myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
+                                        myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
                                     double quantity = (Double) ((TextField) movementsTable.getItem(next).getItemProperty(
                                             myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue();
                                     try {
@@ -566,7 +566,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                         && quantityTF != null && quantityTF.getPropertyDataSource().getValue() != null) {
                     movementsTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Amount)).setValue(
                             (Double) quantityTF.getPropertyDataSource().getValue()
-                            * (Double) movementsTable.getContainerProperty(changedItemId,
+                                    * (Double) movementsTable.getContainerProperty(changedItemId,
                                     myUI.getMessage(SptMessages.Price)).getValue());
                     repaintMovementsFooter();
                 }
@@ -595,13 +595,13 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             if (((ComboBoxMax) movementsTable.getContainerProperty(next,
                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                     && ((ComboBoxMax) movementsTable.getContainerProperty(next,
-                            myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
+                    myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
                     && ((TextField) movementsTable.getContainerProperty(next,
-                            myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
+                    myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
                 if (acc_category_id == (Integer) ((ComboBoxMax) movementsTable.getContainerProperty(
                         next, myUI.getMessage(SptMessages.Product)).getValue()).getValue()
                         && measurement_id == (Integer) ((ComboBoxMax) movementsTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
+                        next, myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
                     remain = 0;
                     if (movementsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Remain)).getValue() != null) {
                         remain = (Double) movementsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Remain)).getValue();
@@ -632,18 +632,18 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             if (((ComboBoxMax) movementsTable.getContainerProperty(next,
                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                     && ((ComboBoxMax) movementsTable.getContainerProperty(next,
-                            myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
+                    myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
                     && ((TextField) movementsTable.getContainerProperty(next,
-                            myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
+                    myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
                 if (!next.equals(changedItemId)
                         && acc_category_id == (Integer) ((ComboBoxMax) movementsTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Product)).getValue()).getValue()
+                        next, myUI.getMessage(SptMessages.Product)).getValue()).getValue()
                         && measurement_id == (Integer) ((ComboBoxMax) movementsTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
+                        next, myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
                     old_remainder = (Double) movementsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Remain)).getValue();
                     curr_remainder = (Double) movementsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Remain)).getValue()
                             - (Double) ((TextField) movementsTable.getContainerProperty(changedItemId,
-                                    myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue();
+                            myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue();
                     isExistsSame = true;
                     break;
                 }
@@ -681,13 +681,13 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 if (((ComboBoxMax) movementsTable.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                         && ((ComboBoxMax) movementsTable.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
+                        myUI.getMessage(SptMessages.Measurement)).getValue()).getValue() != null
                         && ((TextField) movementsTable.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
+                        myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
                     if (acc_category_id == (Integer) ((ComboBoxMax) movementsTable.getContainerProperty(
                             next, myUI.getMessage(SptMessages.Product)).getValue()).getValue()
                             && measurement_id == (Integer) ((ComboBoxMax) movementsTable.getContainerProperty(
-                                    next, myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
+                            next, myUI.getMessage(SptMessages.Measurement)).getValue()).getValue()) {
                         movementsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Remain)).setValue(curr_remainder);
                     }
                 }
@@ -1097,14 +1097,14 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
 
     private void addMovementsItem() {
         NATURAL_COL_ORDER_MOVEMENTS = new String[]{sysSettings.button,
-            myUI.getMessage(SptMessages.Remain),
-            myUI.getMessage(SptMessages.Product),
-            myUI.getMessage(SptMessages.Measurement),
-            myUI.getMessage(SptMessages.Note),
-            myUI.getMessage(SptMessages.Quantity),
-            myUI.getMessage(SptMessages.Price),
-            myUI.getMessage(SptMessages.Rate),
-            myUI.getMessage(SptMessages.Amount)};
+                myUI.getMessage(SptMessages.Remain),
+                myUI.getMessage(SptMessages.Product),
+                myUI.getMessage(SptMessages.Measurement),
+                myUI.getMessage(SptMessages.Note),
+                myUI.getMessage(SptMessages.Quantity),
+                myUI.getMessage(SptMessages.Price),
+                myUI.getMessage(SptMessages.Rate),
+                myUI.getMessage(SptMessages.Amount)};
         String id = sysSettings.FreshItem + (--r_table_counter);
         if (movementsTable.getContainerDataSource().size() == 0) {
             movementsTable.setContainerDataSource(prepareMovementsContainer());
@@ -1119,7 +1119,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
             cb.setContainerDataSource(dbCon.exec_for_select(
-                    myUI, getProductCategorySelect().getContainerProperty(getProductCategorySelect().getValue(),
+                    myUI, productCategorySelect.getContainerProperty(productCategorySelect.getValue(),
                             sysSettings.acc_category_id).getValue().toString()));
             dbCon.close();
         } catch (Exception e) {
@@ -1159,14 +1159,14 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
     private void setMovementsTable() {
         try {
             NATURAL_COL_ORDER_MOVEMENTS = new String[]{sysSettings.button,
-                myUI.getMessage(SptMessages.Remain),
-                myUI.getMessage(SptMessages.Product),
-                myUI.getMessage(SptMessages.Measurement),
-                myUI.getMessage(SptMessages.Note),
-                myUI.getMessage(SptMessages.Quantity),
-                myUI.getMessage(SptMessages.Price),
-                myUI.getMessage(SptMessages.Rate),
-                myUI.getMessage(SptMessages.Amount)};
+                    myUI.getMessage(SptMessages.Remain),
+                    myUI.getMessage(SptMessages.Product),
+                    myUI.getMessage(SptMessages.Measurement),
+                    myUI.getMessage(SptMessages.Note),
+                    myUI.getMessage(SptMessages.Quantity),
+                    myUI.getMessage(SptMessages.Price),
+                    myUI.getMessage(SptMessages.Rate),
+                    myUI.getMessage(SptMessages.Amount)};
             DbStockMovements dbepn = new DbStockMovements();
             dbepn.connect();
             movementsTable.setContainerDataSource(dbepn.execSQL(myUI, invID, this));
@@ -1252,15 +1252,12 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         }
     }
 
-    /**
-     * @return the productCategorySelect
-     */
-    public ComboBoxMax getProductCategorySelect() {
-        return productCategorySelect;
-    }
-
     public void setMovementsFooter(double amount) {
         movementsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(amount));
+    }
+
+    public ComboBoxMax getProductCategorySelect() {
+        return productCategorySelect;
     }
 
     /**

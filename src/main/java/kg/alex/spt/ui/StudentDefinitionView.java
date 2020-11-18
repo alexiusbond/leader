@@ -1,5 +1,6 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.data.validator.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -8,10 +9,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
-import com.vaadin.data.validator.DoubleRangeValidator;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -1348,7 +1345,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             classCB.setEnabled(true);
         }
         contractCB.setEnabled(true);
-        if (currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOlder5Days)
+        if (currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions)
                 || initialPaymentTF.getData() == null
                 || DateUtils.truncate(((StudPayment) initialPaymentTF.getData()).getModification_date(),
                 java.util.Calendar.DAY_OF_MONTH).compareTo(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)) == 0) {
@@ -2999,6 +2996,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 createTextfield(wh_paid, myUI.getMessage(SptMessages.WhoPaid), id, false, false));
         DateField df = createDateField(null, myUI.getMessage(SptMessages.Date), id, true, false);
         df.setId(myUI.getMessage(SptMessages.Payments));
+        if (currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions)) {
+            df.setRangeStart(myUI.getUser().getTransactions_start_date());
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MINUTE, -1441);
+            df.setRangeStart(calendar.getTime());
+            df.addValidator(new DateRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue),
+                    df.getRangeStart(), df.getRangeEnd(), Resolution.MINUTE));
+        }
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                 createTextfieldNote(null, myUI.getMessage(SptMessages.Note), id));

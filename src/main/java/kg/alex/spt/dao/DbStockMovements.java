@@ -10,6 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
 import java.sql.PreparedStatement;
@@ -318,12 +319,14 @@ public class DbStockMovements extends BaseDb {
         String sql = "SELECT SUM(mv.remain) AS remain FROM dp_stock_movements mv "
                 + "LEFT JOIN dp_invoice inv ON inv.id = mv.invoice_id "
                 + "WHERE inv.service_type_id = 1 AND DATE(inv.creation_date) <= ? AND mv.acc_category_id = ? "
-                + "AND mv.dp_measurement_id = ? AND inv.to_stock_id = ?";
+                + "AND inv.to_stock_id = ?";
+        if (measurement_id != 0) {
+            sql += " AND mv.dp_measurement_id = " + measurement_id;
+        }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(date.getTime()));
         stat.setInt(2, acc_category_id);
-        stat.setDouble(3, measurement_id);
-        stat.setInt(4, stock_id);
+        stat.setInt(3, stock_id);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             return result.getDouble("remain");
@@ -372,6 +375,77 @@ public class DbStockMovements extends BaseDb {
         }
         return list;
     }
+
+
+    public void exec_stock_movements(MyVaadinUI myUI, int acc_category_id, Date from, Date till,
+                                     Table t, int stock_id) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
+
+        String sql = "SELECT inv.creation_date, LPAD(inv.invoice_number, 7, 0) as invoice_number, "
+                + "sm.note, sum(sm.amount) as amount, sum(sm.amount * sm.price) as total, "
+                + "sum(sm.currency_rate * sm.amount) as currency_rate, inv.service_type_id, "
+                + "sm.price, m.name, tp.name FROM dp_stock_movements AS sm "
+                + "LEFT JOIN dp_invoice AS inv ON sm.invoice_id = inv.id "
+                + "LEFT JOIN dp_measurement AS m ON sm.dp_measurement_id = m.id "
+                + "LEFT JOIN dp_service_type AS tp ON inv.service_type_id = tp.id "
+                + "WHERE sm.acc_category_id = ? AND (date(inv.creation_date) BETWEEN ? AND ?) "
+                + "AND (inv.to_stock_id = ? OR inv.from_stock_id = ?) "
+                + "group by inv.id ORDER BY inv.creation_date";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, acc_category_id);
+        stat.setDate(2, new java.sql.Date(from.getTime()));
+        stat.setDate(3, new java.sql.Date(till.getTime()));
+        stat.setInt(4, stock_id);
+        stat.setInt(5, stock_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.MovementType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Measurement), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Price), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), Double.class, 0.0);
+        int i = 0;
+        double balance = execSQL_remain(acc_category_id, 0, stock_id, from),
+                totalOut = 0.0, totalIn = 0.0, netAmount = 0.0;
+        while (result.next()) {
+            Item item = container.addItem(++i);
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(sysSettings.df.format(result.getDate("inv.creation_date")));
+            item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("invoice_number"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("sm.note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.MovementType)).setValue(result.getString("tp.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Measurement)).setValue(result.getString("m.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Price)).setValue(
+                    result.getDouble("total") / result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(
+                    result.getDouble("currency_rate") / result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("total"));
+
+            if (result.getInt("inv.service_type_id") == 2) {
+                item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)).setValue(result.getDouble("amount"));
+                balance -= result.getDouble("amount");
+                totalOut += result.getDouble("amount");
+                netAmount-=result.getDouble("total");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)).setValue(result.getDouble("amount"));
+                balance += result.getDouble("amount");
+                totalIn += result.getDouble("amount");
+                netAmount+=result.getDouble("total");
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(balance);
+        }
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome), sysSettings.dFormat.format(totalIn));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome), sysSettings.dFormat.format(totalOut));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(netAmount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Balance), sysSettings.dFormat.format(balance));
+        t.setContainerDataSource(container);
+    }
+
 
     public int exec_delete(StockMovement sm) throws SQLException {
         exec_update_remain(sm.getStock_movement_id(), sm.getQuantity());

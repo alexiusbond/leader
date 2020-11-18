@@ -75,7 +75,7 @@
     <orderEntry type="library" name="Maven: stax:stax-api:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.virtuald:curvesapi:1.04" level="project" />
     <orderEntry type="library" name="Maven: com.itextpdf:itextpdf:5.5.9" level="project" />
-    <orderEntry type="library" name="Maven: net.coobird:thumbnailator:0.4.12" level="project" />
+    <orderEntry type="library" name="Maven: net.coobird:thumbnailator:0.4.13" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin.addon:vaadin-charts:3.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.vaadin.addon:vaadin-charts-model:3.3.1" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.0" level="project" />

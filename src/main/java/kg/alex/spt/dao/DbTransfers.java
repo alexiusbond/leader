@@ -123,7 +123,6 @@ public class DbTransfers extends BaseDb {
         stat.setDate(2, new java.sql.Date(from_date.getTime()));
         stat.setDate(3, new java.sql.Date(till_date.getTime()));
         stat.setInt(4, type_id);
-        System.out.println(stat.toString());
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);

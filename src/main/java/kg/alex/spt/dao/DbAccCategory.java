@@ -181,6 +181,28 @@ public class DbAccCategory extends BaseDb {
         }
     }
 
+    public void execSQL_for_select_as_tree(MyVaadinUI myUI, FilterTreeTable t, String parent_ids)
+            throws SQLException {
+        String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.parent_id from acc_category as c "
+                + "where c.parent_id in (" + parent_ids + ") or c.id in (" + parent_ids + ") order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        ResultSet result = stat.executeQuery();
+        HierarchicalContainer container = new HierarchicalContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        t.setContainerDataSource(container);
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("c.id"));
+            container.setChildrenAllowed(result.getInt("c.id"), false);
+            container.setChildrenAllowed(result.getInt("c.parent_id"), true);
+            t.setCollapsed(result.getInt("c.parent_id"), false);
+            if (result.getInt("c.parent_id") != 0) {
+                container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+                    result.getString("name"));
+        }
+    }
+
     public int exec_insert(AccCategory ac) throws SQLException {
         String sql = "INSERT IGNORE INTO acc_category (name, code, parent_id, acc_type_id, "
                 + "activity_status_id, note, parent_code,school_id,employee_id) values(?,?,?,?,?,?,?,?,?);";

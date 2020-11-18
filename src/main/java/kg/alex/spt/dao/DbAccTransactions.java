@@ -124,7 +124,7 @@ public class DbAccTransactions extends BaseDb {
         String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, "
                 + "t.currency_rate, t.amount, t.note, if(t.student_payments_id is not null or t.dp_invoice_id is not null "
                 + "or t.acc_invoice_id is not null,true, false) as isDisabled, "
-                + "if(DATE(t.modification_date) > DATE(DATE_SUB(NOW(), INTERVAL 3 DAY)), true, false) as isNotOld, "
+                + "if(t.date_time > DATE_SUB(NOW(), INTERVAL 24 HOUR), true, false) as isNotOld, "
                 + "t.from_to_employee_id, concat(e.surname, ' ', e.name) as fullname "
                 + "FROM acc_transactions as t "
                 + "left join acc_category as ac on t.acc_category_id = ac.id "
@@ -148,7 +148,7 @@ public class DbAccTransactions extends BaseDb {
             Item item = container.addItem(id);
             boolean isDisabled = result.getBoolean("isDisabled");
             if (!isDisabled) {
-                isDisabled = !(currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOlder5Days) || result.getBoolean("isNotOld"));
+                isDisabled = !(currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions) || result.getBoolean("isNotOld"));
             }
             String tableName = myUI.getMessage(SptMessages.Outcomes);
             if (incOrOut == 1) {
@@ -759,6 +759,8 @@ public class DbAccTransactions extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(sysSettings.dFormat.format(balance)
                         + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
             }
+            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
+                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
         }
         t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), sysSettings.dFormat.format(totalAccruals));
         t.setColumnFooter(myUI.getMessage(SptMessages.Payout), sysSettings.dFormat.format(totalPayouts));
@@ -816,7 +818,6 @@ public class DbAccTransactions extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_som"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_som"));
                 total_remains += result.getDouble("remain_som");
-                System.out.println(result.getDouble("remain_som") + " сом");
                 total_salaries += result.getDouble("salary_som");
                 if (result.getDouble("salary_som") != 0.0) {
                     item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_som") / result.getDouble("salary_som"));
@@ -839,7 +840,6 @@ public class DbAccTransactions extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_usd"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_usd"));
                 total_remains += result.getDouble("remain_usd");
-                System.out.println(result.getDouble("remain_usd") + " USD");
                 total_salaries += result.getDouble("salary_usd");
                 if (result.getDouble("salary_usd") != 0.0) {
                     item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_usd") / result.getDouble("salary_usd"));

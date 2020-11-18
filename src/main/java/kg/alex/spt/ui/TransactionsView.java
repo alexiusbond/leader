@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.ui;
 
+import com.vaadin.data.validator.DateRangeValidator;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
@@ -538,7 +539,6 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             df.setEnabled(false);
         }
         df.setDescription(description);
-        df.setRangeStart(myUI.getUser().getTransactions_start_date());
         df.setRangeEnd(new Date());
         df.setRequired(true);
         df.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -548,6 +548,15 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         df.setResolution(Resolution.MINUTE);
         if (value != null) {
             df.setValue(value);
+        }
+        if (currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions)) {
+            df.setRangeStart(myUI.getUser().getTransactions_start_date());
+        } else if (!isDisabled){
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MINUTE, -1441);
+            df.setRangeStart(calendar.getTime());
+            df.addValidator(new DateRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue),
+                    df.getRangeStart(), df.getRangeEnd(), Resolution.MINUTE));
         }
         df.setData(itemId);
         df.addValueChangeListener(this);
@@ -728,15 +737,19 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         }
         Item item;
         item = ((IndexedContainer) incomesTable.getContainerDataSource()).addItemAt(0, id);
-        item.getItemProperty(sysSettings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Incomes), false, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(createDateField(new Date(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Incomes)));
-        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(createComboboxCategory(0, myUI.getMessage(SptMessages.Category), id, 1, false,
-                myUI.getMessage(SptMessages.Incomes)));
+        item.getItemProperty(sysSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Incomes), false, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                createDateField(new Date(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Incomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
+                createComboboxCategory(0, myUI.getMessage(SptMessages.Category), id, 1, false,
+                        myUI.getMessage(SptMessages.Incomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(createCombobox(2, myUI.getMessage(SptMessages.Currency), id,
                 sysSettings.dbAcc_currency, false, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(null, myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
-        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(createTextfieldDouble(null, myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Incomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                createTextfieldDouble(null, myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Incomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfieldNote(null, myUI.getMessage(SptMessages.Note), id, false));
         incomesTable.setVisibleColumns(NATURAL_COL_ORDER_INCOMES);
     }
@@ -748,15 +761,19 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         }
         Item item;
         item = ((IndexedContainer) incomesTable.getContainerDataSource()).addItemAt(0, id);
-        item.getItemProperty(sysSettings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Incomes), false, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Incomes)));
-        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 1, false, myUI.getMessage(SptMessages.Incomes)));
+        item.getItemProperty(sysSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Incomes), false, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Incomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
+                createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 1, false, myUI.getMessage(SptMessages.Incomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(createCombobox(t.getCurrency_id(), myUI.getMessage(SptMessages.Currency), id,
                 sysSettings.dbAcc_currency, false, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(t.getCurrency_rate(),
                 myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
-        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(createTextfieldDouble(t.getAmount(), myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Incomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                createTextfieldDouble(t.getAmount(), myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Incomes)));
         item.getItemProperty(sysSettings.old_amount).setValue(t.getAmount());
         item.getItemProperty(sysSettings.old_rate).setValue(t.getCurrency_rate());
         item.getItemProperty(sysSettings.old_currency).setValue(t.getCurrency_id());
@@ -777,14 +794,17 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Outcomes), false, FontAwesome.MINUS_SQUARE));
         hl.addComponent(createButton(myUI.getMessage(SptMessages.Print), id, myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
         item.getItemProperty(sysSettings.button).setValue(hl);
-        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Outcomes)));
-        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 2, false, myUI.getMessage(SptMessages.Outcomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Outcomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
+                createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 2, false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(createCombobox(t.getCurrency_id(), myUI.getMessage(SptMessages.Currency), id,
                 sysSettings.dbAcc_currency, false, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(t.getCurrency_rate(),
                 myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
-        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(createTextfieldDouble(t.getAmount(), myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Outcomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                createTextfieldDouble(t.getAmount(), myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(sysSettings.from_employee_id).setValue(myUI.getUser().getFullname());
         item.getItemProperty(sysSettings.old_amount).setValue(t.getAmount());
         item.getItemProperty(sysSettings.old_rate).setValue(t.getCurrency_rate());
@@ -823,12 +843,16 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Outcomes),
                 false, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(sysSettings.button).setValue(hl);
-        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(createDateField(new Date(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Outcomes)));
-        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(createComboboxCategory(0, myUI.getMessage(SptMessages.Category), id, 2, false, myUI.getMessage(SptMessages.Outcomes)));
-        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(createCombobox(2, myUI.getMessage(SptMessages.Currency), id, sysSettings.dbAcc_currency, false, true));
+        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                createDateField(new Date(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Outcomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
+                createComboboxCategory(0, myUI.getMessage(SptMessages.Category), id, 2, false, myUI.getMessage(SptMessages.Outcomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(
+                createCombobox(2, myUI.getMessage(SptMessages.Currency), id, sysSettings.dbAcc_currency, false, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(null, myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
-        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(createTextfieldDouble(null, myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Outcomes)));
+        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                createTextfieldDouble(null, myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfieldNote(null, myUI.getMessage(SptMessages.Note), id, false));
         ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, sysSettings.dbEmployee, false, false);
         try {

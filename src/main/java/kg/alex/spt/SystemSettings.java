@@ -6,8 +6,10 @@
 package kg.alex.spt;
 
 import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
@@ -18,10 +20,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
- *
  * @author alex
  */
 public class SystemSettings implements Serializable {
@@ -196,7 +198,7 @@ public class SystemSettings implements Serializable {
     public final String actAdd = "добавление";
     public final String actAddContract = "add_contract";
     public final String actModify = "изменение";
-    public final String prmChangeOlder5Days = "изменение записей созданных более 5-ти дней назад";
+    public final String prmChangeOldTransactions = "изменение старых записей";
     public final String prmChangeCurrencyRate = "изменение общего курса доллара";
     public final String prmGeneralInfo = "общая информация";
     public final String prmStudentsInfo = "информация об учениках";
@@ -239,8 +241,9 @@ public class SystemSettings implements Serializable {
     public final String prmTabSearch = "вкладка поиска";
     public final String prmChangeYear = "ChangeYear";
     public final String prmChangeSchool = "ChangeSchool";
-    public final String prmStockBalanceReport = "Отчет по состоянию склада";
-    public final String prmMovementsReport = "Отчет по передвижениям склада";
+    public final String prmStockBalanceReport = "отчет по состоянию склада";
+    public final String prmStockMovementsReport = "отчет по передвижениям товара";
+    public final String prmStockOperationsReport = "отчет по операциям склада";
     public final String prmConfirmationControl = "контроль подтверждений";
     public final String button = "##";
     public final String FreshItem = "fresh";
@@ -270,7 +273,8 @@ public class SystemSettings implements Serializable {
                 format.setMinimumFractionDigits(2);
                 return format;
             }
-        ;
+
+            ;
         };
         return plainConverter;
     }
@@ -284,7 +288,8 @@ public class SystemSettings implements Serializable {
                 format.setMaximumFractionDigits(0);
                 return format;
             }
-        ;
+
+            ;
         };
         return plainConverter;
     }
@@ -302,6 +307,19 @@ public class SystemSettings implements Serializable {
     public String convertCollectionToStr(Collection<?> set) {
         if (!set.isEmpty()) {
             return StringUtils.join(set, ",");
+        } else {
+            return null;
+        }
+    }
+
+    public String convertCollectionToStr(Collection<?> set, IndexedContainer container, Object property) {
+        Set ids = new HashSet();
+        if (!set.isEmpty()) {
+            Iterator iterator = set.iterator();
+            while (iterator.hasNext()) {
+                ids.add(container.getContainerProperty(iterator.next(), property).getValue());
+            }
+            return StringUtils.join(ids, ",");
         } else {
             return null;
         }
@@ -354,7 +372,7 @@ public class SystemSettings implements Serializable {
         @Override
         public String[] getMonths() {
             return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
-                "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+                    "июля", "августа", "сентября", "октября", "ноября", "декабря"};
         }
     };
 }

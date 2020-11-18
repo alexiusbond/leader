@@ -1,6 +1,5 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.utils.ComboBoxMax;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
@@ -11,8 +10,8 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.AccountingMonthReport;
-import kg.alex.spt.reports.AccountingSchoolsReport;
+import kg.alex.spt.reports.StockMovementsReport;
+import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -56,11 +55,15 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         repTypeSelect.setWidth("100%");
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
+
+        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockMovementsReport)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.StockMovementsReport));
+        }
+        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockOperationsReport)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.StockOperationsReport));
+        }
         if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockBalanceReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.StockBalanceReport));
-        }
-        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmMovementsReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.MovementsReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);
     }
@@ -72,11 +75,12 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
             if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockBalanceReport))) {
-                new AccountingMonthReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.MovementsReport))) {
-                new AccountingSchoolsReport(myUI, this);
+                new StockMovementsReport(myUI, this);
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockOperationsReport))) {
+                new StockMovementsReport(myUI, this);
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockMovementsReport))) {
+                new StockMovementsReport(myUI, this);
             }
         }
     }
-
 }

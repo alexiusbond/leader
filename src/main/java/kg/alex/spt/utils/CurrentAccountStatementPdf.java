@@ -149,7 +149,7 @@ public class CurrentAccountStatementPdf {
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Accrual)), tableFontBold));
                     dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Payout)), tableFontBold));
-                    dataTable.addCell(new Phrase(" ", tableFontBold));
+                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Balance)), tableFontBold));
 
                     document.add(dataTable);
 

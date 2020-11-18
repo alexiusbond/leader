@@ -7,16 +7,16 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.validator.DateRangeValidator;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
@@ -62,7 +62,7 @@ public class DbStudPayment extends BaseDb {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
                 + "sp.who_paid, sp.note, sp.modification_date, "
-                + "if(DATE(sp.modification_date) <= DATE(DATE_SUB(NOW(), INTERVAL 5 DAY)),true, false) as isDisabled "
+                + "if(sp.modification_date <= DATE_SUB(NOW(), INTERVAL 24 HOUR),true, false) as isDisabled "
                 + "FROM student_payments as sp "
                 + "where sp.student_id=? and sp.year_id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -72,7 +72,7 @@ public class DbStudPayment extends BaseDb {
         IndexedContainer container = dw.preparePaymentsContainer();
         while (result.next()) {
             boolean isDisabled = false;
-            if (!currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOlder5Days)) {
+            if (!currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions)) {
                 isDisabled = result.getBoolean("isDisabled");
             }
             String id = result.getString("sp.id");
@@ -103,6 +103,15 @@ public class DbStudPayment extends BaseDb {
                     myUI.getMessage(SptMessages.Date), id, false, false);
             df.setId(myUI.getMessage(SptMessages.Payments));
             df.setEnabled(!isDisabled);
+            if (currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions)) {
+                df.setRangeStart(myUI.getUser().getTransactions_start_date());
+            } else if (!isDisabled){
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.MINUTE, -1441);
+                df.setRangeStart(calendar.getTime());
+                df.addValidator(new DateRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue),
+                        df.getRangeStart(), df.getRangeEnd(), Resolution.MINUTE));
+            }
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
             tf = dw.createTextfieldNote(result.getString("sp.note"), myUI.getMessage(SptMessages.Note), id);
             tf.setEnabled(!isDisabled);

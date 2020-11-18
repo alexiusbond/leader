@@ -273,7 +273,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             dbDef.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
-            getProductCategorySelect().setContainerDataSource(dbpc.execSQL_cont(myUI));
+            productCategorySelect.setContainerDataSource(dbpc.execSQL_cont(myUI));
             dbpc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -1114,7 +1114,8 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            cb.setContainerDataSource(dbCon.exec_for_select(myUI, getProductCategorySelect().getContainerProperty(getProductCategorySelect().getValue(),
+            cb.setContainerDataSource(dbCon.exec_for_select(myUI, productCategorySelect.getContainerProperty(
+                    productCategorySelect.getValue(),
                     sysSettings.acc_category_id).getValue().toString()));
             dbCon.close();
         } catch (Exception e) {
@@ -1246,15 +1247,12 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         }
     }
 
-    /**
-     * @return the productCategorySelect
-     */
-    public ComboBoxMax getProductCategorySelect() {
-        return productCategorySelect;
-    }
-
     public void setMovementsFooter(double amount) {
         movementsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(amount));
+    }
+
+    public ComboBoxMax getProductCategorySelect() {
+        return productCategorySelect;
     }
 
     /**
