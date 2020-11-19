@@ -242,7 +242,7 @@ public class SystemSettings implements Serializable {
     public final String prmChangeYear = "ChangeYear";
     public final String prmChangeSchool = "ChangeSchool";
     public final String prmStockBalanceReport = "отчет по состоянию склада";
-    public final String prmStockMovementsReport = "отчет по передвижениям товара";
+    public final String prmProductMovementsReport = "отчет по передвижениям товара";
     public final String prmStockOperationsReport = "отчет по операциям склада";
     public final String prmConfirmationControl = "контроль подтверждений";
     public final String button = "##";

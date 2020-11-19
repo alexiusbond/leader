@@ -369,7 +369,7 @@ public class SptMessages_en extends SptMessages {
             {HRLessonHoursReport, "Отчет по кол-ву преподаваемых часов"},
             {MonthReport, "Отчет по месяцам"},
             {StockBalanceReport, "Отчет по состоянию склада"},
-            {StockMovementsReport, "Отчет по передвижениям товара"},
+            {ProductMovementsReport, "Отчет по передвижениям товара"},
             {StockOperationsReport, "Отчет по операциям склада"},
             {AccountingBalanceReport, "Балансовый отчет"},
             {Yearly, "Годовой"},

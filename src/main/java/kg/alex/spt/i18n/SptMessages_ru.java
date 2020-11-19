@@ -368,7 +368,7 @@ public class SptMessages_ru extends SptMessages {
             {MonthReport, "Отчет по месяцам"},
             {AccountingBalanceReport, "Балансовый отчет"},
             {StockBalanceReport, "Отчет по состоянию склада"},
-            {StockMovementsReport, "Отчет по передвижениям товара"},
+            {ProductMovementsReport, "Отчет по передвижениям товара"},
             {StockOperationsReport, "Отчет по операциям склада"},
             {Yearly, "Годовой"},
             {Monthly, "Месячный"},

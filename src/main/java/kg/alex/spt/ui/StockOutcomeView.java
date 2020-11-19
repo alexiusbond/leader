@@ -225,7 +225,13 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             DbEmployee dbCon = new DbEmployee();
             dbCon.connect();
             fromEmployeeSelect.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 100));
+            if (fromEmployeeSelect.getContainerDataSource() != null) {
+                fromEmployeeSelect.setValue(((IndexedContainer) fromEmployeeSelect.getContainerDataSource()).firstItemId());
+            }
             toEmployeeSelect.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 17));
+            if (toEmployeeSelect.getContainerDataSource() != null) {
+                toEmployeeSelect.setValue(((IndexedContainer) toEmployeeSelect.getContainerDataSource()).firstItemId());
+            }
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);

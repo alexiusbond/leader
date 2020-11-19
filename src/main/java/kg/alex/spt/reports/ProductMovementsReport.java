@@ -22,10 +22,10 @@ import org.tepi.filtertable.FilterTreeTable;
 
 import java.util.Date;
 
-public class StockMovementsReport implements Button.ClickListener,
+public class ProductMovementsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(StockMovementsReport.class);
+    static final Logger logger = LogManager.getLogger(ProductMovementsReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn;
     private HorizontalSplitPanel spltPanel;
@@ -37,7 +37,7 @@ public class StockMovementsReport implements Button.ClickListener,
     private SystemSettings sysSettings = new SystemSettings();
     private ExcelExport excelReport;
 
-    public StockMovementsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public ProductMovementsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
         this.spltPanel = spltPanel;
         buildLeftPanel();
@@ -187,7 +187,7 @@ public class StockMovementsReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     excelReport = new ExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.StockMovementsReport) + " "
+                    excelReport.setReportTitle(myUI.getMessage(SptMessages.ProductMovementsReport) + " "
                             + productsTable.getContainerProperty(productsTable.getValue(),
                             myUI.getMessage(SptMessages.Name)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
                             + sysSettings.df.format(fromDateDF.getValue())
