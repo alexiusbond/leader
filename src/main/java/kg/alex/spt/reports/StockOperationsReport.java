@@ -19,9 +19,8 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbProductCategories;
 import kg.alex.spt.dao.DbStockMovements;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
-import kg.alex.spt.utils.FormattedTable;
+import kg.alex.spt.utils.FormattedTreeTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,14 +35,13 @@ public class StockOperationsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(StockOperationsReport.class);
     private MyVaadinUI myUI;
-    private Button generateBtn, excelBtn;
+    private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private HorizontalSplitPanel spltPanel;
-    private ComboBoxMax stockSelect;
-    private ComboBoxMultiselectMax categorySelect;
+    private ComboBoxMultiselectMax stocksMSB;
     private OptionGroup operationOG;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
-    private FormattedTable dataTable;
+    private FormattedTreeTable dataTable;
     private FilterTreeTable productsTable;
     private SystemSettings sysSettings = new SystemSettings();
     private ExcelExport excelReport;
@@ -69,6 +67,7 @@ public class StockOperationsReport implements Button.ClickListener,
         productsTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
         productsTable.setFilterBarVisible(true);
         productsTable.setFooterVisible(false);
+        productsTable.setMultiSelect(true);
         productsTable.setSelectable(true);
         productsTable.setNullSelectionAllowed(false);
         productsTable.addValueChangeListener(this);
@@ -113,57 +112,66 @@ public class StockOperationsReport implements Button.ClickListener,
         operationOG.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
         operationOG.addValueChangeListener(this);
 
-        stockSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Stocks));
-        stockSelect.setNullSelectionAllowed(false);
-        stockSelect.setRequired(true);
-        stockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        stockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        stockSelect.setWidth("100%");
-        stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
-        stockSelect.setFilteringMode(FilteringMode.CONTAINS);
-        stockSelect.addValueChangeListener(this);
-
-        categorySelect = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ProductCategory));
-        categorySelect.setRequired(true);
-        categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        categorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        categorySelect.setWidth("100%");
-        categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
-        categorySelect.setFilteringMode(FilteringMode.CONTAINS);
-        categorySelect.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        categorySelect.addValueChangeListener(this);
-        categorySelect.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
+        stocksMSB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Stocks));
+        stocksMSB.setRequired(true);
+        stocksMSB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        stocksMSB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        stocksMSB.setWidth("100%");
+        stocksMSB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        stocksMSB.setFilteringMode(FilteringMode.CONTAINS);
+        stocksMSB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        stocksMSB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
             @Override
             public boolean isShow(String filter, int page) {
                 return true;
             }
         });
+        stocksMSB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        stocksMSB.addValueChangeListener(this);
+
+        selectAllBtn = new Button(myUI.getMessage(SptMessages.AllCategories));
+        selectAllBtn.setWidth("100%");
+        selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
+        selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
+        selectAllBtn.addClickListener(this);
+
+        deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllBtn.setWidth("100%");
+        deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
+        deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
+        deselectAllBtn.addClickListener(this);
 
         try {
             DbDefinition dbCon = new DbDefinition();
             dbCon.connect();
-            stockSelect.setContainerDataSource(
+            DbAccCategory dbAc = new DbAccCategory();
+            dbAc.connect();
+            DbProductCategories dbPC = new DbProductCategories();
+            dbPC.connect();
+            stocksMSB.setContainerDataSource(
                     dbCon.exec_for_select(myUI, sysSettings.dbStock, myUI.getUser().getSchool_id()));
+            stocksMSB.setValue(sysSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
             operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, sysSettings.dbOperation));
             if (operationOG.getContainerDataSource() != null) {
                 operationOG.setValue(((IndexedContainer) operationOG.getContainerDataSource()).firstItemId());
             }
+            dbAc.execSQL_for_select_as_tree(myUI, productsTable,
+                    sysSettings.convertCollectionToStr(dbPC.execSQL_for_select(myUI).getItemIds()));
+            dbAc.close();
             dbCon.close();
-            DbProductCategories dbpc = new DbProductCategories();
-            dbpc.connect();
-            categorySelect.setContainerDataSource(dbpc.execSQL_cont(myUI));
-            dbpc.close();
+            dbPC.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        stockSelect.setValue(sysSettings.convertToSet(stockSelect.getContainerDataSource().getItemIds()));
+        stocksMSB.setValue(sysSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
 
         leftGrid.addComponent(operationOG, 0, 0, 3, 0);
         leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
         leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
-        leftGrid.addComponent(stockSelect, 0, 2, 3, 2);
-        leftGrid.addComponent(categorySelect, 0, 3, 3, 3);
+        leftGrid.addComponent(stocksMSB, 0, 2, 3, 2);
+        leftGrid.addComponent(selectAllBtn, 0, 3, 1, 3);
+        leftGrid.addComponent(deselectAllBtn, 2, 3, 3, 3);
         leftGrid.addComponent(productsTable, 0, 4, 3, 4);
         leftGrid.addComponent(generateBtn, 0, 5, 2, 5);
         leftGrid.addComponent(excelBtn, 3, 5);
@@ -176,7 +184,7 @@ public class StockOperationsReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTreeTable();
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -190,19 +198,17 @@ public class StockOperationsReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            if (productsTable.getValue() != null && stockSelect.isValid() && fromDateDF.isValid() && tillDateDF.isValid()) {
+            if (productsTable.getValue() != null && stocksMSB.isValid() && fromDateDF.isValid() && tillDateDF.isValid()) {
                 try {
                     DbStockMovements dbCon = new DbStockMovements();
                     dbCon.connect();
-                    dbCon.exec_stock_movements(myUI, (Integer) productsTable.getValue(), fromDateDF.getValue(),
-                            tillDateDF.getValue(), dataTable, (Integer) stockSelect.getValue());
+                    dbCon.exec_stock_operations(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(), (Integer) operationOG.getValue(),
+                            sysSettings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
 
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Price), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvaragePrice), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvarageRate), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -217,26 +223,29 @@ public class StockOperationsReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     excelReport = new ExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.ProductMovementsReport) + " "
-                            + productsTable.getContainerProperty(productsTable.getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
+                    excelReport.setReportTitle(myUI.getMessage(SptMessages.StockOperationsReport) + "( "
+                            + operationOG.getContainerProperty(operationOG.getValue(),
+                            myUI.getMessage(SptMessages.Name)).getValue() + ") - [" + fromDateDF.getCaption().toLowerCase() + " "
                             + sysSettings.df.format(fromDateDF.getValue())
                             + " " + tillDateDF.getCaption().toLowerCase() + " " + sysSettings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
+                    excelReport.getTotalsRow().getCell(1).setCellFormula(null);
+                    excelReport.getTotalsRow().getCell(3).setCellFormula(null);
+                    excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(5).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(6).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(7).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(7).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
-                    excelReport.getTotalsRow().getCell(10).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(10).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Balance)));
+                    excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
             }
+        } else if (source == selectAllBtn) {
+            productsTable.setValue(productsTable.getContainerDataSource().getItemIds());
+        } else if (source == deselectAllBtn) {
+            productsTable.setValue(null);
         }
     }
 
@@ -244,30 +253,9 @@ public class StockOperationsReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
-            if (property == productsTable || property == tillDateDF || property == fromDateDF || property == stockSelect || property == operationOG) {
+            if (property == productsTable || property == tillDateDF || property == fromDateDF || property == stocksMSB || property == operationOG) {
                 excelBtn.setEnabled(false);
-                dataTable.setContainerDataSource(null);
-            } else if (property == categorySelect) {
-                excelBtn.setEnabled(false);
-                dataTable.setContainerDataSource(null);
-            }
-        }
-        if (property == categorySelect) {
-            if (categorySelect.getValue() != null) {
-                try {
-                    DbAccCategory dbCon = new DbAccCategory();
-                    dbCon.connect();
-                    dbCon.execSQL_for_select_as_tree(myUI, productsTable,
-                            sysSettings.convertCollectionToStr((Set<?>) categorySelect.getValue(),
-                                    (IndexedContainer) categorySelect.getContainerDataSource(),
-                                    sysSettings.acc_category_id));
-                    dbCon.close();
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
-                }
-            } else {
-                productsTable.getContainerDataSource().removeAllItems();
+                dataTable.getContainerDataSource().removeAllItems();
             }
         }
     }

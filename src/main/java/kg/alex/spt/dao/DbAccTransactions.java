@@ -804,11 +804,20 @@ public class DbAccTransactions extends BaseDb {
                 container.setChildrenAllowed(catNext, false);
                 Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
+                    if (container.getItem(parent) == null) {
+                        item = container.addItem((Integer) parent);
+                        item.getItemProperty(myUI.getMessage(SptMessages.Name))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                    }
                     container.setParent(catNext, parent);
                 }
                 if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
                     container.setChildrenAllowed(catNext, true);
                     t.setCollapsed(catNext, false);
+                }
+                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(parent) != null) {
+                    container.setChildrenAllowed(parent, true);
+                    t.setCollapsed(parent, false);
                 }
             }
         }

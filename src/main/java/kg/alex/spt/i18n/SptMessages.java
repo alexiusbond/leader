@@ -7,7 +7,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
 
     // Application
     public static final String AppTitle = generateId();
-//Login Form    
+    //Login Form
     public static final String Language = generateId();
     public static final String Level = generateId();
     public static final String GivenBy = generateId();
@@ -28,7 +28,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Period = generateId();
     public static final String CanDeleteOnlyLastItem = generateId();
     public static final String YearDefinition = generateId();
-// AuthenticatedScreen
+    // AuthenticatedScreen
     public static final String LogoutButton = generateId();
     public static final String LogInAsLabel = generateId();
     public static final String Welcome = generateId();
@@ -169,6 +169,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Salaries = generateId();
     public static final String Ratio = generateId();
     public static final String Price = generateId();
+    public static final String AvaragePrice = generateId();
     public static final String Upload = generateId();
     public static final String Uploading = generateId();
     public static final String Jpeg = generateId();
@@ -370,6 +371,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Calls = generateId();
     public static final String WhoCalled = generateId();
     public static final String Rate = generateId();
+    public static final String AvarageRate = generateId();
     public static final String RateUSD = generateId();
     public static final String Summary = generateId();
     public static final String Report = generateId();
@@ -483,6 +485,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     private static String generateId() {
         return new Integer(ids++).toString();
     }
+
     static int ids = 0;
 
     @Override

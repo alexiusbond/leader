@@ -253,7 +253,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             dbDef.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
-            productCategorySelect.setContainerDataSource(dbpc.execSQL_cont(myUI));
+            productCategorySelect.setContainerDataSource(dbpc.execSQL_for_select(myUI));
             dbpc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -1124,9 +1124,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            cb.setContainerDataSource(dbCon.exec_for_select(
-                    myUI, productCategorySelect.getContainerProperty(productCategorySelect.getValue(),
-                            sysSettings.acc_category_id).getValue().toString()));
+            cb.setContainerDataSource(dbCon.exec_for_select(myUI, productCategorySelect.getValue() + ""));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);

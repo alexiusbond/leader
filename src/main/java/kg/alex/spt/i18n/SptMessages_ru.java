@@ -164,6 +164,8 @@ public class SptMessages_ru extends SptMessages {
             {Salaries, "Зарплаты"},
             {Ratio, "Коофицент остатка"},
             {Price, "Цена за ед."},
+            {AvaragePrice, "Средняя цена за ед."},
+            {AvarageRate, "Средний курс"},
             {FileName, "Имя файла"},
             {Idle, "Пустой"},
             {CurrentState, "Текущее состояние"},

@@ -122,7 +122,7 @@ public class ProductMovementsReport implements Button.ClickListener,
             dbCon.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
-            categorySelect.setContainerDataSource(dbpc.execSQL_cont(myUI));
+            categorySelect.setContainerDataSource(dbpc.execSQL_for_select(myUI));
             dbpc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -164,7 +164,7 @@ public class ProductMovementsReport implements Button.ClickListener,
                 try {
                     DbStockMovements dbCon = new DbStockMovements();
                     dbCon.connect();
-                    dbCon.exec_stock_movements(myUI, (Integer) productsTable.getValue(), fromDateDF.getValue(),
+                    dbCon.exec_product_movements(myUI, (Integer) productsTable.getValue(), fromDateDF.getValue(),
                             tillDateDF.getValue(), dataTable, (Integer) stockSelect.getValue());
 
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
@@ -214,10 +214,8 @@ public class ProductMovementsReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
-            if (property == productsTable || property == tillDateDF || property == fromDateDF || property == stockSelect) {
-                excelBtn.setEnabled(false);
-                dataTable.setContainerDataSource(null);
-            } else if (property == categorySelect) {
+            if (property == productsTable || property == tillDateDF || property == fromDateDF
+                    || property == stockSelect || property == categorySelect) {
                 excelBtn.setEnabled(false);
                 dataTable.setContainerDataSource(null);
             }
@@ -227,8 +225,7 @@ public class ProductMovementsReport implements Button.ClickListener,
                 try {
                     DbAccCategory dbCon = new DbAccCategory();
                     dbCon.connect();
-                    dbCon.execSQL_for_select_as_tree(myUI, productsTable,
-                            categorySelect.getContainerProperty(categorySelect.getValue(), sysSettings.acc_category_id).getValue().toString());
+                    dbCon.execSQL_for_select_as_tree(myUI, productsTable, categorySelect.getValue() + "");
                     dbCon.close();
                 } catch (Exception e) {
                     logger.error(e);

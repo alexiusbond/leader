@@ -183,7 +183,7 @@ public class DbAccCategory extends BaseDb {
 
     public void execSQL_for_select_as_tree(MyVaadinUI myUI, FilterTreeTable t, String parent_ids)
             throws SQLException {
-        String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.parent_id from acc_category as c "
+        String sql = "SELECT c.id, concat(ifnull(concat(c.parent_code,'.',c.code),c.code), ' - ', c.name) as name, c.parent_id from acc_category as c "
                 + "where c.parent_id in (" + parent_ids + ") or c.id in (" + parent_ids + ") order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -198,8 +198,7 @@ public class DbAccCategory extends BaseDb {
             if (result.getInt("c.parent_id") != 0) {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
-                    result.getString("name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("name"));
         }
     }
 

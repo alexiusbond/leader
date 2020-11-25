@@ -39,6 +39,20 @@ public class DbProductCategories extends BaseDb {
         return container;
     }
 
+    public IndexedContainer execSQL_for_select(MyVaadinUI myUI) throws SQLException {
+        String sql = "SELECT id, name, acc_category_id "
+                + "FROM dp_product_category order by id;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("acc_category_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("name"));
+        }
+        return container;
+    }
+
     public int exec_update(int cat_id, int id) throws SQLException {
         String sql = "update dp_product_category set acc_category_id = ? where id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
