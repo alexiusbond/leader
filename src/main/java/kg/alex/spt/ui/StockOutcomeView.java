@@ -81,6 +81,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
 
         movementsTable = new FormattedTable();
         movementsTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        movementsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         movementsTable.setSizeFull();
         movementsTable.setFooterVisible(true);
         rightLay.addComponent(movementsTable, 0, 1, 2, 1);
@@ -416,6 +417,9 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 dateDF.setEnabled(true);
             }
             repaintMovementsFooter();
+            if (!disableFields(movementsTable)) {
+                enableFields(movementsTable);
+            }
         }
     }
 
@@ -623,6 +627,9 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     myUI.getMessage(SptMessages.Quantity)).getValue())
                     .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, remain));
         }
+        if (!disableFields(movementsTable)) {
+            enableFields(movementsTable);
+        }
     }
 
     private void recalculateRemaindersAfterInsert(Object changedItemId) {
@@ -701,7 +708,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         } else {
             movementsTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Remain)).setValue(curr_remainder);
         }
-        if (value_from_db == 0) {
+        if (value_from_db == 0 && !isExistsSame) {
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue()).removeAllValidators();
             ((TextField) movementsTable.getContainerProperty(changedItemId,
@@ -713,6 +720,9 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue())
                     .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, old_remainder));
+        }
+        if (!disableFields(movementsTable)) {
+            enableFields(movementsTable);
         }
     }
 
@@ -1253,6 +1263,66 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
+        }
+    }
+
+    private void enableFields(Table t) {
+        Iterator iter = ((IndexedContainer) t
+                .getContainerDataSource()).getItemIds().iterator();
+        while (iter.hasNext()) {
+            Object next = iter.next();
+            Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
+            while (iterProp.hasNext()) {
+                Object next1 = iterProp.next();
+                Object c = t.getItem(next).getItemProperty(next1).getValue();
+                if (c instanceof AbstractField) {
+                    ((AbstractField) c).setEnabled(true);
+                } else if (c instanceof AbstractComponent) {
+                    ((AbstractComponent) c).setEnabled(true);
+                }
+            }
+        }
+    }
+
+    private boolean disableFields(Table t) {
+        Object idToEnable = null;
+        Iterator iter = ((IndexedContainer) t
+                .getContainerDataSource()).getItemIds().iterator();
+        while (iter.hasNext()) {
+            Object next = iter.next();
+            Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
+            while (iterProp.hasNext()) {
+                Object next1 = iterProp.next();
+                Object c = t.getItem(next).getItemProperty(next1).getValue();
+                if (c instanceof AbstractField) {
+                    if (!((AbstractField) c).isValid()) {
+                        idToEnable = next;
+                    } else {
+                        ((AbstractField) c).setEnabled(false);
+                    }
+                } else if (c instanceof AbstractComponent) {
+                    ((AbstractComponent) c).setEnabled(false);
+                }
+            }
+        }
+        if (idToEnable == null) {
+            return false;
+        } else {
+            enableRow(t, idToEnable);
+            return true;
+        }
+    }
+
+    public void enableRow(Table t, Object itemId) {
+        Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
+        while (iterProp.hasNext()) {
+            Object next1 = iterProp.next();
+            Object c = t.getItem(itemId).getItemProperty(next1).getValue();
+            if (c instanceof AbstractField) {
+                ((AbstractField) c).setEnabled(true);
+            } else if (c instanceof AbstractComponent) {
+                ((AbstractComponent) c).setEnabled(true);
+            }
         }
     }
 

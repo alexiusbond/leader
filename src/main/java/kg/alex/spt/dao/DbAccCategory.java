@@ -161,7 +161,7 @@ public class DbAccCategory extends BaseDb {
                 + "where c.acc_type_id = ? and c.activity_status_id=2 "
                 + "and (c.school_id IS NULL or c.school_id in (" + school_ids + ")) "
                 + "and (c.parent_id not in (select acc_category_id from dp_product_category) or c.parent_id is NULL) "
-                + "group by c.id order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+                + "group by c.id order by c.parent_code, CAST(code AS UNSIGNED);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
         ResultSet result = stat.executeQuery();
@@ -184,7 +184,7 @@ public class DbAccCategory extends BaseDb {
     public void execSQL_for_select_as_tree(MyVaadinUI myUI, FilterTreeTable t, String parent_ids)
             throws SQLException {
         String sql = "SELECT c.id, concat(ifnull(concat(c.parent_code,'.',c.code),c.code), ' - ', c.name) as name, c.parent_id from acc_category as c "
-                + "where c.parent_id in (" + parent_ids + ") or c.id in (" + parent_ids + ") order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+                + "where c.parent_id in (" + parent_ids + ") or c.id in (" + parent_ids + ") order by c.parent_code, CAST(code AS UNSIGNED);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();

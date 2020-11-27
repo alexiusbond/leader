@@ -155,7 +155,6 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String GenerateButton = generateId();
     public static final String Functions = generateId();
     public static final String UploadStatus = generateId();
-    public static final String CancelKey = generateId();
     public static final String CurrentState = generateId();
     public static final String Idle = generateId();
     public static final String FileName = generateId();
@@ -185,6 +184,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Date = generateId();
     public static final String Photo = generateId();
     public static final String Gender = generateId();
+    public static final String General = generateId();
     public static final String Citizenship = generateId();
     public static final String Children = generateId();
     public static final String Questioning = generateId();
@@ -353,9 +353,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String YearMonthReport = generateId();
     public static final String MonthReport = generateId();
     public static final String AccountingBalanceReport = generateId();
-    public static final String StockBalanceReport = generateId();
     public static final String ProductMovementsReport = generateId();
-    public static final String StockOperationsReport = generateId();
+    public static final String StockGeneralReport = generateId();
     public static final String SchoolAccountingReport = generateId();
     public static final String GeneralAccountingReport = generateId();
     public static final String CurrentAccountStatementReport = generateId();
@@ -481,6 +480,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ReturnableAssets = generateId();
     public static final String ExistsNotification = generateId();
     public static final String ExistsInvoiceNotification = generateId();
+    public static final String ToThe = generateId();
 
     private static String generateId() {
         return new Integer(ids++).toString();

@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -30,10 +26,10 @@ import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import java.util.Date;
 import java.util.Set;
 
-public class StockOperationsReport implements Button.ClickListener,
+public class StockGeneralReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(StockOperationsReport.class);
+    static final Logger logger = LogManager.getLogger(StockGeneralReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private HorizontalSplitPanel spltPanel;
@@ -46,7 +42,7 @@ public class StockOperationsReport implements Button.ClickListener,
     private SystemSettings sysSettings = new SystemSettings();
     private ExcelExport excelReport;
 
-    public StockOperationsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public StockGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
         this.spltPanel = spltPanel;
         buildLeftPanel();
@@ -152,6 +148,8 @@ public class StockOperationsReport implements Button.ClickListener,
                     dbCon.exec_for_select(myUI, sysSettings.dbStock, myUI.getUser().getSchool_id()));
             stocksMSB.setValue(sysSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
             operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, sysSettings.dbOperation));
+            Item item = operationOG.getContainerDataSource().addItem(0);
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(myUI.getMessage(SptMessages.General));
             if (operationOG.getContainerDataSource() != null) {
                 operationOG.setValue(((IndexedContainer) operationOG.getContainerDataSource()).firstItemId());
             }
@@ -202,13 +200,25 @@ public class StockOperationsReport implements Button.ClickListener,
                 try {
                     DbStockMovements dbCon = new DbStockMovements();
                     dbCon.connect();
-                    dbCon.exec_stock_operations(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(), (Integer) operationOG.getValue(),
-                            sysSettings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
+                    if ((Integer) operationOG.getValue() == 0) {
+                        dbCon.exec_stock_balance(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(),
+                                sysSettings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
 
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvaragePrice), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvarageRate), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance) + " " +
+                                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + sysSettings.df.format(tillDateDF.getValue()), Table.Align.RIGHT);
+                    } else {
+                        dbCon.exec_stock_operations(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(), (Integer) operationOG.getValue(),
+                                sysSettings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvaragePrice), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvarageRate), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
+                    }
+
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -223,19 +233,31 @@ public class StockOperationsReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     excelReport = new ExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.StockOperationsReport) + "( "
+                    excelReport.setReportTitle(myUI.getMessage(SptMessages.StockGeneralReport) + " ("
                             + operationOG.getContainerProperty(operationOG.getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue() + ") - [" + fromDateDF.getCaption().toLowerCase() + " "
+                            myUI.getMessage(SptMessages.Name)).getValue() + ") - [" + myUI.getMessage(SptMessages.From).toLowerCase() + " "
                             + sysSettings.df.format(fromDateDF.getValue())
-                            + " " + tillDateDF.getCaption().toLowerCase() + " " + sysSettings.df.format(tillDateDF.getValue()) + "]");
+                            + " " + myUI.getMessage(SptMessages.To).toLowerCase() + " " + sysSettings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(1).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(3).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(4).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(5).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
+                    if ((Integer) operationOG.getValue() == 0) {
+                        excelReport.getTotalsRow().getCell(1).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(3).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(4).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(4).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.StockIncome)
+                                + " - " + myUI.getMessage(SptMessages.Amount)));
+                        excelReport.getTotalsRow().getCell(5).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.StockOutcome)
+                                + " - " + myUI.getMessage(SptMessages.Amount)));
+                        excelReport.getTotalsRow().getCell(6).setCellFormula(null);
+                    } else {
+                        excelReport.getTotalsRow().getCell(1).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(3).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(4).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(5).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
+                    }
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {

@@ -93,6 +93,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         tillDateDF.setDateFormat(sysSettings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
+        tillDateDF.addValueChangeListener(this);
 
         stockSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Stocks));
         stockSelect.setNullSelectionAllowed(false);

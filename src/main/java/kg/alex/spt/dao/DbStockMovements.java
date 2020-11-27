@@ -335,6 +335,25 @@ public class DbStockMovements extends BaseDb {
         return 0.0;
     }
 
+    public double execSQL_category_balance(int acc_category_id, String stock_ids, Date date) throws SQLException {
+        String sql = "SELECT SUM(IF(inv.service_type_id = 1 AND DATE(inv.creation_date) < ?, sm.amount, 0.0)) " +
+                "- SUM(IF(inv.service_type_id = 2 AND DATE(inv.creation_date) < ?, sm.amount, 0.0)) AS balance " +
+                "FROM dp_stock_movements AS sm " +
+                "LEFT JOIN acc_category AS cat ON sm.acc_category_id = cat.id " +
+                "LEFT JOIN dp_invoice AS inv ON sm.invoice_id = inv.id " +
+                "WHERE sm.acc_category_id = ? AND (inv.to_stock_id IN (" + stock_ids + ") OR inv.from_stock_id IN (" + stock_ids + ")) " +
+                "GROUP BY cat.id ORDER BY CONCAT(IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code), ' - ', cat.name) ";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setDate(1, new java.sql.Date(date.getTime()));
+        stat.setDate(2, new java.sql.Date(date.getTime()));
+        stat.setInt(3, acc_category_id);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getDouble("balance");
+        }
+        return 0.0;
+    }
+
     public boolean execSQL_allowNewInsert(int acc_category_id, int measurement_id, int stock_id, Date date) throws SQLException {
 
         String sql = "SELECT if(mv.remain<mv.amount, 0, 1) AS isOk FROM dp_stock_movements mv "
@@ -427,11 +446,12 @@ public class DbStockMovements extends BaseDb {
                         item = container.addItem((Integer) parent);
                         item.getItemProperty(myUI.getMessage(SptMessages.Name))
                                 .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                    } else {
+                        item.getItemProperty(myUI.getMessage(SptMessages.AvarageRate)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(SptMessages.AvaragePrice)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
-                    item.getItemProperty(myUI.getMessage(SptMessages.AvarageRate)).setValue(0.0);
-                    item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
-                    item.getItemProperty(myUI.getMessage(SptMessages.AvaragePrice)).setValue(0.0);
                 }
                 if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
                     container.setChildrenAllowed(catNext, true);
@@ -467,6 +487,112 @@ public class DbStockMovements extends BaseDb {
         t.setColumnFooter(myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(total_amount));
     }
 
+    public void exec_stock_balance(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till,
+                                   String stock_ids, FormattedTreeTable t) throws SQLException {
+        SystemSettings sysSettings = new SystemSettings();
+        Set<Integer> selectedCategoryIds = sysSettings.getChild_ids(
+                (HierarchicalContainer) categoriesTable.getContainerDataSource(),
+                (Set<?>) categoriesTable.getValue());
+        String sql = "SELECT cat.id, CONCAT(IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code), ' - ', cat.name) AS name, " +
+                "SUM(IF(inv.service_type_id = 1 AND DATE(inv.creation_date) between ? AND ?, sm.amount, 0.0)) AS in_amount, " +
+                "SUM(IF(inv.service_type_id = 2 AND DATE(inv.creation_date) between ? AND ?, sm.amount, 0.0)) AS out_amount, " +
+                "SUM(IF(inv.service_type_id = 1 AND DATE(inv.creation_date) between ? AND ?, sm.amount * sm.price, 0.0)) AS in_total, " +
+                "SUM(IF(inv.service_type_id = 2 AND DATE(inv.creation_date) between ? AND ?, sm.amount * sm.price, 0.0)) AS out_total, " +
+                "SUM(IF(inv.service_type_id = 1 AND DATE(inv.creation_date) < ?, sm.amount, 0.0)) " +
+                "- SUM(IF(inv.service_type_id = 2 AND DATE(inv.creation_date) < ?, sm.amount, 0.0)) AS balance " +
+                "FROM dp_stock_movements AS sm " +
+                "LEFT JOIN acc_category AS cat ON sm.acc_category_id = cat.id " +
+                "LEFT JOIN dp_invoice AS inv ON sm.invoice_id = inv.id " +
+                "WHERE sm.acc_category_id IN (" + sysSettings.convertCollectionToStr(selectedCategoryIds) + ") AND " +
+                "(inv.to_stock_id IN (" + stock_ids + ") OR inv.from_stock_id IN (" + stock_ids + ")) " +
+                "GROUP BY cat.id ORDER BY cat.parent_code, CAST(cat.code AS UNSIGNED)";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setDate(1, new java.sql.Date(from.getTime()));
+        stat.setDate(2, new java.sql.Date(till.getTime()));
+        stat.setDate(3, new java.sql.Date(from.getTime()));
+        stat.setDate(4, new java.sql.Date(till.getTime()));
+        stat.setDate(5, new java.sql.Date(from.getTime()));
+        stat.setDate(6, new java.sql.Date(till.getTime()));
+        stat.setDate(7, new java.sql.Date(from.getTime()));
+        stat.setDate(8, new java.sql.Date(till.getTime()));
+        stat.setDate(9, new java.sql.Date(from.getTime()));
+        stat.setDate(10, new java.sql.Date(from.getTime()));
+        ResultSet result = stat.executeQuery();
+        HierarchicalContainer container = new HierarchicalContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " " +
+                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + sysSettings.df.format(till), Double.class, null);
+        t.setContainerDataSource(container);
+        double total_in_amount = 0.0, total_out_amount = 0.0;
+        Iterator itr = categoriesTable.getContainerDataSource().getItemIds().iterator();
+        while (itr.hasNext()) {
+            Object catNext = itr.next();
+            if (selectedCategoryIds.contains(catNext)) {
+                Item item = container.addItem((Integer) catNext);
+                item.getItemProperty(myUI.getMessage(SptMessages.Name))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                container.setChildrenAllowed(catNext, false);
+                Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
+                if (parent != null) {
+                    if (container.getItem(parent) == null) {
+                        item = container.addItem((Integer) parent);
+                        item.getItemProperty(myUI.getMessage(SptMessages.Name))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                    } else {
+                        item.getItemProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " " +
+                                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + sysSettings.df.format(till)).setValue(0.0);
+                    }
+                    container.setParent(catNext, parent);
+                }
+                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
+                    container.setChildrenAllowed(catNext, true);
+                    t.setCollapsed(catNext, false);
+                }
+                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(parent) != null) {
+                    container.setChildrenAllowed(parent, true);
+                    t.setCollapsed(parent, false);
+                }
+            }
+        }
+        while (result.next()) {
+            Item item = container.getItem(result.getInt("cat.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)
+                    + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(result.getDouble("in_amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
+                    + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(result.getDouble("out_amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)
+                    + " - " + myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("in_total"));
+            item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
+                    + " - " + myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("out_total"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " " +
+                    myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + sysSettings.df.format(till)).setValue(result.getDouble("balance")
+                    + result.getDouble("in_amount") - result.getDouble("out_amount"));
+
+            total_in_amount += result.getDouble("in_total");
+            total_out_amount += result.getDouble("out_total");
+
+            Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
+            while (parent_id != null) {
+                item = container.getItem(parent_id);
+                item.getItemProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)
+                                + " - " + myUI.getMessage(SptMessages.Amount)).getValue() + result.getDouble("in_total"));
+                item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
+                                + " - " + myUI.getMessage(SptMessages.Amount)).getValue() + result.getDouble("out_total"));
+                parent_id = (Integer) container.getParent(parent_id);
+            }
+        }
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(total_in_amount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(total_out_amount));
+    }
+
     public void exec_product_movements(MyVaadinUI myUI, int acc_category_id, Date from, Date till,
                                        Table t, int stock_id) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
@@ -480,7 +606,7 @@ public class DbStockMovements extends BaseDb {
                 + "LEFT JOIN dp_service_type AS tp ON inv.service_type_id = tp.id "
                 + "WHERE sm.acc_category_id = ? AND (date(inv.creation_date) BETWEEN ? AND ?) "
                 + "AND (inv.to_stock_id = ? OR inv.from_stock_id = ?) "
-                + "group by inv.id ORDER BY inv.creation_date";
+                + "group by inv.id, order_number ORDER BY inv.creation_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_category_id);
         stat.setDate(2, new java.sql.Date(from.getTime()));
@@ -501,7 +627,7 @@ public class DbStockMovements extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Balance), Double.class, 0.0);
         int i = 0;
-        double balance = execSQL_remain(acc_category_id, 0, stock_id, from),
+        double balance = execSQL_category_balance(acc_category_id, stock_id + "", from),
                 totalOut = 0.0, totalIn = 0.0, netAmount = 0.0;
         while (result.next()) {
             Item item = container.addItem(++i);

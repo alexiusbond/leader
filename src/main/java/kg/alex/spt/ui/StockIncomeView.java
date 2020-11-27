@@ -1,5 +1,6 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.ui.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
@@ -14,21 +15,6 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CustomTable;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -109,6 +95,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
 
         movementsTable = new FormattedTable();
         movementsTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        movementsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         movementsTable.setSizeFull();
         movementsTable.setFooterVisible(true);
         rightLay.addComponent(movementsTable, 0, 1, 2, 1);
@@ -497,6 +484,9 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                 dateDF.setEnabled(true);
             }
             repaintMovementsFooter();
+            if (!disableFields(movementsTable)) {
+                enableFields(movementsTable);
+            }
         }
     }
 
@@ -637,6 +627,9 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                 }
             }
         }
+        if (!disableFields(movementsTable)) {
+            enableFields(movementsTable);
+        }
     }
 
     private void recalculateRemaindersAfterInsert(Object changedItemId) {
@@ -712,6 +705,9 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             }
         } else {
             movementsTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Remain)).setValue(curr_remainder);
+        }
+        if (!disableFields(movementsTable)) {
+            enableFields(movementsTable);
         }
     }
 
@@ -993,7 +989,11 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
 
     public ComboBoxMax createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isEnabled) {
         ComboBoxMax cb = new ComboBoxMax();
-        cb.setDescription(description);
+        if (isEnabled) {
+            cb.setDescription(description);
+        } else {
+            cb.setDescription(myUI.getMessage(SptMessages.CanNotModify));
+        }
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth("100%");
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
@@ -1021,7 +1021,11 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
 
     public Button createButton(String description, String itemId, String tableName, boolean is_enabled) {
         Button btn = new Button();
-        btn.setDescription(description);
+        if (is_enabled) {
+            btn.setDescription(description);
+        } else {
+            btn.setDescription(myUI.getMessage(SptMessages.CanNotDelete));
+        }
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.addStyleName(ValoTheme.BUTTON_TINY);
         btn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -1035,7 +1039,11 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
     public TextField createTextfieldWithProperty(Object value, String description, Validator validator, Property p,
                                                  Converter conv, boolean isEnabled) {
         TextField tf = new TextField(p);
-        tf.setDescription(description);
+        if (isEnabled) {
+            tf.setDescription(description);
+        } else {
+            tf.setDescription(myUI.getMessage(SptMessages.CanNotModify));
+        }
         tf.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         tf.setRequired(true);
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -1251,6 +1259,78 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
+        }
+    }
+
+    private void enableFields(Table t) {
+        Iterator iter = ((IndexedContainer) t
+                .getContainerDataSource()).getItemIds().iterator();
+        while (iter.hasNext()) {
+            Object next = iter.next();
+            Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
+            while (iterProp.hasNext()) {
+                Object next1 = iterProp.next();
+                Object c = t.getItem(next).getItemProperty(next1).getValue();
+                if (c instanceof AbstractField) {
+                    if (!((AbstractField) c).getDescription().equals(myUI.getMessage(SptMessages.CanNotModify))) {
+                        ((AbstractField) c).setEnabled(true);
+                    }
+                } else if (c instanceof AbstractComponent) {
+                    if (!((AbstractComponent) c).getDescription().equals(myUI.getMessage(SptMessages.CanNotDelete))) {
+                        ((AbstractComponent) c).setEnabled(true);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean disableFields(Table t) {
+        Object idToEnable = null;
+        Iterator iter = ((IndexedContainer) t
+                .getContainerDataSource()).getItemIds().iterator();
+        while (iter.hasNext()) {
+            Object next = iter.next();
+            Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
+            while (iterProp.hasNext()) {
+                Object next1 = iterProp.next();
+                Object c = t.getItem(next).getItemProperty(next1).getValue();
+                if (c instanceof AbstractField) {
+                    if (!((AbstractField) c).isValid()) {
+                        idToEnable = next;
+                    } else {
+                        if (!((AbstractField) c).getDescription().equals(myUI.getMessage(SptMessages.CanNotModify))) {
+                            ((AbstractField) c).setEnabled(false);
+                        }
+                    }
+                } else if (c instanceof AbstractComponent) {
+                    if (!((AbstractComponent) c).getDescription().equals(myUI.getMessage(SptMessages.CanNotDelete))) {
+                        ((AbstractComponent) c).setEnabled(false);
+                    }
+                }
+            }
+        }
+        if (idToEnable == null) {
+            return false;
+        } else {
+            enableRow(t, idToEnable);
+            return true;
+        }
+    }
+
+    public void enableRow(Table t, Object itemId) {
+        Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
+        while (iterProp.hasNext()) {
+            Object next1 = iterProp.next();
+            Object c = t.getItem(itemId).getItemProperty(next1).getValue();
+            if (c instanceof AbstractField) {
+                if (!((AbstractField) c).getDescription().equals(myUI.getMessage(SptMessages.CanNotModify))) {
+                    ((AbstractField) c).setEnabled(true);
+                }
+            } else if (c instanceof AbstractComponent) {
+                if (!((AbstractComponent) c).getDescription().equals(myUI.getMessage(SptMessages.CanNotDelete))) {
+                    ((AbstractComponent) c).setEnabled(true);
+                }
+            }
         }
     }
 

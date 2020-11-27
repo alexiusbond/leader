@@ -11,7 +11,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ProductMovementsReport;
-import kg.alex.spt.reports.StockOperationsReport;
+import kg.alex.spt.reports.StockGeneralReport;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -60,11 +60,8 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmProductMovementsReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ProductMovementsReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockOperationsReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.StockOperationsReport));
-        }
-        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockBalanceReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.StockBalanceReport));
+        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockGeneralReport)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.StockGeneralReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);
     }
@@ -75,10 +72,8 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         if (property == repTypeSelect) {
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
-            if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockBalanceReport))) {
-                new ProductMovementsReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockOperationsReport))) {
-                new StockOperationsReport(myUI, this);
+            if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockGeneralReport))) {
+                new StockGeneralReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ProductMovementsReport))) {
                 new ProductMovementsReport(myUI, this);
             }

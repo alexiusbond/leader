@@ -1818,7 +1818,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         stateLayout.setSpacing(true);
         stateLayout.addComponent(state);
 
-        cancelButton = new Button(myUI.getMessage(SptMessages.CancelKey));
+        cancelButton = new Button(myUI.getMessage(SptMessages.Cancel));
         cancelButton.addClickListener(this);
         cancelButton.setVisible(false);
         cancelButton.setStyleName("small");
