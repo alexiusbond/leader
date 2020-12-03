@@ -17,6 +17,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccCategory;
+import kg.alex.spt.dao.DbInvoice;
 import kg.alex.spt.dao.DbTransfers;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
@@ -27,6 +28,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.tepi.filtertable.FilterTreeTable;
@@ -276,6 +278,15 @@ public class AccountingBalanceReport implements Button.ClickListener,
                                 logger.error(e);
                                 logger.catching(e);
                             }
+                            try {
+                                DbInvoice dbCon = new DbInvoice();
+                                dbCon.connect();
+                                assertsDataTable.setId(dbCon.execSQL_Note2(myUI.getUser().getSchool_id(), 3, new java.sql.Date(current.getTime().getTime())));
+                                dbCon.close();
+                            } catch (Exception e) {
+                                logger.error(e);
+                                logger.catching(e);
+                            }
                         }
                         if (!((Set<?>) debtsCategoriesTable.getValue()).isEmpty()) {
                             catIds.addAll((Set<Integer>) debtsCategoriesTable.getValue());
@@ -292,6 +303,15 @@ public class AccountingBalanceReport implements Button.ClickListener,
                                     excelBtn.setEnabled(true);
                                 }
                                 dbsc.close();
+                            } catch (Exception e) {
+                                logger.error(e);
+                                logger.catching(e);
+                            }
+                            try {
+                                DbInvoice dbCon = new DbInvoice();
+                                dbCon.connect();
+                                debtsDataTable.setId(dbCon.execSQL_Note2(myUI.getUser().getSchool_id(), 4, new java.sql.Date(current.getTime().getTime())));
+                                dbCon.close();
                             } catch (Exception e) {
                                 logger.error(e);
                                 logger.catching(e);
@@ -440,6 +460,18 @@ public class AccountingBalanceReport implements Button.ClickListener,
                         }
                         colNum = k * 6 + 1;
                     }
+
+                    if (tables.get(k).getId() != null) {
+                        rowNum++;
+                        row = sheet.createRow(rowNum);
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, colNum, colNum + 4));
+                        cell = row.createCell(colNum);
+                        cell.setCellValue(tables.get(k).getId());
+                        sheet.autoSizeColumn(colNum);
+                        colNum = k * 6 + 1;
+                        rowNum++;
+                    }
+
                     if (k == tables.size() - 1) {
                         for (int j = 2; j < labels.size(); j++) {
                             rowNum++;

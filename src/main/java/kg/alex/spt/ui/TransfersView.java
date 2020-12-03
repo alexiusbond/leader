@@ -52,7 +52,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private PopupButton searchBtn;
     private FormattedTable transfersTable;
     private TextField invoiceNumberTF;
-    private TextArea noteTF;
+    private TextArea noteTF, note2TF;
     private DateField dateDF;
     private boolean isNew;
     private SystemSettings sysSettings = new SystemSettings();
@@ -83,7 +83,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
             NATURAL_COL_ORDER = new String[]{sysSettings.button, myUI.getMessage(SptMessages.InvoiceNumber),
                     myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
-                    myUI.getMessage(SptMessages.Note)};
+                    myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Note) + " 2"};
         } else {
             NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.InvoiceNumber),
                     myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
@@ -122,7 +122,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     private void buildSettingsLayout() {
 
-        settingsLay = new GridLayout(2, 4);
+        settingsLay = new GridLayout(2, 5);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
         settingsLay.setWidth("100%");
@@ -229,6 +229,14 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         noteTF.setWidth("100%");
         noteTF.setRows(3);
         settingsLay.addComponent(noteTF, 0, 3, 1, 3);
+
+        note2TF = new TextArea(myUI.getMessage(SptMessages.Note) + " 2");
+        note2TF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        note2TF.setWidth("100%");
+        note2TF.setRows(3);
+        if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
+            settingsLay.addComponent(note2TF, 0, 4, 1, 4);
+        }
         settingsLay.setColumnExpandRatio(0, 1);
 
         buildSearchLayout();
@@ -467,7 +475,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             }
         } else if (source == excelBtn) {
             if (transfersTable.getContainerDataSource().size() != 0) {
-                excelReport = new ExcelExport(transfersTable, caption);
+                excelReport = new ExcelExport(transfersTable, caption.substring(0, 29));
                 excelReport.setReportTitle(caption + " (№" + invoiceNumberTF.getValue() + " - " + df.format(dateDF.getValue()) + ")");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
@@ -475,7 +483,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 excelReport.getTotalsRow().getCell(5).setCellValue(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
 
                 for (int i = 0; i < transfersTable.size(); i++) {
-                    Row row = excelReport.getWorkbook().getSheet(caption).getRow(i + 2);
+                    Row row = excelReport.getWorkbook().getSheet(caption.substring(0, 29)).getRow(i + 2);
 
                     for (int k = 0; k < NATURAL_COL_ORDER_TRANSFERS.length; k++) {
                         String propName = NATURAL_COL_ORDER_TRANSFERS[k];
@@ -582,6 +590,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         invoiceNumberTF.setEnabled(false);
         dateDF.setEnabled(true);
         noteTF.setEnabled(true);
+        note2TF.setEnabled(true);
         rightLay.setEnabled(true);
     }
 
@@ -605,6 +614,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         searchBtn.setEnabled(true);
         dateDF.setEnabled(false);
         noteTF.setEnabled(false);
+        note2TF.setEnabled(false);
         rightLay.setEnabled(false);
 
         if (acc_invoice_type_id != 1 && invoicesTable.getValue() != null
@@ -643,6 +653,13 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         } else {
             noteTF.setValue("");
         }
+        if (invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                myUI.getMessage(SptMessages.Note) + " 2").getValue() != null) {
+            note2TF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
+                    myUI.getMessage(SptMessages.Note) + " 2").getValue().toString());
+        } else {
+            note2TF.setValue("");
+        }
     }
 
     private void clearFields() {
@@ -650,6 +667,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         invoiceNumberTF.setValue("");
         invoiceNumberTF.addValueChangeListener(this);
         dateDF.setValue(new Date());
+        note2TF.setValue("");
         noteTF.setValue("");
         transfersTable.removeAllItems();
     }
@@ -666,6 +684,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         }
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Note)).setValue(
                 noteTF.getValue());
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Note) + " 2").setValue(
+                note2TF.getValue());
     }
 
     private void addDatacontainerItem(int id, String date) {
@@ -679,6 +699,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             logger.catching(e);
         }
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(noteTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.Note) + " 2").setValue(note2TF.getValue());
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
@@ -715,6 +736,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         }
         if (noteTF.getValue() != null && !noteTF.getValue().equals("")) {
             inv.setNote(noteTF.getValue());
+        }
+        if (note2TF.getValue() != null && !note2TF.getValue().equals("")) {
+            inv.setNote2(note2TF.getValue());
         }
         inv.setAcc_invoice_type_id(acc_invoice_type_id);
         inv.setCreation_date(dateDF.getValue());

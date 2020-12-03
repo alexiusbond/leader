@@ -33,7 +33,7 @@ public class DbInvoice extends BaseDb {
         SystemSettings sysSettings = new SystemSettings();
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
-                + "sum(if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount)) as amount, inv.note "
+                + "sum(if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount)) as amount, inv.note, inv.note2 "
                 + "FROM acc_invoice AS inv "
                 + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = inv.id "
                 + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? group by inv.id ORDER BY inv.invoice_number DESC;";
@@ -46,6 +46,7 @@ public class DbInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Note) + " 2", String.class, null);
         container.addContainerProperty(sysSettings.button, CheckBox.class, null);
 
         while (result.next()) {
@@ -58,6 +59,7 @@ public class DbInvoice extends BaseDb {
                 item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Note) + " 2").setValue(result.getString("inv.note2"));
             if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
                 CheckBox cb = new CheckBox();
                 cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
@@ -132,6 +134,19 @@ public class DbInvoice extends BaseDb {
         return null;
     }
 
+    public String execSQL_Note2(int school_id, int acc_invoice_type_id, Date date) throws SQLException {
+        String sql = "SELECT note2 FROM acc_invoice WHERE school_id = ? and acc_invoice_type_id = ? and creation_date = ?;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, school_id);
+        stat.setInt(2, acc_invoice_type_id);
+        stat.setDate(3, date);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getString("note2");
+        }
+        return null;
+    }
+
     public int execSQL_max_invoice_number(int school_id, int acc_invoice_type_id) throws SQLException {
         String sql = "SELECT max(invoice_number) as inv_num FROM acc_invoice WHERE school_id = ? and acc_invoice_type_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -146,8 +161,8 @@ public class DbInvoice extends BaseDb {
 
     public int exec_insert(Invoice inv) throws SQLException {
         String sql = "INSERT IGNORE INTO acc_invoice (invoice_number,creation_date,note,school_id,employee_id,"
-                + "modification_date,acc_invoice_type_id) "
-                + "VALUES(?,?,?,?,?,NOW(),?);";
+                + "modification_date,acc_invoice_type_id,note2) "
+                + "VALUES(?,?,?,?,?,NOW(),?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inv.getInvoice_number());
         stat.setTimestamp(2, new java.sql.Timestamp(inv.getCreation_date().getTime()));
@@ -159,6 +174,11 @@ public class DbInvoice extends BaseDb {
         stat.setInt(4, inv.getSchool_id());
         stat.setInt(5, inv.getEmployee_id());
         stat.setInt(6, inv.getAcc_invoice_type_id());
+        if (inv.getNote2() != null) {
+            stat.setString(7, inv.getNote2());
+        } else {
+            stat.setNull(7, Types.VARCHAR);
+        }
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -170,7 +190,7 @@ public class DbInvoice extends BaseDb {
 
     public int exec_update(Invoice inv) throws SQLException {
         String sql = "UPDATE acc_invoice SET creation_date = ?,"
-                + "note = ?,employee_id = ? WHERE id=?";
+                + "note = ?,note2 = ?,employee_id = ? WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setTimestamp(1, new java.sql.Timestamp(inv.getCreation_date().getTime()));
         if (inv.getNote() != null) {
@@ -178,8 +198,13 @@ public class DbInvoice extends BaseDb {
         } else {
             stat.setNull(2, Types.VARCHAR);
         }
-        stat.setInt(3, inv.getEmployee_id());
-        stat.setInt(4, inv.getId());
+        if (inv.getNote2() != null) {
+            stat.setString(3, inv.getNote2());
+        } else {
+            stat.setNull(3, Types.VARCHAR);
+        }
+        stat.setInt(4, inv.getEmployee_id());
+        stat.setInt(5, inv.getId());
         int status = stat.executeUpdate();
         return status;
     }

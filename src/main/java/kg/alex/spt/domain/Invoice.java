@@ -14,9 +14,18 @@ public class Invoice implements Serializable {
     private int invoice_number;
     private Date creation_date;
     private String note;
+    private String note2;
     private int school_id;
     private int employee_id;
     private int acc_invoice_type_id;
+
+    public String getNote2() {
+        return note2;
+    }
+
+    public void setNote2(String note2) {
+        this.note2 = note2;
+    }
 
     /**
      * @return the id
