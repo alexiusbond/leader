@@ -169,6 +169,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         buttonsLay.addComponent(cancelBtn);
 
         copyBtn = new Button();
+        copyBtn.setEnabled(false);
         copyBtn.setDescription(myUI.getMessage(SptMessages.Copy));
         copyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         copyBtn.setIcon(FontAwesome.COPY);

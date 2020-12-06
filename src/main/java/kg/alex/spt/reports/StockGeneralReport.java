@@ -243,14 +243,16 @@ public class StockGeneralReport implements Button.ClickListener,
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
                     if ((Integer) operationOG.getValue() == 0) {
                         excelReport.getTotalsRow().getCell(1).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(2).setCellFormula(null);
+                        excelReport.getTotalsRow().getCell(2).setCellValue(
+                                dataTable.getColumnFooter(myUI.getMessage(SptMessages.StockIncome)
+                                        + " - " + myUI.getMessage(SptMessages.Amount)));
                         excelReport.getTotalsRow().getCell(3).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(4).setCellFormula(null);
-                        excelReport.getTotalsRow().getCell(4).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.StockIncome)
+                        excelReport.getTotalsRow().getCell(4).setCellValue(
+                                dataTable.getColumnFooter(myUI.getMessage(SptMessages.StockOutcome)
                                 + " - " + myUI.getMessage(SptMessages.Amount)));
                         excelReport.getTotalsRow().getCell(5).setCellFormula(null);
-                        excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.StockOutcome)
-                                + " - " + myUI.getMessage(SptMessages.Amount)));
-                        excelReport.getTotalsRow().getCell(6).setCellFormula(null);
                     } else {
                         excelReport.getTotalsRow().getCell(1).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(3).setCellFormula(null);

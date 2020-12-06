@@ -168,6 +168,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         buttonsLay.addComponent(cancelBtn);
 
         copyBtn = new Button();
+        copyBtn.setEnabled(false);
         copyBtn.setDescription(myUI.getMessage(SptMessages.Copy));
         copyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         copyBtn.setIcon(FontAwesome.COPY);
