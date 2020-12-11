@@ -70,14 +70,14 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     dataTable.setColumnCollapsingAllowed(true);
-                    dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.SaveButton), true);
+                    dataTable.setColumnCollapsed(sysSettings.button, true);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), true);
                     excelReport = new ExcelExport(dataTable, "sheet1");
                     excelReport.excludeCollapsedColumns();
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.Calls));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
-                    dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.SaveButton), false);
+                    dataTable.setColumnCollapsed(sysSettings.button, false);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), false);
                     dataTable.setColumnCollapsingAllowed(false);
                 }
@@ -224,7 +224,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         }
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
                 + sysSettings.dFormat.format(total));
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 200);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 120);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
 
         vl.addComponent(dataTable);
@@ -254,15 +254,15 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     public IndexedContainer prepareContainer() {
         container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Student), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.InstPlanDebt), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PlanDebtDate), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastCall), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastPayment), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.SaveButton), Button.class, null);
+        container.addContainerProperty(sysSettings.button, Button.class, null);
         return container;
     }
 }

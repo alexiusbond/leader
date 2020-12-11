@@ -377,6 +377,7 @@ public class SptMessages_tr extends SptMessages {
             {Month, "Месяц"},
             {Months, "Месяцы"},
             {LastCall, "Последний звонок"},
+            {LastPayment, "Последняя оплата"},
             {LastInstPlan, "Дата по плану о."},
             {Calls, "Звонки"},
             {WhoCalled, "Кто звонил"},

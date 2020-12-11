@@ -367,6 +367,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Months = generateId();
     public static final String LastInstPlan = generateId();
     public static final String LastCall = generateId();
+    public static final String LastPayment = generateId();
     public static final String Calls = generateId();
     public static final String WhoCalled = generateId();
     public static final String Rate = generateId();

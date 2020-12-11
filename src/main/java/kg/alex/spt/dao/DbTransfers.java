@@ -139,7 +139,15 @@ public class DbTransfers extends BaseDb {
                 item = container.addItem(result.getString("ac.id"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("category"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue("USD");
-                item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
+                if (result.getInt("t.acc_currency_id") == 1) {
+                    if (result.getDouble("t.currency_rate") != 0) {
+                        container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                                result.getDouble("t.amount") / result.getDouble("t.currency_rate"));
+                    }
+                } else {
+                    container.getItem(result.getString("ac.id")).getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                            result.getDouble("t.amount"));
+                }
                 container.setChildrenAllowed(result.getString("ac.id"), true);
                 t.setCollapsed(result.getString("ac.id"), false);
             } else {

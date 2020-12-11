@@ -404,6 +404,8 @@ public class DbStudent extends BaseDb {
                 + "concat(sr.phone,' (',sr.fullname,')') "
                 + "as is_main, MAX(IF(ip.is_visible = 1, ip.date_of_payment, NULL)) AS plan_debt_date, "
                 + "ifnull((sum(ip.amount) - sc.net_payments),0.0) as plan_debt, "
+                + "(SELECT concat(sp.amount, ' (', date(sp.modification_date),')') FROM student_payments sp "
+                + "where sp.student_id = st.id and sp.year_id = ? and sp.payment_category_id != 3 order by sp.id desc limit 1) as last_payment, "
                 + "(SELECT CONCAT(DATE_FORMAT(modification_date, '%d-%m-%Y'), IF((note IS NOT NULL AND note != ''), CONCAT(' (', note, ')'), '')) "
                 + "FROM student_calls as sc WHERE student_id = st.id order by sc.id desc limit 1) AS last_call "
                 + "from student as st "
@@ -427,14 +429,13 @@ public class DbStudent extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
+        stat.setInt(3, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = cv.prepareContainer();
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
-                    result.getString("st.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
-                    result.getString("st.surname"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(
+                    result.getString("st.name") + " " + result.getString("st.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
@@ -449,10 +450,12 @@ public class DbStudent extends BaseDb {
             if (result.getString("last_call") != null) {
                 item.getItemProperty(myUi.getMessage(SptMessages.LastCall)).setValue(result.getString("last_call"));
             }
+            if (result.getString("last_payment") != null) {
+                item.getItemProperty(myUi.getMessage(SptMessages.LastPayment)).setValue(result.getString("last_payment"));
+            }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(
                     cv.createTextfieldNote(result.getInt("st.id")));
-            item.getItemProperty(myUi.getMessage(SptMessages.SaveButton)).setValue(
-                    cv.createButton(result.getInt("st.id")));
+            item.getItemProperty(sysSettings.button).setValue(cv.createButton(result.getInt("st.id")));
         }
         return container;
     }
