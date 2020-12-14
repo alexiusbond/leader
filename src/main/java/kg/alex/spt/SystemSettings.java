@@ -63,6 +63,7 @@ public class SystemSettings implements Serializable {
     public final String school_id = "school_id";
     public final String discount_type_id = "discount_type_id";
     public final String position_id = "position_id";
+    public final String extra_position_ids = "extra_position_ids";
     public final String salary_category_id = "salary_category_id";
     public final String gender_id = "gender_id";
     public final String nationality_id = "nationality_id";

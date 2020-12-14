@@ -73,6 +73,7 @@ public class DbEmployee extends BaseDb {
         }
         String sql = "SELECT e.id, e.login, e.name, e.surname, e.middle_name, e.date_of_birth, e.photo, "
                 + "g.id, g.name, n.id, n.name, m.id, m.name, ws.name, ws.id, p.name, p.id, ord.visible_hr_orders, "
+                + "group_concat(DISTINCT p2.id ORDER BY eo2.id ASC separator ', ') as extra_position_ids, "
                 + "group_concat(DISTINCT p2.name ORDER BY eo2.id ASC separator ', ') as extra_positions, cat.id, "
                 + "group_concat(DISTINCT if(eb.hr_importance_id = 1, br.name, null) ORDER BY eb.id ASC separator ', ') as main_branch, "
                 + "group_concat(DISTINCT if(eb.hr_importance_id = 2, br.name, null) ORDER BY eb.id ASC separator ', ') as extra_branches, "
@@ -112,7 +113,6 @@ public class DbEmployee extends BaseDb {
         stat.setInt(2, school_id);
         stat.setInt(3, school_id);
         stat.setInt(4, school_id);
-        System.out.println(stat.toString());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
@@ -133,6 +133,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(sysSettings.martial_status_id, Integer.class, 0);
         container.addContainerProperty(sysSettings.working_status_id, Integer.class, 0);
         container.addContainerProperty(sysSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(sysSettings.extra_position_ids, String.class, null);
         container.addContainerProperty(sysSettings.salary_category_id, Integer.class, 0);
         container.addContainerProperty(sysSettings.acc_category_id, Integer.class, 0);
         container.addContainerProperty(sysSettings.is_modifiable, Boolean.class, true);
@@ -168,6 +169,8 @@ public class DbEmployee extends BaseDb {
                     result.getString("ws.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraPositions)).setValue(
                     result.getString("extra_positions"));
+            item.getItemProperty(sysSettings.extra_position_ids).setValue(
+                    result.getString("extra_position_ids"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraBranches)).setValue(
                     result.getString("extra_branches"));
             item.getItemProperty(myUi.getMessage(SptMessages.Hours)).setValue(

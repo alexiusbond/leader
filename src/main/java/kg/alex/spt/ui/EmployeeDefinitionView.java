@@ -57,13 +57,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
@@ -2227,14 +2221,23 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 eo.setCan_not_delete(1);
                                 insertEmplOrder(eo);
                                 String roleName = loginTF.getValue();
-                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5) {
+                                List<String> extra_position_ids = null;
+                                if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
+                                    extra_position_ids = Arrays.asList(employeesDataTable.getContainerProperty(emplID,
+                                            sysSettings.extra_position_ids).getValue().toString().split(", "));
+                                }
+                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5
+                                        || (extra_position_ids != null && extra_position_ids.contains("5"))) {
                                     roleName = "admin";
-                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25) {
+                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25
+                                        || (extra_position_ids != null && extra_position_ids.contains("25"))) {
                                     roleName = "hr";
                                 }
                                 insertloginRoleName(loginTF.getValue(), roleName);
                                 if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
+                                        && (extra_position_ids == null || !extra_position_ids.contains("5"))
                                         && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
+                                        && (extra_position_ids == null || !extra_position_ids.contains("25"))
                                         && mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
                                         myUI.getMessage(SptMessages.Permissions)).getValue() != null) {
                                     insertPermissions(loginTF.getValue(),
@@ -2291,19 +2294,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             dba.close();
                             if (status != 0) {
                                 updateDatacontainer();
-                                String roleName = roleName = loginTF.getValue();
-                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5) {
-                                    roleName = "admin";
-                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25) {
-                                    roleName = "hr";
-                                }
-                                dbe.exec_update_role(oldLogin, loginTF.getValue(), roleName);
-                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
-                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
-                                        && !oldLogin.equals(loginTF.getValue())) {
-                                    dbe.exec_update_perm(oldLogin, loginTF.getValue());
-                                }
-                                passwordTF.setValue("");
                                 if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()) {
                                     insertPhones(emplID);
                                     insertEmplContact(getEmployeeContact((Integer) emplID));
@@ -2344,8 +2334,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     insertLessons(emplID);
                                     updateInfoLayout();
                                     dbe.exec_delete_perm(oldLogin);
+                                    List<String> extra_position_ids = null;
+                                    if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
+                                        extra_position_ids = Arrays.asList(employeesDataTable.getContainerProperty(emplID,
+                                                sysSettings.extra_position_ids).getValue().toString().split(", "));
+                                    }
                                     if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
-                                            && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25) {
+                                            && (extra_position_ids == null || !extra_position_ids.contains("5"))
+                                            && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
+                                            && (extra_position_ids == null || !extra_position_ids.contains("25"))) {
                                         insertPermissions(loginTF.getValue());
                                     }
                                     setLessonsTable();
@@ -2363,6 +2360,30 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     setOrdersTable();
                                     updateInfoLayout();
                                 }
+                                String roleName = loginTF.getValue();
+                                List<String> extra_position_ids = null;
+                                if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
+                                    extra_position_ids = Arrays.asList(employeesDataTable.getContainerProperty(emplID,
+                                            sysSettings.extra_position_ids).getValue().toString().split(", "));
+                                }
+                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5
+                                        || (extra_position_ids != null && extra_position_ids.contains("5"))) {
+                                    roleName = "admin";
+                                    dbe.exec_delete_perm(oldLogin);
+                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25
+                                        || (extra_position_ids != null && extra_position_ids.contains("25"))) {
+                                    roleName = "hr";
+                                    dbe.exec_delete_perm(oldLogin);
+                                }
+                                dbe.exec_update_role(oldLogin, loginTF.getValue(), roleName);
+                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
+                                        && (extra_position_ids == null || !extra_position_ids.contains("5"))
+                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
+                                        && (extra_position_ids == null || !extra_position_ids.contains("25"))
+                                        && !oldLogin.equals(loginTF.getValue())) {
+                                    dbe.exec_update_perm(oldLogin, loginTF.getValue());
+                                }
+                                passwordTF.setValue("");
                                 prepareNormalMode();
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
@@ -2983,8 +3004,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 }
                 employeesDataTable.getContainerProperty(employeesDataTable.getValue(), myUI.getMessage(SptMessages.Hours)).setValue(hours);
                 employeesDataTable.getContainerProperty(employeesDataTable.getValue(), myUI.getMessage(SptMessages.ExtraHours)).setValue(extra);
-                delLessonIds.clear();
             }
+            delLessonIds.clear();
             dbel.close();
             dbd.close();
         } catch (Exception e) {
@@ -3029,6 +3050,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
             if (ordersTable.getContainerDataSource().size() > 0) {
                 employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).setValue(null);
+                employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(null);
                 Iterator iter = ordersTable.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
@@ -3053,6 +3075,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     boolean isContain = false;
                     for (EmployeeOrder temp : delOrderIds) {
                         if (ordersTable.getItem(next).getItemProperty(
+                                sysSettings.effected_by_id).getValue() != null && ordersTable.getItem(next).getItemProperty(
                                 sysSettings.effected_by_id).getValue().toString().equals(temp.getIdStr())) {
                             isContain = true;
                         }
@@ -3107,12 +3130,16 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     } else if (eo.getOrder_id() == 2) {
                         String str = ((ComboBox) ordersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Details)).getValue()).getItemCaption(eo.getPosition_id());
+                        String str_ids = eo.getPosition_id() + "";
                         if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).getValue() == null) {
                             employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).setValue(str);
+                            employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(str_ids);
                         } else {
                             employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).setValue(
                                     employeesDataTable.getContainerProperty(employee_id,
                                             myUI.getMessage(SptMessages.ExtraPositions)).getValue().toString() + ", " + str);
+                            employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(
+                                    employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).getValue().toString() + ", " + str_ids);
                         }
                     } else if (eo.getOrder_id() == 5) {
                         employeesDataTable.getContainerProperty(employee_id, sysSettings.is_modifiable).setValue(false);

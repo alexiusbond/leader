@@ -149,7 +149,6 @@ public class SalariesReport implements Button.ClickListener,
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.addStyleName("noWrapHeader");
-        dataTable.addStyleName("noWrapFooter");
         vl.addComponent(dataTable);
         spltPanel.setSecondComponent(vl);
     }
