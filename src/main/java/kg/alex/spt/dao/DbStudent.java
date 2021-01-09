@@ -400,7 +400,7 @@ public class DbStudent extends BaseDb {
 
     public IndexedContainer execSQLCalls(MyVaadinUI myUi, int year_id, String class_ids, CallsView cv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "select st.id, st.name, st.surname,concat(cnu.name, ' - ' , cna.name) as class_name, "
+        String sql = "select st.id, st.login, st.name, st.surname,concat(cnu.name, ' - ' , cna.name) as class_name, "
                 + "concat(sr.phone,' (',sr.fullname,')') "
                 + "as is_main, MAX(IF(ip.is_visible = 1, ip.date_of_payment, NULL)) AS plan_debt_date, "
                 + "ifnull((sum(ip.amount) - sc.net_payments),0.0) as plan_debt, "
@@ -434,8 +434,12 @@ public class DbStudent extends BaseDb {
         IndexedContainer container = cv.prepareContainer();
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(
-                    result.getString("st.name") + " " + result.getString("st.surname"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
+                    result.getString("st.login") );
+            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
+                    result.getString("st.name") );
+            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
+                    result.getString("st.surname") );
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
@@ -533,7 +537,7 @@ public class DbStudent extends BaseDb {
                 + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
                 + "ELSE stud_o.to_class_name_id END "
                 + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN 1 "
+                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
                 + "ELSE stud_o.to_education_status_id END "
                 + "WHERE sch.id IN (" + sysSettings.convertCollectionToStr(((Set<?>) sr.schoolsTable.getValue())) + ") "
                 + "GROUP BY sch.id;";

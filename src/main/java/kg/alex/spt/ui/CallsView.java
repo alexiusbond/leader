@@ -20,7 +20,9 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.util.Set;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbClassName;
@@ -208,6 +210,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(FormattedTable.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        dataTable.addStyleName("noWrap");
         try {
             DbStudent dbst = new DbStudent();
             dbst.connect();
@@ -215,8 +218,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             total = 0;
             dataTable.setContainerDataSource(dbst.execSQLCalls(myUI,
                     myUI.getUser().getCurrent_year().getId(),
-                    sysSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
-                    this));
+                    sysSettings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
             dbst.close();
         } catch (Exception e) {
             logger.error(e);
@@ -224,7 +226,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         }
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
                 + sysSettings.dFormat.format(total));
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 120);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 150);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
 
         vl.addComponent(dataTable);
@@ -254,7 +256,9 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     public IndexedContainer prepareContainer() {
         container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Student), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.InstPlanDebt), Double.class, null);

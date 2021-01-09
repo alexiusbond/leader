@@ -1567,8 +1567,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
             setInstPlanTable();
             setDiscountsTable();
-            setContractTab((Integer) studDataTable.getValue(),
-                    myUI.getUser().getCurrent_year().getId());
+            setContractTab((Integer) studDataTable.getValue(), myUI.getUser().getCurrent_year().getId());
         } else if (tabs.getSelectedTab() == tabs.getTab(payTablelay).getComponent()) {
             setPaymentsTable();
         } else if (tabs.getSelectedTab() == tabs.getTab(callsTableLay).getComponent()) {
@@ -3393,6 +3392,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             initialPaymentTF.removeValueChangeListener(this);
             initialPaymentTF.setValue(null);
             initialPaymentTF.addValueChangeListener(this);
+            initialPaymentTF.setData(null);
         } else {
             initialPaymentTF.removeValueChangeListener(this);
             initialPaymentTF.getPropertyDataSource().setValue(ip.getAmount());

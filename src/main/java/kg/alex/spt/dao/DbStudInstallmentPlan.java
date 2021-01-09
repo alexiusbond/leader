@@ -19,10 +19,6 @@ import kg.alex.spt.reports.ClassInstPlanReport;
 import kg.alex.spt.reports.InstplanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
-/**
- *
- * @author eldiyar
- */
 public class DbStudInstallmentPlan extends BaseDb {
 
     public DbStudInstallmentPlan() throws Exception {

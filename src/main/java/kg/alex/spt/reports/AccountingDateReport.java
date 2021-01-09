@@ -129,8 +129,8 @@ public class AccountingDateReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, 2, outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()));
-            dbac.execSQL_for_select_as_tree(myUI, 1, incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()));
+            dbac.execSQL_for_select_as_tree(myUI, 2, outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
+            dbac.execSQL_for_select_as_tree(myUI, 1, incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
@@ -363,7 +363,7 @@ public class AccountingDateReport implements Button.ClickListener,
                                     Font font = excelReport.getWorkbook().createFont();
                                     font.setBold(true);
                                     style.setFont(font);
-                                    
+
                                     int rowNum = excelReport.getTotalsRow().getRowNum();
                                     Row row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
@@ -384,11 +384,11 @@ public class AccountingDateReport implements Button.ClickListener,
                                                     excelReport.getTotalsRow().getFirstCellNum(), excelReport.getTotalsRow().getLastCellNum() - 1));
                                     excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
                                             myUI.getMessage(SptMessages.IncomesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_income(), 2) + "$\t "
-                                            + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$\t "
-                                            + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime())
-                                            + "): " + schoolAcc.getPrevious_balance() + "$\t "
-                                            + myUI.getMessage(SptMessages.Transactions) + ": " + sysSettings.round(
-                                            (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$\t ");
+                                                    + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$\t "
+                                                    + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime())
+                                                    + "): " + schoolAcc.getPrevious_balance() + "$\t "
+                                                    + myUI.getMessage(SptMessages.Transactions) + ": " + sysSettings.round(
+                                                    (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$\t ");
                                 }
                             }
                         }

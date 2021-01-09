@@ -136,8 +136,8 @@ public class AccountingBalanceReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, 3, assertsCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()));
-            dbac.execSQL_for_select_as_tree(myUI, 4, debtsCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()));
+            dbac.execSQL_for_select_as_tree(myUI, 3, assertsCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), true);
+            dbac.execSQL_for_select_as_tree(myUI, 4, debtsCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), true);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);

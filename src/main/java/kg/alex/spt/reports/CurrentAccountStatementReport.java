@@ -17,7 +17,9 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.util.Date;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccCategory;
@@ -26,7 +28,9 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.StudInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+
 import static kg.alex.spt.reports.AccountingGeneralReport.logger;
+
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.CurrentAccountStatementPdf;
 import kg.alex.spt.utils.FormattedTable;
@@ -77,7 +81,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, 2, employeeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()));
+            dbac.execSQL_for_select_as_tree(myUI, 2, employeeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
@@ -196,7 +200,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 if (st.getScl_address() != null && st.getScl_phone() != null
                         && st.getScl_name_ru() != null) {
                     new CurrentAccountStatementPdf(myUI, dataTable, employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue().toString(), 
+                            myUI.getMessage(SptMessages.Name)).getValue().toString(),
                             currencySelect.getItemCaption(currencySelect.getValue()), fromDateDF.getValue(), tillDateDF.getValue(), st);
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),

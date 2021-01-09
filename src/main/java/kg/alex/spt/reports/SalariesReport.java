@@ -75,7 +75,8 @@ public class SalariesReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, 2, employeeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()));
+            dbac.execSQL_for_select_as_tree(myUI, 2, employeeCategoriesTable,
+                    Integer.toString(myUI.getUser().getSchool_id()), true);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);

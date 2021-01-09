@@ -153,13 +153,15 @@ public class DbAccCategory extends BaseDb {
         }
     }
 
-    public void execSQL_for_select_as_tree(MyVaadinUI myUI, int type, FilterTreeTable t, String school_ids)
+    public void execSQL_for_select_as_tree(MyVaadinUI myUI, int type, FilterTreeTable t,
+                                           String school_ids, boolean onlyActive)
             throws SQLException {
         String sql = "SELECT c.id, concat(ifnull(concat(c.parent_code,'.',c.code),c.code), ' - ', c.name) as name, "
-                + "c.parent_id FROM acc_category as c "
-                + "left join activity_status as s on c.activity_status_id = s.id "
-                + "where c.acc_type_id = ? and c.activity_status_id=2 "
-                + "and (c.school_id IS NULL or c.school_id in (" + school_ids + ")) "
+                + "c.parent_id FROM acc_category as c where c.acc_type_id = ? ";
+        if (onlyActive) {
+            sql += "and c.activity_status_id = 2 ";
+        }
+        sql += "and (c.school_id IS NULL or c.school_id in (" + school_ids + ")) "
                 + "and (c.parent_id not in (select acc_category_id from dp_product_category) or c.parent_id is NULL) "
                 + "group by c.id order by c.parent_code, CAST(code AS UNSIGNED);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -337,7 +339,8 @@ public class DbAccCategory extends BaseDb {
         return status;
     }
 
-    public int exec_update_all_parent_codes(int parent_id, String parent_code, boolean isRecursevely) throws SQLException {
+    public int exec_update_all_parent_codes(int parent_id, String parent_code, boolean isRecursevely) throws
+            SQLException {
         int status = 0;
         String sql = "SELECT c.id, c.code from acc_category as c where c.parent_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);

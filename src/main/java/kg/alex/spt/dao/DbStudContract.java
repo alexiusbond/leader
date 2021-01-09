@@ -213,7 +213,7 @@ public class DbStudContract extends BaseDb {
                 + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
                 + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
                 + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN 1 "
+                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
                 + "ELSE stud_o.to_education_status_id END "
                 + "LEFT JOIN class_name AS cln ON cln.id = CASE "
                 + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
@@ -324,7 +324,7 @@ public class DbStudContract extends BaseDb {
                 + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
                 + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
                 + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN 1 "
+                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
                 + "ELSE stud_o.to_education_status_id END "
                 + "LEFT JOIN class_name AS cln ON cln.id = CASE "
                 + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
@@ -432,7 +432,7 @@ public class DbStudContract extends BaseDb {
                 + "GROUP BY so.student_id) AS o_temp ON stud.id = o_temp.stud_id "
                 + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
                 + "LEFT JOIN education_status AS es ON es.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN 1 "
+                + "WHEN stud_o.to_education_status_id IS NULL THEN stud.education_status_id "
                 + "ELSE stud_o.to_education_status_id END "
                 + "LEFT JOIN class_name AS cl ON cl.id = CASE "
                 + "WHEN stud_o.to_class_name_id IS NULL THEN stud.class_name_id "
@@ -663,7 +663,7 @@ public class DbStudContract extends BaseDb {
     }
 
     public void execSQL_Yearly_by_class_numbers(MyVaadinUI myUI, String school_ids,
-            String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
+                                                String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT cln.name AS class, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
@@ -683,7 +683,7 @@ public class DbStudContract extends BaseDb {
                 + "GROUP BY so.student_id) AS o_temp ON stud.id = o_temp.stud_id "
                 + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
                 + "LEFT JOIN education_status AS es ON es.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN 1 "
+                + "WHEN stud_o.to_education_status_id IS NULL THEN stud.education_status_id "
                 + "ELSE stud_o.to_education_status_id END "
                 + "LEFT JOIN class_name AS cl ON cl.id = CASE "
                 + "WHEN stud_o.to_class_name_id IS NULL THEN stud.class_name_id "
@@ -732,7 +732,7 @@ public class DbStudContract extends BaseDb {
                 ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                        - result.getDouble("payments"));
+                                - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
                     item.getItemProperty(sysSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
