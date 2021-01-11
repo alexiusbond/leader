@@ -2222,7 +2222,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 insertEmplOrder(eo);
                                 String roleName = loginTF.getValue();
                                 List<String> extra_position_ids = null;
-                                if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
+                                if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids) != null
+                                        && employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
                                     extra_position_ids = Arrays.asList(employeesDataTable.getContainerProperty(emplID,
                                             sysSettings.extra_position_ids).getValue().toString().split(", "));
                                 }
