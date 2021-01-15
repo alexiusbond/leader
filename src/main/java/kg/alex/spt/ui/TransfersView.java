@@ -476,7 +476,11 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             }
         } else if (source == excelBtn) {
             if (transfersTable.getContainerDataSource().size() != 0) {
-                excelReport = new ExcelExport(transfersTable, caption.substring(0, 29));
+                if (caption.length() > 29) {
+                    excelReport = new ExcelExport(transfersTable, caption.substring(0, 29));
+                } else {
+                    excelReport = new ExcelExport(transfersTable, caption);
+                }
                 excelReport.setReportTitle(caption + " (№" + invoiceNumberTF.getValue() + " - " + df.format(dateDF.getValue()) + ")");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
@@ -484,8 +488,12 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 excelReport.getTotalsRow().getCell(5).setCellValue(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
 
                 for (int i = 0; i < transfersTable.size(); i++) {
-                    Row row = excelReport.getWorkbook().getSheet(caption.substring(0, 29)).getRow(i + 2);
-
+                    Row row;
+                    if (caption.length() > 29) {
+                        row = excelReport.getWorkbook().getSheet(caption.substring(0, 29)).getRow(i + 2);
+                    } else {
+                        row = excelReport.getWorkbook().getSheet(caption).getRow(i + 2);
+                    }
                     for (int k = 0; k < NATURAL_COL_ORDER_TRANSFERS.length; k++) {
                         String propName = NATURAL_COL_ORDER_TRANSFERS[k];
                         Cell cell = row.getCell(k);

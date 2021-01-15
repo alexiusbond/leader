@@ -1,72 +1,56 @@
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_stud_statuses`(y_id int)
-BEGIN
-update student as st inner join (select max(so.id) as max_id,  so.student_id as student_id 
-from student_orders as so  left join student as st1 on so.student_id = st1.id 
-where  so.year_id = y_id and so.is_valid=1 group by so.student_id)  as it on st.id = it.student_id set st.class_name_id = 
-(select  so2.to_class_name_id from student_orders as so2 where so2.id = it.max_id),  st.education_status_id = 
-(select so3.to_education_status_id  from student_orders as so3 where so3.id = it.max_id);
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `processorders`(y_id int)
-BEGIN
-DECLARE done BOOLEAN DEFAULT 0;
-   DECLARE stud_id INT;
-   -- Declare the cursor
-   DECLARE student_ids CURSOR
-   FOR
-   SELECT DISTINCT(student_id) as student_id
-FROM student_orders
-WHERE year_id = y_id AND (orders_id = 1 OR orders_id = 2) AND is_valid = 1;
-   -- Declare continue handler
-   DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done=1;
-   -- Open the cursor
-   OPEN student_ids;
-   -- Loop through all rows
-   REPEAT
-      -- Get order number
-      FETCH student_ids INTO stud_id;
-      -- Insert order and total into ordertotals
-DELETE FROM student_orders 
-WHERE
-    student_id = stud_id
-    AND year_id > y_id
-    AND is_valid = 1;
-   -- End of loop
-   UNTIL done END REPEAT;
-   -- Close the cursor
-   CLOSE student_ids;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `processyears`()
-BEGIN
-DECLARE done BOOLEAN DEFAULT 0;
-   DECLARE year_id INT;
-   -- Declare the cursor
-   DECLARE year_ids CURSOR
-   FOR
-   SELECT id from year order by id asc;
-   -- Declare continue handler
-   DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done=1;
-   -- Open the cursor
-   OPEN year_ids;
-   -- Loop through all rows
-   REPEAT
-      -- Get order number
-      FETCH year_ids INTO year_id;
-      -- Insert order and total into ordertotals
-CALL `processorders`(year_id);
-CALL `update_stud_statuses`(year_id);
-   -- End of loop
-   UNTIL done END REPEAT;
-   -- Close the cursor
-   CLOSE year_ids;
-END$$
-DELIMITER ;
-
-
+ALTER TABLE `spt`.`hr_employee_contacts` 
+CHANGE COLUMN `passport` `passport` VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL ;
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '1') and (`employee_id` = '167') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '263') and (`employee_id` = '2744') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '272') and (`employee_id` = '2721') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '262') and (`employee_id` = '749') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '316') and (`employee_id` = '726') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '278') and (`employee_id` = '2749') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '245') and (`employee_id` = '746') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '240') and (`employee_id` = '2383') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '332') and (`employee_id` = '2732') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '210') and (`employee_id` = '732') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '225') and (`employee_id` = '737') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '228') and (`employee_id` = '731') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '244') and (`employee_id` = '747') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '287') and (`employee_id` = '2735') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '280') and (`employee_id` = '2750') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '227') and (`employee_id` = '2390') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '233') and (`employee_id` = '2733') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '339') and (`employee_id` = '105') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '364') and (`employee_id` = '3833') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '292') and (`employee_id` = '2895') and (`hr_country_id` = '571');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '13') and (`employee_id` = '1015') and (`hr_country_id` = '602');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '4') and (`employee_id` = '12') and (`hr_country_id` = '602');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '39') and (`employee_id` = '1378') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '118') and (`employee_id` = '225') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '126') and (`employee_id` = '213') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '129') and (`employee_id` = '208') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '133') and (`employee_id` = '207') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '134') and (`employee_id` = '206') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '148') and (`employee_id` = '186') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '150') and (`employee_id` = '185') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '152') and (`employee_id` = '148') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '153') and (`employee_id` = '147') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '154') and (`employee_id` = '31') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '155') and (`employee_id` = '2') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '36') and (`employee_id` = '1392') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '102') and (`employee_id` = '1395') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '78') and (`employee_id` = '415') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '95') and (`employee_id` = '1383') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '323') and (`employee_id` = '2716') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '355') and (`employee_id` = '15') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '71') and (`employee_id` = '47') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '320') and (`employee_id` = '158') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '73') and (`employee_id` = '944') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '77') and (`employee_id` = '986') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '83') and (`employee_id` = '2178') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '185') and (`employee_id` = '2406') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '299') and (`employee_id` = '2176') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '304') and (`employee_id` = '2898') and (`hr_country_id` = '591');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '345') and (`employee_id` = '3267') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '346') and (`employee_id` = '3265') and (`hr_country_id` = '611');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '347') and (`employee_id` = '3268') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '361') and (`employee_id` = '3860') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '366') and (`employee_id` = '4040') and (`hr_country_id` = '510');
+UPDATE `spt`.`hr_employee_contacts` SET `passport` = NULL WHERE (`id` = '367') and (`employee_id` = '4002') and (`hr_country_id` = '468');
