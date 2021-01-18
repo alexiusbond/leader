@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeSeminar;
@@ -20,7 +22,6 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
 /**
- *
  * @author eldiyar
  */
 public class DbEmployeeSeminar extends BaseDb {
@@ -59,7 +60,7 @@ public class DbEmployeeSeminar extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-            EmployeeDefinitionView edv) throws SQLException {
+                                    EmployeeDefinitionView edv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT es.id, es.name, es.subject, es.note, es.date_of_issue FROM hr_employee_seminar as es "
                 + "where es.employee_id = ?;";
@@ -86,7 +87,8 @@ public class DbEmployeeSeminar extends BaseDb {
                             new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), false));
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("es.date_of_issue"),
-                            myUI.getMessage(SptMessages.IssueDate), true));
+                            myUI.getMessage(SptMessages.IssueDate), null,
+                            true, sysSettings.datePattern, Resolution.DAY));
             item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;

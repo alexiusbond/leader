@@ -7,9 +7,11 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
@@ -57,8 +59,9 @@ public class DbSalaryCategories extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int school_id) throws SQLException {
-        String sql = "SELECT c.id, IFNULL(CONCAT(c.parent_code, '.', c.code), c.code) AS code, c.name FROM hr_salary_category sc "
-                + "LEFT JOIN acc_category AS c ON sc.acc_category_id = c.parent_id and school_id = ?;";
+        String sql = "SELECT c.id, IFNULL(CONCAT(c.parent_code, '.', c.code), c.code) AS code, sc.name " +
+                "FROM hr_salary_category sc " +
+                "LEFT JOIN acc_category AS c ON sc.acc_category_id = c.parent_id and school_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
@@ -68,7 +71,7 @@ public class DbSalaryCategories extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("sc.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
         }
         return container;

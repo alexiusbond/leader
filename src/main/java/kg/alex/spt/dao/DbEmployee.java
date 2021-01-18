@@ -124,7 +124,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.MainPosition), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.MainBranch), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ExtraBranches), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.ExtraPosition), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Hours), Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ExtraHours), Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.WorkingStatus), String.class, null);
@@ -167,7 +167,7 @@ public class DbEmployee extends BaseDb {
                     result.getString("main_branch"));
             item.getItemProperty(myUi.getMessage(SptMessages.WorkingStatus)).setValue(
                     result.getString("ws.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ExtraPositions)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
             item.getItemProperty(sysSettings.extra_position_ids).setValue(
                     result.getString("extra_position_ids"));
@@ -235,7 +235,7 @@ public class DbEmployee extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.MainPosition), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.ExtraPosition), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.MainBranch), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ExtraBranches), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.TotalHours) + myUi.getUser().getCurrent_year().getName(), String.class, null);
@@ -248,7 +248,7 @@ public class DbEmployee extends BaseDb {
                     result.getString("p.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.MainBranch)).setValue(
                     result.getString("main_branch"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ExtraPositions)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraBranches)).setValue(
                     result.getString("extra_branches"));
@@ -327,7 +327,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.FromDate), DateField.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), TextField.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Position), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.ExtraPosition), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.MainBranch), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ExtraBranches), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Lessons), String.class, null);
@@ -349,7 +349,7 @@ public class DbEmployee extends BaseDb {
                     result.getString("e.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.Position)).setValue(
                     result.getString("p.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ExtraPositions)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
             item.getItemProperty(myUi.getMessage(SptMessages.MainBranch)).setValue(
                     result.getString("main_branch"));

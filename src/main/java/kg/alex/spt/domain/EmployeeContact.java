@@ -12,7 +12,6 @@ public class EmployeeContact implements Serializable {
     private int employee_id;
     private int citizenship_id;
     private String email;
-    private String passport;
     private String address;
     private String birth_place;
 
@@ -56,20 +55,6 @@ public class EmployeeContact implements Serializable {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /**
-     * @return the passport
-     */
-    public String getPassport() {
-        return passport;
-    }
-
-    /**
-     * @param passport the passport to set
-     */
-    public void setPassport(String passport) {
-        this.passport = passport;
     }
 
     /**

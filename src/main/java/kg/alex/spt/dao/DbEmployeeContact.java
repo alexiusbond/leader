@@ -22,14 +22,13 @@ public class DbEmployeeContact extends BaseDb {
 
     public int exec_insert(EmployeeContact ec) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_contacts (employee_id,hr_country_id,"
-                + "birth_place,passport,address,email) VALUES(?,?,?,?,?,?);";
+                + "birth_place,passport,address,email) VALUES(?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         stat.setInt(2, ec.getCitizenship_id());
         stat.setString(3, ec.getBirth_place());
-        stat.setString(4, ec.getPassport());
-        stat.setString(5, ec.getAddress());
-        stat.setString(6, ec.getEmail());
+        stat.setString(4, ec.getAddress());
+        stat.setString(5, ec.getEmail());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -40,14 +39,13 @@ public class DbEmployeeContact extends BaseDb {
 
     public int exec_update(EmployeeContact ec) throws SQLException {
         String sql = "update hr_employee_contacts set "
-                + "hr_country_id=?, birth_place=?, passport=?, address=?, email=? WHERE employee_id=?;";
+                + "hr_country_id=?, birth_place=?, address=?, email=? WHERE employee_id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getCitizenship_id());
         stat.setString(2, ec.getBirth_place());
-        stat.setString(3, ec.getPassport());
-        stat.setString(4, ec.getAddress());
-        stat.setString(5, ec.getEmail());
-        stat.setInt(6, ec.getEmployee_id());
+        stat.setString(3, ec.getAddress());
+        stat.setString(4, ec.getEmail());
+        stat.setInt(5, ec.getEmployee_id());
         return stat.executeUpdate();
     }
 
@@ -61,7 +59,6 @@ public class DbEmployeeContact extends BaseDb {
             ec = new EmployeeContact();
             ec.setAddress(result.getString("ec.address"));
             ec.setBirth_place(result.getString("ec.birth_place"));
-            ec.setPassport(result.getString("ec.passport"));
             ec.setEmail(result.getString("ec.email"));
             ec.setCitizenship_id(result.getInt("c.id"));
             break;

@@ -8,12 +8,15 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Definition;
@@ -24,7 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
  * @author eldiyar
  */
 public class DbEmployeeEducation extends BaseDb {
@@ -36,15 +38,19 @@ public class DbEmployeeEducation extends BaseDb {
     }
 
     public int exec_insert(EmployeeEducation ed) throws SQLException {
-        String sql = "INSERT INTO hr_employee_education (employee_id,hr_university_id,hr_own_id,faculty,department,year) "
-                + "VALUES(?,?,?,?,?,?);";
+        String sql = "INSERT INTO hr_employee_education "
+                + "(employee_id, hr_university_id, hr_own_id, department, start_date, "
+                + "end_date, country_id, education_level_id) "
+                + "VALUES(?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ed.getEmployee_id());
         stat.setInt(2, ed.getUniversity_id());
         stat.setInt(3, ed.getOwn_id());
-        stat.setString(4, ed.getFaculty());
-        stat.setString(5, ed.getDepartment());
-        stat.setString(6, ed.getYear());
+        stat.setString(4, ed.getDepartment());
+        stat.setString(5, SystemSettings.mysql_only_year.format(ed.getStart()));
+        stat.setString(6, SystemSettings.mysql_only_year.format(ed.getEnd()));
+        stat.setInt(7, ed.getCountry_id());
+        stat.setInt(8, ed.getEducation_level_id());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -55,20 +61,23 @@ public class DbEmployeeEducation extends BaseDb {
 
     public int exec_update(EmployeeEducation ed) throws SQLException {
         String sql = "update hr_employee_education set "
-                + "hr_university_id=?, faculty=?, department=?, year=? WHERE id=?;";
+                + "hr_university_id=?, department=?, start_date=?, end_date=?, country_id=?, education_level_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ed.getUniversity_id());
-        stat.setString(2, ed.getFaculty());
-        stat.setString(3, ed.getDepartment());
-        stat.setString(4, ed.getYear());
-        stat.setInt(5, ed.getId());
+        stat.setString(2, ed.getDepartment());
+        stat.setString(3, SystemSettings.mysql_only_year.format(ed.getStart()));
+        stat.setString(4, SystemSettings.mysql_only_year.format(ed.getEnd()));
+        stat.setInt(5, ed.getCountry_id());
+        stat.setInt(6, ed.getEducation_level_id());
+        stat.setInt(7, ed.getId());
         return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
-            EmployeeDefinitionView edv) throws SQLException {
+                                    EmployeeDefinitionView edv) throws SQLException {
         final SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT ed.id, ed.hr_university_id, ed.faculty, ed.department, ed.year FROM hr_employee_education as ed "
+        String sql = "SELECT ed.id, ed.hr_university_id, ed.department, ed.start_date, ed.end_date, ed.country_id, "
+                + "ed.education_level_id FROM hr_employee_education as ed "
                 + "where ed.employee_id = ? and ed.hr_own_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
@@ -80,18 +89,24 @@ public class DbEmployeeEducation extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeEducation));
-            item.getItemProperty(myUI.getMessage(SptMessages.Faculty)).setValue(
-                    edv.createTextfield(result.getString("ed.faculty"),
-                            myUI.getMessage(SptMessages.Faculty),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.Department)).setValue(
                     edv.createTextfield(result.getString("ed.department"),
                             myUI.getMessage(SptMessages.Department),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
-            item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
-                    edv.createTextfield(result.getString("ed.year"),
-                            myUI.getMessage(SptMessages.Year),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 10, true), true));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
+            item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
+                    edv.createDateField(result.getDate("ed.start_date"),
+                            myUI.getMessage(SptMessages.Start), null, true,
+                            SystemSettings.yearPattern, Resolution.YEAR));
+            item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
+                    edv.createDateField(result.getDate("ed.start_date"),
+                            myUI.getMessage(SptMessages.End), null, true,
+                            SystemSettings.yearPattern, Resolution.YEAR));
+            item.getItemProperty(myUI.getMessage(SptMessages.Country)).setValue(
+                    edv.createCombobox(result.getInt("ed.country_id"),
+                            myUI.getMessage(SptMessages.Country), sysSettings.dbCountry, true));
+            item.getItemProperty(myUI.getMessage(SptMessages.EduLevel)).setValue(
+                    edv.createCombobox(result.getInt("ed.education_level_id"),
+                            myUI.getMessage(SptMessages.EduLevel), sysSettings.dbEduLevel, true));
             final ComboBox cb = edv.createCombobox(result.getInt("ed.hr_university_id"),
                     myUI.getMessage(SptMessages.University), sysSettings.dbUniversityTable, true);
             cb.setNewItemsAllowed(true);

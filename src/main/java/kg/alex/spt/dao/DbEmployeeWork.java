@@ -7,28 +7,23 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeWork;
+import kg.alex.spt.domain.Position;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.ui.EmployeeDefinitionView;
+import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- *
- * @author eldiyar
- */
+import java.sql.*;
+import java.util.Iterator;
+
 public class DbEmployeeWork extends BaseDb {
 
     static final Logger logger = LogManager.getLogger(DbEmployeeWork.class);
@@ -38,20 +33,27 @@ public class DbEmployeeWork extends BaseDb {
     }
 
     public int exec_insert(EmployeeWork ew) throws SQLException {
-        String sql = "INSERT INTO hr_employee_work (employee_id,hr_own_id,hr_work_place_id,main_position,extra_position,year,working_status_id) "
-                + "VALUES(?,?,?,?,?,?,?);";
+        String sql = "INSERT INTO hr_employee_work (employee_id, hr_own_id, hr_work_place_id, position_id, "
+                + "extra_position_id, start_date, end_date, working_status_id, is_sapat) "
+                + "VALUES(?,?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ew.getEmployee_id());
         stat.setInt(2, ew.getOwn_id());
         stat.setInt(3, ew.getWork_place_id());
-        stat.setString(4, ew.getMain_position());
-        if (ew.getExtra_position() != null) {
-            stat.setString(5, ew.getExtra_position());
+        stat.setInt(4, ew.getMain_position_id());
+        if (ew.getExtra_position_id() != 0) {
+            stat.setInt(5, ew.getExtra_position_id());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
-        stat.setString(6, ew.getYear());
-        stat.setInt(7, ew.getWorking_status_id());
+        stat.setDate(6, new Date(ew.getStart().getTime()));
+        if (ew.getEnd() != null) {
+            stat.setDate(7, new Date(ew.getEnd().getTime()));
+        } else {
+            stat.setNull(7, Types.DATE);
+        }
+        stat.setInt(8, ew.getWorking_status_id());
+        stat.setBoolean(9, ew.isSapat());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -62,26 +64,34 @@ public class DbEmployeeWork extends BaseDb {
 
     public int exec_update(EmployeeWork ew) throws SQLException {
         String sql = "update hr_employee_work set "
-                + "hr_work_place_id=?, main_position=?, extra_position=?, year=?, working_status_id = ? WHERE id=?;";
+                + "hr_work_place_id=?, position_id=?, extra_position_id=?, start_date=?, end_date=?, "
+                + "working_status_id = ?, is_sapat = ? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ew.getWork_place_id());
-        stat.setString(2, ew.getMain_position());
-        if (ew.getExtra_position() != null) {
-            stat.setString(3, ew.getExtra_position());
+        stat.setInt(2, ew.getMain_position_id());
+        if (ew.getExtra_position_id() != 0) {
+            stat.setInt(3, ew.getExtra_position_id());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        stat.setString(4, ew.getYear());
-        stat.setInt(5, ew.getWorking_status_id());
-        stat.setInt(6, ew.getId());
+        stat.setDate(4, new Date(ew.getStart().getTime()));
+        if (ew.getEnd() != null) {
+            stat.setDate(5, new Date(ew.getEnd().getTime()));
+        } else {
+            stat.setNull(5, Types.VARCHAR);
+        }
+        stat.setInt(6, ew.getWorking_status_id());
+        stat.setBoolean(7, ew.isSapat());
+        stat.setInt(8, ew.getId());
         return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
-            EmployeeDefinitionView edv) throws SQLException {
+                                    EmployeeDefinitionView edv) throws SQLException {
         final SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT ew.id, ew.hr_work_place_id, ew.main_position, ew.extra_position, ew.year, ew.working_status_id FROM hr_employee_work as ew "
-                + "where ew.employee_id = ? and ew.hr_own_id = ?;";
+        String sql = "SELECT ew.id, ew.hr_work_place_id, ew.position_id, ew.extra_position_id, " +
+                "ew.start_date, ew.end_date, ew.working_status_id, ew.is_sapat FROM hr_employee_work as ew " +
+                "where ew.employee_id = ? and ew.hr_own_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, own_id);
@@ -92,15 +102,27 @@ public class DbEmployeeWork extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork));
-            item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(
-                    edv.createTextfield(result.getString("ew.main_position"),
-                            myUI.getMessage(SptMessages.MainPosition),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 150, true), true));
-            item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(
-                    edv.createTextfield(result.getString("ew.extra_position"),
-                            myUI.getMessage(SptMessages.ExtraPositions),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), false));
-            ComboBoxMax cb = edv.createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
+            ComboBoxMax cb = edv.createCombobox(result.getInt("ew.position_id"),
+                    myUI.getMessage(SptMessages.MainPosition), null, true);
+            item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
+            ComboBoxMax cb3 = edv.createCombobox(result.getInt("ew.extra_position_id"),
+                    myUI.getMessage(SptMessages.ExtraPosition), null, false);
+            try {
+                DbDefinition dbDef = new DbDefinition();
+                dbDef.connect();
+                cb3.setContainerDataSource(
+                        dbDef.exec_positions_for_select(myUI, false, true));
+                cb.setContainerDataSource(
+                        dbDef.exec_positions_for_select(myUI, false, true));
+                dbDef.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            cb.setValue(result.getInt("ew.position_id"));
+            cb3.setValue(result.getInt("ew.extra_position_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).setValue(cb3);
+            cb = edv.createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
             try {
                 DbDefinition dbd = new DbDefinition();
                 dbd.connect();
@@ -147,10 +169,14 @@ public class DbEmployeeWork extends BaseDb {
                 }
             });
             item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(cb2);
-            item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
-                    edv.createTextfield(result.getString("ew.year"),
-                            myUI.getMessage(SptMessages.Year),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 10, true), true));
+            item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
+                    edv.createDateField(result.getDate("ew.start_date"),
+                            myUI.getMessage(SptMessages.Start), null, true, sysSettings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
+                    edv.createDateField(result.getDate("ew.end_date"),
+                            myUI.getMessage(SptMessages.End), null, false, sysSettings.datePattern, Resolution.DAY));
+            item.getItemProperty(myUI.getMessage(SptMessages.Sapat)).setValue(
+                    edv.createCheckBox(result.getBoolean("ew.is_sapat"), myUI.getMessage(SptMessages.Sapat)));
             item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;

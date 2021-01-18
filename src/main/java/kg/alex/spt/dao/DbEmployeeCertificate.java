@@ -13,6 +13,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeCertificate;
@@ -80,7 +82,8 @@ public class DbEmployeeCertificate extends BaseDb {
                             new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("ec.date_of_issue"),
-                            myUI.getMessage(SptMessages.IssueDate), true));
+                            myUI.getMessage(SptMessages.IssueDate), null,
+                            true, sysSettings.datePattern, Resolution.DAY));
             item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;

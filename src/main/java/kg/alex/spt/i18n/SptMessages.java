@@ -62,7 +62,6 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String UniversityDefinition = generateId();
     public static final String QuestionDefinition = generateId();
     public static final String University = generateId();
-    public static final String Faculty = generateId();
     public static final String Department = generateId();
     public static final String BranchDefinition = generateId();
     public static final String Branches = generateId();
@@ -150,7 +149,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String MainPositionShort = generateId();
     public static final String MainBranch = generateId();
     public static final String MainBranchShort = generateId();
-    public static final String ExtraPositions = generateId();
+    public static final String ExtraPosition = generateId();
     public static final String ExtraBranches = generateId();
     public static final String GenerateButton = generateId();
     public static final String Functions = generateId();
@@ -179,6 +178,9 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Firstname = generateId();
     public static final String Middlename = generateId();
     public static final String DateOfBirth = generateId();
+    public static final String GraduatedSchool = generateId();
+    public static final String End = generateId();
+    public static final String Start = generateId();
     public static final String Institution = generateId();
     public static final String BirthPlace = generateId();
     public static final String Date = generateId();
@@ -219,6 +221,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Left = generateId();
     public static final String TotalHours = generateId();
     public static final String WorkPlace = generateId();
+    public static final String Sapat = generateId();
     public static final String Passport = generateId();
     public static final String RelativeType = generateId();
     public static final String Relative = generateId();
@@ -389,6 +392,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ExportToPdf = generateId();
     public static final String HomePage = generateId();
     public static final String OtherUsers = generateId();
+    public static final String OtherSchool = generateId();
     public static final String ForThisWeek = generateId();
     public static final String ForThisMonth = generateId();
     public static final String Average = generateId();
@@ -482,6 +486,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ExistsNotification = generateId();
     public static final String ExistsInvoiceNotification = generateId();
     public static final String ToThe = generateId();
+    public static final String Country = generateId();
+    public static final String EduLevel = generateId();
 
     private static String generateId() {
         return new Integer(ids++).toString();

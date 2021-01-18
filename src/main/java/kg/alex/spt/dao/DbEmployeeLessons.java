@@ -228,7 +228,7 @@ public class DbEmployeeLessons extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.MainBranch), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraBranches), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Position), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraPosition), String.class, null);
         int i = 0;
         int branch_id = 0;
         int totalLessons = 0;
@@ -272,7 +272,7 @@ public class DbEmployeeLessons extends BaseDb {
                         result.getString("empl_t.extra_branch"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Position)).setValue(
                         result.getString("empl_t.position"));
-                item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(
+                item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).setValue(
                         result.getString("empl_t.extra_positions"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                         result.getInt("empl_t.hours"));

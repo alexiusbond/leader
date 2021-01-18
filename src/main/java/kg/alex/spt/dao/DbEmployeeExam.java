@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeExam;
@@ -76,7 +77,8 @@ public class DbEmployeeExam extends BaseDb {
                             new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter()));
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("ex.date_of_issue"),
-                            myUI.getMessage(SptMessages.IssueDate), true));
+                            myUI.getMessage(SptMessages.IssueDate), null,
+                            true, sysSettings.datePattern, Resolution.DAY));
             item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;

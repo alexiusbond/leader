@@ -8,6 +8,7 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
@@ -244,14 +245,14 @@ public class DbEmployeeOrder extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(cb);
             }
             DateField df = edv.createDateField(result.getDate("eo.from_date"),
-                    myUI.getMessage(SptMessages.FromDate), true);
+                    myUI.getMessage(SptMessages.FromDate), null, true, sysSettings.datePattern, Resolution.DAY);
             df.setRangeEnd(new Date());
             if (result.getInt("o.id") == 8) {
                 df.setEnabled(false);
             }
             item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
             df = edv.createDateField(result.getDate("eo.to_date"),
-                    myUI.getMessage(SptMessages.TillDate), false);
+                    myUI.getMessage(SptMessages.TillDate), null, false, sysSettings.datePattern, Resolution.DAY);
             if (result.getInt("o.id") != 3 && result.getInt("o.id") != 2) {
                 df.setEnabled(false);
             }

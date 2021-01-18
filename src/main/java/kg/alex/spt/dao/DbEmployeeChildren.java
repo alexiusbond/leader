@@ -11,6 +11,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 
 import java.sql.*;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeChildren;
@@ -95,7 +96,8 @@ public class DbEmployeeChildren extends BaseDb {
                             new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
                     edv.createDateField(result.getDate("ech.date_of_birth"),
-                            myUI.getMessage(SptMessages.DateOfBirth), true));
+                            myUI.getMessage(SptMessages.DateOfBirth), null,
+                            true, sysSettings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(SptMessages.Institution)).setValue(
                     edv.createTextfield(result.getString("ech.institution"),
                             myUI.getMessage(SptMessages.Institution),

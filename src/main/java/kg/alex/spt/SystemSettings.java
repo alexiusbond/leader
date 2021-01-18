@@ -33,12 +33,14 @@ public class SystemSettings implements Serializable {
     public final DecimalFormat dFormat = new DecimalFormat("0.00");
     public final DecimalFormat dMonth = new DecimalFormat("00");
     public final String datePattern = "dd-MM-yyyy";
-    public final String yearMonthPattern = "MM-yyyy";
+    public  final String yearMonthPattern = "MM-yyyy";
+    public static final String yearPattern = "yyyy";
     public final SimpleDateFormat dateRu = new SimpleDateFormat(
             "«dd» MMMMM yyyy г.", myDateFormatSymbols);
     public final SimpleDateFormat dateEn = new SimpleDateFormat(
             "«dd» MMMMM yyyy");
     public final SimpleDateFormat df = new SimpleDateFormat(datePattern);
+    public static final SimpleDateFormat mysql_only_year = new SimpleDateFormat("yyyy-01-01");
     public final String dateTimeSecPattern = "dd-MM-yyyy HH:mm:ss";
     public final String dateTimeMinPattern = "dd-MM-yyyy HH:mm";
     public final SimpleDateFormat dtsf = new SimpleDateFormat(dateTimeSecPattern);
@@ -99,12 +101,14 @@ public class SystemSettings implements Serializable {
     public final String dbBranchTable = "hr_branch";
     public final String dbUniversityTable = "hr_university";
     public final String dbWork_placeTable = "hr_work_place";
+    public final String dbPositionTable = "hr_position";
     public final String dbQuestion = "hr_question";
     public final String dbActivity_status = "activity_status";
     public final String dbSchoolType = "school_type";
     public final String dbAccessoriesCategory = "accessories_category";
     public final String dbGender = "gender";
     public final String dbCountry = "hr_country";
+    public final String dbEduLevel = "hr_education_level";
     public final String dbHealthStatus = "hr_health_status";
     public final String dbAcc_currency = "acc_currency";
     public final String acc_currency_id = "acc_currency_id";

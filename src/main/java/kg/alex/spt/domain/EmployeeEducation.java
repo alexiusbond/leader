@@ -6,6 +6,7 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class EmployeeEducation implements Serializable {
 
@@ -13,9 +14,11 @@ public class EmployeeEducation implements Serializable {
     private int employee_id;
     private int university_id;
     private int own_id;
-    private String faculty;
+    private int country_id;
+    private int education_level_id;
     private String department;
-    private String year;
+    private Date start;
+    private Date end;
 
     /**
      * @return the id
@@ -74,20 +77,6 @@ public class EmployeeEducation implements Serializable {
     }
 
     /**
-     * @return the faculty
-     */
-    public String getFaculty() {
-        return faculty;
-    }
-
-    /**
-     * @param faculty the faculty to set
-     */
-    public void setFaculty(String faculty) {
-        this.faculty = faculty;
-    }
-
-    /**
      * @return the department
      */
     public String getDepartment() {
@@ -101,17 +90,35 @@ public class EmployeeEducation implements Serializable {
         this.department = department;
     }
 
-    /**
-     * @return the year
-     */
-    public String getYear() {
-        return year;
+    public int getCountry_id() {
+        return country_id;
     }
 
-    /**
-     * @param year the year to set
-     */
-    public void setYear(String year) {
-        this.year = year;
+    public void setCountry_id(int country_id) {
+        this.country_id = country_id;
+    }
+
+    public int getEducation_level_id() {
+        return education_level_id;
+    }
+
+    public void setEducation_level_id(int education_level_id) {
+        this.education_level_id = education_level_id;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public void setEnd(Date end) {
+        this.end = end;
     }
 }

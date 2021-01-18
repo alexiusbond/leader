@@ -5,6 +5,9 @@
  */
 package kg.alex.spt.ui;
 
+import com.vaadin.shared.ui.datefield.Resolution;
+import kg.alex.spt.dao.*;
+import kg.alex.spt.domain.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -61,45 +64,6 @@ import java.util.*;
 
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.dao.DbAccCategory;
-import kg.alex.spt.dao.DbClassName;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbEmployee;
-import kg.alex.spt.dao.DbEmployeeBranch;
-import kg.alex.spt.dao.DbEmployeeCertificate;
-import kg.alex.spt.dao.DbEmployeeChildren;
-import kg.alex.spt.dao.DbEmployeeContact;
-import kg.alex.spt.dao.DbEmployeeEducation;
-import kg.alex.spt.dao.DbEmployeeExam;
-import kg.alex.spt.dao.DbEmployeeExtraInfo;
-import kg.alex.spt.dao.DbEmployeeLanguage;
-import kg.alex.spt.dao.DbEmployeeLessons;
-import kg.alex.spt.dao.DbEmployeeOrder;
-import kg.alex.spt.dao.DbEmployeePhoneNumber;
-import kg.alex.spt.dao.DbEmployeeQuestion;
-import kg.alex.spt.dao.DbEmployeeSeminar;
-import kg.alex.spt.dao.DbEmployeeSpouse;
-import kg.alex.spt.dao.DbEmployeeWork;
-import kg.alex.spt.dao.DbSalaryCategories;
-import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.domain.AccCategory;
-import kg.alex.spt.domain.Definition;
-import kg.alex.spt.domain.Employee;
-import kg.alex.spt.domain.EmployeeBranch;
-import kg.alex.spt.domain.EmployeeCertificate;
-import kg.alex.spt.domain.EmployeeChildren;
-import kg.alex.spt.domain.EmployeeContact;
-import kg.alex.spt.domain.EmployeeEducation;
-import kg.alex.spt.domain.EmployeeExam;
-import kg.alex.spt.domain.EmployeeExtraInfo;
-import kg.alex.spt.domain.EmployeeLanguage;
-import kg.alex.spt.domain.EmployeeLessons;
-import kg.alex.spt.domain.EmployeeOrder;
-import kg.alex.spt.domain.EmployeePhoneNumber;
-import kg.alex.spt.domain.EmployeeQuestioning;
-import kg.alex.spt.domain.EmployeeSeminar;
-import kg.alex.spt.domain.EmployeeSpouse;
-import kg.alex.spt.domain.EmployeeWork;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.GenerateRandomString;
@@ -127,12 +91,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private int emplID;
     private OptionGroup optionGroup;
     private TextField nameTF, loginTF, passwordTF, surnameTF, middlenameTF;
-    private TextField birth_placeTF, passportTF, emailTF;
+    private TextField birth_placeTF, emailTF;
     private TextField spouseFullnameTF, spousePhoneTF;
-    private TextField hobbiesTF, fobbiesTF;
-    private TextArea addessTA, spouseHealthNotesTA, healthNotesTA, shortNotesTA;
-    private DateField birthDateDF;
-    private ComboBoxMax genderCB, nationalityCB, martialStatusCB, mainPositionCB, citizenshipCB, spouseHealthCB, healthCB, salaryCategoryCB;
+    private TextField hobbiesTF, fobbiesTF, spouseHealthNotesTF;
+    private TextArea addessTA, healthNotesTA, shortNotesTA;
+    private DateField birthDateDF, gradSchoolStartDF, gradSchoolEndDF;
+    private ComboBoxMax genderCB, nationalityCB, martialStatusCB, mainPositionCB, citizenshipCB,
+            spouseHealthCB, healthCB, salaryCategoryCB, gradSchoolCB;
     private FormLayout fieldsLayRight, fieldsLayLeft, fieldsLayContacts, fieldsLayFamily, fieldsLayExtra;
     private TabSheet tabs;
     private boolean isNew;
@@ -336,6 +301,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             setEducationTable(educationTable, educationCont, 1);
                             setWorkTable(workPlacesTable, workPlacesCont, 1);
                             setBranchesTable();
+                            setGradSchoolFields();
                         } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay
                                 && emplID != 0) {
                             setLessonsTable();
@@ -348,8 +314,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             } else {
                                 clearPermissionsTable();
                             }
-                        } else if (event.getTabSheet().getSelectedTab() == ordersInfoLay
-                                && emplID != 0) {
+                        } else if (event.getTabSheet().getSelectedTab() == ordersInfoLay && emplID != 0) {
                             setOrdersTable();
                         }
                     }
@@ -367,11 +332,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayContacts.setWidth("100%");
         fieldsLayContacts.setSpacing(false);
         fieldsLayContacts.setMargin(new MarginInfo(false, false, false, true));
-
-        passportTF = createTextfield(null, null, new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 20, false), true);
-        passportTF.setCaption(myUI.getMessage(SptMessages.Passport));
-        fieldsLayContacts.addComponent(passportTF);
 
         citizenshipCB = createCombobox(0, null, sysSettings.dbCountry, true);
         citizenshipCB.setCaption(myUI.getMessage(SptMessages.Citizenship));
@@ -457,13 +417,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         spouseHealthCB.setCaption(myUI.getMessage(SptMessages.HealthStatus));
         fieldsLayFamily.addComponent(spouseHealthCB);
 
-        spouseHealthNotesTA = new TextArea(myUI.getMessage(SptMessages.HealthNotes));
-        spouseHealthNotesTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        spouseHealthNotesTA.setWidth("100%");
-        spouseHealthNotesTA.setRows(2);
-        spouseHealthNotesTA.addValidator(new StringLengthValidator(
+        spouseHealthNotesTF = new TextField(myUI.getMessage(SptMessages.HealthNotes));
+        spouseHealthNotesTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
+        spouseHealthNotesTF.setWidth("100%");
+        spouseHealthNotesTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 350, true));
-        fieldsLayFamily.addComponent(spouseHealthNotesTA);
+        fieldsLayFamily.addComponent(spouseHealthNotesTF);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth("100%");
@@ -557,8 +516,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         familyInfoLay.addComponent(spouseWorkPlacesTable, 1, 3);
         familyInfoLay.setRowExpandRatio(1, 1);
         familyInfoLay.setRowExpandRatio(3, 1);
-        familyInfoLay.setColumnExpandRatio(0, 1.2f);
-        familyInfoLay.setColumnExpandRatio(1, 1.8f);
+        familyInfoLay.setColumnExpandRatio(0, 1.3f);
+        familyInfoLay.setColumnExpandRatio(1, 1.7f);
     }
 
     private void buildExtraLayout() {
@@ -745,29 +704,59 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void buildProfLayout() {
 
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        GridLayout gl = new GridLayout(3, 3);
+        gl.setSpacing(true);
+        gl.setSizeFull();
+        gl.setColumnExpandRatio(0, 1);
+        gl.setRowExpandRatio(2, 1);
+
+        gradSchoolCB = createCombobox(0, null, null, true);
+        gradSchoolCB.setCaption(myUI.getMessage(SptMessages.GraduatedSchool));
+        try {
+            DbSchool dbCon = new DbSchool();
+            dbCon.connect();
+            gradSchoolCB.setContainerDataSource(dbCon.execSchoolSel(myUI, 0));
+            Item item = gradSchoolCB.getContainerDataSource().addItem(0);
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(myUI.getMessage(SptMessages.OtherSchool));
+            dbCon.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        gradSchoolCB.setValue(0);
+        gl.addComponent(gradSchoolCB, 0, 0);
+
+        gradSchoolStartDF = createDateField(null, null,
+                myUI.getMessage(SptMessages.Start),
+                true, SystemSettings.yearPattern, Resolution.YEAR);
+        gradSchoolStartDF.setSizeUndefined();
+        gradSchoolStartDF.setResolution(Resolution.YEAR);
+        gl.addComponent(gradSchoolStartDF, 1, 0);
+
+        gradSchoolEndDF = createDateField(null, null,
+                myUI.getMessage(SptMessages.End),
+                true, SystemSettings.yearPattern, Resolution.YEAR);
+        gradSchoolEndDF.setResolution(Resolution.YEAR);
+        gl.addComponent(gradSchoolEndDF, 2, 0);
 
         Label captionBranches = new Label();
         captionBranches.setSizeFull();
         captionBranches.setContentMode(ContentMode.HTML);
         captionBranches.setValue(myUI.getMessage(SptMessages.Branches));
         captionBranches.setStyleName("tableCpt");
+        gl.addComponent(captionBranches, 0, 1, 1, 1);
 
         plusBranchButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusBranchButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusBranchButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusBranchButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusBranchButton.addClickListener(this);
-
-        hl.addComponent(captionBranches);
-        hl.setSpacing(true);
-        hl.addComponent(plusBranchButton);
-        hl.setExpandRatio(captionBranches, 1);
+        gl.addComponent(plusBranchButton, 2, 1);
 
         branchesTable = new FormattedTable();
         branchesTable.setSizeFull();
         branchesTable.setStyleName(ValoTheme.TABLE_SMALL);
+        gl.addComponent(branchesTable, 0, 2, 2, 2);
 
         HorizontalLayout hl2 = new HorizontalLayout();
         hl2.setWidth("100%");
@@ -821,16 +810,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         profInfoLay.setSizeFull();
         profInfoLay.setSpacing(true);
         profInfoLay.setMargin(true);
-        profInfoLay.addComponent(hl, 0, 0);
-        profInfoLay.addComponent(branchesTable, 0, 1, 0, 3);
+        profInfoLay.addComponent(gl, 0, 0, 0, 3);
         profInfoLay.addComponent(hl2, 1, 0);
         profInfoLay.addComponent(educationTable, 1, 1);
         profInfoLay.addComponent(hl3, 1, 2);
         profInfoLay.addComponent(workPlacesTable, 1, 3);
         profInfoLay.setRowExpandRatio(1, 1);
         profInfoLay.setRowExpandRatio(3, 1);
-        profInfoLay.setColumnExpandRatio(1, 1.2F);
-        profInfoLay.setColumnExpandRatio(0, 0.8F);
+        profInfoLay.setColumnExpandRatio(0, 0.6F);
+        profInfoLay.setColumnExpandRatio(1, 1.4F);
     }
 
     private void buildOrdersLayout() {
@@ -1024,16 +1012,17 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         try {
             NATURAL_COL_ORDER_EDU = new String[]{sysSettings.button,
                     myUI.getMessage(SptMessages.University),
-                    myUI.getMessage(SptMessages.Faculty),
+                    myUI.getMessage(SptMessages.Country),
                     myUI.getMessage(SptMessages.Department),
-                    myUI.getMessage(SptMessages.Year)};
+                    myUI.getMessage(SptMessages.EduLevel),
+                    myUI.getMessage(SptMessages.Start),
+                    myUI.getMessage(SptMessages.End)};
             DbEmployeeEducation dbed = new DbEmployeeEducation();
             dbed.connect();
             t.setContainerDataSource(dbed.execSQL(myUI, emplID, own_id, c, this));
             dbed.close();
             t.setVisibleColumns(NATURAL_COL_ORDER_EDU);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.University), 1);
-            t.setColumnExpandRatio(myUI.getMessage(SptMessages.Faculty), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.Department), 1);
         } catch (Exception e) {
             logger.error(e);
@@ -1045,19 +1034,20 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         try {
             NATURAL_COL_ORDER_WORK = new String[]{sysSettings.button,
                     myUI.getMessage(SptMessages.WorkPlace),
+                    myUI.getMessage(SptMessages.Sapat),
                     myUI.getMessage(SptMessages.MainPosition),
-                    myUI.getMessage(SptMessages.ExtraPositions),
+                    myUI.getMessage(SptMessages.ExtraPosition),
                     myUI.getMessage(SptMessages.WorkingStatus),
-                    myUI.getMessage(SptMessages.Year)};
+                    myUI.getMessage(SptMessages.Start),
+                    myUI.getMessage(SptMessages.End)};
             DbEmployeeWork dbew = new DbEmployeeWork();
             dbew.connect();
-            t.setContainerDataSource(
-                    dbew.execSQL(myUI, emplID, own_id, c, this));
+            t.setContainerDataSource(dbew.execSQL(myUI, emplID, own_id, c, this));
             dbew.close();
             t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.WorkPlace), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.MainPosition), 1);
-            t.setColumnExpandRatio(myUI.getMessage(SptMessages.ExtraPositions), 1);
+            t.setColumnExpandRatio(myUI.getMessage(SptMessages.ExtraPosition), 1);
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -1230,7 +1220,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             EmployeeContact ec = dbec.execSQL(emplID);
             dbec.close();
             if (ec != null) {
-                passportTF.setValue(ec.getPassport());
                 addessTA.setValue(ec.getAddress());
                 birth_placeTF.setValue(ec.getBirth_place());
                 emailTF.setValue(ec.getEmail());
@@ -1256,7 +1245,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     spousePhoneTF.setValue(es.getPhone());
                 }
                 if (es.getHealth_notes() != null) {
-                    spouseHealthNotesTA.setValue(es.getHealth_notes());
+                    spouseHealthNotesTF.setValue(es.getHealth_notes());
                 }
                 spouseHealthCB.setValue(es.getHealth_status_id());
             } else {
@@ -1290,6 +1279,25 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 healthCB.setValue(eei.getHealth_status_id());
             } else {
                 clearExtraInfoFields();
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
+    private void setGradSchoolFields() {
+        try {
+            DbEmployeeGraduationSchool dbCon = new DbEmployeeGraduationSchool();
+            dbCon.connect();
+            EmployeeGraduationSchool egs = dbCon.execSQL(emplID);
+            dbCon.close();
+            if (egs != null) {
+                gradSchoolCB.setValue(egs.getSchool_id());
+                gradSchoolStartDF.setValue(egs.getStart());
+                gradSchoolEndDF.setValue(egs.getEnd());
+            } else {
+                clearGradSchoolFields();
             }
         } catch (Exception e) {
             logger.error(e);
@@ -1489,11 +1497,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     + employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.WorkingStatus)).getValue());
             mainPositionLb.setValue(myUI.getMessage(SptMessages.MainPosition) + ": "
                     + employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.MainPosition)).getValue());
-            if (employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.ExtraPositions)).getValue() != null) {
-                extraPositionsLb.setValue(myUI.getMessage(SptMessages.ExtraPositions) + ": "
-                        + employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.ExtraPositions)).getValue());
+            if (employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.ExtraPosition)).getValue() != null) {
+                extraPositionsLb.setValue(myUI.getMessage(SptMessages.ExtraPosition) + ": "
+                        + employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.ExtraPosition)).getValue());
             } else {
-                extraPositionsLb.setValue(myUI.getMessage(SptMessages.ExtraPositions) + ":");
+                extraPositionsLb.setValue(myUI.getMessage(SptMessages.ExtraPosition) + ":");
             }
             if (employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.MainBranch)).getValue() != null) {
                 mainBrancLb.setValue(myUI.getMessage(SptMessages.MainBranch) + ": "
@@ -1516,7 +1524,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         } else {
             workingStatusLb.setValue(myUI.getMessage(SptMessages.WorkingStatus) + ":");
             mainPositionLb.setValue(myUI.getMessage(SptMessages.MainPosition) + ":");
-            extraPositionsLb.setValue(myUI.getMessage(SptMessages.ExtraPositions) + ":");
+            extraPositionsLb.setValue(myUI.getMessage(SptMessages.ExtraPosition) + ":");
             mainBrancLb.setValue(myUI.getMessage(SptMessages.MainBranch) + ":");
             extraBrancesLb.setValue(myUI.getMessage(SptMessages.ExtraBranches) + ":");
             totalHoursLb.setValue(myUI.getMessage(SptMessages.TotalHours) + myUI.getUser().getCurrent_year().getName() + ":");
@@ -1572,13 +1580,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         middlenameTF.setCaption(myUI.getMessage(SptMessages.Middlename));
         fieldsLayLeft.addComponent(middlenameTF);
 
-        birthDateDF = new DateField(myUI.getMessage(SptMessages.DateOfBirth));
-        birthDateDF.setWidth("100%");
-        birthDateDF.setStyleName(ValoTheme.DATEFIELD_TINY);
-        birthDateDF.setRequired(true);
-        birthDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        birthDateDF.setDateFormat(sysSettings.datePattern);
-        birthDateDF.setValue(new Date());
+        birthDateDF = createDateField(new Date(), null, myUI.getMessage(SptMessages.DateOfBirth),
+                true, sysSettings.datePattern, Resolution.DAY);
         fieldsLayLeft.addComponent(birthDateDF);
     }
 
@@ -1991,7 +1994,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void clearContactFields() {
         phonesTable.removeAllItems();
-        passportTF.setValue("");
         addessTA.setValue("");
         emailTF.setValue("");
         birth_placeTF.setValue("");
@@ -2005,7 +2007,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         spouseHealthCB.setValue(null);
         spouseFullnameTF.setValue("");
         spousePhoneTF.setValue("");
-        spouseHealthNotesTA.setValue("");
+        spouseHealthNotesTF.setValue("");
     }
 
     private void clearExtraInfoFields() {
@@ -2014,6 +2016,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fobbiesTF.setValue("");
         healthNotesTA.setValue("");
         shortNotesTA.setValue("");
+    }
+
+    private void clearGradSchoolFields() {
+        gradSchoolStartDF.setValue(null);
+        gradSchoolEndDF.setValue(null);
+        gradSchoolCB.setValue(null);
     }
 
     private void clearAchievementsFields() {
@@ -2095,6 +2103,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             setEducationTable(educationTable, educationCont, 1);
             setWorkTable(workPlacesTable, workPlacesCont, 1);
             setBranchesTable();
+            setGradSchoolFields();
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
             setLessonsTable();
             if (employeesDataTable != null && employeesDataTable.getContainerDataSource().
@@ -2121,6 +2130,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             clearContactFields();
             clearSpouseFields();
             clearExtraInfoFields();
+            clearGradSchoolFields();
             questioningTable.removeAllItems();
             clearAchievementsFields();
             clearProfFields();
@@ -2143,6 +2153,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             clearContactFields();
             clearSpouseFields();
             clearExtraInfoFields();
+            clearGradSchoolFields();
             questioningTable.removeAllItems();
             clearAchievementsFields();
             clearProfFields();
@@ -2327,9 +2338,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     insertEducation(emplID, 1, educationTable, delEducationIds);
                                     insertWorkPlaces(emplID, 1, workPlacesTable, delWorkPlacesIds);
                                     insertBranches(emplID);
+                                    insertEmplGradSchool(getEmployeeGradSchool(emplID));
                                     setEducationTable(educationTable, educationCont, 1);
                                     setWorkTable(workPlacesTable, workPlacesCont, 1);
                                     setBranchesTable();
+                                    setGradSchoolFields();
                                     updateInfoLayout();
                                 } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
                                     insertLessons(emplID);
@@ -2623,12 +2636,16 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     EmployeeEducation ed = new EmployeeEducation();
                     ed.setEmployee_id(employee_id);
                     ed.setOwn_id(own_id);
-                    ed.setFaculty(((TextField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Faculty)).getValue()).getValue().toString());
                     ed.setDepartment(((TextField) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Department)).getValue()).getValue().toString());
-                    ed.setYear(((TextField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Year)).getValue()).getValue().toString());
+                    ed.setStart(((DateField) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Start)).getValue()).getValue());
+                    ed.setEnd(((DateField) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.End)).getValue()).getValue());
+                    ed.setCountry_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Country)).getValue()).getValue());
+                    ed.setEducation_level_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.EduLevel)).getValue()).getValue());
                     ed.setUniversity_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.University)).getValue()).getValue());
                     if (t.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
@@ -2670,17 +2687,21 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     ew.setOwn_id(own_id);
                     ew.setWork_place_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.WorkPlace)).getValue()).getValue());
-                    ew.setMain_position(((TextField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.MainPosition)).getValue()).getValue().toString());
-                    if (((TextField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.ExtraPositions)).getValue()).getValue() != null) {
-                        ew.setExtra_position(((TextField) t.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.ExtraPositions)).getValue()).getValue().toString());
+                    ew.setMain_position_id((Integer) ((ComboBoxMax) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.MainPosition)).getValue()).getValue());
+                    if (((ComboBox) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.ExtraPosition)).getValue()).getValue() != null) {
+                        ew.setExtra_position_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
+                                myUI.getMessage(SptMessages.ExtraPosition)).getValue()).getValue());
                     }
                     ew.setWorking_status_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.WorkingStatus)).getValue()).getValue());
-                    ew.setYear(((TextField) t.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Year)).getValue()).getValue().toString());
+                    ew.setStart(((DateField) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Start)).getValue()).getValue());
+                    ew.setEnd(((DateField) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.End)).getValue()).getValue());
+                    ew.setSapat(((CheckBox) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Sapat)).getValue()).getValue());
                     if (t.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         ew.setId(Integer.parseInt(next.toString()));
@@ -3050,7 +3071,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 }
             }
             if (ordersTable.getContainerDataSource().size() > 0) {
-                employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).setValue(null);
+                employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).setValue(null);
                 employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(null);
                 Iterator iter = ordersTable.getItemIds().iterator();
                 while (iter.hasNext()) {
@@ -3132,13 +3153,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         String str = ((ComboBox) ordersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Details)).getValue()).getItemCaption(eo.getPosition_id());
                         String str_ids = eo.getPosition_id() + "";
-                        if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).getValue() == null) {
-                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).setValue(str);
+                        if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).getValue() == null) {
+                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).setValue(str);
                             employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(str_ids);
                         } else {
-                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPositions)).setValue(
+                            employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).setValue(
                                     employeesDataTable.getContainerProperty(employee_id,
-                                            myUI.getMessage(SptMessages.ExtraPositions)).getValue().toString() + ", " + str);
+                                            myUI.getMessage(SptMessages.ExtraPosition)).getValue().toString() + ", " + str);
                             employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(
                                     employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).getValue().toString() + ", " + str_ids);
                         }
@@ -3223,7 +3244,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 createTextfield(null, myUI.getMessage(SptMessages.Institution),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false));
         item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
-                createDateField(null, myUI.getMessage(SptMessages.DateOfBirth), true));
+                createDateField(null, myUI.getMessage(SptMessages.DateOfBirth),
+                        null, true, sysSettings.datePattern, Resolution.DAY));
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         childrenTable.setVisibleColumns(NATURAL_COL_ORDER_CHILDREN);
 
@@ -3233,9 +3255,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
         NATURAL_COL_ORDER_EDU = new String[]{sysSettings.button,
                 myUI.getMessage(SptMessages.University),
-                myUI.getMessage(SptMessages.Faculty),
+                myUI.getMessage(SptMessages.Country),
                 myUI.getMessage(SptMessages.Department),
-                myUI.getMessage(SptMessages.Year)};
+                myUI.getMessage(SptMessages.EduLevel),
+                myUI.getMessage(SptMessages.Start),
+                myUI.getMessage(SptMessages.End)};
         String id = sysSettings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
             t.setContainerDataSource(prepareEducationContainer(c));
@@ -3279,28 +3303,35 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
         item.getItemProperty(myUI.getMessage(SptMessages.University)).setValue(cb);
-        item.getItemProperty(myUI.getMessage(SptMessages.Faculty)).setValue(
-                createTextfield(null, myUI.getMessage(SptMessages.Faculty),
-                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
         item.getItemProperty(myUI.getMessage(SptMessages.Department)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.Department),
-                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), true));
-        item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
-                createTextfield(null, myUI.getMessage(SptMessages.Year),
-                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 10, true), true));
+                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
+        item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
+                createDateField(null, myUI.getMessage(SptMessages.Start),
+                        null, true, SystemSettings.yearPattern, Resolution.YEAR));
+        item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
+                createDateField(null, myUI.getMessage(SptMessages.End),
+                        null, true, SystemSettings.yearPattern, Resolution.YEAR));
+        item.getItemProperty(myUI.getMessage(SptMessages.Country)).setValue(
+                createCombobox(0, myUI.getMessage(SptMessages.Country), sysSettings.dbCountry, true));
+        item.getItemProperty(myUI.getMessage(SptMessages.EduLevel)).setValue(
+                createCombobox(0, myUI.getMessage(SptMessages.EduLevel), sysSettings.dbEduLevel, true));
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         t.setVisibleColumns(NATURAL_COL_ORDER_EDU);
-
+        t.setColumnExpandRatio(myUI.getMessage(SptMessages.University), 1);
+        t.setColumnExpandRatio(myUI.getMessage(SptMessages.Department), 1);
     }
 
     private void addWorkItem(final Table t, IndexedContainer c) {
 
         NATURAL_COL_ORDER_WORK = new String[]{sysSettings.button,
                 myUI.getMessage(SptMessages.WorkPlace),
+                myUI.getMessage(SptMessages.Sapat),
                 myUI.getMessage(SptMessages.MainPosition),
-                myUI.getMessage(SptMessages.ExtraPositions),
+                myUI.getMessage(SptMessages.ExtraPosition),
                 myUI.getMessage(SptMessages.WorkingStatus),
-                myUI.getMessage(SptMessages.Year)};
+                myUI.getMessage(SptMessages.Start),
+                myUI.getMessage(SptMessages.End)};
         String id = sysSettings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
             t.setContainerDataSource(prepareWorkContainer(c));
@@ -3310,13 +3341,23 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 t.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork));
-        item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(
-                createTextfield(null, myUI.getMessage(SptMessages.MainPosition),
-                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 150, true), true));
-        item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(
-                createTextfield(null, myUI.getMessage(SptMessages.ExtraPositions),
-                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), false));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
+        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.MainPosition), null, true);
+        item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
+        ComboBoxMax cb3 = createCombobox(0, myUI.getMessage(SptMessages.ExtraPosition), null, false);
+        try {
+            DbDefinition dbDef = new DbDefinition();
+            dbDef.connect();
+            cb3.setContainerDataSource(
+                    dbDef.exec_positions_for_select(myUI, false, true));
+            cb.setContainerDataSource(
+                    dbDef.exec_positions_for_select(myUI, false, true));
+            dbDef.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).setValue(cb3);
+        cb = createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -3327,7 +3368,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.catching(e);
         }
         item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(cb);
-        final ComboBox cb2 = createCombobox(0, myUI.getMessage(SptMessages.WorkPlace), sysSettings.dbWork_placeTable, true);
+        final ComboBoxMax cb2 = createCombobox(0, myUI.getMessage(SptMessages.WorkPlace), sysSettings.dbWork_placeTable, true);
         cb2.setNewItemsAllowed(true);
         cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
             @Override
@@ -3342,12 +3383,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         if (item != null) {
                             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
                             cb2.setValue(id);
-                            Iterator iter = t.getContainerDataSource().getItemIds().iterator();
+                            Iterator iter = c.getItemIds().iterator();
                             while (iter.hasNext()) {
                                 Object next = iter.next();
-                                if (((ComboBox) t.getContainerDataSource().getContainerProperty(next,
+                                if (((ComboBox) c.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.WorkPlace)).getValue()).getValue() == null) {
-                                    item = ((IndexedContainer) ((ComboBox) t.getContainerDataSource().getContainerProperty(next,
+                                    item = ((IndexedContainer) ((ComboBox) c.getContainerProperty(next,
                                             myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id);
                                     item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
                                 }
@@ -3361,9 +3402,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
         item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(cb2);
-        item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
-                createTextfield(null, myUI.getMessage(SptMessages.Year),
-                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 10, true), true));
+        item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
+                createDateField(null, myUI.getMessage(SptMessages.Start), null,
+                        true, sysSettings.datePattern, Resolution.DAY));
+        item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
+                createDateField(null, myUI.getMessage(SptMessages.End), null,
+                        false, sysSettings.datePattern, Resolution.DAY));
+        item.getItemProperty(myUI.getMessage(SptMessages.Sapat)).setValue(
+                createCheckBox(false, myUI.getMessage(SptMessages.Sapat)));
+
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
 
@@ -3414,7 +3461,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 createTextfield(null, myUI.getMessage(SptMessages.GivenBy),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
-                createDateField(null, myUI.getMessage(SptMessages.IssueDate), true));
+                createDateField(null, myUI.getMessage(SptMessages.IssueDate),
+                        null, true, sysSettings.datePattern, Resolution.DAY));
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         certificatesTable.setVisibleColumns(NATURAL_COL_ORDER_CERTIFICATES);
 
@@ -3446,7 +3494,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 createTextfield(null, myUI.getMessage(SptMessages.Note),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), false));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
-                createDateField(null, myUI.getMessage(SptMessages.IssueDate), true));
+                createDateField(null, myUI.getMessage(SptMessages.IssueDate),
+                        null, true, sysSettings.datePattern, Resolution.DAY));
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         seminarsTable.setVisibleColumns(NATURAL_COL_ORDER_SEMINARS);
 
@@ -3474,7 +3523,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
                         new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter()));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
-                createDateField(null, myUI.getMessage(SptMessages.IssueDate), true));
+                createDateField(null, myUI.getMessage(SptMessages.IssueDate),
+                        null, true, sysSettings.datePattern, Resolution.DAY));
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         examsTable.setVisibleColumns(NATURAL_COL_ORDER_EXAMS);
 
@@ -3576,10 +3626,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         cb.setRequired(false);
         item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(cb);
         DateField df = createDateField(new Date(),
-                myUI.getMessage(SptMessages.FromDate), true);
+                myUI.getMessage(SptMessages.FromDate), null, true,
+                sysSettings.datePattern, Resolution.DAY);
         df.setRangeEnd(new Date());
         item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
-        df = createDateField(null, myUI.getMessage(SptMessages.TillDate), false);
+        df = createDateField(null, myUI.getMessage(SptMessages.TillDate), null,
+                false, sysSettings.datePattern, Resolution.DAY);
         df.setEnabled(false);
         item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
@@ -3620,15 +3672,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         return tf;
     }
 
-    public DateField createDateField(Date value, String description, boolean isRequired) {
+    public DateField createDateField(Date value, String description, String caption,
+                                     boolean isRequired, String date_format, Resolution resolution) {
         DateField df = new DateField();
+        df.setCaption(caption);
         df.setWidth("100%");
         df.setStyleName(ValoTheme.DATEFIELD_TINY);
         if (isRequired) {
             df.setRequired(true);
             df.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         }
-        df.setDateFormat(sysSettings.datePattern);
+        df.setDateFormat(date_format);
+        df.setResolution(resolution);
         df.setDescription(description);
         if (value != null) {
             df.setValue(value);
@@ -3725,9 +3780,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             c = new IndexedContainer();
             c.addContainerProperty(sysSettings.button, Button.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.University), ComboBoxMax.class, null);
-            c.addContainerProperty(myUI.getMessage(SptMessages.Faculty), TextField.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.Department), TextField.class, null);
-            c.addContainerProperty(myUI.getMessage(SptMessages.Year), TextField.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.Start), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.End), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.Country), ComboBoxMax.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.EduLevel), ComboBoxMax.class, null);
             c.addContainerProperty(sysSettings.crud_status, String.class, null);
         } else {
             c.removeAllItems();
@@ -3740,14 +3797,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             c = new IndexedContainer();
             c.addContainerProperty(sysSettings.button, Button.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.WorkPlace), ComboBoxMax.class, null);
-            c.addContainerProperty(
-                    myUI.getMessage(SptMessages.MainPosition), TextField.class, null);
-            c.addContainerProperty(
-                    myUI.getMessage(SptMessages.ExtraPositions), TextField.class, null);
-            c.addContainerProperty(
-                    myUI.getMessage(SptMessages.WorkingStatus), ComboBoxMax.class, null);
-            c.addContainerProperty(
-                    myUI.getMessage(SptMessages.Year), TextField.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.MainPosition), ComboBoxMax.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.ExtraPosition), ComboBoxMax.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), ComboBoxMax.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.Start), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.End), DateField.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.Sapat), CheckBox.class, null);
             c.addContainerProperty(sysSettings.crud_status, String.class, null);
         } else {
             c.removeAllItems();
@@ -3926,6 +3981,21 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         }
     }
 
+    private void insertEmplGradSchool(EmployeeGraduationSchool egs) {
+        try {
+            DbEmployeeGraduationSchool dbCon = new DbEmployeeGraduationSchool();
+            dbCon.connect();
+            int st = dbCon.exec_insert(egs);
+            if (st == 0) {
+                dbCon.exec_update(egs);
+            }
+            dbCon.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+    }
+
     private void insertEmplOrder(EmployeeOrder eo) {
         try {
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
@@ -4028,7 +4098,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         EmployeeContact ec = new EmployeeContact();
         ec.setEmployee_id(employee_id);
         ec.setEmail(emailTF.getValue());
-        ec.setPassport(passportTF.getValue());
         ec.setAddress(addessTA.getValue());
         ec.setBirth_place(birth_placeTF.getValue());
         ec.setCitizenship_id((Integer) citizenshipCB.getValue());
@@ -4040,7 +4109,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         es.setEmployee_id(employee_id);
         es.setFullname(spouseFullnameTF.getValue());
         es.setPhone(spousePhoneTF.getValue());
-        es.setHealth_notes(spouseHealthNotesTA.getValue());
+        es.setHealth_notes(spouseHealthNotesTF.getValue());
         es.setHealth_status_id((Integer) spouseHealthCB.getValue());
         return es;
     }
@@ -4053,6 +4122,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         es.setHealth_notes(healthNotesTA.getValue());
         es.setShort_notes(shortNotesTA.getValue());
         es.setHealth_status_id((Integer) healthCB.getValue());
+        return es;
+    }
+
+    private EmployeeGraduationSchool getEmployeeGradSchool(int employee_id) {
+        EmployeeGraduationSchool es = new EmployeeGraduationSchool();
+        es.setEmployee_id(employee_id);
+        es.setStart(gradSchoolStartDF.getValue());
+        es.setEnd(gradSchoolEndDF.getValue());
+        es.setSchool_id((Integer) gradSchoolCB.getValue());
         return es;
     }
 
@@ -4164,6 +4242,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 clearContactFields();
                 clearSpouseFields();
                 clearExtraInfoFields();
+                clearGradSchoolFields();
                 questioningTable.removeAllItems();
                 clearAchievementsFields();
                 clearProfFields();

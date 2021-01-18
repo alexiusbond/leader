@@ -270,10 +270,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         extraPositionsLb.setContentMode(ContentMode.HTML);
         extraPositionsLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue() != null) {
-            str = item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue().toString();
+        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).getValue() != null) {
+            str = item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).getValue().toString();
         }
-        extraPositionsLb.setValue("<b>" + myUI.getMessage(SptMessages.ExtraPositions) + ":</b> " + str);
+        extraPositionsLb.setValue("<b>" + myUI.getMessage(SptMessages.ExtraPosition) + ":</b> " + str);
         gl.addComponent(extraPositionsLb, 1, 2, 2, 2);
 
         Label extraBranchesLb = new Label();

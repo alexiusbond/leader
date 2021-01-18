@@ -295,7 +295,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         acr.addTab(schoolsGrid, myUI.getMessage(SptMessages.Schools) + "<font color='red'> *</font>");
         acr.addTab(branchesGrid, myUI.getMessage(SptMessages.Lessons) + "<font color='red'> *</font>");
         acr.addTab(positionsGrid, myUI.getMessage(SptMessages.MainPositions) + "<font color='red'> *</font>");
-        acr.addTab(extraPositionsGrid, myUI.getMessage(SptMessages.ExtraPositions));
+        acr.addTab(extraPositionsGrid, myUI.getMessage(SptMessages.ExtraPosition));
 
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
         leftGrid.addComponent(acr, 0, 1, 3, 1);
