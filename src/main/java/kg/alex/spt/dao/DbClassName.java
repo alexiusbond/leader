@@ -15,10 +15,6 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.ClassName;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- *
- * @author eldiyar
- */
 public class DbClassName extends BaseDb {
 
     public DbClassName() throws Exception {

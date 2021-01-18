@@ -8,10 +8,6 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 import kg.alex.spt.excel.ExcelColumn;
 
-/**
- *
- * @author eldiyar
- */
 public class StudentExcel implements Serializable {
 
     private int id;

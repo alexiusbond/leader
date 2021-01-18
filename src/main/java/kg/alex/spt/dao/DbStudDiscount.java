@@ -21,10 +21,6 @@ import kg.alex.spt.reports.ClassDiscountsReport;
 import kg.alex.spt.reports.SchoolDiscountsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
-/**
- *
- * @author eldiyar
- */
 public class DbStudDiscount extends BaseDb {
 
     public DbStudDiscount() throws Exception {

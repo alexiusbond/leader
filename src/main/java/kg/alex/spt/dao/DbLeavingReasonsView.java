@@ -15,10 +15,6 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.LeavingReason;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- *
- * @author eldiyar
- */
 public class DbLeavingReasonsView extends BaseDb {
 
     public DbLeavingReasonsView() throws Exception {

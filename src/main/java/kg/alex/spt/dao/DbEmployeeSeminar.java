@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -21,9 +22,6 @@ import kg.alex.spt.domain.EmployeeSeminar;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
-/**
- * @author eldiyar
- */
 public class DbEmployeeSeminar extends BaseDb {
 
     public DbEmployeeSeminar() throws Exception {
@@ -72,7 +70,7 @@ public class DbEmployeeSeminar extends BaseDb {
             String id = result.getString("es.id");
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeSeminar));
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                     edv.createTextfield(result.getString("es.name"),
                             myUI.getMessage(SptMessages.Name),

@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -202,7 +203,7 @@ public class DbEmployeeOrder extends BaseDb {
             Button b = null;
 
             if (result.getInt("o.id") == 2 || result.getInt("o.id") == 3) {
-                b = edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeOrder);
+                b = edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE);
             } else if (result.getInt("eo.can_not_delete") != 1) {
                 last_id = result.getString("eo.id");
             }
@@ -277,7 +278,7 @@ public class DbEmployeeOrder extends BaseDb {
                         && (Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != 5)
                         || edv.currentUser.isPermitted(sysSettings.cnEmployeeTransferView + ":" + sysSettings.actDelete)) {
                     item.getItemProperty(sysSettings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
-                            last_id, sysSettings.dbEmployeeOrder));
+                            last_id, sysSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
                 }
             }
         }

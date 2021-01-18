@@ -28,10 +28,6 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- *
- * @author eldiyar
- */
 public class DebtsPdf {
 
     static final Logger logger = LogManager.getLogger(DebtsPdf.class);

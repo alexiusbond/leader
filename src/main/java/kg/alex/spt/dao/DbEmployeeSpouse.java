@@ -11,10 +11,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import kg.alex.spt.domain.EmployeeSpouse;
 
-/**
- *
- * @author eldiyar
- */
 public class DbEmployeeSpouse extends BaseDb {
 
     public DbEmployeeSpouse() throws Exception {

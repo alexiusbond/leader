@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	<groupId>kg.alex.spt</groupId>
-	<artifactId>spt</artifactId>
-	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>spt</name>
+    <groupId>kg.alex.spt</groupId>
+    <artifactId>spt</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>spt</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <productionMode>false</productionMode>
-        <vaadin.version>7.7.9</vaadin.version>
+        <vaadin.version>7.7.17</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     </properties>
@@ -52,7 +52,6 @@
                                 <phase>prepare-package</phase>
                                 <configuration>
                                     <mainClass>com.vaadin.sass.SassCompiler</mainClass>
-                                    <workingDirectory>${project.basedir}</workingDirectory>
                                     <arguments>
                                         <argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.scss</argument>
                                         <argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.css</argument>
@@ -71,18 +70,18 @@
 
     <dependencies>
 
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
-			<version>${vaadin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiled</artifactId>
-			<version>${vaadin.version}</version>
-		</dependency>
-		<!--
-		  Needed when using the widgetset optimizer (custom ConnectorBundleLoaderFactory).
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
+        <!--
+          Needed when using the widgetset optimizer (custom ConnectorBundleLoaderFactory).
 
           For widgetset compilation, vaadin-client-compiler is automatically added on the
           compilation classpath by vaadin-maven-plugin so normally there is no need for an
@@ -238,13 +237,18 @@
             <artifactId>log4j-core</artifactId>
             <version>2.11.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
 
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-                        <plugin>
+            <plugin>
                 <!-- workaround for
                 http://code.google.com/p/google-web-toolkit/issues/detail?id=6397 -->
                 <artifactId>maven-clean-plugin</artifactId>
@@ -276,7 +280,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=12436537-cccc-4786-8526-c5f6ecd570a9</extraJvmArgs>
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=6469ea55-4a96-43b9-b809-31d640d1450f</extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>
                     <noServer>true</noServer>

@@ -14,10 +14,6 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- *
- * @author eldiyar
- */
 public class DbRelative extends BaseDb {
 
     public DbRelative() throws Exception {

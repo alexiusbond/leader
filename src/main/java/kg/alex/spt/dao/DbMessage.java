@@ -16,10 +16,6 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Messages;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- *
- * @author eldiyar
- */
 public class DbMessage extends BaseDb {
 
     public DbMessage() throws Exception {

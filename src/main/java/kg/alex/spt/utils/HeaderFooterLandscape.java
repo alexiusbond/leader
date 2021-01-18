@@ -5,10 +5,6 @@
  */
 package kg.alex.spt.utils;
 
-/**
- *
- * @author eldiyar
- */
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;

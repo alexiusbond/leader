@@ -18,10 +18,6 @@ import kg.alex.spt.domain.EmployeeQuestioning;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
-/**
- *
- * @author eldiyar
- */
 public class DbEmployeeQuestion extends BaseDb {
 
     public DbEmployeeQuestion() throws Exception {

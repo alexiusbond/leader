@@ -11,10 +11,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import kg.alex.spt.domain.EmployeeExtraInfo;
 
-/**
- *
- * @author eldiyar
- */
 public class DbEmployeeExtraInfo extends BaseDb {
 
     public DbEmployeeExtraInfo() throws Exception {

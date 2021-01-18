@@ -8,10 +8,6 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- *
- * @author eldiyar
- */
 public class StudPayment implements Serializable {
 
     private int id;

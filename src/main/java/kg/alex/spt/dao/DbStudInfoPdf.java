@@ -10,10 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.domain.StudInfoPdf;
 
-/**
- *
- * @author eldiyar
- */
 public class DbStudInfoPdf extends BaseDb {
 
     public DbStudInfoPdf() throws Exception {

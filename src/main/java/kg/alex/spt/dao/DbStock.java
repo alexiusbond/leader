@@ -15,10 +15,6 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Stock;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- *
- * @author eldiyar
- */
 public class DbStock extends BaseDb {
 
     public DbStock() throws Exception {

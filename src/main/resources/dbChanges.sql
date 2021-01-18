@@ -153,3 +153,53 @@ ALTER TABLE `spt`.`hr_employee_work`
 CHANGE COLUMN `end_date` `end_date` DATE NULL DEFAULT NULL ;
 UPDATE `spt`.`hr_salary_category` SET `name` = 'Контракт Сапат' WHERE (`id` = '34') and (`acc_category_id` = '34') and (`acc_currency_id` = '2');
 UPDATE `spt`.`hr_salary_category` SET `name` = 'Контракт школы' WHERE (`id` = '37') and (`acc_category_id` = '37') and (`acc_currency_id` = '1');
+CREATE TABLE `hr_certificate` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_cert22` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+delete FROM spt.hr_employee_certificate;
+ALTER TABLE `spt`.`hr_employee_certificate` 
+ADD COLUMN `certificate_id` INT NOT NULL AFTER `given_by`,
+ADD INDEX `fk_hr_employee_certificate_certificate_idx` (`certificate_id` ASC) VISIBLE;
+ALTER TABLE `spt`.`hr_employee_certificate` ALTER INDEX `fk_hr_employee_certificate_employee_idx` INVISIBLE;
+ALTER TABLE `spt`.`hr_employee_certificate` 
+ADD CONSTRAINT `fk_hr_employee_certificate_certificate1`
+  FOREIGN KEY (`certificate_id`)
+  REFERENCES `spt`.`hr_certificate` (`id`)
+  ON DELETE RESTRICT
+  ON UPDATE NO ACTION;
+  ALTER TABLE `spt`.`hr_employee_certificate` 
+ADD COLUMN `note` VARCHAR(250) NULL DEFAULT NULL AFTER `certificate_id`;
+
+CREATE TABLE `hr_attachements` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `extension` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `unique_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_attach22` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+delete FROM spt.hr_employee_education;
+ALTER TABLE `spt`.`hr_employee_education` 
+ADD COLUMN `attachment_id` INT NOT NULL AFTER `note`,
+ADD INDEX `fk_hr_employee_education_attachement_idx` (`attachment_id` ASC) VISIBLE;
+ALTER TABLE `spt`.`hr_employee_education` 
+ADD CONSTRAINT `fk_hr_employee_education_attachement1`
+  FOREIGN KEY (`attachment_id`)
+  REFERENCES `spt`.`hr_attachements` (`id`)
+  ON DELETE RESTRICT
+  ON UPDATE NO ACTION;
+  
+ALTER TABLE `spt`.`hr_employee_education` 
+ADD COLUMN `attachment_id` INT NOT NULL AFTER `note`,
+ADD INDEX `fk_hr_employee_education_attachement_idx` (`attachment_id` ASC) VISIBLE;
+ALTER TABLE `spt`.`hr_employee_education` 
+ADD CONSTRAINT `fk_hr_employee_education_attachement1`
+  FOREIGN KEY (`attachment_id`)
+  REFERENCES `spt`.`hr_attachements` (`id`)
+  ON DELETE RESTRICT
+  ON UPDATE NO ACTION;
+

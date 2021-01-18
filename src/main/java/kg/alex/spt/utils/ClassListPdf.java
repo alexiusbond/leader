@@ -29,10 +29,6 @@ import kg.alex.spt.reports.ClassListReport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- *
- * @author eldiyar
- */
 public class ClassListPdf {
 
     static final Logger logger = LogManager.getLogger(ClassListPdf.class);

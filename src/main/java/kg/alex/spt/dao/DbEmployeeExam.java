@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
@@ -67,7 +68,8 @@ public class DbEmployeeExam extends BaseDb {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeExams));
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeExams,
+                            FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_exam_id"),
                             myUI.getMessage(SptMessages.Exam), sysSettings.dbExamTable, true));

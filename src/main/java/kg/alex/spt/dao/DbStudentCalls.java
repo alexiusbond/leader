@@ -17,10 +17,6 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.CallsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
-/**
- *
- * @author eldiyar
- */
 public class DbStudentCalls extends BaseDb {
 
     public DbStudentCalls() throws Exception {

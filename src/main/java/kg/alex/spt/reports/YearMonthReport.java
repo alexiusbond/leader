@@ -42,10 +42,6 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
-/**
- *
- * @author eldiyar
- */
 public class YearMonthReport implements Button.ClickListener,
         Property.ValueChangeListener {
 

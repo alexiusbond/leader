@@ -101,6 +101,7 @@ public class SystemSettings implements Serializable {
     public final String dbBranchTable = "hr_branch";
     public final String dbUniversityTable = "hr_university";
     public final String dbWork_placeTable = "hr_work_place";
+    public final String dbCertificateTable = "hr_certificate";
     public final String dbPositionTable = "hr_position";
     public final String dbQuestion = "hr_question";
     public final String dbActivity_status = "activity_status";

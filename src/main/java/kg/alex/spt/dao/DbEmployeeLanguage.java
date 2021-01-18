@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import java.sql.PreparedStatement;
@@ -16,10 +17,6 @@ import kg.alex.spt.domain.EmployeeLanguage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
-/**
- *
- * @author eldiyar
- */
 public class DbEmployeeLanguage extends BaseDb {
 
     public DbEmployeeLanguage() throws Exception {
@@ -64,7 +61,7 @@ public class DbEmployeeLanguage extends BaseDb {
             String id = result.getString("el.id");
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeLanguage));
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Language)).setValue(
                     edv.createCombobox(result.getInt("el.hr_language_id"),
                             myUI.getMessage(SptMessages.Language), sysSettings.dbLanguageTable, true));

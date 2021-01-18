@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -26,9 +27,6 @@ import kg.alex.spt.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * @author eldiyar
- */
 public class DbEmployeeEducation extends BaseDb {
 
     static final Logger logger = LogManager.getLogger(DbEmployeeEducation.class);
@@ -88,7 +86,7 @@ public class DbEmployeeEducation extends BaseDb {
             String id = result.getString("ed.id");
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeEducation));
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Department)).setValue(
                     edv.createTextfield(result.getString("ed.department"),
                             myUI.getMessage(SptMessages.Department),

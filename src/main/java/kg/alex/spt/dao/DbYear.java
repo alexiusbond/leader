@@ -12,9 +12,6 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Year;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- * @author eldiyar
- */
 public class DbYear extends BaseDb {
 
     public DbYear() throws Exception {

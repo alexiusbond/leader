@@ -10,10 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.domain.EmployeeContact;
 
-/**
- *
- * @author eldiyar
- */
 public class DbEmployeeContact extends BaseDb {
 
     public DbEmployeeContact() throws Exception {

@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.ui;
 
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
@@ -688,14 +689,14 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         achievementsInfoLay.setSizeFull();
         achievementsInfoLay.setSpacing(true);
         achievementsInfoLay.setMargin(true);
-        achievementsInfoLay.addComponent(hl, 1, 0);
-        achievementsInfoLay.addComponent(examsTable, 1, 1);
-        achievementsInfoLay.addComponent(hl2, 1, 2);
-        achievementsInfoLay.addComponent(seminarsTable, 1, 3);
         achievementsInfoLay.addComponent(hl4, 0, 0);
         achievementsInfoLay.addComponent(languagesTable, 0, 1);
-        achievementsInfoLay.addComponent(hl3, 0, 2);
-        achievementsInfoLay.addComponent(certificatesTable, 0, 3);
+        achievementsInfoLay.addComponent(hl, 0, 2);
+        achievementsInfoLay.addComponent(examsTable, 0, 3);
+        achievementsInfoLay.addComponent(hl3, 1, 0);
+        achievementsInfoLay.addComponent(certificatesTable, 1, 1);
+        achievementsInfoLay.addComponent(hl2, 1, 2);
+        achievementsInfoLay.addComponent(seminarsTable, 1, 3);
         achievementsInfoLay.setRowExpandRatio(1, 1);
         achievementsInfoLay.setRowExpandRatio(3, 1);
         achievementsInfoLay.setColumnExpandRatio(1, 1.2F);
@@ -1094,9 +1095,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private void setCertificatesTable() {
         try {
             NATURAL_COL_ORDER_CERTIFICATES = new String[]{sysSettings.button,
-                    myUI.getMessage(SptMessages.Name),
+                    myUI.getMessage(SptMessages.Certificate),
                     myUI.getMessage(SptMessages.GivenBy),
-                    myUI.getMessage(SptMessages.IssueDate)};
+                    myUI.getMessage(SptMessages.IssueDate),
+                    myUI.getMessage(SptMessages.Note),
+                    myUI.getMessage(SptMessages.Document)};
             DbEmployeeCertificate dbec = new DbEmployeeCertificate();
             dbec.connect();
             certificatesTable.setContainerDataSource(
@@ -1653,7 +1656,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         photoEmb.setImmediate(true);
         photoEmb.setHeight("140px");
 
-        buildUpload();
+       photoUpl =  buildUpload(myUI.getMessage(SptMessages.Upload));
     }
 
     private void buildButtonsLayout() {
@@ -1880,13 +1883,14 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     }
 
-    private void buildUpload() {
+    private Upload buildUpload(String caption) {
         receiver = new MyReceiver();
-        photoUpl = new Upload(null, receiver);
-        photoUpl.setImmediate(true);
-        photoUpl.setStyleName(ValoTheme.BUTTON_TINY);
-        photoUpl.setButtonCaption(myUI.getMessage(SptMessages.Upload));
-        photoUpl.addStartedListener(new Upload.StartedListener() {
+        Upload u = new Upload(null, receiver);
+        u.setImmediate(true);
+        u.setStyleName(ValoTheme.BUTTON_TINY);
+        u.setButtonCaption(caption);
+        u.setCaptionAsHtml(true);
+        u.addStartedListener(new Upload.StartedListener() {
             @Override
             public void uploadStarted(Upload.StartedEvent event) {
                 // This method gets called immediatedly after upload is started
@@ -1908,18 +1912,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
 
-        photoUpl.addProgressListener(new Upload.ProgressListener() {
+        u.addProgressListener(new Upload.ProgressListener() {
             @Override
             public void updateProgress(long readBytes, long contentLength) {
                 // This method gets called several times during the update
                 if (!mimeType.equals("image/jpeg")) {
-                    photoUpl.interruptUpload();
+                    u.interruptUpload();
                     myFile.delete();
                     photoName = null;
                     Notification.show(myUI.getMessage(SptMessages.Jpeg),
                             Notification.Type.WARNING_MESSAGE);
                 } else if (contentLength >= 5000000) {
-                    photoUpl.interruptUpload();
+                    u.interruptUpload();
                     myFile.delete();
                     photoName = null;
                     Notification.show(myUI.getMessage(SptMessages.Maxsize),
@@ -1934,7 +1938,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
 
-        photoUpl.addSucceededListener(new Upload.SucceededListener() {
+        u.addSucceededListener(new Upload.SucceededListener() {
             @Override
             public void uploadSucceeded(Upload.SucceededEvent event) {
                 // This method gets called when the upload finished successfully
@@ -1948,20 +1952,20 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
 
-        photoUpl.addFailedListener(new Upload.FailedListener() {
+        u.addFailedListener(new Upload.FailedListener() {
             @Override
             public void uploadFailed(Upload.FailedEvent event) {
             }
         });
 
-        photoUpl.addFinishedListener(new Upload.FinishedListener() {
+        u.addFinishedListener(new Upload.FinishedListener() {
             @Override
             public void uploadFinished(Upload.FinishedEvent event) {
                 if (statusWindow != null) {
                     statusWindow.close();
                 }
             }
-        });
+        });return u;
     }
 
     private void clearEmployeeFields(boolean generateNewLogin) {
@@ -2814,10 +2818,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     Object next = iter.next();
                     EmployeeCertificate ec = new EmployeeCertificate();
                     ec.setEmployee_id(employee_id);
-                    ec.setName(((TextField) certificatesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Name)).getValue()).getValue().toString());
+                    ec.setNote(((TextField) certificatesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Note)).getValue()).getValue());
+                    ec.setCertificate_id((Integer) ((ComboBoxMax) certificatesTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Certificate)).getValue()).getValue());
                     ec.setGiven_by(((TextField) certificatesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.GivenBy)).getValue()).getValue().toString());
+                            myUI.getMessage(SptMessages.GivenBy)).getValue()).getValue());
                     ec.setDate_of_issue(((DateField) certificatesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.IssueDate)).getValue()).getValue());
                     if (certificatesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
@@ -3205,7 +3211,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) phonesTable.getContainerDataSource()).addItemAt(
                 phonesTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, null));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.Type), sysSettings.dbPhoneType, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
@@ -3232,7 +3238,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) childrenTable.getContainerDataSource()).addItemAt(
                 childrenTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeChildren));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeChildren,FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.EducationStatus), sysSettings.dbHrEducationStatus, false));
         item.getItemProperty(myUI.getMessage(SptMessages.HealthStatus)).setValue(
@@ -3268,7 +3274,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
                 t.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeEducation));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeEducation,FontAwesome.MINUS_SQUARE));
         final ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.University), sysSettings.dbUniversityTable, true);
         cb.setNewItemsAllowed(true);
         cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
@@ -3340,7 +3346,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
                 t.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork,FontAwesome.MINUS_SQUARE));
         ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.MainPosition), null, true);
         item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
         ComboBoxMax cb3 = createCombobox(0, myUI.getMessage(SptMessages.ExtraPosition), null, false);
@@ -3429,7 +3435,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) languagesTable.getContainerDataSource()).addItemAt(
                 languagesTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeLanguage));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeLanguage,FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Language)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.Language), sysSettings.dbLanguageTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Level)).setValue(
@@ -3442,9 +3448,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private void addCertificateItem() {
 
         NATURAL_COL_ORDER_CERTIFICATES = new String[]{sysSettings.button,
-                myUI.getMessage(SptMessages.Name),
+                myUI.getMessage(SptMessages.Certificate),
                 myUI.getMessage(SptMessages.GivenBy),
-                myUI.getMessage(SptMessages.IssueDate)};
+                myUI.getMessage(SptMessages.IssueDate),
+                myUI.getMessage(SptMessages.Note),
+                myUI.getMessage(SptMessages.Document)};
         String id = sysSettings.FreshItem + (--r_table_counter);
         if (certificatesTable.getContainerDataSource().size() == 0) {
             certificatesTable.setContainerDataSource(prepareCertificateContainer());
@@ -3453,16 +3461,60 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) certificatesTable.getContainerDataSource()).addItemAt(
                 certificatesTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeCertificate));
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
-                createTextfield(null, myUI.getMessage(SptMessages.Name),
-                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeCertificate,FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
+                createTextfield(null, myUI.getMessage(SptMessages.Note),
+                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue),
+                                null, 250, true), false));
         item.getItemProperty(myUI.getMessage(SptMessages.GivenBy)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.GivenBy),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.IssueDate),
                         null, true, sysSettings.datePattern, Resolution.DAY));
+        final ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.Certificate), sysSettings.dbCertificateTable, true);
+        cb.setNewItemsAllowed(true);
+        cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
+            @Override
+            public void addNewItem(String newItemCaption) {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id = dbd.exec_insert(new Definition(0, newItemCaption), sysSettings.dbCertificateTable, false);
+                    dbd.close();
+                    if (id != 0) {
+                        Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
+                        if (item != null) {
+                            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                            cb.setValue(id);
+                            Iterator iter = certificatesTable.getContainerDataSource().getItemIds().iterator();
+                            while (iter.hasNext()) {
+                                Object next = iter.next();
+                                if (((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
+                                        myUI.getMessage(SptMessages.Certificate)).getValue()).getValue() == null) {
+                                    item = ((IndexedContainer) ((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
+                                            myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id);
+                                    item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            }
+        });
+        item.getItemProperty(myUI.getMessage(SptMessages.Certificate)).setValue(cb);
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setSpacing(true);
+
+        Button b = createButton(myUI.getMessage(SptMessages.DownLoad), id, sysSettings.dbEmployeeCertificate,
+                FontAwesome.DOWNLOAD);
+        hl.addComponent(b);
+
+        item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
+
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         certificatesTable.setVisibleColumns(NATURAL_COL_ORDER_CERTIFICATES);
 
@@ -3483,7 +3535,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) seminarsTable.getContainerDataSource()).addItemAt(
                 seminarsTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeSeminar));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeSeminar,FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.Name),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
@@ -3515,7 +3567,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) examsTable.getContainerDataSource()).addItemAt(
                 examsTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeExams));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeExams,FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.Exam), sysSettings.dbExamTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(
@@ -3543,7 +3595,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) branchesTable.getContainerDataSource()).addItemAt(
                 branchesTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranch));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranch,FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Branch)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.Branch), sysSettings.dbBranchTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Main)).setValue(
@@ -3569,7 +3621,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item = ((IndexedContainer) lessonsTable.getContainerDataSource()).addItemAt(
                 lessonsTable.getContainerDataSource().size(), id);
         item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranchHours));
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranchHours,FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.Lesson), sysSettings.dbBranchTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
@@ -3603,7 +3655,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         Item item;
         item = ((IndexedContainer) ordersTable.getContainerDataSource()).addItemAt(
                 ordersTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeOrder));
+        item.getItemProperty(sysSettings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
         ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.OrderType), null, true);
         cb.setData(id);
         cb.addValueChangeListener(this);
@@ -3725,13 +3777,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         return cb;
     }
 
-    public Button createButton(String description, String itemId, String table_name) {
+    public Button createButton(String description, String itemId, String table_name, Resource icon) {
 
         Button btn = new Button();
         btn.setDescription(description);
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.addStyleName(ValoTheme.BUTTON_TINY);
-        btn.setIcon(FontAwesome.MINUS_SQUARE);
+        btn.setIcon(icon);
         btn.setData(itemId);
         btn.setId(table_name);
         btn.addClickListener(this);
@@ -3829,12 +3881,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         if (certificatesCont == null) {
             certificatesCont = new IndexedContainer();
             certificatesCont.addContainerProperty(sysSettings.button, Button.class, null);
-            certificatesCont.addContainerProperty(
-                    myUI.getMessage(SptMessages.Name), TextField.class, null);
-            certificatesCont.addContainerProperty(
-                    myUI.getMessage(SptMessages.GivenBy), TextField.class, null);
-            certificatesCont.addContainerProperty(
-                    myUI.getMessage(SptMessages.IssueDate), DateField.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.GivenBy), TextField.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.IssueDate), DateField.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.Certificate), ComboBoxMax.class, null);
+            certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.Document), HorizontalLayout.class, null);
             certificatesCont.addContainerProperty(sysSettings.crud_status, String.class, null);
         } else {
             certificatesCont.removeAllItems();

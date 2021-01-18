@@ -5,11 +5,14 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeBranch;
@@ -56,7 +59,7 @@ public class DbEmployeeBranch extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-            EmployeeDefinitionView edv) throws SQLException {
+                                    EmployeeDefinitionView edv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT ex.id, ex.hr_branch_id, ex.hr_importance_id FROM hr_employee_branch as ex "
                 + "where ex.employee_id = ?;";
@@ -68,7 +71,7 @@ public class DbEmployeeBranch extends BaseDb {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranch));
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Branch)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
                             myUI.getMessage(SptMessages.Branch), sysSettings.dbBranchTable, true));

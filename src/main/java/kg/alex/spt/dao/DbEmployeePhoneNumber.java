@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.RegexpValidator;
@@ -17,10 +18,6 @@ import kg.alex.spt.domain.EmployeePhoneNumber;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
-/**
- *
- * @author eldiyar
- */
 public class DbEmployeePhoneNumber extends BaseDb {
 
     public DbEmployeePhoneNumber() throws Exception {
@@ -65,7 +62,7 @@ public class DbEmployeePhoneNumber extends BaseDb {
             String id = result.getString("epn.id");
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, null));
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(
                     edv.createCombobox(result.getInt("epn.hr_phone_type_id"),
                             myUI.getMessage(SptMessages.Type), sysSettings.dbPhoneType, true));

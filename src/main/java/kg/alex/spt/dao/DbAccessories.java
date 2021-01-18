@@ -16,10 +16,6 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Accessories;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- *
- * @author eldiyar
- */
 public class DbAccessories extends BaseDb {
 
     public ArrayList<Accessories> q = null;

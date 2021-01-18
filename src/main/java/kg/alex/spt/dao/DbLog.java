@@ -14,10 +14,6 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
 
-/**
- *
- * @author eldiyar
- */
 public class DbLog extends BaseDb {
 
     public DbLog() throws Exception {

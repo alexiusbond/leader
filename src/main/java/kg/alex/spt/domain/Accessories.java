@@ -7,10 +7,6 @@ package kg.alex.spt.domain;
 
 import java.io.Serializable;
 
-/**
- *
- * @author eldiyar
- */
 public class Accessories implements Serializable {
 
     private int id;

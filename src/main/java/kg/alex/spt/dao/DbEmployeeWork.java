@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -14,7 +15,6 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeWork;
-import kg.alex.spt.domain.Position;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import kg.alex.spt.utils.ComboBoxMax;
@@ -101,7 +101,7 @@ public class DbEmployeeWork extends BaseDb {
             String id = result.getString("ew.id");
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork));
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
             ComboBoxMax cb = edv.createCombobox(result.getInt("ew.position_id"),
                     myUI.getMessage(SptMessages.MainPosition), null, true);
             item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
