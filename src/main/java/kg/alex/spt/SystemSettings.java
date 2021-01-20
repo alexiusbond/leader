@@ -102,6 +102,7 @@ public class SystemSettings implements Serializable {
     public final String dbUniversityTable = "hr_university";
     public final String dbWork_placeTable = "hr_work_place";
     public final String dbCertificateTable = "hr_certificate";
+    public final String dbAttachmentsTable = "hr_attachments";
     public final String dbPositionTable = "hr_position";
     public final String dbQuestion = "hr_question";
     public final String dbActivity_status = "activity_status";
@@ -267,6 +268,7 @@ public class SystemSettings implements Serializable {
     public final String old_rate = "old_rate";
     public final String old_date = "old_date";
     public final String old_category = "old_category";
+    public final String download_button = "download_button";
 
     public StringToDoubleConverter getStringToDoubleConverter() {
         StringToDoubleConverter plainConverter = new StringToDoubleConverter() {

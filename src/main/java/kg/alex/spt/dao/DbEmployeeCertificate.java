@@ -15,11 +15,16 @@ import java.util.Iterator;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
+import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeCertificate;
+import kg.alex.spt.eupload.EUpload;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import kg.alex.spt.utils.ComboBoxMax;
@@ -34,8 +39,8 @@ public class DbEmployeeCertificate extends BaseDb {
     }
 
     public int exec_insert(EmployeeCertificate ec) throws SQLException {
-        String sql = "INSERT INTO hr_employee_certificate (employee_id,note,given_by,date_of_issue,certificate_id) "
-                + "VALUES(?,?,?,?,?);";
+        String sql = "INSERT INTO hr_employee_certificate (employee_id,note,given_by,date_of_issue,certificate_id,attachment_id) "
+                + "VALUES(?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         if (ec.getNote() != null) {
@@ -46,6 +51,7 @@ public class DbEmployeeCertificate extends BaseDb {
         stat.setString(3, ec.getGiven_by());
         stat.setDate(4, new Date(ec.getDate_of_issue().getTime()));
         stat.setInt(5, ec.getCertificate_id());
+        stat.setInt(6, ec.getAttachment_id());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -56,7 +62,7 @@ public class DbEmployeeCertificate extends BaseDb {
 
     public int exec_update(EmployeeCertificate ec) throws SQLException {
         String sql = "update hr_employee_certificate set "
-                + "note=?, given_by=?, date_of_issue=?, certificate_id=? WHERE id=?;";
+                + "note=?, given_by=?, date_of_issue=?, certificate_id=?, attachment_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (ec.getNote() != null) {
             stat.setString(1, ec.getNote());
@@ -66,15 +72,18 @@ public class DbEmployeeCertificate extends BaseDb {
         stat.setString(2, ec.getGiven_by());
         stat.setDate(3, new Date(ec.getDate_of_issue().getTime()));
         stat.setInt(4, ec.getCertificate_id());
-        stat.setInt(5, ec.getId());
+        stat.setInt(5, ec.getAttachment_id());
+        stat.setInt(6, ec.getId());
         return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
                                     EmployeeDefinitionView edv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT ec.id, ec.note, ec.given_by, ec.date_of_issue, ec.certificate_id " +
-                "FROM hr_employee_certificate as ec where ec.employee_id = ?;";
+        String sql = "SELECT ec.id, ec.note, ec.given_by, ec.date_of_issue, ec.certificate_id, " +
+                "a.id, a.name, a.extension, a.unique_name " +
+                "FROM hr_employee_certificate as ec " +
+                "left join hr_attachments as a on a.id = ec.attachment_id where ec.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
@@ -131,6 +140,27 @@ public class DbEmployeeCertificate extends BaseDb {
                 }
             });
             item.getItemProperty(myUI.getMessage(SptMessages.Certificate)).setValue(cb2);
+
+            HorizontalLayout hl = new HorizontalLayout();
+            hl.setSpacing(true);
+
+            Attachment a = new Attachment();
+            a.setId(result.getInt("a.id"));
+            a.setUnique_name(result.getString("a.unique_name"));
+            a.setExtension(result.getString("a.extension"));
+            a.setName(result.getString("a.name"));
+            Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, sysSettings.download_button, FontAwesome.DOWNLOAD);
+            b.setStyleName(ValoTheme.BUTTON_SMALL);
+            b.setData(a);
+            hl.addComponent(b);
+
+            EUpload upload = edv.createUpload("", false);
+            upload.setId(id);
+            upload.setData(container);
+            upload.setButtonIcon(FontAwesome.UPLOAD);
+            upload.addButtonStyleName(ValoTheme.BUTTON_ICON_ONLY);
+            hl.addComponent(upload);
+            item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;

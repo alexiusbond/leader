@@ -11,11 +11,38 @@ import java.util.Date;
 public class EmployeeCertificate implements Serializable {
 
     private int id;
+    private String idStr;
+    private String attachmentUniqueName;
     private int employee_id;
     private int certificate_id;
+    private int attachment_id;
     private String note;
     private String given_by;
     private Date date_of_issue;
+
+    public String getAttachmentUniqueName() {
+        return attachmentUniqueName;
+    }
+
+    public void setAttachmentUniqueName(String attachmentUniqueName) {
+        this.attachmentUniqueName = attachmentUniqueName;
+    }
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String idStr) {
+        this.idStr = idStr;
+    }
+
+    public int getAttachment_id() {
+        return attachment_id;
+    }
+
+    public void setAttachment_id(int attachment_id) {
+        this.attachment_id = attachment_id;
+    }
 
     public int getId() {
         return id;

@@ -7,10 +7,12 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Definition;
@@ -18,7 +20,6 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 
 /**
- *
  * @author alex
  */
 public class DbDefinition extends BaseDb {
@@ -147,7 +148,7 @@ public class DbDefinition extends BaseDb {
             Item item = container.addItem(result.getInt("m.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
                     sysSettings.dMonth.format(result.getInt("m.order_num"))
-                    + "-" + result.getString("m.name"));
+                            + "-" + result.getString("m.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Month)).setValue(
                     result.getString("m.name"));
         }
@@ -276,6 +277,12 @@ public class DbDefinition extends BaseDb {
         String sql = "DELETE FROM " + dbTableName + " WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
+        return stat.executeUpdate();
+    }
+
+    public int exec_delete_not_referenced(String dbTableName) throws SQLException {
+        String sql = "DELETE IGNORE FROM " + dbTableName;
+        PreparedStatement stat = dbCon.prepareStatement(sql);
         return stat.executeUpdate();
     }
 

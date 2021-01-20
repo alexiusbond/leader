@@ -173,7 +173,7 @@ ADD CONSTRAINT `fk_hr_employee_certificate_certificate1`
   ALTER TABLE `spt`.`hr_employee_certificate` 
 ADD COLUMN `note` VARCHAR(250) NULL DEFAULT NULL AFTER `certificate_id`;
 
-CREATE TABLE `hr_attachements` (
+CREATE TABLE `hr_attachments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `extension` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -184,22 +184,22 @@ CREATE TABLE `hr_attachements` (
 
 delete FROM spt.hr_employee_education;
 ALTER TABLE `spt`.`hr_employee_education` 
-ADD COLUMN `attachment_id` INT NOT NULL AFTER `note`,
+ADD COLUMN `attachment_id` INT NOT NULL,
 ADD INDEX `fk_hr_employee_education_attachement_idx` (`attachment_id` ASC) VISIBLE;
 ALTER TABLE `spt`.`hr_employee_education` 
 ADD CONSTRAINT `fk_hr_employee_education_attachement1`
   FOREIGN KEY (`attachment_id`)
-  REFERENCES `spt`.`hr_attachements` (`id`)
+  REFERENCES `spt`.`hr_attachments` (`id`)
   ON DELETE RESTRICT
   ON UPDATE NO ACTION;
   
-ALTER TABLE `spt`.`hr_employee_education` 
-ADD COLUMN `attachment_id` INT NOT NULL AFTER `note`,
-ADD INDEX `fk_hr_employee_education_attachement_idx` (`attachment_id` ASC) VISIBLE;
-ALTER TABLE `spt`.`hr_employee_education` 
-ADD CONSTRAINT `fk_hr_employee_education_attachement1`
+delete FROM spt.hr_employee_exam;
+ALTER TABLE `spt`.`hr_employee_exam` 
+ADD COLUMN `attachment_id` INT NOT NULL,
+ADD INDEX `fk_hr_employee_exam_attachement_idx` (`attachment_id` ASC) VISIBLE;
+ALTER TABLE `spt`.`hr_employee_exam` 
+ADD CONSTRAINT `fk_hr_employee_exam_attachement1`
   FOREIGN KEY (`attachment_id`)
-  REFERENCES `spt`.`hr_attachements` (`id`)
+  REFERENCES `spt`.`hr_attachments` (`id`)
   ON DELETE RESTRICT
   ON UPDATE NO ACTION;
-

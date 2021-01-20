@@ -1875,7 +1875,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     photoUpl.interruptUpload();
                     myFile.delete();
                     photoName = null;
-                    Notification.show(myUI.getMessage(SptMessages.Jpeg),
+                    Notification.show(myUI.getMessage(SptMessages.OnlyJpg),
                             Notification.Type.WARNING_MESSAGE);
                 } else if (contentLength >= 5000000) {
                     photoUpl.interruptUpload();

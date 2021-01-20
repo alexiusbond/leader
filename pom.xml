@@ -53,8 +53,12 @@
                                 <configuration>
                                     <mainClass>com.vaadin.sass.SassCompiler</mainClass>
                                     <arguments>
-                                        <argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.scss</argument>
-                                        <argument>${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.css</argument>
+                                        <argument>
+                                            ${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.scss
+                                        </argument>
+                                        <argument>
+                                            ${project.build.directory}/${project.artifactId}-${project.version}/VAADIN/themes/dashboard/styles.css
+                                        </argument>
                                     </arguments>
                                 </configuration>
                                 <goals>
@@ -242,6 +246,11 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>simplefiledownloader</artifactId>
+            <version>1.0.4</version>
+        </dependency>
     </dependencies>
 
 
@@ -280,7 +289,8 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=6469ea55-4a96-43b9-b809-31d640d1450f</extraJvmArgs>
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=6469ea55-4a96-43b9-b809-31d640d1450f
+                    </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>
                     <noServer>true</noServer>
