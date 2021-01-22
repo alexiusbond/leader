@@ -10,18 +10,21 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Iterator;
 
+import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
+import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeEducation;
+import kg.alex.spt.eupload.EUpload;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
@@ -38,8 +41,8 @@ public class DbEmployeeEducation extends BaseDb {
     public int exec_insert(EmployeeEducation ed) throws SQLException {
         String sql = "INSERT INTO hr_employee_education "
                 + "(employee_id, hr_university_id, hr_own_id, department, start_date, "
-                + "end_date, country_id, education_level_id) "
-                + "VALUES(?,?,?,?,?,?,?,?);";
+                + "end_date, country_id, education_level_id,attachment_id) "
+                + "VALUES(?,?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ed.getEmployee_id());
         stat.setInt(2, ed.getUniversity_id());
@@ -49,6 +52,11 @@ public class DbEmployeeEducation extends BaseDb {
         stat.setString(6, SystemSettings.mysql_only_year.format(ed.getEnd()));
         stat.setInt(7, ed.getCountry_id());
         stat.setInt(8, ed.getEducation_level_id());
+        if (ed.getAttachment_id() != 0) {
+            stat.setInt(9, ed.getAttachment_id());
+        } else {
+            stat.setNull(9, Types.INTEGER);
+        }
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -59,7 +67,7 @@ public class DbEmployeeEducation extends BaseDb {
 
     public int exec_update(EmployeeEducation ed) throws SQLException {
         String sql = "update hr_employee_education set "
-                + "hr_university_id=?, department=?, start_date=?, end_date=?, country_id=?, education_level_id=? WHERE id=?;";
+                + "hr_university_id=?, department=?, start_date=?, end_date=?, country_id=?, education_level_id=?, attachment_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ed.getUniversity_id());
         stat.setString(2, ed.getDepartment());
@@ -67,7 +75,12 @@ public class DbEmployeeEducation extends BaseDb {
         stat.setString(4, SystemSettings.mysql_only_year.format(ed.getEnd()));
         stat.setInt(5, ed.getCountry_id());
         stat.setInt(6, ed.getEducation_level_id());
-        stat.setInt(7, ed.getId());
+        if (ed.getAttachment_id() != 0) {
+            stat.setInt(7, ed.getAttachment_id());
+        } else {
+            stat.setNull(7, Types.INTEGER);
+        }
+        stat.setInt(8, ed.getId());
         return stat.executeUpdate();
     }
 
@@ -75,7 +88,8 @@ public class DbEmployeeEducation extends BaseDb {
                                     EmployeeDefinitionView edv) throws SQLException {
         final SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT ed.id, ed.hr_university_id, ed.department, ed.start_date, ed.end_date, ed.country_id, "
-                + "ed.education_level_id FROM hr_employee_education as ed "
+                + "ed.education_level_id, a.id, a.name, a.extension, a.unique_name FROM hr_employee_education as ed "
+                + "left join hr_attachments as a on a.id = ed.attachment_id "
                 + "where ed.employee_id = ? and ed.hr_own_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
@@ -140,6 +154,27 @@ public class DbEmployeeEducation extends BaseDb {
                 }
             });
             item.getItemProperty(myUI.getMessage(SptMessages.University)).setValue(cb);
+
+            HorizontalLayout hl = new HorizontalLayout();
+            hl.setSpacing(true);
+
+            if (result.getInt("a.id") != 0) {
+                Attachment a = new Attachment();
+                a.setId(result.getInt("a.id"));
+                a.setUnique_name(result.getString("a.unique_name"));
+                a.setExtension(result.getString("a.extension"));
+                a.setName(result.getString("a.name"));
+                Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, sysSettings.download_button, FontAwesome.DOWNLOAD);
+                b.setStyleName(ValoTheme.BUTTON_SMALL);
+                b.setData(a);
+                hl.addComponent(b);
+
+                Upload upload = edv.createUpload("", false);
+                upload.setId(id);
+                upload.setData(container);
+                hl.addComponent(upload);
+                item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
+            }
             item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;

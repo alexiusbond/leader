@@ -15,6 +15,33 @@ public class EmployeeExam implements Serializable {
     private int exam_id;
     private double score;
     private Date date_of_issue;
+    private String idStr;
+    private int attachment_id;
+    private String attachmentUniqueName;
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String idStr) {
+        this.idStr = idStr;
+    }
+
+    public int getAttachment_id() {
+        return attachment_id;
+    }
+
+    public void setAttachment_id(int attachment_id) {
+        this.attachment_id = attachment_id;
+    }
+
+    public String getAttachmentUniqueName() {
+        return attachmentUniqueName;
+    }
+
+    public void setAttachmentUniqueName(String attachmentUniqueName) {
+        this.attachmentUniqueName = attachmentUniqueName;
+    }
 
     /**
      * @return the id

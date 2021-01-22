@@ -81,12 +81,6 @@ CHANGE COLUMN `department` `department` VARCHAR(250) CHARACTER SET 'utf8' NOT NU
 ALTER TABLE `spt`.`hr_employee_education` 
 ADD COLUMN `graduation_year` DATE NOT NULL DEFAULT '2021-01-01' AFTER `year`;
 
-update ignore hr_employee_education set graduation_year = concat(year,'-01-01');
-update ignore hr_employee_education set graduation_year = concat(substr(year, 6, 4),'-01-01') where graduation_year = '0000-00-00';
-UPDATE `spt`.`hr_employee_education` SET `graduation_year` = '1986-01-01' WHERE (`id` = '45') and (`employee_id` = '1386') and (`hr_university_id` = '4') and (`hr_own_id` = '2');
-UPDATE `spt`.`hr_employee_education` SET `graduation_year` = '1980-01-01' WHERE (`id` = '94') and (`employee_id` = '769') and (`hr_university_id` = '3') and (`hr_own_id` = '2');
-UPDATE `spt`.`hr_employee_education` SET `graduation_year` = '2020-01-01' WHERE (`id` = '134') and (`employee_id` = '2453') and (`hr_university_id` = '79') and (`hr_own_id` = '2');
-UPDATE `spt`.`hr_employee_education` SET `graduation_year` = '2006-01-01' WHERE (`id` = '224') and (`employee_id` = '2779') and (`hr_university_id` = '100') and (`hr_own_id` = '1');
 ALTER TABLE `spt`.`hr_employee_education` 
 DROP COLUMN `year`;
 ALTER TABLE `spt`.`hr_employee_grad_school` 
@@ -203,3 +197,56 @@ ADD CONSTRAINT `fk_hr_employee_exam_attachement1`
   REFERENCES `spt`.`hr_attachments` (`id`)
   ON DELETE RESTRICT
   ON UPDATE NO ACTION;
+  
+delete FROM spt.hr_employee_certificate;
+ALTER TABLE `spt`.`hr_employee_certificate` 
+ADD COLUMN `attachment_id` INT NOT NULL,
+ADD INDEX `fk_hr_employee_certificate_attachement_idx` (`attachment_id` ASC) VISIBLE;
+ALTER TABLE `spt`.`hr_employee_certificate` 
+ADD CONSTRAINT `fk_hr_employee_certificate_attachement1`
+  FOREIGN KEY (`attachment_id`)
+  REFERENCES `spt`.`hr_attachments` (`id`)
+  ON DELETE RESTRICT
+  ON UPDATE NO ACTION;
+
+  ALTER TABLE `spt`.`hr_attachments` 
+DROP INDEX `index_attach22` ,
+ADD UNIQUE INDEX `index_attach22` (`unique_name` ASC) VISIBLE;
+
+UPDATE `spt`.`hr_education_level` SET `name` = 'Бакалавриат' WHERE (`id` = '1');
+UPDATE `spt`.`hr_education_level` SET `name` = 'Магистратура' WHERE (`id` = '2');
+UPDATE `spt`.`hr_education_level` SET `name` = 'Аспирантура' WHERE (`id` = '3');
+INSERT INTO `spt`.`hr_education_level` (`id`, `name`) VALUES ('4', 'Докторантура');
+UPDATE `spt`.`hr_education_status` SET `name` = 'Учится' WHERE (`id` = '1');
+UPDATE `spt`.`hr_education_status` SET `name` = 'Законлил' WHERE (`id` = '2');
+UPDATE `spt`.`hr_health_status` SET `name` = 'Здоров' WHERE (`id` = '1');
+UPDATE `spt`.`hr_health_status` SET `name` = 'Болен' WHERE (`id` = '2');
+UPDATE `spt`.`hr_health_status` SET `name` = 'Имеет инвалидность' WHERE (`id` = '3');
+UPDATE `spt`.`hr_language` SET `name` = 'Английский' WHERE (`id` = '1');
+UPDATE `spt`.`hr_language` SET `name` = 'Турецкий' WHERE (`id` = '2');
+UPDATE `spt`.`hr_language` SET `name` = 'Кыргызский' WHERE (`id` = '3');
+UPDATE `spt`.`hr_language` SET `name` = 'Русский' WHERE (`id` = '4');
+UPDATE `spt`.`hr_language` SET `name` = 'Французский' WHERE (`id` = '5');
+INSERT INTO `spt`.`hr_language` (`name`) VALUES ('Арабский');
+INSERT INTO `spt`.`hr_language` (`name`) VALUES ('Китайский');
+UPDATE `spt`.`hr_martial_status` SET `name` = 'Холост' WHERE (`id` = '1');
+UPDATE `spt`.`hr_martial_status` SET `name` = 'Жетат/Замужем' WHERE (`id` = '2');
+UPDATE `spt`.`hr_martial_status` SET `name` = 'Разведен' WHERE (`id` = '3');
+UPDATE `spt`.`hr_martial_status` SET `name` = 'Вдовец/Вдова' WHERE (`id` = '4');
+UPDATE `spt`.`hr_martial_status` SET `name` = 'Живет раздельно' WHERE (`id` = '5');
+UPDATE `spt`.`hr_phone_type` SET `name` = 'Мобильный' WHERE (`id` = '1');
+UPDATE `spt`.`hr_phone_type` SET `name` = 'Домашний' WHERE (`id` = '2');
+UPDATE `spt`.`hr_phone_type` SET `name` = 'Рабочий' WHERE (`id` = '3');
+UPDATE `spt`.`hr_position_category` SET `name` = 'Академический' WHERE (`id` = '1');
+UPDATE `spt`.`hr_position_category` SET `name` = 'Административный' WHERE (`id` = '2');
+UPDATE `spt`.`hr_position_category` SET `name` = 'Тех персонал' WHERE (`id` = '3');
+UPDATE `spt`.`hr_position_category` SET `name` = 'Другой' WHERE (`id` = '4');
+ALTER TABLE `spt`.`hr_employee_education` 
+DROP FOREIGN KEY `fk_hr_employee_education_attachement1`;
+ALTER TABLE `spt`.`hr_employee_education` 
+CHANGE COLUMN `attachment_id` `attachment_id` INT NULL DEFAULT NULL ;
+ALTER TABLE `spt`.`hr_employee_education` 
+ADD CONSTRAINT `fk_hr_employee_education_attachement1`
+  FOREIGN KEY (`attachment_id`)
+  REFERENCES `spt`.`hr_attachments` (`id`)
+  ON DELETE RESTRICT;

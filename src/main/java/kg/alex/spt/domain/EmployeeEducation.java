@@ -19,75 +19,40 @@ public class EmployeeEducation implements Serializable {
     private String department;
     private Date start;
     private Date end;
+    private String idStr;
+    private int attachment_id;
+    private String attachmentUniqueName;
 
-    /**
-     * @return the id
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * @return the employee_id
-     */
     public int getEmployee_id() {
         return employee_id;
     }
 
-    /**
-     * @param employee_id the employee_id to set
-     */
     public void setEmployee_id(int employee_id) {
         this.employee_id = employee_id;
     }
 
-    /**
-     * @return the university_id
-     */
     public int getUniversity_id() {
         return university_id;
     }
 
-    /**
-     * @param university_id the university_id to set
-     */
     public void setUniversity_id(int university_id) {
         this.university_id = university_id;
     }
 
-    /**
-     * @return the own_id
-     */
     public int getOwn_id() {
         return own_id;
     }
 
-    /**
-     * @param own_id the own_id to set
-     */
     public void setOwn_id(int own_id) {
         this.own_id = own_id;
-    }
-
-    /**
-     * @return the department
-     */
-    public String getDepartment() {
-        return department;
-    }
-
-    /**
-     * @param department the department to set
-     */
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     public int getCountry_id() {
@@ -106,6 +71,14 @@ public class EmployeeEducation implements Serializable {
         this.education_level_id = education_level_id;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     public Date getStart() {
         return start;
     }
@@ -120,5 +93,29 @@ public class EmployeeEducation implements Serializable {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String idStr) {
+        this.idStr = idStr;
+    }
+
+    public int getAttachment_id() {
+        return attachment_id;
+    }
+
+    public void setAttachment_id(int attachment_id) {
+        this.attachment_id = attachment_id;
+    }
+
+    public String getAttachmentUniqueName() {
+        return attachmentUniqueName;
+    }
+
+    public void setAttachmentUniqueName(String attachmentUniqueName) {
+        this.attachmentUniqueName = attachmentUniqueName;
     }
 }

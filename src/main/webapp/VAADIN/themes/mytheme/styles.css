@@ -16310,3 +16310,10 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .v-table-footer-container, .mytheme .v-table-caption-container {
 	overflow: initial;
 }
+
+.mytheme .v-upload-with-icon .v-button {
+	background-image: url('icons/24/file-upload-solid.png');
+	background-repeat: no-repeat;
+	background-size: 12px 16px;
+	background-position: center;
+}

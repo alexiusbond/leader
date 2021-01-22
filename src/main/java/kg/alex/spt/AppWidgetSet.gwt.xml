@@ -34,9 +34,7 @@
     <inherits name="org.tepi.filtertable.gwt.FilterTableWidgetset" /> 
     <inherits name="com.vaadin.addon.charts.Widgetset" />
     <inherits name="org.vaadin.addons.maskedtextfield.MaskedTextFieldWidgetset" />
-
-
-    <inherits name="kg.alex.spt.eupload.EUploadWidgetset" />
-
     <inherits name="org.vaadin.simplefiledownloader.SimplefiledownloaderWidgetset" />
+
+
 </module>

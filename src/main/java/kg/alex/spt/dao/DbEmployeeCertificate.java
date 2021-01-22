@@ -14,10 +14,7 @@ import java.sql.*;
 import java.util.Iterator;
 
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
@@ -39,7 +36,8 @@ public class DbEmployeeCertificate extends BaseDb {
     }
 
     public int exec_insert(EmployeeCertificate ec) throws SQLException {
-        String sql = "INSERT INTO hr_employee_certificate (employee_id,note,given_by,date_of_issue,certificate_id,attachment_id) "
+        String sql = "INSERT INTO hr_employee_certificate "
+                + "(employee_id,note,given_by,date_of_issue,certificate_id,attachment_id) "
                 + "VALUES(?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
@@ -154,11 +152,9 @@ public class DbEmployeeCertificate extends BaseDb {
             b.setData(a);
             hl.addComponent(b);
 
-            EUpload upload = edv.createUpload("", false);
+            Upload upload = edv.createUpload("", false);
             upload.setId(id);
             upload.setData(container);
-            upload.setButtonIcon(FontAwesome.UPLOAD);
-            upload.addButtonStyleName(ValoTheme.BUTTON_ICON_ONLY);
             hl.addComponent(upload);
             item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));

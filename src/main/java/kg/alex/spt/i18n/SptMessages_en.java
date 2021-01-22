@@ -203,6 +203,8 @@ public class SptMessages_en extends SptMessages {
             {ProfInfo, "Проф. информация"},
             {ExtraInfo, "Дополнительная информация"},
             {SchoolInfo, "Деятельная информация"},
+            {ListOfDocuments, "Список документов"},
+            {Documents, "Документы"},
             {SpouseWorkPlaces, "Места работы супруги(а)"},
             {SpouseEducation, "Места учебы супруги(а)"},
             {WorkPlaces, "Места работы"},
