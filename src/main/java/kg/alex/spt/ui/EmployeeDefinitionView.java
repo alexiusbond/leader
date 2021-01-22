@@ -9,7 +9,6 @@ import com.vaadin.server.*;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
-import kg.alex.spt.eupload.EUpload;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
