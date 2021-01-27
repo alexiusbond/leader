@@ -258,10 +258,10 @@ public class HRLessonHoursReport implements Button.ClickListener,
             workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbWorking_status));
             branchTable.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbBranchTable));
             positionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole("admin"), currentUser.hasRole("hr")));
+                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
             positionTable.setVisibleColumns(NATURAL_COL_ORDER);
             extraPositionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole("admin"), currentUser.hasRole("hr")));
+                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
             extraPositionTable.setVisibleColumns(NATURAL_COL_ORDER);
             dbd.close();
         } catch (Exception e) {

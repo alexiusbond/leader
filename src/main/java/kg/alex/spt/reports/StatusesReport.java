@@ -193,7 +193,7 @@ public class StatusesReport implements Button.ClickListener,
         leftGrid.addComponent(selectAllClassesBtn, 0, 2, 1, 2);
         leftGrid.addComponent(deselectAllClassesBtn, 2, 2, 3, 2);
         leftGrid.addComponent(classTable, 0, 3, 3, 3);
-        if (currentUser.hasRole("admin")) {
+        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
             leftGrid.addComponent(selectAllSchoolsBtn, 0, 4, 1, 4);
             leftGrid.addComponent(deselectAllSchoolsBtn, 2, 4, 3, 4);
             leftGrid.addComponent(schoolsTable, 0, 5, 3, 5);

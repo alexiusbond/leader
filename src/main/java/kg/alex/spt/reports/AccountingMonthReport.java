@@ -151,7 +151,7 @@ public class AccountingMonthReport implements Button.ClickListener,
         outcomeCategoriesTable.setMultiSelect(true);
         outcomeCategoriesTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         outcomeCategoriesTable.addValueChangeListener(this);
-        if (!currentUser.hasRole("admin")) {
+        if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
             try {
                 DbAccCategory dbac = new DbAccCategory();
                 dbac.connect();
@@ -215,7 +215,7 @@ public class AccountingMonthReport implements Button.ClickListener,
 
         leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
         leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
-        if (currentUser.hasRole("admin")) {
+        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
             leftGrid.addComponent(selectAllSchoolsBtn, 0, 1, 1, 1);
             leftGrid.addComponent(deselectAllSchoolsBtn, 2, 1, 3, 1);
             leftGrid.addComponent(schoolsTable, 0, 2, 3, 2);
@@ -269,7 +269,7 @@ public class AccountingMonthReport implements Button.ClickListener,
         final Button source = event.getButton();
         if (source == generateBtn) {
             if (fromDateDF.isValid() && tillDateDF.isValid()) {
-                if (!currentUser.hasRole("admin") || !((Set<?>) schoolsTable.getValue()).isEmpty()) {
+                if (!currentUser.hasRole(SystemSettings.rnAdmin) || !((Set<?>) schoolsTable.getValue()).isEmpty()) {
                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()
                             || !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                         rightLayout.removeAllComponents();
@@ -279,7 +279,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                             if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                                 rightLayout.addComponent(incomesDataTable);
                                 rightLayout.setExpandRatio(incomesDataTable, 1);
-                                if (currentUser.hasRole("admin")) {
+                                if (currentUser.hasRole(SystemSettings.rnAdmin)) {
                                     dbTr.execSQL_by_months(myUI, 1,
                                             schoolsTable, incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                                 } else {
@@ -295,7 +295,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                             if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                                 rightLayout.addComponent(outcomesDataTable);
                                 rightLayout.setExpandRatio(outcomesDataTable, 1);
-                                if (currentUser.hasRole("admin")) {
+                                if (currentUser.hasRole(SystemSettings.rnAdmin)) {
                                     dbTr.execSQL_by_months(myUI, 2, schoolsTable,
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                                 } else {
@@ -349,7 +349,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                                                 + sysSettings.ymdf.format(current.getTime())));
                                     }
                                 }
-                                if (!currentUser.hasRole("admin")) {
+                                if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
                                     SchoolAccounting scAcc = dbTr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
                                             tillDate.getTime(), sysSettings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
@@ -395,7 +395,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                                                 + sysSettings.ymdf.format(current.getTime())));
                                 i++;
                             }
-                            if (!currentUser.hasRole("admin")) {
+                            if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
                                 excelReport.getTotalsRow().getCell(i).setCellValue(
                                         incomesDataTable.getColumnFooter(sysSettings.ymdf.format(current.getTime())));
                                 i++;
@@ -427,7 +427,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                                                 + sysSettings.ymdf.format(current.getTime())));
                                 i++;
                             }
-                            if (!currentUser.hasRole("admin")) {
+                            if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
                                 excelReport.getTotalsRow().getCell(i).setCellValue(
                                         incomesDataTable.getColumnFooter(sysSettings.ymdf.format(current.getTime())));
                                 i++;
@@ -471,7 +471,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                                                 + sysSettings.ymdf.format(current.getTime())));
                                 i++;
                             }
-                            if (!currentUser.hasRole("admin")) {
+                            if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
                                 excelReport.getTotalsRow().getCell(i).setCellValue(
                                         incomesDataTable.getColumnFooter(sysSettings.ymdf.format(current.getTime())));
                                 i++;

@@ -66,7 +66,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
             employeesTable.setContainerDataSource(
-                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), currentUser.hasRole("admin"), currentUser.hasRole("hr")));
+                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
             dbe.close();
         } catch (Exception e) {
             logger.error(e);

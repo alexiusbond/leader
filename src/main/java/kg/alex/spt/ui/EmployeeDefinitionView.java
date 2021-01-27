@@ -152,7 +152,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public EmployeeDefinitionView(final MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        if (!currentUser.hasRole("admin") && !currentUser.hasRole("hr")) {
+        if (!currentUser.hasRole(SystemSettings.rnAdmin) && !currentUser.hasRole(SystemSettings.rnHr)) {
             emplID = myUI.getUser().getId();
         }
         buildButtonsLayout();
@@ -730,14 +730,21 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void buildProfLayout() {
 
-        GridLayout gl = new GridLayout(3, 3);
+        GridLayout gl = new GridLayout(3, 4);
         gl.setSpacing(true);
         gl.setSizeFull();
         gl.setColumnExpandRatio(0, 1);
-        gl.setRowExpandRatio(2, 1);
+        gl.setRowExpandRatio(3, 1);
+
+        Label captionGradSchool = new Label();
+        captionGradSchool.setWidth("100%");
+        captionGradSchool.setContentMode(ContentMode.HTML);
+        captionGradSchool.setValue(myUI.getMessage(SptMessages.SapatOrSchool));
+        captionGradSchool.setStyleName("tableCpt");
+        gl.addComponent(captionGradSchool, 0, 0, 2, 0);
 
         gradSchoolCB = createCombobox(0, null, null, true);
-        gradSchoolCB.setCaption(myUI.getMessage(SptMessages.GraduatedSchool));
+        gradSchoolCB.setCaption(myUI.getMessage(SptMessages.SapatOrSchool));
         try {
             DbSchool dbCon = new DbSchool();
             dbCon.connect();
@@ -750,39 +757,39 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.catching(e);
         }
         gradSchoolCB.setValue(0);
-        gl.addComponent(gradSchoolCB, 0, 0);
+        gl.addComponent(gradSchoolCB, 0, 1);
 
         gradSchoolStartDF = createDateField(null, null,
                 myUI.getMessage(SptMessages.Start),
                 true, SystemSettings.yearPattern, Resolution.YEAR);
         gradSchoolStartDF.setSizeUndefined();
         gradSchoolStartDF.setResolution(Resolution.YEAR);
-        gl.addComponent(gradSchoolStartDF, 1, 0);
+        gl.addComponent(gradSchoolStartDF, 1, 1);
 
         gradSchoolEndDF = createDateField(null, null,
                 myUI.getMessage(SptMessages.End),
                 true, SystemSettings.yearPattern, Resolution.YEAR);
         gradSchoolEndDF.setResolution(Resolution.YEAR);
-        gl.addComponent(gradSchoolEndDF, 2, 0);
+        gl.addComponent(gradSchoolEndDF, 2, 1);
 
         Label captionBranches = new Label();
         captionBranches.setSizeFull();
         captionBranches.setContentMode(ContentMode.HTML);
         captionBranches.setValue(myUI.getMessage(SptMessages.Branches));
         captionBranches.setStyleName("tableCpt");
-        gl.addComponent(captionBranches, 0, 1, 1, 1);
+        gl.addComponent(captionBranches, 0, 2, 1, 2);
 
         plusBranchButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusBranchButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusBranchButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusBranchButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusBranchButton.addClickListener(this);
-        gl.addComponent(plusBranchButton, 2, 1);
+        gl.addComponent(plusBranchButton, 2, 2);
 
         branchesTable = new FormattedTable();
         branchesTable.setSizeFull();
         branchesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        gl.addComponent(branchesTable, 0, 2, 2, 2);
+        gl.addComponent(branchesTable, 0, 3, 2, 3);
 
         HorizontalLayout hl2 = new HorizontalLayout();
         hl2.setWidth("100%");
@@ -1243,7 +1250,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
             dbeo.connect();
             ordersTable.setContainerDataSource(
-                    dbeo.execSQL(myUI, emplID, myUI.getUser().getSchool_id(), currentUser.hasRole("admin"), currentUser.hasRole("hr"), this));
+                    dbeo.execSQL(myUI, emplID, myUI.getUser().getSchool_id(), currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr), this));
             dbeo.close();
             ordersTable.setVisibleColumns(NATURAL_COL_ORDER_ORDERS);
             ordersTable.setColumnExpandRatio(myUI.getMessage(SptMessages.OrderType), 1);
@@ -1261,6 +1268,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             documentsDataTable.setContainerDataSource(dbCon.execSQL(myUI, emplID, this));
             dbCon.close();
             documentsDataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Name), 1);
+            documentsDataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Details), 1);
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -1476,8 +1484,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 id = emplID;
             }
             employeesDataTable.setContainerDataSource(
-                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), edu_st_ids, workingStatCont, currentUser.hasRole("admin"),
-                            currentUser.hasRole("hr"), id));
+                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), edu_st_ids, workingStatCont, currentUser.hasRole(SystemSettings.rnAdmin),
+                            currentUser.hasRole(SystemSettings.rnHr), id));
             dbe.close();
         } catch (Exception e) {
             logger.error(e);
@@ -1588,7 +1596,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             extraBrancesLb.setValue(myUI.getMessage(SptMessages.ExtraBranches) + ":");
             totalHoursLb.setValue(myUI.getMessage(SptMessages.TotalHours) + myUI.getUser().getCurrent_year().getName() + ":");
             mainPositionCB.setValue(null);
-            salaryCategoryCB.setValue(null);
+            salaryCategoryCB.setValue(((IndexedContainer) salaryCategoryCB.getContainerDataSource()).lastItemId());
         }
     }
 
@@ -1675,7 +1683,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             mainPositionCB.setContainerDataSource(
-                    dbDef.exec_positions_for_select(myUI, currentUser.hasRole("admin"), currentUser.hasRole("hr")));
+                    dbDef.exec_positions_for_select(myUI, currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -1690,7 +1698,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         salaryCategoryCB.setWidth("100%");
         salaryCategoryCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
         salaryCategoryCB.setFilteringMode(FilteringMode.CONTAINS);
-        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmMenu)) {
+        if (currentUser.hasRole(SystemSettings.rnAdmin) || currentUser.hasRole(SystemSettings.rnHr)) {
+            salaryCategoryCB.setEnabled(true);
+        } else {
             salaryCategoryCB.setEnabled(false);
         }
         fieldsLayRight.addComponent(salaryCategoryCB);
@@ -1704,6 +1714,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.error(e);
             logger.catching(e);
         }
+        salaryCategoryCB.setValue(((IndexedContainer) salaryCategoryCB.getContainerDataSource()).lastItemId());
     }
 
     private void buildphotoLayout() {
@@ -2111,7 +2122,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         nationalityCB.setValue(null);
         martialStatusCB.setValue(null);
         mainPositionCB.setValue(null);
-        salaryCategoryCB.setValue(null);
+        salaryCategoryCB.setValue(((IndexedContainer) salaryCategoryCB.getContainerDataSource()).lastItemId());
         photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
         photoName = null;
     }
@@ -2366,10 +2377,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 }
                                 if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5
                                         || (extra_position_ids != null && extra_position_ids.contains("5"))) {
-                                    roleName = "admin";
+                                    roleName = SystemSettings.rnAdmin;
                                 } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
-                                    roleName = "hr";
+                                    roleName = SystemSettings.rnHr;
                                 }
                                 insertloginRoleName(loginTF.getValue(), roleName);
                                 if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
@@ -2509,11 +2520,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 }
                                 if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5
                                         || (extra_position_ids != null && extra_position_ids.contains("5"))) {
-                                    roleName = "admin";
+                                    roleName = SystemSettings.rnAdmin;
                                     dbe.exec_delete_perm(oldLogin);
                                 } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
-                                    roleName = "hr";
+                                    roleName = SystemSettings.rnHr;
                                     dbe.exec_delete_perm(oldLogin);
                                 }
                                 dbe.exec_update_role(oldLogin, loginTF.getValue(), roleName);
@@ -4663,7 +4674,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         DbDefinition dbd = new DbDefinition();
                         dbd.connect();
                         orders_extraCB.setContainerDataSource(
-                                dbd.exec_positions_for_select(myUI, currentUser.hasRole("admin"), currentUser.hasRole("hr")));
+                                dbd.exec_positions_for_select(myUI, currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
                         dbd.close();
                     } else {
                         orders_extraCB.setValue(null);

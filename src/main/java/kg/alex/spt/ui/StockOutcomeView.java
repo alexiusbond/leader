@@ -367,6 +367,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                         if (status != 0) {
                             insertMovements(invID);
                             updateDatacontainer();
+                            setMovementsTable();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {

@@ -186,7 +186,7 @@ public class YearMonthReport implements Button.ClickListener,
         type.setWidth("100%");
         type.addItem(myUI.getMessage(SptMessages.Monthly));
         type.addItem(myUI.getMessage(SptMessages.Yearly));
-        if (currentUser.hasRole("admin")) {
+        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
             type.addItem(myUI.getMessage(SptMessages.Summary));
         }
         type.setValue(myUI.getMessage(SptMessages.Monthly));
@@ -219,7 +219,7 @@ public class YearMonthReport implements Button.ClickListener,
         leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
         leftGrid.addComponent(selectAllBtn, 0, 2, 1, 2);
         leftGrid.addComponent(deselectAllBtn, 2, 2, 3, 2);
-        if (currentUser.hasRole("admin")) {
+        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
             leftGrid.setSizeFull();
             leftGrid.addComponent(schoolTable, 0, 3, 3, 3);
             leftGrid.setRowExpandRatio(3, 1);
@@ -314,7 +314,7 @@ public class YearMonthReport implements Button.ClickListener,
                     DbStudContract dbsc = new DbStudContract();
                     dbsc.connect();
                     String school_ids;
-                    if (currentUser.hasRole("admin")) {
+                    if (currentUser.hasRole(SystemSettings.rnAdmin)) {
                         school_ids = sysSettings.convertCollectionToStr((Set<?>) schoolTable.getValue());
                     } else {
                         school_ids = myUI.getUser().getSchool_id() + "";

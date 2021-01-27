@@ -24,7 +24,6 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeEducation;
-import kg.alex.spt.eupload.EUpload;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;

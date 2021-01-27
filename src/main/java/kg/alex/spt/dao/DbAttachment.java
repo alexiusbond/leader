@@ -43,13 +43,20 @@ public class DbAttachment extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int employee_id, EmployeeDefinitionView edv) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT a.id, a.name, a.unique_name, 'Сертификат' as type FROM hr_employee_certificate AS ec " +
+        String sql = "SELECT a.id, a.name, a.unique_name, concat(c.name, ' - ', ec.given_by) as details, 'Сертификат' as type " +
+                "FROM hr_employee_certificate AS ec " +
+                "LEFT JOIN hr_certificate c ON c.id = ec.certificate_id " +
                 "LEFT JOIN hr_attachments a ON a.id = ec.attachment_id WHERE ec.employee_id = ? " +
                 "UNION " +
-                "SELECT a.id, a.name, a.unique_name, 'Экзамен' as type FROM hr_employee_exam AS ex " +
+                "SELECT a.id, a.name, a.unique_name, e.name as details, 'Экзамен' as type " +
+                "FROM hr_employee_exam AS ex " +
+                "LEFT JOIN hr_exam e ON e.id = ex.hr_exam_id " +
                 "LEFT JOIN hr_attachments a ON a.id = ex.attachment_id WHERE ex.employee_id = ? " +
                 "UNION " +
-                "SELECT a.id, a.name, a.unique_name, 'Образование' as type FROM hr_employee_education AS ed " +
+                "SELECT a.id, a.name, a.unique_name, concat(u.name, ' - ', el.name) as details, 'Образование' as type " +
+                "FROM hr_employee_education AS ed " +
+                "LEFT JOIN hr_university u ON u.id = ed.hr_university_id " +
+                "LEFT JOIN hr_education_level el ON el.id = ed.education_level_id " +
                 "LEFT JOIN hr_attachments a ON a.id = ed.attachment_id " +
                 "WHERE ed.employee_id = ? AND hr_own_id = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -59,6 +66,7 @@ public class DbAttachment extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Details), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Type), String.class, null);
         container.addContainerProperty(sysSettings.button, Button.class, null);
 
@@ -67,6 +75,7 @@ public class DbAttachment extends BaseDb {
 
             item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(result.getString("name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Type)).setValue(result.getString("type"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Details)).setValue(result.getString("details"));
             Attachment a = new Attachment();
             a.setId(result.getInt("id"));
             a.setUnique_name(result.getString("unique_name"));

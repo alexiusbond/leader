@@ -283,7 +283,7 @@ public class MessagesView extends HorizontalSplitPanel implements Button.ClickLi
             if (dataTable.getItem(dataTable.getValue()) != null) {
                 clearFields();
                 fillFields();
-                if (currentUser.hasRole("admin") || (myUI.getUser().getId()
+                if (currentUser.hasRole(SystemSettings.rnAdmin) || (myUI.getUser().getId()
                         == (Integer) dataTable.getContainerProperty(dataTable.getValue(),
                                 sysSettings.employee_id).getValue()
                         && dataTable.getContainerProperty(dataTable.getValue(),
@@ -307,7 +307,7 @@ public class MessagesView extends HorizontalSplitPanel implements Button.ClickLi
         dataTable.setEnabled(false);
         subjectTF.setEnabled(true);
         messageTA.setEnabled(true);
-        if (currentUser.hasRole("admin")) {
+        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
             feedbackTA.setEnabled(true);
         }
         photoUpl.setEnabled(true);
@@ -315,7 +315,7 @@ public class MessagesView extends HorizontalSplitPanel implements Button.ClickLi
 
     private void prepareNormalMode() {
         if (currentUser.isPermitted(sysSettings.cnMessagesView + ":" + sysSettings.actModify)) {
-            if (currentUser.hasRole("admin") || (myUI.getUser().getId()
+            if (currentUser.hasRole(SystemSettings.rnAdmin) || (myUI.getUser().getId()
                     == (Integer) dataTable.getContainerProperty(dataTable.getValue(),
                             sysSettings.employee_id).getValue()
                     && dataTable.getContainerProperty(dataTable.getValue(),
@@ -327,7 +327,7 @@ public class MessagesView extends HorizontalSplitPanel implements Button.ClickLi
             createBtn.setEnabled(true);
         }
         if (currentUser.isPermitted(sysSettings.cnMessagesView + ":" + sysSettings.actDelete)) {
-            if (currentUser.hasRole("admin") || (myUI.getUser().getId()
+            if (currentUser.hasRole(SystemSettings.rnAdmin) || (myUI.getUser().getId()
                     == (Integer) dataTable.getContainerProperty(dataTable.getValue(),
                             sysSettings.employee_id).getValue()
                     && dataTable.getContainerProperty(dataTable.getValue(),

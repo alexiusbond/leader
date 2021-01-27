@@ -12,12 +12,14 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Employee;
@@ -66,7 +68,7 @@ public class DbEmployee extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id, String working_statuses,
-            IndexedContainer workingStatCont, boolean withAdmin, boolean withHr, int employee_id) throws SQLException {
+                                    IndexedContainer workingStatCont, boolean withAdmin, boolean withHr, int employee_id) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         if (working_statuses.equals("") || working_statuses == null) {
             working_statuses = "-1";
@@ -200,7 +202,7 @@ public class DbEmployee extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id,
-            boolean withAdmin, boolean withHr) throws SQLException {
+                                    boolean withAdmin, boolean withHr) throws SQLException {
         String sql = "SELECT e.id, CONCAT(e.surname, ' ', e.name, ' ', IFNULL(e.middle_name, '')) AS fullname, p.name, "
                 + "group_concat(DISTINCT p2.name ORDER BY eo2.id ASC separator ', ') as extra_positions, "
                 + "group_concat(DISTINCT if(eb.hr_importance_id = 1, br.name, null) ORDER BY eb.id ASC separator ', ') as main_branch, "
@@ -291,7 +293,7 @@ public class DbEmployee extends BaseDb {
                 + "es.fullname, GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 1, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS main_branch, "
                 + "GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 2, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS extra_branches, "
                 + "GROUP_CONCAT(DISTINCT p2.name ORDER BY eo2.id ASC SEPARATOR ', ') AS extra_positions, "
-                + "GROUP_CONCAT(DISTINCT CONCAT(wp.name, ' (', ew.main_position, ')') ORDER BY ew.id ASC SEPARATOR ', ') AS spouse_work, "
+                + "GROUP_CONCAT(DISTINCT CONCAT(wp.name, ' (', p3.name, ')') ORDER BY ew.id ASC SEPARATOR ', ') AS spouse_work, "
                 + "GROUP_CONCAT(DISTINCT CONCAT(ech.fullname, ' ', (YEAR(NOW()) - YEAR(ech.date_of_birth)), ' y/o', IF(ech.hr_education_status_id = 1, "
                 + "CONCAT(' (', ech.institution, ')'), '')) ORDER BY ech.id ASC SEPARATOR ', ') AS children, cat.id "
                 + "FROM employee AS e "
@@ -310,6 +312,7 @@ public class DbEmployee extends BaseDb {
                 + "LEFT JOIN hr_employee_spouse AS es ON es.employee_id = e.id "
                 + "LEFT JOIN hr_employee_work AS ew ON ew.employee_id = e.id AND ew.hr_own_id = 2 AND ew.working_status_id = 2 "
                 + "LEFT JOIN hr_work_place AS wp ON ew.hr_work_place_id = wp.id "
+                + "LEFT JOIN hr_position AS p3 ON ew.position_id = p3.id "
                 + "LEFT JOIN hr_employee_children AS ech ON ech.employee_id = e.id "
                 + "LEFT JOIN acc_category as cat ON cat.employee_id = e.id and cat.school_id = eo.school_id "
                 + "WHERE eo.school_id = ? "
@@ -358,7 +361,7 @@ public class DbEmployee extends BaseDb {
             if (result.getString("ebh.lessons") != null) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Lessons)).setValue(
                         result.getString("ebh.lessons") + "; " + myUi.getMessage(SptMessages.Total) + " - "
-                        + result.getInt("ebh.hours") + "(" + result.getInt("ebh.extra") + ")");
+                                + result.getInt("ebh.hours") + "(" + result.getInt("ebh.extra") + ")");
             }
             item.getItemProperty(myUi.getMessage(SptMessages.SpouseInfo)).setValue(
                     result.getString("es.fullname"));

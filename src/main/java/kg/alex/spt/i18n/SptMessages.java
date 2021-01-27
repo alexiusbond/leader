@@ -180,6 +180,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Firstname = generateId();
     public static final String Middlename = generateId();
     public static final String DateOfBirth = generateId();
+    public static final String SapatOrSchool = generateId();
     public static final String GraduatedSchool = generateId();
     public static final String End = generateId();
     public static final String Start = generateId();

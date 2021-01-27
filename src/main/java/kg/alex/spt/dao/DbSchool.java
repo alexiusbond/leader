@@ -7,10 +7,12 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.School;
@@ -30,7 +32,7 @@ public class DbSchool extends BaseDb {
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join year as y on y.id = s.year_id "
                 + "left join activity_status as ac on ac.id = s.activity_status_id "
-                + "order by s.name;";
+                + "order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -222,7 +224,7 @@ public class DbSchool extends BaseDb {
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join year as y on y.id = s.year_id "
                 + "left join activity_status as ac on ac.id = s.activity_status_id "
-                + "where s.id = ? order by s.name;";
+                + "where s.id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -245,17 +247,17 @@ public class DbSchool extends BaseDb {
     }
 
     public int execUpdateYear(School scl) throws SQLException {
-        int st = 0;
         String sql = "update school set year_id = ? where id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl.getYear_id());
         stat.setInt(2, scl.getId());
-        st = stat.executeUpdate();
+        int st = stat.executeUpdate();
         return st;
     }
 
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, int except_id) throws SQLException {
-        String sql = "SELECT s.id, concat(s.code, ' - ', s.name) as name, s.year_id, s.photo, s.code from school as s where s.id!=?;";
+        String sql = "SELECT s.id, concat(s.code, ' - ', s.name) as name, s.year_id, s.photo, s.code from school as s " +
+                "where s.id!=? order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, except_id);
         ResultSet result = stat.executeQuery();

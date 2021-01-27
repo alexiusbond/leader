@@ -24,7 +24,6 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.EmployeeExam;
-import kg.alex.spt.eupload.EUpload;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 

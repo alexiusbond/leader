@@ -33,7 +33,7 @@ public class SystemSettings implements Serializable {
     public final DecimalFormat dFormat = new DecimalFormat("0.00");
     public final DecimalFormat dMonth = new DecimalFormat("00");
     public final String datePattern = "dd-MM-yyyy";
-    public  final String yearMonthPattern = "MM-yyyy";
+    public final String yearMonthPattern = "MM-yyyy";
     public static final String yearPattern = "yyyy";
     public final SimpleDateFormat dateRu = new SimpleDateFormat(
             "«dd» MMMMM yyyy г.", myDateFormatSymbols);
@@ -41,9 +41,7 @@ public class SystemSettings implements Serializable {
             "«dd» MMMMM yyyy");
     public final SimpleDateFormat df = new SimpleDateFormat(datePattern);
     public static final SimpleDateFormat mysql_only_year = new SimpleDateFormat("yyyy-01-01");
-    public final String dateTimeSecPattern = "dd-MM-yyyy HH:mm:ss";
     public final String dateTimeMinPattern = "dd-MM-yyyy HH:mm";
-    public final SimpleDateFormat dtsf = new SimpleDateFormat(dateTimeSecPattern);
     public final SimpleDateFormat dtmf = new SimpleDateFormat(dateTimeMinPattern);
     public final SimpleDateFormat ymdf = new SimpleDateFormat(yearMonthPattern);
 
@@ -59,7 +57,6 @@ public class SystemSettings implements Serializable {
     public final String school_type_id = "school_type_id";
     public final String category_id = "category_id";
     public final String payment_category_id = "payment_category_id";
-    public final String relative_id = "relative_id";
     public final String is_main = "is_main";
     public final String year_id = "year_id";
     public final String school_id = "school_id";
@@ -70,10 +67,8 @@ public class SystemSettings implements Serializable {
     public final String gender_id = "gender_id";
     public final String nationality_id = "nationality_id";
     public final String martial_status_id = "martial_status_id";
-    public final String discount_id = "discount_id";
     public final String activity_status_id = "activity_status_id";
     public final String working_status_id = "working_status_id";
-    public final String details_id = "details_id";
     public final String education_status_id = "education_status_id";
     public final String class_name_id = "class_name_id";
     public final String class_id = "class_id";
@@ -88,7 +83,6 @@ public class SystemSettings implements Serializable {
     public final String to_class_id = "to_class_id";
     public final String student_id = "student_id";
     public final String stock_id = "stock_id";
-    public final String operation_id = "operation_id";
     public final String quantity_id = "remain_id";
     public final String measurement_id = "measurement_id";
     public final String crud_status = "crud_status";
@@ -103,7 +97,6 @@ public class SystemSettings implements Serializable {
     public final String dbWork_placeTable = "hr_work_place";
     public final String dbCertificateTable = "hr_certificate";
     public final String dbAttachmentsTable = "hr_attachments";
-    public final String dbPositionTable = "hr_position";
     public final String dbQuestion = "hr_question";
     public final String dbActivity_status = "activity_status";
     public final String dbSchoolType = "school_type";
@@ -116,11 +109,9 @@ public class SystemSettings implements Serializable {
     public final String acc_currency_id = "acc_currency_id";
     public final String dbAcc_transactions = "acc_transactions";
     public final String dbPaymentType = "payment_type";
-    public final String dbPaymentCategoryType = "payment_category";
     public final String dbWorking_status = "working_status";
     public final String dbClass_name = "class_name";
     public final String db_dp_invoice = "dp_invoice";
-    public final String db_dp_invoice_id = "dp_invoice_id";
     public final String dbAccInvoice = "acc_invoice";
     public final String db_acc_invoice_id = "acc_invoice_id";
     public final String invoice_id = "invoice_id";
@@ -138,8 +129,6 @@ public class SystemSettings implements Serializable {
     public final String hr_positionTable = "hr_position";
     public final String dbStudent = "student";
     public final String dbStudentContract = "student_contract";
-    public final String dbStudentPayments = "student_payments";
-    public final String dbStudentRelatives = "student_relatives";
     public final String dbDiscount = "discount";
     public final String dbEmployee = "employee";
     public final String dbEmployeePhoneNumber = "hr_employee_phone_number";
@@ -158,17 +147,14 @@ public class SystemSettings implements Serializable {
     public final String dbHrEducationStatus = "hr_education_status";
     public final String employee_id = "employee_id";
     public final String dbAccessories = "accessories";
-    public final String dbReasons = "order_reason";
     public final String dbContract = "contract";
     public final String dbOrderReason = "order_reason";
     public final String dbSchool = "school";
     public final String dbMessages = "messages";
     public final String dbYear = "year";
-    public final String dbUserPermission = "user_permission";
-    public final String dbUserRoles = "user_roles";
     public final String dbStudentOrders = "student_orders";
-    public final String dbStudentDiscount = "student_discount";
-    public final String rnAdmin = "admin";
+    public static final String rnAdmin = "admin";
+    public static final String rnHr = "hr";
     public final String cnAccessoriesDefinitionView = "AccessoriesDefinitionView";
     public final String cnIssueOrderView = "IssueOrderView";
     public final String cnClassNameDefinitionView = "ClassNameDefinitionView";
@@ -197,13 +183,11 @@ public class SystemSettings implements Serializable {
     public final String cnMessagesView = "MessagesView";
     public final String cnSchoolModificationView = "SchoolModificationView";
     public final String cnStudentDefinitionView = "StudentDefinitionView";
-    public final String cnImportFromExcelView = "ImportFromExcelView";
     public final String cnReportsView = "ReportsView";
     public final String cnAccountingReportsView = "AccountingReportsView";
     public final String cnStockReportsView = "StockReportsView";
     public final String cnHRReportsView = "HRReportsView";
     public final String actAdd = "добавление";
-    public final String actAddContract = "add_contract";
     public final String actModify = "изменение";
     public final String prmChangeOldTransactions = "изменение старых записей";
     public final String prmChangeCurrencyRate = "изменение общего курса доллара";
@@ -260,8 +244,6 @@ public class SystemSettings implements Serializable {
     public final String activeStatus = "active";
     public final String entering_year_id = "entering_year_id";
     public final String hr_position_category_id = "hr_position_category_id";
-    public final String dbProduct_category = "dp_product_category";
-    public final String dbColumnStockMovement_id = "stock_movements_id";
     public final String dbColumnStudent_payments_id = "student_payments_id";
     public final String old_amount = "old_amount";
     public final String old_currency = "old_currency";
@@ -280,8 +262,6 @@ public class SystemSettings implements Serializable {
                 format.setMinimumFractionDigits(2);
                 return format;
             }
-
-            ;
         };
         return plainConverter;
     }
@@ -295,8 +275,6 @@ public class SystemSettings implements Serializable {
                 format.setMaximumFractionDigits(0);
                 return format;
             }
-
-            ;
         };
         return plainConverter;
     }
@@ -333,7 +311,7 @@ public class SystemSettings implements Serializable {
     }
 
     public Set<Integer> getChild_ids(HierarchicalContainer container, Set<?> selectedIds) {
-        Set<Integer> set = new HashSet<Integer>();
+        Set<Integer> set = new HashSet<>();
         Iterator selectedIter = selectedIds.iterator();
         while (selectedIter.hasNext()) {
             Integer nextId = (Integer) selectedIter.next();
@@ -341,7 +319,7 @@ public class SystemSettings implements Serializable {
             if (container.hasChildren(nextId)) {
                 Iterator iter = container.getChildren(nextId).iterator();
                 while (iter.hasNext()) {
-                    Set<Integer> setChild = new HashSet<Integer>();
+                    Set<Integer> setChild = new HashSet<>();
                     setChild.add((Integer) iter.next());
                     set.addAll(getChild_ids(container, setChild));
                 }
@@ -375,7 +353,7 @@ public class SystemSettings implements Serializable {
         return builder.toString();
     }
 
-    private static DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {
+    private static final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {
         @Override
         public String[] getMonths() {
             return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",

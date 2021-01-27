@@ -413,7 +413,7 @@ public class DbStudContract extends BaseDb {
     public void execSQL_Yearly_by_classes(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT sch.id, sch.name, CONCAT(cln.name, ' - ', cl.name) AS class, "
+        String sql = "SELECT sch.id, sch.name, sch.code, CONCAT(cln.name, ' - ', cl.name) AS class, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
                 + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
@@ -441,7 +441,7 @@ public class DbStudContract extends BaseDb {
                 + "LEFT JOIN student_contract AS sc ON sc.student_id = st.t_st_id AND sc.year_id = ? "
                 + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
                 + "WHERE cl.school_id IN (" + school_ids + ") GROUP BY cl.id "
-                + "ORDER BY sch.id, cln.id, cl.id;";
+                + "ORDER BY CAST(sch.code AS UNSIGNED), cln.id, cl.id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -485,7 +485,7 @@ public class DbStudContract extends BaseDb {
                     ymr.paids = 0.0;
                     ymr.lefts = 0.0;
                 }
-                t = ymr.createTable(result.getString("sch.name"));
+                t = ymr.createTable(result.getString("sch.code") + " - " + result.getString("sch.name"));
                 ymr.rightLay.addComponent(t);
                 school_id = result.getInt("sch.id");
             }
@@ -566,7 +566,7 @@ public class DbStudContract extends BaseDb {
     public void execSQL_Monthly_by_classes(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT months.name, months.id, s_temp.id, s_temp.name, i_temp.amn, p_temp.amn FROM months "
+        String sql = "SELECT months.name, months.id, s_temp.id, s_temp.name, s_temp.code, i_temp.amn, p_temp.amn FROM months "
                 + "CROSS JOIN school AS s_temp LEFT JOIN "
                 + "(SELECT sch.id AS s_id, sch.name AS s_name, SUM(inst.amount) AS amn, MONTH(inst.date_of_payment) AS mnth "
                 + "FROM student_installement_plan AS inst LEFT JOIN student AS st ON st.id = inst.student_id "
@@ -588,7 +588,7 @@ public class DbStudContract extends BaseDb {
                 + "ON edu.id = CASE WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
                 + "ELSE stud_o.to_education_status_id END WHERE pay.year_id = ? AND edu.id IN (" + edu_statuses_ids + ") "
                 + "GROUP BY sch.id , MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
-                + "AND s_temp.id = p_temp.s_id WHERE s_temp.id IN (" + school_ids + ") ORDER BY s_temp.id, months.order_num;";
+                + "AND s_temp.id = p_temp.s_id WHERE s_temp.id IN (" + school_ids + ") ORDER BY  CAST(s_temp.code AS UNSIGNED), months.order_num;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -616,7 +616,7 @@ public class DbStudContract extends BaseDb {
                     ymr.paids = 0.0;
                     ymr.lefts = 0.0;
                 }
-                t = ymr.createTable(result.getString("s_temp.name"));
+                t = ymr.createTable(result.getString("s_temp.code") + " - " +result.getString("s_temp.name"));
                 ymr.rightLay.addComponent(t);
                 school_id = result.getInt("s_temp.id");
             }
@@ -778,7 +778,7 @@ public class DbStudContract extends BaseDb {
     public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT sch.name, "
+        String sql = "SELECT sch.name, sch.code, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), "
                 + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
@@ -800,7 +800,7 @@ public class DbStudContract extends BaseDb {
                 + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
                 + "WHERE st.entering_year_id <= ? "
                 + "OR st.entering_year_id IS NULL GROUP BY sch.id "
-                + "HAVING sch.id in (" + school_ids + ") ORDER BY sch.id;";
+                + "HAVING sch.id in (" + school_ids + ") ORDER BY CAST(sch.code AS UNSIGNED);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);

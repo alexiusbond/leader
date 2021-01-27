@@ -181,7 +181,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
 
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
         leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
-        if (currentUser.hasRole("admin")) {
+        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
             leftGrid.setSizeFull();
             leftGrid.addComponent(schoolsTable, 0, 2, 3, 2);
             leftGrid.setRowExpandRatio(2, 1);

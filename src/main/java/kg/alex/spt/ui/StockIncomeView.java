@@ -422,6 +422,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                         if (status != 0) {
                             insertMovements(invID);
                             updateDatacontainer();
+                            setMovementsTable();
                             /*dbat.exec_update(at, sysSettings.db_dp_invoice_id, invID, dbat.getConnection());*/
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
@@ -1174,6 +1175,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
     }
 
     private void setMovementsTable() {
+        System.out.println("Set movements table");
         try {
             NATURAL_COL_ORDER_MOVEMENTS = new String[]{sysSettings.button,
                     myUI.getMessage(SptMessages.Remain),
@@ -1247,9 +1249,9 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         smv.setId(Integer.parseInt(next.toString()));
                         dbCon.exec_update(smv);
-                    } else if (movementsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Insert))) {
+                    } else if (movementsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                            .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbCon.exec_insert(smv);
-
                     }
                 }
             }
