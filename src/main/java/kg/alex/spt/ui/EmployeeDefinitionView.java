@@ -1703,6 +1703,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         } else {
             salaryCategoryCB.setEnabled(false);
         }
+        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmMenu)) {
+            salaryCategoryCB.setVisible(false);
+        }
         fieldsLayRight.addComponent(salaryCategoryCB);
 
         try {

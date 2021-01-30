@@ -181,6 +181,8 @@ public class SptMessages_en extends SptMessages {
             {DateOfBirth, "Дата рождения"},
             {SapatOrSchool, "Школа / Лицей Сапат"},
             {GraduatedSchool, "Окончил школу:"},
+            {ExpenceOrder, "РАСХОДНЫЙ КАССОВЫЙ ОРДЕР"},
+            {IncomeOrder, "ДОХОДНЫЙ КАССОВЫЙ ОРДЕР"},
             {End, "Окончание"},
             {Start, "Начало"},
             {Institution, "Учебное заведение"},

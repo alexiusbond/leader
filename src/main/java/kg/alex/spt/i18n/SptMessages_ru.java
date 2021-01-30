@@ -183,6 +183,8 @@ public class SptMessages_ru extends SptMessages {
             {BirthPlace, "Место рождения"},
             {SapatOrSchool, "Школа / Лицей Сапат"},
             {GraduatedSchool, "Окончил школу:"},
+            {ExpenceOrder, "РАСХОДНЫЙ КАССОВЫЙ ОРДЕР"},
+            {IncomeOrder, "ДОХОДНЫЙ КАССОВЫЙ ОРДЕР"},
             {End, "Окончание"},
             {Start, "Начало"},
             {Date, "Дата"},

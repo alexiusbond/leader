@@ -18,7 +18,7 @@ public class DbEmployeeContact extends BaseDb {
 
     public int exec_insert(EmployeeContact ec) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_contacts (employee_id,hr_country_id,"
-                + "birth_place,passport,address,email) VALUES(?,?,?,?,?);";
+                + "birth_place,address,email) VALUES(?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         stat.setInt(2, ec.getCitizenship_id());

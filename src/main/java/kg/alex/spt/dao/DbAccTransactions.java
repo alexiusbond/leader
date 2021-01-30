@@ -151,20 +151,19 @@ public class DbAccTransactions extends BaseDb {
                 isDisabled = !(currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions) || result.getBoolean("isNotOld"));
             }
             String tableName = myUI.getMessage(SptMessages.Outcomes);
+            HorizontalLayout hl = new HorizontalLayout();
+            hl.setSpacing(true);
             if (incOrOut == 1) {
-                tableName = myUI.getMessage(SptMessages.Incomes);
-                item.getItemProperty(sysSettings.button).setValue(dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
                         myUI.getMessage(SptMessages.Incomes), isDisabled, FontAwesome.MINUS_SQUARE));
+
+                tableName = myUI.getMessage(SptMessages.Incomes);
                 item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
                         myUI.getMessage(SptMessages.Category), id, 1, isDisabled, tableName));
             } else {
-                HorizontalLayout hl = new HorizontalLayout();
-                hl.setSpacing(true);
                 hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
                         myUI.getMessage(SptMessages.Outcomes), isDisabled, FontAwesome.MINUS_SQUARE));
-                hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.Print), id,
-                        myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
-                item.getItemProperty(sysSettings.button).setValue(hl);
+
                 item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
                         myUI.getMessage(SptMessages.Category), id, 2, isDisabled, tableName));
                 ComboBoxMax cb = dw.createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, sysSettings.dbEmployee, false, false);
@@ -183,9 +182,12 @@ public class DbAccTransactions extends BaseDb {
                 cb.setNullSelectionAllowed(true);
                 cb.setEnabled(!isDisabled);
                 item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(cb);
-                item.getItemProperty(sysSettings.order_number).setValue(result.getInt("t.order_number"));
-                item.getItemProperty(sysSettings.from_employee_id).setValue(result.getString("fullname"));
             }
+            item.getItemProperty(sysSettings.from_employee_id).setValue(result.getString("fullname"));
+            item.getItemProperty(sysSettings.order_number).setValue(result.getInt("t.order_number"));
+            hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.Print), id,
+                    myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
+            item.getItemProperty(sysSettings.button).setValue(hl);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(result.getTimestamp("t.date_time"), myUI.getMessage(SptMessages.Date), id, isDisabled, tableName));
             item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(dw.createCombobox(result.getInt("t.acc_currency_id"),
@@ -203,7 +205,6 @@ public class DbAccTransactions extends BaseDb {
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(dw.createTextfieldDouble(result.getDouble("currency_rate"),
                     myUI.getMessage(SptMessages.Rate), id, true, isDisabled, null));
-
         }
         return container;
     }
@@ -1091,7 +1092,7 @@ public class DbAccTransactions extends BaseDb {
                 + "acc_transactions AS tr LEFT JOIN acc_category AS cat ON cat.id = tr.acc_category_id  where tr.school_id = ? "
                 + "GROUP BY DATE(tr.date_time) ORDER BY DATE(tr.date_time)) AS gr_transactions, (SELECT @runtot:=0) c) AS balances_table "
                 + "WHERE balances_table.date_time <= ?;";
-        PreparedStatement stat = conn.prepareStatement(sql);
+        PreparedStatement stat = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(date.getTime()));
         ResultSet result = stat.executeQuery();
@@ -1101,12 +1102,15 @@ public class DbAccTransactions extends BaseDb {
         return null;
     }
 
-    public int getMaxOrderNum(int school_id) throws SQLException {
+    public int getMaxOrderNum(int school_id, int acc_type_id) throws SQLException {
         int maxValue = 0;
-        String sql = "select (ifnull(max(tr.order_number),0)+1) as max_plus1 "
-                + "from acc_transactions as tr where tr.school_id = ?";
+        String sql = "select (ifnull(max(tr.order_number), 0) + 1) as max_plus1 "
+                + "from acc_transactions as tr "
+                + "left join acc_category as c on c.id = tr.acc_category_id "
+                + "where tr.school_id = ? and c.acc_type_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
+        stat.setInt(2, acc_type_id);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             maxValue = (result.getInt("max_plus1"));
@@ -1116,8 +1120,8 @@ public class DbAccTransactions extends BaseDb {
         return maxValue;
     }
 
-    public int exec_update_order_number(String id, int school_id) throws SQLException {
-        int order_number = getMaxOrderNum(school_id);
+    public int exec_update_order_number(String id, int school_id, int acc_type_id) throws SQLException {
+        int order_number = getMaxOrderNum(school_id, acc_type_id);
         String sql = "update acc_transactions set order_number=? WHERE id=? and order_number IS NULL;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, order_number);

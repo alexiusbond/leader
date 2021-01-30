@@ -13,9 +13,11 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.server.StreamResource;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.AccTransaction;
@@ -23,7 +25,7 @@ import kg.alex.spt.ui.TransactionsView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class OutcomeOrderPDF {
+public class TransactionOrderPDF {
 
     static final Logger logger = LogManager.getLogger(TransactionsView.class);
     private byte[] b = null;
@@ -33,7 +35,8 @@ public class OutcomeOrderPDF {
     private Document document = null;
     private final String nameOf = "Order";
 
-    public OutcomeOrderPDF(final MyVaadinUI myUI, final AccTransaction tr, final String school, final String logo_name) {
+    public TransactionOrderPDF(final MyVaadinUI myUI, final AccTransaction tr, final String school,
+                               final String logo_name, final String orderName) {
 
         source1 = new StreamResource.StreamSource() {
             @Override
@@ -83,7 +86,7 @@ public class OutcomeOrderPDF {
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     orderTable.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase("РАСХОДНЫЙ КАССОВЫЙ ОРДЕР", bold_font));
+                    cell = new PdfPCell(new Phrase(orderName, bold_font));
                     cell.setBorder(0);
                     cell.setPaddingBottom(20);
                     orderTable.addCell(cell);
