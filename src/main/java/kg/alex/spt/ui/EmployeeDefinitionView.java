@@ -73,6 +73,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
 
@@ -1081,7 +1082,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.WorkPlace),
                     myUI.getMessage(SptMessages.Sapat),
                     myUI.getMessage(SptMessages.MainPosition),
-                    myUI.getMessage(SptMessages.ExtraPosition),
+                    myUI.getMessage(SptMessages.ExtraPositions),
                     myUI.getMessage(SptMessages.WorkingStatus),
                     myUI.getMessage(SptMessages.Start),
                     myUI.getMessage(SptMessages.End)};
@@ -1092,7 +1093,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.WorkPlace), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.MainPosition), 1);
-            t.setColumnExpandRatio(myUI.getMessage(SptMessages.ExtraPosition), 1);
+            t.setColumnExpandRatio(myUI.getMessage(SptMessages.ExtraPositions), 1);
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -2896,10 +2897,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             myUI.getMessage(SptMessages.WorkPlace)).getValue()).getValue());
                     ew.setMain_position_id((Integer) ((ComboBoxMax) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.MainPosition)).getValue()).getValue());
-                    if (((ComboBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.ExtraPosition)).getValue()).getValue() != null) {
-                        ew.setExtra_position_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.ExtraPosition)).getValue()).getValue());
+                    if (((ComboBoxMultiselectMax) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.ExtraPositions)).getValue()).getValue() != null
+                            && !((Set<?>) ((ComboBoxMultiselectMax) t.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.ExtraPositions)).getValue()).getValue()).isEmpty()) {
+                        ew.setExtra_position_ids((Set<?>) ((ComboBoxMultiselectMax) t.getItem(next).getItemProperty(
+                                myUI.getMessage(SptMessages.ExtraPositions)).getValue()).getValue());
                     }
                     ew.setWorking_status_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.WorkingStatus)).getValue()).getValue());
@@ -2915,7 +2918,19 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         dbew.exec_update(ew);
                     } else if (t.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
-                        dbew.exec_insert(ew);
+                        ew.setId(dbew.exec_insert(ew));
+                    }
+                    if (ew.getExtra_position_ids() != null && !ew.getExtra_position_ids().isEmpty()) {
+                        DbDefinition dbCon = new DbDefinition();
+                        dbCon.connect();
+                        dbCon.exec_delete(ew.getId() + "",
+                                sysSettings.dbEmployeeWorkExtraPosition, sysSettings.employee_work_id);
+                        dbCon.close();
+                        Iterator extraIter = ew.getExtra_position_ids().iterator();
+                        while (extraIter.hasNext()) {
+                            int position_id = (Integer) extraIter.next();
+                            dbew.exec_insert_extra_position(ew.getId(), position_id);
+                        }
                     }
                 }
             }
@@ -3591,7 +3606,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 myUI.getMessage(SptMessages.WorkPlace),
                 myUI.getMessage(SptMessages.Sapat),
                 myUI.getMessage(SptMessages.MainPosition),
-                myUI.getMessage(SptMessages.ExtraPosition),
+                myUI.getMessage(SptMessages.ExtraPositions),
                 myUI.getMessage(SptMessages.WorkingStatus),
                 myUI.getMessage(SptMessages.Start),
                 myUI.getMessage(SptMessages.End)};
@@ -3606,7 +3621,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
         ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.MainPosition), null, true);
         item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
-        ComboBoxMax cb3 = createCombobox(0, myUI.getMessage(SptMessages.ExtraPosition), null, false);
+        ComboBoxMultiselectMax cb3 = createComboboxMulti(myUI.getMessage(SptMessages.ExtraPosition), false);
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
@@ -3619,7 +3634,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.error(e);
             logger.catching(e);
         }
-        item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).setValue(cb3);
+        item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(cb3);
         cb = createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
         try {
             DbDefinition dbd = new DbDefinition();
@@ -3676,7 +3691,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
         item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
-
     }
 
     private void addLanguageItem() {
@@ -4028,6 +4042,23 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         return ckb;
     }
 
+    public ComboBoxMultiselectMax createComboboxMulti(String description, boolean isRequired) {
+        ComboBoxMultiselectMax cb = new ComboBoxMultiselectMax();
+        cb.setRequired(true);
+        cb.setDescription(description);
+        cb.setStyleName(ValoTheme.COMBOBOX_TINY);
+        cb.setWidth("100%");
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setFilteringMode(FilteringMode.CONTAINS);
+        if (isRequired) {
+            cb.setRequired(true);
+            cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        }
+        cb.setClearButtonCaption(null);
+        cb.setSelectAllButtonCaption(null);
+        return cb;
+    }
+
     public ComboBoxMax createCombobox(int value, String description, String dbtable, boolean isRequired) {
         ComboBoxMax cb = new ComboBoxMax();
         cb.setDescription(description);
@@ -4129,7 +4160,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             c.addContainerProperty(sysSettings.button, Button.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.WorkPlace), ComboBoxMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.MainPosition), ComboBoxMax.class, null);
-            c.addContainerProperty(myUI.getMessage(SptMessages.ExtraPosition), ComboBoxMax.class, null);
+            c.addContainerProperty(myUI.getMessage(SptMessages.ExtraPositions), ComboBoxMultiselectMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), ComboBoxMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.Start), DateField.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.End), DateField.class, null);

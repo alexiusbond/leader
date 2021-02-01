@@ -150,6 +150,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String MainBranch = generateId();
     public static final String MainBranchShort = generateId();
     public static final String ExtraPosition = generateId();
+    public static final String ExtraPositions = generateId();
     public static final String ExtraBranches = generateId();
     public static final String GenerateButton = generateId();
     public static final String Functions = generateId();

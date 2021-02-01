@@ -7,6 +7,7 @@ package kg.alex.spt.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 public class EmployeeWork implements Serializable {
 
@@ -16,7 +17,7 @@ public class EmployeeWork implements Serializable {
     private int working_status_id;
     private int work_place_id;
     private int main_position_id;
-    private int extra_position_id;
+    private Set<?> extra_position_ids;
     boolean isSapat;
     private Date start;
     private Date end;
@@ -69,12 +70,12 @@ public class EmployeeWork implements Serializable {
         this.main_position_id = main_position_id;
     }
 
-    public int getExtra_position_id() {
-        return extra_position_id;
+    public Set<?> getExtra_position_ids() {
+        return extra_position_ids;
     }
 
-    public void setExtra_position_id(int extra_position_id) {
-        this.extra_position_id = extra_position_id;
+    public void setExtra_position_ids(Set<?> extra_position_ids) {
+        this.extra_position_ids = extra_position_ids;
     }
 
     public boolean isSapat() {

@@ -138,6 +138,7 @@ public class SptMessages_tr extends SptMessages {
             {MainBranch, "Основная область преподавания"},
             {MainBranchShort, "Осн. область преподавания"},
             {ExtraPosition, "Доп. должность"},
+            {ExtraPositions, "Доп. должности"},
             {ExtraBranches, "Доп. области преподавания"},
             {GenerateButton, "Сгенерировать"},
             {SelectOptions, "Выбрать параметры"},

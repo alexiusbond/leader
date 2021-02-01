@@ -95,6 +95,7 @@ public class SystemSettings implements Serializable {
     public final String dbBranchTable = "hr_branch";
     public final String dbUniversityTable = "hr_university";
     public final String dbWork_placeTable = "hr_work_place";
+    public final String dbEmployeeWorkExtraPosition = "hr_employee_work_extra_positions";
     public final String dbCertificateTable = "hr_certificate";
     public final String dbAttachmentsTable = "hr_attachments";
     public final String dbQuestion = "hr_question";
@@ -103,6 +104,7 @@ public class SystemSettings implements Serializable {
     public final String dbAccessoriesCategory = "accessories_category";
     public final String dbGender = "gender";
     public final String dbCountry = "hr_country";
+    public final String employee_work_id = "hr_employee_work_id";
     public final String dbEduLevel = "hr_education_level";
     public final String dbHealthStatus = "hr_health_status";
     public final String dbAcc_currency = "acc_currency";
@@ -284,6 +286,16 @@ public class SystemSettings implements Serializable {
         HashSet<Integer> hs = new HashSet<Integer>();
         while (iter.hasNext()) {
             Object next = iter.next();
+            hs.add((Integer) next);
+        }
+        return hs;
+    }
+
+    public Set<?> convertToSet(String str) {
+        String[] arr = str.split(",");
+        HashSet<Integer> hs = new HashSet<Integer>();
+        for (String curVal : arr) {
+            Object next = Integer.parseInt(curVal);
             hs.add((Integer) next);
         }
         return hs;

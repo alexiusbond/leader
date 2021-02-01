@@ -18,6 +18,7 @@ import kg.alex.spt.domain.EmployeeWork;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import kg.alex.spt.utils.ComboBoxMax;
+import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,26 +35,21 @@ public class DbEmployeeWork extends BaseDb {
 
     public int exec_insert(EmployeeWork ew) throws SQLException {
         String sql = "INSERT INTO hr_employee_work (employee_id, hr_own_id, hr_work_place_id, position_id, "
-                + "extra_position_id, start_date, end_date, working_status_id, is_sapat) "
-                + "VALUES(?,?,?,?,?,?,?,?,?);";
+                + "start_date, end_date, working_status_id, is_sapat) "
+                + "VALUES(?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ew.getEmployee_id());
         stat.setInt(2, ew.getOwn_id());
         stat.setInt(3, ew.getWork_place_id());
         stat.setInt(4, ew.getMain_position_id());
-        if (ew.getExtra_position_id() != 0) {
-            stat.setInt(5, ew.getExtra_position_id());
-        } else {
-            stat.setNull(5, Types.VARCHAR);
-        }
-        stat.setDate(6, new Date(ew.getStart().getTime()));
+        stat.setDate(5, new Date(ew.getStart().getTime()));
         if (ew.getEnd() != null) {
-            stat.setDate(7, new Date(ew.getEnd().getTime()));
+            stat.setDate(6, new Date(ew.getEnd().getTime()));
         } else {
-            stat.setNull(7, Types.DATE);
+            stat.setNull(6, Types.DATE);
         }
-        stat.setInt(8, ew.getWorking_status_id());
-        stat.setBoolean(9, ew.isSapat());
+        stat.setInt(7, ew.getWorking_status_id());
+        stat.setBoolean(8, ew.isSapat());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -62,36 +58,41 @@ public class DbEmployeeWork extends BaseDb {
         }
     }
 
+    public void exec_insert_extra_position(int employee_work_id, int position_id) throws SQLException {
+        String sql = "INSERT INTO hr_employee_work_extra_positions (hr_employee_work_id, position_id) VALUES(?,?);";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_work_id);
+        stat.setInt(2, position_id);
+        stat.executeUpdate();
+    }
+
     public int exec_update(EmployeeWork ew) throws SQLException {
         String sql = "update hr_employee_work set "
-                + "hr_work_place_id=?, position_id=?, extra_position_id=?, start_date=?, end_date=?, "
+                + "hr_work_place_id=?, position_id=?, start_date=?, end_date=?, "
                 + "working_status_id = ?, is_sapat = ? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ew.getWork_place_id());
         stat.setInt(2, ew.getMain_position_id());
-        if (ew.getExtra_position_id() != 0) {
-            stat.setInt(3, ew.getExtra_position_id());
-        } else {
-            stat.setNull(3, Types.VARCHAR);
-        }
-        stat.setDate(4, new Date(ew.getStart().getTime()));
+        stat.setDate(3, new Date(ew.getStart().getTime()));
         if (ew.getEnd() != null) {
-            stat.setDate(5, new Date(ew.getEnd().getTime()));
+            stat.setDate(4, new Date(ew.getEnd().getTime()));
         } else {
-            stat.setNull(5, Types.VARCHAR);
+            stat.setNull(4, Types.VARCHAR);
         }
-        stat.setInt(6, ew.getWorking_status_id());
-        stat.setBoolean(7, ew.isSapat());
-        stat.setInt(8, ew.getId());
+        stat.setInt(5, ew.getWorking_status_id());
+        stat.setBoolean(6, ew.isSapat());
+        stat.setInt(7, ew.getId());
         return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
                                     EmployeeDefinitionView edv) throws SQLException {
         final SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT ew.id, ew.hr_work_place_id, ew.position_id, ew.extra_position_id, " +
+        String sql = "SELECT ew.id, ew.hr_work_place_id, ew.position_id, " +
+                "group_concat(ep.position_id separator ',') as extra_positions, " +
                 "ew.start_date, ew.end_date, ew.working_status_id, ew.is_sapat FROM hr_employee_work as ew " +
-                "where ew.employee_id = ? and ew.hr_own_id = ?;";
+                "left join hr_employee_work_extra_positions as ep on ep.hr_employee_work_id = ew.id " +
+                "where ew.employee_id = ? and ew.hr_own_id = ? group by ew.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, own_id);
@@ -102,11 +103,11 @@ public class DbEmployeeWork extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(sysSettings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
-            ComboBoxMax cb = edv.createCombobox(result.getInt("ew.position_id"),
-                    myUI.getMessage(SptMessages.MainPosition), null, true);
+            ComboBoxMax cb = edv.createCombobox(0, myUI.getMessage(SptMessages.MainPosition),
+                    null, true);
             item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
-            ComboBoxMax cb3 = edv.createCombobox(result.getInt("ew.extra_position_id"),
-                    myUI.getMessage(SptMessages.ExtraPosition), null, false);
+            ComboBoxMultiselectMax cb3 = edv.createComboboxMulti(
+                    myUI.getMessage(SptMessages.ExtraPositions), false);
             try {
                 DbDefinition dbDef = new DbDefinition();
                 dbDef.connect();
@@ -120,8 +121,10 @@ public class DbEmployeeWork extends BaseDb {
                 logger.catching(e);
             }
             cb.setValue(result.getInt("ew.position_id"));
-            cb3.setValue(result.getInt("ew.extra_position_id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).setValue(cb3);
+            if (result.getString("extra_positions") != null) {
+                cb3.setValue(sysSettings.convertToSet(result.getString("extra_positions")));
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(cb3);
             cb = edv.createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
             try {
                 DbDefinition dbd = new DbDefinition();

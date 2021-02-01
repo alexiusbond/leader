@@ -1175,7 +1175,6 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
     }
 
     private void setMovementsTable() {
-        System.out.println("Set movements table");
         try {
             NATURAL_COL_ORDER_MOVEMENTS = new String[]{sysSettings.button,
                     myUI.getMessage(SptMessages.Remain),
