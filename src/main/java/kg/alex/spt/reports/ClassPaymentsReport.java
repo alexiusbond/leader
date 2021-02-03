@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
@@ -49,7 +49,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
     private HorizontalSplitPanel spltPanel;
     private GridLayout leftGrid;
     private FilterTable classTable;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private ComboBoxMax yearSelect;
     private ComboBoxMultiselectMax educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
@@ -248,7 +248,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new ExcelExport(dataTable, "sheet1");
+                    excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.ClassPayments));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();

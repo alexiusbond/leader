@@ -6,6 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
@@ -55,7 +56,7 @@ public class AccountingDateReport implements Button.ClickListener,
     private DateField fromDateDF, tillDateDF;
     public FormattedTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private SystemSettings sysSettings = new SystemSettings();
     private VerticalLayout rightLayout;
     private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab;
@@ -350,7 +351,7 @@ public class AccountingDateReport implements Button.ClickListener,
                                 if (t.getContainerDataSource().size() != 0) {
                                     String sheet = t.getCaption();
                                     if (excelReport == null) {
-                                        excelReport = new ExcelExport(t, sheet);
+                                        excelReport = new EnhancedFormatExcelExport(t, sheet);
                                     } else {
                                         excelReport.setNextTable(t, sheet);
                                     }

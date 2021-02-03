@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -43,7 +43,7 @@ public class SalariesReport implements Button.ClickListener,
     public FormattedTreeTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
     private SystemSettings sysSettings = new SystemSettings();
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
 
     public SalariesReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
@@ -179,7 +179,7 @@ public class SalariesReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             try {
-                excelReport = new ExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
+                excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");

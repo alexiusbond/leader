@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -48,7 +48,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
     private ComboBoxMultiselectMax educationStatusMCB;
     public FormattedTable dataTable;
     public FilterTable schoolTable, discountsTable;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private SystemSettings sysSettings = new SystemSettings();
 
     public SchoolDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
@@ -265,7 +265,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new ExcelExport(dataTable);
+                    excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SchoolDiscounts));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();

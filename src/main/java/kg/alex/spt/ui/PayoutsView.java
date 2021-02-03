@@ -1,5 +1,6 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.addon.tableexport.ExcelExport;
@@ -79,7 +80,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     private int r_table_counter = 1000;
     private ArrayList<String> delPayoutsIds = new ArrayList<>();
     private int invID;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private double totalAmount = 0.0, oldTotalAmount = 0.0;
 
     public PayoutsView(MyVaadinUI myUI) {
@@ -370,7 +371,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             addPayoutsItem();
         } else if (source == excelBtn) {
             if (payoutsTable.getContainerDataSource().size() != 0) {
-                excelReport = new ExcelExport(payoutsTable, myUI.getMessage(SptMessages.Payouts));
+                excelReport = new EnhancedFormatExcelExport(payoutsTable, myUI.getMessage(SptMessages.Payouts));
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.Payouts) + " (№" + invoiceNumberTF.getValue() + " - " + sysSettings.df.format(dateDF.getValue()) + ")");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();

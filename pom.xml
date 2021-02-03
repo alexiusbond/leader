@@ -118,13 +118,13 @@
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>
-            <version>1.4.0</version>
+            <version>1.7.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-web</artifactId>
-            <version>1.4.0</version>
+            <version>1.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -145,11 +145,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.21</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin.addon</groupId>
-            <artifactId>tableexport-for-vaadin</artifactId>
-            <version>1.6.2</version>
         </dependency>
         <dependency>
             <groupId>org.vaadin.addon</groupId>
@@ -289,7 +284,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=6469ea55-4a96-43b9-b809-31d640d1450f
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=da8ce79d-3bf4-4dd3-bb08-b7ed105b99d7
                     </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>

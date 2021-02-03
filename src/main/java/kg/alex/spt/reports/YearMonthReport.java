@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
@@ -55,7 +55,7 @@ public class YearMonthReport implements Button.ClickListener,
     private FilterTable schoolTable;
     private ComboBoxMax yearSelect;
     private ComboBoxMultiselectMax educationStatusMCB;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private SystemSettings sysSettings = new SystemSettings();
     private String[] NATURAL_COL_ORDER_YEAR;
     private String[] NATURAL_COL_ORDER_MONTH;
@@ -392,7 +392,7 @@ public class YearMonthReport implements Button.ClickListener,
                         Table t = ((Table) rightLay.getComponent(i));
                         if (t.getContainerDataSource().size() != 0) {
                             if (excelReport == null) {
-                                excelReport = new ExcelExport(t, t.getCaption());
+                                excelReport = new EnhancedFormatExcelExport(t, t.getCaption());
                             } else {
                                 excelReport.setNextTable(t, t.getCaption());
                             }

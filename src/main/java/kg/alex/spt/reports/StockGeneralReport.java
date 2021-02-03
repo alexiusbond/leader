@@ -1,7 +1,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -40,7 +40,7 @@ public class StockGeneralReport implements Button.ClickListener,
     private FormattedTreeTable dataTable;
     private FilterTreeTable productsTable;
     private SystemSettings sysSettings = new SystemSettings();
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
 
     public StockGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
@@ -232,7 +232,7 @@ public class StockGeneralReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new ExcelExport(dataTable);
+                    excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.StockGeneralReport) + " ("
                             + operationOG.getContainerProperty(operationOG.getValue(),
                             myUI.getMessage(SptMessages.Name)).getValue() + ") - [" + myUI.getMessage(SptMessages.From).toLowerCase() + " "

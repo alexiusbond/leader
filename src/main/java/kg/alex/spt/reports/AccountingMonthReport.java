@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -55,7 +55,7 @@ public class AccountingMonthReport implements Button.ClickListener,
     public FormattedTreeTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     public FilterTable schoolsTable;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private SystemSettings sysSettings = new SystemSettings();
     private VerticalLayout rightLayout;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -377,7 +377,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                         && !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0
                             && outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new ExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -409,7 +409,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() != 0
                             && outcomesDataTable.getContainerDataSource().size() == 0) {
-                        excelReport = new ExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -437,7 +437,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() == 0
                             && outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new ExcelExport(outcomesDataTable, myUI.getMessage(SptMessages.Outcomes));
+                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(SptMessages.Outcomes));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -445,7 +445,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                     }
                 } else if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new ExcelExport(outcomesDataTable, myUI.getMessage(SptMessages.Outcomes));
+                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(SptMessages.Outcomes));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -453,7 +453,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                     }
                 } else if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new ExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();

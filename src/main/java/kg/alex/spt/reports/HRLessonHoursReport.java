@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -56,7 +56,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
     public FilterTable schoolTable, branchTable, positionTable, extraPositionTable;
     private ComboBoxMultiselectMax workingStatusesMCB;
     private ComboBoxMax yearSelect;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private String[] NATURAL_COL_ORDER;
     private SystemSettings sysSettings = new SystemSettings();
     private Subject currentUser = SecurityUtils.getSubject();
@@ -527,7 +527,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
             try {
                 for (int i = 0; i < vl.getComponentCount(); i += 2) {
                     if (i == 0) {
-                        excelReport = new ExcelExport((Table) vl.getComponent(i + 1), ((Label) vl.getComponent(i)).getValue());
+                        excelReport = new EnhancedFormatExcelExport((Table) vl.getComponent(i + 1), ((Label) vl.getComponent(i)).getValue());
                         excelReport.setReportTitle(((Label) vl.getComponent(i)).getValue());
                         excelReport.setDisplayTotals(false);
 

@@ -1,9 +1,9 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.ui.*;
 import kg.alex.spt.utils.*;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
@@ -64,7 +64,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     private int r_table_counter = 1000;
     private ArrayList<String> delTransferIds = new ArrayList<>();
     private int invID;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private String caption, viewName;
     private int acc_category_type_id, acc_invoice_type_id;
     private SimpleDateFormat df;
@@ -477,9 +477,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         } else if (source == excelBtn) {
             if (transfersTable.getContainerDataSource().size() != 0) {
                 if (caption.length() > 29) {
-                    excelReport = new ExcelExport(transfersTable, caption.substring(0, 29));
+                    excelReport = new EnhancedFormatExcelExport(transfersTable, caption.substring(0, 29));
                 } else {
-                    excelReport = new ExcelExport(transfersTable, caption);
+                    excelReport = new EnhancedFormatExcelExport(transfersTable, caption);
                 }
                 excelReport.setReportTitle(caption + " (№" + invoiceNumberTF.getValue() + " - " + df.format(dateDF.getValue()) + ")");
                 excelReport.setDisplayTotals(true);

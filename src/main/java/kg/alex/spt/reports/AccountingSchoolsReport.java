@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.ui.Button;
@@ -42,7 +42,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
     public FormattedTable dataTable;
     private DateField fromDateDF, tillDateDF;
     public FilterTable schoolTable;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private SystemSettings sysSettings = new SystemSettings();
 
     public AccountingSchoolsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
@@ -184,7 +184,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new ExcelExport(dataTable, myUI.getMessage(SptMessages.SchoolDiscounts));
+                    excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SchoolDiscounts));
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SchoolDiscounts)
                             + "(" + sysSettings.df.format(fromDateDF.getValue()) + " - " + sysSettings.df.format(tillDateDF.getValue()) + ")");
                     excelReport.setDisplayTotals(true);

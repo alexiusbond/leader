@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -50,7 +50,7 @@ public class StatusesReport implements Button.ClickListener,
     public ComboBoxMultiselectMax statusMS;
     public FormattedTable dataTable;
     public FilterTable classTable, schoolsTable;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private SystemSettings sysSettings = new SystemSettings();
     private Subject currentUser = SecurityUtils.getSubject();
 
@@ -266,7 +266,7 @@ public class StatusesReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new ExcelExport(dataTable, "sheet1");
+                    excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.StatusesReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();

@@ -27,6 +27,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -354,7 +356,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
 
     private void createWorkbook() {
         if (excelBtn.isEnabled()) {
-            XSSFWorkbook workbook = new XSSFWorkbook();
+            HSSFWorkbook workbook = new HSSFWorkbook();
             Font fontBoldWht = workbook.createFont();
             fontBoldWht.setColor(IndexedColors.WHITE.getIndex());
             fontBoldWht.setBold(true);
@@ -388,7 +390,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                         }
                     }
                 }
-                XSSFSheet sheet = workbook.createSheet(tab.getCaption());
+                HSSFSheet sheet = workbook.createSheet(tab.getCaption());
 
                 int rowNum;
                 int colNum;
@@ -515,7 +517,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                 }
                 fd = new FileDownloader(new StreamResource(() -> {
                     return new ByteArrayInputStream(baos.toByteArray());
-                }, myUI.getMessage(SptMessages.AccountingBalanceReport) + System.currentTimeMillis() + ".xlsx"));
+                }, myUI.getMessage(SptMessages.AccountingBalanceReport) + System.currentTimeMillis() + ".xls"));
                 fd.extend(excelBtn);
             } catch (FileNotFoundException e) {
                 logger.error(e);

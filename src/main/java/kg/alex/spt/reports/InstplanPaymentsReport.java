@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.FileResource;
@@ -53,7 +53,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
     private Button generateBtn, makePdfBtn, excelBtn;
     private HorizontalSplitPanel spltPanel;
     private GridLayout leftGrid, rightGrid;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private double debt, amount, plan_debt, ttl_payment, kOplate, ttl_left;
     private String discounts;
     private StudInfoPdf st;
@@ -236,14 +236,14 @@ public class InstplanPaymentsReport implements Button.ClickListener,
             try {
                 if (paymentsCkb.getValue() == true && instPlanCkb.getValue() == false) {
                     if (paymentsTable.getContainerDataSource().size() != 0) {
-                        excelReport = new ExcelExport(paymentsTable, "sheet1");
+                        excelReport = new EnhancedFormatExcelExport(paymentsTable, "sheet1");
                         excelReport.setReportTitle(paymentsTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.export();
                     }
                 } else if (paymentsCkb.getValue() == false && instPlanCkb.getValue() == true) {
                     if (installmentTable.getContainerDataSource().size() != 0) {
-                        excelReport = new ExcelExport(installmentTable, "sheet1");
+                        excelReport = new EnhancedFormatExcelExport(installmentTable, "sheet1");
                         excelReport.setReportTitle(installmentTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.export();
@@ -251,7 +251,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
                 } else if (paymentsCkb.getValue() == true && instPlanCkb.getValue() == true) {
                     if (installmentTable.getContainerDataSource().size() != 0
                             && paymentsTable.getContainerDataSource().size() != 0) {
-                        excelReport = new ExcelExport(paymentsTable, "sheet1");
+                        excelReport = new EnhancedFormatExcelExport(paymentsTable, "sheet1");
                         excelReport.setReportTitle(paymentsTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();

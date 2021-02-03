@@ -6,7 +6,7 @@
 package kg.alex.spt.ui;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
@@ -42,7 +42,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
     private MyVaadinUI myUI;
     private VerticalLayout leftLay;
     private FormattedTable dataTable;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private FilterTable classTable;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private IndexedContainer container;
@@ -74,7 +74,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                     dataTable.setColumnCollapsingAllowed(true);
                     dataTable.setColumnCollapsed(sysSettings.button, true);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), true);
-                    excelReport = new ExcelExport(dataTable, "sheet1");
+                    excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.excludeCollapsedColumns();
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.Calls));
                     excelReport.setDisplayTotals(true);

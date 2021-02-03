@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.ExcelExport;
+import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
@@ -49,7 +49,7 @@ public class DiscountsReport implements Button.ClickListener,
     private FormattedTable dataTable;
     private FilterTable classTable, discountsTable;
     private IndexedContainer dataCont;
-    private ExcelExport excelReport;
+    private EnhancedFormatExcelExport excelReport;
     private SystemSettings sysSettings = new SystemSettings();
     private String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
@@ -277,7 +277,7 @@ public class DiscountsReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             if (dataTable.getContainerDataSource().size() != 0) {
-                excelReport = new ExcelExport(dataTable);
+                excelReport = new EnhancedFormatExcelExport(dataTable);
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.DiscountsReport));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
