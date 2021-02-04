@@ -24,7 +24,7 @@ public class EnhancedFormatExcelExport extends ExcelExport {
         Font f;
 
         style = this.getTitleStyle();
-        style.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+        style.setFillForegroundColor(IndexedColors.DARK_GREEN.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         f = workbook.getFontAt(style.getFontIndex());
         f.setFontHeightInPoints((short) 18);
@@ -42,7 +42,7 @@ public class EnhancedFormatExcelExport extends ExcelExport {
         style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
 
         style = this.getColumnHeaderStyle();
-        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        style.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         f = workbook.getFontAt(style.getFontIndex());
         f.setFontHeightInPoints((short) 12);
@@ -60,7 +60,7 @@ public class EnhancedFormatExcelExport extends ExcelExport {
         style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
 
         style = this.getDoubleDataStyle();
-        style.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+        style.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         f = workbook.getFontAt(style.getFontIndex());
         f.setFontHeightInPoints((short) 12);
