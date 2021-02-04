@@ -208,13 +208,11 @@
             <artifactId>vaadin-charts</artifactId>
             <version>3.3.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.vaadin.addons/maskedtextfield -->
         <dependency>
             <groupId>org.vaadin.addons</groupId>
             <artifactId>maskedtextfield</artifactId>
             <version>0.1.6</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-transcoder</artifactId>
