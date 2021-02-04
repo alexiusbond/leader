@@ -43,6 +43,7 @@ public class ExcelExport extends TableExport {
      */
     protected String sheetName;
     protected int rowNum = 0;
+    protected HashMap<Integer, Integer> rowsForGroupping;
 
     /**
      * The title of the "report" of the table contents.
@@ -251,15 +252,16 @@ public class ExcelExport extends TableExport {
 
         // add data rows
         if (isHierarchical()) {
+            rowsForGroupping = new HashMap<>();
             row = addHierarchicalDataRows(sheet, row);
+            Iterator<Integer> iter = rowsForGroupping.keySet().iterator();
+            while (iter.hasNext()) {
+                int key = iter.next();
+                sheet.groupRow(key, rowsForGroupping.get(key));
+                sheet.setRowGroupCollapsed(key, true);
+            }
         } else {
             row = addDataRows(sheet, row);
-
-       /* sheet.groupRow(3, 4);
-        sheet.groupRow(6, 8);
-        sheet.groupRow(10, 27);
-        sheet.groupRow(11, 18);
-        sheet.groupRow(20, 27);*/
         }
 
         // add totals row
@@ -417,6 +419,7 @@ public class ExcelExport extends TableExport {
      * @return the int
      */
     protected int addHierarchicalDataRows(final Sheet sheetToAddTo, final int row) {
+
         final Collection<?> roots;
         int localRow = row;
         roots = ((Container.Hierarchical) getTable().getContainerDataSource()).rootItemIds();
@@ -428,15 +431,6 @@ public class ExcelExport extends TableExport {
         int count = 0;
         for (final Object rootId : roots) {
             count = addDataRowRecursively(sheetToAddTo, rootId, localRow);
-            // for totals purposes, we just want to add rootIds which contain totals
-            // so we store just the totals in a separate sheet.
-            /*if (displayTotals) {
-                addDataRow(hierarchicalTotalsSheet, rootId, localRow);
-            }*/
-            if (count > 1) {
-                sheet.groupRow(localRow + 1, (localRow + count) - 1);
-                sheet.setRowGroupCollapsed(localRow + 1, true);
-            }
             localRow = localRow + count;
         }
         return localRow;
@@ -483,12 +477,27 @@ public class ExcelExport extends TableExport {
             final Collection<?> children =
                     ((Container.Hierarchical) getTable().getContainerDataSource())
                             .getChildren(rootItemId);
+            rowsForGroupping.put(rowNum + 1, countAllChildren(rootItemId) + rowNum);
             for (final Object child : children) {
                 localRow++;
                 numberAdded = numberAdded + addDataRowRecursively(sheetToAddTo, child, localRow);
             }
         }
         return numberAdded;
+    }
+
+    private int countAllChildren(final Object rootItemId) {
+        int count = 0;
+        if (((Container.Hierarchical) getTable().getContainerDataSource()).hasChildren(rootItemId)) {
+            final Collection<?> children =
+                    ((Container.Hierarchical) getTable().getContainerDataSource())
+                            .getChildren(rootItemId);
+            for (final Object child : children) {
+                count = count + countAllChildren(child);
+            }
+            count += children.size();
+        }
+        return count;
     }
 
     /**
@@ -499,9 +508,6 @@ public class ExcelExport extends TableExport {
      * @param row        the row
      */
     protected void addDataRow(final Sheet sheetToAddTo, final Object rootItemId, final int row) {
-        /*System.out.println(row + " ---- " +
-                        ((Container.Hierarchical) getTable().getContainerDataSource())
-                        .getContainerProperty(rootItemId, "Название").getValue());*/
         final Row sheetRow = sheetToAddTo.createRow(++rowNum);
         Property prop;
         Object propId;
