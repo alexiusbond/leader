@@ -119,6 +119,7 @@ public class DbAccTransactions extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int incOrOut, int school_id,
                                     TransactionsView dw, Date from, Date till) throws SQLException {
+        IndexedContainer employeesContainer = null, currenciesContainer = null;
         SystemSettings sysSettings = new SystemSettings();
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, "
@@ -166,17 +167,21 @@ public class DbAccTransactions extends BaseDb {
 
                 item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
                         myUI.getMessage(SptMessages.Category), id, 2, isDisabled, tableName));
-                ComboBoxMax cb = dw.createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, sysSettings.dbEmployee, false, false);
-                try {
-                    DbEmployee dbCon = new DbEmployee();
-                    dbCon.connect();
-                    cb.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0));
-                    dbCon.close();
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
+                ComboBoxMax cb = dw.createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, null, false, false, false);
+                if (employeesContainer == null) {
+                    try {
+                        DbEmployee dbCon = new DbEmployee();
+                        dbCon.connect();
+                        employeesContainer = dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0);
+                        cb.setContainerDataSource(employeesContainer);
+                        dbCon.close();
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                } else {
+                    cb.setContainerDataSource(SystemSettings.copyContainer(employeesContainer));
                 }
-                cb.removeValueChangeListener(dw);
                 cb.setValue(result.getInt("t.from_to_employee_id"));
                 cb.addValueChangeListener(dw);
                 cb.setNullSelectionAllowed(true);
@@ -190,8 +195,24 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(sysSettings.button).setValue(hl);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(result.getTimestamp("t.date_time"), myUI.getMessage(SptMessages.Date), id, isDisabled, tableName));
-            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(dw.createCombobox(result.getInt("t.acc_currency_id"),
-                    myUI.getMessage(SptMessages.Currency), id, sysSettings.dbAcc_currency, isDisabled, true));
+            ComboBoxMax cb = dw.createCombobox(0, myUI.getMessage(SptMessages.Currency), id, null, isDisabled, true, false);
+            if (currenciesContainer == null) {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    currenciesContainer = dbd.exec_for_select(myUI, sysSettings.dbAcc_currency);
+                    cb.setContainerDataSource(currenciesContainer);
+                    dbd.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            } else {
+                cb.setContainerDataSource(SystemSettings.copyContainer(currenciesContainer));
+            }
+            cb.setValue(result.getInt("t.acc_currency_id"));
+            cb.addValueChangeListener(dw);
+            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(dw.createTextfieldDouble(result.getDouble("t.amount"),
                     myUI.getMessage(SptMessages.Amount), id, false, isDisabled, tableName));
             item.getItemProperty(sysSettings.old_amount).setValue(result.getDouble("t.amount"));

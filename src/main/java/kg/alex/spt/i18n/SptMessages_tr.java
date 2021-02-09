@@ -39,6 +39,7 @@ public class SptMessages_tr extends SptMessages {
             {Number, "Номер"},
             {Status, "Статус"},
             {NotifWrongValue, "Неверное значение!"},
+            {NotifDateRageExceeds, "Диапозон дат не может привышать 10 дней!"},
             {NotifNothingIsSelected, "Ничего не выбрано!"},
             {NotifWrongValueCounter, "Выберите одного ответственного!"},
             {NotifWrongPercentValue, "Неверное процентное значение!"},

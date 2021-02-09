@@ -5,6 +5,8 @@
  */
 package kg.alex.spt;
 
+import com.vaadin.data.Container;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
@@ -363,6 +365,23 @@ public class SystemSettings implements Serializable {
             }
         }
         return builder.toString();
+    }
+
+    public static IndexedContainer copyContainer(Container source) {
+        IndexedContainer cont = new IndexedContainer();
+
+        for (Object prop : source.getContainerPropertyIds())
+            cont.addContainerProperty(prop, source.getType(prop), null);
+
+        for (Object id : source.getItemIds()) {
+            Item sourceItem = source.getItem(id);
+            Item destItem = cont.addItem(id);
+            for (Object prop : source.getContainerPropertyIds()) {
+                Object value = sourceItem.getItemProperty(prop).getValue();
+                destItem.getItemProperty(prop).setValue(value);
+            }
+        }
+        return cont;
     }
 
     private static final DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {

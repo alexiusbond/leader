@@ -40,6 +40,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Reasons = generateId();
     public static final String ClassCaption = generateId();
     public static final String NotifWrongValue = generateId();
+    public static final String NotifDateRageExceeds = generateId();
     public static final String NotifNothingIsSelected = generateId();
     public static final String NotifWrongValueCounter = generateId();
     public static final String NotifWrongPercentValue = generateId();

@@ -22,6 +22,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
@@ -47,7 +48,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
 
     static final Logger logger = LogManager.getLogger(TransactionsView.class);
     private MyVaadinUI myUI;
-    private Button plusButton, saveButton;
+    private Button plusButton, saveButton, searchButton;
     private OptionGroup currencySettingsOG;
     private TextField currencyTF;
     private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab, currencyLab;
@@ -96,8 +97,6 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setDateFormat(sysSettings.datePattern);
         fromDateDF.setValue(new Date());
-        fromDateDF.setRangeEnd(fromDateDF.getValue());
-        fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField();
         tillDateDF.setDescription(myUI.getMessage(SptMessages.TillDate));
@@ -105,12 +104,18 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setDateFormat(sysSettings.datePattern);
         tillDateDF.setValue(new Date());
-        tillDateDF.setRangeEnd(tillDateDF.getValue());
-        tillDateDF.setRangeStart(fromDateDF.getValue());
-        tillDateDF.addValueChangeListener(this);
+
+        searchButton = new Button();
+        searchButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        searchButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        searchButton.setIcon(FontAwesome.SEARCH);
+        searchButton.addClickListener(this);
 
         hl.addComponent(fromDateDF);
         hl.addComponent(tillDateDF);
+        hl.addComponent(searchButton);
+        hl.setExpandRatio(fromDateDF, 1);
+        hl.setExpandRatio(tillDateDF, 1);
 
         incomeTtlLab = new Label();
         incomeTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -232,7 +237,19 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source == plusButton) {
+        if (source == searchButton) {
+            if (fromDateDF.getValue() != null && tillDateDF.getValue() != null) {
+                long diff = tillDateDF.getValue().getTime() - fromDateDF.getValue().getTime();
+                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 10) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifDateRageExceeds), Notification.Type.WARNING_MESSAGE);
+                } else {
+                    setIncomesTable();
+                    setExpensesTable();
+                    getTotals();
+                    recount();
+                }
+            }
+        } else if (source == plusButton) {
             if (accordition.getSelectedTab() == incomesTable) {
                 addIncomesItem();
             } else {
@@ -333,15 +350,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        if (property == fromDateDF || property == tillDateDF) {
-            if (fromDateDF.getValue() != null && tillDateDF.getValue() != null) {
-                tillDateDF.setRangeStart(fromDateDF.getValue());
-                setIncomesTable();
-                setExpensesTable();
-                getTotals();
-                recount();
-            }
-        } else if (property == currencySettingsOG) {
+        if (property == currencySettingsOG) {
             if (currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Mannual))) {
                 currencyHl.setEnabled(true);
             } else {
@@ -575,7 +584,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     }
 
     public ComboBoxMax createCombobox(int value, String description, String itemId,
-                                      String dbTable, boolean isDisabled, boolean isRequired) {
+                                      String dbTable, boolean isDisabled, boolean isRequired, boolean isValueChangeLsitener) {
         ComboBoxMax cb = new ComboBoxMax();
 
         cb.setDescription(description);
@@ -590,20 +599,23 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         }
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
         cb.setFilteringMode(FilteringMode.CONTAINS);
-        try {
-            DbDefinition dbd = new DbDefinition();
-            dbd.connect();
-            cb.setContainerDataSource(dbd.exec_for_select(myUI, dbTable));
-            dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        if (dbTable != null) {
+            try {
+                DbDefinition dbd = new DbDefinition();
+                dbd.connect();
+                cb.setContainerDataSource(dbd.exec_for_select(myUI, dbTable));
+                dbd.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         }
         cb.setNullSelectionAllowed(false);
         cb.setData(itemId);
         cb.setValue(value);
-        cb.addValueChangeListener(this);
-
+        if (isValueChangeLsitener) {
+            cb.addValueChangeListener(this);
+        }
         return cb;
     }
 
@@ -632,7 +644,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         cb.setNullSelectionAllowed(false);
         cb.setData(itemId);
         cb.setValue(value);
-        cb.addValueChangeListener(this);
+            cb.addValueChangeListener(this);
         cb.setId(tableName);
         return cb;
     }
@@ -758,8 +770,9 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
                 createComboboxCategory(0, myUI.getMessage(SptMessages.Category), id, 1, false,
                         myUI.getMessage(SptMessages.Incomes)));
-        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(createCombobox(2, myUI.getMessage(SptMessages.Currency), id,
-                sysSettings.dbAcc_currency, false, true));
+        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(
+                createCombobox(2, myUI.getMessage(SptMessages.Currency), id,
+                sysSettings.dbAcc_currency, false, true, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(null, myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -784,9 +797,10 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                 createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Incomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
-                createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 1, false, myUI.getMessage(SptMessages.Incomes)));
+                createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 1,
+                        false, myUI.getMessage(SptMessages.Incomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(createCombobox(t.getCurrency_id(), myUI.getMessage(SptMessages.Currency), id,
-                sysSettings.dbAcc_currency, false, true));
+                sysSettings.dbAcc_currency, false, true, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(t.getCurrency_rate(),
                 myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
@@ -816,9 +830,10 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                 createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
-                createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 2, false, myUI.getMessage(SptMessages.Outcomes)));
+                createComboboxCategory(t.getCategory_id(), myUI.getMessage(SptMessages.Category), id, 2,
+                        false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(createCombobox(t.getCurrency_id(), myUI.getMessage(SptMessages.Currency), id,
-                sysSettings.dbAcc_currency, false, true));
+                sysSettings.dbAcc_currency, false, true, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(t.getCurrency_rate(),
                 myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
@@ -830,7 +845,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         item.getItemProperty(sysSettings.old_currency).setValue(t.getCurrency_id());
         item.getItemProperty(sysSettings.old_date).setValue(t.getDate());
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfieldNote(t.getNote(), myUI.getMessage(SptMessages.Note), id, false));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, sysSettings.dbEmployee, false, false);
+        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, sysSettings.dbEmployee,
+                false, false, true);
         try {
             DbEmployee dbCon = new DbEmployee();
             dbCon.connect();
@@ -865,15 +881,17 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                 createDateField(new Date(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
-                createComboboxCategory(0, myUI.getMessage(SptMessages.Category), id, 2, false, myUI.getMessage(SptMessages.Outcomes)));
+                createComboboxCategory(0, myUI.getMessage(SptMessages.Category), id, 2,
+                        false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(
-                createCombobox(2, myUI.getMessage(SptMessages.Currency), id, sysSettings.dbAcc_currency, false, true));
+                createCombobox(2, myUI.getMessage(SptMessages.Currency), id, sysSettings.dbAcc_currency, false, true, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(null, myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate), null));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                 createTextfieldDouble(null, myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Outcomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfieldNote(null, myUI.getMessage(SptMessages.Note), id, false));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, sysSettings.dbEmployee, false, false);
+        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, sysSettings.dbEmployee,
+                false, false, true);
         try {
             DbEmployee dbCon = new DbEmployee();
             dbCon.connect();
