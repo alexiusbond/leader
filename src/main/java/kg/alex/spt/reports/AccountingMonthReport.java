@@ -381,31 +381,30 @@ public class AccountingMonthReport implements Button.ClickListener,
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
-                        Iterator school_iter = null;
-                        Calendar current = Calendar.getInstance();
-                        current.setTime(fromDate.getTime());
                         int i = 1;
-                        while (current.before(tillDate)) {
-                            school_iter = ((Set<?>) schoolsTable.getValue()).iterator();
-                            while (school_iter.hasNext()) {
-                                Object nextSchool = school_iter.next();
-                                excelReport.getTotalsRow().getCell(i).setCellValue(
-                                        incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
-                                                + sysSettings.ymdf.format(current.getTime())));
-                                i++;
-                            }
-                            if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
-                                excelReport.getTotalsRow().getCell(i).setCellValue(
-                                        incomesDataTable.getColumnFooter(sysSettings.ymdf.format(current.getTime())));
-                                i++;
-                            }
-                            current.add(Calendar.MONTH, 1);
+                        Iterator iter = incomesDataTable.getContainerPropertyIds().iterator();
+                        if (iter.hasNext()) {
+                            iter.next();
+                        }
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            excelReport.getTotalsRow().getCell(i).setCellValue(incomesDataTable.getColumnFooter(next));
+                            i++;
                         }
                         excelReport.setNextTable(outcomesDataTable, myUI.getMessage(SptMessages.Outcomes));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
+                        i = 1;
+                        iter = outcomesDataTable.getContainerPropertyIds().iterator();
+                        if (iter.hasNext()) {
+                            iter.next();
+                        }
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            excelReport.getTotalsRow().getCell(i).setCellValue(outcomesDataTable.getColumnFooter(next));
+                            i++;
+                        }
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() != 0
                             && outcomesDataTable.getContainerDataSource().size() == 0) {
@@ -413,26 +412,15 @@ public class AccountingMonthReport implements Button.ClickListener,
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
-                        Iterator school_iter = null;
-                        Calendar current = Calendar.getInstance();
-                        current.setTime(fromDate.getTime());
                         int i = 1;
-                        while (current.before(tillDate)) {
-                            school_iter = ((Set<?>) schoolsTable.getValue()).iterator();
-                            while (school_iter.hasNext()) {
-                                Object nextSchool = school_iter.next();
-                                excelReport.getTotalsRow().getCell(i).setCellValue(
-                                        incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
-                                                + sysSettings.ymdf.format(current.getTime())));
-                                i++;
-                            }
-                            if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
-                                excelReport.getTotalsRow().getCell(i).setCellValue(
-                                        incomesDataTable.getColumnFooter(sysSettings.ymdf.format(current.getTime())));
-                                i++;
-                            }
-                            current.add(Calendar.MONTH, 1);
+                        Iterator iter = incomesDataTable.getContainerPropertyIds().iterator();
+                        if (iter.hasNext()) {
+                            iter.next();
+                        }
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            excelReport.getTotalsRow().getCell(i).setCellValue(incomesDataTable.getColumnFooter(next));
+                            i++;
                         }
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() == 0
@@ -441,6 +429,16 @@ public class AccountingMonthReport implements Button.ClickListener,
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
+                        int i = 1;
+                        Iterator iter = outcomesDataTable.getContainerPropertyIds().iterator();
+                        if (iter.hasNext()) {
+                            iter.next();
+                        }
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            excelReport.getTotalsRow().getCell(i).setCellValue(outcomesDataTable.getColumnFooter(next));
+                            i++;
+                        }
                         excelReport.sendConverted();
                     }
                 } else if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
@@ -449,6 +447,16 @@ public class AccountingMonthReport implements Button.ClickListener,
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
+                        int i = 1;
+                        Iterator iter = outcomesDataTable.getContainerPropertyIds().iterator();
+                        if (iter.hasNext()) {
+                            iter.next();
+                        }
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            excelReport.getTotalsRow().getCell(i).setCellValue(outcomesDataTable.getColumnFooter(next));
+                            i++;
+                        }
                         excelReport.sendConverted();
                     }
                 } else if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
@@ -457,26 +465,15 @@ public class AccountingMonthReport implements Button.ClickListener,
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
-                        Iterator school_iter = null;
-                        Calendar current = Calendar.getInstance();
-                        current.setTime(fromDate.getTime());
                         int i = 1;
-                        while (current.before(tillDate)) {
-                            school_iter = ((Set<?>) schoolsTable.getValue()).iterator();
-                            while (school_iter.hasNext()) {
-                                Object nextSchool = school_iter.next();
-                                excelReport.getTotalsRow().getCell(i).setCellValue(
-                                        incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
-                                                + sysSettings.ymdf.format(current.getTime())));
-                                i++;
-                            }
-                            if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
-                                excelReport.getTotalsRow().getCell(i).setCellValue(
-                                        incomesDataTable.getColumnFooter(sysSettings.ymdf.format(current.getTime())));
-                                i++;
-                            }
-                            current.add(Calendar.MONTH, 1);
+                        Iterator iter = incomesDataTable.getContainerPropertyIds().iterator();
+                        if (iter.hasNext()) {
+                            iter.next();
+                        }
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            excelReport.getTotalsRow().getCell(i).setCellValue(incomesDataTable.getColumnFooter(next));
+                            i++;
                         }
                         excelReport.sendConverted();
                     }

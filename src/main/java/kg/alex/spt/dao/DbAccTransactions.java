@@ -393,7 +393,7 @@ public class DbAccTransactions extends BaseDb {
                 + "WHERE cat.id IN ("
                 + sysSettings.convertCollectionToStr(selectedIds)
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
-                + "AND cat.activity_status_id = 2 AND tr.school_id = ? "
+                + "AND tr.school_id = ? "
                 + "GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time) ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
@@ -478,7 +478,7 @@ public class DbAccTransactions extends BaseDb {
                 + "WHERE cat.id IN ("
                 + sysSettings.convertCollectionToStr(selectedCategoryIds)
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
-                + "AND cat.activity_status_id = 2 AND tr.school_id IN ("
+                + "AND tr.school_id IN ("
                 + sysSettings.convertCollectionToStr(selectedSchoolIds)
                 + ") GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);

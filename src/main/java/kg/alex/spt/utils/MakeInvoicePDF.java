@@ -150,7 +150,8 @@ public class MakeInvoicePDF {
                     sumPar.add(new Chunk("Сумма цифрами: ", bold_font));
 
 //                    sumPar.add(new Chunk(student.getAmount() + " USD", underlined_font));
-                    sumPar.add(new Chunk(Math.round(student.getAmount() * kurs) + " сом", underlined_font));
+                    sumPar.add(new Chunk(Math.round(student.getAmount() * kurs) + " сом (" +
+                            student.getAmount() + " USD)", underlined_font));
 
                     cell = new PdfPCell(sumPar);
                     cell.setColspan(2);
