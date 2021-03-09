@@ -115,7 +115,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String SchoolModification = generateId();
     public static final String StudentDefiniton = generateId();
     public static final String ImportStudentsFromExcel = generateId();
-    public static final String MessagesDefinition = generateId();
+    public static final String SendDiscountOrderMessage = generateId();
     public static final String AccessoriesDefinition = generateId();
     public static final String Value = generateId();
     public static final String Amount = generateId();

@@ -24,40 +24,8 @@ import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.dao.DbStudentOrder;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.ui.AccessoriesDefinitionView;
-import kg.alex.spt.ui.AccountingReportsView;
-import kg.alex.spt.ui.SettingsView;
-import kg.alex.spt.ui.BackupView;
-import kg.alex.spt.ui.CallsView;
-import kg.alex.spt.ui.ChangeUserData;
-import kg.alex.spt.ui.ClassNameDefinitionView;
+import kg.alex.spt.ui.*;
 import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.ui.ContractDefintionView;
-import kg.alex.spt.ui.DefinitionView;
-import kg.alex.spt.ui.DiscountDefinitionView;
-import kg.alex.spt.ui.EmployeeDefinitionView;
-import kg.alex.spt.ui.EmployeeTransferView;
-import kg.alex.spt.ui.HRReportsView;
-import kg.alex.spt.ui.HomePageView;
-import kg.alex.spt.ui.ImportFromExcelView;
-import kg.alex.spt.ui.AccCategoriesDefinitionView;
-import kg.alex.spt.ui.TransfersView;
-import kg.alex.spt.ui.IssueOrderView;
-import kg.alex.spt.ui.LeavingReasonsDefinitionView;
-import kg.alex.spt.ui.LessonAssessmentView;
-import kg.alex.spt.ui.MessagesView;
-import kg.alex.spt.ui.PayoutsView;
-import kg.alex.spt.ui.PositionDefinitionView;
-import kg.alex.spt.ui.ReportsView;
-import kg.alex.spt.ui.SchoolDefinitionView;
-import kg.alex.spt.ui.SchoolModificationView;
-import kg.alex.spt.ui.StockDefinitionView;
-import kg.alex.spt.ui.StockIncomeView;
-import kg.alex.spt.ui.StockOutcomeView;
-import kg.alex.spt.ui.StockReportsView;
-import kg.alex.spt.ui.StudentDefinitionView;
-import kg.alex.spt.ui.TransactionsView;
-import kg.alex.spt.ui.YearDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -459,8 +427,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new IssueOrderView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ImportStudentsFromExcel))) {
                     verticalPanel.setSecondComponent(new ImportFromExcelView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.MessagesDefinition))) {
-                    verticalPanel.setSecondComponent(new MessagesView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendDiscountOrderMessage))) {
+                    verticalPanel.setSecondComponent(new SendDiscountOrderView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Reports))) {
                     verticalPanel.setSecondComponent(new ReportsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingReports))) {
@@ -665,9 +633,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals(((String) myUI.getMessage(
                     SptMessages.HRReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HRReportsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
-                    SptMessages.MessagesDefinition)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new MessagesView(myUI));
             } else if (header.getValue().equals(((String) myUI.getMessage(
                     SptMessages.ImportStudentsFromExcel)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ImportFromExcelView(myUI));

@@ -43,8 +43,8 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
     private Label foodLab, stationeryLab, buildingMaterialsLab, washingMaterialsLab, otherProductsLab;
     private ComboBoxMax initPayCb, currCb, prevCb, futrCb, outcomesCb, earlyPayCb, salaryCb, localSalaryCb;
     private ComboBoxMax foodCb, stationeryCb, buildingMaterialsCb, washingMaterialsCb, otherProductsCb;
-    private Label adminLab, directorLab, accountentLab, supervisorLab, hrLab, supplyManagerLab, warehouseManagerLab;
-    private ComboBoxMax adminCb, directorCb, accountentCb, supervisorCb, hrCb, supplyManagerCb, warehouseManagerCb;
+    private Label adminLab, directorLab, accountentLab, supervisorLab, hrLab, supplyManagerLab, warehouseManagerLab, sapat_secretaryLab;
+    private ComboBoxMax adminCb, directorCb, accountentCb, supervisorCb, hrCb, supplyManagerCb, warehouseManagerCb, sapat_secretaryCb;
     private Label sebatExamLab;
     private ComboBoxMax sebatExamCb;
     private SystemSettings sysSettings = new SystemSettings();
@@ -367,6 +367,11 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         warehouseManagerLab.setValue(positionsContainer.getContainerProperty(100,
                 myUI.getMessage(SptMessages.Name)).getValue().toString());
 
+        sapat_secretaryLab = new Label();
+        sapat_secretaryLab.setSizeUndefined();
+        sapat_secretaryLab.setValue(positionsContainer.getContainerProperty(115,
+                myUI.getMessage(SptMessages.Name)).getValue().toString());
+
         directorLab = new Label();
         directorLab.setSizeUndefined();
         directorLab.setValue(positionsContainer.getContainerProperty(1,
@@ -379,7 +384,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
 
         supervisorLab = new Label();
         supervisorLab.setSizeUndefined();
-        supervisorLab.setValue(positionsContainer.getContainerProperty(7,
+        supervisorLab.setValue(positionsContainer.getContainerProperty(21,
                 myUI.getMessage(SptMessages.Name)).getValue().toString());
 
         adminCb = new ComboBoxMax();
@@ -422,6 +427,16 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         warehouseManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
         warehouseManagerCb.setFilteringMode(FilteringMode.CONTAINS);
 
+        sapat_secretaryCb = new ComboBoxMax();
+        sapat_secretaryCb.setNullSelectionAllowed(false);
+        sapat_secretaryCb.setRequired(true);
+        sapat_secretaryCb.setData(115);
+        sapat_secretaryCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        sapat_secretaryCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        sapat_secretaryCb.setWidth("100%");
+        sapat_secretaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        sapat_secretaryCb.setFilteringMode(FilteringMode.CONTAINS);
+
         directorCb = new ComboBoxMax();
         directorCb.setNullSelectionAllowed(false);
         directorCb.setRequired(true);
@@ -445,7 +460,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supervisorCb = new ComboBoxMax();
         supervisorCb.setNullSelectionAllowed(false);
         supervisorCb.setRequired(true);
-        supervisorCb.setData(7);
+        supervisorCb.setData(21);
         supervisorCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         supervisorCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         supervisorCb.setWidth("100%");
@@ -479,6 +494,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
             hrCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
             supplyManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
             warehouseManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
+            sapat_secretaryCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
             directorCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
             accountentCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
             supervisorCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
@@ -507,6 +523,8 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supplyManagerCb.setValue(positionsContainer.getContainerProperty((Integer) supplyManagerCb.getData(),
                 sysSettings.position_id).getValue());
         warehouseManagerCb.setValue(positionsContainer.getContainerProperty((Integer) warehouseManagerCb.getData(),
+                sysSettings.position_id).getValue());
+        sapat_secretaryCb.setValue(positionsContainer.getContainerProperty((Integer) sapat_secretaryCb.getData(),
                 sysSettings.position_id).getValue());
         directorCb.setValue(positionsContainer.getContainerProperty((Integer) directorCb.getData(),
                 sysSettings.position_id).getValue());
@@ -564,9 +582,11 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         addComponent(supervisorCb, 3, 6);
         addComponent(warehouseManagerLab, 2, 7);
         addComponent(warehouseManagerCb, 3, 7);
-        addComponent(captionExams, 2, 8, 3, 8);
-        addComponent(sebatExamLab, 2, 9);
-        addComponent(sebatExamCb, 3, 9);
+        addComponent(sapat_secretaryLab, 2, 8);
+        addComponent(sapat_secretaryCb, 3, 8);
+        addComponent(captionExams, 2, 9, 3, 9);
+        addComponent(sebatExamLab, 2, 10);
+        addComponent(sebatExamCb, 3, 10);
         addComponent(saveBtn, 0, 15, 3, 15);
 
         setComponentAlignment(initPayLab, Alignment.BOTTOM_LEFT);
@@ -586,6 +606,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         setComponentAlignment(hrLab, Alignment.BOTTOM_LEFT);
         setComponentAlignment(supplyManagerLab, Alignment.BOTTOM_LEFT);
         setComponentAlignment(warehouseManagerLab, Alignment.BOTTOM_LEFT);
+        setComponentAlignment(sapat_secretaryLab, Alignment.BOTTOM_LEFT);
         setComponentAlignment(directorLab, Alignment.BOTTOM_LEFT);
         setComponentAlignment(accountentLab, Alignment.BOTTOM_LEFT);
         setComponentAlignment(supervisorLab, Alignment.BOTTOM_LEFT);
@@ -634,6 +655,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
                     dbp.exec_update((Integer) hrCb.getValue(), (Integer) hrCb.getData());
                     dbp.exec_update((Integer) supplyManagerCb.getValue(), (Integer) supplyManagerCb.getData());
                     dbp.exec_update((Integer) warehouseManagerCb.getValue(), (Integer) warehouseManagerCb.getData());
+                    dbp.exec_update((Integer) sapat_secretaryCb.getValue(), (Integer) sapat_secretaryCb.getData());
                     dbp.close();
 
                     DbExam dbe = new DbExam();

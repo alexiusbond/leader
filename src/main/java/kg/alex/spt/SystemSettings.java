@@ -159,6 +159,7 @@ public class SystemSettings implements Serializable {
     public final String dbStudentOrders = "student_orders";
     public static final String rnAdmin = "admin";
     public static final String rnHr = "hr";
+    public static final String rnSapatSecretary = "sapat_secretary";
     public final String cnAccessoriesDefinitionView = "AccessoriesDefinitionView";
     public final String cnIssueOrderView = "IssueOrderView";
     public final String cnClassNameDefinitionView = "ClassNameDefinitionView";

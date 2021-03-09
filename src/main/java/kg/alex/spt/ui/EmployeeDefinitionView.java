@@ -73,7 +73,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
-import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
 
@@ -2386,12 +2385,17 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
                                     roleName = SystemSettings.rnHr;
+                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 115
+                                        || (extra_position_ids != null && extra_position_ids.contains("115"))) {
+                                    roleName = SystemSettings.rnSapatSecretary;
                                 }
                                 insertloginRoleName(loginTF.getValue(), roleName);
                                 if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
                                         && (extra_position_ids == null || !extra_position_ids.contains("5"))
                                         && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
                                         && (extra_position_ids == null || !extra_position_ids.contains("25"))
+                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 115
+                                        && (extra_position_ids == null || !extra_position_ids.contains("115"))
                                         && mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
                                         myUI.getMessage(SptMessages.Permissions)).getValue() != null) {
                                     insertPermissions(loginTF.getValue(),
@@ -2499,7 +2503,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
                                             && (extra_position_ids == null || !extra_position_ids.contains("5"))
                                             && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
-                                            && (extra_position_ids == null || !extra_position_ids.contains("25"))) {
+                                            && (extra_position_ids == null || !extra_position_ids.contains("25"))
+                                            && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 115
+                                            && (extra_position_ids == null || !extra_position_ids.contains("115"))) {
                                         insertPermissions(loginTF.getValue());
                                     }
                                     setLessonsTable();
@@ -2531,12 +2537,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
                                     roleName = SystemSettings.rnHr;
                                     dbe.exec_delete_perm(oldLogin);
+                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 115
+                                        || (extra_position_ids != null && extra_position_ids.contains("115"))) {
+                                    roleName = SystemSettings.rnSapatSecretary;
+                                    dbe.exec_delete_perm(oldLogin);
                                 }
                                 dbe.exec_update_role(oldLogin, loginTF.getValue(), roleName);
                                 if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
                                         && (extra_position_ids == null || !extra_position_ids.contains("5"))
                                         && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
                                         && (extra_position_ids == null || !extra_position_ids.contains("25"))
+                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 115
+                                        && (extra_position_ids == null || !extra_position_ids.contains("115"))
                                         && !oldLogin.equals(loginTF.getValue())) {
                                     dbe.exec_update_perm(oldLogin, loginTF.getValue());
                                 }

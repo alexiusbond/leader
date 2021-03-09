@@ -3143,7 +3143,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         discountsTable = new FormattedTable();
         discountsTable.setSizeFull();
         discountsTable.setSelectable(false);
-        discountsTable.setCaption(myUI.getMessage(SptMessages.Discount));
+        discountsTable.setCaption(myUI.getMessage(SptMessages.Discounts));
         discountsTable.setStyleName(ValoTheme.TABLE_SMALL);
         discountsTable.setNullSelectionAllowed(false);
 
