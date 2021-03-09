@@ -17,7 +17,8 @@ public class StudInfoPdf implements Serializable {
     private String stud_middle_name;
     private String stud_class_name;
     private String scl_name_ru;
-    private String scl_name;
+    private String scl_name_en;
+    private String scl_name_kg;
     private int scl_contr_type;
     private String scl_year_name;
     private String scl_city;
@@ -384,15 +385,15 @@ public class StudInfoPdf implements Serializable {
     /**
      * @return the scl_name
      */
-    public String getScl_name() {
-        return scl_name;
+    public String getScl_name_kg() {
+        return scl_name_kg;
     }
 
     /**
-     * @param scl_name the scl_name to set
+     * @param scl_name_kg the scl_name to set
      */
-    public void setScl_name(String scl_name) {
-        this.scl_name = scl_name;
+    public void setScl_name_kg(String scl_name_kg) {
+        this.scl_name_kg = scl_name_kg;
     }
 
     /**

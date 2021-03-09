@@ -1,4 +1,4 @@
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;

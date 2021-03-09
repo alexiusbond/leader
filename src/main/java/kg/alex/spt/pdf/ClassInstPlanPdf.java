@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -19,7 +19,6 @@ import com.vaadin.server.StreamResource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
@@ -29,9 +28,9 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ClassCallsPdf {
+public class ClassInstPlanPdf {
 
-    static final Logger logger = LogManager.getLogger(ClassCallsPdf.class);
+    static final Logger logger = LogManager.getLogger(ClassInstPlanPdf.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
@@ -41,8 +40,8 @@ public class ClassCallsPdf {
     private Date fromDate, tillDate;
     SystemSettings sysSettings = new SystemSettings();
 
-    public ClassCallsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
-            final Date fDate, final Date tDate, final StudInfoPdf st, final int total) {
+    public ClassInstPlanPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
+            final Date fDate, final Date tDate, final StudInfoPdf st, final double ttl_plan) {
         this.fromDate = fDate;
         this.tillDate = tDate;
         source1 = new StreamResource.StreamSource() {
@@ -88,7 +87,7 @@ public class ClassCallsPdf {
                     Tdate.addCell(new Phrase("Дата: " + sysSettings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.CallsReport) + ": "
+                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassInstallementPlan) + ": "
                             + year + " (" + sysSettings.df.format(fromDate) + " - " + sysSettings.df.format(tillDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
@@ -96,19 +95,18 @@ public class ClassCallsPdf {
                     document.add(new Paragraph(24, " "));
 
                     //installment plan table
-                    float[] Tplan_colsWidth = {0.1f, 0.4f, 0.4f, 0.17f, 0.4f, 0.4f, 0.4f};
-                    PdfPTable infoTable = new PdfPTable(7);
-                    infoTable.setWidthPercentage(90f);
-                    infoTable.setWidths(Tplan_colsWidth);
-                    infoTable.getDefaultCell().
+                    float[] Tplan_colsWidth = {1f, 4f, 4f, 4f, 4f, 4f};
+                    PdfPTable Tplan = new PdfPTable(6);
+                    Tplan.setWidthPercentage(90f);
+                    Tplan.setWidths(Tplan_colsWidth);
+                    Tplan.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
-                    infoTable.addCell(new Phrase(" №", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Firstname), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Surname), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Note), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.WhoCalled), ordFontBold));
+                    Tplan.addCell(new Phrase(" №", ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Firstname), ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Surname), ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
 
                     Iterator iter = planCont.getItemIds().iterator();
                     int i = 0;
@@ -117,31 +115,31 @@ public class ClassCallsPdf {
                     }
                     while (iter.hasNext()) {
                         Object next = iter.next();
-                        infoTable.addCell(new Phrase(i + "", tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        Tplan.addCell(new Phrase(i + "", tableFont));
+                        Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Firstname)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Surname)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Note)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.WhoCalled)).getValue().toString(), tableFont));
+                        Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                        Tplan.addCell(new Phrase(sysSettings.dFormat.format(
+                                (Double) planCont.getContainerProperty(next,
+                                        myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
+                        Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;
                     }
-                    infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
-                            + total, ordFontBold));
+                    Tplan.addCell(new Phrase(" ", ordFontBold));
+                    Tplan.addCell(new Phrase(" ", ordFontBold));
+                    Tplan.addCell(new Phrase(" ", ordFontBold));
+                    Tplan.addCell(new Phrase(" ", ordFontBold));
+                    Tplan.addCell(new Phrase(" ", ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
+                            + sysSettings.dFormat.format(ttl_plan), ordFontBold));
 
-                    document.add(infoTable);
+                    document.add(Tplan);
 
                     document.add(new Paragraph(12, " "));
                     float[] T2_colsWidth = {2f, 2f};
@@ -151,10 +149,10 @@ public class ClassCallsPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
+                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
-                    T2.addCell("");
+                    T2.addCell(new Phrase(st.getScl_accountent_fullname(), ordFont));
                     T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));
-                    T2.addCell("");
                     document.add(T2);
 
                 } catch (Exception e) {

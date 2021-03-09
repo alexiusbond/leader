@@ -58,7 +58,7 @@ public class MyVaadinUI extends UI {
     protected void init(VaadinRequest request) {
         r = request;
 //        i18nBundle = ResourceBundle.getBundle(SptMessages.class.getName(), this.getLocale());
-        i18nBundle = ResourceBundle.getBundle(SptMessages.class.getName(), new Locale("en"));
+        i18nBundle = ResourceBundle.getBundle(SptMessages.class.getName(), new Locale("ru"));
 
         getPage().setTitle(i18nBundle.getString(SptMessages.AppTitle));
 

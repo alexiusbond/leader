@@ -1,4 +1,4 @@
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
@@ -26,9 +26,9 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ContractSchoolPdfKg {
+public class ContractLisePdfKg {
 
-    static final Logger logger = LogManager.getLogger(ContractSchoolPdfKg.class);
+    static final Logger logger = LogManager.getLogger(ContractLisePdfRu.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
@@ -43,7 +43,7 @@ public class ContractSchoolPdfKg {
     private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
-    public ContractSchoolPdfKg(final MyVaadinUI ui, StudInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractLisePdfKg(final MyVaadinUI ui, StudInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.student = st_info;
 
@@ -107,19 +107,20 @@ public class ContractSchoolPdfKg {
                     document.add(Tdate);
                     document.add(new Paragraph(10, " "));
 
+                    Decliner dcl = new Decliner();
+
                     Paragraph paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
                     paragraph.setIndentationLeft(30);
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("Уставдын негизинде ишмердүүлүгүн жүргүзгөн ", ordFont));                                 
-                    paragraph.add(new Phrase("“" + student.getScl_name(), ordBoldFont));   
-                    paragraph.add(new Phrase(" (мындан ары “Мектеп” деп белгиленет) атынан директору ", ordFont));    
+                    paragraph.add(new Phrase("Уставдын негизинде ишмердүүлүгүн жүргүзгөн “" + student.getScl_name_ru()
+                            + "” билим берүү мекемесинин (мындан ары “Лицей” деп белгиленет) атынан директору ", ordFont));
                     paragraph.add(new Phrase(student.getScl_dir_f_name(), ordBoldFont));
                     paragraph.add(new Phrase(" биринчи тараптан жана ", ordFont));
                     paragraph.add(new Phrase(student.getRel_fullname(), ordBoldFont));
-                    paragraph.add(new Phrase(" окуучунун ата-энеси (мындан ары “Ата-эне” деп белгиленет) экинчи тараптан ", ordFont));
+                    paragraph.add(new Phrase(" окуучунун ата-энеси (мындан ары“Ата-эне” деп белгиленет) экинчи тараптан ", ordFont));
                     String fullname = student.getStud_sur_name() + " " + student.getStud_name();
                     if (!student.getStud_middle_name().equals("")) {
                         fullname = fullname + " " + student.getStud_middle_name();
@@ -144,9 +145,9 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("1.1. Окуучунун окутуу процессин жана тамактануусун уюштуруу, ", ordFont));
+                    paragraph.add(new Phrase("1.1. Окуучунун толук пансиондук шарттарына ылайык, окутуу процессин, тамактануу жана жатакана менен камсыз болууну уюштуруу, ", ordFont));
                     paragraph.add(new Phrase(student.getPeriod_kg(), ordBoldFont));
-                    paragraph.add(new Phrase(" чейин мамлекеттик билим берүү стандартынын жана тиешелүү билим берүү программасынын алкагында билим алуусу Келишимдин предмети болуп саналат.", ordFont));
+                    paragraph.add(new Phrase(" чейин мамлекеттик билим берүү стандартынын жана жалпы орто билим берүүчү мектептин программасынын алкагында билим алуусу Келишимдин предмети болуп саналат.", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 
@@ -163,7 +164,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationLeft(30);
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
-                    paragraph.add(new Phrase("2.1. Мектептин милдеттери:", boldFont));
+                    paragraph.add(new Phrase("2.1. Лицейдин милдеттери:", boldFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -181,7 +182,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.2. Келишимдин предмети болгон билим берүү  программаларынын Окуучу тарабынан өздөштүрүүсү максатында  Мектеп тарабынан белгиленген тартипте Окуучуга жеке билим берүү жардамын көрсөтүү.", ordFont));
+                    paragraph.add(new Phrase("2.1.2. Келишимдин предмети болгон билим берүүчү программаларынын Окуучу тарабынан өздөштүрүүсү максатында Лицей тарабынан белгиленген тартипте Окуучуга жеке билим берүү жардамын көрсөтүү.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -190,7 +191,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.3. Окуучуну Мектеп китепканасындагы окуу китептери жана окутуунун I, II баскычтарынын предмет жана окуу планынын программасына тиешелүү башка адабияттар менен камсыз кылуу, Окуучуга жабдылган окуу кабинеттерин, компьютердик класс, китепкананы колдонууга берүү.", ordFont));
+                    paragraph.add(new Phrase("2.1.3. Окуучуну Лицейдин китепканасындагы окуу китептери жана окутуунун II, III баскычтарынын (керектүүсүнүн асты сызылат) предмет жана окуу планынын программасына тиешелүү башка адабияттар менен камсыз кылуу, Окуучуга жабдылган окуу кабинеттерин, компьютердик класс, китепкананы колдонууга берүү.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -199,7 +200,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.4. Жаш өзгөчөлүгүнө жараша Окуучуну экинчи эртең мененки, түшкү, түштөн кийинки жеңил тамак менен камсыз кылуу.", ordFont));
+                    paragraph.add(new Phrase("2.1.4. Окуучуну алгач лицейге өткөндө бир жолу мектеп формасы камсыздоо мектеп тарабынан болот, муктаждык келип чыккан кийинки учурларда мектеп формасы ата-эне тарабынан сатып алынат.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -208,7 +209,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.5. Мектеп тарабынан белгиленген тартипте Окуучуну чейректик, жарым жылдык, жылдык аттестациядан өткөрүү.", ordFont));
+                    paragraph.add(new Phrase("2.1.5. Окуучуну жаш өзгөчөлүгүнө ылайык 3 маал тамак менен камсыз кылуу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -226,7 +227,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.7. Педагогикалык кеңештин чечимине ылайык, Мектептин белгиленген тартибинде Окуучуну класстан класска көчүрүү.", ordFont));
+                    paragraph.add(new Phrase("2.1.7. Кыргыз Республикасынын билим берүү жана илим министрлиги тарабынан бекитилген окуу планына ылайык, Лицейдин белгилеген тартибинде Окуучунун жарым жылдык жана жылдык аттестациядан өткөрүүнү ишке ашыруу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -235,7 +236,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.8. Окуучунун ден-соолугун, күнүмдүк көзөмөлүн медициналык квалификациясы документалдык түрдө тастыкталган Мектептин медицина кызматкери тарабынан камсыздоо.", ordFont));
+                    paragraph.add(new Phrase("2.1.8. Кыргыз Республикасынын билим берүү жана илим министрлигинин Жобосуна ылайык, Лицей белгилеген тартипте педагогикалык кеңештин чечими менен Окуучуну класстан класска көчүрүү.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -244,7 +245,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.9. Окуучунун Мектепте жүргөн учурунда «Күн тартибин»(Тиркеме№1), «Ички тартиптин»(Тиркеме№ 2) кынтыксыз аткарган учурда жүрүш-турушун көзөмөлдөө жана керектүү учурда ата-энеге билдирүү.", ordFont));
+                    paragraph.add(new Phrase("2.1.9. Окуучуга окутуунун II деңгээлин аяктаганда - күбөлүк, III деңгээлин аяктаганда белгиленген үлгүдөгү мамлекеттик аттестат берүү.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -253,7 +254,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.10. Окуучунун ден соолугу, жетишкендиги жана жүрүш-турушу тууралуу ар бир чейректин жыйынтыгы боюнча Ата-энеге маалымат берүү.", ordFont));
+                    paragraph.add(new Phrase("2.1.10. Окуучунун жеке инсандыгына урмат көрсөтүү, физикалык жана психологиялык зордук көрсөтпөө, окуучунун жеке өзгөчөлүктөрүн эске алуу менен адеп-ахлактык, физикалык жана психологиялык ден соолугун, эмоционалдык бейпилдигин бекемдөө үчүн шарттарды камсыздоо.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -262,7 +263,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.11. Окуучунун алгач бир жолу мектеп формасы менен камсыздоо Мектеп тарабынан болот, ал эми муктаждык келип чыккан кийинки учурларда мектеп формасы ата-эне тарабынан сатып алынат.", ordFont));
+                    paragraph.add(new Phrase("2.1.11. Окуучуну мектептин ички локалдык актылары жана “Ички тартип эрежелери” , билим берүү чөйрөсүнүн коопсуздугу жана саламаттыкты сактоо боюнча эрэжелерди сактоо менен тааныштыруу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -271,7 +272,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.12. Окуучунун  Мектептин ички локалдык актылары жана “Ички тартип эрежелери” , билим берүү чөйрөсүнүн коопсуздугу жана саламаттыкты сактоо боюнча эрежелерди сактоо менен тааныштыруу.", ordFont));
+                    paragraph.add(new Phrase("2.1.12. Окуучу тарабынан Лицейдин Уставы жана “Ички тартип Эрежелери” кынтыксыз аткарылган учурда, анын Лицейде жүргөн убактысында өмүрү жана ден соолугу үчүн жооп берүү.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -279,7 +280,16 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationLeft(30);
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
-                    paragraph.add(new Phrase("2.2 Мектептин укуктары:", boldFont));
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("2.1.13. Окуучунун ден соолугу, жетишкендиги жана жүрүш-турушу тууралуу ар бир чейректин жыйынтыгы боюнча Ата-энеге маалымат берүү.", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.add(new Phrase("2.2 Лицейдин укуктары:", boldFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -297,7 +307,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.2. Жылдык чыгашалар сметасына жараша ата-энелерден алынуучу акылардын төлөмдөрдүн өлчөмүн өз алдынча белгилөө жана өзгөртүү. Мектеп мүдүрүнүн жана «Сапат» ЭББМ жетекчилигинин чечимине ылайык Мектептин жылсайын жеңилдик өлчөмдөрүн өзгөртүүгө укугу бар. Окуучунун тартип бузуулары болсо, берилген жеңилдиктер ", ordFont));
+                    paragraph.add(new Phrase("2.2.2. Жылдык чыгашалар сметасына жараша ата-энелерден алынуучу акыларлын өлчөмүн өз алдынча белгилөө жана өзгөртүү. Педкеңештин чечимине ылайык окуу төлөмдөрүнө берилүүчү жеңилдиктердин көлөмүн өзгөртүүгө укуктуу. Берилген жеңилдиктер Окуучунун дисциплиналык жаза алган учурунда ", ordFont));
                     paragraph.add(new Phrase("жокко чыгарылат.", ordBoldFont));
                     document.add(paragraph);
 
@@ -307,7 +317,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.3. Ата-эне тарабынан окуу төлөмдөрү (бул Келишимдин 3-пункту) убагында төлөнбөгөн учурда, Ата- энеге маалымдоо менен Окуучуну окуу жана окуудан сырткаркы иш-чараларга катышуусун, материалдык-техникалык шарттарды (сабактар, китепкана, ашкана, ийримдер, этюддар ж.б.), сынактарга киргизбөө, Эдупейж тутумуна байланышына чектөө коюлат. Муну менен катар, Ата-энеге эскертүүсүз Мектеп тарабынан мурда берилген жеңилдиктер ", ordFont));
+                    paragraph.add(new Phrase("2.2.3. Ата-эне тарабынан окуу төлөмдөрү (бул Келишимдин 3-пункту) убагында төлөнбөгөн учурда, Ата- энеге эскертүү менен Окуучуну окуудан четтетет. Муну менен катар, Ата-энеге эскертүү менен Лицей тарабынан мурда берилген жеңилдиктер ", ordFont));
                     paragraph.add(new Phrase("жокко чыгарылат.", ordBoldFont));
                     document.add(paragraph);
 
@@ -317,7 +327,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.4. Окуучу кийинки учурларда Мектептен чыгарылат:", ordFont));
+                    paragraph.add(new Phrase("2.2.4. Окуучу кийинки учурларда окуу төлөмдөрүнүн кайтарымысыз мектептен окуудан чыгарылат  жана Эдупейдж тутумундагы бааларын окуучу көрө албайт жана сынактарга катыша албайт.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -326,7 +336,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("А) Мектептин “Ички тартип эрежелерин” орой, системалуу түрдө бузган учурда; бул тартип бузуулар Мектептин Педагогикалык кеңешинин чечими менен тастыкталган учурда;", ordFont));
+                    paragraph.add(new Phrase("а) Лицейдин “Ички тартип эрежелерин” орой, системалуу түрдө бузган учурда;", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -335,7 +345,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("Б) Окуу жылынын аягында предметтерден системалуу түрдө жетишпеген (методикалык жардам берилгенден кийин дагы) учурда;", ordFont));
+                    paragraph.add(new Phrase("б) Лицейдин кызматкерлерине жана өз курактагы балдарга мыйзамсыз аракеттерди көрсөткөн учурда;", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -344,7 +354,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("В) Мектептин кызматкерлерине жана өз курактагы балдарга мыйзамсыз аракеттерди көрсөткөн учурда;", ordFont));
+                    paragraph.add(new Phrase("в) Кыргыз Республикасынын мыйзамдарын бузганда. (Кыргыз Республикасынын Жаза кодексинин 154-беренесинин негизинде жашы жете элек кызын /уулун үй-бүлө курууга мажбурлаган учурда Ата-энелер жооп тартат.)", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -353,7 +363,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("Г) Ата-энеси тарабынан окуу акысы төлөнбөгөн учурда.", ordFont));
+                    paragraph.add(new Phrase("2.2.5. “Кыргыз Республикасынын мамлекеттик жана мамлекеттик эмес жалпы орто билим берүү мекемелериндеги бүтүрүүчүлөрдүн мамлекеттик жыйынтыктоочу аттестациясы жана класстан класска көчүрүү тартиби тууралуу Жобонун” талаптарын аткарбаган учурда Окуучуга тиешелүү билими тууралуу мамлекеттик үлгүдөгү документти берүүдөн баш тартуу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -362,7 +372,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.5. Окуучу тарабынанМектептин мүлкүнө зыян келтирген учурда анын баасы Ата-энеден төлөп берүүсүн талап кылуу.", ordFont));
+                    paragraph.add(new Phrase("2.2.6. Өнөкөт оорулары (эпилепсия, астма, тубаса жүрөк оорусу, энурез ж.б.) боюнча диспансердик учетто турган окуууларга атайын шарттар түзүлбөйт.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -371,7 +381,9 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.6. Окуучуга жеңилдик бир жылдык гана берилет. Жеңилдик менен окуган окуучу окуудан жетишпей калган учурда же тартип бузуу катталган учурда жеңилдик өз күчүн жоготот, жетекчилик тешелүү чараларды көрөт.", ordFont));
+                    paragraph.add(new Phrase("2.2.7. Ата-эненин каалоосу менен Келишим токтотулган учурда ", ordFont));
+                    paragraph.add(new Phrase("окуп жаткан чейрек үчүн окуу төлөмүнүн суммасын ", ordBoldFont));
+                    paragraph.add(new Phrase("кесип калуу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -380,7 +392,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.7. Окуучунун аралыктуу аттестациядан өтүү тартиби жана мөөнөтүн аныктоо.", ordFont));
+                    paragraph.add(new Phrase("2.2.8. Күтүүсүз себептер менен Келишим токтотулган учурда Ата-эне тарабынан төлөнгөн окуу акысынын калган бөлүгү Лицейдин мүмкүнчүлүгүнө жараша, бирок кийинки жылдын май айынан кеч эмес мөөнөттө төлөнөт.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -389,8 +401,15 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.8. Ата-эненин каалоосу менен Келишим токтотулган кезде, ", ordFont));
-                    paragraph.add(new Phrase("учурдагы чейрек үчүн окуу акысын кармап калуу, мында берилген жеңилдиктер эсепке алынбайт.", ordBoldFont));
+                    paragraph.add(new Phrase("2.2.9. Бул келишим күтүлбөгөн жагдайлардын айынан бузулган учурда, кайтарыла турган сумма мектептин сарптаган бардык чыгымдарын эске алуу менен мектептин мүмкүнчүлүгүнө жараша, бирок кийинки жылдын май айына чейин кайтарылат. Мындай учурда бул пункт жеңилдиктерге ээ болгон окуучуларга тарабайт.", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.add(new Phrase("2.3. Ата-эненин милдеттери:", boldFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -399,7 +418,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.9. Күтүүсүз себептер менен Келишим  токтотулган учурда Ата-эне тарабынан төлөнгөн окуу акысынын калган бөлүгү Мектептин мүмкүнчүлүгүнө жараша, бирок кийинки жылдын май айынан кеч эмес мөөнөттө төлөнөт.", ordFont));
+                    paragraph.add(new Phrase("2.3.1. Бул келишимдин 1.1. пунктуна ылайык, Келишимдин 3.1.1.-3.1.3. пункттарында каралган мөөнөттөрдө, өз убагында окуу акыларын төлөө.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -408,24 +427,11 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.10. Келишимдин 2.4.2. пунктун системалуу түрдө бузган Ата-энелерменен келишимдин мөөнөтүн узартпоо.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.add(new Phrase("2.3. Ата-эненин укуктары:", boldFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.1. Бул Келишимдин 2.1.1.-2.1.9. пункттарындагы шарттарды аткаруусун Мектептен талап кылуу.", ordFont));
+                    paragraph.add(new Phrase("2.3.2. Жыл сайын 1-апрелден 15-майга чейин ", ordFont));
+                    paragraph.add(new Phrase("20% алдын ала төлөмдү ", ordBoldFont));
+                    paragraph.add(new Phrase("сөзсүз төлөө менен кийинки окуу жылына Келишим түзүү. ", ordFont));
+                    paragraph.add(new Phrase("Белгиленген мөөнөттө келишим түзүлбөгөн учурда", ordBoldFont));
+                    paragraph.add(new Phrase(" окуучунун орду башка окуучуларга берилиши мүмкүн жана берилген жеңилдиктер алынып салынышы мүмкүн.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -434,7 +440,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.2. Балдарынын мыйзамдуу укук жана кызыкчылыктарын коргоо.", ordFont));
+                    paragraph.add(new Phrase("2.3.3. Лицейге келерден мурда Окуучуну толугу менен медициналык кароодон өткөрүү, Лицейдин администрациясына Окуучунун саламаттыгы тууралуу медициналык адистердин жыйынтыктарын тапшыруу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -443,15 +449,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.3. Окутуу процессинин жүрүшү, ошондой эле жетишкендиктери менен таанышуу.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.add(new Phrase("2.4. Ата-эненин милдеттери:", boldFont));
+                    paragraph.add(new Phrase("2.3.4. “Окуучунун анкетасын” (Тиркеме №1), “Өз алдынча чыгууга уруксат кагазын” (Тиркеме №2) жана “Окуучунун саламаттыгы тууралуу чынчыл маалыматтарды берүү арызын” (Тиркеме №3) толтуруу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -460,19 +458,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.1. Жыл сайын 1-апрелден 15-майга чейин ", ordFont));
-                    paragraph.add(new Phrase("20% алдын ала төлөмдү", ordBoldFont));
-                    paragraph.add(new Phrase(" сөзсүз төлөө менен кийинки окуу жылына Келишим түзүү.", ordFont));
-                    document.add(paragraph);
-                    
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("- белгиленген мөөнөттө келишим түзүлбөгөн учурда", ordBoldFont));
-                    paragraph.add(new Phrase(" окуучунун орду башка окуучуларга берилет жана берилген жеңилдиктерден пайдалана албайт.", ordFont));
+                    paragraph.add(new Phrase("2.3.5. Окуучу тарабынан Лицейдин “Ички тартип эрежелерин” аткарууга көмөктөш болуу. Лицейдин “Ички тартип эрежелерин” бузган учурда Окуучуга таасир берүү.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -481,7 +467,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.2. Мектеп менен Ата-эненин ортосунда окуу акысы тууралуу графикке ылайык ата-энелер тарабынан төлөнүүчү акыны өз убагында төлөп туруу.", ordFont));
+                    paragraph.add(new Phrase("2.3.6. Окуучунун Лицейдин мүлкүнүн талкалануу же жок кылуусуна алып келген бардык аракеттери үчүн жоопкерчилигин мойнуна алуу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -490,7 +476,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.3. Мектепке келерден мурда Окуучуну толугу менен медициналык кароодон өткөрүү, Мектептин жетекчилигине Окуучунун саламаттыгы тууралуу медициналык адистердин жыйынтыктарын тапшыруу .", ordFont));
+                    paragraph.add(new Phrase("2.3.7. Лицейге келтирилген зыянды Лицейдин администрациясы тарабынан жиберилген расмий эсепти/invoice алгандан кийин, 7 календардык күндүн ичинде төлөп берүү.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -499,8 +485,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.4. Медициналык кызматтарга жазуу түрүндө ", ordFont));
-                    paragraph.add(new Phrase("макулдугун берүү же баш тартуу:", ordBoldFont));
+                    paragraph.add(new Phrase("2.3.8. Лицейдин администрациясы менен дайыма телефон байланышында болуп туруу:", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -509,7 +494,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("А) окуучуга медициналык жардам көрсөтүү муктаждыгында (дары-дармек алуу)", ordFont));
+                    paragraph.add(new Phrase("- Эки жумада бир жолу Окуучунун саламаттыгы, окуу программалары, сабактан тышкаркы иш-чаралары тууралуу кызыкдар болуу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -518,7 +503,15 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.5. Окуучунун өнөкөт оорулары тууралуу медпункт кызматкерлерине билдирүү.", ordFont));
+                    paragraph.add(new Phrase("2.3.9. Лицейге балдарды алып келүү жана алып кетүү.", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.add(new Phrase("2.4. Ата-энелердин укуктары:", boldFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -527,7 +520,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.6. Окуучуну Мектептин “Күн тартиби” жана “Ички тартип эрежелери” менен тааныштыруу. “Күн тартибин” жана “Ички тартип эрежелерин” бузган учурда Окуучуга таасир берүү.", ordFont));
+                    paragraph.add(new Phrase("2.4.1. Лицейдин администрациясынан Келишимдин 2.1.1.-2.1.13.-пункттарында белгиленген шарттарды аткаруусун талап кылуу.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -536,72 +529,9 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.7. Мектепке келтирилген зыянды Мектептин жетекчилиги тарабынан жиберилген расмий эсепти алгандан кийин, 10 календардык күндүн ичинде төлөп берүү.", ordFont));
+                    paragraph.add(new Phrase("2.4.2. Окуучунун Лицейде калган мөөнөттөрүн төлөө менен Келишимдин 2.2.9.-2.2.10.-пункттарына ылайык, Келишимди мөөнөтүнөн мурда токтотуу.", ordFont));
                     document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.8. Окуучулардын жетишкендиги, жүрүш-турушу, окуучулардын сабакка келбей калган күндөрүнө, саламаттыгына байланыштуу иш-чаралардын бардыгына катышуу. (Ден-соолугуна байланыштуу окууга келбейкалган учурда , келбей калган ар бир күн үчүн медициналык аныктаманы алып келүү, башка себептерге байланыштуу келбеген учурда класс жетекчисине же жардамчы мугалимине маалымат берүү).", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.9. Мектеп жетекчилиги менен дайыма телефон байланышында болуп туруу :", ordFont));
-                    document.add(paragraph);                   
-                    
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("- эки жумада бир жолу Окуучунун саламаттыгы, окуу программалары, сабактан тышкаркы иш-чаралары тууралуу кызыкдар болуу.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.10. Ата-энелер окуу китептеринин сакталышынан жооптуу. Китептер жоголуп кетсе, же жакшы сакталбаса, толук баасы төлөнөт.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.11. ", ordFont));
-                    paragraph.add(new Phrase("Дарек менен телефондор алмашкан учурда Ата-эне Мектептин жетекчилигине кабар берүү.", ordBoldFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.12. Мектепке балдарды алып келүү жана алып кетүү.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.13. Мектепте сабактар 8:30-16:45 ке чейин, жума күндөрү 16:00гө чейин болот. Сабактар бүткөндөн кийин Ата-энелер өз убагында алып кетүүгө милдеттүү. Мектеп окуучунун коопсуздугун жана ден-соолугу үчүн жогорудагы белгиленген гана мөөнөткө жоопкерчилик ала алат.", ordFont));
-                    document.add(paragraph);
+                    document.add(new Paragraph(10, " "));
 
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
@@ -616,7 +546,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationLeft(30);
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
-                    paragraph.add(new Phrase("3.1. Мектептин жетекчилиги тарабынан окуу акыларын төлөө мөөнөттөрү  төмөндөгүдөй белгиленген:", ordFont));
+                    paragraph.add(new Phrase("3.1. Лицейдин администрациясы тарабынан окуу акыларын төлөө мөөнөттөрү төмөндөгүдөй белгиленген:", ordFont));
                     document.add(paragraph);
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
@@ -634,7 +564,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("3.1.2.  Төлөмдөр ата-энелер, же алардын ордундагы кишилер тарабынан расмий эсеп келгенден кийин 3 календардык күн ичинде Мектептин ", ordFont));
+                    paragraph.add(new Phrase("3.1.2.  Төлөмдөр ата-энелер, же алардын ордундагы кишилер тарабынан расмий эсеп/invoice келгенден кийин 3 календардык күн ичинде Лицейдин ", ordFont));
                     paragraph.add(new Phrase("банк эсебине сом менен", ordBoldFont));
                     paragraph.add(new Phrase(" төлөнөт.", ordFont));
                     document.add(paragraph);
@@ -664,15 +594,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("4.1. Келишимге кол койгон эки тараптын талаптарын аткарууга мүмкүнчүлүк бербеген : өзгөчө кырдаал, өрт, табият кырсыктары (жер титирөө, сел ж.б.), согуш, бардык түрдөгү аскердик аракеттер, иш таштоо, блокада, Кыргыз Республикасынын мыйзамдарынын өзгөрүшү жана ушуга байланыштуу Келишимге кол койгон тараптарга баш ийбеген окуялар үчүн эки тарап тең жооп бербейт.", ordFont));
-                    document.add(paragraph);
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("4.2. Бул келишим өзгөчө кырдаал учурларында же күтүлбөгөн жагдайлардын айынан бузулган учурда, кайтарыла турган сумма мектептин сарптаган бардык чыгымдарды эске алуу менен Мектептин мүмүкүнчүлүгүнө жараша, бирок кйинки жылдын май айына чейин кайтарылат. Мында бул пункт жеңилдиктерге ээ болгон окуучуларга жарабайт, тиешелүү эмес.", ordFont));
+                    paragraph.add(new Phrase("4.1. Келишимге кол койго эки тараптын талаптарын аткарууга мүмкүнчүлүк бербеген : өрт, табият кырсыктары (жер титирөө, сел ж.б.), согуш, бардык түрдөгү аскердик аракеттер, иш таштоо, блокада, Кыргыз Республикасынын мыйзамдарынын өзгөрүшү жана ушуга байланыштуу Келишимге кол койгон тараптарга баш ийбеген окуялара үчүн эки тарап тең жооп бербейт.", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 
@@ -698,7 +620,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("5.2. Бул Келишим 2.2.4 жана 2.2.8.-пункттарына ылайык мөөнөтүнөн мурда токтотулат.", ordFont));
+                    paragraph.add(new Phrase("5.2. Бул Келишим 2.2.3 жана 2.4.2.-пункттарына ылайык мөөнөтүнөн мурда токтотулат.", ordFont));
                     document.add(paragraph);
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
@@ -706,7 +628,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("5.3. Бул Келишимге киргизилүүчү өзгөртүүлөр жана кошумчалар жазуу түрүндө белгиленип, эки тарап кол койгондон кийин гана күчүнө кирет.", ordFont));
+                    paragraph.add(new Phrase("5.3. Бул Келишимге киргизилүүчү өзгөртүүлөр жана кошумчалар жазуу түрүндө белгиленип, эки тарап тарабынан кол коюлганда гана жарамдуу болот.", ordFont));
                     document.add(paragraph);
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
@@ -730,18 +652,9 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("5.6. Бул Келишим 2 нускада, кыргыз тилинде түзүлдү жана эки тарап тарабынан кол коюлду. Эки нускасы тең бирдей юридикалык күчкө ээ. Ар бир тарапта Келишимдин бирден нускасы сакталат.", ordFont));
+                    paragraph.add(new Phrase("5.6. Бул Келишим 2 нускада, кыргыз тилинде түзүлдү жана эки тарап тарабынан кол коюлду. Эки нускасы тең бирдей юридикалык күчкө ээ. Ар бир тарапта Келишимдин өз нускасы бар.", ordFont));
                     document.add(paragraph);
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("5.7. Келишимдин мөөнөтү ", ordFont));
-                    paragraph.add(new Phrase("бир жыл.", ordBoldFont));
-                    document.add(paragraph);
-                    document.newPage();
+                    document.add(new Paragraph(10, " "));
 
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
@@ -759,7 +672,7 @@ public class ContractSchoolPdfKg {
                     Tinfo.setWidthPercentage(90f);
                     Tinfo.setWidths(Tinfo_colsWidth);
                     Paragraph text10 = new Paragraph();
-                    text10.add(new Phrase("Мектеп: " + student.getScl_name(), ordFont));
+                    text10.add(new Phrase("Лицей: " + student.getScl_name_ru(), ordFont));
                     text10.add(Chunk.NEWLINE);
                     text10.add(new Phrase("Дареги: " + student.getScl_address(), ordFont));
                     text10.add(Chunk.NEWLINE);
@@ -771,7 +684,7 @@ public class ContractSchoolPdfKg {
                     text10.add(Chunk.NEWLINE);
                     text10.add(new Phrase("Тел.: " + student.getScl_phone(), ordFont));
                     text10.add(Chunk.NEWLINE);
-                    text10.add(new Phrase("Мектептин мүдүрү: " + student.getScl_dir_f_name(), ordFont));
+                    text10.add(new Phrase("Лицейдин директору: " + student.getScl_dir_f_name(), ordFont));
                     text10.add(Chunk.NEWLINE);
 
                     IndexedContainer relativeCont = null;
@@ -839,9 +752,8 @@ public class ContractSchoolPdfKg {
                     Tinfo.addCell(new Phrase("                             (Мөөр)", ordFont));
                     Tinfo.addCell(new Phrase("Колу:", ordFont));
 
-                    document.add(Tinfo);
-                    
-                    document.add(new Paragraph(10, " "));
+                    document.add(Tinfo);                    
+                    document.newPage();
 
                     Paragraph text15 = new Paragraph();
                     text15.setIndentationLeft(30);
@@ -931,7 +843,7 @@ public class ContractSchoolPdfKg {
                     paragraph = new Paragraph();
                     paragraph.setIndentationLeft(30);
                     paragraph.setIndentationRight(30);
-                    paragraph.add(new Phrase("Мүдүр: ", ordBoldFont));
+                    paragraph.add(new Phrase("Директор: ", ordBoldFont));
                     document.add(paragraph);
                     document.add(new Paragraph(5, " "));
                     paragraph = new Paragraph();

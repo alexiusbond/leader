@@ -1,4 +1,4 @@
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
@@ -114,7 +114,7 @@ public class ContractCambridgePdfEn {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase(student.getScl_name(), ordBoldFont));
+                    paragraph.add(new Phrase(student.getScl_name_kg(), ordBoldFont));
                     paragraph.add(new Phrase(", here in after referred to as the “School”, represented by Director ", ordFont));
                     paragraph.add(new Phrase(SystemSettings.transliterate(student.getScl_dir_f_name()), ordBoldFont));
                     paragraph.add(new Phrase(",  acting on the basis of the Charter, on the one hand, and ", ordFont));
@@ -590,7 +590,7 @@ public class ContractCambridgePdfEn {
                     Tinfo.setWidthPercentage(90f);
                     Tinfo.setWidths(Tinfo_colsWidth);
                     Paragraph text10 = new Paragraph();
-                    text10.add(new Phrase("School: " + student.getScl_name(), ordFont));
+                    text10.add(new Phrase("School: " + student.getScl_name_kg(), ordFont));
                     text10.add(Chunk.NEWLINE);
                     text10.add(new Phrase("Address:  Bishkek city, str. A.Masalieva 26", ordFont));
                     text10.add(Chunk.NEWLINE);

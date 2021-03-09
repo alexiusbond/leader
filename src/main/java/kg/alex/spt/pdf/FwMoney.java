@@ -1,4 +1,4 @@
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 interface WritableSumm {
     String numberToString(Number num);
@@ -43,9 +43,9 @@ abstract class AbstractWritableSumm implements WritableSumm {
         num = num.longValue() * 1000 + (long)((num.doubleValue() - num.longValue()) * 100);
         while (num.longValue() > 0) {
             String triad = triadToString((int)(num.longValue() % 1000),
-                                            getUnitGender(idx), idx < 1);
+                    getUnitGender(idx), idx < 1);
             res = triad + getUnit(idx, num.longValue() % 1000) + " " + res;
-            num = num.longValue() / 1000; 
+            num = num.longValue() / 1000;
             idx++;
         }
         return res;
@@ -54,8 +54,8 @@ abstract class AbstractWritableSumm implements WritableSumm {
 
 abstract class WritableSummRu extends AbstractWritableSumm {
     final String[][] str1 = {
-        {"ноль","один","два","три","четыре","пять","шесть","семь","восемь","девять"},
-        {"ноль","одна","две","три","четыре","пять","шесть","семь","восемь","девять"},
+            {"ноль","один","два","три","четыре","пять","шесть","семь","восемь","девять"},
+            {"ноль","одна","две","три","четыре","пять","шесть","семь","восемь","девять"},
     };
     final String[] str100 = {"", "сто", "двести", "триста", "четыреста", "пятьсот",
             "шестьсот", "семьсот", "восемьсот", "девятьсот"};
@@ -65,12 +65,12 @@ abstract class WritableSummRu extends AbstractWritableSumm {
     String[] str10 = {"", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
             "шестьдесят", "семьдесят", "восемьдесят", "девяносто"};
     final String[][] forms = {
-        {"", "", "", "0"},
-        {"", "", "", "0"},
-        {"тысяча", "тысячи", "тысяч", "1"},
-        {"миллион", "миллиона", "миллионов", "0"},
-        {"миллиард", "миллиарда", "миллиардов", "0"},
-        {"триллион", "триллиона", "триллионов", "0"},
+            {"", "", "", "0"},
+            {"", "", "", "0"},
+            {"тысяча", "тысячи", "тысяч", "1"},
+            {"миллион", "миллиона", "миллионов", "0"},
+            {"миллиард", "миллиарда", "миллиардов", "0"},
+            {"триллион", "триллиона", "триллионов", "0"},
     };
     protected String getS1(int n, int gender) {
         return str1[gender][n];
@@ -110,10 +110,9 @@ class WritableSummRuUSD extends WritableSummRu {
         forms[1] = new String[]{"доллар", "доллара", "долларов", "0"};
     }
 }
-    class WritableSummRuSOM extends WritableSummRu {
+class WritableSummRuSOM extends WritableSummRu {
     {
         forms[0] = new String[]{"тыйын", "тыйына", "тыйынов", "1"};
         forms[1] = new String[]{"сом", "сома", "сомов", "0"};
     }
 }
-    

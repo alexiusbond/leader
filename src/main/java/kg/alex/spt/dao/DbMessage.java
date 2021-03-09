@@ -24,7 +24,7 @@ public class DbMessage extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT m.id, m.subject, m.message, m.modification_date, concat(e.name, ' ', e.surname) as fullname, sch.name, "
+        String sql = "SELECT m.id, m.subject, m.message, m.modification_date, concat(e.name, ' ', e.surname) as fullname, sch.name_ru, "
                 + "m.photo, m.feedback, e.id FROM messages as m "
                 + "left join employee as e on e.id = m.employee_id "
                 + "left join hr_employee_order as eo on eo.employee_id=e.id and eo.to_date IS NULL "
@@ -58,7 +58,7 @@ public class DbMessage extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
-                    result.getString("sch.name"));
+                    result.getString("sch.name_ru"));
             item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(
                     result.getString("m.photo"));
             item.getItemProperty(sysSettings.id).setValue(result.getInt("m.id"));

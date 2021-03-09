@@ -29,10 +29,8 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.StudInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 
-import static kg.alex.spt.reports.AccountingGeneralReport.logger;
-
 import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.CurrentAccountStatementPdf;
+import kg.alex.spt.pdf.CurrentAccountStatementPdf;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;

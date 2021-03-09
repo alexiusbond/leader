@@ -1,4 +1,4 @@
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -31,6 +31,7 @@ import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.domain.StudInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.FormattedTable;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.DocumentLoader;

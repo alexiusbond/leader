@@ -22,6 +22,7 @@ import kg.alex.spt.domain.StockInvoice;
 import kg.alex.spt.domain.StockMovement;
 import kg.alex.spt.domain.StudInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.StockMovementsPdf;
 import kg.alex.spt.utils.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

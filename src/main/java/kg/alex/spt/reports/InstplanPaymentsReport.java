@@ -39,7 +39,7 @@ import kg.alex.spt.domain.StudPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.utils.InstplanPaymentsPdf;
+import kg.alex.spt.pdf.InstplanPaymentsPdf;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -29,7 +29,7 @@ public class DbContract extends BaseDb {
             throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT c.id, c.name,c.amount,c.year_id,y.name,c.school_id,"
-                + "sc.name,sc.name_ru, c.activity_status_id, ac.name "
+                + "sc.name_ru,sc.name_ru, c.activity_status_id, ac.name "
                 + "FROM contract as c "
                 + "left join year as y on y.id=c.year_id "
                 + "left join school as sc on sc.id = c.school_id "
@@ -67,7 +67,7 @@ public class DbContract extends BaseDb {
             item.getItemProperty(sysSettings.school_id).setValue(
                     result.getInt("c.school_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
-                    result.getString("sc.name"));
+                    result.getString("sc.name_ru"));
             item.getItemProperty(sysSettings.id).setValue(result.getInt("c.id"));
         }
         return container;

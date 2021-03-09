@@ -21,10 +21,12 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccCategory;
@@ -43,8 +45,8 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     static final Logger logger = LogManager.getLogger(SchoolModificationView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax statusSelect, contractTypeSelect;
-    private TextField nameTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
+    private ComboBoxMax statusSelect;
+    private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
             innTF, bankTF, bankAccountTF, phoneTF, cityTF;
     private SystemSettings sysSettings = new SystemSettings();
     private int school_id;
@@ -117,17 +119,22 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         codeTF.setWidth("100%");
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Name));
-        nameTF.setRequired(true);
-        nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
-
         nameRuTF = new TextField(myUI.getMessage(SptMessages.NameRu));
-        nameRuTF.setRequired(false);
+        nameRuTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameRuTF.setRequired(true);
         nameRuTF.setNullRepresentation("");
         nameRuTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameRuTF.setWidth("100%");
+
+        nameKgTF = new TextField(myUI.getMessage(SptMessages.NameKg));
+        nameKgTF.setNullRepresentation("");
+        nameKgTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        nameKgTF.setWidth("100%");
+
+        nameEnTF = new TextField(myUI.getMessage(SptMessages.NameEn));
+        nameEnTF.setNullRepresentation("");
+        nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        nameEnTF.setWidth("100%");
 
         directorFullNameTF = new TextField(myUI.getMessage(SptMessages.DirectorFullName) + " (Ru/Kg)");
         directorFullNameTF.setRequired(false);
@@ -190,25 +197,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             logger.error(e);
             logger.catching(e);
         }
-        contractTypeSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ContractType));
-        contractTypeSelect.setNullSelectionAllowed(false);
-        contractTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        contractTypeSelect.setRequired(true);
-        contractTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        contractTypeSelect.setWidth("100%");
-        contractTypeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
-        contractTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
-
-        try {
-            DbDefinition dbDef = new DbDefinition();
-            dbDef.connect();
-            contractTypeSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbSchoolType));
-            dbDef.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
 
         photoEmb = new Embedded();
         photoEmb.setHeight("100%");
@@ -219,17 +207,17 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
 
         this.addComponent(buttonsLay, 0, 0, 1, 0);
         this.addComponent(codeTF, 0, 1);
-        this.addComponent(innTF, 1, 1);
-        this.addComponent(nameTF, 0, 2);
-        this.addComponent(nameRuTF, 1, 2);
+        this.addComponent(nameRuTF, 1, 1);
+        this.addComponent(nameKgTF, 0, 2);
+        this.addComponent(nameEnTF, 1, 2);
         this.addComponent(directorFullNameTF, 0, 3);
         this.addComponent(cityTF, 1, 3);
         this.addComponent(addressTF, 0, 4);
         this.addComponent(phoneTF, 1, 4);
         this.addComponent(bankTF, 0, 5);
         this.addComponent(bankAccountTF, 1, 5);
-        this.addComponent(statusSelect, 0, 6);
-        this.addComponent(contractTypeSelect, 1, 6);
+        this.addComponent(innTF, 0, 6);
+        this.addComponent(statusSelect, 1, 6);
         this.addComponent(photoEmb, 2, 1, 2, 3);
         this.addComponent(photoUpl, 2, 4);
 
@@ -256,7 +244,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                         logger.catching(e);
                     }
                     if (status != 0) {
-                        if (!sch.getCode().equals(school.getCode()) || !sch.getName().equals(school.getName())) {
+                        if (!sch.getCode().equals(school.getCode()) || !sch.getName_ru().equals(school.getName_ru())) {
                             DbSalaryCategories dbsc = new DbSalaryCategories();
                             dbsc.connect();
                             IndexedContainer salCont = dbsc.execSQL(myUI);
@@ -268,7 +256,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                                 Object next = iter.next();
                                 int id = dba.exec_id((Integer) next, sch.getId());
                                 dba.exec_update_code(id, sch.getCode(), salCont.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Name)).getValue() + " - " + sch.getName());
+                                        myUI.getMessage(SptMessages.Name)).getValue() + " - " + sch.getName_ru());
                                 dba.exec_update_all_parent_codes(id, salCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Code)).getValue() + "." + sch.getCode(), false);
                             }
@@ -277,12 +265,13 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                         Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                 Notification.Type.HUMANIZED_MESSAGE);
                         myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
-                                myUI.getMessage(SptMessages.Name)).setValue(codeTF.getValue() + " - " + nameTF.getValue());
+                                myUI.getMessage(SptMessages.Name)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
+                        myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                                myUI.getMessage(SptMessages.Logo)).setValue(sch.getPhoto());
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
                                 Notification.Type.WARNING_MESSAGE);
                     }
-
                     dbScl.close();
                     prepareNormalMode();
                 } else {
@@ -304,9 +293,9 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         deleteBtn.setEnabled(false);
         saveBtn.setEnabled(true);
         cancelBtn.setEnabled(true);
-        nameTF.setEnabled(true);
+        nameKgTF.setEnabled(true);
+        nameEnTF.setEnabled(true);
         statusSelect.setEnabled(false);
-        contractTypeSelect.setEnabled(true);
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(true);
         directorFullNameTF.setEnabled(true);
@@ -331,9 +320,9 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         }
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
-        nameTF.setEnabled(false);
+        nameKgTF.setEnabled(false);
+        nameEnTF.setEnabled(false);
         statusSelect.setEnabled(false);
-        contractTypeSelect.setEnabled(false);
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(false);
         directorFullNameTF.setEnabled(false);
@@ -359,7 +348,8 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             logger.catching(e);
         }
         codeTF.setValue(school.getCode());
-        nameTF.setValue(school.getName());
+        nameKgTF.setValue(school.getName_kg());
+        nameEnTF.setValue(school.getName_en());
         nameRuTF.setValue(school.getName_ru());
         directorFullNameTF.setValue(school.getDirector_f_name());
         cityTF.setValue(school.getCity());
@@ -369,7 +359,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         bankAccountTF.setValue(school.getBank_account());
         phoneTF.setValue(school.getPhone());
         statusSelect.setValue(school.getStatus_id());
-        contractTypeSelect.setValue(school.getSchool_type_id());
         if (school.getPhoto() != null && !school.getPhoto().equals("")) {
             photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS
                     + school.getPhoto())));
@@ -383,7 +372,8 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         School s = new School();
         s.setId(i);
         s.setCode(codeTF.getValue());
-        s.setName(nameTF.getValue());
+        s.setName_kg(nameKgTF.getValue());
+        s.setName_en(nameEnTF.getValue());
         s.setName_ru(nameRuTF.getValue());
         s.setDirector_f_name(directorFullNameTF.getValue());
         s.setCity(cityTF.getValue());
@@ -393,7 +383,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         s.setBank_account(bankAccountTF.getValue());
         s.setPhone(phoneTF.getValue());
         s.setStatus_id((Integer) statusSelect.getValue());
-        s.setSchool_type_id((Integer) contractTypeSelect.getValue());
+        s.setSchool_type_id(1);
         s.setYear_id(myUI.getUser().getCurrent_year().getId());
         s.setPhoto(photoName);
         return s;

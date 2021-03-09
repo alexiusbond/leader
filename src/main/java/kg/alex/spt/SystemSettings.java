@@ -204,6 +204,7 @@ public class SystemSettings implements Serializable {
     public final String prmContractInfo = "информация о контракте";
     public final String prmContractInfoLeftDebt = "информация о задолженностях";
     public final String prmMenu = "меню";
+    public final String prmContractVisible = "видимость контракта";
     public final String actCopy = "копирование";
     public final String prmPlanPayments = "план оплат и оплаты";
     public final String prmClassPayments = "оплаты по классам";

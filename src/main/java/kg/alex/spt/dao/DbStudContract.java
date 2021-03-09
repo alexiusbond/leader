@@ -413,7 +413,7 @@ public class DbStudContract extends BaseDb {
     public void execSQL_Yearly_by_classes(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT sch.id, sch.name, sch.code, CONCAT(cln.name, ' - ', cl.name) AS class, "
+        String sql = "SELECT sch.id, sch.name_ru, sch.code, CONCAT(cln.name, ' - ', cl.name) AS class, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
                 + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
@@ -485,7 +485,8 @@ public class DbStudContract extends BaseDb {
                     ymr.paids = 0.0;
                     ymr.lefts = 0.0;
                 }
-                t = ymr.createTable(result.getString("sch.code") + " - " + result.getString("sch.name"));
+                t = ymr.createTable(result.getString("sch.code")
+                        + " - " + result.getString("sch.name_ru"));
                 ymr.rightLay.addComponent(t);
                 school_id = result.getInt("sch.id");
             }
@@ -566,9 +567,9 @@ public class DbStudContract extends BaseDb {
     public void execSQL_Monthly_by_classes(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT months.name, months.id, s_temp.id, s_temp.name, s_temp.code, i_temp.amn, p_temp.amn FROM months "
+        String sql = "SELECT months.name, months.id, s_temp.id, s_temp.name_ru, s_temp.code, i_temp.amn, p_temp.amn FROM months "
                 + "CROSS JOIN school AS s_temp LEFT JOIN "
-                + "(SELECT sch.id AS s_id, sch.name AS s_name, SUM(inst.amount) AS amn, MONTH(inst.date_of_payment) AS mnth "
+                + "(SELECT sch.id AS s_id, sch.name_ru AS s_name, SUM(inst.amount) AS amn, MONTH(inst.date_of_payment) AS mnth "
                 + "FROM student_installement_plan AS inst LEFT JOIN student AS st ON st.id = inst.student_id "
                 + "LEFT JOIN school AS sch ON sch.id = st.school_id LEFT JOIN (SELECT MAX(so.id) AS oid, "
                 + "so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
@@ -616,7 +617,7 @@ public class DbStudContract extends BaseDb {
                     ymr.paids = 0.0;
                     ymr.lefts = 0.0;
                 }
-                t = ymr.createTable(result.getString("s_temp.code") + " - " +result.getString("s_temp.name"));
+                t = ymr.createTable(result.getString("s_temp.code") + " - " +result.getString("s_temp.name_ru"));
                 ymr.rightLay.addComponent(t);
                 school_id = result.getInt("s_temp.id");
             }
@@ -778,7 +779,7 @@ public class DbStudContract extends BaseDb {
     public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT sch.name, sch.code, "
+        String sql = "SELECT sch.name_ru, sch.code, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), "
                 + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
@@ -815,7 +816,7 @@ public class DbStudContract extends BaseDb {
             if (t != null) {
                 Item item = t.getContainerDataSource().addItem(i++);
                 item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
-                        result.getString("sch.name"));
+                        result.getString("sch.name_ru"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
                         result.getInt("stud_num") + "/" + result.getInt("active"));
                 ymr.totalStudents += result.getInt("stud_num");

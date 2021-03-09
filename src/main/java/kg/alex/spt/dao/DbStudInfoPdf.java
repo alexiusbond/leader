@@ -18,7 +18,7 @@ public class DbStudInfoPdf extends BaseDb {
 
     public StudInfoPdf execSQL(int stud_id) throws SQLException {
         StudInfoPdf sti = new StudInfoPdf();
-        String sql = "SELECT s.id, s.surname, s.name, s.middle_name, scl.city, scl.name_ru, scl.name, s.gender_id, "
+        String sql = "SELECT s.id, s.surname, s.name, s.middle_name, scl.city, scl.name_ru, scl.name_kg, scl.name_en, s.gender_id, "
                 + "scl.director_fullname, scl.adress, scl.inn, scl.bank, scl.bank_account, "
                 + "scl.school_type_id, scl.phone, sr.fullname, sr.phone, sr.passport, sr.adress, r.name_ru, r.name_ru_dec, "
                 + "y.period, y.period_kg, y.name, "
@@ -49,7 +49,7 @@ public class DbStudInfoPdf extends BaseDb {
             }
             sti.setScl_city(result.getString("scl.city"));
             sti.setScl_name_ru(result.getString("scl.name_ru"));
-            sti.setScl_name(result.getString("scl.name"));
+            sti.setScl_name_kg(result.getString("scl.name_kg"));
             sti.setScl_dir_f_name(result.getString("scl.director_fullname"));
             sti.setScl_address(result.getString("scl.adress"));
             sti.setScl_inn(result.getString("scl.inn"));

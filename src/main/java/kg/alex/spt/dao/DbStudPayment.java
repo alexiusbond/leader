@@ -29,10 +29,6 @@ import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-/**
- *
- * @author eldiiar
- */
 public class DbStudPayment extends BaseDb {
 
     public DbStudPayment() throws Exception {

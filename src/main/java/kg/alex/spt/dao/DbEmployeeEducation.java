@@ -109,7 +109,7 @@ public class DbEmployeeEducation extends BaseDb {
                             myUI.getMessage(SptMessages.Start), null, true,
                             SystemSettings.yearPattern, Resolution.YEAR));
             item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
-                    edv.createDateField(result.getDate("ed.start_date"),
+                    edv.createDateField(result.getDate("ed.end_date"),
                             myUI.getMessage(SptMessages.End), null, true,
                             SystemSettings.yearPattern, Resolution.YEAR));
             item.getItemProperty(myUI.getMessage(SptMessages.Country)).setValue(

@@ -624,7 +624,7 @@ public class DbAccTransactions extends BaseDb {
     public void exec_schools_accounting(MyVaadinUI myUI, String school_ids, Date from_date, Date till_date,
                                         AccountingSchoolsReport sar) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT sch.id, sch.name, "
+        String sql = "SELECT sch.id, sch.name_ru, "
                 + "MAX(IF(cat.acc_type_id = 2, DATE(tr.date_time), null)) as max_exp, "
                 + "MAX(IF(cat.acc_type_id = 1, DATE(tr.date_time), null)) as max_inc, "
                 + "SUM(IF(cat.acc_type_id = 1 AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ?, "
@@ -661,7 +661,7 @@ public class DbAccTransactions extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("sch.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
-                    result.getString("sch.name"));
+                    result.getString("sch.name_ru"));
             item.getItemProperty(myUI.getMessage(SptMessages.IncomesTotal)).setValue(
                     result.getDouble("incTtl"));
             ttlInc += result.getDouble("incTtl");

@@ -184,7 +184,7 @@ public class DbEmployeeOrder extends BaseDb {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT eo.id, o.id, o.name, eo.from_date, eo.to_date, eo.note, eo.effected_by_id, eo.can_not_delete, "
                 + "CASE WHEN o.id IN (1, 2, 7) THEN p.name WHEN o.id = 3 THEN CONCAT(cn.name, ' - ', cln.name) "
-                + "WHEN o.id IN (5, 8) THEN sch.name ELSE NULL END AS details, CASE WHEN o.id IN (1, 2, 7) THEN p.id "
+                + "WHEN o.id IN (5, 8) THEN sch.name_ru ELSE NULL END AS details, CASE WHEN o.id IN (1, 2, 7) THEN p.id "
                 + "WHEN o.id = 3 THEN cln.id WHEN o.id IN (5, 8) THEN sch.id ELSE NULL END AS details_id "
                 + "FROM hr_employee_order AS eo "
                 + "LEFT JOIN hr_orders AS o ON o.id = eo.hr_orders_id "
@@ -289,7 +289,7 @@ public class DbEmployeeOrder extends BaseDb {
         SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT eo.id, o.name, eo.from_date, eo.to_date, eo.note, "
                 + "CASE WHEN o.id IN (1, 2, 7) THEN p.name WHEN o.id = 3 THEN CONCAT(cn.name, ' - ', cln.name) "
-                + "WHEN o.id IN (5, 8) THEN sch.name ELSE NULL END AS details "
+                + "WHEN o.id IN (5, 8) THEN sch.name_ru ELSE NULL END AS details "
                 + "FROM hr_employee_order AS eo LEFT JOIN hr_orders AS o ON o.id = eo.hr_orders_id "
                 + "LEFT JOIN school AS sch ON sch.id = eo.from_to_school_id LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id "
                 + "LEFT JOIN class_name AS cln ON cln.id = eo.class_name_id LEFT JOIN class_number AS cn ON cn.id = cln.class_number_id "

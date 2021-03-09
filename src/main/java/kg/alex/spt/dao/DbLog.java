@@ -31,7 +31,6 @@ public class DbLog extends BaseDb {
                 + "left join hr_employee_order as eo on eo.employee_id=e.id and "
                 + "(eo.to_date IS NULL or date(eo.to_date) >=  date(dl.datetime)) and eo.hr_orders_id = 1 "
                 + "left join hr_orders as ord on ord.id=eo.hr_orders_id "
-                + "left join school as sch on eo.school_id=sch.id "
                 + "where eo.school_id = ? ";
         if (logType.equals(myUi.getMessage(SptMessages.SystemLogs))) {
             sql += "and dl.table_name != 'transactions' ";

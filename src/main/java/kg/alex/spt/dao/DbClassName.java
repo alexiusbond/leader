@@ -23,7 +23,7 @@ public class DbClassName extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT cn.id, cn.name, cn.school_id, sc.name, cnum.id, cnum.name, "
+        String sql = "SELECT cn.id, cn.name, cn.school_id, sc.name_ru, cnum.id, cnum.name, "
                 + "cn.activity_status_id, ac.name FROM class_name as cn "
                 + "left join class_number as cnum on cnum.id = cn.class_number_id "
                 + "left join school as sc on sc.id = cn.school_id "
@@ -58,7 +58,7 @@ public class DbClassName extends BaseDb {
             item.getItemProperty(sysSettings.school_id).setValue(
                     result.getInt("cn.school_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
-                    result.getString("sc.name"));
+                    result.getString("sc.name_ru"));
             item.getItemProperty(sysSettings.id).setValue(result.getInt("cn.id"));
         }
         return container;

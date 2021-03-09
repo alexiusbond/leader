@@ -97,7 +97,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private TextArea addessTA, healthNotesTA, shortNotesTA;
     private DateField birthDateDF, gradSchoolStartDF, gradSchoolEndDF;
     private ComboBoxMax genderCB, nationalityCB, martialStatusCB, mainPositionCB, citizenshipCB,
-            spouseHealthCB, healthCB, salaryCategoryCB, gradSchoolCB;
+            spouseHealthCB, healthCB, contractCategoryCB, gradSchoolCB;
     private FormLayout fieldsLayRight, fieldsLayLeft, fieldsLayContacts, fieldsLayFamily, fieldsLayExtra;
     private TabSheet tabs;
     private boolean isNew;
@@ -740,12 +740,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         Label captionGradSchool = new Label();
         captionGradSchool.setWidth("100%");
         captionGradSchool.setContentMode(ContentMode.HTML);
-        captionGradSchool.setValue(myUI.getMessage(SptMessages.SapatOrSchool));
+        captionGradSchool.setValue(myUI.getMessage(SptMessages.GraduationSchool));
         captionGradSchool.setStyleName("tableCpt");
         gl.addComponent(captionGradSchool, 0, 0, 2, 0);
 
         gradSchoolCB = createCombobox(0, null, null, true);
-        gradSchoolCB.setCaption(myUI.getMessage(SptMessages.SapatOrSchool));
+        gradSchoolCB.setCaption(myUI.getMessage(SptMessages.GraduationSchool));
         try {
             DbSchool dbCon = new DbSchool();
             dbCon.connect();
@@ -1588,7 +1588,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     + ", " + myUI.getMessage(SptMessages.ExtraHours) + ": "
                     + employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.ExtraHours)).getValue());
             mainPositionCB.setValue((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.position_id).getValue());
-            salaryCategoryCB.setValue((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.salary_category_id).getValue());
+            contractCategoryCB.setValue((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.salary_category_id).getValue());
         } else {
             workingStatusLb.setValue(myUI.getMessage(SptMessages.WorkingStatus) + ":");
             mainPositionLb.setValue(myUI.getMessage(SptMessages.MainPosition) + ":");
@@ -1597,7 +1597,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             extraBrancesLb.setValue(myUI.getMessage(SptMessages.ExtraBranches) + ":");
             totalHoursLb.setValue(myUI.getMessage(SptMessages.TotalHours) + myUI.getUser().getCurrent_year().getName() + ":");
             mainPositionCB.setValue(null);
-            salaryCategoryCB.setValue(((IndexedContainer) salaryCategoryCB.getContainerDataSource()).lastItemId());
+            contractCategoryCB.setValue(((IndexedContainer) contractCategoryCB.getContainerDataSource()).lastItemId());
         }
     }
 
@@ -1691,34 +1691,35 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.catching(e);
         }
 
-        salaryCategoryCB = new ComboBoxMax(myUI.getMessage(SptMessages.SalaryCategory));
-        salaryCategoryCB.setNullSelectionAllowed(false);
-        salaryCategoryCB.setRequired(true);
-        salaryCategoryCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        salaryCategoryCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        salaryCategoryCB.setWidth("100%");
-        salaryCategoryCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
-        salaryCategoryCB.setFilteringMode(FilteringMode.CONTAINS);
+        contractCategoryCB = new ComboBoxMax(myUI.getMessage(SptMessages.SalaryCategory));
+        contractCategoryCB.setNullSelectionAllowed(false);
+        contractCategoryCB.setRequired(true);
+        contractCategoryCB.setStyleName(ValoTheme.COMBOBOX_TINY);
+        contractCategoryCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        contractCategoryCB.setWidth("100%");
+        contractCategoryCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        contractCategoryCB.setFilteringMode(FilteringMode.CONTAINS);
         if (currentUser.hasRole(SystemSettings.rnAdmin) || currentUser.hasRole(SystemSettings.rnHr)) {
-            salaryCategoryCB.setEnabled(true);
+            contractCategoryCB.setEnabled(true);
         } else {
-            salaryCategoryCB.setEnabled(false);
+            contractCategoryCB.setEnabled(false);
         }
-        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmMenu)) {
-            salaryCategoryCB.setVisible(false);
+        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView
+                + ":" + sysSettings.prmContractVisible)) {
+            contractCategoryCB.setVisible(false);
         }
-        fieldsLayRight.addComponent(salaryCategoryCB);
+        fieldsLayRight.addComponent(contractCategoryCB);
 
         try {
             DbSalaryCategories dbCon = new DbSalaryCategories();
             dbCon.connect();
-            salaryCategoryCB.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
+            contractCategoryCB.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        salaryCategoryCB.setValue(((IndexedContainer) salaryCategoryCB.getContainerDataSource()).lastItemId());
+        contractCategoryCB.setValue(((IndexedContainer) contractCategoryCB.getContainerDataSource()).lastItemId());
     }
 
     private void buildphotoLayout() {
@@ -2126,7 +2127,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         nationalityCB.setValue(null);
         martialStatusCB.setValue(null);
         mainPositionCB.setValue(null);
-        salaryCategoryCB.setValue(((IndexedContainer) salaryCategoryCB.getContainerDataSource()).lastItemId());
+        contractCategoryCB.setValue(((IndexedContainer) contractCategoryCB.getContainerDataSource()).lastItemId());
         photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
         photoName = null;
     }
@@ -2209,7 +2210,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 emplID, sysSettings.martial_status_id).getValue());
         mainPositionCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, sysSettings.position_id).getValue());
-        salaryCategoryCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
+        contractCategoryCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, sysSettings.salary_category_id).getValue());
         if (employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.Photo)).getValue() != null) {
@@ -2406,9 +2407,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 ac.setType_id(2);
                                 ac.setSchool_id(myUI.getUser().getSchool_id());
                                 ac.setCode(empl.getLogin());
-                                ac.setParent_code(salaryCategoryCB.getContainerProperty(salaryCategoryCB.getValue(),
+                                ac.setParent_code(contractCategoryCB.getContainerProperty(contractCategoryCB.getValue(),
                                         myUI.getMessage(SptMessages.Code)).getValue().toString());
-                                ac.setParent_id((Integer) salaryCategoryCB.getValue());
+                                ac.setParent_id((Integer) contractCategoryCB.getValue());
                                 int acc_id = dba.exec_insert(ac);
                                 dba.close();
                                 addDatacontainerItem(id, acc_id);
@@ -2440,9 +2441,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             ac.setName(e.getSurname() + " " + e.getName());
                             ac.setStatus_id(2);
                             ac.setCode(e.getLogin());
-                            ac.setParent_code(salaryCategoryCB.getContainerProperty(salaryCategoryCB.getValue(),
+                            ac.setParent_code(contractCategoryCB.getContainerProperty(contractCategoryCB.getValue(),
                                     myUI.getMessage(SptMessages.Code)).getValue().toString());
-                            ac.setParent_id((Integer) salaryCategoryCB.getValue());
+                            ac.setParent_id((Integer) contractCategoryCB.getValue());
                             dba.exec_update(ac);
                             dba.close();
                             if (status != 0) {
@@ -2903,6 +2904,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             myUI.getMessage(SptMessages.ExtraPositions)).getValue()).getValue()).isEmpty()) {
                         ew.setExtra_position_ids((Set<?>) ((ComboBoxMultiselectMax) t.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.ExtraPositions)).getValue()).getValue());
+                    } else {
+                        ew.setExtra_position_ids(null);
                     }
                     ew.setWorking_status_id((Integer) ((ComboBox) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.WorkingStatus)).getValue()).getValue());
@@ -2920,18 +2923,17 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         ew.setId(dbew.exec_insert(ew));
                     }
+                    DbDefinition dbCon = new DbDefinition();
+                    dbCon.connect();
+                    dbCon.exec_delete(ew.getId() + "", sysSettings.dbEmployeeWorkExtraPosition, sysSettings.employee_work_id);
                     if (ew.getExtra_position_ids() != null && !ew.getExtra_position_ids().isEmpty()) {
-                        DbDefinition dbCon = new DbDefinition();
-                        dbCon.connect();
-                        dbCon.exec_delete(ew.getId() + "",
-                                sysSettings.dbEmployeeWorkExtraPosition, sysSettings.employee_work_id);
-                        dbCon.close();
                         Iterator extraIter = ew.getExtra_position_ids().iterator();
                         while (extraIter.hasNext()) {
                             int position_id = (Integer) extraIter.next();
                             dbew.exec_insert_extra_position(ew.getId(), position_id);
                         }
                     }
+                    dbCon.close();
                 }
             }
             list.clear();
@@ -4044,7 +4046,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     public ComboBoxMultiselectMax createComboboxMulti(String description, boolean isRequired) {
         ComboBoxMultiselectMax cb = new ComboBoxMultiselectMax();
-        cb.setRequired(true);
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth("100%");
@@ -4514,7 +4515,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item.getItemProperty(sysSettings.nationality_id).setValue(nationalityCB.getValue());
         item.getItemProperty(sysSettings.martial_status_id).setValue(martialStatusCB.getValue());
         item.getItemProperty(sysSettings.position_id).setValue(mainPositionCB.getValue());
-        item.getItemProperty(sysSettings.salary_category_id).setValue(salaryCategoryCB.getValue());
+        item.getItemProperty(sysSettings.salary_category_id).setValue(contractCategoryCB.getValue());
         item.getItemProperty(sysSettings.working_status_id).setValue(2);
         item.getItemProperty(sysSettings.acc_category_id).setValue(acc_category_id);
         item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(
@@ -4546,7 +4547,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         employeesDataTable.getContainerProperty(emplID,
                 sysSettings.martial_status_id).setValue(martialStatusCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                sysSettings.salary_category_id).setValue(salaryCategoryCB.getValue());
+                sysSettings.salary_category_id).setValue(contractCategoryCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.MainPosition)).setValue(mainPositionCB
                 .getContainerDataSource().getContainerProperty(mainPositionCB.getValue(),

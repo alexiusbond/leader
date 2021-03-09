@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -30,9 +30,9 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class YearlyPdf {
+public class SummaryPdf {
 
-    static final Logger logger = LogManager.getLogger(YearlyPdf.class);
+    static final Logger logger = LogManager.getLogger(SummaryPdf.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
@@ -41,7 +41,7 @@ public class YearlyPdf {
     Date aDate = new Date(System.currentTimeMillis());
     SystemSettings sysSettings = new SystemSettings();
 
-    public YearlyPdf(final MyVaadinUI myUI, final ComponentContainer layout,
+    public SummaryPdf(final MyVaadinUI myUI, final ComponentContainer layout,
             final StudInfoPdf st) {
         source1 = new StreamResource.StreamSource() {
 
@@ -59,10 +59,10 @@ public class YearlyPdf {
 
                 try {
 
-                    document = new Document(PageSize.A4, 10, 10, 70, 40);
+                    document = new Document(PageSize.A4.rotate(), 10, 10, 70, 40);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterLandscape event = new HeaderFooterLandscape(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -103,7 +103,7 @@ public class YearlyPdf {
                         document.add(p);
 
                         //installment plan table
-                        float[] Tplan_colsWidth = {0.07f, 0.12f, 0.2f, 0.25f, 0.23f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
+                        float[] Tplan_colsWidth = {0.07f, 0.8f, 0.2f, 0.25f, 0.23f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
                         PdfPTable pdfTable = new PdfPTable(10);
                         pdfTable.setWidthPercentage(90f);
                         pdfTable.setWidths(Tplan_colsWidth);
@@ -111,7 +111,7 @@ public class YearlyPdf {
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         pdfTable.addCell(new Phrase(" №", tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.School), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total_Active), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discount), tableFontBold));
@@ -131,7 +131,7 @@ public class YearlyPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             pdfTable.addCell(new Phrase(j + "", tableFont));
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
+                                    myUI.getMessage(SptMessages.School)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Total_Active)).getValue().toString(), tableFont));
@@ -188,17 +188,15 @@ public class YearlyPdf {
                     document.add(T2);
 
                 } catch (Exception e) {
-                    logger.error(e);
+                        logger.error(e);
                     logger.catching(e);
                 } finally {
                     if (document != null) {
                         document.close();
                     }
                 }
-
                 b = buffer.toByteArray();
                 return new ByteArrayInputStream(b);
-
             }
         };
 

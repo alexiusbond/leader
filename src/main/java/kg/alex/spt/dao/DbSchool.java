@@ -27,7 +27,7 @@ public class DbSchool extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT s.id, s.code, s.name, s.name_ru, s.year_id,y.name, "
+        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id, y.name, "
                 + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.adress, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join year as y on y.id = s.year_id "
@@ -37,8 +37,9 @@ public class DbSchool extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.NameKg), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.NameRu), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.NameEn), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(sysSettings.status_id, Integer.class, 0);
         container.addContainerProperty(sysSettings.year_id, Integer.class, 0);
@@ -58,10 +59,12 @@ public class DbSchool extends BaseDb {
             Item item = container.addItem(result.getInt("s.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Code)).setValue(
                     result.getString("s.code"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
-                    result.getString("s.name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.NameKg)).setValue(
+                    result.getString("s.name_kg"));
             item.getItemProperty(myUi.getMessage(SptMessages.NameRu)).setValue(
                     result.getString("s.name_ru"));
+            item.getItemProperty(myUi.getMessage(SptMessages.NameEn)).setValue(
+                    result.getString("s.name_en"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(sysSettings.status_id).setValue(
@@ -94,120 +97,131 @@ public class DbSchool extends BaseDb {
     }
 
     public int exec_update(School scl) throws SQLException {
-        String sql = "UPDATE school SET code=?,name=?,name_ru=?,"
+        String sql = "UPDATE school SET code=?,name_ru=?,name_kg=?,name_en=?,"
                 + "activity_status_id=?,director_fullname=?,adress=?,"
                 + "inn=?,bank=?,bank_account=?,phone=?,photo=?,city=?,school_type_id=? WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
-        stat.setString(2, scl.getName());
-        if (scl.getName_ru() != null && !scl.getName_ru().equals("")) {
-            stat.setString(3, scl.getName_ru());
+        stat.setString(2, scl.getName_ru());
+        if (scl.getName_kg() != null && !scl.getName_kg().equals("")) {
+            stat.setString(3, scl.getName_kg());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        stat.setInt(4, scl.getStatus_id());
-        if (scl.getDirector_f_name() != null && !scl.getDirector_f_name().equals("")) {
-            stat.setString(5, scl.getDirector_f_name());
+        if (scl.getName_en() != null && !scl.getName_en().equals("")) {
+            stat.setString(4, scl.getName_en());
         } else {
-            stat.setNull(5, Types.VARCHAR);
+            stat.setNull(4, Types.VARCHAR);
         }
-        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
-            stat.setString(6, scl.getAddress());
-        } else {
-            stat.setNull(6, Types.VARCHAR);
-        }
-        if (scl.getInn() != null && !scl.getInn().equals("")) {
-            stat.setString(7, scl.getInn());
-        } else {
-            stat.setNull(7, Types.VARCHAR);
-        }
-        if (scl.getBank() != null && !scl.getBank().equals("")) {
-            stat.setString(8, scl.getBank());
-        } else {
-            stat.setNull(8, Types.VARCHAR);
-        }
-        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
-            stat.setString(9, scl.getBank_account());
-        } else {
-            stat.setNull(9, Types.VARCHAR);
-        }
-        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
-            stat.setString(10, scl.getPhone());
-        } else {
-            stat.setNull(10, Types.VARCHAR);
-        }
-        if (scl.getPhoto() != null && !scl.getPhoto().equals("")) {
-            stat.setString(11, scl.getPhoto());
-        } else {
-            stat.setNull(11, Types.VARCHAR);
-        }
-        if (scl.getCity() != null && !scl.getCity().equals("")) {
-            stat.setString(12, scl.getCity());
-        } else {
-            stat.setNull(12, Types.VARCHAR);
-        }
-        stat.setInt(13, scl.getSchool_type_id());
-        stat.setInt(14, scl.getId());
-
-        int status = stat.executeUpdate();
-        return status;
-    }
-
-    public int exec_insert(School scl) throws SQLException {
-        String sql = "INSERT IGNORE INTO school (code,name,name_ru,"
-                + "year_id,activity_status_id,director_fullname,city,adress,inn,bank,"
-                + "bank_account,phone,photo,school_type_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, scl.getCode());
-        stat.setString(2, scl.getName());
-        if (scl.getName_ru() != null && !scl.getName_ru().equals("")) {
-            stat.setString(3, scl.getName_ru());
-        } else {
-            stat.setNull(3, Types.VARCHAR);
-        }
-        stat.setInt(4, scl.getYear_id());
         stat.setInt(5, scl.getStatus_id());
         if (scl.getDirector_f_name() != null && !scl.getDirector_f_name().equals("")) {
             stat.setString(6, scl.getDirector_f_name());
         } else {
             stat.setNull(6, Types.VARCHAR);
         }
-        if (scl.getCity() != null && !scl.getCity().equals("")) {
-            stat.setString(7, scl.getCity());
+        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
+            stat.setString(7, scl.getAddress());
         } else {
             stat.setNull(7, Types.VARCHAR);
         }
-        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
-            stat.setString(8, scl.getAddress());
+        if (scl.getInn() != null && !scl.getInn().equals("")) {
+            stat.setString(8, scl.getInn());
         } else {
             stat.setNull(8, Types.VARCHAR);
         }
-        if (scl.getInn() != null && !scl.getInn().equals("")) {
-            stat.setString(9, scl.getInn());
+        if (scl.getBank() != null && !scl.getBank().equals("")) {
+            stat.setString(9, scl.getBank());
         } else {
             stat.setNull(9, Types.VARCHAR);
         }
-        if (scl.getBank() != null && !scl.getBank().equals("")) {
-            stat.setString(10, scl.getBank());
+        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
+            stat.setString(10, scl.getBank_account());
         } else {
             stat.setNull(10, Types.VARCHAR);
         }
-        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
-            stat.setString(11, scl.getBank_account());
+        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
+            stat.setString(11, scl.getPhone());
         } else {
             stat.setNull(11, Types.VARCHAR);
         }
-        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
-            stat.setString(12, scl.getPhone());
+        if (scl.getPhoto() != null && !scl.getPhoto().equals("")) {
+            stat.setString(12, scl.getPhoto());
         } else {
             stat.setNull(12, Types.VARCHAR);
         }
-        if (scl.getPhoto() != null && scl.getPhoto().equals("")) {
-            stat.setString(13, scl.getPhoto());
+        if (scl.getCity() != null && !scl.getCity().equals("")) {
+            stat.setString(13, scl.getCity());
         } else {
             stat.setNull(13, Types.VARCHAR);
         }
         stat.setInt(14, scl.getSchool_type_id());
+        stat.setInt(15, scl.getId());
+
+        int status = stat.executeUpdate();
+        return status;
+    }
+
+    public int exec_insert(School scl) throws SQLException {
+        String sql = "INSERT IGNORE INTO school (code,name_ru,name_kg,name_en,"
+                + "year_id,activity_status_id,director_fullname,city,adress,inn,bank,"
+                + "bank_account,phone,photo,school_type_id) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setString(1, scl.getCode());
+        stat.setString(2, scl.getName_ru());
+        if (scl.getName_kg() != null && !scl.getName_kg().equals("")) {
+            stat.setString(3, scl.getName_kg());
+        } else {
+            stat.setNull(3, Types.VARCHAR);
+        }
+        if (scl.getName_en() != null && !scl.getName_en().equals("")) {
+            stat.setString(4, scl.getName_en());
+        } else {
+            stat.setNull(4, Types.VARCHAR);
+        }
+        stat.setInt(5, scl.getYear_id());
+        stat.setInt(6, scl.getStatus_id());
+        if (scl.getDirector_f_name() != null && !scl.getDirector_f_name().equals("")) {
+            stat.setString(7, scl.getDirector_f_name());
+        } else {
+            stat.setNull(7, Types.VARCHAR);
+        }
+        if (scl.getCity() != null && !scl.getCity().equals("")) {
+            stat.setString(8, scl.getCity());
+        } else {
+            stat.setNull(8, Types.VARCHAR);
+        }
+        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
+            stat.setString(9, scl.getAddress());
+        } else {
+            stat.setNull(9, Types.VARCHAR);
+        }
+        if (scl.getInn() != null && !scl.getInn().equals("")) {
+            stat.setString(10, scl.getInn());
+        } else {
+            stat.setNull(10, Types.VARCHAR);
+        }
+        if (scl.getBank() != null && !scl.getBank().equals("")) {
+            stat.setString(11, scl.getBank());
+        } else {
+            stat.setNull(11, Types.VARCHAR);
+        }
+        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
+            stat.setString(12, scl.getBank_account());
+        } else {
+            stat.setNull(12, Types.VARCHAR);
+        }
+        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
+            stat.setString(13, scl.getPhone());
+        } else {
+            stat.setNull(13, Types.VARCHAR);
+        }
+        if (scl.getPhoto() != null && scl.getPhoto().equals("")) {
+            stat.setString(14, scl.getPhoto());
+        } else {
+            stat.setNull(14, Types.VARCHAR);
+        }
+        stat.setInt(15, scl.getSchool_type_id());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -219,7 +233,7 @@ public class DbSchool extends BaseDb {
 
     public School execSchool(int scl_id) throws SQLException {
         School scl = new School();
-        String sql = "SELECT s.id, s.code, s.name, s.name_ru, s.year_id,y.name, "
+        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id,y.name, "
                 + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.adress, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join year as y on y.id = s.year_id "
@@ -236,7 +250,8 @@ public class DbSchool extends BaseDb {
             scl.setDirector_f_name(result.getString("s.director_fullname"));
             scl.setCity(result.getString("s.city"));
             scl.setInn(result.getString("s.inn"));
-            scl.setName(result.getString("s.name"));
+            scl.setName_kg(result.getString("s.name_kg"));
+            scl.setName_en(result.getString("s.name_en"));
             scl.setName_ru(result.getString("s.name_ru"));
             scl.setPhone(result.getString("s.phone"));
             scl.setStatus_id(result.getInt("s.activity_status_id"));
@@ -256,7 +271,7 @@ public class DbSchool extends BaseDb {
     }
 
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, int except_id) throws SQLException {
-        String sql = "SELECT s.id, concat(s.code, ' - ', s.name) as name, s.year_id, s.photo, s.code from school as s " +
+        String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.year_id, s.photo, s.code from school as s " +
                 "where s.id!=? order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, except_id);
@@ -294,7 +309,7 @@ public class DbSchool extends BaseDb {
 
     public StudInfoPdf execGetSchoolPdf(int scl_id) throws SQLException {
         StudInfoPdf st = new StudInfoPdf();
-        String sql = "SELECT sc.id, sc.name, sc.adress, sc.phone, sc.director_fullname, "
+        String sql = "SELECT sc.id, sc.name_ru, sc.adress, sc.phone, sc.director_fullname, "
                 + "concat(e.surname, ' ', e.name) as fullname FROM school as sc "
                 + "LEFT JOIN hr_employee_order AS eo ON sc.id = eo.school_id AND eo.to_date IS NULL "
                 + "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id "
@@ -306,7 +321,7 @@ public class DbSchool extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
-            st.setScl_name_ru(result.getString("sc.name"));
+            st.setScl_name_ru(result.getString("sc.name_ru"));
             st.setScl_address(result.getString("sc.adress"));
             st.setScl_phone(result.getString("sc.phone"));
             st.setScl_accountent_fullname(result.getString("fullname"));

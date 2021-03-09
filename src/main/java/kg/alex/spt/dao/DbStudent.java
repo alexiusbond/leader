@@ -348,7 +348,7 @@ public class DbStudent extends BaseDb {
 
     public StudInfoPdf execStudInfo_pdf(int student_id, int year_id)
             throws SQLException {
-        String sql = "SELECT st.login, st.photo, st.name, st.surname, sc.name, sc.adress, sc.phone, sc.director_fullname, "
+        String sql = "SELECT st.login, st.photo, st.name, st.surname, sc.name_ru, sc.adress, sc.phone, sc.director_fullname, "
                 + "CONCAT(cnu.name, ' - ', cna.name) AS class_name, concat(e.name, ' ', e.surname) as fullname FROM student AS st "
                 + "LEFT JOIN (SELECT so.to_class_name_id AS tcl, so.student_id as stid "
                 + "FROM student_orders AS so WHERE so.year_id = ? AND so.student_id = ? AND so.is_valid = 1 "
@@ -372,7 +372,7 @@ public class DbStudent extends BaseDb {
             st.setStud_name(result.getString("st.name"));
             st.setStud_surname(result.getString("st.surname"));
             st.setStud_class_name(result.getString("class_name"));
-            st.setScl_name_ru(result.getString("sc.name"));
+            st.setScl_name_ru(result.getString("sc.name_ru"));
             st.setScl_address(result.getString("sc.adress"));
             st.setScl_phone(result.getString("sc.phone"));
             st.setScl_accountent_fullname(result.getString("fullname"));
@@ -508,7 +508,7 @@ public class DbStudent extends BaseDb {
     public void execSQL_Statuses_by_classes(MyVaadinUI myUI, int year_id,
                                             StatusesReport sr) throws SQLException {
         SystemSettings sysSettings = new SystemSettings();
-        String sql = "SELECT sch.id, sch.name, COUNT(IF(st.entering_year_id<="
+        String sql = "SELECT sch.id, sch.name_ru, COUNT(IF(st.entering_year_id<="
                 + year_id + " AND cna.class_number_id IN ("
                 + sysSettings.convertCollectionToStr(((Set<?>) sr.classTable.getValue())) + ") "
                 + "AND edu.id IN ("
@@ -570,7 +570,7 @@ public class DbStudent extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("sch.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
-                    result.getString("sch.name"));
+                    result.getString("sch.name_ru"));
             class_iter = ((Set<?>) sr.classTable.getValue()).iterator();
             String footerVal;
             while (class_iter.hasNext()) {

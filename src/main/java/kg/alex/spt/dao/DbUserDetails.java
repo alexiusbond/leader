@@ -23,7 +23,7 @@ public class DbUserDetails extends BaseDb {
 
     public UserDetails execSQLUserInfo(String login) throws SQLException {
         String sql = "select e.id, ord.working_status_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
-                + "eo.school_id, sch.name, sch.school_type_id, sch.photo, sch.code, y.id, y.name, sch.transactions_start_date "
+                + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, y.id, y.name, sch.transactions_start_date "
                 + "from employee as e "
                 + "left join hr_employee_order as eo on eo.employee_id=e.id and eo.to_date IS NULL "
                 + "left join hr_orders as ord on ord.id=eo.hr_orders_id "
@@ -42,7 +42,7 @@ public class DbUserDetails extends BaseDb {
             user.setWorking_status_id(result.getInt("ord.working_status_id"));
             user.setSchool_id(result.getInt("eo.school_id"));
             user.setSchool_type_id(result.getInt("sch.school_type_id"));
-            user.setSchool_name(result.getString("sch.name"));
+            user.setSchool_name(result.getString("sch.name_ru"));
             user.setSchool_code(result.getString("sch.code"));
             user.setSchool_logo(result.getString("sch.photo"));
             user.setCurrent_year(new Definition(result.getInt("y.id"), result.getString("y.name")));

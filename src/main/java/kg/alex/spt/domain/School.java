@@ -11,7 +11,8 @@ public class School implements Serializable {
 
     private int id;
     private String code;
-    private String name;
+    private String name_kg;
+    private String name_en;
     private String name_ru;
     private String director_f_name;
     private String address;
@@ -24,6 +25,14 @@ public class School implements Serializable {
     private int school_type_id;
     private int year_id;
     private String photo;
+
+    public String getName_en() {
+        return name_en;
+    }
+
+    public void setName_en(String name_en) {
+        this.name_en = name_en;
+    }
 
     public int getSchool_type_id() {
         return school_type_id;
@@ -68,12 +77,12 @@ public class School implements Serializable {
         this.code = code;
     }
 
-    public String getName() {
-        return name;
+    public String getName_kg() {
+        return name_kg;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName_kg(String name_kg) {
+        this.name_kg = name_kg;
     }
 
     public String getDirector_f_name() {

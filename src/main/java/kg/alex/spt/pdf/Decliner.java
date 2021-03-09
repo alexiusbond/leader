@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.utils;
+package kg.alex.spt.pdf;
 
 public class Decliner {
     /// <summary>
