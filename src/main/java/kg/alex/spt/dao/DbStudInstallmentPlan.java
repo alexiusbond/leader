@@ -27,7 +27,8 @@ public class DbStudInstallmentPlan extends BaseDb {
 
     public IndexedContainer execSQL_St_InstPLan(MyVaadinUI myUI, int stud_id, int year_id,
             StudentDefinitionView dw) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT ip.id, ip.amount, ip.date_of_payment, ip.is_visible "
                 + "FROM student_installement_plan as ip "
                 + "where ip.student_id = ? and ip.year_id = ? "
@@ -40,14 +41,14 @@ public class DbStudInstallmentPlan extends BaseDb {
         while (result.next()) {
             String id = result.getString("ip.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
+            item.getItemProperty(SystemSettings.button).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false));
             java.util.Date date = result.getDate("ip.date_of_payment");
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(date, myUI.getMessage(SptMessages.Date), id, false, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     dw.createTextfieldDouble(result.getDouble("ip.amount"), myUI.getMessage(SptMessages.Amount), id));
-            item.getItemProperty(sysSettings.status_id)
+            item.getItemProperty(SystemSettings.status_id)
                     .setValue(result.getInt("ip.is_visible"));
         }
         return container;
@@ -89,7 +90,8 @@ public class DbStudInstallmentPlan extends BaseDb {
     public IndexedContainer execSQL_InstPLan(MyVaadinUI myUI, int stud_id, int year_id,
             InstplanPaymentsReport ip)
             throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT ip.id, ip.amount, ip.date_of_payment "
                 + "FROM student_installement_plan as ip "
                 + "where ip.student_id = ? and ip.year_id = ? "
@@ -104,7 +106,7 @@ public class DbStudInstallmentPlan extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("ip.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    sysSettings.df.format((result.getDate("ip.date_of_payment"))));
+                    SystemSettings.df.format((result.getDate("ip.date_of_payment"))));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("ip.amount"));
             ip.total_inst += result.getDouble("ip.amount");
@@ -115,7 +117,8 @@ public class DbStudInstallmentPlan extends BaseDb {
     public IndexedContainer execSQL_InstPlanByClass(MyVaadinUI myUI, Date from,
             Date till, int year_id, String class_ids, String edu_statuses_ids,
             ClassInstPlanReport cip) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT ip.id, ip.date_of_payment, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
                 + "st.name, st.surname, ip.amount, concat(sr.phone,' (',sr.fullname,')') as phone FROM student_installement_plan AS ip "
                 + "LEFT JOIN student AS st ON st.id = ip.student_id "
@@ -155,7 +158,7 @@ public class DbStudInstallmentPlan extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(result.getString("class_name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("ip.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(result.getString("phone"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(sysSettings.df.format((result.getDate("ip.date_of_payment"))));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format((result.getDate("ip.date_of_payment"))));
             cip.total += result.getDouble("ip.amount");
         }
         return container;

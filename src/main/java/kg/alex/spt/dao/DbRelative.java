@@ -21,7 +21,8 @@ public class DbRelative extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT sr.fullname, sr.work_place, sr.phone, "
                 + "sr.adress, sr.passport, sr.relatives_id, sr.is_main "
                 + "FROM student_relatives as sr where sr.student_id = ? "
@@ -36,7 +37,7 @@ public class DbRelative extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Address), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Passport), String.class, null);
-        container.addContainerProperty(sysSettings.is_main, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.is_main, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("sr.relatives_id"));
@@ -52,7 +53,7 @@ public class DbRelative extends BaseDb {
                     result.getString("sr.passport"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
                     result.getString("sr.phone"));
-            item.getItemProperty(sysSettings.is_main).setValue(
+            item.getItemProperty(SystemSettings.is_main).setValue(
                     result.getInt("sr.is_main"));
         }
         return container;

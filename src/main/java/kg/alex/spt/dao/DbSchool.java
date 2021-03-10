@@ -26,7 +26,7 @@ public class DbSchool extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
         String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id, y.name, "
                 + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.adress, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
@@ -41,9 +41,9 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.NameRu), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.NameEn), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(sysSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.year_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.school_type_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.year_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.school_type_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.DirectorFullName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.City), String.class, null);
@@ -53,7 +53,7 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.BankAccount), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Logo), String.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
@@ -67,11 +67,11 @@ public class DbSchool extends BaseDb {
                     result.getString("s.name_en"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(sysSettings.status_id).setValue(
+            item.getItemProperty(SystemSettings.status_id).setValue(
                     result.getInt("s.activity_status_id"));
-            item.getItemProperty(sysSettings.year_id).setValue(
+            item.getItemProperty(SystemSettings.year_id).setValue(
                     result.getInt("s.year_id"));
-            item.getItemProperty(sysSettings.school_type_id).setValue(
+            item.getItemProperty(SystemSettings.school_type_id).setValue(
                     result.getInt("s.school_type_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     result.getString("y.name"));
@@ -91,7 +91,7 @@ public class DbSchool extends BaseDb {
                     result.getString("s.phone"));
             item.getItemProperty(myUi.getMessage(SptMessages.Logo)).setValue(
                     result.getString("s.photo"));
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("s.id"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("s.id"));
         }
         return container;
     }
@@ -277,18 +277,18 @@ public class DbSchool extends BaseDb {
         stat.setInt(1, except_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        SystemSettings sysSettings = new SystemSettings();
+
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Logo), String.class, null);
-        container.addContainerProperty(sysSettings.year_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.year_id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("s.code"));
             item.getItemProperty(myUI.getMessage(SptMessages.Logo)).setValue(result.getString("s.photo"));
-            item.getItemProperty(sysSettings.year_id).setValue(result.getInt("s.year_id"));
+            item.getItemProperty(SystemSettings.year_id).setValue(result.getInt("s.year_id"));
         }
         return container;
     }

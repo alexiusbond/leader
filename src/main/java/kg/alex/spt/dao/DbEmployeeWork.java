@@ -87,7 +87,8 @@ public class DbEmployeeWork extends BaseDb {
 
     public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
                                     EmployeeDefinitionView edv) throws SQLException {
-        final SystemSettings sysSettings = new SystemSettings();
+        final 
+
         String sql = "SELECT ew.id, ew.hr_work_place_id, ew.position_id, " +
                 "group_concat(ep.position_id separator ',') as extra_positions, " +
                 "ew.start_date, ew.end_date, ew.working_status_id, ew.is_sapat FROM hr_employee_work as ew " +
@@ -101,8 +102,8 @@ public class DbEmployeeWork extends BaseDb {
         while (result.next()) {
             String id = result.getString("ew.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
             ComboBoxMax cb = edv.createCombobox(0, myUI.getMessage(SptMessages.MainPosition),
                     null, true);
             item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
@@ -122,7 +123,7 @@ public class DbEmployeeWork extends BaseDb {
             }
             cb.setValue(result.getInt("ew.position_id"));
             if (result.getString("extra_positions") != null) {
-                cb3.setValue(sysSettings.convertToSet(result.getString("extra_positions")));
+                cb3.setValue(SystemSettings.convertToSet(result.getString("extra_positions")));
             }
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(cb3);
             cb = edv.createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
@@ -138,7 +139,7 @@ public class DbEmployeeWork extends BaseDb {
             cb.setValue(result.getInt("ew.working_status_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(cb);
             final ComboBoxMax cb2 = edv.createCombobox(result.getInt("ew.hr_work_place_id"),
-                    myUI.getMessage(SptMessages.WorkPlace), sysSettings.dbWork_placeTable, true);
+                    myUI.getMessage(SptMessages.WorkPlace), SystemSettings.dbWork_placeTable, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
                 @Override
@@ -146,7 +147,7 @@ public class DbEmployeeWork extends BaseDb {
                     try {
                         DbDefinition dbd = new DbDefinition();
                         dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), sysSettings.dbWork_placeTable, false);
+                        int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbWork_placeTable, false);
                         dbd.close();
                         if (id != 0) {
                             Item item = ((IndexedContainer) cb2.getContainerDataSource()).addItem(id);
@@ -174,13 +175,13 @@ public class DbEmployeeWork extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(cb2);
             item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
                     edv.createDateField(result.getDate("ew.start_date"),
-                            myUI.getMessage(SptMessages.Start), null, true, sysSettings.datePattern, Resolution.DAY));
+                            myUI.getMessage(SptMessages.Start), null, true, SystemSettings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
                     edv.createDateField(result.getDate("ew.end_date"),
-                            myUI.getMessage(SptMessages.End), null, false, sysSettings.datePattern, Resolution.DAY));
+                            myUI.getMessage(SptMessages.End), null, false, SystemSettings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(SptMessages.Sapat)).setValue(
                     edv.createCheckBox(result.getBoolean("ew.is_sapat"), myUI.getMessage(SptMessages.Sapat)));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

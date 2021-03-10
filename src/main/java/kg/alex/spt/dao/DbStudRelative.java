@@ -28,7 +28,8 @@ public class DbStudRelative extends BaseDb {
 
     public IndexedContainer execSQL_St_Rel(MyVaadinUI myUi, int stud_id,
             StudentDefinitionView dw) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.work_place, "
                 + "sr.phone, sr.adress, sr.passport, sr.is_main, sr.relatives_id "
                 + "FROM student_relatives as sr where sr.student_id = ?;";
@@ -39,7 +40,7 @@ public class DbStudRelative extends BaseDb {
         while (result.next()) {
             String id = result.getString("sr.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
+            item.getItemProperty(SystemSettings.button).setValue(
                     dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id, false, false));
             if (result.getInt("sr.is_main") == 1) {
                 item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
@@ -81,8 +82,8 @@ public class DbStudRelative extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.RelativeType)).setValue(
                     dw.createCombobox(result.getInt("sr.relatives_id"),
                             myUi.getMessage(SptMessages.RelativeType),
-                            id, sysSettings.dbRelatives, false, false, false, false));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+                            id, SystemSettings.dbRelatives, false, false, false, false));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
         }
         return container;
     }

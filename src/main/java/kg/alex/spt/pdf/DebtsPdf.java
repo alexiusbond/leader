@@ -38,7 +38,8 @@ public class DebtsPdf {
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
     private Date fromDate, tillDate;
-    SystemSettings sysSettings = new SystemSettings();
+    
+
 
     public DebtsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
             final Date fDate, final Date tDate, final StudInfoPdf st, final double ttl_plan,
@@ -85,11 +86,11 @@ public class DebtsPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + sysSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassInstallementPlan) + ": "
-                            + year + " (" + sysSettings.df.format(fromDate) + " - " + sysSettings.df.format(tillDate) + ")", fontBold);
+                            + year + " (" + SystemSettings.df.format(fromDate) + " - " + SystemSettings.df.format(tillDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -125,13 +126,13 @@ public class DebtsPdf {
                         Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
                         Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        Tplan.addCell(new Phrase(sysSettings.dFormat.format(
+                        Tplan.addCell(new Phrase(SystemSettings.dFormat.format(
                                 (Double) planCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.InstallmentPlan)).getValue()), tableFont));
-                        Tplan.addCell(new Phrase(sysSettings.dFormat.format(
+                        Tplan.addCell(new Phrase(SystemSettings.dFormat.format(
                                 (Double) planCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
-                        Tplan.addCell(new Phrase(sysSettings.dFormat.format(
+                        Tplan.addCell(new Phrase(SystemSettings.dFormat.format(
                                 (Double) planCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Debt)).getValue()), tableFont));
                         Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -141,9 +142,9 @@ public class DebtsPdf {
                     Tplan.addCell(new Phrase(" ", ordFontBold));
                     Tplan.addCell(new Phrase(" ", ordFontBold));
                     Tplan.addCell(new Phrase(" ", ordFontBold));
-                    Tplan.addCell(new Phrase(sysSettings.dFormat.format(ttl_plan), ordFontBold));
-                    Tplan.addCell(new Phrase(sysSettings.dFormat.format(total_paid), ordFontBold));
-                    Tplan.addCell(new Phrase(sysSettings.dFormat.format(total_debt), ordFontBold));
+                    Tplan.addCell(new Phrase(SystemSettings.dFormat.format(ttl_plan), ordFontBold));
+                    Tplan.addCell(new Phrase(SystemSettings.dFormat.format(total_paid), ordFontBold));
+                    Tplan.addCell(new Phrase(SystemSettings.dFormat.format(total_debt), ordFontBold));
 
                     document.add(Tplan);
 

@@ -22,7 +22,8 @@ public class DbClassName extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT cn.id, cn.name, cn.school_id, sc.name_ru, cnum.id, cnum.name, "
                 + "cn.activity_status_id, ac.name FROM class_name as cn "
                 + "left join class_number as cnum on cnum.id = cn.class_number_id "
@@ -35,31 +36,31 @@ public class DbClassName extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Number), String.class, 0);
-        container.addContainerProperty(sysSettings.number_id, Integer.class, null);
+        container.addContainerProperty(SystemSettings.number_id, Integer.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(sysSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.school_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.school_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.School), String.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, null);
+        container.addContainerProperty(SystemSettings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("cn.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Number)).setValue(
                     result.getString("cnum.name"));
-            item.getItemProperty(sysSettings.number_id).setValue(
+            item.getItemProperty(SystemSettings.number_id).setValue(
                     result.getInt("cnum.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
                     result.getString("cn.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(sysSettings.status_id).setValue(
+            item.getItemProperty(SystemSettings.status_id).setValue(
                     result.getInt("cn.activity_status_id"));
-            item.getItemProperty(sysSettings.school_id).setValue(
+            item.getItemProperty(SystemSettings.school_id).setValue(
                     result.getInt("cn.school_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
                     result.getString("sc.name_ru"));
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("cn.id"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("cn.id"));
         }
         return container;
     }
@@ -116,7 +117,8 @@ public class DbClassName extends BaseDb {
     }
 
     public IndexedContainer execClass_for_import(MyVaadinUI myUi, int scl_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "select cn.id, concat(cnu.name,' - ',cn.name) as cl_name "
                 + "from class_name as cn "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
@@ -125,10 +127,10 @@ public class DbClassName extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(sysSettings.id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getString("cl_name"));
-            item.getItemProperty(sysSettings.id).setValue(
+            item.getItemProperty(SystemSettings.id).setValue(
                     result.getInt("cn.id"));
         }
         return container;

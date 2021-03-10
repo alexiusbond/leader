@@ -38,7 +38,8 @@ public class ClassListPdf {
     StreamResource resource = null;
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
-    SystemSettings sysSettings = new SystemSettings();
+    
+
 
     public ClassListPdf(final MyVaadinUI myUI, final IndexedContainer dataCont,
             final StudInfoPdf st, final ClassListReport clr) {
@@ -83,7 +84,7 @@ public class ClassListPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + sysSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassList), fontBold);
@@ -136,7 +137,7 @@ public class ClassListPdf {
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         if (dataCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Contract)).getValue() != null) {
-                            dataTable.addCell(new Phrase(sysSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Contract)).getValue()), tableFont));
                             dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             if (dataCont.getContainerProperty(next,
@@ -144,20 +145,20 @@ public class ClassListPdf {
                                 dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString(), tableFont));
                                 dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                                dataTable.addCell(new Phrase(sysSettings.dFormat.format(dataCont.getContainerProperty(next,
+                                dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Discount)).getValue()), tableFont));
                             } else {
                                 dataTable.addCell(new Phrase(" ", tableFont));
                                 dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                                 dataTable.addCell(new Phrase("0.00", tableFont));
                             }
-                            dataTable.addCell(new Phrase(sysSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(sysSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Net)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(sysSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(sysSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Left)).getValue()), tableFont));
                             dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         } else {
@@ -180,14 +181,14 @@ public class ClassListPdf {
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
-                    dataTable.addCell(new Phrase(sysSettings.dFormat.format(clr.contracts), tableFontBold));
+                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.contracts), tableFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discounted)
                             + clr.discountedStudents, tableFontBold));
-                    dataTable.addCell(new Phrase(sysSettings.dFormat.format(clr.discounts), tableFontBold));
-                    dataTable.addCell(new Phrase(sysSettings.dFormat.format(clr.debts), tableFontBold));
-                    dataTable.addCell(new Phrase(sysSettings.dFormat.format(clr.nets), tableFontBold));
-                    dataTable.addCell(new Phrase(sysSettings.dFormat.format(clr.paids), tableFontBold));
-                    dataTable.addCell(new Phrase(sysSettings.dFormat.format(clr.lefts), tableFontBold));
+                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.discounts), tableFontBold));
+                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.debts), tableFontBold));
+                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.nets), tableFontBold));
+                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.paids), tableFontBold));
+                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.lefts), tableFontBold));
 
                     document.add(dataTable);
 

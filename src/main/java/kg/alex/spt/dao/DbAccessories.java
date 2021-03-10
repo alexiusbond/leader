@@ -25,7 +25,8 @@ public class DbAccessories extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT ac.id, ac.name, ac.activity_status_id, a.name, "
                 + "ac.accessories_category_id, c.name FROM accessories as ac "
                 + "left join activity_status as a on a.id = ac.activity_status_id "
@@ -36,9 +37,9 @@ public class DbAccessories extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Category), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(sysSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.category_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.id, Integer.class, null);
+        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("ac.id"));
@@ -48,11 +49,11 @@ public class DbAccessories extends BaseDb {
                     result.getString("a.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(
                     result.getString("c.name"));
-            item.getItemProperty(sysSettings.status_id).setValue(
+            item.getItemProperty(SystemSettings.status_id).setValue(
                     result.getInt("ac.activity_status_id"));
-            item.getItemProperty(sysSettings.category_id).setValue(
+            item.getItemProperty(SystemSettings.category_id).setValue(
                     result.getInt("ac.accessories_category_id"));
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("ac.id"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("ac.id"));
         }
         return container;
     }

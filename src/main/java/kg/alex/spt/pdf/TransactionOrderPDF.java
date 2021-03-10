@@ -45,7 +45,8 @@ public class TransactionOrderPDF {
                 buffer = new ByteArrayOutputStream();
 
                 try {
-                    SystemSettings sysSettings = new SystemSettings();
+                    
+
 
                     document = new Document(PageSize.A4, 10, 10, 10, 10);
                     PdfWriter.getInstance(document, buffer);
@@ -72,7 +73,7 @@ public class TransactionOrderPDF {
                     dateTable.addCell(new Phrase("Номер документа", normal_font));
                     dateTable.addCell(new Phrase("Дата составления", normal_font));
                     dateTable.addCell(new Phrase(String.format("%07d", tr.getOrder_number()), normal_font));
-                    dateTable.addCell(new Phrase(sysSettings.dtmf.format(tr.getDate()), normal_font));
+                    dateTable.addCell(new Phrase(SystemSettings.dtmf.format(tr.getDate()), normal_font));
 
                     float[] orderTableWidth = {0.6f, 0.4f};
                     PdfPTable orderTable = new PdfPTable(2);
@@ -130,9 +131,9 @@ public class TransactionOrderPDF {
                     Paragraph sumPar = new Paragraph();
                     sumPar.add(new Chunk("Сумма цифрами: ", bold_font));
                     if (tr.getCurrency_id() == 2) {
-                        sumPar.add(new Chunk(sysSettings.dFormat.format(tr.getAmount()) + " USD", underlined_font));
+                        sumPar.add(new Chunk(SystemSettings.dFormat.format(tr.getAmount()) + " USD", underlined_font));
                     } else {
-                        sumPar.add(new Chunk(sysSettings.dFormat.format(tr.getAmount()) + " KGS", underlined_font));
+                        sumPar.add(new Chunk(SystemSettings.dFormat.format(tr.getAmount()) + " KGS", underlined_font));
                     }
 
                     cell = new PdfPCell(sumPar);

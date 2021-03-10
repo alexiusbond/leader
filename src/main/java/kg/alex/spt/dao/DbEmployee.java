@@ -69,7 +69,8 @@ public class DbEmployee extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id, String working_statuses,
                                     IndexedContainer workingStatCont, boolean withAdmin, boolean withHr, int employee_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         if (working_statuses.equals("") || working_statuses == null) {
             working_statuses = "-1";
         }
@@ -130,27 +131,27 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Hours), Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ExtraHours), Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.WorkingStatus), String.class, null);
-        container.addContainerProperty(sysSettings.gender_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.nationality_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.martial_status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.working_status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.position_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.extra_position_ids, String.class, null);
-        container.addContainerProperty(sysSettings.salary_category_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.acc_category_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.is_modifiable, Boolean.class, true);
-        container.addContainerProperty(sysSettings.visible_hr_orders, String.class, null);
+        container.addContainerProperty(SystemSettings.gender_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.nationality_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.martial_status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.working_status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.extra_position_ids, String.class, null);
+        container.addContainerProperty(SystemSettings.salary_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.is_modifiable, Boolean.class, true);
+        container.addContainerProperty(SystemSettings.visible_hr_orders, String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
 
         Iterator iter = workingStatCont.getItemIds().iterator();
         while (iter.hasNext()) {
             Object next = iter.next();
-            workingStatCont.getContainerProperty(next, sysSettings.count).setValue(0);
+            workingStatCont.getContainerProperty(next, SystemSettings.count).setValue(0);
         }
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("e.id"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("e.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("e.login"));
             item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
@@ -171,7 +172,7 @@ public class DbEmployee extends BaseDb {
                     result.getString("ws.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
-            item.getItemProperty(sysSettings.extra_position_ids).setValue(
+            item.getItemProperty(SystemSettings.extra_position_ids).setValue(
                     result.getString("extra_position_ids"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraBranches)).setValue(
                     result.getString("extra_branches"));
@@ -179,24 +180,24 @@ public class DbEmployee extends BaseDb {
                     result.getInt("ebh.hours"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraHours)).setValue(
                     result.getInt("ebh.extra"));
-            item.getItemProperty(sysSettings.gender_id).setValue(
+            item.getItemProperty(SystemSettings.gender_id).setValue(
                     result.getInt("g.id"));
-            item.getItemProperty(sysSettings.nationality_id).setValue(
+            item.getItemProperty(SystemSettings.nationality_id).setValue(
                     result.getInt("n.id"));
-            item.getItemProperty(sysSettings.martial_status_id).setValue(
+            item.getItemProperty(SystemSettings.martial_status_id).setValue(
                     result.getInt("m.id"));
-            item.getItemProperty(sysSettings.working_status_id).setValue(
+            item.getItemProperty(SystemSettings.working_status_id).setValue(
                     result.getInt("ws.id"));
             if (result.getInt("eo3.id") != 0) {
-                item.getItemProperty(sysSettings.is_modifiable).setValue(false);
+                item.getItemProperty(SystemSettings.is_modifiable).setValue(false);
             }
-            item.getItemProperty(sysSettings.visible_hr_orders).setValue(result.getString("ord.visible_hr_orders"));
+            item.getItemProperty(SystemSettings.visible_hr_orders).setValue(result.getString("ord.visible_hr_orders"));
             item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(result.getString("permissions"));
-            item.getItemProperty(sysSettings.position_id).setValue(result.getInt("p.id"));
-            item.getItemProperty(sysSettings.salary_category_id).setValue(result.getInt("cat.parent_id"));
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("cat.id"));
-            workingStatCont.getContainerProperty(result.getInt("ws.id"), sysSettings.count).setValue(
-                    (Integer) workingStatCont.getContainerProperty(result.getInt("ws.id"), sysSettings.count).getValue() + 1);
+            item.getItemProperty(SystemSettings.position_id).setValue(result.getInt("p.id"));
+            item.getItemProperty(SystemSettings.salary_category_id).setValue(result.getInt("cat.parent_id"));
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("cat.id"));
+            workingStatCont.getContainerProperty(result.getInt("ws.id"), SystemSettings.count).setValue(
+                    (Integer) workingStatCont.getContainerProperty(result.getInt("ws.id"), SystemSettings.count).getValue() + 1);
         }
         return container;
     }
@@ -288,7 +289,8 @@ public class DbEmployee extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT e.id, e.login, e.name, e.surname, e.photo, p.id, p.name, eo.from_date, eo.note, ebh.lessons, ebh.hours, ebh.extra, "
                 + "es.fullname, GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 1, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS main_branch, "
                 + "GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 2, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS extra_branches, "
@@ -337,10 +339,10 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.SpouseInfo), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Children), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Photo), String.class, null);
-        container.addContainerProperty(sysSettings.crud_status, String.class, null);
-        container.addContainerProperty(sysSettings.school_id, Integer.class, school_id);
-        container.addContainerProperty(sysSettings.position_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.crud_status, String.class, null);
+        container.addContainerProperty(SystemSettings.school_id, Integer.class, school_id);
+        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
@@ -384,7 +386,7 @@ public class DbEmployee extends BaseDb {
             try {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUi, sysSettings.hr_positionTable));
+                cb.setContainerDataSource(dbp.exec_for_select(myUi, SystemSettings.hr_positionTable));
                 dbp.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -400,7 +402,7 @@ public class DbEmployee extends BaseDb {
             df.setStyleName(ValoTheme.DATEFIELD_TINY);
             df.setRequired(true);
             df.setRequiredError(myUi.getMessage(SptMessages.RequiredField));
-            df.setDateFormat(sysSettings.datePattern);
+            df.setDateFormat(SystemSettings.datePattern);
             df.setDescription(myUi.getMessage(SptMessages.FromDate));
             df.setValue(result.getDate("eo.from_date"));
             df.setRangeEnd(new Date());
@@ -417,8 +419,8 @@ public class DbEmployee extends BaseDb {
             }
             tf.setEnabled(false);
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(tf);
-            item.getItemProperty(sysSettings.position_id).setValue(result.getInt("p.id"));
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("cat.id"));
+            item.getItemProperty(SystemSettings.position_id).setValue(result.getInt("p.id"));
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("cat.id"));
         }
         return container;
     }

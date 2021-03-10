@@ -51,7 +51,6 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
     private TextField period, periodKg;
     private DateField start_date, end_date;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
     private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -174,7 +173,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         start_date.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         start_date.setWidth("100%");
         start_date.setValue(new Date());
-        start_date.setDateFormat(sysSettings.datePattern);
+        start_date.setDateFormat(SystemSettings.datePattern);
         settingsLay.addComponent(start_date);
 
         end_date = new DateField(myUI.getMessage(SptMessages.EndDate));
@@ -183,7 +182,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         end_date.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         end_date.setWidth("100%");
         end_date.setValue(new Date());
-        end_date.setDateFormat(sysSettings.datePattern);
+        end_date.setDateFormat(SystemSettings.datePattern);
         settingsLay.addComponent(end_date);
 
     }
@@ -250,7 +249,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                         try {
                             status = dby.exec_update(
                                     getYearDefinition((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            sysSettings.id).getValue()));
+                                            SystemSettings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -327,13 +326,13 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnClassNameDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnClassNameDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnClassNameDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -353,10 +352,10 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                 myUI.getMessage(SptMessages.Period)).getValue().toString());
         periodKg.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.PeriodKg)).getValue().toString());
-        start_date.setValue(sysSettings.df.parse(dataTable.getContainerProperty(
+        start_date.setValue(SystemSettings.df.parse(dataTable.getContainerProperty(
                 dataTable.getValue(), myUI.getMessage(SptMessages.StartDate))
                 .getValue().toString()));
-        end_date.setValue(sysSettings.df.parse(dataTable.getContainerProperty(
+        end_date.setValue(SystemSettings.df.parse(dataTable.getContainerProperty(
                 dataTable.getValue(), myUI.getMessage(SptMessages.EndDate))
                 .getValue().toString()));
 
@@ -379,10 +378,10 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                 myUI.getMessage(SptMessages.PeriodKg)).setValue(periodKg.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.StartDate)).setValue(
-                sysSettings.df.format(start_date.getValue()));
+                SystemSettings.df.format(start_date.getValue()));
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.EndDate)).setValue(
-                sysSettings.df.format(end_date.getValue()));
+                SystemSettings.df.format(end_date.getValue()));
 
     }
 
@@ -391,15 +390,15 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.id).setValue(id);
         item.getItemProperty(myUI.getMessage(SptMessages.Period)).setValue(
                 period.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.PeriodKg)).setValue(
                 periodKg.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.StartDate)).setValue(
-                sysSettings.df.format(start_date.getValue()));
+                SystemSettings.df.format(start_date.getValue()));
         item.getItemProperty(myUI.getMessage(SptMessages.EndDate)).setValue(
-                sysSettings.df.format(end_date.getValue()));
+                SystemSettings.df.format(end_date.getValue()));
 
         dataTable.setValue(id);
     }
@@ -417,12 +416,12 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private void execDelete() {
         if (((Integer) ((IndexedContainer) dataTable.getContainerDataSource()).getIdByIndex(0)).intValue() == ((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.id).getValue()).intValue()) {
+                SystemSettings.id).getValue()).intValue()) {
             try {
                 DbDefinition dbDef = new DbDefinition();
                 dbDef.connect();
                 int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                        sysSettings.id).getValue(), sysSettings.dbYear);
+                        SystemSettings.id).getValue(), SystemSettings.dbYear);
                 if (st != 0) {
                     dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                     if (dataTable.getContainerDataSource().size() != 0) {

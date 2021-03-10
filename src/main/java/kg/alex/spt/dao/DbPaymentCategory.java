@@ -46,7 +46,8 @@ public class DbPaymentCategory extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT id, name, acc_category_id "
                 + "FROM payment_category "
                 + "order by id;";
@@ -54,12 +55,12 @@ public class DbPaymentCategory extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
-        container.addContainerProperty(sysSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                     result.getString("name"));
-            item.getItemProperty(sysSettings.acc_category_id).setValue(
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(
                     result.getInt("acc_category_id"));
         }
         return container;

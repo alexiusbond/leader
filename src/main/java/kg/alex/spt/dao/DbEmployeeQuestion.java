@@ -51,7 +51,8 @@ public class DbEmployeeQuestion extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
             EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT q.id, eq.id, q.name, eq.answer FROM hr_question as q "
                 + "left join hr_employee_question as eq on eq.question_id = q.id and eq.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -60,12 +61,12 @@ public class DbEmployeeQuestion extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Question), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Answer), TextField.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
         while (result.next()) {
             String id = result.getString("q.id");
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.Question)).setValue(result.getString("q.name"));
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("eq.id"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("eq.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Answer)).setValue(
                     edv.createTextfield(result.getString("eq.answer"),
                             myUI.getMessage(SptMessages.Answer),

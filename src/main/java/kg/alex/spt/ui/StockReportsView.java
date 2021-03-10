@@ -20,7 +20,7 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
 
     private MyVaadinUI myUI;
     private ComboBoxMax repTypeSelect;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
     public HorizontalSplitPanel mainPage;
@@ -57,10 +57,10 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
 
-        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmProductMovementsReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnStockReportsView + ":" + SystemSettings.prmProductMovementsReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ProductMovementsReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnStockReportsView + ":" + sysSettings.prmStockGeneralReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnStockReportsView + ":" + SystemSettings.prmStockGeneralReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.StockGeneralReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);

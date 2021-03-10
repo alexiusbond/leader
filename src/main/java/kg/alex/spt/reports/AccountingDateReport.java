@@ -57,7 +57,7 @@ public class AccountingDateReport implements Button.ClickListener,
     public FormattedTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private VerticalLayout rightLayout;
     private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab;
     private HorizontalLayout infoLay;
@@ -157,7 +157,7 @@ public class AccountingDateReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(sysSettings.datePattern);
+        fromDateDF.setDateFormat(SystemSettings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -166,7 +166,7 @@ public class AccountingDateReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(sysSettings.datePattern);
+        tillDateDF.setDateFormat(SystemSettings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
@@ -314,15 +314,15 @@ public class AccountingDateReport implements Button.ClickListener,
                         DbAccTransactions dbtr = new DbAccTransactions();
                         dbtr.connect();
                         schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), fromDateDF.getValue(),
-                                tillDateDF.getValue(), sysSettings.convertCollectionToStr(catIds));
-                        incomeTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
-                        expenseTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
-                        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": " + sysSettings.round(
+                                tillDateDF.getValue(), SystemSettings.convertCollectionToStr(catIds));
+                        incomeTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
+                        expenseTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
+                        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": " + SystemSettings.round(
                                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$</b>");
                         Calendar c = Calendar.getInstance();
                         c.setTime(fromDateDF.getValue());
                         c.add(Calendar.DAY_OF_MONTH, -1);
-                        prev_balanceLab.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime()) + "): " + schoolAcc.getPrevious_balance() + "$</b>");
+                        prev_balanceLab.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(c.getTime()) + "): " + schoolAcc.getPrevious_balance() + "$</b>");
                         dbtr.close();
                     } catch (Exception e) {
                         logger.error(e);
@@ -355,8 +355,8 @@ public class AccountingDateReport implements Button.ClickListener,
                                     } else {
                                         excelReport.setNextTable(t, sheet);
                                     }
-                                    excelReport.setReportTitle(t.getCaption() + " (" + sysSettings.df.format(fromDateDF.getValue()) + " / "
-                                            + sysSettings.df.format(tillDateDF.getValue()) + ")");
+                                    excelReport.setReportTitle(t.getCaption() + " (" + SystemSettings.df.format(fromDateDF.getValue()) + " / "
+                                            + SystemSettings.df.format(tillDateDF.getValue()) + ")");
                                     excelReport.setDisplayTotals(true);
                                     excelReport.convertTable();
                                     CellStyle style = excelReport.getWorkbook().createCellStyle();
@@ -384,11 +384,11 @@ public class AccountingDateReport implements Button.ClickListener,
                                             new CellRangeAddress(excelReport.getTotalsRow().getRowNum(), excelReport.getTotalsRow().getRowNum(),
                                                     excelReport.getTotalsRow().getFirstCellNum(), excelReport.getTotalsRow().getLastCellNum() - 1));
                                     excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
-                                            myUI.getMessage(SptMessages.IncomesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_income(), 2) + "$\t "
-                                                    + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$\t "
-                                                    + myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime())
+                                            myUI.getMessage(SptMessages.IncomesTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_income(), 2) + "$\t "
+                                                    + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_outcome(), 2) + "$\t "
+                                                    + myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(c.getTime())
                                                     + "): " + schoolAcc.getPrevious_balance() + "$\t "
-                                                    + myUI.getMessage(SptMessages.Transactions) + ": " + sysSettings.round(
+                                                    + myUI.getMessage(SptMessages.Transactions) + ": " + SystemSettings.round(
                                                     (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$\t ");
                                 }
                             }

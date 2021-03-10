@@ -51,7 +51,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
     private TextField nameTF, codeTF;
     private TextArea noteTF;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     private String parent_code = "";
     private Label parent_code_label;
@@ -217,7 +217,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -341,13 +341,13 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnIncomesDefinitionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnIncomesDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnIncomesDefinitionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnIncomesDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnIncomesDefinitionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnIncomesDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -362,9 +362,9 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
 
     private void fillFields() {
         if ((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.parent_id).getValue() != 0) {
+                SystemSettings.parent_id).getValue() != 0) {
             parentSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.parent_id).getValue());
+                    SystemSettings.parent_id).getValue());
         } else {
             parentSelect.setValue(null);
         }
@@ -388,7 +388,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         codeTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Code)).getValue().toString().replace((parent_code + "."), ""));
         statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).getValue());
+                SystemSettings.status_id).getValue());
     }
 
     private void clearFields() {
@@ -420,7 +420,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
-            int st = dbDef.exec_delete((Integer) dataTable.getValue(), sysSettings.dbAcc_category);
+            int st = dbDef.exec_delete((Integer) dataTable.getValue(), SystemSettings.dbAcc_category);
             if (st != 0) {
                 setParentCombo();
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());

@@ -43,7 +43,6 @@ public class AccountingSchoolsReport implements Button.ClickListener,
     private DateField fromDateDF, tillDateDF;
     public FilterTable schoolTable;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
 
     public AccountingSchoolsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
@@ -63,7 +62,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(sysSettings.datePattern);
+        fromDateDF.setDateFormat(SystemSettings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -72,7 +71,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(sysSettings.datePattern);
+        tillDateDF.setDateFormat(SystemSettings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
@@ -161,7 +160,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
                 try {
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
-                    dbat.exec_schools_accounting(myUI, sysSettings.convertCollectionToStr((Set<?>) schoolTable.getValue()),
+                    dbat.exec_schools_accounting(myUI, SystemSettings.convertCollectionToStr((Set<?>) schoolTable.getValue()),
                             fromDateDF.getValue(), tillDateDF.getValue(), this);
 
                     Calendar c = Calendar.getInstance();
@@ -170,7 +169,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.IncomesTotal), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.ExpensesTotal), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance) + " (" + sysSettings.df.format(c.getTime()) + ")", Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(c.getTime()) + ")", Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -186,7 +185,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
                 if (dataTable.getContainerDataSource().size() != 0) {
                     excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SchoolDiscounts));
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SchoolDiscounts)
-                            + "(" + sysSettings.df.format(fromDateDF.getValue()) + " - " + sysSettings.df.format(tillDateDF.getValue()) + ")");
+                            + "(" + SystemSettings.df.format(fromDateDF.getValue()) + " - " + SystemSettings.df.format(tillDateDF.getValue()) + ")");
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
                 }

@@ -52,7 +52,7 @@ public class ClassListReport implements Button.ClickListener,
     private FilterTable classTable;
     private IndexedContainer dataCont;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
     public double contracts, discounts, debts, nets, paids, lefts;
@@ -112,15 +112,15 @@ public class ClassListReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, sysSettings.dbEducationStatus));
+                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(sysSettings.convertToSet(
+        educationStatusMCB.setValue(SystemSettings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
@@ -219,9 +219,9 @@ public class ClassListReport implements Button.ClickListener,
                     DbStudContract dbsc = new DbStudContract();
                     dbsc.connect();
                     dataCont = dbsc.execSQL_ClassList(myUI,
-                            sysSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                            SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
                             (Integer) yearSelect.getValue(),
-                            sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
                     dataTable.setContainerDataSource(dataCont);
                     dataTable.setVisibleColumns(NATURAL_COL_ORDER);
@@ -236,17 +236,17 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
                             myUI.getMessage(SptMessages.Active) + activeStudents);
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            sysSettings.dFormat.format(contracts));
+                            SystemSettings.dFormat.format(contracts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            sysSettings.dFormat.format(discounts));
+                            SystemSettings.dFormat.format(discounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            sysSettings.dFormat.format(debts));
+                            SystemSettings.dFormat.format(debts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            sysSettings.dFormat.format(nets));
+                            SystemSettings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            sysSettings.dFormat.format(paids));
+                            SystemSettings.dFormat.format(paids));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            sysSettings.dFormat.format(lefts));
+                            SystemSettings.dFormat.format(lefts));
                     if (dataCont.size() != 0) {
                         dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
                                 + discountedStudents + " (" + discountedStudents * 100 / dataCont.size() + "%)");

@@ -59,7 +59,6 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
     private ComboBoxMax school1Select, school2Select;
     private Table data1Table, data2Table;
     private TextField search1TF, search2TF;
-    private SystemSettings sysSettings = new SystemSettings();
     private GridLayout settingsLay;
     private String[] NATURAL_COL_ORDER;
 
@@ -479,13 +478,13 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     .getContainerDataSource()).getItemIds().iterator();
             while (iter.hasNext()) {
                 Object next = iter.next();
-                if (t.getContainerProperty(next, sysSettings.crud_status).getValue() != null) {
+                if (t.getContainerProperty(next, SystemSettings.crud_status).getValue() != null) {
                     EmployeeOrder eo = new EmployeeOrder();
                     eo.setEmployee_id((Integer) next);
                     eo.setOrder_id(5);
                     eo.setFrom_to_school_id(Integer.parseInt(t.getId()));
-                    eo.setSchool_id((Integer) t.getContainerProperty(next, sysSettings.school_id).getValue());
-                    eo.setPosition_id((Integer) t.getContainerProperty(next, sysSettings.position_id).getValue());
+                    eo.setSchool_id((Integer) t.getContainerProperty(next, SystemSettings.school_id).getValue());
+                    eo.setPosition_id((Integer) t.getContainerProperty(next, SystemSettings.position_id).getValue());
                     eo.setFrom_date(((DateField) t.getContainerProperty(
                             next, myUI.getMessage(SptMessages.FromDate)).getValue()).getValue());
                     if (((TextField) t.getContainerProperty(next,
@@ -510,7 +509,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     AccCategory ac = dbAc.exec_sql(eo.getEmployee_id(), eo.getFrom_to_school_id(), eo.getSchool_id());
                     dbAc.exec_insert(ac);
                     dbAc.exec_update_activity_status((Integer) t.getContainerProperty(eo.getEmployee_id(),
-                            sysSettings.acc_category_id).getValue(), 1, sysSettings.transfered);
+                            SystemSettings.acc_category_id).getValue(), 1, SystemSettings.transfered);
                     dbAc.close();
                 }
             }
@@ -549,7 +548,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         Object sourceItemId = t.getData("itemId");
         Table targetTable = (Table) ((AbstractSelect.AbstractSelectTargetDetails) event.getTargetDetails()).getTarget();
         Table sourceTable = (Table) t.getSourceComponent();
-        if (targetTable != sourceTable && sourceTable.getContainerProperty(sourceItemId, sysSettings.crud_status).getValue() == null) {
+        if (targetTable != sourceTable && sourceTable.getContainerProperty(sourceItemId, SystemSettings.crud_status).getValue() == null) {
             Object[] propertyIds = sourceTable.getContainerPropertyIds().toArray();
             int size = propertyIds.length;
             Object[][] properties = new Object[size][2];
@@ -568,8 +567,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
             for (int i = 0; i < size; i++) {
                 Object propertyId = properties[i][0];
                 Object value = properties[i][1];
-                if (propertyId.equals(sysSettings.crud_status)) {
-                    item.getItemProperty(propertyId).setValue(sysSettings.FreshItem);
+                if (propertyId.equals(SystemSettings.crud_status)) {
+                    item.getItemProperty(propertyId).setValue(SystemSettings.FreshItem);
                 } else {
                     item.getItemProperty(propertyId).setValue(value);
                 }

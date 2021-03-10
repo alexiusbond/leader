@@ -48,7 +48,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     private ComboBoxMax statusSelect;
     private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
             innTF, bankTF, bankAccountTF, phoneTF, cityTF;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private int school_id;
     private Upload photoUpl;
     private File myFile;
@@ -191,7 +191,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -309,13 +309,13 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnSchoolModificationView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnSchoolModificationView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnSchoolModificationView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnSchoolModificationView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnSchoolModificationView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnSchoolModificationView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);

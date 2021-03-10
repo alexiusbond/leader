@@ -47,7 +47,6 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
     private ComboBoxMax adminCb, directorCb, accountentCb, supervisorCb, hrCb, supplyManagerCb, warehouseManagerCb, sapat_secretaryCb;
     private Label sebatExamLab;
     private ComboBoxMax sebatExamCb;
-    private SystemSettings sysSettings = new SystemSettings();
     private IndexedContainer paymentsContainer = new IndexedContainer();
     private IndexedContainer salaryContainer = new IndexedContainer();
     private IndexedContainer productsContainer = new IndexedContainer();
@@ -314,32 +313,32 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         }
 
         initPayCb.setValue(paymentsContainer.getContainerProperty((Integer) initPayCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         currCb.setValue(paymentsContainer.getContainerProperty((Integer) currCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         prevCb.setValue(paymentsContainer.getContainerProperty((Integer) prevCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         futrCb.setValue(paymentsContainer.getContainerProperty((Integer) futrCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         outcomesCb.setValue(paymentsContainer.getContainerProperty((Integer) outcomesCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         earlyPayCb.setValue(paymentsContainer.getContainerProperty((Integer) earlyPayCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         salaryCb.setValue(salaryContainer.getContainerProperty((Integer) salaryCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         localSalaryCb.setValue(salaryContainer.getContainerProperty((Integer) localSalaryCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
 
         foodCb.setValue(productsContainer.getContainerProperty((Integer) foodCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         stationeryCb.setValue(productsContainer.getContainerProperty((Integer) stationeryCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         buildingMaterialsCb.setValue(productsContainer.getContainerProperty((Integer) buildingMaterialsCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         washingMaterialsCb.setValue(productsContainer.getContainerProperty((Integer) washingMaterialsCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
         otherProductsCb.setValue(productsContainer.getContainerProperty((Integer) otherProductsCb.getData(),
-                sysSettings.acc_category_id).getValue());
+                SystemSettings.acc_category_id).getValue());
 
         Label captionPositions = new Label();
         captionPositions.setSizeFull();
@@ -490,15 +489,15 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            adminCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            hrCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            supplyManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            warehouseManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            sapat_secretaryCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            directorCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            accountentCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            supervisorCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.hr_positionTable));
-            sebatExamCb.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbExamTable));
+            adminCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            hrCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            supplyManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            warehouseManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            sapat_secretaryCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            directorCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            accountentCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            supervisorCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
+            sebatExamCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbExamTable));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -517,21 +516,21 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         }
 
         adminCb.setValue(positionsContainer.getContainerProperty((Integer) adminCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         hrCb.setValue(positionsContainer.getContainerProperty((Integer) hrCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         supplyManagerCb.setValue(positionsContainer.getContainerProperty((Integer) supplyManagerCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         warehouseManagerCb.setValue(positionsContainer.getContainerProperty((Integer) warehouseManagerCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         sapat_secretaryCb.setValue(positionsContainer.getContainerProperty((Integer) sapat_secretaryCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         directorCb.setValue(positionsContainer.getContainerProperty((Integer) directorCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         accountentCb.setValue(positionsContainer.getContainerProperty((Integer) accountentCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         supervisorCb.setValue(positionsContainer.getContainerProperty((Integer) supervisorCb.getData(),
-                sysSettings.position_id).getValue());
+                SystemSettings.position_id).getValue());
         sebatExamCb.setValue(main_exam);
 
         saveBtn = new Button(myUI.getMessage(SptMessages.SaveButton));

@@ -15,8 +15,6 @@ import org.tepi.filtertable.FilterTable;
  */
 public class FormattedFilterTable extends FilterTable {
 
-    private SystemSettings sysSettings = new SystemSettings();
-
     public FormattedFilterTable() {
         super();
     }
@@ -29,7 +27,7 @@ public class FormattedFilterTable extends FilterTable {
 
             if (property.getValue() != null) // Format a decimal value for a specific locale
             {
-                return sysSettings.dFormat.format((Double) property.getValue());
+                return SystemSettings.dFormat.format((Double) property.getValue());
             }
         }
         return super.formatPropertyValue(rowId, colId, property);

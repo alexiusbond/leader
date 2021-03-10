@@ -54,7 +54,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
     private DateField fromDateDF, tillDateDF;
     public FormattedTreeTable assertsDataTable, debtsDataTable;
     public FilterTreeTable assertsCategoriesTable, debtsCategoriesTable;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private Label assertsTtlLab, debtsTtlLab, ttlLab;
     private HorizontalLayout infoLay;
     private SchoolAccounting schoolAcc;
@@ -165,7 +165,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         fromDateDF.setResolution(Resolution.MONTH);
-        fromDateDF.setDateFormat(sysSettings.yearMonthPattern);
+        fromDateDF.setDateFormat(SystemSettings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         fromDateDF.addValueChangeListener(this);
 
@@ -175,7 +175,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tillDateDF.setResolution(Resolution.MONTH);
-        tillDateDF.setDateFormat(sysSettings.yearMonthPattern);
+        tillDateDF.setDateFormat(SystemSettings.yearMonthPattern);
         tillDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         tillDateDF.addValueChangeListener(this);
 
@@ -259,7 +259,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                         end_date.setTime(current.getTime());
                         end_date.set(Calendar.DAY_OF_MONTH, end_date.getActualMaximum(Calendar.DAY_OF_MONTH));
                         VerticalLayout rightLayout = buildRightLayout();
-                        tabSheet.addTab(rightLayout, sysSettings.ymdf.format(current.getTime()));
+                        tabSheet.addTab(rightLayout, SystemSettings.ymdf.format(current.getTime()));
                         Set<Integer> catIds = new HashSet<>();
                         if (!((Set<?>) assertsCategoriesTable.getValue()).isEmpty()) {
                             catIds.addAll((Set<Integer>) assertsCategoriesTable.getValue());
@@ -269,7 +269,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                                 DbTransfers dbCon = new DbTransfers();
                                 dbCon.connect();
                                 dbCon.exec_report_by_date(myUI, 3, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
-                                        assertsDataTable, sysSettings.convertCollectionToStr(catIds));
+                                        assertsDataTable, SystemSettings.convertCollectionToStr(catIds));
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (assertsDataTable.getContainerDataSource().size() != 0) {
@@ -298,7 +298,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                                 DbTransfers dbsc = new DbTransfers();
                                 dbsc.connect();
                                 dbsc.exec_report_by_date(myUI, 4, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
-                                        debtsDataTable, sysSettings.convertCollectionToStr(catIds));
+                                        debtsDataTable, SystemSettings.convertCollectionToStr(catIds));
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (debtsDataTable.getContainerDataSource().size() != 0) {
@@ -323,10 +323,10 @@ public class AccountingBalanceReport implements Button.ClickListener,
                             DbTransfers dbtr = new DbTransfers();
                             dbtr.connect();
                             schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
-                                    end_date.getTime(), sysSettings.convertCollectionToStr(catIds));
-                            assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " + sysSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
-                            debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": " + sysSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
-                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + sysSettings.round(
+                                    end_date.getTime(), SystemSettings.convertCollectionToStr(catIds));
+                            assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
+                            debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
+                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.round(
                                     (schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$</b>");
                             assertsDataTable.setData(schoolAcc.getTotal_income());
                             debtsDataTable.setData(schoolAcc.getTotal_outcome());

@@ -37,7 +37,8 @@ public class ClassPaymentPdf {
     StreamResource resource = null;
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
-    SystemSettings sysSettings = new SystemSettings();
+
+
 
     public ClassPaymentPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
             final Date fDate, final Date tDate, final StudInfoPdf st, final double total) {
@@ -81,11 +82,11 @@ public class ClassPaymentPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + sysSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassPayments) + ": "
-                            + year + " (" + sysSettings.df.format(fDate) + " - " + sysSettings.df.format(tDate) + ")", fontBold);
+                            + year + " (" + SystemSettings.df.format(fDate) + " - " + SystemSettings.df.format(tDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -128,7 +129,7 @@ public class ClassPaymentPdf {
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        infoTable.addCell(new Phrase(sysSettings.dFormat.format((Double) planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;
@@ -141,7 +142,7 @@ public class ClassPaymentPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
-                            + sysSettings.dFormat.format(total), ordFontBold));
+                            + SystemSettings.dFormat.format(total), ordFontBold));
 
                     document.add(infoTable);
 

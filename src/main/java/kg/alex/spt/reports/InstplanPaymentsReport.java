@@ -65,7 +65,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
     private Label debtLab, contractLab, discountLab, planDebt, netLab, paidLab,
             leftLab, emptyLab, loginLab, nameLab, surnameLab, classLab;
     private Embedded photoEmb;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     public double total_inst, total_pay;
 
@@ -95,7 +95,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -322,7 +322,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
             }
             installmentTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
             installmentTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), "Total "
-                    + sysSettings.dFormat.format(total_inst));
+                    + SystemSettings.dFormat.format(total_inst));
             if (paymentsCkb.getValue() == false) {
                 rightGrid.addComponent(installmentTable, 0, 4, 6, 4);
             } else {
@@ -352,7 +352,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
             }
             paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
             paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), "Total "
-                    + sysSettings.dFormat.format(total_pay));
+                    + SystemSettings.dFormat.format(total_pay));
 
             if (instPlanCkb.getValue() == false) {
                 rightGrid.addComponent(paymentsTable, 0, 4, 6, 4);
@@ -492,52 +492,52 @@ public class InstplanPaymentsReport implements Button.ClickListener,
         while (iter.hasNext()) {
             Object next = iter.next();
             if ((Integer) discCont.getContainerProperty(next,
-                    sysSettings.discount_type_id).getValue() == 1) {
-                discounts += sysSettings.dFormat.format(discCont.getContainerProperty(next,
+                    SystemSettings.discount_type_id).getValue() == 1) {
+                discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue()).toString() + "%";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
-                    sysSettings.discount_type_id).getValue() == 2) {
-                discounts += sysSettings.dFormat.format(discCont.getContainerProperty(next,
+                    SystemSettings.discount_type_id).getValue() == 2) {
+                discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue()).toString() + "$";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
-                    sysSettings.discount_type_id).getValue() == 3) {
-                discounts += sysSettings.dFormat.format(discCont.getContainerProperty(next,
+                    SystemSettings.discount_type_id).getValue() == 3) {
+                discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.FreeAmount)).getValue()).toString() + "%";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
-                    sysSettings.discount_type_id).getValue() == 4) {
-                discounts += sysSettings.dFormat.format(discCont.getContainerProperty(next,
+                    SystemSettings.discount_type_id).getValue() == 4) {
+                discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.FreeAmount)).getValue()).toString() + "$";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
             }
         }
-        contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + sysSettings.dFormat.format(c.getAmount()) + " $");
+        contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + SystemSettings.dFormat.format(c.getAmount()) + " $");
         discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts);
         if (debt > 0) {
             debtLab.setStyleName(ValoTheme.LABEL_FAILURE);
         } else {
             debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         }
-        debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + sysSettings.dFormat.format(debt) + " $");
-        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + sysSettings.dFormat.format(c.getContr_with_disc() + debt) + " $");
-        paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + sysSettings.dFormat.format(ttl_payment) + " $");
-        leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + sysSettings.dFormat.format((c.getContr_with_disc() + debt) - ttl_payment) + " $");
+        debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + SystemSettings.dFormat.format(debt) + " $");
+        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + SystemSettings.dFormat.format(c.getContr_with_disc() + debt) + " $");
+        paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + SystemSettings.dFormat.format(ttl_payment) + " $");
+        leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + SystemSettings.dFormat.format((c.getContr_with_disc() + debt) - ttl_payment) + " $");
         if ((c.getPlan_debt() - ttl_payment) > 0) {
             planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
-            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + sysSettings.dFormat.format(c.getPlan_debt() - ttl_payment) + " $");
+            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(c.getPlan_debt() - ttl_payment) + " $");
         } else {
             planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
-            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + sysSettings.dFormat.format(0.0) + " $");
+            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(0.0) + " $");
         }
     }
 }

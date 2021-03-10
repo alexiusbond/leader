@@ -58,7 +58,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
     private ComboBoxMax yearSelect;
     private EnhancedFormatExcelExport excelReport;
     private String[] NATURAL_COL_ORDER;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private Subject currentUser = SecurityUtils.getSubject();
     private VerticalLayout vl = new VerticalLayout();
 
@@ -254,9 +254,9 @@ public class HRLessonHoursReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
-            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbWorking_status));
-            branchTable.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbBranchTable));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
+            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWorking_status));
+            branchTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable));
             positionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
                     currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
             positionTable.setVisibleColumns(NATURAL_COL_ORDER);
@@ -268,7 +268,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        workingStatusesMCB.setValue(sysSettings.convertToSet(
+        workingStatusesMCB.setValue(SystemSettings.convertToSet(
                 workingStatusesMCB.getContainerDataSource().getItemIds()));
         workingStatusesMCB.addValueChangeListener(this);
 
@@ -392,10 +392,10 @@ public class HRLessonHoursReport implements Button.ClickListener,
                             }
 
                             dataTable.setContainerDataSource(dbel.execSQLHours(myUI, (Integer) yearSelect.getValue(), next,
-                                    sysSettings.convertCollectionToStr((Set<?>) branchTable.getValue()),
-                                    sysSettings.convertCollectionToStr((Set<?>) positionTable.getValue()),
-                                    sysSettings.convertCollectionToStr((Set<?>) extraPositionTable.getValue()),
-                                    sysSettings.convertCollectionToStr((Set<?>) workingStatusesMCB.getValue())));
+                                    SystemSettings.convertCollectionToStr((Set<?>) branchTable.getValue()),
+                                    SystemSettings.convertCollectionToStr((Set<?>) positionTable.getValue()),
+                                    SystemSettings.convertCollectionToStr((Set<?>) extraPositionTable.getValue()),
+                                    SystemSettings.convertCollectionToStr((Set<?>) workingStatusesMCB.getValue())));
                             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Hours), Table.Align.RIGHT);
                             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.ExtraHours), Table.Align.RIGHT);
                             if (((Set<?>) schoolTable.getValue()).size() > 1) {

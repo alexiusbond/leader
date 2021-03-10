@@ -44,7 +44,8 @@ public class MakeInvoicePDF {
                 buffer = new ByteArrayOutputStream();
 
                 try {
-                    SystemSettings sysSettings = new SystemSettings();
+
+
                     SimpleDateFormat dateRu = new SimpleDateFormat(
                             "«dd» MMMMM yyyy г.", myDateFormatSymbols);
 
@@ -79,7 +80,7 @@ public class MakeInvoicePDF {
                     dateTable.addCell(new Phrase("Номер документа", normal_font));
                     dateTable.addCell(new Phrase("Дата составления", normal_font));
                     dateTable.addCell(new Phrase(" ", normal_font));
-                    dateTable.addCell(new Phrase(sysSettings.dtmf.format(student.getPayment_date()), normal_font));
+                    dateTable.addCell(new Phrase(SystemSettings.dtmf.format(student.getPayment_date()), normal_font));
 
                     float[] orderTableWidth = {0.6f, 0.4f};
                     PdfPTable orderTable = new PdfPTable(2);

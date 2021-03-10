@@ -59,7 +59,8 @@ public class DbEmployeeSeminar extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
                                     EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT es.id, es.name, es.subject, es.note, es.date_of_issue FROM hr_employee_seminar as es "
                 + "where es.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -69,8 +70,8 @@ public class DbEmployeeSeminar extends BaseDb {
         while (result.next()) {
             String id = result.getString("es.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                     edv.createTextfield(result.getString("es.name"),
                             myUI.getMessage(SptMessages.Name),
@@ -86,8 +87,8 @@ public class DbEmployeeSeminar extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("es.date_of_issue"),
                             myUI.getMessage(SptMessages.IssueDate), null,
-                            true, sysSettings.datePattern, Resolution.DAY));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                            true, SystemSettings.datePattern, Resolution.DAY));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

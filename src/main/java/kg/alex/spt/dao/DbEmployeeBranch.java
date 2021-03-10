@@ -60,7 +60,8 @@ public class DbEmployeeBranch extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
                                     EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT ex.id, ex.hr_branch_id, ex.hr_importance_id FROM hr_employee_branch as ex "
                 + "where ex.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -70,11 +71,11 @@ public class DbEmployeeBranch extends BaseDb {
         while (result.next()) {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Branch)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Branch), sysSettings.dbBranchTable, true));
+                            myUI.getMessage(SptMessages.Branch), SystemSettings.dbBranchTable, true));
             if (result.getInt("ex.hr_importance_id") == 1) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Main)).setValue(
                         edv.createCheckBox(true, myUI.getMessage(SptMessages.Main)));
@@ -82,7 +83,7 @@ public class DbEmployeeBranch extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Main)).setValue(
                         edv.createCheckBox(false, myUI.getMessage(SptMessages.Main)));
             }
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

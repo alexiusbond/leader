@@ -45,7 +45,8 @@ public class DbStockMovements extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int invoice_id, StockIncomeView v)
             throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT t.id, t.amount, t.remain, t.price, t.acc_category_id, t.dp_measurement_id, t.note, t.currency_rate, rmn.remain "
                 + "FROM dp_stock_movements as t "
                 + "left join dp_invoice as inv on inv.id = t.invoice_id "
@@ -65,8 +66,8 @@ public class DbStockMovements extends BaseDb {
             }
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, sysSettings.dbStockMovement, is_modifyable));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbStockMovement, is_modifyable));
             ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true, is_modifyable);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
@@ -82,16 +83,16 @@ public class DbStockMovements extends BaseDb {
             cb.setId(id);
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Product)).setValue(cb);
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextfield(
                     result.getString("t.note"), myUi.getMessage(SptMessages.Note),
                     new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, false), true));
             cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(SptMessages.Measurement),
-                    sysSettings.dbMeasurement, true, is_modifyable);
+                    SystemSettings.dbMeasurement, true, is_modifyable);
             cb.setId(id);
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Measurement)).setValue(cb);
-            item.getItemProperty(sysSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
+            item.getItemProperty(SystemSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
             double minVal = 0.1;
             if (result.getDouble("t.remain") < result.getDouble("t.amount")) {
                 minVal = result.getDouble("t.amount") - result.getDouble("t.remain");
@@ -99,16 +100,16 @@ public class DbStockMovements extends BaseDb {
             TextField tf = v.createTextfieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Quantity),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), minVal, null),
-                    new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter(), (result.getDouble("t.remain") > 0));
+                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(), (result.getDouble("t.remain") > 0));
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
             item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
-            item.getItemProperty(sysSettings.quantity_id).setValue(result.getDouble("t.amount"));
+            item.getItemProperty(SystemSettings.quantity_id).setValue(result.getDouble("t.amount"));
             tf = v.createTextfieldWithProperty(
                     result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter(), is_modifyable);
+                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(), is_modifyable);
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Price));
@@ -117,14 +118,14 @@ public class DbStockMovements extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("t.amount") * result.getDouble("t.price"));
             item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getDouble("rmn.remain"));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
-            item.getItemProperty(sysSettings.is_modifiable).setValue(is_modifyable);
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.is_modifiable).setValue(is_modifyable);
             total += result.getDouble("t.amount") * result.getDouble("t.price");
 
             item = v.getOriginalCont().addItem(id);
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(sysSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
-            item.getItemProperty(sysSettings.quantity_id).setValue(result.getDouble("t.amount"));
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(SystemSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
+            item.getItemProperty(SystemSettings.quantity_id).setValue(result.getDouble("t.amount"));
         }
         v.setMovementsFooter(total);
         return container;
@@ -155,7 +156,8 @@ public class DbStockMovements extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int invoice_id, StockOutcomeView v) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT t.id, sum(t.amount) as amount, sum(t.amount * t.price) as total, "
                 + "t.acc_category_id, t.dp_measurement_id, t.note, "
                 + "sum(t.currency_rate*t.amount) as currency_rate, rmn.remain, "
@@ -174,8 +176,8 @@ public class DbStockMovements extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, sysSettings.dbStockMovement));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbStockMovement));
             ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
@@ -191,35 +193,35 @@ public class DbStockMovements extends BaseDb {
             cb.setId(id);
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Product)).setValue(cb);
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextfield(
                     result.getString("t.note"), myUi.getMessage(SptMessages.Note),
                     new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, false), true));
-            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(SptMessages.Measurement), sysSettings.dbMeasurement, true);
+            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(SptMessages.Measurement), SystemSettings.dbMeasurement, true);
             cb.setId(id);
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Measurement)).setValue(cb);
-            item.getItemProperty(sysSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
+            item.getItemProperty(SystemSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
             TextField tf = v.createTextfieldWithProperty(
                     result.getDouble("amount"), myUi.getMessage(SptMessages.Quantity),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter());
+                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter());
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
             item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
-            item.getItemProperty(sysSettings.quantity_id).setValue(result.getDouble("amount"));
+            item.getItemProperty(SystemSettings.quantity_id).setValue(result.getDouble("amount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Price)).setValue(result.getDouble("total") / result.getDouble("amount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(result.getDouble("currency_rate") / result.getDouble("amount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("total"));
             item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getDouble("rmn.remain"));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             total += result.getDouble("total");
 
             item = v.getOriginalCont().addItem(id);
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(sysSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
-            item.getItemProperty(sysSettings.quantity_id).setValue(result.getDouble("amount"));
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(SystemSettings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
+            item.getItemProperty(SystemSettings.quantity_id).setValue(result.getDouble("amount"));
         }
         v.setMovementsFooter(total);
         return container;
@@ -398,8 +400,9 @@ public class DbStockMovements extends BaseDb {
 
     public void exec_stock_operations(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till, int service_type_id,
                                       String stock_ids, FormattedTreeTable t) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
-        Set<Integer> selectedCategoryIds = sysSettings.getChild_ids(
+
+
+        Set<Integer> selectedCategoryIds = SystemSettings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
         String sql = "SELECT cat.id, CONCAT(IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code), ' - ', cat.name) AS name, " +
@@ -409,7 +412,7 @@ public class DbStockMovements extends BaseDb {
                 "LEFT JOIN acc_category AS cat ON sm.acc_category_id = cat.id " +
                 "LEFT JOIN dp_measurement AS m ON sm.dp_measurement_id = m.id " +
                 "LEFT JOIN dp_invoice AS inv ON sm.invoice_id = inv.id " +
-                "WHERE sm.acc_category_id IN (" + sysSettings.convertCollectionToStr(selectedCategoryIds) + ") AND " +
+                "WHERE sm.acc_category_id IN (" + SystemSettings.convertCollectionToStr(selectedCategoryIds) + ") AND " +
                 "(DATE(inv.creation_date) BETWEEN ? AND ?) AND ";
         if (service_type_id == 1) {
             sql += "inv.to_stock_id ";
@@ -484,13 +487,14 @@ public class DbStockMovements extends BaseDb {
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(total_amount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), SystemSettings.dFormat.format(total_amount));
     }
 
     public void exec_stock_balance(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till,
                                    String stock_ids, FormattedTreeTable t) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
-        Set<Integer> selectedCategoryIds = sysSettings.getChild_ids(
+
+
+        Set<Integer> selectedCategoryIds = SystemSettings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
         String sql = "SELECT cat.id, CONCAT(IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code), ' - ', cat.name) AS name, " +
@@ -503,7 +507,7 @@ public class DbStockMovements extends BaseDb {
                 "FROM dp_stock_movements AS sm " +
                 "LEFT JOIN acc_category AS cat ON sm.acc_category_id = cat.id " +
                 "LEFT JOIN dp_invoice AS inv ON sm.invoice_id = inv.id " +
-                "WHERE sm.acc_category_id IN (" + sysSettings.convertCollectionToStr(selectedCategoryIds) + ") AND " +
+                "WHERE sm.acc_category_id IN (" + SystemSettings.convertCollectionToStr(selectedCategoryIds) + ") AND " +
                 "(inv.to_stock_id IN (" + stock_ids + ") OR inv.from_stock_id IN (" + stock_ids + ")) " +
                 "GROUP BY cat.id ORDER BY cat.parent_code, CAST(cat.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -525,7 +529,7 @@ public class DbStockMovements extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " " +
-                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + sysSettings.df.format(till), Double.class, null);
+                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + SystemSettings.df.format(till), Double.class, null);
         t.setContainerDataSource(container);
         double total_in_amount = 0.0, total_out_amount = 0.0;
         Iterator itr = categoriesTable.getContainerDataSource().getItemIds().iterator();
@@ -546,7 +550,7 @@ public class DbStockMovements extends BaseDb {
                         item.getItemProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " " +
-                                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + sysSettings.df.format(till)).setValue(0.0);
+                                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + SystemSettings.df.format(till)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
                 }
@@ -571,7 +575,7 @@ public class DbStockMovements extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
                     + " - " + myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("out_total"));
             item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " " +
-                    myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + sysSettings.df.format(till)).setValue(result.getDouble("balance")
+                    myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + SystemSettings.df.format(till)).setValue(result.getDouble("balance")
                     + result.getDouble("in_amount") - result.getDouble("out_amount"));
 
             total_in_amount += result.getDouble("in_total");
@@ -589,13 +593,14 @@ public class DbStockMovements extends BaseDb {
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(total_in_amount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(total_out_amount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), SystemSettings.dFormat.format(total_in_amount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), SystemSettings.dFormat.format(total_out_amount));
     }
 
     public void exec_product_movements(MyVaadinUI myUI, int acc_category_id, Date from, Date till,
                                        Table t, int stock_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
 
         String sql = "SELECT inv.creation_date, LPAD(inv.invoice_number, 7, 0) as invoice_number, "
                 + "sm.note, sum(sm.amount) as amount, sum(sm.amount * sm.price) as total, "
@@ -631,7 +636,7 @@ public class DbStockMovements extends BaseDb {
                 totalOut = 0.0, totalIn = 0.0, netAmount = 0.0;
         while (result.next()) {
             Item item = container.addItem(++i);
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(sysSettings.df.format(result.getDate("inv.creation_date")));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(result.getDate("inv.creation_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("invoice_number"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("sm.note"));
             item.getItemProperty(myUI.getMessage(SptMessages.MovementType)).setValue(result.getString("tp.name"));
@@ -657,10 +662,10 @@ public class DbStockMovements extends BaseDb {
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(balance);
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome), sysSettings.dFormat.format(totalIn));
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome), sysSettings.dFormat.format(totalOut));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), sysSettings.dFormat.format(netAmount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Balance), sysSettings.dFormat.format(balance));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome), SystemSettings.dFormat.format(totalIn));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome), SystemSettings.dFormat.format(totalOut));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), SystemSettings.dFormat.format(netAmount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Balance), SystemSettings.dFormat.format(balance));
         t.setContainerDataSource(container);
     }
 

@@ -19,7 +19,7 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
 
     private MyVaadinUI myUI;
     private ComboBoxMax repTypeSelect;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
     public HorizontalSplitPanel mainPage;
@@ -55,25 +55,25 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         repTypeSelect.setWidth("100%");
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
-        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmMonthReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnAccountingReportsView + ":" + SystemSettings.prmMonthReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.MonthReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmByDateReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnAccountingReportsView + ":" + SystemSettings.prmByDateReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ByDateReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmSchoolAccountingReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnAccountingReportsView + ":" + SystemSettings.prmSchoolAccountingReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.SchoolAccountingReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmGeneralReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnAccountingReportsView + ":" + SystemSettings.prmGeneralReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.GeneralAccountingReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmCurrentAccountStatement)) {
+        if (currentUser.isPermitted(SystemSettings.cnAccountingReportsView + ":" + SystemSettings.prmCurrentAccountStatement)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.CurrentAccountStatementReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmSalariesReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnAccountingReportsView + ":" + SystemSettings.prmSalariesReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.SalariesReport));
         }
-        if (currentUser.isPermitted(sysSettings.cnAccountingReportsView + ":" + sysSettings.prmAccountingBalanceReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnAccountingReportsView + ":" + SystemSettings.prmAccountingBalanceReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.AccountingBalanceReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);

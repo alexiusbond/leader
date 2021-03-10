@@ -49,7 +49,6 @@ public class ClassDiscountsReport implements Button.ClickListener,
     public FormattedTable dataTable;
     public FilterTable classTable, discountsTable;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
 
     public ClassDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
@@ -166,15 +165,15 @@ public class ClassDiscountsReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, sysSettings.dbEducationStatus));
+                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(sysSettings.convertToSet(
+        educationStatusMCB.setValue(SystemSettings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.addValueChangeListener(this);
@@ -221,7 +220,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                     dbsc.connect();
                     dataTable.setContainerDataSource(null);
                     dbsc.execSQL_Discounts_by_classes(myUI, (Integer) yearSelect.getValue(),
-                            sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
                     Iterator class_iter = ((Set<?>) classTable.getValue()).iterator();
                     while (class_iter.hasNext()) {
@@ -239,7 +238,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                             dataTable.setColumnFooter(classTable.getContainerProperty(
                                     next, myUI.getMessage(SptMessages.Name)).getValue()
                                     + " " + myUI.getMessage(SptMessages.Average) + "%",
-                                    sysSettings.dFormat.format(Double.parseDouble(
+                                    SystemSettings.dFormat.format(Double.parseDouble(
                                             dataTable.getColumnFooter(classTable.getContainerProperty(
                                                     next, myUI.getMessage(SptMessages.Name)).getValue()
                                                     + " " + myUI.getMessage(SptMessages.Average) + "%"))

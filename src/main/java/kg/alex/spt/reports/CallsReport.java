@@ -56,7 +56,7 @@ public class CallsReport implements Button.ClickListener,
     private EnhancedFormatExcelExport excelReport;
     private IndexedContainer callsCont;
     private Date fromDate, tillDate;
-    private SystemSettings sysSettings = new SystemSettings();
+
     public int total;
 
     public CallsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
@@ -98,15 +98,15 @@ public class CallsReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, sysSettings.dbEducationStatus));
+                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(sysSettings.convertToSet(
+        educationStatusMCB.setValue(SystemSettings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
@@ -152,7 +152,7 @@ public class CallsReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(sysSettings.datePattern);
+        fromDateDF.setDateFormat(SystemSettings.datePattern);
         fromDateDF.setValue(new Date());
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
@@ -160,7 +160,7 @@ public class CallsReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(sysSettings.datePattern);
+        tillDateDF.setDateFormat(SystemSettings.datePattern);
         tillDateDF.setValue(new Date());
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
@@ -290,8 +290,8 @@ public class CallsReport implements Button.ClickListener,
             callsCont = dbsc.execSQL_getCallsReport(myUI,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
-                    sysSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
-                    sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
+                    SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                    SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
             dataTable.setContainerDataSource(callsCont);
             dbsc.close();
         } catch (Exception e) {
@@ -299,6 +299,6 @@ public class CallsReport implements Button.ClickListener,
             logger.catching(e);
         }
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.WhoCalled),
-                myUI.getMessage(SptMessages.Total) + ": " + sysSettings.dFormat.format(total));
+                myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.dFormat.format(total));
     }
 }

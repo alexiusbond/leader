@@ -47,7 +47,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
     private ComboBoxMax classNumberSelect;
     private Table lessonsTable;
     private FilterTable employeesTable;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private Subject currentUser = SecurityUtils.getSubject();
 
     public LessonAssessmentView(MyVaadinUI myUI) {
@@ -98,7 +98,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             classNumberSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.classTable));
+                    dbDef.exec_for_select(myUI, SystemSettings.classTable));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -142,7 +142,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                     Iterator iter = lessonsTable.getItemIds().iterator();
                     while (iter.hasNext()) {
                         Object next = iter.next();
-                        CheckBox cb = (CheckBox) lessonsTable.getContainerProperty(next, sysSettings.button).getValue();
+                        CheckBox cb = (CheckBox) lessonsTable.getContainerProperty(next, SystemSettings.button).getValue();
                         if (cb.getValue()) {
                             EmployeeLessons el = new EmployeeLessons();
                             el.setBranch_id((Integer) cb.getData());

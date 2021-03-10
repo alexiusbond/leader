@@ -51,7 +51,8 @@ public class DbAccCategory extends BaseDb {
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, int id, boolean withParents) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code, sc.acc_currency_id, "
                 + "c.employee_id from acc_category as c "
                 + "left join acc_category as cp on cp.id = c.parent_id "
@@ -71,16 +72,16 @@ public class DbAccCategory extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(sysSettings.acc_currency_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.employee_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.acc_currency_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.employee_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                     result.getString("code") + " - " + result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
-            item.getItemProperty(sysSettings.acc_currency_id).setValue(result.getInt("sc.acc_currency_id"));
-            item.getItemProperty(sysSettings.employee_id).setValue(result.getInt("c.employee_id"));
+            item.getItemProperty(SystemSettings.acc_currency_id).setValue(result.getInt("sc.acc_currency_id"));
+            item.getItemProperty(SystemSettings.employee_id).setValue(result.getInt("c.employee_id"));
         }
         return container;
     }
@@ -107,7 +108,8 @@ public class DbAccCategory extends BaseDb {
     }
 
     public void execSQL(MyVaadinUI myUI, int type, TreeTable t) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.parent_id, s.name, c.activity_status_id, "
                 + "c2.name, c.note FROM spt.acc_category as c "
                 + "left join activity_status as s on c.activity_status_id = s.id "
@@ -121,10 +123,10 @@ public class DbAccCategory extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Parent), String.class, null);
-        container.addContainerProperty(sysSettings.parent_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.parent_id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(sysSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
         t.setContainerDataSource(container);
         while (result.next()) {
@@ -135,18 +137,18 @@ public class DbAccCategory extends BaseDb {
             if (result.getInt("c.parent_id") != 0) {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("c.id"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("c.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                     result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(
                     result.getString("code"));
             item.getItemProperty(myUI.getMessage(SptMessages.Parent)).setValue(
                     result.getString("c2.name"));
-            item.getItemProperty(sysSettings.parent_id).setValue(
+            item.getItemProperty(SystemSettings.parent_id).setValue(
                     result.getInt("c.parent_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                     result.getString("s.name"));
-            item.getItemProperty(sysSettings.status_id).setValue(
+            item.getItemProperty(SystemSettings.status_id).setValue(
                     result.getInt("c.activity_status_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                     result.getString("c.note"));

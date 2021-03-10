@@ -102,7 +102,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private boolean isNew;
     private Label workingStatusLb, mainPositionLb, extraPositionsLb, mainBrancLb, extraBrancesLb, totalHoursLb,
             workingStatTtlLb, filteredLab;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER, NATURAL_COL_ORDER_PHONES, NATURAL_COL_ORDER_CHILDREN,
             NATURAL_COL_ORDER_EDU, NATURAL_COL_ORDER_WORK,
             NATURAL_COL_ORDER_QUESTIONING, NATURAL_COL_ORDER_EXAMS, NATURAL_COL_ORDER_SEMINARS,
@@ -160,7 +160,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         try {
             DbDefinition dbed = new DbDefinition();
             dbed.connect();
-            workingStatCont = dbed.execSQL_statuses_with_count(myUI, sysSettings.dbWorking_status, false);
+            workingStatCont = dbed.execSQL_statuses_with_count(myUI, SystemSettings.dbWorking_status, false);
             dbed.close();
         } catch (Exception e) {
             logger.error(e);
@@ -257,7 +257,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         tabs.addStyleName(ValoTheme.TABSHEET_FRAMED);
         tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         tabs.addTab(empSearchLay).setCaption(myUI.getMessage(SptMessages.Search));
-        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmTabSearch)) {
+        if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabSearch)) {
             tabs.getTab(empSearchLay).setVisible(false);
         }
         tabs.addTab(contactInfoLay).setCaption(myUI.getMessage(SptMessages.ContactInfo));
@@ -266,11 +266,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         tabs.addTab(achievementsInfoLay).setCaption(myUI.getMessage(SptMessages.Achievements));
         tabs.addTab(extraInfoLay).setCaption(myUI.getMessage(SptMessages.ExtraInfo));
         tabs.addTab(schoolInfoLay).setCaption(myUI.getMessage(SptMessages.SchoolInfo));
-        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmTabActivities)) {
+        if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabActivities)) {
             tabs.getTab(schoolInfoLay).setVisible(false);
         }
         tabs.addTab(ordersInfoLay).setCaption(myUI.getMessage(SptMessages.OrdersHistory));
-        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmTabOrders)) {
+        if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabOrders)) {
             tabs.getTab(ordersInfoLay).setVisible(false);
         }
         tabs.addTab(documentsLay).setCaption(myUI.getMessage(SptMessages.Documents));
@@ -337,7 +337,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayContacts.setSpacing(false);
         fieldsLayContacts.setMargin(new MarginInfo(false, false, false, true));
 
-        citizenshipCB = createCombobox(0, null, sysSettings.dbCountry, true);
+        citizenshipCB = createCombobox(0, null, SystemSettings.dbCountry, true);
         citizenshipCB.setCaption(myUI.getMessage(SptMessages.Citizenship));
         fieldsLayContacts.addComponent(citizenshipCB);
 
@@ -347,7 +347,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayContacts.addComponent(birth_placeTF);
 
         emailTF = createTextfield(null, null, new EmailValidator(myUI.getMessage(SptMessages.NotifWrongValue)), true);
-        emailTF.setCaption(sysSettings.email);
+        emailTF.setCaption(SystemSettings.email);
         fieldsLayContacts.addComponent(emailTF);
 
         addessTA = new TextArea(myUI.getMessage(SptMessages.Address));
@@ -417,7 +417,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         spousePhoneTF.setCaption(myUI.getMessage(SptMessages.Phone));
         fieldsLayFamily.addComponent(spousePhoneTF);
 
-        spouseHealthCB = createCombobox(0, null, sysSettings.dbHealthStatus, true);
+        spouseHealthCB = createCombobox(0, null, SystemSettings.dbHealthStatus, true);
         spouseHealthCB.setCaption(myUI.getMessage(SptMessages.HealthStatus));
         fieldsLayFamily.addComponent(spouseHealthCB);
 
@@ -553,7 +553,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayExtra.setSpacing(false);
         fieldsLayExtra.setMargin(true);
 
-        healthCB = createCombobox(0, null, sysSettings.dbHealthStatus, true);
+        healthCB = createCombobox(0, null, SystemSettings.dbHealthStatus, true);
         healthCB.setCaption(myUI.getMessage(SptMessages.HealthStatus));
         fieldsLayExtra.addComponent(healthCB);
 
@@ -1003,7 +1003,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setPhonesTable() {
         try {
-            NATURAL_COL_ORDER_PHONES = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_PHONES = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.Type),
                     myUI.getMessage(SptMessages.Number)};
             DbEmployeePhoneNumber dbepn = new DbEmployeePhoneNumber();
@@ -1021,7 +1021,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setChildrenTable() {
         try {
-            NATURAL_COL_ORDER_CHILDREN = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_CHILDREN = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.FullName),
                     myUI.getMessage(SptMessages.DateOfBirth),
                     myUI.getMessage(SptMessages.Institution),
@@ -1044,7 +1044,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private void setEducationTable(Table t, IndexedContainer c, int own_id) {
         try {
             if (own_id == 1) {
-                NATURAL_COL_ORDER_EDU = new String[]{sysSettings.button,
+                NATURAL_COL_ORDER_EDU = new String[]{SystemSettings.button,
                         myUI.getMessage(SptMessages.University),
                         myUI.getMessage(SptMessages.Country),
                         myUI.getMessage(SptMessages.Department),
@@ -1053,7 +1053,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         myUI.getMessage(SptMessages.End),
                         myUI.getMessage(SptMessages.Document)};
             } else {
-                NATURAL_COL_ORDER_EDU = new String[]{sysSettings.button,
+                NATURAL_COL_ORDER_EDU = new String[]{SystemSettings.button,
                         myUI.getMessage(SptMessages.University),
                         myUI.getMessage(SptMessages.Country),
                         myUI.getMessage(SptMessages.Department),
@@ -1077,7 +1077,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setWorkTable(Table t, IndexedContainer c, int own_id) {
         try {
-            NATURAL_COL_ORDER_WORK = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_WORK = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.WorkPlace),
                     myUI.getMessage(SptMessages.Sapat),
                     myUI.getMessage(SptMessages.MainPosition),
@@ -1119,7 +1119,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setLanguagesTable() {
         try {
-            NATURAL_COL_ORDER_LANGUAGES = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_LANGUAGES = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.Language),
                     myUI.getMessage(SptMessages.Level)};
             DbEmployeeLanguage dbel = new DbEmployeeLanguage();
@@ -1138,7 +1138,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setCertificatesTable() {
         try {
-            NATURAL_COL_ORDER_CERTIFICATES = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_CERTIFICATES = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.Certificate),
                     myUI.getMessage(SptMessages.GivenBy),
                     myUI.getMessage(SptMessages.IssueDate),
@@ -1160,7 +1160,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setSeminarsTable() {
         try {
-            NATURAL_COL_ORDER_SEMINARS = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_SEMINARS = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.Name),
                     myUI.getMessage(SptMessages.Subject),
                     myUI.getMessage(SptMessages.Note),
@@ -1182,7 +1182,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setExamsTable() {
         try {
-            NATURAL_COL_ORDER_EXAMS = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_EXAMS = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.Exam),
                     myUI.getMessage(SptMessages.Score),
                     myUI.getMessage(SptMessages.IssueDate),
@@ -1202,7 +1202,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setBranchesTable() {
         try {
-            NATURAL_COL_ORDER_BRANCHES = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_BRANCHES = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.Branch),
                     myUI.getMessage(SptMessages.Main)};
             DbEmployeeBranch dbeb = new DbEmployeeBranch();
@@ -1220,7 +1220,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setLessonsTable() {
         try {
-            NATURAL_COL_ORDER_LESSONS = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_LESSONS = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.Lesson),
                     myUI.getMessage(SptMessages.ClassName),
                     myUI.getMessage(SptMessages.AcademicYear),
@@ -1241,7 +1241,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void setOrdersTable() {
         try {
-            NATURAL_COL_ORDER_ORDERS = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_ORDERS = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.OrderType),
                     myUI.getMessage(SptMessages.Details),
                     myUI.getMessage(SptMessages.FromDate),
@@ -1404,16 +1404,16 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private void prepareNormalMode() {
         if (emplID == myUI.getUser().getId()) {
             modifyBtn.setEnabled(true);
-        } else if (currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.actModify) && emplID != 0
-                && (Boolean) employeesDataTable.getContainerProperty(emplID, sysSettings.is_modifiable).getValue()) {
+        } else if (currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.actModify) && emplID != 0
+                && (Boolean) employeesDataTable.getContainerProperty(emplID, SystemSettings.is_modifiable).getValue()) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
         if (tabs.getSelectedTab() == tabs.getTab(empSearchLay).getComponent()) {
-            if (currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.actDelete) && emplID != 0
-                    && (Boolean) employeesDataTable.getContainerProperty(emplID, sysSettings.is_modifiable).getValue()) {
+            if (currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.actDelete) && emplID != 0
+                    && (Boolean) employeesDataTable.getContainerProperty(emplID, SystemSettings.is_modifiable).getValue()) {
                 deleteBtn.setEnabled(true);
             }
         } else {
@@ -1467,8 +1467,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         while (iter.hasNext()) {
             Integer next = iter.next();
             str += "&emsp;" + workingStatCont.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue() + ": "
-                    + workingStatCont.getContainerProperty(next, sysSettings.count).getValue();
-            total += (Integer) workingStatCont.getContainerProperty(next, sysSettings.count).getValue();
+                    + workingStatCont.getContainerProperty(next, SystemSettings.count).getValue();
+            total += (Integer) workingStatCont.getContainerProperty(next, SystemSettings.count).getValue();
         }
         str += "&emsp;" + myUI.getMessage(SptMessages.Total) + ": " + total;
         workingStatTtlLb.setValue(str);
@@ -1480,7 +1480,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
             int id = 0;
-            if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.prmMenu)) {
+            if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmMenu)) {
                 id = emplID;
             }
             employeesDataTable.setContainerDataSource(
@@ -1586,8 +1586,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     + employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.Hours)).getValue()
                     + ", " + myUI.getMessage(SptMessages.ExtraHours) + ": "
                     + employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.ExtraHours)).getValue());
-            mainPositionCB.setValue((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.position_id).getValue());
-            contractCategoryCB.setValue((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.salary_category_id).getValue());
+            mainPositionCB.setValue((Integer) employeesDataTable.getContainerProperty(emplID, SystemSettings.position_id).getValue());
+            contractCategoryCB.setValue((Integer) employeesDataTable.getContainerProperty(emplID, SystemSettings.salary_category_id).getValue());
         } else {
             workingStatusLb.setValue(myUI.getMessage(SptMessages.WorkingStatus) + ":");
             mainPositionLb.setValue(myUI.getMessage(SptMessages.MainPosition) + ":");
@@ -1648,7 +1648,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayLeft.addComponent(middlenameTF);
 
         birthDateDF = createDateField(new Date(), null, myUI.getMessage(SptMessages.DateOfBirth),
-                true, sysSettings.datePattern, Resolution.DAY);
+                true, SystemSettings.datePattern, Resolution.DAY);
         fieldsLayLeft.addComponent(birthDateDF);
     }
 
@@ -1657,15 +1657,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayRight.setSpacing(false);
         fieldsLayRight.setMargin(false);
 
-        genderCB = createCombobox(0, null, sysSettings.dbGender, true);
+        genderCB = createCombobox(0, null, SystemSettings.dbGender, true);
         genderCB.setCaption(myUI.getMessage(SptMessages.Gender));
         fieldsLayRight.addComponent(genderCB);
 
-        nationalityCB = createCombobox(0, null, sysSettings.dbNationality, true);
+        nationalityCB = createCombobox(0, null, SystemSettings.dbNationality, true);
         nationalityCB.setCaption(myUI.getMessage(SptMessages.Nationality));
         fieldsLayRight.addComponent(nationalityCB);
 
-        martialStatusCB = createCombobox(0, null, sysSettings.dbMartialStatus, true);
+        martialStatusCB = createCombobox(0, null, SystemSettings.dbMartialStatus, true);
         martialStatusCB.setCaption(myUI.getMessage(SptMessages.MartialStatus));
         fieldsLayRight.addComponent(martialStatusCB);
 
@@ -1703,8 +1703,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         } else {
             contractCategoryCB.setEnabled(false);
         }
-        if (!currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView
-                + ":" + sysSettings.prmContractVisible)) {
+        if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView
+                + ":" + SystemSettings.prmContractVisible)) {
             contractCategoryCB.setVisible(false);
         }
         fieldsLayRight.addComponent(contractCategoryCB);
@@ -2200,17 +2200,17 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             middlenameTF.setValue("");
         }
         genderCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, sysSettings.gender_id).getValue());
+                emplID, SystemSettings.gender_id).getValue());
         birthDateDF.setValue((Date) employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, myUI.getMessage(SptMessages.DateOfBirth)).getValue());
         nationalityCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, sysSettings.nationality_id).getValue());
+                emplID, SystemSettings.nationality_id).getValue());
         martialStatusCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, sysSettings.martial_status_id).getValue());
+                emplID, SystemSettings.martial_status_id).getValue());
         mainPositionCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, sysSettings.position_id).getValue());
+                emplID, SystemSettings.position_id).getValue());
         contractCategoryCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, sysSettings.salary_category_id).getValue());
+                emplID, SystemSettings.salary_category_id).getValue());
         if (employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.Photo)).getValue() != null) {
             photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR
@@ -2374,27 +2374,27 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 insertEmplOrder(eo);
                                 String roleName = loginTF.getValue();
                                 List<String> extra_position_ids = null;
-                                if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids) != null
-                                        && employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
+                                if (employeesDataTable.getContainerProperty(emplID, SystemSettings.extra_position_ids) != null
+                                        && employeesDataTable.getContainerProperty(emplID, SystemSettings.extra_position_ids).getValue() != null) {
                                     extra_position_ids = Arrays.asList(employeesDataTable.getContainerProperty(emplID,
-                                            sysSettings.extra_position_ids).getValue().toString().split(", "));
+                                            SystemSettings.extra_position_ids).getValue().toString().split(", "));
                                 }
-                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5
+                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 5
                                         || (extra_position_ids != null && extra_position_ids.contains("5"))) {
                                     roleName = SystemSettings.rnAdmin;
-                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25
+                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 25
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
                                     roleName = SystemSettings.rnHr;
-                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 115
+                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 115
                                         || (extra_position_ids != null && extra_position_ids.contains("115"))) {
                                     roleName = SystemSettings.rnSapatSecretary;
                                 }
                                 insertloginRoleName(loginTF.getValue(), roleName);
-                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
+                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 5
                                         && (extra_position_ids == null || !extra_position_ids.contains("5"))
-                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
+                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 25
                                         && (extra_position_ids == null || !extra_position_ids.contains("25"))
-                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 115
+                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 115
                                         && (extra_position_ids == null || !extra_position_ids.contains("115"))
                                         && mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
                                         myUI.getMessage(SptMessages.Permissions)).getValue() != null) {
@@ -2420,8 +2420,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                 prepareNormalMode();
                                 passwordTF.setValue("");
-                                workingStatCont.getContainerProperty(2, sysSettings.count)
-                                        .setValue(((Integer) workingStatCont.getContainerProperty(2, sysSettings.count).getValue()) + 1);
+                                workingStatCont.getContainerProperty(2, SystemSettings.count)
+                                        .setValue(((Integer) workingStatCont.getContainerProperty(2, SystemSettings.count).getValue()) + 1);
                                 repaint();
                             } else {
                                 Notification.show(myUI.getMessage(SptMessages.CanNotSaveIdNumber), Notification.Type.WARNING_MESSAGE);
@@ -2431,7 +2431,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             String oldLogin = employeesDataTable.getContainerDataSource()
                                     .getContainerProperty(emplID, myUI.getMessage(SptMessages.Id)).getValue().toString();
                             int status = 0;
-                            Employee e = getEmployee((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.id).getValue());
+                            Employee e = getEmployee((Integer) employeesDataTable.getContainerProperty(emplID, SystemSettings.id).getValue());
                             try {
                                 status = dbe.exec_update(e, checkPassword());
                             } catch (Exception ex) {
@@ -2441,7 +2441,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             DbAccCategory dba = new DbAccCategory();
                             dba.connect();
                             AccCategory ac = new AccCategory();
-                            ac.setId((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.acc_category_id).getValue());
+                            ac.setId((Integer) employeesDataTable.getContainerProperty(emplID, SystemSettings.acc_category_id).getValue());
                             ac.setName(e.getSurname() + " " + e.getName());
                             ac.setStatus_id(2);
                             ac.setCode(e.getLogin());
@@ -2496,15 +2496,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     updateInfoLayout();
                                     dbe.exec_delete_perm(oldLogin);
                                     List<String> extra_position_ids = null;
-                                    if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
+                                    if (employeesDataTable.getContainerProperty(emplID, SystemSettings.extra_position_ids).getValue() != null) {
                                         extra_position_ids = Arrays.asList(employeesDataTable.getContainerProperty(emplID,
-                                                sysSettings.extra_position_ids).getValue().toString().split(", "));
+                                                SystemSettings.extra_position_ids).getValue().toString().split(", "));
                                     }
-                                    if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
+                                    if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 5
                                             && (extra_position_ids == null || !extra_position_ids.contains("5"))
-                                            && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
+                                            && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 25
                                             && (extra_position_ids == null || !extra_position_ids.contains("25"))
-                                            && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 115
+                                            && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 115
                                             && (extra_position_ids == null || !extra_position_ids.contains("115"))) {
                                         insertPermissions(loginTF.getValue());
                                     }
@@ -2525,29 +2525,29 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 }
                                 String roleName = loginTF.getValue();
                                 List<String> extra_position_ids = null;
-                                if (employeesDataTable.getContainerProperty(emplID, sysSettings.extra_position_ids).getValue() != null) {
+                                if (employeesDataTable.getContainerProperty(emplID, SystemSettings.extra_position_ids).getValue() != null) {
                                     extra_position_ids = Arrays.asList(employeesDataTable.getContainerProperty(emplID,
-                                            sysSettings.extra_position_ids).getValue().toString().split(", "));
+                                            SystemSettings.extra_position_ids).getValue().toString().split(", "));
                                 }
-                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 5
+                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 5
                                         || (extra_position_ids != null && extra_position_ids.contains("5"))) {
                                     roleName = SystemSettings.rnAdmin;
                                     dbe.exec_delete_perm(oldLogin);
-                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 25
+                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 25
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
                                     roleName = SystemSettings.rnHr;
                                     dbe.exec_delete_perm(oldLogin);
-                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() == 115
+                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 115
                                         || (extra_position_ids != null && extra_position_ids.contains("115"))) {
                                     roleName = SystemSettings.rnSapatSecretary;
                                     dbe.exec_delete_perm(oldLogin);
                                 }
                                 dbe.exec_update_role(oldLogin, loginTF.getValue(), roleName);
-                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 5
+                                if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 5
                                         && (extra_position_ids == null || !extra_position_ids.contains("5"))
-                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 25
+                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 25
                                         && (extra_position_ids == null || !extra_position_ids.contains("25"))
-                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), sysSettings.position_id).getValue() != 115
+                                        && (Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() != 115
                                         && (extra_position_ids == null || !extra_position_ids.contains("115"))
                                         && !oldLogin.equals(loginTF.getValue())) {
                                     dbe.exec_update_perm(oldLogin, loginTF.getValue());
@@ -2557,7 +2557,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 try {
                                     DbDefinition dbCon = new DbDefinition();
                                     dbCon.connect();
-                                    dbCon.exec_delete_not_referenced(sysSettings.dbAttachmentsTable);
+                                    dbCon.exec_delete_not_referenced(SystemSettings.dbAttachmentsTable);
                                     dbCon.close();
                                 } catch (Exception ex) {
                                     logger.error(ex);
@@ -2632,7 +2632,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         } else if (source == plusOrdersButton) {
             Object last_id = ((IndexedContainer) ordersTable.getContainerDataSource()).lastItemId();
             if (!((IndexedContainer) ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
-                    sysSettings.crud_status).getValue().equals(myUI.getMessage(SptMessages.Insert))
+                    SystemSettings.crud_status).getValue().equals(myUI.getMessage(SptMessages.Insert))
                     && (Integer) ((ComboBox) ((IndexedContainer) ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
                     myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != 5) {
                 addOrderItem();
@@ -2643,16 +2643,16 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         } else if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()) {
             delPhoneIds.add(source.getData().toString());
             phonesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeChildren)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeChildren)) {
             delChildIds.add(source.getData().toString());
             childrenTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeEducation)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeEducation)) {
             delSpouseEducationIds.add(source.getData().toString());
             spouseEducationTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeWork)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeWork)) {
             delSpouseWorkIds.add(source.getData().toString());
             spouseWorkPlacesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeExams)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeExams)) {
             EmployeeExam employeeExam = new EmployeeExam();
             employeeExam.setIdStr(source.getData().toString());
             Button b = (Button) ((HorizontalLayout) examsTable.getContainerProperty(employeeExam.getIdStr(),
@@ -2662,13 +2662,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
             delExamsIds.add(employeeExam);
             examsTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeLanguage)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeLanguage)) {
             delLanguagesIds.add(source.getData().toString());
             languagesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeSeminar)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeSeminar)) {
             delSeminarsIds.add(source.getData().toString());
             seminarsTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeCertificate)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeCertificate)) {
             EmployeeCertificate employeeCertificate = new EmployeeCertificate();
             employeeCertificate.setIdStr(source.getData().toString());
             Button b = (Button) ((HorizontalLayout) certificatesTable.getContainerProperty(employeeCertificate.getIdStr(),
@@ -2678,10 +2678,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
             delCertificatesIds.add(employeeCertificate);
             certificatesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeWork)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeWork)) {
             delWorkPlacesIds.add(source.getData().toString());
             workPlacesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeEducation)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeEducation)) {
             EmployeeEducation employeeEducation = new EmployeeEducation();
             employeeEducation.setIdStr(source.getData().toString());
             Button b = (Button) ((HorizontalLayout) educationTable.getContainerProperty(employeeEducation.getIdStr(),
@@ -2691,13 +2691,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
             delEducationIds.add(employeeEducation);
             educationTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeBranch)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeBranch)) {
             delBranchesIds.add(source.getData().toString());
             branchesTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeBranchHours)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeBranchHours)) {
             delLessonIds.add(source.getData().toString());
             lessonsTable.removeItem(event.getButton().getData().toString());
-        } else if (tabs.getSelectedTab() == tabs.getTab(ordersInfoLay).getComponent() && source.getId().equals(sysSettings.dbEmployeeOrder)) {
+        } else if (tabs.getSelectedTab() == tabs.getTab(ordersInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeOrder)) {
             EmployeeOrder eo = new EmployeeOrder();
             eo.setIdStr(source.getData().toString());
             delOrderIds.add(eo);
@@ -2710,12 +2710,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
                 ordersTable.removeItem(event.getButton().getData().toString());
             }
-        } else if (source.getId().equals(sysSettings.download_button)) {
+        } else if (source.getId().equals(SystemSettings.download_button)) {
             if (downloader == null) {
                 downloader = new SimpleFileDownloader();
                 addExtension(downloader);
             }
-            downloader.setFileDownloadResource(getFileStream(new File(sysSettings.PATH_TO_UPLOADS_HR
+            downloader.setFileDownloadResource(getFileStream(new File(SystemSettings.PATH_TO_UPLOADS_HR
                     + ((Attachment) source.getData()).getUnique_name())));
             downloader.download();
         }
@@ -2750,7 +2750,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (delPhoneIds.size() > 0) {
                 for (int i = 0; i < delPhoneIds.size(); i++) {
-                    dbd.exec_delete(delPhoneIds.get(i), sysSettings.dbEmployeePhoneNumber);
+                    dbd.exec_delete(delPhoneIds.get(i), SystemSettings.dbEmployeePhoneNumber);
                 }
             }
             if (phonesTable.getContainerDataSource().size() > 0) {
@@ -2763,11 +2763,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             myUI.getMessage(SptMessages.Number)).getValue()).getValue().toString());
                     epn.setPhone_type_id((Integer) ((ComboBox) phonesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Type)).getValue()).getValue());
-                    if (phonesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (phonesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         epn.setId(Integer.parseInt(next.toString()));
                         dbepn.exec_update(epn);
-                    } else if (phonesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (phonesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbepn.exec_insert(epn);
                     }
@@ -2790,7 +2790,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (delChildIds.size() > 0) {
                 for (int i = 0; i < delChildIds.size(); i++) {
-                    dbd.exec_delete(delChildIds.get(i), sysSettings.dbEmployeeChildren);
+                    dbd.exec_delete(delChildIds.get(i), SystemSettings.dbEmployeeChildren);
                 }
             }
             if (childrenTable.getContainerDataSource().size() > 0) {
@@ -2812,11 +2812,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     }
                     ec.setHealth_status_id((Integer) ((ComboBox) childrenTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.HealthStatus)).getValue()).getValue());
-                    if (childrenTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (childrenTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         ec.setId(Integer.parseInt(next.toString()));
                         dbech.exec_update(ec);
-                    } else if (childrenTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (childrenTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbech.exec_insert(ec);
                     }
@@ -2839,7 +2839,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
-                    dbd.exec_delete(((EmployeeEducation) list.get(i)).getIdStr(), sysSettings.dbEmployeeEducation);
+                    dbd.exec_delete(((EmployeeEducation) list.get(i)).getIdStr(), SystemSettings.dbEmployeeEducation);
                 }
             }
             if (t.getContainerDataSource().size() > 0) {
@@ -2869,11 +2869,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             ed.setAttachment_id(((Attachment) b.getData()).getId());
                         }
                     }
-                    if (t.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (t.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         ed.setId(Integer.parseInt(next.toString()));
                         dbed.exec_update(ed);
-                    } else if (t.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (t.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbed.exec_insert(ed);
                     }
@@ -2896,7 +2896,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
-                    dbd.exec_delete(list.get(i), sysSettings.dbEmployeeWork);
+                    dbd.exec_delete(list.get(i), SystemSettings.dbEmployeeWork);
                 }
             }
             if (t.getContainerDataSource().size() > 0) {
@@ -2927,17 +2927,17 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             myUI.getMessage(SptMessages.End)).getValue()).getValue());
                     ew.setSapat(((CheckBox) t.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Sapat)).getValue()).getValue());
-                    if (t.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (t.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         ew.setId(Integer.parseInt(next.toString()));
                         dbew.exec_update(ew);
-                    } else if (t.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (t.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         ew.setId(dbew.exec_insert(ew));
                     }
                     DbDefinition dbCon = new DbDefinition();
                     dbCon.connect();
-                    dbCon.exec_delete(ew.getId() + "", sysSettings.dbEmployeeWorkExtraPosition, sysSettings.employee_work_id);
+                    dbCon.exec_delete(ew.getId() + "", SystemSettings.dbEmployeeWorkExtraPosition, SystemSettings.employee_work_id);
                     if (ew.getExtra_position_ids() != null && !ew.getExtra_position_ids().isEmpty()) {
                         Iterator extraIter = ew.getExtra_position_ids().iterator();
                         while (extraIter.hasNext()) {
@@ -2981,7 +2981,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     } else {
                         DbDefinition dbd = new DbDefinition();
                         dbd.connect();
-                        dbd.exec_delete((Integer) questioningTable.getContainerProperty(next, sysSettings.id).getValue(), sysSettings.dbEmployeeQuestion);
+                        dbd.exec_delete((Integer) questioningTable.getContainerProperty(next, SystemSettings.id).getValue(), SystemSettings.dbEmployeeQuestion);
                         dbd.close();
                     }
                 }
@@ -3001,7 +3001,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (delLanguagesIds.size() > 0) {
                 for (int i = 0; i < delLanguagesIds.size(); i++) {
-                    dbd.exec_delete(delLanguagesIds.get(i), sysSettings.dbEmployeeLanguage);
+                    dbd.exec_delete(delLanguagesIds.get(i), SystemSettings.dbEmployeeLanguage);
                 }
             }
             if (languagesTable.getContainerDataSource().size() > 0) {
@@ -3014,11 +3014,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             myUI.getMessage(SptMessages.Language)).getValue()).getValue());
                     el.setLevel_id((Integer) ((ComboBox) languagesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Level)).getValue()).getValue());
-                    if (languagesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (languagesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         el.setId(Integer.parseInt(next.toString()));
                         dbel.exec_update(el);
-                    } else if (languagesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (languagesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbel.exec_insert(el);
                     }
@@ -3043,14 +3043,14 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 for (int i = 0; i < delCertificatesIds.size(); i++) {
                     try {
                         if (delCertificatesIds.get(i).getAttachmentUniqueName() != null) {
-                            File f = new File(sysSettings.PATH_TO_UPLOADS_HR + delCertificatesIds.get(i).getAttachmentUniqueName());
+                            File f = new File(SystemSettings.PATH_TO_UPLOADS_HR + delCertificatesIds.get(i).getAttachmentUniqueName());
                             f.delete();
                         }
                     } catch (Exception e) {
                         logger.error(e);
                         logger.catching(e);
                     }
-                    dbd.exec_delete(delCertificatesIds.get(i).getIdStr(), sysSettings.dbEmployeeCertificate);
+                    dbd.exec_delete(delCertificatesIds.get(i).getIdStr(), SystemSettings.dbEmployeeCertificate);
                 }
             }
             if (certificatesTable.getContainerDataSource().size() > 0) {
@@ -3072,11 +3072,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     if (b.getData() != null) {
                         ec.setAttachment_id(((Attachment) b.getData()).getId());
                     }
-                    if (certificatesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (certificatesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         ec.setId(Integer.parseInt(next.toString()));
                         dbec.exec_update(ec);
-                    } else if (certificatesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (certificatesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbec.exec_insert(ec);
                     }
@@ -3099,7 +3099,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (delSeminarsIds.size() > 0) {
                 for (int i = 0; i < delSeminarsIds.size(); i++) {
-                    dbd.exec_delete(delSeminarsIds.get(i), sysSettings.dbEmployeeSeminar);
+                    dbd.exec_delete(delSeminarsIds.get(i), SystemSettings.dbEmployeeSeminar);
                 }
             }
             if (seminarsTable.getContainerDataSource().size() > 0) {
@@ -3116,11 +3116,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString());
                     es.setDate_of_issue(((DateField) seminarsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.IssueDate)).getValue()).getValue());
-                    if (seminarsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (seminarsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         es.setId(Integer.parseInt(next.toString()));
                         dbes.exec_update(es);
-                    } else if (seminarsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (seminarsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbes.exec_insert(es);
                     }
@@ -3145,14 +3145,14 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 for (int i = 0; i < delExamsIds.size(); i++) {
                     try {
                         if (delExamsIds.get(i).getAttachmentUniqueName() != null) {
-                            File f = new File(sysSettings.PATH_TO_UPLOADS_HR + delExamsIds.get(i).getAttachmentUniqueName());
+                            File f = new File(SystemSettings.PATH_TO_UPLOADS_HR + delExamsIds.get(i).getAttachmentUniqueName());
                             f.delete();
                         }
                     } catch (Exception e) {
                         logger.error(e);
                         logger.catching(e);
                     }
-                    dbd.exec_delete(delExamsIds.get(i).getIdStr(), sysSettings.dbEmployeeExams);
+                    dbd.exec_delete(delExamsIds.get(i).getIdStr(), SystemSettings.dbEmployeeExams);
                 }
             }
             if (examsTable.getContainerDataSource().size() > 0) {
@@ -3172,11 +3172,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     if (b.getData() != null) {
                         ex.setAttachment_id(((Attachment) b.getData()).getId());
                     }
-                    if (examsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (examsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         ex.setId(Integer.parseInt(next.toString()));
                         dbex.exec_update(ex);
-                    } else if (examsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (examsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbex.exec_insert(ex);
                     }
@@ -3199,7 +3199,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (delBranchesIds.size() > 0) {
                 for (int i = 0; i < delBranchesIds.size(); i++) {
-                    dbd.exec_delete(delBranchesIds.get(i), sysSettings.dbEmployeeBranch);
+                    dbd.exec_delete(delBranchesIds.get(i), SystemSettings.dbEmployeeBranch);
                 }
             }
             if (branchesTable.getContainerDataSource().size() > 0) {
@@ -3228,11 +3228,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                             myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString() + ", " + str);
                         }
                     }
-                    if (branchesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (branchesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         eb.setId(Integer.parseInt(next.toString()));
                         dbeb.exec_update(eb);
-                    } else if (branchesTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (branchesTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbeb.exec_insert(eb);
                     }
@@ -3256,7 +3256,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (delLessonIds.size() > 0) {
                 for (int i = 0; i < delLessonIds.size(); i++) {
-                    dbd.exec_delete(delLessonIds.get(i), sysSettings.dbEmployeeBranchHours);
+                    dbd.exec_delete(delLessonIds.get(i), SystemSettings.dbEmployeeBranchHours);
                 }
             }
             if (lessonsTable.getContainerDataSource().size() > 0) {
@@ -3281,11 +3281,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         hours += el.getHours();
                         extra += el.getExtra_hours();
                     }
-                    if (lessonsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (lessonsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         el.setId(Integer.parseInt(next.toString()));
                         dbel.exec_update(el);
-                    } else if (lessonsTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (lessonsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbel.exec_insert(el);
                     }
@@ -3311,34 +3311,34 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             if (delOrderIds.size() > 0) {
                 for (int i = 0; i < delOrderIds.size(); i++) {
                     if (delOrderIds.get(i).getIdStr().startsWith("_")) {
-                        employeesDataTable.getContainerProperty(employee_id, sysSettings.is_modifiable).setValue(false);
+                        employeesDataTable.getContainerProperty(employee_id, SystemSettings.is_modifiable).setValue(false);
                         delOrderIds.get(i).setIdStr(delOrderIds.get(i).getIdStr().replace("_", ""));
                     }
                     dbeo.exec_update_before_delete(delOrderIds.get(i).getIdStr());
-                    dbd.exec_delete(delOrderIds.get(i).getIdStr(), sysSettings.dbEmployeeOrder);
+                    dbd.exec_delete(delOrderIds.get(i).getIdStr(), SystemSettings.dbEmployeeOrder);
                     if (delOrderIds.get(i).getOrder_id() == 6 || delOrderIds.get(i).getOrder_id() == 5) {
                         DbAccCategory dbAc = new DbAccCategory();
                         dbAc.connect();
-                        String namePostfix = sysSettings.transfered;
+                        String namePostfix = SystemSettings.transfered;
                         if (delOrderIds.get(i).getOrder_id() == 6) {
-                            namePostfix = sysSettings.resigned;
+                            namePostfix = SystemSettings.resigned;
                         }
                         dbAc.exec_update_activity_status((Integer) employeesDataTable.getContainerProperty(
-                                employee_id, sysSettings.acc_category_id).getValue(), 2, namePostfix);
+                                employee_id, SystemSettings.acc_category_id).getValue(), 2, namePostfix);
                         dbAc.close();
                     }
                     if (delOrderIds.get(i).getOrder_id() == 8) {
                         DbDefinition dbCon = new DbDefinition();
                         dbCon.connect();
                         dbCon.exec_delete((Integer) employeesDataTable.getContainerProperty(employee_id,
-                                sysSettings.acc_category_id).getValue(), sysSettings.dbAcc_category);
+                                SystemSettings.acc_category_id).getValue(), SystemSettings.dbAcc_category);
                         dbCon.close();
                     }
                 }
             }
             if (ordersTable.getContainerDataSource().size() > 0) {
                 employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).setValue(null);
-                employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(null);
+                employeesDataTable.getContainerProperty(employee_id, SystemSettings.extra_position_ids).setValue(null);
                 Iterator iter = ordersTable.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
@@ -3347,7 +3347,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
                     eo.setSchool_id(myUI.getUser().getSchool_id());
-                    eo.setPosition_id((Integer) employeesDataTable.getContainerProperty(employee_id, sysSettings.position_id).getValue());
+                    eo.setPosition_id((Integer) employeesDataTable.getContainerProperty(employee_id, SystemSettings.position_id).getValue());
                     if (eo.getOrder_id() == 5) {
                         eo.setFrom_to_school_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Details)).getValue()).getValue());
@@ -3363,13 +3363,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     boolean isContain = false;
                     for (EmployeeOrder temp : delOrderIds) {
                         if (ordersTable.getItem(next).getItemProperty(
-                                sysSettings.effected_by_id).getValue() != null && ordersTable.getItem(next).getItemProperty(
-                                sysSettings.effected_by_id).getValue().toString().equals(temp.getIdStr())) {
+                                SystemSettings.effected_by_id).getValue() != null && ordersTable.getItem(next).getItemProperty(
+                                SystemSettings.effected_by_id).getValue().toString().equals(temp.getIdStr())) {
                             isContain = true;
                         }
                     }
                     if (ordersTable.getItem(next).getItemProperty(
-                            sysSettings.effected_by_id).getValue() == null || !isContain) {
+                            SystemSettings.effected_by_id).getValue() == null || !isContain) {
                         eo.setTo_date(((DateField) ordersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.TillDate)).getValue()).getValue());
                     }
@@ -3381,18 +3381,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 myUI.getMessage(SptMessages.Note)).getValue()).getValue());
                     }
                     eo.setM_employee_id(myUI.getUser().getId());
-                    if (ordersTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    if (ordersTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         eo.setId(Integer.parseInt(next.toString()));
                         dbeo.exec_update(eo);
-                    } else if (ordersTable.getContainerProperty(next, sysSettings.crud_status).getValue().toString()
+                    } else if (ordersTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbeo.exec_insert(eo);
                         if (eo.getOrder_id() == 6) {
                             DbAccCategory dbAc = new DbAccCategory();
                             dbAc.connect();
                             dbAc.exec_update_activity_status((Integer) employeesDataTable.getContainerProperty(employee_id,
-                                    sysSettings.acc_category_id).getValue(), 1, sysSettings.resigned);
+                                    SystemSettings.acc_category_id).getValue(), 1, SystemSettings.resigned);
                             dbAc.close();
                         }
                         if (eo.getOrder_id() == 5) {
@@ -3406,12 +3406,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             AccCategory ac = dbAc.exec_sql(employee_id, eo.getFrom_to_school_id(), eo.getSchool_id());
                             dbAc.exec_insert(ac);
                             dbAc.exec_update_activity_status((Integer) employeesDataTable.getContainerProperty(employee_id,
-                                    sysSettings.acc_category_id).getValue(), 1, sysSettings.transfered);
+                                    SystemSettings.acc_category_id).getValue(), 1, SystemSettings.transfered);
                             dbAc.close();
                         }
                     }
                     if (eo.getOrder_id() == 1) {
-                        employeesDataTable.getContainerProperty(employee_id, sysSettings.position_id).setValue(eo.getPosition_id());
+                        employeesDataTable.getContainerProperty(employee_id, SystemSettings.position_id).setValue(eo.getPosition_id());
                         employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.MainPosition)).setValue(
                                 ((ComboBox) ordersTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.Details)).getValue()).getItemCaption(eo.getPosition_id()));
@@ -3421,28 +3421,28 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         String str_ids = eo.getPosition_id() + "";
                         if (employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).getValue() == null) {
                             employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).setValue(str);
-                            employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(str_ids);
+                            employeesDataTable.getContainerProperty(employee_id, SystemSettings.extra_position_ids).setValue(str_ids);
                         } else {
                             employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.ExtraPosition)).setValue(
                                     employeesDataTable.getContainerProperty(employee_id,
                                             myUI.getMessage(SptMessages.ExtraPosition)).getValue().toString() + ", " + str);
-                            employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).setValue(
-                                    employeesDataTable.getContainerProperty(employee_id, sysSettings.extra_position_ids).getValue().toString() + ", " + str_ids);
+                            employeesDataTable.getContainerProperty(employee_id, SystemSettings.extra_position_ids).setValue(
+                                    employeesDataTable.getContainerProperty(employee_id, SystemSettings.extra_position_ids).getValue().toString() + ", " + str_ids);
                         }
                     } else if (eo.getOrder_id() == 5) {
-                        employeesDataTable.getContainerProperty(employee_id, sysSettings.is_modifiable).setValue(false);
+                        employeesDataTable.getContainerProperty(employee_id, SystemSettings.is_modifiable).setValue(false);
                     }
                     if ((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
-                            sysSettings.working_status_id).getValue() != 0) {
-                        employeesDataTable.getContainerProperty(employee_id, sysSettings.working_status_id).setValue(
+                            SystemSettings.working_status_id).getValue() != 0) {
+                        employeesDataTable.getContainerProperty(employee_id, SystemSettings.working_status_id).setValue(
                                 (Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
-                                        sysSettings.working_status_id).getValue());
-                        employeesDataTable.getContainerProperty(employee_id, sysSettings.visible_hr_orders).setValue(
+                                        SystemSettings.working_status_id).getValue());
+                        employeesDataTable.getContainerProperty(employee_id, SystemSettings.visible_hr_orders).setValue(
                                 ((ComboBox) ordersTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
-                                        sysSettings.visible_hr_orders).getValue().toString());
+                                        SystemSettings.visible_hr_orders).getValue().toString());
                         employeesDataTable.getContainerProperty(employee_id, myUI.getMessage(SptMessages.WorkingStatus)).setValue(
                                 ((ComboBox) ordersTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.OrderType)).getValue()).getContainerProperty(eo.getOrder_id(),
@@ -3460,49 +3460,49 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     private void addPhonesItem() {
-        NATURAL_COL_ORDER_PHONES = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_PHONES = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.Type),
                 myUI.getMessage(SptMessages.Number)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (phonesTable.getContainerDataSource().size() == 0) {
             phonesTable.setContainerDataSource(preparePhonesContainer());
         }
         Item item;
         item = ((IndexedContainer) phonesTable.getContainerDataSource()).addItemAt(
                 phonesTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
+        item.getItemProperty(SystemSettings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.Type), sysSettings.dbPhoneType, true));
+                createCombobox(0, myUI.getMessage(SptMessages.Type), SystemSettings.dbPhoneType, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.Number),
                         new RegexpValidator("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s0-9]*$", true,
                                 myUI.getMessage(SptMessages.NotifWrongValue)), true));
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         phonesTable.setVisibleColumns(NATURAL_COL_ORDER_PHONES);
 
     }
 
     private void addChildItem() {
-        NATURAL_COL_ORDER_CHILDREN = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_CHILDREN = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.FullName),
                 myUI.getMessage(SptMessages.DateOfBirth),
                 myUI.getMessage(SptMessages.Institution),
                 myUI.getMessage(SptMessages.EducationStatus),
                 myUI.getMessage(SptMessages.HealthStatus)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (childrenTable.getContainerDataSource().size() == 0) {
             childrenTable.setContainerDataSource(prepareChildrenContainer());
         }
         Item item;
         item = ((IndexedContainer) childrenTable.getContainerDataSource()).addItemAt(
                 childrenTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.EducationStatus), sysSettings.dbHrEducationStatus, false));
+                createCombobox(0, myUI.getMessage(SptMessages.EducationStatus), SystemSettings.dbHrEducationStatus, false));
         item.getItemProperty(myUI.getMessage(SptMessages.HealthStatus)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.HealthStatus), sysSettings.dbHealthStatus, true));
+                createCombobox(0, myUI.getMessage(SptMessages.HealthStatus), SystemSettings.dbHealthStatus, true));
         item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.FullName),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
@@ -3511,15 +3511,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false));
         item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.DateOfBirth),
-                        null, true, sysSettings.datePattern, Resolution.DAY));
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+                        null, true, SystemSettings.datePattern, Resolution.DAY));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         childrenTable.setVisibleColumns(NATURAL_COL_ORDER_CHILDREN);
 
     }
 
     private void addEducationItem(final Table t, IndexedContainer c, int own_id) {
         if (own_id == 1) {
-            NATURAL_COL_ORDER_EDU = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_EDU = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.University),
                     myUI.getMessage(SptMessages.Country),
                     myUI.getMessage(SptMessages.Department),
@@ -3528,7 +3528,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.End),
                     myUI.getMessage(SptMessages.Document)};
         } else {
-            NATURAL_COL_ORDER_EDU = new String[]{sysSettings.button,
+            NATURAL_COL_ORDER_EDU = new String[]{SystemSettings.button,
                     myUI.getMessage(SptMessages.University),
                     myUI.getMessage(SptMessages.Country),
                     myUI.getMessage(SptMessages.Department),
@@ -3537,16 +3537,16 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.End)};
 
         }
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
             t.setContainerDataSource(prepareEducationContainer(c));
         }
         Item item;
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
                 t.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
-        final ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.University), sysSettings.dbUniversityTable, true);
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
+        final ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.University), SystemSettings.dbUniversityTable, true);
         cb.setNewItemsAllowed(true);
         cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
             @Override
@@ -3554,7 +3554,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 try {
                     DbDefinition dbd = new DbDefinition();
                     dbd.connect();
-                    int id = dbd.exec_insert(new Definition(0, newItemCaption), sysSettings.dbUniversityTable, false);
+                    int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbUniversityTable, false);
                     dbd.close();
                     if (id != 0) {
                         Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
@@ -3590,14 +3590,14 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 createDateField(null, myUI.getMessage(SptMessages.End),
                         null, true, SystemSettings.yearPattern, Resolution.YEAR));
         item.getItemProperty(myUI.getMessage(SptMessages.Country)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.Country), sysSettings.dbCountry, true));
+                createCombobox(0, myUI.getMessage(SptMessages.Country), SystemSettings.dbCountry, true));
         item.getItemProperty(myUI.getMessage(SptMessages.EduLevel)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.EduLevel), sysSettings.dbEduLevel, true));
+                createCombobox(0, myUI.getMessage(SptMessages.EduLevel), SystemSettings.dbEduLevel, true));
         if (own_id == 1) {
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
 
-            Button b = createButton(myUI.getMessage(SptMessages.DownLoad), null, sysSettings.download_button, FontAwesome.DOWNLOAD);
+            Button b = createButton(myUI.getMessage(SptMessages.DownLoad), null, SystemSettings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setEnabled(false);
             hl.addComponent(b);
@@ -3608,7 +3608,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             hl.addComponent(u);
             item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
         }
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         t.setVisibleColumns(NATURAL_COL_ORDER_EDU);
         t.setColumnExpandRatio(myUI.getMessage(SptMessages.University), 1);
         t.setColumnExpandRatio(myUI.getMessage(SptMessages.Department), 1);
@@ -3616,7 +3616,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void addWorkItem(final Table t, IndexedContainer c) {
 
-        NATURAL_COL_ORDER_WORK = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_WORK = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.WorkPlace),
                 myUI.getMessage(SptMessages.Sapat),
                 myUI.getMessage(SptMessages.MainPosition),
@@ -3624,15 +3624,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 myUI.getMessage(SptMessages.WorkingStatus),
                 myUI.getMessage(SptMessages.Start),
                 myUI.getMessage(SptMessages.End)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
             t.setContainerDataSource(prepareWorkContainer(c));
         }
         Item item;
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
                 t.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
         ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.MainPosition), null, true);
         item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
         ComboBoxMultiselectMax cb3 = createComboboxMulti(myUI.getMessage(SptMessages.ExtraPosition), false);
@@ -3660,7 +3660,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.catching(e);
         }
         item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(cb);
-        final ComboBoxMax cb2 = createCombobox(0, myUI.getMessage(SptMessages.WorkPlace), sysSettings.dbWork_placeTable, true);
+        final ComboBoxMax cb2 = createCombobox(0, myUI.getMessage(SptMessages.WorkPlace), SystemSettings.dbWork_placeTable, true);
         cb2.setNewItemsAllowed(true);
         cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
             @Override
@@ -3668,7 +3668,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 try {
                     DbDefinition dbd = new DbDefinition();
                     dbd.connect();
-                    int id = dbd.exec_insert(new Definition(0, newItemCaption), sysSettings.dbWork_placeTable, false);
+                    int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbWork_placeTable, false);
                     dbd.close();
                     if (id != 0) {
                         Item item = ((IndexedContainer) cb2.getContainerDataSource()).addItem(id);
@@ -3696,57 +3696,57 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(cb2);
         item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.Start), null,
-                        true, sysSettings.datePattern, Resolution.DAY));
+                        true, SystemSettings.datePattern, Resolution.DAY));
         item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.End), null,
-                        false, sysSettings.datePattern, Resolution.DAY));
+                        false, SystemSettings.datePattern, Resolution.DAY));
         item.getItemProperty(myUI.getMessage(SptMessages.Sapat)).setValue(
                 createCheckBox(false, myUI.getMessage(SptMessages.Sapat)));
 
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
     }
 
     private void addLanguageItem() {
 
-        NATURAL_COL_ORDER_LANGUAGES = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_LANGUAGES = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.Language),
                 myUI.getMessage(SptMessages.Level)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (languagesTable.getContainerDataSource().size() == 0) {
             languagesTable.setContainerDataSource(prepareLanguageContainer());
         }
         Item item;
         item = ((IndexedContainer) languagesTable.getContainerDataSource()).addItemAt(
                 languagesTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Language)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.Language), sysSettings.dbLanguageTable, true));
+                createCombobox(0, myUI.getMessage(SptMessages.Language), SystemSettings.dbLanguageTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Level)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.Level), sysSettings.dbLanguageLevelTable, true));
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+                createCombobox(0, myUI.getMessage(SptMessages.Level), SystemSettings.dbLanguageLevelTable, true));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         languagesTable.setVisibleColumns(NATURAL_COL_ORDER_LANGUAGES);
 
     }
 
     private void addCertificateItem() {
 
-        NATURAL_COL_ORDER_CERTIFICATES = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_CERTIFICATES = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.Certificate),
                 myUI.getMessage(SptMessages.GivenBy),
                 myUI.getMessage(SptMessages.IssueDate),
                 myUI.getMessage(SptMessages.Note),
                 myUI.getMessage(SptMessages.Document)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (certificatesTable.getContainerDataSource().size() == 0) {
             certificatesTable.setContainerDataSource(prepareCertificateContainer());
         }
         Item item;
         item = ((IndexedContainer) certificatesTable.getContainerDataSource()).addItemAt(
                 certificatesTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.Note),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue),
@@ -3756,8 +3756,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.IssueDate),
-                        null, true, sysSettings.datePattern, Resolution.DAY));
-        final ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.Certificate), sysSettings.dbCertificateTable, true);
+                        null, true, SystemSettings.datePattern, Resolution.DAY));
+        final ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.Certificate), SystemSettings.dbCertificateTable, true);
         cb.setNewItemsAllowed(true);
         cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
             @Override
@@ -3765,7 +3765,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 try {
                     DbDefinition dbd = new DbDefinition();
                     dbd.connect();
-                    int id = dbd.exec_insert(new Definition(0, newItemCaption), sysSettings.dbCertificateTable, false);
+                    int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbCertificateTable, false);
                     dbd.close();
                     if (id != 0) {
                         Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
@@ -3795,7 +3795,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
 
-        Button b = createButton(myUI.getMessage(SptMessages.DownLoad), null, sysSettings.download_button, FontAwesome.DOWNLOAD);
+        Button b = createButton(myUI.getMessage(SptMessages.DownLoad), null, SystemSettings.download_button, FontAwesome.DOWNLOAD);
         b.setStyleName(ValoTheme.BUTTON_SMALL);
         b.setEnabled(false);
         hl.addComponent(b);
@@ -3806,27 +3806,27 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         hl.addComponent(u);
         item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
 
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         certificatesTable.setVisibleColumns(NATURAL_COL_ORDER_CERTIFICATES);
 
     }
 
     private void addSeminarItem() {
 
-        NATURAL_COL_ORDER_SEMINARS = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_SEMINARS = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.Name),
                 myUI.getMessage(SptMessages.Subject),
                 myUI.getMessage(SptMessages.Note),
                 myUI.getMessage(SptMessages.IssueDate)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (seminarsTable.getContainerDataSource().size() == 0) {
             seminarsTable.setContainerDataSource(prepareSeminarContainer());
         }
         Item item;
         item = ((IndexedContainer) seminarsTable.getContainerDataSource()).addItemAt(
                 seminarsTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.Name),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
@@ -3838,42 +3838,42 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), false));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.IssueDate),
-                        null, true, sysSettings.datePattern, Resolution.DAY));
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+                        null, true, SystemSettings.datePattern, Resolution.DAY));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         seminarsTable.setVisibleColumns(NATURAL_COL_ORDER_SEMINARS);
 
     }
 
     private void addExamItem() {
 
-        NATURAL_COL_ORDER_EXAMS = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_EXAMS = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.Exam),
                 myUI.getMessage(SptMessages.Score),
                 myUI.getMessage(SptMessages.IssueDate),
                 myUI.getMessage(SptMessages.Document)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (examsTable.getContainerDataSource().size() == 0) {
             examsTable.setContainerDataSource(prepareExamContainer());
         }
         Item item;
         item = ((IndexedContainer) examsTable.getContainerDataSource()).addItemAt(
                 examsTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.Exam), sysSettings.dbExamTable, true));
+                createCombobox(0, myUI.getMessage(SptMessages.Exam), SystemSettings.dbExamTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(
                 createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Score),
                         new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                        new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter()));
+                        new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter()));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.IssueDate),
-                        null, true, sysSettings.datePattern, Resolution.DAY));
+                        null, true, SystemSettings.datePattern, Resolution.DAY));
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
 
-        Button b = createButton(myUI.getMessage(SptMessages.DownLoad), null, sysSettings.download_button, FontAwesome.DOWNLOAD);
+        Button b = createButton(myUI.getMessage(SptMessages.DownLoad), null, SystemSettings.download_button, FontAwesome.DOWNLOAD);
         b.setStyleName(ValoTheme.BUTTON_SMALL);
         b.setEnabled(false);
         hl.addComponent(b);
@@ -3883,85 +3883,85 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         u.setData(examsTable.getContainerDataSource());
         hl.addComponent(u);
         item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         examsTable.setVisibleColumns(NATURAL_COL_ORDER_EXAMS);
 
     }
 
     private void addBranchItem() {
 
-        NATURAL_COL_ORDER_BRANCHES = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_BRANCHES = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.Branch),
                 myUI.getMessage(SptMessages.Main)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (branchesTable.getContainerDataSource().size() == 0) {
             branchesTable.setContainerDataSource(prepareBranchContainer());
         }
         Item item;
         item = ((IndexedContainer) branchesTable.getContainerDataSource()).addItemAt(
                 branchesTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Branch)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.Branch), sysSettings.dbBranchTable, true));
+                createCombobox(0, myUI.getMessage(SptMessages.Branch), SystemSettings.dbBranchTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Main)).setValue(
                 createCheckBox(false, myUI.getMessage(SptMessages.Main)));
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         branchesTable.setVisibleColumns(NATURAL_COL_ORDER_BRANCHES);
 
     }
 
     private void addLessonItem() {
 
-        NATURAL_COL_ORDER_LESSONS = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_LESSONS = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.Lesson),
                 myUI.getMessage(SptMessages.ClassName),
                 myUI.getMessage(SptMessages.AcademicYear),
                 myUI.getMessage(SptMessages.Hours),
                 myUI.getMessage(SptMessages.ExtraHours)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (lessonsTable.getContainerDataSource().size() == 0) {
             lessonsTable.setContainerDataSource(prepareLessonsContainer());
         }
         Item item;
         item = ((IndexedContainer) lessonsTable.getContainerDataSource()).addItemAt(
                 lessonsTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.Lesson), sysSettings.dbBranchTable, true));
+                createCombobox(0, myUI.getMessage(SptMessages.Lesson), SystemSettings.dbBranchTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
-                createCombobox(0, myUI.getMessage(SptMessages.ClassName), sysSettings.classTable, true));
+                createCombobox(0, myUI.getMessage(SptMessages.ClassName), SystemSettings.classTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.AcademicYear)).setValue(
-                createCombobox(myUI.getUser().getCurrent_year().getId(), myUI.getMessage(SptMessages.AcademicYear), sysSettings.dbYear, true));
+                createCombobox(myUI.getUser().getCurrent_year().getId(), myUI.getMessage(SptMessages.AcademicYear), SystemSettings.dbYear, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                 createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Hours),
                         new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
-                        new ObjectProperty<Integer>(0), sysSettings.getStringToIntegerConverter()));
+                        new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
         item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                 createTextfieldWithProperty(null, myUI.getMessage(SptMessages.ExtraHours),
                         new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
-                        new ObjectProperty<Integer>(0), sysSettings.getStringToIntegerConverter()));
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+                        new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         lessonsTable.setVisibleColumns(NATURAL_COL_ORDER_LESSONS);
 
     }
 
     private void addOrderItem() {
-        NATURAL_COL_ORDER_ORDERS = new String[]{sysSettings.button,
+        NATURAL_COL_ORDER_ORDERS = new String[]{SystemSettings.button,
                 myUI.getMessage(SptMessages.OrderType),
                 myUI.getMessage(SptMessages.Details),
                 myUI.getMessage(SptMessages.FromDate),
                 myUI.getMessage(SptMessages.TillDate),
                 myUI.getMessage(SptMessages.Note)};
-        String id = sysSettings.FreshItem + (--r_table_counter);
+        String id = SystemSettings.FreshItem + (--r_table_counter);
         if (ordersTable.getContainerDataSource().size() == 0) {
             ordersTable.setContainerDataSource(prepareOrdersContainer());
         }
         Item item;
         item = ((IndexedContainer) ordersTable.getContainerDataSource()).addItemAt(
                 ordersTable.getContainerDataSource().size(), id);
-        item.getItemProperty(sysSettings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
         ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.OrderType), null, true);
         cb.setData(id);
         cb.addValueChangeListener(this);
@@ -3969,8 +3969,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
             dbeo.connect();
             cb.setContainerDataSource(dbeo.execOrderTypesSel(myUI,
-                    employeesDataTable.getContainerProperty(emplID, sysSettings.visible_hr_orders).getValue().toString()));
-            if (!currentUser.isPermitted(sysSettings.cnEmployeeTransferView + ":" + sysSettings.actAdd)) {
+                    employeesDataTable.getContainerProperty(emplID, SystemSettings.visible_hr_orders).getValue().toString()));
+            if (!currentUser.isPermitted(SystemSettings.cnEmployeeTransferView + ":" + SystemSettings.actAdd)) {
                 cb.removeItem(5);
             }
             dbeo.close();
@@ -3985,17 +3985,17 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(cb);
         DateField df = createDateField(new Date(),
                 myUI.getMessage(SptMessages.FromDate), null, true,
-                sysSettings.datePattern, Resolution.DAY);
+                SystemSettings.datePattern, Resolution.DAY);
         df.setRangeEnd(new Date());
         item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
         df = createDateField(null, myUI.getMessage(SptMessages.TillDate), null,
-                false, sysSettings.datePattern, Resolution.DAY);
+                false, SystemSettings.datePattern, Resolution.DAY);
         df.setEnabled(false);
         item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.Note),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false));
-        item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         ordersTable.setVisibleColumns(NATURAL_COL_ORDER_ORDERS);
 
     }
@@ -4116,12 +4116,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer preparePhonesContainer() {
         if (phonesCont == null) {
             phonesCont = new IndexedContainer();
-            phonesCont.addContainerProperty(sysSettings.button, Button.class, null);
+            phonesCont.addContainerProperty(SystemSettings.button, Button.class, null);
             phonesCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Type), ComboBoxMax.class, null);
             phonesCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Number), TextField.class, null);
-            phonesCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            phonesCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             phonesCont.removeAllItems();
         }
@@ -4131,7 +4131,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareChildrenContainer() {
         if (childrenCont == null) {
             childrenCont = new IndexedContainer();
-            childrenCont.addContainerProperty(sysSettings.button, Button.class, null);
+            childrenCont.addContainerProperty(SystemSettings.button, Button.class, null);
             childrenCont.addContainerProperty(
                     myUI.getMessage(SptMessages.FullName), TextField.class, null);
             childrenCont.addContainerProperty(
@@ -4142,7 +4142,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.EducationStatus), ComboBoxMax.class, null);
             childrenCont.addContainerProperty(
                     myUI.getMessage(SptMessages.HealthStatus), ComboBoxMax.class, null);
-            childrenCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            childrenCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             childrenCont.removeAllItems();
         }
@@ -4152,7 +4152,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareEducationContainer(IndexedContainer c) {
         if (c == null) {
             c = new IndexedContainer();
-            c.addContainerProperty(sysSettings.button, Button.class, null);
+            c.addContainerProperty(SystemSettings.button, Button.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.University), ComboBoxMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.Department), TextField.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.Start), DateField.class, null);
@@ -4160,7 +4160,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             c.addContainerProperty(myUI.getMessage(SptMessages.Country), ComboBoxMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.EduLevel), ComboBoxMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.Document), HorizontalLayout.class, null);
-            c.addContainerProperty(sysSettings.crud_status, String.class, null);
+            c.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             c.removeAllItems();
         }
@@ -4170,7 +4170,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareWorkContainer(IndexedContainer c) {
         if (c == null) {
             c = new IndexedContainer();
-            c.addContainerProperty(sysSettings.button, Button.class, null);
+            c.addContainerProperty(SystemSettings.button, Button.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.WorkPlace), ComboBoxMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.MainPosition), ComboBoxMax.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.ExtraPositions), ComboBoxMultiselectMax.class, null);
@@ -4178,7 +4178,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             c.addContainerProperty(myUI.getMessage(SptMessages.Start), DateField.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.End), DateField.class, null);
             c.addContainerProperty(myUI.getMessage(SptMessages.Sapat), CheckBox.class, null);
-            c.addContainerProperty(sysSettings.crud_status, String.class, null);
+            c.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             c.removeAllItems();
         }
@@ -4188,12 +4188,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareLanguageContainer() {
         if (languagesCont == null) {
             languagesCont = new IndexedContainer();
-            languagesCont.addContainerProperty(sysSettings.button, Button.class, null);
+            languagesCont.addContainerProperty(SystemSettings.button, Button.class, null);
             languagesCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Language), ComboBoxMax.class, null);
             languagesCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Level), ComboBoxMax.class, null);
-            languagesCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            languagesCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             languagesCont.removeAllItems();
         }
@@ -4203,13 +4203,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareCertificateContainer() {
         if (certificatesCont == null) {
             certificatesCont = new IndexedContainer();
-            certificatesCont.addContainerProperty(sysSettings.button, Button.class, null);
+            certificatesCont.addContainerProperty(SystemSettings.button, Button.class, null);
             certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
             certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.GivenBy), TextField.class, null);
             certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.IssueDate), DateField.class, null);
             certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.Certificate), ComboBoxMax.class, null);
             certificatesCont.addContainerProperty(myUI.getMessage(SptMessages.Document), HorizontalLayout.class, null);
-            certificatesCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            certificatesCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             certificatesCont.removeAllItems();
         }
@@ -4219,7 +4219,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareSeminarContainer() {
         if (seminarsCont == null) {
             seminarsCont = new IndexedContainer();
-            seminarsCont.addContainerProperty(sysSettings.button, Button.class, null);
+            seminarsCont.addContainerProperty(SystemSettings.button, Button.class, null);
             seminarsCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Name), TextField.class, null);
             seminarsCont.addContainerProperty(
@@ -4228,7 +4228,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.Note), TextField.class, null);
             seminarsCont.addContainerProperty(
                     myUI.getMessage(SptMessages.IssueDate), DateField.class, null);
-            seminarsCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            seminarsCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             seminarsCont.removeAllItems();
         }
@@ -4238,7 +4238,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareExamContainer() {
         if (examsCont == null) {
             examsCont = new IndexedContainer();
-            examsCont.addContainerProperty(sysSettings.button, Button.class, null);
+            examsCont.addContainerProperty(SystemSettings.button, Button.class, null);
             examsCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Exam), ComboBox.class, null);
             examsCont.addContainerProperty(
@@ -4247,7 +4247,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.IssueDate), DateField.class, null);
             examsCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Document), HorizontalLayout.class, null);
-            examsCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            examsCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             examsCont.removeAllItems();
         }
@@ -4257,12 +4257,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareBranchContainer() {
         if (branchesCont == null) {
             branchesCont = new IndexedContainer();
-            branchesCont.addContainerProperty(sysSettings.button, Button.class, null);
+            branchesCont.addContainerProperty(SystemSettings.button, Button.class, null);
             branchesCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Branch), ComboBox.class, null);
             branchesCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Main), CheckBox.class, null);
-            branchesCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            branchesCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             branchesCont.removeAllItems();
         }
@@ -4272,7 +4272,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareLessonsContainer() {
         if (lessonsCont == null) {
             lessonsCont = new IndexedContainer();
-            lessonsCont.addContainerProperty(sysSettings.button, Button.class, null);
+            lessonsCont.addContainerProperty(SystemSettings.button, Button.class, null);
             lessonsCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Lesson), ComboBox.class, null);
             lessonsCont.addContainerProperty(
@@ -4283,7 +4283,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.Hours), TextField.class, null);
             lessonsCont.addContainerProperty(
                     myUI.getMessage(SptMessages.ExtraHours), TextField.class, null);
-            lessonsCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            lessonsCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             lessonsCont.removeAllItems();
         }
@@ -4293,7 +4293,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     public IndexedContainer prepareOrdersContainer() {
         if (ordersCont == null) {
             ordersCont = new IndexedContainer();
-            ordersCont.addContainerProperty(sysSettings.button, Button.class, null);
+            ordersCont.addContainerProperty(SystemSettings.button, Button.class, null);
             ordersCont.addContainerProperty(
                     myUI.getMessage(SptMessages.OrderType), ComboBox.class, null);
             ordersCont.addContainerProperty(
@@ -4304,8 +4304,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.TillDate), DateField.class, null);
             ordersCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Note), TextField.class, null);
-            ordersCont.addContainerProperty(sysSettings.effected_by_id, String.class, null);
-            ordersCont.addContainerProperty(sysSettings.crud_status, String.class, null);
+            ordersCont.addContainerProperty(SystemSettings.effected_by_id, String.class, null);
+            ordersCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
         } else {
             ordersCont.removeAllItems();
         }
@@ -4421,10 +4421,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             while (iter.hasNext()) {
                 Object next = iter.next();
                 String permission = "";
-                if (sysSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
+                if (SystemSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
                         .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                         .getValue())).getValue()) != null) {
-                    permission = next + ":" + (sysSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
+                    permission = next + ":" + (SystemSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
                             .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                             .getValue())).getValue()));
                     dbe.exec_insert_perm(login, permission);
@@ -4514,7 +4514,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         Item item = ((IndexedContainer) employeesDataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(loginTF.getValue());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.id).setValue(id);
         item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(nameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(surnameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Middlename)).setValue(middlenameTF.getValue());
@@ -4523,13 +4523,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item.getItemProperty(myUI.getMessage(SptMessages.Permissions)).setValue(
                 mainPositionCB.getContainerProperty(mainPositionCB.getValue(),
                         myUI.getMessage(SptMessages.Permissions)).getValue());
-        item.getItemProperty(sysSettings.gender_id).setValue(genderCB.getValue());
-        item.getItemProperty(sysSettings.nationality_id).setValue(nationalityCB.getValue());
-        item.getItemProperty(sysSettings.martial_status_id).setValue(martialStatusCB.getValue());
-        item.getItemProperty(sysSettings.position_id).setValue(mainPositionCB.getValue());
-        item.getItemProperty(sysSettings.salary_category_id).setValue(contractCategoryCB.getValue());
-        item.getItemProperty(sysSettings.working_status_id).setValue(2);
-        item.getItemProperty(sysSettings.acc_category_id).setValue(acc_category_id);
+        item.getItemProperty(SystemSettings.gender_id).setValue(genderCB.getValue());
+        item.getItemProperty(SystemSettings.nationality_id).setValue(nationalityCB.getValue());
+        item.getItemProperty(SystemSettings.martial_status_id).setValue(martialStatusCB.getValue());
+        item.getItemProperty(SystemSettings.position_id).setValue(mainPositionCB.getValue());
+        item.getItemProperty(SystemSettings.salary_category_id).setValue(contractCategoryCB.getValue());
+        item.getItemProperty(SystemSettings.working_status_id).setValue(2);
+        item.getItemProperty(SystemSettings.acc_category_id).setValue(acc_category_id);
         item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(
                 mainPositionCB.getContainerDataSource().getContainerProperty(mainPositionCB.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
@@ -4553,13 +4553,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.DateOfBirth)).setValue(birthDateDF.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                sysSettings.gender_id).setValue(genderCB.getValue());
+                SystemSettings.gender_id).setValue(genderCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                sysSettings.nationality_id).setValue(nationalityCB.getValue());
+                SystemSettings.nationality_id).setValue(nationalityCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                sysSettings.martial_status_id).setValue(martialStatusCB.getValue());
+                SystemSettings.martial_status_id).setValue(martialStatusCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                sysSettings.salary_category_id).setValue(contractCategoryCB.getValue());
+                SystemSettings.salary_category_id).setValue(contractCategoryCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.MainPosition)).setValue(mainPositionCB
                 .getContainerDataSource().getContainerProperty(mainPositionCB.getValue(),
@@ -4573,10 +4573,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbDef = new DbDefinition();
             dbDef.connect();
             dbDef.getConnection().setAutoCommit(false);
-            st = dbDef.exec_delete((Integer) employeesDataTable.getContainerProperty(emplID, sysSettings.acc_category_id).getValue(), sysSettings.dbAcc_category);
+            st = dbDef.exec_delete((Integer) employeesDataTable.getContainerProperty(emplID, SystemSettings.acc_category_id).getValue(), SystemSettings.dbAcc_category);
             if (st != 0) {
                 dbDef.exec_delete((Integer) employeesDataTable.getContainerProperty(emplID,
-                        sysSettings.id).getValue(), sysSettings.dbEmployee);
+                        SystemSettings.id).getValue(), SystemSettings.dbEmployee);
             }
             dbDef.getConnection().commit();
             dbDef.getConnection().setAutoCommit(true);
@@ -4626,11 +4626,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 ordersTable.removeAllItems();
                 workingStatCont.getContainerProperty((Integer) employeesDataTable
                         .getContainerProperty(emplID,
-                                sysSettings.working_status_id).getValue(), sysSettings.count)
+                                SystemSettings.working_status_id).getValue(), SystemSettings.count)
                         .setValue(((Integer) workingStatCont.getContainerProperty((Integer) employeesDataTable
                                         .getContainerProperty(emplID,
-                                                sysSettings.working_status_id).getValue(),
-                                sysSettings.count).getValue()) - 1);
+                                                SystemSettings.working_status_id).getValue(),
+                                SystemSettings.count).getValue()) - 1);
                 repaint();
                 employeesDataTable.getContainerDataSource().removeItem(emplID);
                 employeesDataTable.setValue(null);
@@ -4661,15 +4661,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 if (emplID == myUI.getUser().getId()) {
                     modifyBtn.setEnabled(true);
                 } else if (!(Boolean) employeesDataTable.getContainerProperty(
-                        emplID, sysSettings.is_modifiable).getValue()) {
+                        emplID, SystemSettings.is_modifiable).getValue()) {
                     modifyBtn.setEnabled(false);
                     deleteBtn.setEnabled(false);
                 } else {
-                    if (currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.actModify)) {
+                    if (currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.actModify)) {
                         modifyBtn.setEnabled(true);
                     }
                     if (tabs.getSelectedTab() == tabs.getTab(empSearchLay).getComponent()) {
-                        if (currentUser.isPermitted(sysSettings.cnEmployeeDefinitionView + ":" + sysSettings.actDelete)) {
+                        if (currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.actDelete)) {
                             deleteBtn.setEnabled(true);
                         }
                     }

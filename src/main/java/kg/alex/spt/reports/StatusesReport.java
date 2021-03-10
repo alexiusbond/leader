@@ -51,7 +51,7 @@ public class StatusesReport implements Button.ClickListener,
     public FormattedTable dataTable;
     public FilterTable classTable, schoolsTable;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private Subject currentUser = SecurityUtils.getSubject();
 
     public StatusesReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
@@ -78,7 +78,7 @@ public class StatusesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -130,8 +130,8 @@ public class StatusesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            statusMS.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbEducationStatus));
-            classTable.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.classTable));
+            statusMS.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
+            classTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.classTable));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

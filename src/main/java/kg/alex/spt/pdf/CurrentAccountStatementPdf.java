@@ -37,7 +37,8 @@ public class CurrentAccountStatementPdf {
     StreamResource resource = null;
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
-    SystemSettings sysSettings = new SystemSettings();
+    
+
 
     public CurrentAccountStatementPdf(final MyVaadinUI myUI, final Table t,
             final String acc_category, final String currency, final Date from, final Date to, final StudInfoPdf st) {
@@ -82,14 +83,14 @@ public class CurrentAccountStatementPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase("Счет: " + acc_category, ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + sysSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
                     Tdate.addCell(new Phrase("Валюта: " + currency, tableFont));
                     Tdate.addCell(new Phrase(" " , tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.CurrentAccountStatementReport) + " "
-                            + myUI.getMessage(SptMessages.From) + " " + sysSettings.df.format(from) + " "
-                            + myUI.getMessage(SptMessages.To) + " " + sysSettings.df.format(to), fontBold);
+                            + myUI.getMessage(SptMessages.From) + " " + SystemSettings.df.format(from) + " "
+                            + myUI.getMessage(SptMessages.To) + " " + SystemSettings.df.format(to), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(9, " "));
                     document.add(spr);
@@ -128,13 +129,13 @@ public class CurrentAccountStatementPdf {
                         }
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Accrual)).getValue() != null) {
-                            dataTable.addCell(new Phrase(sysSettings.dFormat.format(t.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(t.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Accrual)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
                         if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Payout)).getValue() != null) {
-                            dataTable.addCell(new Phrase(sysSettings.dFormat.format(t.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(t.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Payout)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));

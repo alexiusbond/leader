@@ -42,7 +42,7 @@ public class SalariesReport implements Button.ClickListener,
     private GridLayout leftGrid;
     public FormattedTreeTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private EnhancedFormatExcelExport excelReport;
 
     public SalariesReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
@@ -109,7 +109,7 @@ public class SalariesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbAcc_currency));
+            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

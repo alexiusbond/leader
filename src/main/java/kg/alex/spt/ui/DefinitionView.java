@@ -47,7 +47,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
     private boolean withActivityStatus;
     private String dbTableName;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -151,9 +151,9 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         settingsLay.addComponent(buttonsLay);
 
         nameTF = new TextField(myUI.getMessage(SptMessages.Name));
-        if (dbTableName.equals(sysSettings.classTable)) {
+        if (dbTableName.equals(SystemSettings.classTable)) {
             nameTF.setPropertyDataSource(new ObjectProperty<Integer>(0));
-            nameTF.setConverter(sysSettings.getStringToIntegerConverter());
+            nameTF.setConverter(SystemSettings.getStringToIntegerConverter());
             nameTF.addValidator(new IntegerRangeValidator(
                     myUI.getMessage(SptMessages.NotifWrongValue), 0, null));
         } else {
@@ -181,7 +181,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                 DbDefinition dbDef = new DbDefinition();
                 dbDef.connect();
                 statusSelect.setContainerDataSource(
-                        dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                        dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
                 dbDef.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -240,7 +240,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                             status = dbDef.exec_update(
                                     getDefinition(
                                             (Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                                    sysSettings.id).getValue()), dbTableName, withActivityStatus);
+                                                    SystemSettings.id).getValue()), dbTableName, withActivityStatus);
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -296,13 +296,13 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(permissionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(permissionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(permissionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(permissionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(permissionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(permissionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -316,7 +316,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
 
     private void fillFields() {
 
-        if (dbTableName.equals(sysSettings.classTable)) {
+        if (dbTableName.equals(SystemSettings.classTable)) {
             nameTF.getPropertyDataSource().setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
                     myUI.getMessage(SptMessages.Name)).getValue().toString()));
         } else {
@@ -325,7 +325,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         }
         if (withActivityStatus) {
             statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.activity_status_id).getValue());
+                    SystemSettings.activity_status_id).getValue());
         }
     }
 
@@ -343,7 +343,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             dataTable.getContainerProperty(dataTable.getValue(),
                     myUI.getMessage(SptMessages.Status)).setValue(statusSelect.getItemCaption(statusSelect.getValue()));
             dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
+                    SystemSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
         }
     }
 
@@ -352,11 +352,11 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.id).setValue(id);
         if (withActivityStatus) {
             item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                     statusSelect.getItemCaption(statusSelect.getValue()));
-            item.getItemProperty(sysSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
+            item.getItemProperty(SystemSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
         }
         dataTable.setValue(id);
     }
@@ -377,7 +377,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue(), dbTableName);
+                    SystemSettings.id).getValue(), dbTableName);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

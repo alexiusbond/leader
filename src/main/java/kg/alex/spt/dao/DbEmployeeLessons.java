@@ -68,7 +68,6 @@ public class DbEmployeeLessons extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id, int school_id,
             EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
         String sql = "SELECT ex.id, ex.hr_branch_id, ex.year_id, ex.hours, ex.extra_hours, ex.class_number_id FROM hr_employee_branch_hours as ex "
                 + "where ex.employee_id = ? and school_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -79,29 +78,29 @@ public class DbEmployeeLessons extends BaseDb {
         while (result.next()) {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Lesson), sysSettings.dbBranchTable, true));
+                            myUI.getMessage(SptMessages.Lesson), SystemSettings.dbBranchTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     edv.createCombobox(result.getInt("ex.class_number_id"),
-                            myUI.getMessage(SptMessages.ClassName), sysSettings.classTable, true));
+                            myUI.getMessage(SptMessages.ClassName), SystemSettings.classTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Lesson), sysSettings.dbBranchTable, true));
+                            myUI.getMessage(SptMessages.Lesson), SystemSettings.dbBranchTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.AcademicYear)).setValue(
                     edv.createCombobox(result.getInt("ex.year_id"),
-                            myUI.getMessage(SptMessages.AcademicYear), sysSettings.dbYear, true));
+                            myUI.getMessage(SptMessages.AcademicYear), SystemSettings.dbYear, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                     edv.createTextfieldWithProperty(result.getInt("ex.hours"), myUI.getMessage(SptMessages.Hours),
                             new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
-                            new ObjectProperty<Integer>(0), sysSettings.getStringToIntegerConverter()));
+                            new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                     edv.createTextfieldWithProperty(result.getInt("ex.extra_hours"), myUI.getMessage(SptMessages.ExtraHours),
                             new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
-                            new ObjectProperty<Integer>(0), sysSettings.getStringToIntegerConverter()));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                            new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }
@@ -122,7 +121,8 @@ public class DbEmployeeLessons extends BaseDb {
 
     public IndexedContainer execSQLHours(MyVaadinUI myUI, int employee_id, int school_id, int cl_num_id,
             Property.ValueChangeListener vll) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT br.id, br.name, ebr.hours, ebr.extra_hours, ebr.id FROM hr_branch AS br "
                 + "LEFT JOIN hr_employee_branch_hours AS ebr ON ebr.hr_branch_id = br.id AND ebr.year_id = ? AND ebr.employee_id = ? "
                 + "AND ebr.class_number_id = ? and ebr.school_id = ? WHERE br.activity_status_id = 2 order by br.id desc;";
@@ -133,7 +133,7 @@ public class DbEmployeeLessons extends BaseDb {
         stat.setInt(4, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(sysSettings.button, CheckBox.class, null);
+        container.addContainerProperty(SystemSettings.button, CheckBox.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Lesson), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Hours), TextField.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), TextField.class, null);
@@ -144,7 +144,7 @@ public class DbEmployeeLessons extends BaseDb {
             ch.setValue(result.getInt("ebr.id") != 0);
             ch.addValueChangeListener(vll);
             ch.setData(result.getInt("br.id"));
-            item.getItemProperty(sysSettings.button).setValue(ch);
+            item.getItemProperty(SystemSettings.button).setValue(ch);
             item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(result.getString("br.name"));
             Integer hours = null;
             if (result.getInt("ebr.id") != 0) {
@@ -152,7 +152,7 @@ public class DbEmployeeLessons extends BaseDb {
             }
             TextField tf = createTextfieldWithProperty(myUI, hours, myUI.getMessage(SptMessages.Hours),
                     new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
-                    new ObjectProperty<Integer>(0), sysSettings.getStringToIntegerConverter());
+                    new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter());
             tf.setData(result.getInt("ebr.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(tf);
             Integer extra_hours = null;
@@ -162,7 +162,7 @@ public class DbEmployeeLessons extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                     createTextfieldWithProperty(myUI, extra_hours, myUI.getMessage(SptMessages.ExtraHours),
                             new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
-                            new ObjectProperty<Integer>(0), sysSettings.getStringToIntegerConverter()));
+                            new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
         }
         return container;
     }

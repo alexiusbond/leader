@@ -27,7 +27,8 @@ public class DbDiscount extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi)
             throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT d.id, d.name, d.amount, d.activity_status_id, dt.name,"
                 + "d.discount_type_id, ac.name, d.year_id, y.name FROM spt.discount as d "
                 + "left join discount_type as dt on dt.id=d.discount_type_id "
@@ -40,13 +41,13 @@ public class DbDiscount extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Value), Double.class, 0.0);
-        container.addContainerProperty(sysSettings.discount_type_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.discount_type_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.DiscountType), String.class, null);
-        container.addContainerProperty(sysSettings.year_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.year_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
-        container.addContainerProperty(sysSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, null);
+        container.addContainerProperty(SystemSettings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.id"));
@@ -54,19 +55,19 @@ public class DbDiscount extends BaseDb {
                     result.getString("d.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Value)).setValue(
                     result.getDouble("d.amount"));
-            item.getItemProperty(sysSettings.discount_type_id).setValue(
+            item.getItemProperty(SystemSettings.discount_type_id).setValue(
                     result.getInt("d.discount_type_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.DiscountType)).setValue(
                     result.getString("dt.name"));
-            item.getItemProperty(sysSettings.year_id).setValue(
+            item.getItemProperty(SystemSettings.year_id).setValue(
                     result.getInt("d.year_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     result.getString("y.name"));
-            item.getItemProperty(sysSettings.status_id).setValue(
+            item.getItemProperty(SystemSettings.status_id).setValue(
                     result.getInt("d.activity_status_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("d.id"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("d.id"));
         }
         return container;
     }
@@ -132,7 +133,8 @@ public class DbDiscount extends BaseDb {
     }
 
     public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "select t.id, t.name, t.amount, t.discount_type_id "
                 + "from discount as t "
                 + "where t.year_id = ? and t.activity_status_id = 2 "
@@ -143,7 +145,7 @@ public class DbDiscount extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(sysSettings.discount_type_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.discount_type_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             if (result.getInt("t.discount_type_id") == 3) {
@@ -161,7 +163,7 @@ public class DbDiscount extends BaseDb {
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("t.amount"));
-            item.getItemProperty(sysSettings.discount_type_id).setValue(
+            item.getItemProperty(SystemSettings.discount_type_id).setValue(
                     result.getInt("t.discount_type_id"));
         }
         return container;

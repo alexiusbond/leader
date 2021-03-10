@@ -56,7 +56,7 @@ public class AccountingMonthReport implements Button.ClickListener,
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     public FilterTable schoolsTable;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private VerticalLayout rightLayout;
     private Subject currentUser = SecurityUtils.getSubject();
     private Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
@@ -194,7 +194,7 @@ public class AccountingMonthReport implements Button.ClickListener,
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         fromDateDF.setWidth("100%");
         fromDateDF.setResolution(Resolution.MONTH);
-        fromDateDF.setDateFormat(sysSettings.yearMonthPattern);
+        fromDateDF.setDateFormat(SystemSettings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         fromDateDF.addValueChangeListener(this);
 
@@ -204,7 +204,7 @@ public class AccountingMonthReport implements Button.ClickListener,
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tillDateDF.setWidth("100%");
         tillDateDF.setResolution(Resolution.MONTH);
-        tillDateDF.setDateFormat(sysSettings.yearMonthPattern);
+        tillDateDF.setDateFormat(SystemSettings.yearMonthPattern);
         tillDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         tillDateDF.addValueChangeListener(this);
 
@@ -321,7 +321,7 @@ public class AccountingMonthReport implements Button.ClickListener,
                                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
-                                                        + " - " + sysSettings.ymdf.format(current.getTime()),
+                                                        + " - " + SystemSettings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
@@ -332,32 +332,32 @@ public class AccountingMonthReport implements Button.ClickListener,
                                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
-                                                        + " - " + sysSettings.ymdf.format(current.getTime()),
+                                                        + " - " + SystemSettings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
                                                         + " - " + myUI.getMessage(SptMessages.Total),
                                                 Table.Align.RIGHT);
                                         SchoolAccounting scAcc = dbTr.exec_get_ttls((Integer) nextSchool, current.getTime(),
-                                                tillDate.getTime(), sysSettings.convertCollectionToStr(catIds));
+                                                tillDate.getTime(), SystemSettings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
-                                                + sysSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
-                                                + sysSettings.df.format(prev_date.getTime()) + "): " + sysSettings.dFormat.format(scAcc.getPrevious_balance())
+                                                + SystemSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
+                                                + SystemSettings.df.format(prev_date.getTime()) + "): " + SystemSettings.dFormat.format(scAcc.getPrevious_balance())
                                                 + "; " + myUI.getMessage(SptMessages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
-                                                + sysSettings.ymdf.format(current.getTime())));
+                                                + SystemSettings.ymdf.format(current.getTime())));
                                     }
                                 }
                                 if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
                                     SchoolAccounting scAcc = dbTr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
-                                            tillDate.getTime(), sysSettings.convertCollectionToStr(catIds));
+                                            tillDate.getTime(), SystemSettings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
-                                            sysSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
-                                                    + sysSettings.df.format(prev_date.getTime()) + ") - " + sysSettings.dFormat.format(scAcc.getPrevious_balance())
-                                                    + "; " + myUI.getMessage(SptMessages.Total) + " - " + incomesDataTable.getColumnFooter(sysSettings.ymdf.format(current.getTime())));
-                                    incomesDataTable.setColumnAlignment(sysSettings.ymdf.format(current.getTime()), Table.Align.RIGHT);
-                                    outcomesDataTable.setColumnAlignment(sysSettings.ymdf.format(current.getTime()), Table.Align.RIGHT);
+                                            SystemSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
+                                                    + SystemSettings.df.format(prev_date.getTime()) + ") - " + SystemSettings.dFormat.format(scAcc.getPrevious_balance())
+                                                    + "; " + myUI.getMessage(SptMessages.Total) + " - " + incomesDataTable.getColumnFooter(SystemSettings.ymdf.format(current.getTime())));
+                                    incomesDataTable.setColumnAlignment(SystemSettings.ymdf.format(current.getTime()), Table.Align.RIGHT);
+                                    outcomesDataTable.setColumnAlignment(SystemSettings.ymdf.format(current.getTime()), Table.Align.RIGHT);
                                 }
                                 current.add(Calendar.MONTH, 1);
                             }
@@ -505,8 +505,8 @@ public class AccountingMonthReport implements Button.ClickListener,
                 try {
                     DbAccCategory dbac = new DbAccCategory();
                     dbac.connect();
-                    dbac.execSQL_for_select_as_tree(myUI, 2, outcomeCategoriesTable, sysSettings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
-                    dbac.execSQL_for_select_as_tree(myUI, 1, incomeCategoriesTable, sysSettings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
+                    dbac.execSQL_for_select_as_tree(myUI, 2, outcomeCategoriesTable, SystemSettings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
+                    dbac.execSQL_for_select_as_tree(myUI, 1, incomeCategoriesTable, SystemSettings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
                     dbac.close();
                 } catch (Exception e) {
                     logger.error(e);

@@ -23,7 +23,8 @@ public class DbStockInvoice extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int service_type_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT t.id, LPAD(t.invoice_number, 7, 0) as inv_num, t.creation_date, sum(mov.amount * mov.price) as amount, "
                 + "stock.name, stock.id, from_e.id, to_e.id, t.note, t.acc_category_id, "
                 + "CONCAT(from_e.surname, ' ', from_e.name, ' ', IFNULL(from_e.middle_name, '')) AS from_employee, "
@@ -45,10 +46,10 @@ public class DbStockInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.FromEmployee), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ToEmployee), String.class, null);
-        container.addContainerProperty(sysSettings.stock_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.from_employee_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.to_employee_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.stock_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.from_employee_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.to_employee_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
 
         while (result.next()) {
@@ -58,11 +59,11 @@ public class DbStockInvoice extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.FromEmployee)).setValue(result.getString("from_employee"));
             item.getItemProperty(myUi.getMessage(SptMessages.ToEmployee)).setValue(result.getString("to_employee"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("t.creation_date")));
-            item.getItemProperty(sysSettings.stock_id).setValue(result.getInt("stock.id"));
-            item.getItemProperty(sysSettings.from_employee_id).setValue(result.getInt("from_e.id"));
-            item.getItemProperty(sysSettings.to_employee_id).setValue(result.getInt("to_e.id"));
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.dtmf.format(result.getTimestamp("t.creation_date")));
+            item.getItemProperty(SystemSettings.stock_id).setValue(result.getInt("stock.id"));
+            item.getItemProperty(SystemSettings.from_employee_id).setValue(result.getInt("from_e.id"));
+            item.getItemProperty(SystemSettings.to_employee_id).setValue(result.getInt("to_e.id"));
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
         }
         return container;

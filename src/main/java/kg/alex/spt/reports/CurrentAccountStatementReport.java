@@ -49,7 +49,6 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
     private DateField fromDateDF, tillDateDF;
     public FormattedTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
-    private SystemSettings sysSettings = new SystemSettings();
 
     public CurrentAccountStatementReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
@@ -105,7 +104,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(sysSettings.datePattern);
+        fromDateDF.setDateFormat(SystemSettings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -114,7 +113,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(sysSettings.datePattern);
+        tillDateDF.setDateFormat(SystemSettings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
@@ -130,7 +129,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbAcc_currency));
+            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

@@ -412,7 +412,8 @@ public class DbStudContract extends BaseDb {
 
     public void execSQL_Yearly_by_classes(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT sch.id, sch.name_ru, sch.code, CONCAT(cln.name, ' - ', cl.name) AS class, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
@@ -457,23 +458,23 @@ public class DbStudContract extends BaseDb {
                     t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                             ymr.totalStudents + "/" + ymr.totalActive);
                     t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            sysSettings.dFormat.format(ymr.contracts));
+                            SystemSettings.dFormat.format(ymr.contracts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            sysSettings.dFormat.format(ymr.discounts));
+                            SystemSettings.dFormat.format(ymr.discounts));
                     if (ymr.contracts != 0) {
                         t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                                sysSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                                SystemSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
                     }
                     t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            sysSettings.dFormat.format(ymr.debts));
+                            SystemSettings.dFormat.format(ymr.debts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            sysSettings.dFormat.format(ymr.nets));
+                            SystemSettings.dFormat.format(ymr.nets));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            sysSettings.dFormat.format(ymr.paids));
+                            SystemSettings.dFormat.format(ymr.paids));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            sysSettings.dFormat.format(ymr.lefts));
+                            SystemSettings.dFormat.format(ymr.lefts));
                     if (ymr.nets != 0.0) {
-                        t.setColumnFooter(sysSettings.percentage, sysSettings.dFormat.format(
+                        t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
                                 ymr.paids * 100 / ymr.nets));
                     }
                     ymr.totalStudents = 0;
@@ -522,7 +523,7 @@ public class DbStudContract extends BaseDb {
                         - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(sysSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
+                    item.getItemProperty(SystemSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
                 }
             }
@@ -531,23 +532,23 @@ public class DbStudContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    sysSettings.dFormat.format(ymr.contracts));
+                    SystemSettings.dFormat.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    sysSettings.dFormat.format(ymr.discounts));
+                    SystemSettings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        sysSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                        SystemSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    sysSettings.dFormat.format(ymr.debts));
+                    SystemSettings.dFormat.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    sysSettings.dFormat.format(ymr.nets));
+                    SystemSettings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    sysSettings.dFormat.format(ymr.paids));
+                    SystemSettings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    sysSettings.dFormat.format(ymr.lefts));
+                    SystemSettings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(sysSettings.percentage, sysSettings.dFormat.format(
+                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
                         ymr.paids * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -566,7 +567,8 @@ public class DbStudContract extends BaseDb {
 
     public void execSQL_Monthly_by_classes(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT months.name, months.id, s_temp.id, s_temp.name_ru, s_temp.code, i_temp.amn, p_temp.amn FROM months "
                 + "CROSS JOIN school AS s_temp LEFT JOIN "
                 + "(SELECT sch.id AS s_id, sch.name_ru AS s_name, SUM(inst.amount) AS amn, MONTH(inst.date_of_payment) AS mnth "
@@ -604,13 +606,13 @@ public class DbStudContract extends BaseDb {
             if (school_id != result.getInt("s_temp.id")) {
                 if (t != null) {
                     t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                            sysSettings.dFormat.format(ymr.inst_plans));
+                            SystemSettings.dFormat.format(ymr.inst_plans));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            sysSettings.dFormat.format(ymr.paids));
+                            SystemSettings.dFormat.format(ymr.paids));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            sysSettings.dFormat.format(ymr.lefts));
+                            SystemSettings.dFormat.format(ymr.lefts));
                     if (ymr.inst_plans != 0.0) {
-                        t.setColumnFooter(sysSettings.percentage, sysSettings.dFormat.format(
+                        t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
                                 ymr.paids * 100 / ymr.inst_plans));
                     }
                     ymr.inst_plans = 0.0;
@@ -637,7 +639,7 @@ public class DbStudContract extends BaseDb {
                         - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
-                    item.getItemProperty(sysSettings.percentage).setValue(
+                    item.getItemProperty(SystemSettings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100.0
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
                 }
@@ -645,13 +647,13 @@ public class DbStudContract extends BaseDb {
         }
         if (t != null) {
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    sysSettings.dFormat.format(ymr.inst_plans));
+                    SystemSettings.dFormat.format(ymr.inst_plans));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    sysSettings.dFormat.format(ymr.paids));
+                    SystemSettings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    sysSettings.dFormat.format(ymr.lefts));
+                    SystemSettings.dFormat.format(ymr.lefts));
             if (ymr.inst_plans != 0.0) {
-                t.setColumnFooter(sysSettings.percentage, sysSettings.dFormat.format(
+                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
                         ymr.paids * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;
@@ -665,7 +667,8 @@ public class DbStudContract extends BaseDb {
 
     public void execSQL_Yearly_by_class_numbers(MyVaadinUI myUI, String school_ids,
                                                 String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT cln.name AS class, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
@@ -736,7 +739,7 @@ public class DbStudContract extends BaseDb {
                                 - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(sysSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
+                    item.getItemProperty(SystemSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
 
                 }
@@ -746,23 +749,23 @@ public class DbStudContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    sysSettings.dFormat.format(ymr.contracts));
+                    SystemSettings.dFormat.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    sysSettings.dFormat.format(ymr.discounts));
+                    SystemSettings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        sysSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                        SystemSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    sysSettings.dFormat.format(ymr.debts));
+                    SystemSettings.dFormat.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    sysSettings.dFormat.format(ymr.nets));
+                    SystemSettings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    sysSettings.dFormat.format(ymr.paids));
+                    SystemSettings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    sysSettings.dFormat.format(ymr.lefts));
+                    SystemSettings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(sysSettings.percentage, sysSettings.dFormat.format(
+                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
                         ymr.paids * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -778,7 +781,8 @@ public class DbStudContract extends BaseDb {
 
     public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids,
             String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT sch.name_ru, sch.code, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), "
@@ -845,7 +849,7 @@ public class DbStudContract extends BaseDb {
                         - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(sysSettings.percentage).setValue(
+                    item.getItemProperty(SystemSettings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
 
@@ -856,23 +860,23 @@ public class DbStudContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    sysSettings.dFormat.format(ymr.contracts));
+                    SystemSettings.dFormat.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    sysSettings.dFormat.format(ymr.discounts));
+                    SystemSettings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        sysSettings.dFormat.format(ymr.discounts * 100 / ymr.contracts));
+                        SystemSettings.dFormat.format(ymr.discounts * 100 / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    sysSettings.dFormat.format(ymr.debts));
+                    SystemSettings.dFormat.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    sysSettings.dFormat.format(ymr.nets));
+                    SystemSettings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    sysSettings.dFormat.format(ymr.paids));
+                    SystemSettings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    sysSettings.dFormat.format(ymr.lefts));
+                    SystemSettings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(sysSettings.percentage, sysSettings.dFormat.format(
+                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
                         ymr.paids * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -888,7 +892,8 @@ public class DbStudContract extends BaseDb {
 
     public void execSQL_Monthly(MyVaadinUI myUI, String school_ids, String edu_statuses_ids,
             int year_id, YearMonthReport ymr) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "select months.name, months.id, i_temp.amn, p_temp.amn FROM months "
                 + "left join ("
                 + "select sum(inst.amount) as amn, month(inst.date_of_payment) as mnth "
@@ -950,7 +955,7 @@ public class DbStudContract extends BaseDb {
                         - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
-                    item.getItemProperty(sysSettings.percentage).setValue(
+                    item.getItemProperty(SystemSettings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
                 }
@@ -958,15 +963,15 @@ public class DbStudContract extends BaseDb {
         }
         if (t != null) {
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    sysSettings.dFormat.format(ymr.nets));
+                    SystemSettings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    sysSettings.dFormat.format(ymr.paids));
+                    SystemSettings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    sysSettings.dFormat.format(ymr.lefts));
+                    SystemSettings.dFormat.format(ymr.lefts));
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    sysSettings.dFormat.format(ymr.inst_plans));
+                    SystemSettings.dFormat.format(ymr.inst_plans));
             if (ymr.inst_plans != 0.0) {
-                t.setColumnFooter(sysSettings.percentage, sysSettings.dFormat.format(
+                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
                         ymr.paids * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;

@@ -45,7 +45,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
     static final Logger logger = LogManager.getLogger(HomePageView.class);
     private final MyVaadinUI myUI;
-    private final SystemSettings sysSettings = new SystemSettings();
+
     private Subject currentUser = SecurityUtils.getSubject();
     private Button weekLog, monthLog, allLog;
     private Table logTable;
@@ -67,21 +67,21 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         this.setColumnExpandRatio(1, 3);
         this.setColumnExpandRatio(2, 5);
 
-        if (currentUser.isPermitted(sysSettings.cnHomePageView + ":" + sysSettings.prmGeneralInfo)) {
+        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmGeneralInfo)) {
             this.addComponent(buildEmpInfo(), 0, 0);
         }
-        if (currentUser.isPermitted(sysSettings.cnHomePageView + ":" + sysSettings.prmStudentsInfo)) {
+        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmStudentsInfo)) {
             this.addComponent(buildStudEduCount(), 0, 1);
         }
-        if (currentUser.isPermitted(sysSettings.cnHomePageView + ":" + sysSettings.prmAccountingInfo)) {
+        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmAccountingInfo)) {
             accLayout.addComponent(buildWeekPlan());
             accLayout.addComponent(buildMonthPlan());
             accLayout.addComponent(buildTotalContract());
             this.addComponent(accLayout, 1, 0, 1, 1);
             this.addComponent(createChart(), 2, 0, 2, 1);
         }
-        if (currentUser.isPermitted(sysSettings.cnHomePageView + ":" + sysSettings.prmLogsInfo)
-                || currentUser.isPermitted(sysSettings.cnHomePageView + ":" + sysSettings.prmAccountingLogsSelect)) {
+        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmLogsInfo)
+                || currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmAccountingLogsSelect)) {
             this.addComponent(buildLogLayout(), 0, 2, 2, 2);
         }
     }
@@ -105,11 +105,11 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
         if (total != 0.0) {
             final DataSeries series = new DataSeries();
-            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), sysSettings.round(tc.getTtl_payments() * 100 / total, 2));
+            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), SystemSettings.round(tc.getTtl_payments() * 100 / total, 2));
             payments.setSliced(true);
             series.add(payments);
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), sysSettings.round(tc.getTtl_left() * 100 / total, 2)));
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), sysSettings.round(tc.getTtl_disc() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), SystemSettings.round(tc.getTtl_left() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), SystemSettings.round(tc.getTtl_disc() * 100 / total, 2)));
             conf.setSeries(series);
         }
 
@@ -409,15 +409,15 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         }
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
-        layout.addComponent(new Label(sysSettings.dFormat.format(tc.getTtl_contract()) + "$"));
+        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_contract()) + "$"));
         layout.addComponent(ttlDiscLab);
-        layout.addComponent(new Label(sysSettings.dFormat.format(tc.getTtl_disc()) + "$"));
+        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_disc()) + "$"));
         layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(sysSettings.dFormat.format(tc.getTtl_debt()) + "$"));
+        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_debt()) + "$"));
         layout.addComponent(ttlPaymentLab);
-        layout.addComponent(new Label(sysSettings.dFormat.format(tc.getTtl_payments()) + "$"));
+        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_payments()) + "$"));
         layout.addComponent(ttlLeftLab);
-        layout.addComponent(new Label(sysSettings.dFormat.format(tc.getTtl_left()) + "$"));
+        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_left()) + "$"));
         return layout;
     }
 
@@ -449,7 +449,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logsTypeSelect.setWidth("100%");
         logsTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         logsTypeSelect.addItem(myUI.getMessage(SptMessages.SystemLogs));
-        if (currentUser.isPermitted(sysSettings.cnHomePageView + ":" + sysSettings.prmAccountingLogsSelect)) {
+        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmAccountingLogsSelect)) {
             logsTypeSelect.addItem(myUI.getMessage(SptMessages.AccountingLogs));
         }
         logsTypeSelect.setValue(myUI.getMessage(SptMessages.SystemLogs));

@@ -49,7 +49,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
     private IndexedContainer permissionCont;
     private TextField nameTF;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER, PERMISSION_NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -178,9 +178,9 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
             categorySelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.positionCategoryTable));
+                    dbDef.exec_for_select(myUI, SystemSettings.positionCategoryTable));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -245,7 +245,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                         try {
                             status = dbp.exec_update(
                                     getPosition((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            sysSettings.id).getValue()));
+                                            SystemSettings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -283,8 +283,8 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         if (property == dataTable) {
             if (dataTable.getItem(dataTable.getValue()) != null) {
                 fillFields();
-                if ((Integer) dataTable.getContainerProperty(dataTable.getValue(), sysSettings.position_id).getValue() == 5
-                        || (Integer) dataTable.getContainerProperty(dataTable.getValue(), sysSettings.position_id).getValue() == 25) {
+                if ((Integer) dataTable.getContainerProperty(dataTable.getValue(), SystemSettings.position_id).getValue() == 5
+                        || (Integer) dataTable.getContainerProperty(dataTable.getValue(), SystemSettings.position_id).getValue() == 25) {
                     permissionTable.setVisible(false);
                 } else {
                     permissionTable.setVisible(true);
@@ -307,13 +307,13 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnHRDefinitionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnHRDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnHRDefinitionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnHRDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnHRDefinitionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnHRDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -330,10 +330,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(SptMessages.Name)).getValue().toString());
         categorySelect.setValue(
                 (Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                        sysSettings.hr_position_category_id).getValue());
+                        SystemSettings.hr_position_category_id).getValue());
         statusSelect.setValue(
                 (Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                        sysSettings.activity_status_id).getValue());
+                        SystemSettings.activity_status_id).getValue());
         clearPermissionTable();
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Permissions)).getValue() != null) {
@@ -353,7 +353,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.hr_position_category_id).setValue(categorySelect
+                SystemSettings.hr_position_category_id).setValue(categorySelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Category)).setValue(categorySelect
@@ -362,7 +362,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Permissions)).setValue(permJoinSingleStr());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.activity_status_id).setValue(statusSelect
+                SystemSettings.activity_status_id).setValue(statusSelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
@@ -379,14 +379,14 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                 categorySelect.getContainerProperty(categorySelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Permissions)).setValue(permJoinSingleStr());
-        item.getItemProperty(sysSettings.hr_position_category_id).setValue(
+        item.getItemProperty(SystemSettings.hr_position_category_id).setValue(
                 categorySelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
-        item.getItemProperty(sysSettings.activity_status_id).setValue(
+        item.getItemProperty(SystemSettings.activity_status_id).setValue(
                 statusSelect.getValue());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -406,7 +406,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             int st = dbd.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue(), sysSettings.hr_positionTable);
+                    SystemSettings.id).getValue(), SystemSettings.hr_positionTable);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {
@@ -500,10 +500,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         String permissions = "";
         while (iter.hasNext()) {
             Object next = iter.next();
-            if (sysSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
+            if (SystemSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
                     .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                     .getValue())).getValue()) != null) {
-                permissions += next + ":" + (sysSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
+                permissions += next + ":" + (SystemSettings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
                         .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                         .getValue())).getValue())) + ";";
             }

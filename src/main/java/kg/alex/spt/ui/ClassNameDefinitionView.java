@@ -45,7 +45,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
     private Table dataTable;
     private TextField nameTF;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -172,9 +172,9 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
             classNumberSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.classTable));
+                    dbDef.exec_for_select(myUI, SystemSettings.classTable));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -231,7 +231,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
                         try {
                             status = dbcn.exec_update(
                                     getClassName((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            sysSettings.id).getValue()));
+                                            SystemSettings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -286,13 +286,13 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnClassNameDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnClassNameDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnClassNameDefinitionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnClassNameDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -308,9 +308,9 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
                 myUI.getMessage(SptMessages.Name)).getValue().toString());
         classNumberSelect.setValue(
                 (Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                        sysSettings.number_id).getValue());
+                        SystemSettings.number_id).getValue());
         statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).getValue());
+                SystemSettings.status_id).getValue());
     }
 
     private void clearFields() {
@@ -323,21 +323,21 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.number_id).setValue(classNumberSelect
+                SystemSettings.number_id).setValue(classNumberSelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Number)).setValue(classNumberSelect
                 .getContainerProperty(classNumberSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).setValue(statusSelect
+                SystemSettings.status_id).setValue(statusSelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.school_id).setValue(
+                SystemSettings.school_id).setValue(
                         myUI.getUser().getSchool_id());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.School)).setValue(
@@ -352,18 +352,18 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
                 classNumberSelect.getContainerProperty(classNumberSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue());
-        item.getItemProperty(sysSettings.number_id).setValue(
+        item.getItemProperty(SystemSettings.number_id).setValue(
                 classNumberSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
-        item.getItemProperty(sysSettings.status_id).setValue(
+        item.getItemProperty(SystemSettings.status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
                 myUI.getUser().getSchool_name());
-        item.getItemProperty(sysSettings.school_id).setValue(
+        item.getItemProperty(SystemSettings.school_id).setValue(
                 myUI.getUser().getSchool_id());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -383,7 +383,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue(), sysSettings.dbClass_name);
+                    SystemSettings.id).getValue(), SystemSettings.dbClass_name);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

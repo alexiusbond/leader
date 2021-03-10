@@ -16,7 +16,6 @@ import kg.alex.spt.i18n.SptMessages;
 public class MyFilterDecorator implements FilterDecorator, Serializable {
 
     private MyVaadinUI myUI;
-    private SystemSettings sysSettings = new SystemSettings();
 
     public MyFilterDecorator(MyVaadinUI myUi) {
         myUI = myUi;
@@ -89,7 +88,7 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
     }
 
     public DateFormat getDateFormat(Object propertyId) {
-        return sysSettings.df;
+        return SystemSettings.df;
     }
 
     @Override

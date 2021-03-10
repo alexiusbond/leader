@@ -38,7 +38,8 @@ public class ClassCallsPdf {
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
     private Date fromDate, tillDate;
-    SystemSettings sysSettings = new SystemSettings();
+    
+
 
     public ClassCallsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
             final Date fDate, final Date tDate, final StudInfoPdf st, final int total) {
@@ -84,11 +85,11 @@ public class ClassCallsPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + sysSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.CallsReport) + ": "
-                            + year + " (" + sysSettings.df.format(fromDate) + " - " + sysSettings.df.format(tillDate) + ")", fontBold);
+                            + year + " (" + SystemSettings.df.format(fromDate) + " - " + SystemSettings.df.format(tillDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);

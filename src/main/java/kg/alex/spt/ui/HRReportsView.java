@@ -18,7 +18,7 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
 
     private MyVaadinUI myUI;
     private ComboBoxMax repTypeSelect;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
     public HorizontalSplitPanel mainPage;
@@ -54,7 +54,7 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
         repTypeSelect.setWidth("100%");
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
-        if (currentUser.isPermitted(sysSettings.cnHRReportsView + ":" + sysSettings.prmLessonHoursReport)) {
+        if (currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmLessonHoursReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.HRLessonHoursReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);

@@ -39,7 +39,8 @@ public class ContractCambridgePdfEn {
     private final String nameOf = "Contract";
     private MyVaadinUI myUI;
     private StudInfoPdf student;
-    SystemSettings sysSettings = new SystemSettings();
+    
+
     private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
@@ -99,9 +100,9 @@ public class ContractCambridgePdfEn {
                     Tdate.addCell(new Phrase(" ", ordBoldFont));
                     Tdate.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     if (aDate.before(cal.getTime())) {
-                        Tdate.addCell(new Phrase(sysSettings.dateEn.format(cal.getTime()), ordBoldFont));
+                        Tdate.addCell(new Phrase(SystemSettings.dateEn.format(cal.getTime()), ordBoldFont));
                     } else {
-                        Tdate.addCell(new Phrase(sysSettings.dateEn.format(aDate), ordBoldFont));
+                        Tdate.addCell(new Phrase(SystemSettings.dateEn.format(aDate), ordBoldFont));
                     }
                     document.add(Tdate);
                     document.add(new Paragraph(10, " "));
@@ -639,7 +640,7 @@ public class ContractCambridgePdfEn {
                     text15.add(new Phrase(df.format(new Date()), ordBoldFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("TOTAL FEE: ", ordFont));
-                    text15.add(new Phrase((sysSettings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
+                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
                     text15.add(new Phrase(" USD.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     if (student.getCtr_debt() >= 0) {
@@ -647,7 +648,7 @@ public class ContractCambridgePdfEn {
                     } else {
                         text15.add(new Phrase("Overpayment from previous year: ", ordFont));
                     }
-                    text15.add(new Phrase((sysSettings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
+                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
                     text15.add(new Phrase(" USD.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Discount: ", ordFont));
@@ -657,10 +658,10 @@ public class ContractCambridgePdfEn {
                     }
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Prepayment: ", ordFont));
-                    text15.add(new Phrase(sysSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Remainder: ", ordFont));
-                    text15.add(new Phrase(sysSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
                     document.add(text15);
                     document.add(new Paragraph(10, " "));
 
@@ -696,7 +697,7 @@ public class ContractCambridgePdfEn {
                     }
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("Total:", ordBoldFont));
-                    TContract.addCell(new Phrase(sysSettings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
+                    TContract.addCell(new Phrase(SystemSettings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("", ordFont));
 

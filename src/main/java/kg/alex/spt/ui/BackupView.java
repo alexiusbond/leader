@@ -24,7 +24,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
     private MyVaadinUI myUI;
     private Table dataTable;
     private Button takeBakup;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private IndexedContainer container;
 
     public BackupView(MyVaadinUI myUI) {
@@ -87,7 +87,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
         container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
-        container.addContainerProperty(sysSettings.button, Button.class, null);
+        container.addContainerProperty(SystemSettings.button, Button.class, null);
         try {
             File folder = new File("/home/logo/backups");
             File[] listOfFiles = folder.listFiles();
@@ -99,7 +99,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
                             listOfFiles[i].getName());
                     item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                             new Date(listOfFiles[i].lastModified()));
-                    item.getItemProperty(sysSettings.button).setValue(createButton(id));
+                    item.getItemProperty(SystemSettings.button).setValue(createButton(id));
                 }
             }
             dataTable.clear();

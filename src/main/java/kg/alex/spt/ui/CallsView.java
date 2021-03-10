@@ -46,7 +46,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
     private FilterTable classTable;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private IndexedContainer container;
-    private SystemSettings sysSettings = new SystemSettings();
+
     public double total;
 
     public CallsView(MyVaadinUI myUI) {
@@ -72,14 +72,14 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     dataTable.setColumnCollapsingAllowed(true);
-                    dataTable.setColumnCollapsed(sysSettings.button, true);
+                    dataTable.setColumnCollapsed(SystemSettings.button, true);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), true);
                     excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.excludeCollapsedColumns();
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.Calls));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
-                    dataTable.setColumnCollapsed(sysSettings.button, false);
+                    dataTable.setColumnCollapsed(SystemSettings.button, false);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), false);
                     dataTable.setColumnCollapsingAllowed(false);
                 }
@@ -218,14 +218,14 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             total = 0;
             dataTable.setContainerDataSource(dbst.execSQLCalls(myUI,
                     myUI.getUser().getCurrent_year().getId(),
-                    sysSettings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
+                    SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
             dbst.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
-                + sysSettings.dFormat.format(total));
+                + SystemSettings.dFormat.format(total));
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 150);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
 
@@ -266,7 +266,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         container.addContainerProperty(myUI.getMessage(SptMessages.LastCall), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastPayment), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
-        container.addContainerProperty(sysSettings.button, Button.class, null);
+        container.addContainerProperty(SystemSettings.button, Button.class, null);
         return container;
     }
 }

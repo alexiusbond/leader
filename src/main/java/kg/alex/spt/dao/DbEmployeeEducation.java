@@ -85,7 +85,8 @@ public class DbEmployeeEducation extends BaseDb {
 
     public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
                                     EmployeeDefinitionView edv) throws SQLException {
-        final SystemSettings sysSettings = new SystemSettings();
+        final 
+
         String sql = "SELECT ed.id, ed.hr_university_id, ed.department, ed.start_date, ed.end_date, ed.country_id, "
                 + "ed.education_level_id, a.id, a.name, a.extension, a.unique_name FROM hr_employee_education as ed "
                 + "left join hr_attachments as a on a.id = ed.attachment_id "
@@ -98,8 +99,8 @@ public class DbEmployeeEducation extends BaseDb {
         while (result.next()) {
             String id = result.getString("ed.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Department)).setValue(
                     edv.createTextfield(result.getString("ed.department"),
                             myUI.getMessage(SptMessages.Department),
@@ -114,12 +115,12 @@ public class DbEmployeeEducation extends BaseDb {
                             SystemSettings.yearPattern, Resolution.YEAR));
             item.getItemProperty(myUI.getMessage(SptMessages.Country)).setValue(
                     edv.createCombobox(result.getInt("ed.country_id"),
-                            myUI.getMessage(SptMessages.Country), sysSettings.dbCountry, true));
+                            myUI.getMessage(SptMessages.Country), SystemSettings.dbCountry, true));
             item.getItemProperty(myUI.getMessage(SptMessages.EduLevel)).setValue(
                     edv.createCombobox(result.getInt("ed.education_level_id"),
-                            myUI.getMessage(SptMessages.EduLevel), sysSettings.dbEduLevel, true));
+                            myUI.getMessage(SptMessages.EduLevel), SystemSettings.dbEduLevel, true));
             final ComboBox cb = edv.createCombobox(result.getInt("ed.hr_university_id"),
-                    myUI.getMessage(SptMessages.University), sysSettings.dbUniversityTable, true);
+                    myUI.getMessage(SptMessages.University), SystemSettings.dbUniversityTable, true);
             cb.setNewItemsAllowed(true);
             cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
                 @Override
@@ -127,7 +128,7 @@ public class DbEmployeeEducation extends BaseDb {
                     try {
                         DbDefinition dbd = new DbDefinition();
                         dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), sysSettings.dbUniversityTable, false);
+                        int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbUniversityTable, false);
                         dbd.close();
                         if (id != 0) {
                             Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
@@ -163,7 +164,7 @@ public class DbEmployeeEducation extends BaseDb {
                 a.setUnique_name(result.getString("a.unique_name"));
                 a.setExtension(result.getString("a.extension"));
                 a.setName(result.getString("a.name"));
-                Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, sysSettings.download_button, FontAwesome.DOWNLOAD);
+                Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, SystemSettings.download_button, FontAwesome.DOWNLOAD);
                 b.setStyleName(ValoTheme.BUTTON_SMALL);
                 b.setData(a);
                 hl.addComponent(b);
@@ -174,7 +175,7 @@ public class DbEmployeeEducation extends BaseDb {
                 hl.addComponent(upload);
                 item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             }
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

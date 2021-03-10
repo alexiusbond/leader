@@ -45,7 +45,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
     private Table dataTable;
     private TextField nameTF;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -161,7 +161,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -218,7 +218,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
                         try {
                             status = dbCon.exec_update(
                                     getStock((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            sysSettings.id).getValue()));
+                                            SystemSettings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -272,13 +272,13 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnStockDefinitionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnStockDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnStockDefinitionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnStockDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnStockDefinitionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnStockDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -292,7 +292,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Name)).getValue().toString());
         statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).getValue());
+                SystemSettings.status_id).getValue());
     }
 
     private void clearFields() {
@@ -304,14 +304,14 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).setValue(statusSelect
+                SystemSettings.status_id).setValue(statusSelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.school_id).setValue(
+                SystemSettings.school_id).setValue(
                         myUI.getUser().getSchool_id());
     }
 
@@ -323,11 +323,11 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
-        item.getItemProperty(sysSettings.status_id).setValue(
+        item.getItemProperty(SystemSettings.status_id).setValue(
                 statusSelect.getValue());
-        item.getItemProperty(sysSettings.school_id).setValue(
+        item.getItemProperty(SystemSettings.school_id).setValue(
                 myUI.getUser().getSchool_id());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -346,7 +346,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue(), sysSettings.dbStock);
+                    SystemSettings.id).getValue(), SystemSettings.dbStock);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

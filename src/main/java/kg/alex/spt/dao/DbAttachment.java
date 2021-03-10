@@ -42,7 +42,8 @@ public class DbAttachment extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int employee_id, EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT a.id, a.name, a.unique_name, concat(c.name, ' - ', ec.given_by) as details, 'Сертификат' as type " +
                 "FROM hr_employee_certificate AS ec " +
                 "LEFT JOIN hr_certificate c ON c.id = ec.certificate_id " +
@@ -68,7 +69,7 @@ public class DbAttachment extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Details), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Type), String.class, null);
-        container.addContainerProperty(sysSettings.button, Button.class, null);
+        container.addContainerProperty(SystemSettings.button, Button.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
@@ -81,10 +82,10 @@ public class DbAttachment extends BaseDb {
             a.setUnique_name(result.getString("unique_name"));
             a.setName(result.getString("name"));
             com.vaadin.ui.Button b = edv.createButton(myUi.getMessage(SptMessages.DownLoad), a.getId() + "",
-                    sysSettings.download_button, FontAwesome.DOWNLOAD);
+                    SystemSettings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);
-            item.getItemProperty(sysSettings.button).setValue(b);
+            item.getItemProperty(SystemSettings.button).setValue(b);
 
         }
         return container;

@@ -53,7 +53,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
     private PopupButton copyButton;
     private TextField nameTF, valueTF;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
 
@@ -177,7 +177,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
         valueTF.setRequired(true);
         valueTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         valueTF.setNullRepresentation("");
-        valueTF.setConverter(sysSettings.getStringToDoubleConverter());
+        valueTF.setConverter(SystemSettings.getStringToDoubleConverter());
         valueTF.setWidth("100%");
         valueTF.addValidator(new DoubleRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
@@ -195,7 +195,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -267,7 +267,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                         try {
                             status = dbDis.exec_update(
                                     getContract((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            sysSettings.id).getValue()));
+                                            SystemSettings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -361,16 +361,16 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnContractDefintionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnContractDefintionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnContractDefintionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnContractDefintionView + ":" + sysSettings.actCopy)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actCopy)) {
             copyButton.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -387,7 +387,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
         valueTF.getPropertyDataSource().setValue((Double) dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Value)).getValue());
         statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).getValue().toString()));
+                SystemSettings.status_id).getValue().toString()));
 
     }
 
@@ -408,10 +408,10 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).setValue(
+                SystemSettings.status_id).setValue(
                         (Integer) statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.school_id).setValue(
+                SystemSettings.school_id).setValue(
                         myUI.getUser().getSchool_id());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.School)).setValue(
@@ -428,17 +428,17 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
-        item.getItemProperty(sysSettings.status_id).setValue(
+        item.getItemProperty(SystemSettings.status_id).setValue(
                 (Integer) statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());
-        item.getItemProperty(sysSettings.year_id).setValue(
+        item.getItemProperty(SystemSettings.year_id).setValue(
                 myUI.getUser().getCurrent_year().getId());
         item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
                 myUI.getUser().getSchool_name());
-        item.getItemProperty(sysSettings.school_id).setValue(
+        item.getItemProperty(SystemSettings.school_id).setValue(
                 myUI.getUser().getSchool_id());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -459,9 +459,9 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             dbDef.exec_update_emp_id((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue(), myUI.getUser().getId(), sysSettings.dbContract);
+                    SystemSettings.id).getValue(), myUI.getUser().getId(), SystemSettings.dbContract);
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue(), sysSettings.dbContract);
+                    SystemSettings.id).getValue(), SystemSettings.dbContract);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

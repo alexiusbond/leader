@@ -38,7 +38,8 @@ public class DbEmployeeOrder extends BaseDb {
     }
 
     public int exec_insert(EmployeeOrder eo) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "INSERT INTO hr_employee_order (hr_orders_id, employee_id,"
                 + "school_id, hr_position_id, class_name_id, "
                 + "to_date, note, modification_date, m_employee_id, from_date, from_to_school_id, can_not_delete) "
@@ -119,7 +120,8 @@ public class DbEmployeeOrder extends BaseDb {
     }
 
     public int exec_update_after_insert(EmployeeOrder eo) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "update hr_employee_order as eo "
                 + "left join hr_orders as o on o.id = eo.hr_orders_id "
                 + "set eo.effected_by_id=?, eo.to_date=? "
@@ -134,7 +136,8 @@ public class DbEmployeeOrder extends BaseDb {
     }
 
     public int exec_update_after_update(int effected_by_id, Date to_date) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "update hr_employee_order as eo set eo.to_date=? WHERE eo.effected_by_id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(to_date.getTime()));
@@ -159,19 +162,20 @@ public class DbEmployeeOrder extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        SystemSettings sysSettings = new SystemSettings();
+
+
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
-        container.addContainerProperty(sysSettings.working_status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.visible_hr_orders, String.class, null);
+        container.addContainerProperty(SystemSettings.working_status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.visible_hr_orders, String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("o.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                     result.getString("o.name"));
-            item.getItemProperty(sysSettings.working_status_id).setValue(
+            item.getItemProperty(SystemSettings.working_status_id).setValue(
                     result.getInt("o.working_status_id"));
-            item.getItemProperty(sysSettings.visible_hr_orders).setValue(
+            item.getItemProperty(SystemSettings.visible_hr_orders).setValue(
                     result.getString("o.visible_hr_orders"));
             item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(
                     result.getString("ws.name"));
@@ -181,7 +185,8 @@ public class DbEmployeeOrder extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id, int school_id, boolean isAdmin, boolean isHR,
                                     EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT eo.id, o.id, o.name, eo.from_date, eo.to_date, eo.note, eo.effected_by_id, eo.can_not_delete, "
                 + "CASE WHEN o.id IN (1, 2, 7) THEN p.name WHEN o.id = 3 THEN CONCAT(cn.name, ' - ', cln.name) "
                 + "WHEN o.id IN (5, 8) THEN sch.name_ru ELSE NULL END AS details, CASE WHEN o.id IN (1, 2, 7) THEN p.id "
@@ -203,11 +208,11 @@ public class DbEmployeeOrder extends BaseDb {
             Button b = null;
 
             if (result.getInt("o.id") == 2 || result.getInt("o.id") == 3) {
-                b = edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE);
+                b = edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE);
             } else if (result.getInt("eo.can_not_delete") != 1) {
                 last_id = result.getString("eo.id");
             }
-            item.getItemProperty(sysSettings.button).setValue(b);
+            item.getItemProperty(SystemSettings.button).setValue(b);
             ComboBox cb = edv.createCombobox(0, myUI.getMessage(SptMessages.OrderType), null, true);
             cb.setEnabled(false);
             cb.setContainerDataSource(execOrderTypesSel(myUI, result.getString("o.id")));
@@ -246,14 +251,14 @@ public class DbEmployeeOrder extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(cb);
             }
             DateField df = edv.createDateField(result.getDate("eo.from_date"),
-                    myUI.getMessage(SptMessages.FromDate), null, true, sysSettings.datePattern, Resolution.DAY);
+                    myUI.getMessage(SptMessages.FromDate), null, true, SystemSettings.datePattern, Resolution.DAY);
             df.setRangeEnd(new Date());
             if (result.getInt("o.id") == 8) {
                 df.setEnabled(false);
             }
             item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
             df = edv.createDateField(result.getDate("eo.to_date"),
-                    myUI.getMessage(SptMessages.TillDate), null, false, sysSettings.datePattern, Resolution.DAY);
+                    myUI.getMessage(SptMessages.TillDate), null, false, SystemSettings.datePattern, Resolution.DAY);
             if (result.getInt("o.id") != 3 && result.getInt("o.id") != 2) {
                 df.setEnabled(false);
             }
@@ -265,8 +270,8 @@ public class DbEmployeeOrder extends BaseDb {
                 tf.setEnabled(false);
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
-            item.getItemProperty(sysSettings.effected_by_id).setValue(result.getString("eo.effected_by_id"));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.effected_by_id).setValue(result.getString("eo.effected_by_id"));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         if (last_id != null) {
             Item item = container.getItem(last_id);
@@ -276,9 +281,9 @@ public class DbEmployeeOrder extends BaseDb {
                 }
                 if (((Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != 8
                         && (Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != 5)
-                        || edv.currentUser.isPermitted(sysSettings.cnEmployeeTransferView + ":" + sysSettings.actDelete)) {
-                    item.getItemProperty(sysSettings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
-                            last_id, sysSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
+                        || edv.currentUser.isPermitted(SystemSettings.cnEmployeeTransferView + ":" + SystemSettings.actDelete)) {
+                    item.getItemProperty(SystemSettings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
+                            last_id, SystemSettings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
                 }
             }
         }
@@ -286,7 +291,8 @@ public class DbEmployeeOrder extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT eo.id, o.name, eo.from_date, eo.to_date, eo.note, "
                 + "CASE WHEN o.id IN (1, 2, 7) THEN p.name WHEN o.id = 3 THEN CONCAT(cn.name, ' - ', cln.name) "
                 + "WHEN o.id IN (5, 8) THEN sch.name_ru ELSE NULL END AS details "
@@ -307,9 +313,9 @@ public class DbEmployeeOrder extends BaseDb {
             Item item = container.addItem(result.getString("eo.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).setValue(result.getString("o.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(result.getString("details"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(sysSettings.df.format(result.getDate("eo.from_date")));
+            item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(SystemSettings.df.format(result.getDate("eo.from_date")));
             if (result.getDate("eo.to_date") != null) {
-                item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(sysSettings.df.format(result.getDate("eo.to_date")));
+                item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(SystemSettings.df.format(result.getDate("eo.to_date")));
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getDate("eo.note"));
         }

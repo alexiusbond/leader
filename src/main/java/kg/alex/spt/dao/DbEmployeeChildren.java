@@ -75,7 +75,8 @@ public class DbEmployeeChildren extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
             EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT ech.id, ech.fullname, ech.date_of_birth, ech.institution, ech.hr_education_status_id, ech.hr_health_status_id "
                 + "FROM hr_employee_children as ech where ech.employee_id = ? ;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -85,8 +86,8 @@ public class DbEmployeeChildren extends BaseDb {
         while (result.next()) {
             String id = result.getString("ech.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                     edv.createTextfield(result.getString("ech.fullname"),
                             myUI.getMessage(SptMessages.FullName),
@@ -94,18 +95,18 @@ public class DbEmployeeChildren extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
                     edv.createDateField(result.getDate("ech.date_of_birth"),
                             myUI.getMessage(SptMessages.DateOfBirth), null,
-                            true, sysSettings.datePattern, Resolution.DAY));
+                            true, SystemSettings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(SptMessages.Institution)).setValue(
                     edv.createTextfield(result.getString("ech.institution"),
                             myUI.getMessage(SptMessages.Institution),
                             new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false));
             item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
                     edv.createCombobox(result.getInt("ech.hr_education_status_id"),
-                            myUI.getMessage(SptMessages.EducationStatus), sysSettings.dbHrEducationStatus, false));
+                            myUI.getMessage(SptMessages.EducationStatus), SystemSettings.dbHrEducationStatus, false));
             item.getItemProperty(myUI.getMessage(SptMessages.HealthStatus)).setValue(
                     edv.createCombobox(result.getInt("ech.hr_health_status_id"),
-                            myUI.getMessage(SptMessages.HealthStatus), sysSettings.dbHealthStatus, true));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                            myUI.getMessage(SptMessages.HealthStatus), SystemSettings.dbHealthStatus, true));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

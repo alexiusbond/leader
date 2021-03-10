@@ -63,7 +63,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
             innTF, bankTF, bankAccountTF, phoneTF, cityTF;
     private boolean isNew;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     private Upload photoUpl;
     private File myFile;
@@ -259,7 +259,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, sysSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -344,7 +344,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
                             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                                     codeTF.getValue() + " - " + nameRuTF.getValue());
-                            item.getItemProperty(sysSettings.year_id).setValue(
+                            item.getItemProperty(SystemSettings.year_id).setValue(
                                     myUI.getUser().getCurrent_year().getId());
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
@@ -353,7 +353,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                     } else {
                         int status = 0;
                         School school = getSchool((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                sysSettings.id).getValue());
+                                SystemSettings.id).getValue());
                         try {
                             status = dbScl.exec_update(school);
                         } catch (Exception e) {
@@ -362,9 +362,9 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                         }
                         if (status != 0) {
                             if (!school.getCode().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                    sysSettings.id).getValue(), myUI.getMessage(SptMessages.Code)).getValue())
+                                    SystemSettings.id).getValue(), myUI.getMessage(SptMessages.Code)).getValue())
                                     || !school.getName_kg().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                    sysSettings.id).getValue(), myUI.getMessage(SptMessages.NameRu)).getValue())) {
+                                    SystemSettings.id).getValue(), myUI.getMessage(SptMessages.NameRu)).getValue())) {
                                 DbSalaryCategories dbsc = new DbSalaryCategories();
                                 dbsc.connect();
                                 IndexedContainer salCont = dbsc.execSQL(myUI);
@@ -445,13 +445,13 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(sysSettings.cnSchoolDefinitionView + ":" + sysSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnSchoolDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnSchoolDefinitionView + ":" + sysSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnSchoolDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(sysSettings.cnSchoolDefinitionView + ":" + sysSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnSchoolDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -479,7 +479,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         nameRuTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.NameRu)).getValue().toString());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).getValue());
+                SystemSettings.status_id).getValue());
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.NameKg)).getValue() != null) {
             nameKgTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
@@ -583,7 +583,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Logo)).setValue(photoName);
         dataTable.getContainerProperty(dataTable.getValue(),
-                sysSettings.status_id).setValue(statusSelect.getValue());
+                SystemSettings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
@@ -608,11 +608,11 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Name)).getValue().toString());
-        item.getItemProperty(sysSettings.status_id).setValue(statusSelect.getValue());
+        item.getItemProperty(SystemSettings.status_id).setValue(statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());
-        item.getItemProperty(sysSettings.year_id).setValue(myUI.getUser().getCurrent_year().getId());
-        item.getItemProperty(sysSettings.id).setValue(id);
+        item.getItemProperty(SystemSettings.year_id).setValue(myUI.getUser().getCurrent_year().getId());
+        item.getItemProperty(SystemSettings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -644,12 +644,12 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             dbDef.connect();
             dbDef.getConnection().setAutoCommit(false);
             dbDef.exec_delete(dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue().toString(), sysSettings.dbAcc_category, sysSettings.school_id);
+                    SystemSettings.id).getValue().toString(), SystemSettings.dbAcc_category, SystemSettings.school_id);
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    sysSettings.id).getValue(), sysSettings.dbSchool);
+                    SystemSettings.id).getValue(), SystemSettings.dbSchool);
             if (st != 0) {
                 myUI.getSchoolCont().removeItem(dataTable.getContainerProperty(
-                        dataTable.getValue(), sysSettings.id).getValue());
+                        dataTable.getValue(), SystemSettings.id).getValue());
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {
                     dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());

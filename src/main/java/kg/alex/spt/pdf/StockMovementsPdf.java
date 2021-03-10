@@ -40,7 +40,8 @@ public class StockMovementsPdf {
     StreamResource resource = null;
     SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private Document document = null;
-    SystemSettings sysSettings = new SystemSettings();
+    
+
 
     public StockMovementsPdf(final MyVaadinUI myUI, final String title, final StockInvoice stockInvoice,
             final IndexedContainer stockMovementsCont, final StudInfoPdf schoolInfo, final String total) {
@@ -145,17 +146,17 @@ public class StockMovementsPdf {
                         table.addCell(new Phrase(tf.getValue(), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Quantity)).getValue();
-                        table.addCell(new Phrase(sysSettings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
+                        table.addCell(new Phrase(SystemSettings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
                         if (title.equals(myUI.getMessage(SptMessages.StockIncome))) {
                             tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Price)).getValue();
-                            table.addCell(new Phrase(sysSettings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
+                            table.addCell(new Phrase(SystemSettings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
                         } else {
-                            table.addCell(new Phrase(sysSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
+                            table.addCell(new Phrase(SystemSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Price)).getValue()), tableFont));
                         }
-                        table.addCell(new Phrase(sysSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(SystemSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Rate)).getValue()), tableFont));
-                        table.addCell(new Phrase(sysSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(SystemSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         y++;

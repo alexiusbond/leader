@@ -23,7 +23,8 @@ public class DbPosition extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT p.id, p.name, st.id, st.name, pc.id, pc.name, p.default_permissions, pos.id "
                 + "FROM spt.hr_position AS p "
                 + "LEFT JOIN activity_status AS st ON p.activity_status_id = st.id "
@@ -35,17 +36,17 @@ public class DbPosition extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(sysSettings.activity_status_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.hr_position_category_id, Integer.class, 0);
-        container.addContainerProperty(sysSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.activity_status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.hr_position_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Category), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, null);
+        container.addContainerProperty(SystemSettings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("p.id"));
 
-            item.getItemProperty(sysSettings.activity_status_id).setValue(
+            item.getItemProperty(SystemSettings.activity_status_id).setValue(
                     result.getInt("st.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
                     result.getString("p.name"));
@@ -55,11 +56,11 @@ public class DbPosition extends BaseDb {
                     result.getString("pc.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(
                     result.getString("p.default_permissions"));
-            item.getItemProperty(sysSettings.hr_position_category_id).setValue(
+            item.getItemProperty(SystemSettings.hr_position_category_id).setValue(
                     result.getInt("pc.id"));
-            item.getItemProperty(sysSettings.position_id).setValue(
+            item.getItemProperty(SystemSettings.position_id).setValue(
                     result.getInt("pos.id"));
-            item.getItemProperty(sysSettings.id).setValue(
+            item.getItemProperty(SystemSettings.id).setValue(
                     result.getInt("p.id"));
 
         }
@@ -107,19 +108,20 @@ public class DbPosition extends BaseDb {
     }
 
     public IndexedContainer execSQL_cont(MyVaadinUI myUI) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+
+
         String sql = "SELECT id, name, hr_position_id "
                 + "FROM position order by id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
-        container.addContainerProperty(sysSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
                     result.getString("name"));
-            item.getItemProperty(sysSettings.position_id).setValue(
+            item.getItemProperty(SystemSettings.position_id).setValue(
                     result.getInt("hr_position_id"));
         }
         return container;

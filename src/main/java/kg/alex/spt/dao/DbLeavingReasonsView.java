@@ -23,7 +23,8 @@ public class DbLeavingReasonsView extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi)
             throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT lr.id, lr.name, lr.activity_status_id, ac.name FROM spt.order_reason as lr "
                 + "left join activity_status as ac on ac.id = lr.activity_status_id "
                 + "order by lr.id asc, lr.activity_status_id desc;";
@@ -32,19 +33,19 @@ public class DbLeavingReasonsView extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
-        container.addContainerProperty(sysSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("lr.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
                     result.getString("lr.name"));
-            item.getItemProperty(sysSettings.status_id).setValue(
+            item.getItemProperty(SystemSettings.status_id).setValue(
                     result.getInt("lr.activity_status_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(sysSettings.id).setValue(
+            item.getItemProperty(SystemSettings.id).setValue(
                     result.getInt("lr.id"));
         }
         return container;

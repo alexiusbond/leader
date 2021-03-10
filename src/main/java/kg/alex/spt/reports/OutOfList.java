@@ -48,7 +48,7 @@ public class OutOfList implements Button.ClickListener,
     private FilterTable fromClassTable;
     private IndexedContainer dataCont;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
     public double nets, paids, lefts;
@@ -113,7 +113,7 @@ public class OutOfList implements Button.ClickListener,
             DbLeavingReasonsView dblr = new DbLeavingReasonsView();
             dbd.connect();
             dblr.connect();
-            yearSelectMCB.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelectMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             reasonsMCB.setContainerDataSource(
                     dblr.exec_for_select(myUI, true));
             dblr.close();
@@ -208,8 +208,8 @@ public class OutOfList implements Button.ClickListener,
                     DbStudentOrder dbor = new DbStudentOrder();
                     dbor.connect();
                     dataCont = dbor.execSQL_outOf(myUI,
-                            sysSettings.convertCollectionToStr((Set<?>) yearSelectMCB.getValue()),
-                            sysSettings.convertCollectionToStr((Set<?>) fromClassTable.getValue()),
+                            SystemSettings.convertCollectionToStr((Set<?>) yearSelectMCB.getValue()),
+                            SystemSettings.convertCollectionToStr((Set<?>) fromClassTable.getValue()),
                             getMulticomboCaptions((Set<?>) reasonsMCB.getValue()),
                             myUI.getUser().getSchool_id(), this);
                     dataTable.setContainerDataSource(dataCont);
@@ -221,11 +221,11 @@ public class OutOfList implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
                             myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            sysSettings.dFormat.format(nets));
+                            SystemSettings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            sysSettings.dFormat.format(paids));
+                            SystemSettings.dFormat.format(paids));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            sysSettings.dFormat.format(nets - paids));
+                            SystemSettings.dFormat.format(nets - paids));
                     if (dataCont.size() != 0) {
                         excelBtn.setEnabled(true);
                     }

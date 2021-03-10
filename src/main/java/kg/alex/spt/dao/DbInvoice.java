@@ -30,7 +30,8 @@ public class DbInvoice extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id, String viewName, Property.ValueChangeListener listener) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
                 + "sum(if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount)) as amount, inv.note, inv.note2 "
@@ -47,31 +48,31 @@ public class DbInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note) + " 2", String.class, null);
-        container.addContainerProperty(sysSettings.button, CheckBox.class, null);
+        container.addContainerProperty(SystemSettings.button, CheckBox.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("inv.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
             if (invoice_type_id != 1) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.ymdf.format(result.getTimestamp("inv.creation_date")));
+                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.ymdf.format(result.getTimestamp("inv.creation_date")));
             } else {
-                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note) + " 2").setValue(result.getString("inv.note2"));
-            if (viewName.equals(sysSettings.cnShortTermDebtsView) || viewName.equals(sysSettings.cnReturnableAssetsView)) {
+            if (viewName.equals(SystemSettings.cnShortTermDebtsView) || viewName.equals(SystemSettings.cnReturnableAssetsView)) {
                 CheckBox cb = new CheckBox();
                 cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
                 cb.setData(result.getInt("inv.id"));
                 if (result.getInt("inv.is_confirmed") == 1) {
                     cb.setValue(true);
                 }
-                if (!currentUser.isPermitted(viewName + ":" + sysSettings.prmConfirmationControl)) {
+                if (!currentUser.isPermitted(viewName + ":" + SystemSettings.prmConfirmationControl)) {
                     cb.setEnabled(false);
                 }
                 cb.addValueChangeListener(listener);
-                item.getItemProperty(sysSettings.button).setValue(cb);
+                item.getItemProperty(SystemSettings.button).setValue(cb);
             }
         }
         return container;
@@ -96,7 +97,8 @@ public class DbInvoice extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
                 + "sum(if(tr.acc_currency_id != 2, tr.amount/tr.currency_rate, tr.amount)) as amount, inv.note "
                 + "FROM acc_invoice AS inv "
@@ -116,7 +118,7 @@ public class DbInvoice extends BaseDb {
             Item item = container.addItem(result.getInt("inv.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(sysSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
 
         }

@@ -37,7 +37,8 @@ public class DbStudentCalls extends BaseDb {
 
     public IndexedContainer execSQL_St_Calls(MyVaadinUI myUI, int stud_id, int year_id,
             StudentDefinitionView dw) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT sc.id, sc.note, concat(e.name, ' ', e.surname) as fullname, sc.modification_date FROM student_calls as sc "
                 + "left join employee as e on sc.employee_id = e.id "
                 + "where sc.student_id = ? and sc.year_id = ?;";
@@ -49,16 +50,16 @@ public class DbStudentCalls extends BaseDb {
         while (result.next()) {
             String id = result.getString("sc.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
+            item.getItemProperty(SystemSettings.button).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    sysSettings.df.format(result.getDate("sc.modification_date")));
+                    SystemSettings.df.format(result.getDate("sc.modification_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                     dw.createTextfieldNote(result.getString("sc.note"),
                             myUI.getMessage(SptMessages.Note), id));
-            item.getItemProperty(sysSettings.crud_status)
+            item.getItemProperty(SystemSettings.crud_status)
                     .setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
@@ -82,7 +83,8 @@ public class DbStudentCalls extends BaseDb {
     public IndexedContainer execSQL_getCallsReport(MyVaadinUI myUI, Date from,
             Date till, int year_id, String class_ids, String edu_statuses_ids,
             CallsReport cr) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT sc.id, st.name, st.surname, DATE(sc.modification_date) AS date, "
                 + "CONCAT(cnu.name, ' - ', cna.name) AS class_name, sc.note, concat(e.name, ' ', e.surname) as fullname "
                 + "FROM spt.student_calls AS sc LEFT JOIN student AS st ON sc.student_id = st.id "
@@ -128,7 +130,7 @@ public class DbStudentCalls extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    sysSettings.df.format((result.getDate("date"))));
+                    SystemSettings.df.format((result.getDate("date"))));
             cr.total++;
         }
         return container;

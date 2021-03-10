@@ -44,7 +44,8 @@ public class DbTransfers extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int invoice_id, int school_id,
                                     int acc_invoice_type_id, TransfersView v) throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT t.id, t.amount, t.acc_category_id, t.acc_currency_id, t.currency_rate, t.note "
                 + "FROM acc_transfers as t where t.invoice_id = ? order by t.id;";
 
@@ -56,8 +57,8 @@ public class DbTransfers extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, sysSettings.dbTransfers));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbTransfers));
             ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.Category), null,
                     true, acc_invoice_type_id == 1);
             try {
@@ -73,28 +74,28 @@ public class DbTransfers extends BaseDb {
             cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(cb);
-            item.getItemProperty(sysSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            cb = v.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(SptMessages.Currency), sysSettings.dbAcc_currency, true, false);
+            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            cb = v.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(SptMessages.Currency), SystemSettings.dbAcc_currency, true, false);
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Currency)).setValue(cb);
-            item.getItemProperty(sysSettings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
+            item.getItemProperty(SystemSettings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = v.createTextfieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, null),
-                    new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter(), true);
+                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = v.createTextfieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), sysSettings.getStringToDoubleConverter(),
-                    currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeCurrencyRate));
+                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(),
+                    currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeCurrencyRate));
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextfield(
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue),
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
                 total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
             } else {

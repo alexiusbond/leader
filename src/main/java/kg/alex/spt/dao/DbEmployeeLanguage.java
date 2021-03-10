@@ -50,7 +50,8 @@ public class DbEmployeeLanguage extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
             EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT el.id, el.hr_language_id, el.hr_language_level_id FROM hr_employee_language as el "
                 + "where el.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -60,15 +61,15 @@ public class DbEmployeeLanguage extends BaseDb {
         while (result.next()) {
             String id = result.getString("el.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, sysSettings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(SystemSettings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Language)).setValue(
                     edv.createCombobox(result.getInt("el.hr_language_id"),
-                            myUI.getMessage(SptMessages.Language), sysSettings.dbLanguageTable, true));
+                            myUI.getMessage(SptMessages.Language), SystemSettings.dbLanguageTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Level)).setValue(
                     edv.createCombobox(result.getInt("el.hr_language_level_id"),
-                            myUI.getMessage(SptMessages.Level), sysSettings.dbLanguageLevelTable, true));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                            myUI.getMessage(SptMessages.Level), SystemSettings.dbLanguageLevelTable, true));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

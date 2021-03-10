@@ -19,7 +19,8 @@ public class DbYear extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT y.id, y.name, y.period, y.period_kg, y.start_date, y.end_date "
                 + "FROM year as y order by y.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -30,7 +31,7 @@ public class DbYear extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.PeriodKg), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.StartDate), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.EndDate), String.class, null);
-        container.addContainerProperty(sysSettings.id, Integer.class, null);
+        container.addContainerProperty(SystemSettings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("y.id"));
@@ -41,10 +42,10 @@ public class DbYear extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.PeriodKg)).setValue(
                     result.getString("y.period_kg"));
             item.getItemProperty(myUi.getMessage(SptMessages.StartDate)).setValue(
-                    sysSettings.df.format(result.getDate("y.start_date")));
+                    SystemSettings.df.format(result.getDate("y.start_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.EndDate)).setValue(
-                    sysSettings.df.format(result.getDate("y.end_date")));
-            item.getItemProperty(sysSettings.id).setValue(result.getInt("y.id"));
+                    SystemSettings.df.format(result.getDate("y.end_date")));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("y.id"));
         }
         return container;
     }

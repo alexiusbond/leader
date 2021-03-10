@@ -35,7 +35,7 @@ public class ProductMovementsReport implements Button.ClickListener,
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;
     private FilterTreeTable productsTable;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private EnhancedFormatExcelExport excelReport;
 
     public ProductMovementsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
@@ -82,7 +82,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(sysSettings.datePattern);
+        fromDateDF.setDateFormat(SystemSettings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -91,7 +91,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(sysSettings.datePattern);
+        tillDateDF.setDateFormat(SystemSettings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
         tillDateDF.addValueChangeListener(this);
@@ -120,7 +120,7 @@ public class ProductMovementsReport implements Button.ClickListener,
             DbDefinition dbCon = new DbDefinition();
             dbCon.connect();
             stockSelect.setContainerDataSource(
-                    dbCon.exec_for_select(myUI, sysSettings.dbStock, myUI.getUser().getSchool_id()));
+                    dbCon.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id()));
             dbCon.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
@@ -130,7 +130,7 @@ public class ProductMovementsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        stockSelect.setValue(sysSettings.convertToSet(stockSelect.getContainerDataSource().getItemIds()));
+        stockSelect.setValue(SystemSettings.convertToSet(stockSelect.getContainerDataSource().getItemIds()));
 
         leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
         leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
@@ -192,8 +192,8 @@ public class ProductMovementsReport implements Button.ClickListener,
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.ProductMovementsReport) + " "
                             + productsTable.getContainerProperty(productsTable.getValue(),
                             myUI.getMessage(SptMessages.Name)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
-                            + sysSettings.df.format(fromDateDF.getValue())
-                            + " " + tillDateDF.getCaption().toLowerCase() + " " + sysSettings.df.format(tillDateDF.getValue()) + "]");
+                            + SystemSettings.df.format(fromDateDF.getValue())
+                            + " " + tillDateDF.getCaption().toLowerCase() + " " + SystemSettings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);

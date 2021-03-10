@@ -54,7 +54,8 @@ public class DbStudPayment extends BaseDb {
 
     public IndexedContainer execSQL_St_Payments(MyVaadinUI myUI, int stud_id, int year_id,
             StudentDefinitionView dw) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
                 + "sp.who_paid, sp.note, sp.modification_date, "
@@ -68,15 +69,15 @@ public class DbStudPayment extends BaseDb {
         IndexedContainer container = dw.preparePaymentsContainer();
         while (result.next()) {
             boolean isDisabled = false;
-            if (!currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions)) {
+            if (!currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeOldTransactions)) {
                 isDisabled = result.getBoolean("isDisabled");
             }
             String id = result.getString("sp.id");
             Item item = container.addItem(id);
             Button btn = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false);
             btn.setEnabled(!isDisabled);
-            item.getItemProperty(sysSettings.button).setValue(btn);
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.button).setValue(btn);
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
             ComboBoxMax cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
                     myUI.getMessage(SptMessages.PaymentCategoryType), id, true, false);
             cb.setId(myUI.getMessage(SptMessages.Payments));
@@ -84,7 +85,7 @@ public class DbStudPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(cb);
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentType)).setValue(
                     dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(SptMessages.PaymentType), id,
-                            sysSettings.dbPaymentType, false, false, false, isDisabled));
+                            SystemSettings.dbPaymentType, false, false, false, isDisabled));
             TextField tf = dw.createTextfieldDouble(result.getDouble("sp.amount"), myUI.getMessage(SptMessages.Amount), id);
             tf.setId(myUI.getMessage(SptMessages.Payments));
             tf.setEnabled(!isDisabled);
@@ -99,7 +100,7 @@ public class DbStudPayment extends BaseDb {
                     myUI.getMessage(SptMessages.Date), id, false, false);
             df.setId(myUI.getMessage(SptMessages.Payments));
             df.setEnabled(!isDisabled);
-            if (currentUser.isPermitted(sysSettings.cnTransactionsView + ":" + sysSettings.prmChangeOldTransactions)) {
+            if (currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeOldTransactions)) {
                 df.setRangeStart(myUI.getUser().getTransactions_start_date());
             } else if (!isDisabled){
                 Calendar calendar = Calendar.getInstance();
@@ -114,9 +115,9 @@ public class DbStudPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             item.getItemProperty(myUI.getMessage(SptMessages.Print)).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.Print), id, true, false));
-            item.getItemProperty(sysSettings.old_amount).setValue(result.getDouble("sp.amount"));
-            item.getItemProperty(sysSettings.old_date).setValue(result.getDate("sp.modification_date"));
-            item.getItemProperty(sysSettings.old_category).setValue(result.getInt("sp.payment_category_id"));
+            item.getItemProperty(SystemSettings.old_amount).setValue(result.getDouble("sp.amount"));
+            item.getItemProperty(SystemSettings.old_date).setValue(result.getDate("sp.modification_date"));
+            item.getItemProperty(SystemSettings.old_category).setValue(result.getInt("sp.payment_category_id"));
         }
         return container;
     }
@@ -227,7 +228,8 @@ public class DbStudPayment extends BaseDb {
 
     public IndexedContainer execSQL_Payment(MyVaadinUI myUI, int stud_id, int year_id,
             InstplanPaymentsReport ip)            throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT sp.id, sp.amount, sp.who_paid, sp.modification_date, "
                 + "pc.id, pc.name FROM student_payments as sp "
                 + "left join payment_category as pc on sp.payment_category_id = pc.id "
@@ -241,18 +243,18 @@ public class DbStudPayment extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.WhoPaid), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PaymentCategoryType), String.class, null);
-        container.addContainerProperty(sysSettings.payment_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.payment_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    sysSettings.df.format((result.getDate("sp.modification_date"))));
+                    SystemSettings.df.format((result.getDate("sp.modification_date"))));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("sp.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
-            item.getItemProperty(sysSettings.payment_category_id).setValue(
+            item.getItemProperty(SystemSettings.payment_category_id).setValue(
                     result.getInt("pc.id"));
             if (result.getInt("pc.id") != 3) {
                 ip.total_pay += result.getDouble("sp.amount");
@@ -266,7 +268,8 @@ public class DbStudPayment extends BaseDb {
     public IndexedContainer execSQL_PaymentsByClass(MyVaadinUI myUI, Date from,
             Date till, int year_id, String class_ids, String edu_statuses_ids,
             ClassPaymentsReport cpr) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT sp.id, sp.modification_date, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
                 + "st.name, st.surname, sp.amount, pc.name, sp.who_paid, sp.payment_category_id "
                 + "FROM student_payments AS sp "
@@ -301,7 +304,7 @@ public class DbStudPayment extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.PaymentCategoryType), String.class, null);
-        container.addContainerProperty(sysSettings.payment_category_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.payment_category_id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.WhoPaid), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
@@ -314,10 +317,10 @@ public class DbStudPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("sp.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    sysSettings.df.format((result.getDate("sp.modification_date"))));
+                    SystemSettings.df.format((result.getDate("sp.modification_date"))));
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
-            item.getItemProperty(sysSettings.payment_category_id).setValue(
+            item.getItemProperty(SystemSettings.payment_category_id).setValue(
                     result.getInt("sp.payment_category_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));

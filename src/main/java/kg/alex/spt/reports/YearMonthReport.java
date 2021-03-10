@@ -56,7 +56,7 @@ public class YearMonthReport implements Button.ClickListener,
     private ComboBoxMax yearSelect;
     private ComboBoxMultiselectMax educationStatusMCB;
     private EnhancedFormatExcelExport excelReport;
-    private SystemSettings sysSettings = new SystemSettings();
+
     private String[] NATURAL_COL_ORDER_YEAR;
     private String[] NATURAL_COL_ORDER_MONTH;
     private String[] NATURAL_COL_ORDER_SUMMARY;
@@ -80,7 +80,7 @@ public class YearMonthReport implements Button.ClickListener,
             myUI.getMessage(SptMessages.Net),
             myUI.getMessage(SptMessages.Paid),
             myUI.getMessage(SptMessages.Left),
-            sysSettings.percentage};
+            SystemSettings.percentage};
 
         NATURAL_COL_ORDER_SUMMARY = new String[]{myUI.getMessage(SptMessages.School),
             myUI.getMessage(SptMessages.Total_Active),
@@ -91,13 +91,13 @@ public class YearMonthReport implements Button.ClickListener,
             myUI.getMessage(SptMessages.Net),
             myUI.getMessage(SptMessages.Paid),
             myUI.getMessage(SptMessages.Left),
-            sysSettings.percentage};
+            SystemSettings.percentage};
 
         NATURAL_COL_ORDER_MONTH = new String[]{myUI.getMessage(SptMessages.Month),
             myUI.getMessage(SptMessages.InstPlanDebt),
             myUI.getMessage(SptMessages.Paid),
             myUI.getMessage(SptMessages.Left),
-            sysSettings.percentage};
+            SystemSettings.percentage};
     }
 
     private void buildLeftPanel() {
@@ -132,15 +132,15 @@ public class YearMonthReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, sysSettings.dbEducationStatus));
+                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(sysSettings.convertToSet(
+        educationStatusMCB.setValue(SystemSettings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
@@ -265,7 +265,7 @@ public class YearMonthReport implements Button.ClickListener,
         }
         container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Left), Double.class, null);
-        container.addContainerProperty(sysSettings.percentage, Double.class, 0.0);
+        container.addContainerProperty(SystemSettings.percentage, Double.class, 0.0);
 
         FormattedTable dataTable = new FormattedTable();
         dataTable.setCaption(caption);
@@ -292,7 +292,7 @@ public class YearMonthReport implements Button.ClickListener,
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
         }
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
-        dataTable.setColumnAlignment(sysSettings.percentage, Table.Align.RIGHT);
+        dataTable.setColumnAlignment(SystemSettings.percentage, Table.Align.RIGHT);
         if (container.size() != 0) {
             makePdfBtn.setEnabled(true);
             excelBtn.setEnabled(true);
@@ -315,7 +315,7 @@ public class YearMonthReport implements Button.ClickListener,
                     dbsc.connect();
                     String school_ids;
                     if (currentUser.hasRole(SystemSettings.rnAdmin)) {
-                        school_ids = sysSettings.convertCollectionToStr((Set<?>) schoolTable.getValue());
+                        school_ids = SystemSettings.convertCollectionToStr((Set<?>) schoolTable.getValue());
                     } else {
                         school_ids = myUI.getUser().getSchool_id() + "";
                     }
@@ -323,18 +323,18 @@ public class YearMonthReport implements Button.ClickListener,
                         if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Yearly))) {
                             rightLay.setHeightUndefined();
                             dbsc.execSQL_Yearly_by_classes(myUI, school_ids,
-                                    sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                                    SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                                     (Integer) yearSelect.getValue(), this);
                         } else if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Summary))) {
                             dbsc.execSQL_Summary_report(myUI, school_ids,
-                                    sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                                    SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                                     (Integer) yearSelect.getValue(), this);
                             rightLay.setHeight("100%");
                             rightLay.getComponent(0).setHeight("100%");
                         } else {
                             rightLay.setHeightUndefined();
                             dbsc.execSQL_Monthly_by_classes(myUI, school_ids,
-                                    sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                                    SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                                     (Integer) yearSelect.getValue(), this);
                         }
                     } else {
@@ -402,7 +402,7 @@ public class YearMonthReport implements Button.ClickListener,
                             if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Monthly))) {
                                 excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                                 excelReport.getTotalsRow().getCell(4).setCellValue(
-                                        t.getColumnFooter(sysSettings.percentage));
+                                        t.getColumnFooter(SystemSettings.percentage));
                             } else {
                                 excelReport.getTotalsRow().getCell(1).setCellFormula(null);
                                 excelReport.getTotalsRow().getCell(4).setCellFormula(null);
@@ -411,7 +411,7 @@ public class YearMonthReport implements Button.ClickListener,
                                         t.getColumnFooter(myUI.getMessage(SptMessages.Total_Active)));
                                 excelReport.getTotalsRow().getCell(4).setCellValue(
                                         t.getColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage)));
-                                excelReport.getTotalsRow().getCell(9).setCellValue(t.getColumnFooter(sysSettings.percentage));
+                                excelReport.getTotalsRow().getCell(9).setCellValue(t.getColumnFooter(SystemSettings.percentage));
                             }
                         }
                     }

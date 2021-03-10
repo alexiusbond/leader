@@ -67,7 +67,8 @@ public class DbStudAccessories extends BaseDb {
 
         public IndexedContainer execSQL_St_Acs(MyVaadinUI myUi, int stud_id,
             StudentDefinitionView dw, int cat_id) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT sa.id, sa.student_id, sa.year_id, "
                 + "group_concat(sa.accessories_id separator ',') as accessories, sa.employee_id, "
                 + "sa.modification_date FROM student_accessories as sa "
@@ -88,11 +89,11 @@ public class DbStudAccessories extends BaseDb {
         while (result.next()) {
             String id = result.getString("sa.year_id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
+            item.getItemProperty(SystemSettings.button).setValue(
                     dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id, false, false));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     dw.createCombobox(result.getInt("sa.year_id"),
-                            myUi.getMessage(SptMessages.Year), id, sysSettings.dbYear,
+                            myUi.getMessage(SptMessages.Year), id, SystemSettings.dbYear,
                             false, false, false, false));
             item.getItemProperty(myUi.getMessage(SptMessages.Materials)).setValue(
                     dw.createComboboxMultiAcs(result.getString("accessories"),

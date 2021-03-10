@@ -23,7 +23,8 @@ public class DbLog extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int days_interval, String logType) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "select dl.id, concat(e.name, ' ', e.surname) as fullname, dl.table_name, dl.column_name, dl.action, "
                 + "dl.old_field, dl.new_field, "
                 + "dl.datetime from data_log as dl "
@@ -59,7 +60,7 @@ public class DbLog extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("dl.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(
-                    sysSettings.df.format(result.getDate("dl.datetime")));
+                    SystemSettings.df.format(result.getDate("dl.datetime")));
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUi.getMessage(SptMessages.TableName)).setValue(

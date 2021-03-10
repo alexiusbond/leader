@@ -51,7 +51,8 @@ public class DbEmployeePhoneNumber extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
             EmployeeDefinitionView edv) throws SQLException {
-        SystemSettings sysSettings = new SystemSettings();
+        
+
         String sql = "SELECT epn.id, epn.hr_phone_type_id, epn.number "
                 + "FROM hr_employee_phone_number as epn where epn.employee_id = ? ;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -61,17 +62,17 @@ public class DbEmployeePhoneNumber extends BaseDb {
         while (result.next()) {
             String id = result.getString("epn.id");
             Item item = container.addItem(id);
-            item.getItemProperty(sysSettings.button).setValue(
+            item.getItemProperty(SystemSettings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(
                     edv.createCombobox(result.getInt("epn.hr_phone_type_id"),
-                            myUI.getMessage(SptMessages.Type), sysSettings.dbPhoneType, true));
+                            myUI.getMessage(SptMessages.Type), SystemSettings.dbPhoneType, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
                     edv.createTextfield(result.getString("epn.number"),
                             myUI.getMessage(SptMessages.Number),
                             new RegexpValidator("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s0-9]*$", true,
                                     myUI.getMessage(SptMessages.NotifWrongValue)), true));
-            item.getItemProperty(sysSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

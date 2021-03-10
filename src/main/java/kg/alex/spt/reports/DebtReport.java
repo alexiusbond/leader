@@ -58,7 +58,6 @@ public class DebtReport implements Button.ClickListener,
     private IndexedContainer installmentCont;
     private Date fromDate, tillDate;
     private String[] NATURAL_COL_ORDER;
-    private SystemSettings sysSettings = new SystemSettings();
     public double inst_total, paid_total, debt_total;
 
     public DebtReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
@@ -103,15 +102,15 @@ public class DebtReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, sysSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, sysSettings.dbEducationStatus));
+                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(sysSettings.convertToSet(
+        educationStatusMCB.setValue(SystemSettings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
@@ -157,7 +156,7 @@ public class DebtReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(sysSettings.datePattern);
+        fromDateDF.setDateFormat(SystemSettings.datePattern);
         fromDateDF.setValue(new Date());
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
@@ -165,7 +164,7 @@ public class DebtReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(sysSettings.datePattern);
+        tillDateDF.setDateFormat(SystemSettings.datePattern);
         tillDateDF.setValue(new Date());
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
@@ -289,8 +288,8 @@ public class DebtReport implements Button.ClickListener,
             installmentCont = dbsc.execSQL_DebtsByClass(myUI,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
-                    sysSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
-                    sysSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
+                    SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                    SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
             dataTable.setContainerDataSource(installmentCont);
             dbsc.close();
         } catch (Exception e) {
@@ -301,11 +300,11 @@ public class DebtReport implements Button.ClickListener,
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan),
-                sysSettings.dFormat.format(inst_total));
+                SystemSettings.dFormat.format(inst_total));
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                sysSettings.dFormat.format(paid_total));
+                SystemSettings.dFormat.format(paid_total));
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                sysSettings.dFormat.format(debt_total));
+                SystemSettings.dFormat.format(debt_total));
         dataTable.setVisibleColumns(NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         spltPanel.setSecondComponent(vl);
