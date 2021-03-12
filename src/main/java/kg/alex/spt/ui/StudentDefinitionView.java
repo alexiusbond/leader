@@ -1,6 +1,7 @@
 package kg.alex.spt.ui;
 
 import com.vaadin.data.validator.*;
+import com.vaadin.ui.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -14,31 +15,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.io.File;
@@ -152,8 +129,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private File myFile;
     private Window statusWindow;
     private Button cancelButton;
-    private Label state, textualProgress, fName;
-    private ProgressIndicator pi;
+    private ProgressBar uploadProgressBar;
     private String photoName, mimeType, discounts = "";
     private MyReceiver receiver;
     private Embedded photoEmb;
@@ -721,7 +697,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source == modifyBtn) {
+        if (source.getId() != null && source.getId().equals(SystemSettings.cancel_upload_button)) {
+            if (photoUpl != null) {
+                photoUpl.interruptUpload();
+            }
+        } else if (source == modifyBtn) {
             if (studDataTable.getValue() != null) {
                 isNew = false;
                 photoUpl.setEnabled(true);
@@ -973,7 +953,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             discCounter--;
             delDiscIds.add((String) source.getData());
         } else if (tabs.getSelectedTab() == tabs.getTab(payTablelay).getComponent() && source.getCaption() == null) {
-            AccTransaction tr = null;
+            AccTransaction tr;
             delPayIds.add(source.getData().toString());
             if (paymentsTable.getContainerProperty(source.getData().toString(), SystemSettings.crud_status).getValue().toString()
                     .equals(myUI.getMessage(SptMessages.Update))) {
@@ -994,13 +974,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (tabs.getSelectedTab() == tabs.getTab(payTablelay).getComponent()
                 && source.getCaption().equals(myUI.getMessage(SptMessages.Invoice))) {
             InvoiceInfoPdf iip = new InvoiceInfoPdf();
-            iip.setLogin(loginTF.getValue().toString());
+            iip.setLogin(loginTF.getValue());
             iip.setClass_name(classCB.getContainerProperty(classCB.getValue(),
                     myUI.getMessage(SptMessages.Name)).getValue().toString());
-            iip.setStud_fullname(nameTF.getValue().toString() + " " + surnameTF.getValue().toString()
-                    + " " + middlenameTF.getValue().toString());
+            iip.setStud_fullname(nameTF.getValue() + " " + surnameTF.getValue()
+                    + " " + middlenameTF.getValue());
             iip.setWhopaid_fullname(((TextField) paymentsTable.getContainerProperty(source.getData(),
-                    myUI.getMessage(SptMessages.WhoPaid)).getValue()).getValue().toString());
+                    myUI.getMessage(SptMessages.WhoPaid)).getValue()).getValue());
             iip.setPayment_date(((DateField) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.Date)).getValue()).getValue());
             iip.setAmount((Double) (((TextField) paymentsTable.getContainerProperty(source.getData(),
@@ -1025,7 +1005,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             try {
                 DbSchool dbs = new DbSchool();
                 dbs.connect();
-                iip.setScl_logo(dbs.execGet_logo(loginTF.getValue().toString()));
+                iip.setScl_logo(dbs.execGet_logo(loginTF.getValue()));
                 dbs.close();
             } catch (Exception e) {
             }
@@ -1231,7 +1211,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 4)) {
                                 allDists += "(" + SystemSettings.dFormat.format((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()).toString() + "$)";
+                                        .getPropertyDataSource().getValue())+ "$)";
                                 count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
                             }
@@ -1663,11 +1643,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Student getStudent(int id) {
         Student s = new Student();
         s.setPhoto(photoName);
-        s.setLogin(loginTF.getValue().toString());
+        s.setLogin(loginTF.getValue());
         s.setPassword(new Sha256Hash(loginTF.getValue()).toString());
-        s.setName(nameTF.getValue().toString());
-        s.setSur_name(surnameTF.getValue().toString());
-        s.setMiddle_name(middlenameTF.getValue().toString());
+        s.setName(nameTF.getValue());
+        s.setSur_name(surnameTF.getValue());
+        s.setMiddle_name(middlenameTF.getValue());
         s.setGender_id((Integer) genderCB.getValue());
         s.setBirth_date((Date) birthDate.getValue());
         s.setClass_name_id((Integer) classCB.getValue());
@@ -1796,47 +1776,37 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             return fos; // Return the output stream to write tou
         }
     }
-
     private void buildUploadWindow() {
-        state = new Label();
-        textualProgress = new Label();
-        fName = new Label();
-        pi = new ProgressIndicator();
+        uploadProgressBar = new ProgressBar();
+        uploadProgressBar.setWidth("90%");
 
         statusWindow = new Window(myUI.getMessage(SptMessages.UploadStatus));
         statusWindow.setResizable(false);
         statusWindow.setDraggable(false);
-        statusWindow.addStyleName("upload-info");
+        statusWindow.setModal(true);
+        statusWindow.setWidth("20%");
+        statusWindow.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
 
-        final FormLayout l = new FormLayout();
+        final HorizontalLayout l = new HorizontalLayout();
+        l.setSpacing(true);
+        l.setWidth("100%");
+        l.setMargin(true);
         statusWindow.setContent(l);
 
-        l.setMargin(true);
-
-        final HorizontalLayout stateLayout = new HorizontalLayout();
-        stateLayout.setSpacing(true);
-        stateLayout.addComponent(state);
-
-        cancelButton = new Button(myUI.getMessage(SptMessages.Cancel));
+        cancelButton = new Button();
         cancelButton.addClickListener(this);
+        cancelButton.setId(SystemSettings.cancel_upload_button);
         cancelButton.setVisible(false);
-        cancelButton.setStyleName("small");
-        stateLayout.addComponent(cancelButton);
+        cancelButton.setIcon(FontAwesome.CLOSE);
+        cancelButton.setStyleName(ValoTheme.BUTTON_TINY);
+        cancelButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        l.addComponent(cancelButton);
+        l.setComponentAlignment(cancelButton, Alignment.MIDDLE_LEFT);
 
-        stateLayout.setCaption(myUI.getMessage(SptMessages.CurrentState));
-        state.setValue(myUI.getMessage(SptMessages.Idle));
-        l.addComponent(stateLayout);
-
-        fName.setCaption(myUI.getMessage(SptMessages.FileName));
-        l.addComponent(fName);
-
-        pi.setCaption(myUI.getMessage(SptMessages.Progress));
-        pi.setVisible(false);
-        l.addComponent(pi);
-
-        textualProgress.setVisible(false);
-        l.addComponent(textualProgress);
-
+        uploadProgressBar.setCaption(myUI.getMessage(SptMessages.Progress));
+        uploadProgressBar.setVisible(false);
+        l.addComponent(uploadProgressBar);
+        l.setExpandRatio(uploadProgressBar, 1);
     }
 
     private void buildUpload() {
@@ -1854,13 +1824,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.addWindow(statusWindow);
                 statusWindow.setClosable(false);
 
-                pi.setValue(0f);
-                pi.setVisible(true);
-                pi.setPollingInterval(500); // hit server frequantly to get
-                textualProgress.setVisible(true);
-                // updates to client
-                state.setValue(myUI.getMessage(SptMessages.Uploading));
-                fName.setValue(event.getFilename());
+                uploadProgressBar.setValue(0f);
+                uploadProgressBar.setVisible(true);
+                UI.getCurrent().setPollInterval(500); // hit server frequantly to get
 
                 cancelButton.setVisible(true);
 
@@ -1873,22 +1839,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 // This method gets called several times during the update
                 if (!mimeType.equals("image/jpeg")) {
                     photoUpl.interruptUpload();
-                    myFile.delete();
                     photoName = null;
                     Notification.show(myUI.getMessage(SptMessages.OnlyJpg),
                             Notification.Type.WARNING_MESSAGE);
                 } else if (contentLength >= 5000000) {
                     photoUpl.interruptUpload();
-                    myFile.delete();
                     photoName = null;
                     Notification.show(myUI.getMessage(SptMessages.Maxsize),
                             Notification.Type.WARNING_MESSAGE);
                 } else {
-
-                    pi.setValue(new Float(readBytes / (float) contentLength));
-                    textualProgress.setValue(myUI.getMessage(SptMessages.Processed) + " "
-                            + readBytes + " " + myUI.getMessage(SptMessages.BytesOf) + " "
-                            + contentLength);
+                    uploadProgressBar.setValue(new Float(readBytes / (float) contentLength));
                 }
             }
         });
@@ -1910,6 +1870,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         photoUpl.addFailedListener(new Upload.FailedListener() {
             @Override
             public void uploadFailed(Upload.FailedEvent event) {
+                if (statusWindow != null) {
+                    statusWindow.close();
+                }
+                try {
+                    myFile.delete();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -3422,7 +3391,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         d.setYear_id(year_id);
         d.setId(disc_id);
         d.setNote(((TextField) discountsTable
-                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString());
+                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Note)).getValue()).getValue());
         if (contractCB.getValue() != null) {
             discountAmount = (Double) (((TextField) discountsTable.getContainerProperty(disc_id,
                     myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
@@ -3493,28 +3462,28 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if ((Integer) discCont.getContainerProperty(next,
                     SystemSettings.discount_type_id).getValue() == 1) {
                 discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Amount)).getValue()).toString() + "%";
+                        myUI.getMessage(SptMessages.Amount)).getValue()) + "%";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     SystemSettings.discount_type_id).getValue() == 2) {
                 discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Amount)).getValue()).toString() + "$";
+                        myUI.getMessage(SptMessages.Amount)).getValue()) + "$";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     SystemSettings.discount_type_id).getValue() == 3) {
                 discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.FreeAmount)).getValue()).toString() + "%";
+                        myUI.getMessage(SptMessages.FreeAmount)).getValue())+ "%";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     SystemSettings.discount_type_id).getValue() == 4) {
                 discounts += SystemSettings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.FreeAmount)).getValue()).toString() + "$";
+                        myUI.getMessage(SptMessages.FreeAmount)).getValue()) + "$";
                 if (iter.hasNext()) {
                     discounts += ", ";
                 }
@@ -4061,12 +4030,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (callsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
                         dbsc.exec_update(((TextField) callsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString(), Integer.parseInt(next.toString()));
+                                myUI.getMessage(SptMessages.Note)).getValue()).getValue(), Integer.parseInt(next.toString()));
                     } else if (callsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbsc.exec_insert(student_id, myUI.getUser().getCurrent_year().getId(), myUI.getUser().getId(),
                                 ((TextField) callsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString());
+                                        myUI.getMessage(SptMessages.Note)).getValue()).getValue());
                     }
                 }
 

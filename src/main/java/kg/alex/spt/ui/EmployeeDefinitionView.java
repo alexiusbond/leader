@@ -7,6 +7,7 @@ package kg.alex.spt.ui;
 
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.*;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
 import kg.alex.spt.utils.ComboBoxMax;
@@ -26,33 +27,6 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.VerticalSplitPanel;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.io.*;
@@ -113,12 +87,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             achievementsInfoLay, profInfoLay, schoolInfoLay, ordersInfoLay;
     private HorizontalSplitPanel horSplitPanel;
     private HorizontalLayout buttonsLay;
-    private Upload photoUpl;
+    private Upload photoUpl, currentUpload;
     private File myFile;
     private Window statusWindow;
     private Button cancelButton;
-    private Label state, textualProgress, fName;
-    private ProgressIndicator pi;
+    private ProgressBar uploadProgressBar;
     private String photoName, fileName, mimeType;
     private Embedded photoEmb;
     private IndexedContainer workingStatCont;
@@ -136,7 +109,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             lessonsCont, permissionCont, ordersCont;
     private ArrayList<String> delPhoneIds = new ArrayList<>();
     private ArrayList<String> delChildIds = new ArrayList<>();
-    private ArrayList<String> delSpouseEducationIds = new ArrayList<>();
+    private ArrayList<EmployeeEducation> delSpouseEducationIds = new ArrayList<>();
     private ArrayList<String> delSpouseWorkIds = new ArrayList<>();
     private ArrayList<String> delLanguagesIds = new ArrayList<>();
     private ArrayList<String> delSeminarsIds = new ArrayList<>();
@@ -162,9 +135,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbed.connect();
             workingStatCont = dbed.execSQL_statuses_with_count(myUI, SystemSettings.dbWorking_status, false);
             dbed.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
 
         horSplitPanel = new HorizontalSplitPanel();
@@ -748,13 +721,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         try {
             DbSchool dbCon = new DbSchool();
             dbCon.connect();
-            gradSchoolCB.setContainerDataSource(dbCon.execSchoolSel(myUI, 0));
+            gradSchoolCB.setContainerDataSource(dbCon.execSchoolSel(myUI, "1,3,4"));
             Item item = gradSchoolCB.getContainerDataSource().addItem(0);
             item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(myUI.getMessage(SptMessages.OtherSchool));
             dbCon.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         gradSchoolCB.setValue(0);
         gl.addComponent(gradSchoolCB, 0, 1);
@@ -953,9 +926,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             permissionTable.setContainerDataSource(permissionCont);
             permissionTable.setVisibleColumns(NATURAL_COL_ORDER_PERMISSIONS);
             permissionTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Functions), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
 
         schoolInfoLay = new GridLayout(2, 2);
@@ -995,9 +968,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     }
                 }
             }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1013,9 +986,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbepn.close();
             phonesTable.setVisibleColumns(NATURAL_COL_ORDER_PHONES);
             phonesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Number), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1035,9 +1008,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             childrenTable.setVisibleColumns(NATURAL_COL_ORDER_CHILDREN);
             childrenTable.setColumnExpandRatio(myUI.getMessage(SptMessages.FullName), 1);
             childrenTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Institution), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1069,9 +1042,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             t.setVisibleColumns(NATURAL_COL_ORDER_EDU);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.University), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.Department), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1093,9 +1066,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.WorkPlace), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.MainPosition), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.ExtraPositions), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1111,9 +1084,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             questioningTable.setVisibleColumns(NATURAL_COL_ORDER_QUESTIONING);
             questioningTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Question), 1);
             questioningTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Answer), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1130,9 +1103,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             languagesTable.setVisibleColumns(NATURAL_COL_ORDER_LANGUAGES);
             languagesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Language), 1);
             languagesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Level), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1152,9 +1125,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             certificatesTable.setVisibleColumns(NATURAL_COL_ORDER_CERTIFICATES);
             certificatesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Name), 1);
             certificatesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.GivenBy), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1174,9 +1147,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Name), 1);
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Subject), 1);
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1194,9 +1167,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbex.close();
             examsTable.setVisibleColumns(NATURAL_COL_ORDER_EXAMS);
             examsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Exam), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1212,9 +1185,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbeb.close();
             branchesTable.setVisibleColumns(NATURAL_COL_ORDER_BRANCHES);
             branchesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Branch), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1233,9 +1206,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbel.close();
             lessonsTable.setVisibleColumns(NATURAL_COL_ORDER_LESSONS);
             lessonsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Lessons), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1255,9 +1228,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             ordersTable.setVisibleColumns(NATURAL_COL_ORDER_ORDERS);
             ordersTable.setColumnExpandRatio(myUI.getMessage(SptMessages.OrderType), 1);
             ordersTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1269,9 +1242,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbCon.close();
             documentsDataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Name), 1);
             documentsDataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Details), 1);
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1289,9 +1262,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             } else {
                 clearContactFields();
             }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1313,9 +1286,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             } else {
                 clearSpouseFields();
             }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1342,9 +1315,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             } else {
                 clearExtraInfoFields();
             }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1361,9 +1334,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             } else {
                 clearGradSchoolFields();
             }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -1487,9 +1460,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     dbe.execSQL(myUI, myUI.getUser().getSchool_id(), edu_st_ids, workingStatCont, currentUser.hasRole(SystemSettings.rnAdmin),
                             currentUser.hasRole(SystemSettings.rnHr), id));
             dbe.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         employeesDataTable.setVisibleColumns(NATURAL_COL_ORDER);
     }
@@ -1685,9 +1658,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             mainPositionCB.setContainerDataSource(
                     dbDef.exec_positions_for_select(myUI, currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
             dbDef.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
 
         contractCategoryCB = new ComboBoxMax(myUI.getMessage(SptMessages.SalaryCategory));
@@ -1714,9 +1687,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbCon.connect();
             contractCategoryCB.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
             dbCon.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         contractCategoryCB.setValue(((IndexedContainer) contractCategoryCB.getContainerDataSource()).lastItemId());
     }
@@ -1795,7 +1768,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             } else if (c instanceof AbstractField) {
                 try {
                     ((AbstractField) c).validate();
-                } catch (Exception e) {
+                } catch (Exception ex) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
                 }
@@ -1838,7 +1811,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     if (c instanceof AbstractField) {
                         try {
                             ((AbstractField) c).validate();
-                        } catch (Exception e) {
+                        } catch (Exception ex) {
                             //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                             return false;
                         }
@@ -1928,10 +1901,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 }
 
                 fos = new FileOutputStream(myFile);
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 // Error while opening the file. Not reported here.
-                logger.error(e);
-                logger.catching(e);
+                logger.error(ex);
+                logger.catching(ex);
                 return null;
             }
             return fos; // Return the output stream to write tou
@@ -1939,56 +1912,47 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     private void buildUploadWindow() {
-        state = new Label();
-        textualProgress = new Label();
-        fName = new Label();
-        pi = new ProgressIndicator();
+        uploadProgressBar = new ProgressBar();
+        uploadProgressBar.setWidth("90%");
 
         statusWindow = new Window(myUI.getMessage(SptMessages.UploadStatus));
         statusWindow.setResizable(false);
         statusWindow.setDraggable(false);
-        statusWindow.addStyleName("upload-info");
+        statusWindow.setModal(true);
+        statusWindow.setWidth("20%");
+        statusWindow.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
 
-        final FormLayout l = new FormLayout();
+        final HorizontalLayout l = new HorizontalLayout();
+        l.setSpacing(true);
+        l.setWidth("100%");
+        l.setMargin(true);
         statusWindow.setContent(l);
 
-        l.setMargin(true);
-
-        final HorizontalLayout stateLayout = new HorizontalLayout();
-        stateLayout.setSpacing(true);
-        stateLayout.addComponent(state);
-
-        cancelButton = new Button(myUI.getMessage(SptMessages.Cancel));
+        cancelButton = new Button();
         cancelButton.addClickListener(this);
+        cancelButton.setId(SystemSettings.cancel_upload_button);
         cancelButton.setVisible(false);
-        cancelButton.setStyleName("small");
-        stateLayout.addComponent(cancelButton);
+        cancelButton.setIcon(FontAwesome.CLOSE);
+        cancelButton.setStyleName(ValoTheme.BUTTON_TINY);
+        cancelButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        l.addComponent(cancelButton);
+        l.setComponentAlignment(cancelButton, Alignment.MIDDLE_LEFT);
 
-        stateLayout.setCaption(myUI.getMessage(SptMessages.CurrentState));
-        state.setValue(myUI.getMessage(SptMessages.Idle));
-        l.addComponent(stateLayout);
-
-        fName.setCaption(myUI.getMessage(SptMessages.FileName));
-        l.addComponent(fName);
-
-        pi.setCaption(myUI.getMessage(SptMessages.Progress));
-        pi.setVisible(false);
-        l.addComponent(pi);
-
-        textualProgress.setVisible(false);
-        l.addComponent(textualProgress);
-
+        uploadProgressBar.setCaption(myUI.getMessage(SptMessages.Progress));
+        uploadProgressBar.setVisible(false);
+        l.addComponent(uploadProgressBar);
+        l.setExpandRatio(uploadProgressBar, 1);
     }
 
     public Upload createUpload(String caption, boolean isPhoto) {
-        Upload upload = new Upload(null, new MyReceiver(isPhoto));
-        upload.setImmediate(true);
+        currentUpload = new Upload(null, new MyReceiver(isPhoto));
+        currentUpload.setImmediate(true);
         if (!isPhoto) {
-            upload.setStyleName("with-icon");
+            currentUpload.setStyleName("with-icon");
         }
-        upload.addStyleName(ValoTheme.BUTTON_TINY);
-        upload.setButtonCaption(caption);
-        upload.addStartedListener(new Upload.StartedListener() {
+        currentUpload.addStyleName(ValoTheme.BUTTON_TINY);
+        currentUpload.setButtonCaption(caption);
+        currentUpload.addStartedListener(new Upload.StartedListener() {
             @Override
             public void uploadStarted(Upload.StartedEvent event) {
                 // This method gets called immediatedly after upload is started
@@ -1997,70 +1961,62 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 myUI.addWindow(statusWindow);
                 statusWindow.setClosable(false);
 
-                pi.setValue(0f);
-                pi.setVisible(true);
-                pi.setPollingInterval(500); // hit server frequantly to get
-                textualProgress.setVisible(true);
-                // updates to client
-                state.setValue(myUI.getMessage(SptMessages.Uploading));
-                fName.setValue(event.getFilename());
+                uploadProgressBar.setValue(0f);
+                uploadProgressBar.setVisible(true);
+                UI.getCurrent().setPollInterval(500); // hit server frequantly to get
                 cancelButton.setVisible(true);
             }
         });
 
-        upload.addProgressListener(new Upload.ProgressListener() {
+        currentUpload.addProgressListener(new Upload.ProgressListener() {
             @Override
             public void updateProgress(long readBytes, long contentLength) {
                 // This method gets called several times during the update
                 if ((isPhoto && !mimeType.equals("image/jpeg")) || (!mimeType.equals("image/jpeg") && !mimeType.equals("application/pdf"))) {
-                    upload.interruptUpload();
-                    myFile.delete();
+                    currentUpload.interruptUpload();
                     if (isPhoto) {
                         photoName = null;
                         Notification.show(myUI.getMessage(SptMessages.OnlyJpg), Notification.Type.WARNING_MESSAGE);
                     } else {
                         fileName = null;
-                        IndexedContainer c = (IndexedContainer) upload.getData();
-                        Button b = (Button) ((HorizontalLayout) c.getContainerProperty(upload.getId(),
+                        IndexedContainer c = (IndexedContainer) currentUpload.getData();
+                        Button b = (Button) ((HorizontalLayout) c.getContainerProperty(currentUpload.getId(),
                                 myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
                         b.setEnabled(false);
                         b.setData(null);
                         Notification.show(myUI.getMessage(SptMessages.OnlyJpgOrPdf), Notification.Type.WARNING_MESSAGE);
                     }
-                } else if (contentLength >= 5000000) {
-                    upload.interruptUpload();
-                    myFile.delete();
+                } else if (contentLength >= 15000000) {
+                    currentUpload.interruptUpload();
                     photoName = null;
                     fileName = null;
-                    IndexedContainer container = (IndexedContainer) upload.getData();
-                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(upload.getId(),
+                    IndexedContainer container = (IndexedContainer) currentUpload.getData();
+                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(currentUpload.getId(),
                             myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
                     b.setEnabled(false);
                     b.setData(null);
                     Notification.show(myUI.getMessage(SptMessages.Maxsize), Notification.Type.WARNING_MESSAGE);
                 } else {
-                    pi.setValue(new Float(readBytes / (float) contentLength));
-                    textualProgress.setValue(myUI.getMessage(SptMessages.Processed) + " "
-                            + readBytes + " " + myUI.getMessage(SptMessages.BytesOf) + " " + contentLength);
+                    uploadProgressBar.setValue(new Float(readBytes / (float) contentLength));
                 }
             }
         });
 
-        upload.addSucceededListener(new Upload.SucceededListener() {
+        currentUpload.addSucceededListener(new Upload.SucceededListener() {
             @Override
             public void uploadSucceeded(Upload.SucceededEvent event) {
                 // This method gets called when the upload finished successfully
                 if (isPhoto) {
                     try {
                         Thumbnails.of(myFile).size(200, 200).toFile(myFile);
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
                     }
                     photoEmb.setSource(new FileResource(myFile));
                 } else {
-                    IndexedContainer container = (IndexedContainer) upload.getData();
-                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(upload.getId(),
+                    IndexedContainer container = (IndexedContainer) currentUpload.getData();
+                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(currentUpload.getId(),
                             myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
                     Attachment attachment = null;
                     try {
@@ -2075,32 +2031,41 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             attachment.setId(id);
                         }
                         dbCon.close();
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
                     }
                     b.setData(attachment);
+                }
+                Notification.show(myUI.getMessage(SptMessages.UploadedSuccessfully),
+                        Notification.Type.TRAY_NOTIFICATION);
+            }
+        });
+
+        currentUpload.addFailedListener(new Upload.FailedListener() {
+            @Override
+            public void uploadFailed(Upload.FailedEvent event) {
+                if (statusWindow != null) {
+                    statusWindow.close();
+                }
+                try {
+                    myFile.delete();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    ex.printStackTrace();
                 }
             }
         });
 
-        upload.addFailedListener(new Upload.FailedListener() {
-            @Override
-            public void uploadFailed(Upload.FailedEvent event) {
-            }
-        });
-
-        upload.addFinishedListener(new Upload.FinishedListener() {
+        currentUpload.addFinishedListener(new Upload.FinishedListener() {
             @Override
             public void uploadFinished(Upload.FinishedEvent event) {
                 if (statusWindow != null) {
                     statusWindow.close();
-                    Notification.show(myUI.getMessage(SptMessages.UploadedSuccessfully),
-                            Notification.Type.TRAY_NOTIFICATION);
                 }
             }
         });
-        return upload;
+        return currentUpload;
     }
 
     private void clearEmployeeFields(boolean generateNewLogin) {
@@ -2113,9 +2078,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 loginTF.setValue("");
             }
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         passwordTF.setValue("");
         nameTF.setValue("");
@@ -2262,7 +2227,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source == createBtn) {
+        if (source.getId() != null && source.getId().equals(SystemSettings.cancel_upload_button)) {
+            if (currentUpload != null) {
+                currentUpload.interruptUpload();
+            }
+        } else if (source == createBtn) {
             isNew = true;
             tabs.setSelectedTab(empSearchLay);
             clearEmployeeFields(true);
@@ -2327,7 +2296,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()
                             && (!validateTable(childrenTable, true, false)
                             || !validateTable(spouseEducationTable, true, false)
-                            || !validateTable(spouseWorkPlacesTable, true, false) || !validate(familyInfoLay, false))) {
+                            || !validateTable(spouseWorkPlacesTable, true, false)
+                            || !validate(familyInfoLay, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(extraInfoLay).getComponent()
@@ -2344,8 +2314,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         Notification.show(myUI.getMessage(SptMessages.NotifOnlyOneMain),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent()
-                            && (!validateTable(educationTable, true, true) || !validateTable(workPlacesTable, true, false)
-                            || !validateTable(branchesTable, true, false))) {
+                            && (!validateTable(educationTable, true, true)
+                            || !validateTable(workPlacesTable, true, false)
+                            || !validateTable(branchesTable, true, false)
+                            || !validate(profInfoLay, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()
@@ -2385,7 +2357,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                 } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 25
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
                                     roleName = SystemSettings.rnHr;
-                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 115
+                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 115
                                         || (extra_position_ids != null && extra_position_ids.contains("115"))) {
                                     roleName = SystemSettings.rnSapatSecretary;
                                 }
@@ -2435,7 +2407,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             try {
                                 status = dbe.exec_update(e, checkPassword());
                             } catch (Exception ex) {
-                                logger.error(e);
+                                logger.error(ex);
                                 ex.printStackTrace();
                             }
                             DbAccCategory dba = new DbAccCategory();
@@ -2537,7 +2509,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                         || (extra_position_ids != null && extra_position_ids.contains("25"))) {
                                     roleName = SystemSettings.rnHr;
                                     dbe.exec_delete_perm(oldLogin);
-                                }else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 115
+                                } else if ((Integer) mainPositionCB.getContainerProperty(mainPositionCB.getValue(), SystemSettings.position_id).getValue() == 115
                                         || (extra_position_ids != null && extra_position_ids.contains("115"))) {
                                     roleName = SystemSettings.rnSapatSecretary;
                                     dbe.exec_delete_perm(oldLogin);
@@ -2577,9 +2549,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
+            } catch (Exception ex) {
+                logger.error(ex);
+                logger.catching(ex);
             }
         } else if (source == deleteBtn) {
             if (emplID != 0) {
@@ -2647,7 +2619,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delChildIds.add(source.getData().toString());
             childrenTable.removeItem(event.getButton().getData().toString());
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeEducation)) {
-            delSpouseEducationIds.add(source.getData().toString());
+            EmployeeEducation employeeEducation = new EmployeeEducation();
+            employeeEducation.setIdStr(source.getData().toString());
+            delEducationIds.add(employeeEducation);
+            delSpouseEducationIds.add(employeeEducation);
             spouseEducationTable.removeItem(event.getButton().getData().toString());
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(SystemSettings.dbEmployeeWork)) {
             delSpouseWorkIds.add(source.getData().toString());
@@ -2730,9 +2705,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 InputStream input = null;
                 try {
                     input = new FileInputStream(inputfile);
-                } catch (FileNotFoundException e) {
-                    logger.error(e);
-                    logger.catching(e);
+                } catch (FileNotFoundException ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
                 }
                 return input;
 
@@ -2776,9 +2751,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delPhoneIds.clear();
             dbepn.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -2825,9 +2800,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delChildIds.clear();
             dbech.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -2882,9 +2857,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             list.clear();
             dbed.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -2951,9 +2926,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             list.clear();
             dbew.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -2987,9 +2962,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 }
             }
             dbeq.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3027,9 +3002,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delLanguagesIds.clear();
             dbel.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3046,9 +3021,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             File f = new File(SystemSettings.PATH_TO_UPLOADS_HR + delCertificatesIds.get(i).getAttachmentUniqueName());
                             f.delete();
                         }
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
                     }
                     dbd.exec_delete(delCertificatesIds.get(i).getIdStr(), SystemSettings.dbEmployeeCertificate);
                 }
@@ -3085,9 +3060,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delCertificatesIds.clear();
             dbec.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3109,11 +3084,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     EmployeeSeminar es = new EmployeeSeminar();
                     es.setEmployee_id(employee_id);
                     es.setName(((TextField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Name)).getValue()).getValue().toString());
+                            myUI.getMessage(SptMessages.Name)).getValue()).getValue());
                     es.setSubject(((TextField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Subject)).getValue()).getValue().toString());
+                            myUI.getMessage(SptMessages.Subject)).getValue()).getValue());
                     es.setNote(((TextField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString());
+                            myUI.getMessage(SptMessages.Note)).getValue()).getValue());
                     es.setDate_of_issue(((DateField) seminarsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.IssueDate)).getValue()).getValue());
                     if (seminarsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
@@ -3129,9 +3104,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delSeminarsIds.clear();
             dbes.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3148,9 +3123,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             File f = new File(SystemSettings.PATH_TO_UPLOADS_HR + delExamsIds.get(i).getAttachmentUniqueName());
                             f.delete();
                         }
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
                     }
                     dbd.exec_delete(delExamsIds.get(i).getIdStr(), SystemSettings.dbEmployeeExams);
                 }
@@ -3185,9 +3160,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delExamsIds.clear();
             dbex.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3242,9 +3217,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delBranchesIds.clear();
             dbeb.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3296,9 +3271,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delLessonIds.clear();
             dbel.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3453,9 +3428,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             delOrderIds.clear();
             dbeo.close();
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -3573,9 +3548,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             }
                         }
                     }
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
                 }
             }
         });
@@ -3644,9 +3619,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             cb.setContainerDataSource(
                     dbDef.exec_positions_for_select(myUI, false, true));
             dbDef.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(cb3);
         cb = createCombobox(0, myUI.getMessage(SptMessages.WorkingStatus), null, true);
@@ -3655,9 +3630,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             cb.setContainerDataSource(dbd.exec_for_select_general_working_statuses(myUI));
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(cb);
         final ComboBoxMax cb2 = createCombobox(0, myUI.getMessage(SptMessages.WorkPlace), SystemSettings.dbWork_placeTable, true);
@@ -3687,9 +3662,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             }
                         }
                     }
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
                 }
             }
         });
@@ -3784,9 +3759,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             }
                         }
                     }
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
                 }
             }
         });
@@ -3974,9 +3949,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 cb.removeItem(5);
             }
             dbeo.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).setValue(cb);
         cb = createCombobox(0, null, null, false);
@@ -4090,9 +4065,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable));
                 dbp.close();
             }
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
         cb.setNullSelectionAllowed(false);
         cb.setValue(value);
@@ -4321,9 +4296,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 dbec.exec_update(ec);
             }
             dbec.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4336,9 +4311,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 dbes.exec_update(es);
             }
             dbes.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4351,9 +4326,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 dbei.exec_update(eei);
             }
             dbei.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4366,9 +4341,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 dbCon.exec_update(egs);
             }
             dbCon.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4378,9 +4353,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbeo.connect();
             dbeo.exec_insert(eo);
             dbeo.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4390,9 +4365,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbe.connect();
             dbe.exec_insert_role(loginRName, roleName);
             dbe.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4405,9 +4380,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 dbe.exec_insert_perm(login, string);
             }
             dbe.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4436,9 +4411,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
             employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.Permissions)).setValue(permOneStr);
             dbe.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
         }
     }
 
@@ -4581,30 +4556,30 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbDef.getConnection().commit();
             dbDef.getConnection().setAutoCommit(true);
             dbDef.close();
-        } catch (SQLIntegrityConstraintViolationException e) {
+        } catch (SQLIntegrityConstraintViolationException ex) {
             Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             if (dbDef != null) {
                 try {
                     dbDef.getConnection().rollback();
-                } catch (Exception ex) {
+                } catch (Exception exx) {
                     logger.error(ex);
                     logger.catching(ex);
                 }
             }
-            logger.error(e);
-            logger.catching(e);
-        } catch (Exception e) {
+            logger.error(ex);
+            logger.catching(ex);
+        } catch (Exception ex) {
             if (dbDef != null) {
                 try {
                     dbDef.getConnection().rollback();
-                } catch (Exception ex) {
+                } catch (Exception exx) {
                     logger.error(ex);
                     logger.catching(ex);
                 }
             }
-            logger.error(e);
-            logger.catching(e);
+            logger.error(ex);
+            logger.catching(ex);
         }
         try {
             DbEmployee dbe = new DbEmployee();
@@ -4637,7 +4612,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 Notification.show(myUI.getMessage(SptMessages.ValueDeleted), Notification.Type.HUMANIZED_MESSAGE);
             }
             dbe.close();
-        } catch (Exception e) {
+        } catch (Exception ex) {
         }
     }
 
@@ -4731,9 +4706,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         orderToDateDF.setEnabled(false);
                     }
                     ordersTable.refreshRowCache();
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
                 }
             }
         }

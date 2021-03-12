@@ -1,4 +1,4 @@
-package com.vaadin.addon.tableexport;
+package kg.alex.spt.tableexport;
 
 import com.vaadin.data.Property;
 

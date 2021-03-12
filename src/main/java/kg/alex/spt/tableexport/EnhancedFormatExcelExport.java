@@ -1,4 +1,4 @@
-package com.vaadin.addon.tableexport;
+package kg.alex.spt.tableexport;
 
 import com.vaadin.ui.Table;
 import org.apache.poi.hssf.usermodel.HSSFFont;

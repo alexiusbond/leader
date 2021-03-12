@@ -81,7 +81,7 @@ public class DbEmployeeCertificate extends BaseDb {
         String sql = "SELECT ec.id, ec.note, ec.given_by, ec.date_of_issue, ec.certificate_id, " +
                 "a.id, a.name, a.extension, a.unique_name " +
                 "FROM hr_employee_certificate as ec " +
-                "left join hr_attachments as a on a.id = ec.attachment_id where ec.employee_id = ?;";
+                "left join attachments as a on a.id = ec.attachment_id where ec.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

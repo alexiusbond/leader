@@ -6,7 +6,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.FileResource;
@@ -23,8 +23,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.io.File;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
@@ -74,9 +76,9 @@ public class InstplanPaymentsReport implements Button.ClickListener,
         this.spltPanel = spltPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
-            myUI.getMessage(SptMessages.Amount),
-            myUI.getMessage(SptMessages.WhoPaid),
-            myUI.getMessage(SptMessages.PaymentCategoryType)};
+                myUI.getMessage(SptMessages.Amount),
+                myUI.getMessage(SptMessages.WhoPaid),
+                myUI.getMessage(SptMessages.PaymentCategoryType)};
     }
 
     private void buildLeftPanel() {
@@ -272,8 +274,8 @@ public class InstplanPaymentsReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         makePdfBtn.setEnabled(false);
-        if ((property == classTable && classTable.getValue() != null)
-                || (property == yearSelect && yearSelect.getValue() != null)) {
+        if ((property == classTable || property == yearSelect)
+                && classTable.getValue() != null && yearSelect.getValue() != null) {
             try {
                 DbStudent dbst = new DbStudent();
                 dbst.connect();

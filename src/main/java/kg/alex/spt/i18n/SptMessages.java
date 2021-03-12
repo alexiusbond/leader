@@ -159,9 +159,6 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Functions = generateId();
     public static final String UploadStatus = generateId();
     public static final String UploadedSuccessfully = generateId();
-    public static final String CurrentState = generateId();
-    public static final String Idle = generateId();
-    public static final String FileName = generateId();
     public static final String Progress = generateId();
     public static final String Product = generateId();
     public static final String Measurement = generateId();
@@ -174,12 +171,9 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Price = generateId();
     public static final String AvaragePrice = generateId();
     public static final String Upload = generateId();
-    public static final String Uploading = generateId();
     public static final String OnlyJpg = generateId();
     public static final String OnlyJpgOrPdf = generateId();
     public static final String Maxsize = generateId();
-    public static final String Processed = generateId();
-    public static final String BytesOf = generateId();
     public static final String Surname = generateId();
     public static final String Firstname = generateId();
     public static final String Middlename = generateId();

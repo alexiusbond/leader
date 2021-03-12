@@ -16,7 +16,7 @@
  * 
  * ====================================================================
  */
-package com.vaadin.addon.tableexport;
+package kg.alex.spt.tableexport;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

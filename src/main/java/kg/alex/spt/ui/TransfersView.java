@@ -1,6 +1,6 @@
 package kg.alex.spt.ui;
 
-import com.vaadin.addon.tableexport.EnhancedFormatExcelExport;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.ui.*;
 import kg.alex.spt.utils.*;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;

@@ -69,7 +69,7 @@ public class DbEmployeeExam extends BaseDb {
         String sql = "SELECT ex.id, ex.hr_exam_id, ex.score, ex.date_of_issue, ex.attachment_id, " +
                 "a.id, a.name, a.extension, a.unique_name " +
                 "FROM hr_employee_exam as ex " +
-                "left join hr_attachments as a on a.id = ex.attachment_id where ex.employee_id = ?;";
+                "left join attachments as a on a.id = ex.attachment_id where ex.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

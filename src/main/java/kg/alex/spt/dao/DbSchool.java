@@ -293,6 +293,24 @@ public class DbSchool extends BaseDb {
         return container;
     }
 
+    public IndexedContainer execSchoolSel(MyVaadinUI myUI, String school_type_ids) throws SQLException {
+        String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.year_id, s.photo, s.code from school as s " +
+                "where s.school_type_id in (" + school_type_ids + ") order by CAST(s.code AS UNSIGNED)";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+
+        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("s.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("s.code"));
+        }
+        return container;
+    }
+
     public String execGet_logo(String st_login) throws SQLException {
         String sql = "SELECT sc.photo FROM school as sc "
                 + "left join student as st on st.school_id = sc.id "

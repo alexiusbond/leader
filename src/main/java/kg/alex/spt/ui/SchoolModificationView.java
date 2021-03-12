@@ -1,25 +1,11 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.ui.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.FileResource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.io.File;
@@ -35,6 +21,7 @@ import kg.alex.spt.dao.DbSalaryCategories;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -54,8 +41,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     private File myFile;
     private Window statusWindow;
     private Button cancelButton;
-    private Label state, textualProgress, fName;
-    private ProgressIndicator pi;
+    private ProgressBar uploadProgressBar;
     private String photoName, mimeType;
     private MyReceiver receiver;
     private Embedded photoEmb;
@@ -228,7 +214,11 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source == modifyBtn) {
+        if (source.getId() != null && source.getId().equals(SystemSettings.cancel_upload_button)) {
+            if (photoUpl != null) {
+                photoUpl.interruptUpload();
+            }
+        } else if (source == modifyBtn) {
             prepareModificationMode();
         } else if (source == saveBtn) {
             try {
@@ -433,45 +423,36 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     }
 
     private void buildUploadWindow() {
-        state = new Label();
-        textualProgress = new Label();
-        fName = new Label();
-        pi = new ProgressIndicator();
+        uploadProgressBar = new ProgressBar();
+        uploadProgressBar.setWidth("90%");
 
         statusWindow = new Window(myUI.getMessage(SptMessages.UploadStatus));
         statusWindow.setResizable(false);
         statusWindow.setDraggable(false);
-        statusWindow.addStyleName("upload-info");
+        statusWindow.setModal(true);
+        statusWindow.setWidth("20%");
+        statusWindow.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
 
-        final FormLayout l = new FormLayout();
+        final HorizontalLayout l = new HorizontalLayout();
+        l.setSpacing(true);
+        l.setWidth("100%");
+        l.setMargin(true);
         statusWindow.setContent(l);
 
-        l.setMargin(true);
-
-        final HorizontalLayout stateLayout = new HorizontalLayout();
-        stateLayout.setSpacing(true);
-        stateLayout.addComponent(state);
-
-        cancelButton = new Button(myUI.getMessage(SptMessages.Cancel));
+        cancelButton = new Button();
         cancelButton.addClickListener(this);
+        cancelButton.setId(SystemSettings.cancel_upload_button);
         cancelButton.setVisible(false);
-        cancelButton.setStyleName("small");
-        stateLayout.addComponent(cancelButton);
+        cancelButton.setIcon(FontAwesome.CLOSE);
+        cancelButton.setStyleName(ValoTheme.BUTTON_TINY);
+        cancelButton.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        l.addComponent(cancelButton);
+        l.setComponentAlignment(cancelButton, Alignment.MIDDLE_LEFT);
 
-        stateLayout.setCaption(myUI.getMessage(SptMessages.CurrentState));
-        state.setValue(myUI.getMessage(SptMessages.Idle));
-        l.addComponent(stateLayout);
-
-        fName.setCaption(myUI.getMessage(SptMessages.FileName));
-        l.addComponent(fName);
-
-        pi.setCaption(myUI.getMessage(SptMessages.Progress));
-        pi.setVisible(false);
-        l.addComponent(pi);
-
-        textualProgress.setVisible(false);
-        l.addComponent(textualProgress);
-
+        uploadProgressBar.setCaption(myUI.getMessage(SptMessages.Progress));
+        uploadProgressBar.setVisible(false);
+        l.addComponent(uploadProgressBar);
+        l.setExpandRatio(uploadProgressBar, 1);
     }
 
     private void buildUpload() {
@@ -491,16 +472,11 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                 myUI.addWindow(statusWindow);
                 statusWindow.setClosable(false);
 
-                pi.setValue(0f);
-                pi.setVisible(true);
-                pi.setPollingInterval(500); // hit server frequantly to get
-                textualProgress.setVisible(true);
-                // updates to client
-                state.setValue(myUI.getMessage(SptMessages.Uploading));
-                fName.setValue(event.getFilename());
+                uploadProgressBar.setValue(0f);
+                uploadProgressBar.setVisible(true);
+                UI.getCurrent().setPollInterval(500); // hit server frequantly to get
 
                 cancelButton.setVisible(true);
-
             }
         });
 
@@ -510,22 +486,16 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                 // This method gets called several times during the update
                 if (!mimeType.equals("image/jpeg")) {
                     photoUpl.interruptUpload();
-                    myFile.delete();
                     photoName = null;
                     Notification.show(myUI.getMessage(SptMessages.OnlyJpg),
                             Notification.Type.WARNING_MESSAGE);
                 } else if (contentLength >= 5000000) {
                     photoUpl.interruptUpload();
-                    myFile.delete();
                     photoName = null;
                     Notification.show(myUI.getMessage(SptMessages.Maxsize),
                             Notification.Type.WARNING_MESSAGE);
                 } else {
-
-                    pi.setValue(new Float(readBytes / (float) contentLength));
-                    textualProgress.setValue(myUI.getMessage(SptMessages.Processed) + " "
-                            + readBytes + " " + myUI.getMessage(SptMessages.BytesOf) + " "
-                            + contentLength);
+                    uploadProgressBar.setValue(new Float(readBytes / (float) contentLength));
                 }
             }
         });
@@ -534,6 +504,12 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             @Override
             public void uploadSucceeded(Upload.SucceededEvent event) {
                 // This method gets called when the upload finished successfully
+                try {
+                    Thumbnails.of(myFile).size(300, 300).toFile(myFile);
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
                 photoEmb.setSource(new FileResource(myFile));
             }
         });
@@ -541,6 +517,15 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         photoUpl.addFailedListener(new Upload.FailedListener() {
             @Override
             public void uploadFailed(Upload.FailedEvent event) {
+                if (statusWindow != null) {
+                    statusWindow.close();
+                }
+                try {
+                    myFile.delete();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    ex.printStackTrace();
+                }
             }
         });
 

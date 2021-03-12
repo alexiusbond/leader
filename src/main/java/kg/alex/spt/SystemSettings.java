@@ -97,7 +97,7 @@ public class SystemSettings implements Serializable {
     public static final String dbWork_placeTable = "hr_work_place";
     public static final String dbEmployeeWorkExtraPosition = "hr_employee_work_extra_positions";
     public static final String dbCertificateTable = "hr_certificate";
-    public static final String dbAttachmentsTable = "hr_attachments";
+    public static final String dbAttachmentsTable = "attachments";
     public static final String dbQuestion = "hr_question";
     public static final String dbActivity_status = "activity_status";
     public static final String dbAccessoriesCategory = "accessories_category";
@@ -252,6 +252,7 @@ public class SystemSettings implements Serializable {
     public static final String old_date = "old_date";
     public static final String old_category = "old_category";
     public static final String download_button = "download_button";
+    public static final String cancel_upload_button = "cancel_upload_button";
     public static final SimpleDateFormat dateRu = new SimpleDateFormat(
             "«dd» MMMMM yyyy г.", new DateFormatSymbols() {
         @Override
