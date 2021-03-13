@@ -16,7 +16,7 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudInstallmentPlan;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ClassInstPlanReport;
-import kg.alex.spt.reports.InstplanPaymentsReport;
+import kg.alex.spt.reports.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
 public class DbStudInstallmentPlan extends BaseDb {
@@ -88,7 +88,7 @@ public class DbStudInstallmentPlan extends BaseDb {
     }
 
     public IndexedContainer execSQL_InstPLan(MyVaadinUI myUI, int stud_id, int year_id,
-            InstplanPaymentsReport ip)
+            InstallmentPlanPaymentsReport ip)
             throws SQLException {
         
 

@@ -31,10 +31,10 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.pdf.MonthlyPdf;
+import kg.alex.spt.pdf.MonthsReportPdf;
 import kg.alex.spt.utils.MyFilterDecorator;
-import kg.alex.spt.pdf.SummaryPdf;
-import kg.alex.spt.pdf.YearlyPdf;
+import kg.alex.spt.pdf.SummaryReportPdf;
+import kg.alex.spt.pdf.YearReportPdf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -362,11 +362,11 @@ public class YearMonthReport implements Button.ClickListener,
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
                         if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Yearly))) {
-                            new YearlyPdf(myUI, rightLay, st);
+                            new YearReportPdf(myUI, rightLay, st);
                         } else if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Monthly))) {
-                            new MonthlyPdf(myUI, rightLay, st);
+                            new MonthsReportPdf(myUI, rightLay, st);
                         } else {
-                            new SummaryPdf(myUI, rightLay, st);
+                            new SummaryReportPdf(myUI, rightLay, st);
                         }
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),

@@ -41,16 +41,16 @@ import kg.alex.spt.domain.StudPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.pdf.InstplanPaymentsPdf;
+import kg.alex.spt.pdf.InstallmentPlanPaymentsPdf;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
 
-public class InstplanPaymentsReport implements Button.ClickListener,
+public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(InstplanPaymentsReport.class);
+    static final Logger logger = LogManager.getLogger(InstallmentPlanPaymentsReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, excelBtn;
     private HorizontalSplitPanel spltPanel;
@@ -71,7 +71,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
     private String[] NATURAL_COL_ORDER;
     public double total_inst, total_pay;
 
-    public InstplanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
         this.myUI = ui;
         this.spltPanel = spltPanel;
         buildLeftPanel();
@@ -224,7 +224,7 @@ public class InstplanPaymentsReport implements Button.ClickListener,
             if (st.getScl_accountent_fullname() != null) {
                 if (st.getScl_address() != null && st.getScl_phone() != null
                         && st.getScl_name_ru() != null) {
-                    new InstplanPaymentsPdf(myUI, st, installmentCont, paymentsCont, total_inst,
+                    new InstallmentPlanPaymentsPdf(myUI, st, installmentCont, paymentsCont, total_inst,
                             total_pay);
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),

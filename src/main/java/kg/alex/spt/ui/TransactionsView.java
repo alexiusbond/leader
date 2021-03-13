@@ -35,7 +35,7 @@ import kg.alex.spt.domain.CurrencyRate;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.pdf.TransactionOrderPDF;
+import kg.alex.spt.pdf.TransactionInvoicePDF;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -322,7 +322,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                 }
             }
             t.getContainerProperty(source.getData().toString(), SystemSettings.order_number).setValue(tr.getOrder_number());
-            new TransactionOrderPDF(myUI, tr, myUI.getUser().getSchool_name(), myUI.getUser().getSchool_logo(), orderName);
+            new TransactionInvoicePDF(myUI, tr, myUI.getUser().getSchool_name(), myUI.getUser().getSchool_logo(), orderName);
         } else {
             if (source.getData().toString().contains(SystemSettings.FreshItem)) {
                 if (source.getCaption().equals(myUI.getMessage(SptMessages.Incomes))) {

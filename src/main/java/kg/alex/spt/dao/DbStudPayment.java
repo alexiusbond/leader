@@ -23,7 +23,7 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ClassPaymentsReport;
-import kg.alex.spt.reports.InstplanPaymentsReport;
+import kg.alex.spt.reports.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
@@ -227,7 +227,7 @@ public class DbStudPayment extends BaseDb {
     }
 
     public IndexedContainer execSQL_Payment(MyVaadinUI myUI, int stud_id, int year_id,
-            InstplanPaymentsReport ip)            throws SQLException {
+            InstallmentPlanPaymentsReport ip)            throws SQLException {
         
 
         String sql = "SELECT sp.id, sp.amount, sp.who_paid, sp.modification_date, "

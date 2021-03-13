@@ -172,10 +172,10 @@ public class ClassCallsPdf {
             }
         };
 
-        resource = new StreamResource(source1, "TokenReport"
+        resource = new StreamResource(source1, "ClassCalls"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
-        myUI.getPage().open(resource, "TokenReport", false);
+        myUI.getPage().open(resource, "ClassCalls", false);
     }
 }

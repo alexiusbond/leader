@@ -177,10 +177,10 @@ public class DebtsPdf {
             }
         };
 
-        resource = new StreamResource(source1, "TokenReport"
+        resource = new StreamResource(source1, "Debts"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
-        myUI.getPage().open(resource, "TokenReport", false);
+        myUI.getPage().open(resource, "Debts", false);
     }
 }

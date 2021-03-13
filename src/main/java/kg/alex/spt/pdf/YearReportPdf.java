@@ -30,20 +30,20 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class SummaryPdf {
+public class YearReportPdf {
 
-    static final Logger logger = LogManager.getLogger(SummaryPdf.class);
+    static final Logger logger = LogManager.getLogger(YearReportPdf.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
     StreamResource resource = null;
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
-    
 
 
-    public SummaryPdf(final MyVaadinUI myUI, final ComponentContainer layout,
-            final StudInfoPdf st) {
+
+    public YearReportPdf(final MyVaadinUI myUI, final ComponentContainer layout,
+                         final StudInfoPdf st) {
         source1 = new StreamResource.StreamSource() {
 
             /**
@@ -60,10 +60,10 @@ public class SummaryPdf {
 
                 try {
 
-                    document = new Document(PageSize.A4.rotate(), 10, 10, 70, 40);
+                    document = new Document(PageSize.A4, 10, 10, 70, 40);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterLandscape event = new HeaderFooterLandscape(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -104,7 +104,7 @@ public class SummaryPdf {
                         document.add(p);
 
                         //installment plan table
-                        float[] Tplan_colsWidth = {0.07f, 0.8f, 0.2f, 0.25f, 0.23f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
+                        float[] Tplan_colsWidth = {0.07f, 0.12f, 0.2f, 0.25f, 0.23f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
                         PdfPTable pdfTable = new PdfPTable(10);
                         pdfTable.setWidthPercentage(90f);
                         pdfTable.setWidths(Tplan_colsWidth);
@@ -112,7 +112,7 @@ public class SummaryPdf {
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         pdfTable.addCell(new Phrase(" №", tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.School), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total_Active), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discount), tableFontBold));
@@ -132,7 +132,7 @@ public class SummaryPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             pdfTable.addCell(new Phrase(j + "", tableFont));
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.School)).getValue().toString(), tableFont));
+                                    myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Total_Active)).getValue().toString(), tableFont));
@@ -189,22 +189,24 @@ public class SummaryPdf {
                     document.add(T2);
 
                 } catch (Exception e) {
-                        logger.error(e);
+                    logger.error(e);
                     logger.catching(e);
                 } finally {
                     if (document != null) {
                         document.close();
                     }
                 }
+
                 b = buffer.toByteArray();
                 return new ByteArrayInputStream(b);
+
             }
         };
 
-        resource = new StreamResource(source1, "TokenReport"
+        resource = new StreamResource(source1, "YearReport"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
-        myUI.getPage().open(resource, "TokenReport", false);
+        myUI.getPage().open(resource, "YearReport", false);
     }
 }

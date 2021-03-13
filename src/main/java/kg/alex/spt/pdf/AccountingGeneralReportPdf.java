@@ -320,9 +320,11 @@ public class AccountingGeneralReportPdf {
             }
         };
 
-        resource = new StreamResource(source1, System.currentTimeMillis() + ".pdf");
+        resource = new StreamResource(source1, "AccountingGeneralReport"
+                + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
-        myUI.getPage().open(resource, "application", false);
+
+        myUI.getPage().open(resource, "AccountingGeneralReport", false);
     }
 
     private Image drawUnscaledSvg(PdfContentByte contentByte, String svg)

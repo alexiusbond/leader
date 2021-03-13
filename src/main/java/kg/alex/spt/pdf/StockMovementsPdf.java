@@ -217,10 +217,10 @@ public class StockMovementsPdf {
             }
         };
 
-        resource = new StreamResource(source1, "TokenReport"
+        resource = new StreamResource(source1, "StockMovements"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
-        myUI.getPage().open(resource, "TokenReport", false);
+        myUI.getPage().open(resource, "StockMovements", false);
     }
 }

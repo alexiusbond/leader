@@ -166,10 +166,10 @@ public class CurrentAccountStatementPdf {
             }
         };
 
-        resource = new StreamResource(source1, "TokenReport"
+        resource = new StreamResource(source1, "CurrentAccountStatement"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
-        myUI.getPage().open(resource, "TokenReport", false);
+        myUI.getPage().open(resource, "CurrentAccountStatement", false);
     }
 }

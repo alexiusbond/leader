@@ -30,9 +30,9 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MonthlyPdf {
+public class SummaryReportPdf {
 
-    static final Logger logger = LogManager.getLogger(MonthlyPdf.class);
+    static final Logger logger = LogManager.getLogger(SummaryReportPdf.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
@@ -42,8 +42,8 @@ public class MonthlyPdf {
     
 
 
-    public MonthlyPdf(final MyVaadinUI myUI, final ComponentContainer layout,
-            final StudInfoPdf st) {
+    public SummaryReportPdf(final MyVaadinUI myUI, final ComponentContainer layout,
+                            final StudInfoPdf st) {
         source1 = new StreamResource.StreamSource() {
 
             /**
@@ -60,10 +60,10 @@ public class MonthlyPdf {
 
                 try {
 
-                    document = new Document(PageSize.A4, 10, 10, 70, 40);
+                    document = new Document(PageSize.A4.rotate(), 10, 10, 70, 40);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterLandscape event = new HeaderFooterLandscape(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -88,7 +88,7 @@ public class MonthlyPdf {
                     Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Monthly)
+                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Yearly)
                             + " " + myUI.getMessage(SptMessages.Report), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
@@ -104,16 +104,20 @@ public class MonthlyPdf {
                         document.add(p);
 
                         //installment plan table
-                        float[] Tplan_colsWidth = {0.07f, 1.0f, 0.3f, 0.3f, 0.3f, 0.2f};
-                        PdfPTable pdfTable = new PdfPTable(6);
+                        float[] Tplan_colsWidth = {0.07f, 0.8f, 0.2f, 0.25f, 0.23f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
+                        PdfPTable pdfTable = new PdfPTable(10);
                         pdfTable.setWidthPercentage(90f);
                         pdfTable.setWidths(Tplan_colsWidth);
                         pdfTable.getDefaultCell().
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         pdfTable.addCell(new Phrase(" №", tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Month), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.School), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total_Active), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discount), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Net), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Paid), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Left), tableFontBold));
                         pdfTable.addCell(new Phrase(SystemSettings.percentage, tableFontBold));
@@ -128,10 +132,18 @@ public class MonthlyPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             pdfTable.addCell(new Phrase(j + "", tableFont));
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Month)).getValue().toString(), tableFont));
+                                    myUI.getMessage(SptMessages.School)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Total_Active)).getValue().toString(), tableFont));
                             pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.InstPlanDebt)).getValue()), tableFont));
+                                    myUI.getMessage(SptMessages.Contract)).getValue()), tableFont));
+                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Discount)).getValue()), tableFont));
+                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
+                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Net)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
@@ -143,7 +155,15 @@ public class MonthlyPdf {
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.InstPlanDebt)), tableFontBold));
+                                myUI.getMessage(SptMessages.Total_Active)), tableFontBold));
+                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
+                                myUI.getMessage(SptMessages.Contract)), tableFontBold));
+                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
+                                myUI.getMessage(SptMessages.Discount)), tableFontBold));
+                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
+                                myUI.getMessage(SptMessages.PreviousYearDebt)), tableFontBold));
+                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
+                                myUI.getMessage(SptMessages.Net)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
                                 myUI.getMessage(SptMessages.Paid)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
@@ -176,17 +196,15 @@ public class MonthlyPdf {
                         document.close();
                     }
                 }
-
                 b = buffer.toByteArray();
                 return new ByteArrayInputStream(b);
-
             }
         };
 
-        resource = new StreamResource(source1, "TokenReport"
+        resource = new StreamResource(source1, "SummaryReport"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
-        myUI.getPage().open(resource, "TokenReport", false);
+        myUI.getPage().open(resource, "SummaryReport", false);
     }
 }

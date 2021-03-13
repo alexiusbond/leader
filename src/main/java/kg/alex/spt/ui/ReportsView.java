@@ -18,7 +18,7 @@ import kg.alex.spt.reports.ClassListReport;
 import kg.alex.spt.reports.ClassPaymentsReport;
 import kg.alex.spt.reports.DebtReport;
 import kg.alex.spt.reports.DiscountsReport;
-import kg.alex.spt.reports.InstplanPaymentsReport;
+import kg.alex.spt.reports.InstallmentPlanPaymentsReport;
 import kg.alex.spt.reports.OutOfList;
 import kg.alex.spt.reports.SchoolDiscountsReport;
 import kg.alex.spt.reports.StatusesReport;
@@ -111,7 +111,7 @@ public class ReportsView extends HorizontalSplitPanel implements Property.ValueC
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
             if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.PlanPayments))) {
-                new InstplanPaymentsReport(myUI, this);
+                new InstallmentPlanPaymentsReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ClassPayments))) {
                 new ClassPaymentsReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ClassDiscounts))) {

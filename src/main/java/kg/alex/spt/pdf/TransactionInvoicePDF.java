@@ -25,7 +25,7 @@ import kg.alex.spt.ui.TransactionsView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TransactionOrderPDF {
+public class TransactionInvoicePDF {
 
     static final Logger logger = LogManager.getLogger(TransactionsView.class);
     private byte[] b = null;
@@ -33,10 +33,10 @@ public class TransactionOrderPDF {
     ByteArrayOutputStream buffer = null;
     StreamResource resource = null;
     private Document document = null;
-    private final String nameOf = "Order";
+    private final String nameOf = "Invoice";
 
-    public TransactionOrderPDF(final MyVaadinUI myUI, final AccTransaction tr, final String school,
-                               final String logo_name, final String orderName) {
+    public TransactionInvoicePDF(final MyVaadinUI myUI, final AccTransaction tr, final String school,
+                                 final String logo_name, final String orderName) {
 
         source1 = new StreamResource.StreamSource() {
             @Override

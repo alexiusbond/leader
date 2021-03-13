@@ -68,7 +68,7 @@ import kg.alex.spt.pdf.ContractSchoolPdfKg;
 import kg.alex.spt.pdf.ContractSchoolPdfRu;
 import kg.alex.spt.pdf.ContractSilkPdfRu;
 import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.pdf.MakeInvoicePDF;
+import kg.alex.spt.pdf.InvoicePDF;
 import kg.alex.spt.utils.MyFilterDecorator;
 import kg.alex.spt.utils.MyFilterGenerator;
 import net.coobird.thumbnailator.Thumbnails;
@@ -1010,7 +1010,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             } catch (Exception e) {
             }
             if (iip.getScl_logo() != null) {
-                new MakeInvoicePDF(myUI, iip);
+                new InvoicePDF(myUI, iip);
             } else {
                 Notification.show(myUI.getMessage(SptMessages.NoSchoolLogo),
                         Notification.Type.WARNING_MESSAGE);

@@ -30,20 +30,20 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class YearlyPdf {
+public class MonthsReportPdf {
 
-    static final Logger logger = LogManager.getLogger(YearlyPdf.class);
+    static final Logger logger = LogManager.getLogger(MonthsReportPdf.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
     StreamResource resource = null;
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
+    
 
 
-
-    public YearlyPdf(final MyVaadinUI myUI, final ComponentContainer layout,
-            final StudInfoPdf st) {
+    public MonthsReportPdf(final MyVaadinUI myUI, final ComponentContainer layout,
+                           final StudInfoPdf st) {
         source1 = new StreamResource.StreamSource() {
 
             /**
@@ -88,7 +88,7 @@ public class YearlyPdf {
                     Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Yearly)
+                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Monthly)
                             + " " + myUI.getMessage(SptMessages.Report), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
@@ -104,20 +104,16 @@ public class YearlyPdf {
                         document.add(p);
 
                         //installment plan table
-                        float[] Tplan_colsWidth = {0.07f, 0.12f, 0.2f, 0.25f, 0.23f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
-                        PdfPTable pdfTable = new PdfPTable(10);
+                        float[] Tplan_colsWidth = {0.07f, 1.0f, 0.3f, 0.3f, 0.3f, 0.2f};
+                        PdfPTable pdfTable = new PdfPTable(6);
                         pdfTable.setWidthPercentage(90f);
                         pdfTable.setWidths(Tplan_colsWidth);
                         pdfTable.getDefaultCell().
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         pdfTable.addCell(new Phrase(" №", tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total_Active), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discount), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Net), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Month), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Paid), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Left), tableFontBold));
                         pdfTable.addCell(new Phrase(SystemSettings.percentage, tableFontBold));
@@ -132,18 +128,10 @@ public class YearlyPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             pdfTable.addCell(new Phrase(j + "", tableFont));
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
+                                    myUI.getMessage(SptMessages.Month)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Total_Active)).getValue().toString(), tableFont));
                             pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Contract)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Discount)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Net)).getValue()), tableFont));
+                                    myUI.getMessage(SptMessages.InstPlanDebt)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) dataTable.getContainerProperty(next,
@@ -155,15 +143,7 @@ public class YearlyPdf {
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.Total_Active)), tableFontBold));
-                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.Contract)), tableFontBold));
-                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.Discount)), tableFontBold));
-                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.PreviousYearDebt)), tableFontBold));
-                        pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.Net)), tableFontBold));
+                                myUI.getMessage(SptMessages.InstPlanDebt)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
                                 myUI.getMessage(SptMessages.Paid)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
@@ -189,7 +169,7 @@ public class YearlyPdf {
                     document.add(T2);
 
                 } catch (Exception e) {
-                    logger.error(e);
+                        logger.error(e);
                     logger.catching(e);
                 } finally {
                     if (document != null) {
@@ -203,10 +183,10 @@ public class YearlyPdf {
             }
         };
 
-        resource = new StreamResource(source1, "TokenReport"
+        resource = new StreamResource(source1, "MonthsReport"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
-        myUI.getPage().open(resource, "TokenReport", false);
+        myUI.getPage().open(resource, "MonthsReport", false);
     }
 }

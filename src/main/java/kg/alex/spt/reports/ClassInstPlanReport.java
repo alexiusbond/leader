@@ -32,7 +32,7 @@ import kg.alex.spt.domain.StudInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
-import kg.alex.spt.pdf.ClassInstPlanPdf;
+import kg.alex.spt.pdf.ClassInstallmentPlanPdf;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -224,7 +224,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
                             && st.getScl_name_ru() != null) {
                         fromDate = fromDateDF.getValue();
                         tillDate = tillDateDF.getValue();
-                        new ClassInstPlanPdf(myUI, installmentCont,
+                        new ClassInstallmentPlanPdf(myUI, installmentCont,
                                 yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(SptMessages.Name)).getValue().toString(),
                                 fromDate, tillDate, st, total);

@@ -25,17 +25,17 @@ import kg.alex.spt.domain.InvoiceInfoPdf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MakeInvoicePDF {
+public class InvoicePDF {
 
-    static final Logger logger = LogManager.getLogger(MakeInvoicePDF.class);
+    static final Logger logger = LogManager.getLogger(InvoicePDF.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
     StreamResource resource = null;
     private Document document = null;
-    private final String nameOf = "Order";
+    private final String nameOf = "Invoice";
 
-    public MakeInvoicePDF(final MyVaadinUI myUI, final InvoiceInfoPdf student) {
+    public InvoicePDF(final MyVaadinUI myUI, final InvoiceInfoPdf student) {
 
         source1 = new StreamResource.StreamSource() {
             @Override
