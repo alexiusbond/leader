@@ -119,9 +119,9 @@ public class DbStudDiscount extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, true));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     dw.createComboboxDisc(result.getInt("d.id"),
-                            myUI.getMessage(SptMessages.Name), id));
+                            myUI.getMessage(SptMessages.Title), id));
             if (result.getString("d.discount_type_id").equals("1")
                     || result.getString("d.discount_type_id").equals("2")) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -187,13 +187,13 @@ public class DbStudDiscount extends BaseDb {
         while (class_iter.hasNext()) {
             Object next = class_iter.next();
             container.addContainerProperty(cdr.classTable.getContainerProperty(
-                    next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                    next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                     + myUI.getMessage(SptMessages.Students), Integer.class, 0);
             container.addContainerProperty(cdr.classTable.getContainerProperty(
-                    next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                    next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                     + myUI.getMessage(SptMessages.DiscountAmount), Double.class, 0.0);
             container.addContainerProperty(cdr.classTable.getContainerProperty(
-                    next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                    next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                     + myUI.getMessage(SptMessages.Average) + "%", Double.class, 0.0);
         }
         container.addContainerProperty(myUI.getMessage(SptMessages.Total) + " "
@@ -209,7 +209,7 @@ public class DbStudDiscount extends BaseDb {
             Item item = container.addItem((Integer) next);
             item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
                     cdr.discountsTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue());
+                            next, myUI.getMessage(SptMessages.Title)).getValue());
         }
         cdr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
                 myUI.getMessage(SptMessages.Total));
@@ -223,46 +223,46 @@ public class DbStudDiscount extends BaseDb {
             while (class_iter.hasNext()) {
                 Object next = class_iter.next();
                 item.getItemProperty(cdr.classTable.getContainerProperty(
-                        next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                        next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.Students)).setValue(
                         result.getInt("disc_quantity" + next));
                 footerVal = cdr.dataTable.getColumnFooter(cdr.classTable.getContainerProperty(
-                        next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                        next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.Students));
                 if (footerVal == null) {
                     footerVal = "0";
                 }
                 if (counter != 0) {
                     cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Students), (Integer.parseInt(footerVal)
                             + result.getInt("disc_quantity" + next)) + "");
                 } else {
                     cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Students),
                             result.getInt("disc_quantity" + next) + "");
                 }
                 item.getItemProperty(cdr.classTable.getContainerProperty(
-                        next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                        next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.DiscountAmount)).setValue(
                         result.getDouble("disc_amount" + next));
                 footerVal = cdr.dataTable.getColumnFooter(
                         cdr.classTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.DiscountAmount));
                 if (footerVal == null) {
                     footerVal = "0";
                 }
                 if (counter != 0) {
                     cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.DiscountAmount),
                             SystemSettings.dFormat.format(Double.parseDouble(footerVal)
                                     + result.getDouble("disc_amount" + next)));
                 } else {
                     cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.DiscountAmount),
                             SystemSettings.dFormat.format(result.getDouble("disc_amount" + next)));
                 }
@@ -270,23 +270,23 @@ public class DbStudDiscount extends BaseDb {
                     double val = result.getDouble("disc_amount" + next)
                             / result.getDouble("contr_amount" + next) * 100.0;
                     item.getItemProperty(cdr.classTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Average) + "%").setValue(val);
                     footerVal = cdr.dataTable.getColumnFooter(cdr.classTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Average) + "%");
                     if (footerVal == null) {
                         footerVal = "0";
                     }
                     if (counter != 0) {
                         cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.Average) + "%",
                                 SystemSettings.dFormat.format(Double.parseDouble(footerVal)
                                         + val));
                     } else {
                         cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.Average) + "%",
                                 SystemSettings.dFormat.format(val));
                     }
@@ -390,13 +390,13 @@ public class DbStudDiscount extends BaseDb {
         while (school_iter.hasNext()) {
             Object next = school_iter.next();
             container.addContainerProperty(sdr.schoolTable.getContainerProperty(
-                    next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                    next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                     + myUI.getMessage(SptMessages.Students), Integer.class, 0);
             container.addContainerProperty(sdr.schoolTable.getContainerProperty(
-                    next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                    next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                     + myUI.getMessage(SptMessages.DiscountAmount), Double.class, 0.0);
             container.addContainerProperty(sdr.schoolTable.getContainerProperty(
-                    next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                    next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                     + myUI.getMessage(SptMessages.Average) + "%", Double.class, 0.0);
         }
         container.addContainerProperty(myUI.getMessage(SptMessages.Total) + " "
@@ -412,7 +412,7 @@ public class DbStudDiscount extends BaseDb {
             Item item = container.addItem((Integer) next);
             item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
                     sdr.discountsTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue());
+                            next, myUI.getMessage(SptMessages.Title)).getValue());
         }
         sdr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
                 myUI.getMessage(SptMessages.Total));
@@ -426,46 +426,46 @@ public class DbStudDiscount extends BaseDb {
             while (school_iter.hasNext()) {
                 Object next = school_iter.next();
                 item.getItemProperty(sdr.schoolTable.getContainerProperty(
-                        next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                        next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.Students)).setValue(
                         result.getInt("disc_quantity" + next));
                 footerVal = sdr.dataTable.getColumnFooter(sdr.schoolTable.getContainerProperty(
-                        next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                        next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.Students));
                 if (footerVal == null) {
                     footerVal = "0";
                 }
                 if (counter != 0) {
                     sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Students), (Integer.parseInt(footerVal)
                             + result.getInt("disc_quantity" + next)) + "");
                 } else {
                     sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Students),
                             result.getInt("disc_quantity" + next) + "");
                 }
                 item.getItemProperty(sdr.schoolTable.getContainerProperty(
-                        next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                        next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.DiscountAmount)).setValue(
                         result.getDouble("disc_amount" + next));
                 footerVal = sdr.dataTable.getColumnFooter(
                         sdr.schoolTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                         + myUI.getMessage(SptMessages.DiscountAmount));
                 if (footerVal == null) {
                     footerVal = "0";
                 }
                 if (counter != 0) {
                     sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.DiscountAmount),
                             SystemSettings.dFormat.format(Double.parseDouble(footerVal)
                                     + result.getDouble("disc_amount" + next)));
                 } else {
                     sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.DiscountAmount),
                             SystemSettings.dFormat.format(result.getDouble("disc_amount" + next)));
                 }
@@ -473,23 +473,23 @@ public class DbStudDiscount extends BaseDb {
                     double val = result.getDouble("disc_amount" + next)
                             / result.getDouble("contr_amount" + next) * 100.0;
                     item.getItemProperty(sdr.schoolTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Average) + "%").setValue(val);
                     footerVal = sdr.dataTable.getColumnFooter(sdr.schoolTable.getContainerProperty(
-                            next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.Average) + "%");
                     if (footerVal == null) {
                         footerVal = "0";
                     }
                     if (counter != 0) {
                         sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.Average) + "%",
                                 SystemSettings.dFormat.format(Double.parseDouble(footerVal)
                                         + val));
                     } else {
                         sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.Average) + "%",
                                 SystemSettings.dFormat.format(val));
                     }

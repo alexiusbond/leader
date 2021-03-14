@@ -32,11 +32,11 @@ public class DbSalaryCategories extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
             item.getItemProperty(SystemSettings.acc_category_id).setValue(
                     result.getInt("acc_category_id"));
@@ -51,11 +51,11 @@ public class DbSalaryCategories extends BaseDb {
         ResultSet result = stat.executeQuery();
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sc.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
         }
         return container;
@@ -71,11 +71,11 @@ public class DbSalaryCategories extends BaseDb {
         ResultSet result = stat.executeQuery();
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         while (result.next()) {
                 Item item = container.addItem(result.getInt("c.id"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("sc.name"));
+                item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("sc.name"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
         }
         return container;

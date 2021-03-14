@@ -81,7 +81,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
@@ -89,7 +89,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         educationStatusMCB.setWidth("100%");
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -226,7 +226,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
                         tillDate = tillDateDF.getValue();
                         new ClassInstallmentPlanPdf(myUI, installmentCont,
                                 yearSelect.getContainerProperty(yearSelect.getValue(),
-                                        myUI.getMessage(SptMessages.Name)).getValue().toString(),
+                                        myUI.getMessage(SptMessages.Title)).getValue().toString(),
                                 fromDate, tillDate, st, total);
                     } else {
 

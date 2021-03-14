@@ -33,11 +33,11 @@ public class DbPaymentCategory extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(systemSettings.acc_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name"));
             item.getItemProperty(systemSettings.acc_category_id).setValue(
                     result.getInt("t.acc_category_id"));
@@ -54,11 +54,11 @@ public class DbPaymentCategory extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, 0);
         container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
             item.getItemProperty(SystemSettings.acc_category_id).setValue(
                     result.getInt("acc_category_id"));

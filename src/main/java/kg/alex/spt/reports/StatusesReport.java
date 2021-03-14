@@ -73,7 +73,7 @@ public class StatusesReport implements Button.ClickListener,
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbd = new DbDefinition();
@@ -90,7 +90,7 @@ public class StatusesReport implements Button.ClickListener,
         statusMS = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Status));
         statusMS.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusMS.setWidth("100%");
-        statusMS.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusMS.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusMS.setFilteringMode(FilteringMode.CONTAINS);
         statusMS.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         statusMS.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -168,7 +168,7 @@ public class StatusesReport implements Button.ClickListener,
             dbsc.connect();
             schoolsTable.setContainerDataSource(dbsc.execSchoolSel(myUI, 0));
             dbsc.close();
-            schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Name)});
+            schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -245,10 +245,10 @@ public class StatusesReport implements Button.ClickListener,
                         while (status_iter.hasNext()) {
                             Object nextStatus = status_iter.next();
                             dataTable.setColumnAlignment(classTable.getContainerProperty(
-                                    nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                    nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                     + myUI.getMessage(SptMessages.ClassName) + " "
                                     + statusMS.getContainerProperty(
-                                            nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
+                                            nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                                     Table.Align.RIGHT);
                         }
                     }

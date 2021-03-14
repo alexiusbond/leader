@@ -172,7 +172,7 @@ public class AccountingMonthReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Name)});
+        schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth("100%");
@@ -320,32 +320,32 @@ public class AccountingMonthReport implements Button.ClickListener,
                                     if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
+                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + SystemSettings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
+                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + myUI.getMessage(SptMessages.Total),
                                                 Table.Align.RIGHT);
                                     }
                                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
+                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + SystemSettings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue()
+                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + myUI.getMessage(SptMessages.Total),
                                                 Table.Align.RIGHT);
                                         SchoolAccounting scAcc = dbTr.exec_get_ttls((Integer) nextSchool, current.getTime(),
                                                 tillDate.getTime(), SystemSettings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
+                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
                                                 + SystemSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
                                                 + SystemSettings.df.format(prev_date.getTime()) + "): " + SystemSettings.dFormat.format(scAcc.getPrevious_balance())
                                                 + "; " + myUI.getMessage(SptMessages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
+                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
                                                 + SystemSettings.ymdf.format(current.getTime())));
                                     }
                                 }

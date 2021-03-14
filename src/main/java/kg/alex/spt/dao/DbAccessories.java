@@ -34,7 +34,7 @@ public class DbAccessories extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Category), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
@@ -43,7 +43,7 @@ public class DbAccessories extends BaseDb {
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("ac.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("a.name"));
@@ -93,10 +93,10 @@ public class DbAccessories extends BaseDb {
         stat.setInt(1, cat_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getString("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name"));
         }
         return container;

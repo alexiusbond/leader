@@ -31,7 +31,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.tepi.filtertable.FilterTreeTable;
 
 public class DbTransfers extends BaseDb {
 
@@ -126,7 +125,7 @@ public class DbTransfers extends BaseDb {
         stat.setInt(4, type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, "USD");
         container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
@@ -138,7 +137,7 @@ public class DbTransfers extends BaseDb {
             Item item;
             if (container.getItem(result.getString("ac.id")) == null) {
                 item = container.addItem(result.getString("ac.id"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("category"));
+                item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("category"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue("USD");
                 if (result.getInt("t.acc_currency_id") == 1) {
                     if (result.getDouble("t.currency_rate") != 0) {
@@ -170,7 +169,7 @@ public class DbTransfers extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getString("acu.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("t.note"));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(result.getString("fullname"));
             id++;
         }

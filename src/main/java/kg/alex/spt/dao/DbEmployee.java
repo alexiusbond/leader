@@ -68,8 +68,8 @@ public class DbEmployee extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id, String working_statuses,
-                                    IndexedContainer workingStatCont, boolean withAdmin, boolean withHr, int employee_id) throws SQLException {
-
+                                    IndexedContainer workingStatCont, boolean withAdmin,
+                                    boolean withHr, int employee_id) throws SQLException {
 
         if (working_statuses.equals("") || working_statuses == null) {
             working_statuses = "-1";
@@ -261,6 +261,45 @@ public class DbEmployee extends BaseDb {
         return container;
     }
 
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int except_empl_id, int school_id,
+                                            boolean withAdmin, boolean withHr) throws SQLException {
+        String sql = "SELECT e.id, CONCAT(e.name, ' ', e.surname) AS fullname, p.name, "
+                + "group_concat(DISTINCT p2.name ORDER BY eo2.id ASC separator ', ') as extra_positions "
+                + "FROM employee AS e "
+                + "LEFT JOIN hr_employee_order AS eo ON eo.employee_id = e.id AND eo.to_date IS NULL "
+                + "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id "
+                + "LEFT JOIN position AS pos ON p.id = pos.hr_position_id "
+                + "LEFT JOIN hr_employee_order AS eo2 ON eo2.employee_id = e.id AND eo2.hr_orders_id = 2 and (eo2.to_date IS NULL or eo2.to_date>=NOW()) "
+                + "LEFT JOIN hr_position AS p2 ON p2.id = eo2.hr_position_id "
+                + "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id "
+                + "LEFT JOIN working_status AS ws ON ord.working_status_id = ws.id "
+                + "WHERE eo.school_id = ? and e.id != ? ";
+        if (!withAdmin) {
+            sql += " and (pos.id IS NULL or pos.id != 5) ";
+        } else if (!withAdmin && !withHr) {
+            sql += " and (pos.id IS NULL or (pos.id != 5 and pos.id !=25) ";
+        }
+        sql += " AND ord.working_status_id IS NOT NULL and ws.id in (2,5) group by e.id order by e.name, e.surname ";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, except_empl_id);
+        stat.setInt(2, school_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("e.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+                    result.getString("fullname") + " - " + result.getString("p.name"));
+            if (result.getString("extra_positions") != null) {
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+                        item.getItemProperty(myUi.getMessage(SptMessages.Title)).getValue()
+                                + ", " + result.getString("extra_positions"));
+            }
+        }
+        return container;
+    }
+
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id, int position_id) throws SQLException {
         String sql = "SELECT e.id, CONCAT(e.surname, ' ', e.name, ' ', IFNULL(e.middle_name, '')) AS fullname FROM employee AS e "
                 + "LEFT JOIN hr_employee_order AS eo ON eo.employee_id = e.id AND eo.to_date IS NULL "
@@ -278,11 +317,11 @@ public class DbEmployee extends BaseDb {
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("fullname"));
         }
         return container;
@@ -379,7 +418,7 @@ public class DbEmployee extends BaseDb {
             cb.setDescription(myUi.getMessage(SptMessages.MainPosition));
             cb.setStyleName(ValoTheme.COMBOBOX_TINY);
             cb.setWidth("100%");
-            cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.Name));
+            cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.Title));
             cb.setFilteringMode(FilteringMode.CONTAINS);
             cb.setRequired(true);
             cb.setRequiredError(myUi.getMessage(SptMessages.RequiredField));

@@ -161,7 +161,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         optionGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         optionGroup.setMultiSelect(true);
         optionGroup.setContainerDataSource(workingStatCont);
-        optionGroup.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        optionGroup.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         optionGroup.select(2);
         optionGroup.addValueChangeListener(this);
 
@@ -723,7 +723,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbCon.connect();
             gradSchoolCB.setContainerDataSource(dbCon.execSchoolSel(myUI, "1,3,4"));
             Item item = gradSchoolCB.getContainerDataSource().addItem(0);
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(myUI.getMessage(SptMessages.OtherSchool));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(myUI.getMessage(SptMessages.OtherSchool));
             dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -1123,7 +1123,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     dbec.execSQL(myUI, emplID, this));
             dbec.close();
             certificatesTable.setVisibleColumns(NATURAL_COL_ORDER_CERTIFICATES);
-            certificatesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Name), 1);
+            certificatesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Title), 1);
             certificatesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.GivenBy), 1);
         } catch (Exception ex) {
             logger.error(ex);
@@ -1134,7 +1134,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private void setSeminarsTable() {
         try {
             NATURAL_COL_ORDER_SEMINARS = new String[]{SystemSettings.button,
-                    myUI.getMessage(SptMessages.Name),
+                    myUI.getMessage(SptMessages.Title),
                     myUI.getMessage(SptMessages.Subject),
                     myUI.getMessage(SptMessages.Note),
                     myUI.getMessage(SptMessages.IssueDate)};
@@ -1144,7 +1144,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     dbes.execSQL(myUI, emplID, this));
             dbes.close();
             seminarsTable.setVisibleColumns(NATURAL_COL_ORDER_SEMINARS);
-            seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Name), 1);
+            seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Title), 1);
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Subject), 1);
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
         } catch (Exception ex) {
@@ -1240,7 +1240,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbCon.connect();
             documentsDataTable.setContainerDataSource(dbCon.execSQL(myUI, emplID, this));
             dbCon.close();
-            documentsDataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Name), 1);
+            documentsDataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Title), 1);
             documentsDataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Details), 1);
         } catch (Exception ex) {
             logger.error(ex);
@@ -1439,7 +1439,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         int total = 0;
         while (iter.hasNext()) {
             Integer next = iter.next();
-            str += "&emsp;" + workingStatCont.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue() + ": "
+            str += "&emsp;" + workingStatCont.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue() + ": "
                     + workingStatCont.getContainerProperty(next, SystemSettings.count).getValue();
             total += (Integer) workingStatCont.getContainerProperty(next, SystemSettings.count).getValue();
         }
@@ -1648,7 +1648,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         mainPositionCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         mainPositionCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         mainPositionCB.setWidth("100%");
-        mainPositionCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        mainPositionCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         mainPositionCB.setFilteringMode(FilteringMode.CONTAINS);
         fieldsLayRight.addComponent(mainPositionCB);
 
@@ -1669,7 +1669,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         contractCategoryCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         contractCategoryCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         contractCategoryCB.setWidth("100%");
-        contractCategoryCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        contractCategoryCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         contractCategoryCB.setFilteringMode(FilteringMode.CONTAINS);
         if (currentUser.hasRole(SystemSettings.rnAdmin) || currentUser.hasRole(SystemSettings.rnHr)) {
             contractCategoryCB.setEnabled(true);
@@ -3084,7 +3084,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     EmployeeSeminar es = new EmployeeSeminar();
                     es.setEmployee_id(employee_id);
                     es.setName(((TextField) seminarsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Name)).getValue()).getValue());
+                            myUI.getMessage(SptMessages.Title)).getValue()).getValue());
                     es.setSubject(((TextField) seminarsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Subject)).getValue()).getValue());
                     es.setNote(((TextField) seminarsTable.getItem(next).getItemProperty(
@@ -3534,7 +3534,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     if (id != 0) {
                         Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
                         if (item != null) {
-                            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb.setValue(id);
                             Iterator iter = t.getContainerDataSource().getItemIds().iterator();
                             while (iter.hasNext()) {
@@ -3543,7 +3543,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                         myUI.getMessage(SptMessages.University)).getValue()).getValue() == null) {
                                     item = ((IndexedContainer) ((ComboBox) t.getContainerDataSource().getContainerProperty(next,
                                             myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
-                                    item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                                 }
                             }
                         }
@@ -3648,7 +3648,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     if (id != 0) {
                         Item item = ((IndexedContainer) cb2.getContainerDataSource()).addItem(id);
                         if (item != null) {
-                            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb2.setValue(id);
                             Iterator iter = c.getItemIds().iterator();
                             while (iter.hasNext()) {
@@ -3657,7 +3657,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                         myUI.getMessage(SptMessages.WorkPlace)).getValue()).getValue() == null) {
                                     item = ((IndexedContainer) ((ComboBox) c.getContainerProperty(next,
                                             myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id);
-                                    item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                                 }
                             }
                         }
@@ -3745,7 +3745,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     if (id != 0) {
                         Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
                         if (item != null) {
-                            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb.setValue(id);
                             Iterator iter = certificatesTable.getContainerDataSource().getItemIds().iterator();
                             while (iter.hasNext()) {
@@ -3754,7 +3754,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                         myUI.getMessage(SptMessages.Certificate)).getValue()).getValue() == null) {
                                     item = ((IndexedContainer) ((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
                                             myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id);
-                                    item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                                 }
                             }
                         }
@@ -3789,7 +3789,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private void addSeminarItem() {
 
         NATURAL_COL_ORDER_SEMINARS = new String[]{SystemSettings.button,
-                myUI.getMessage(SptMessages.Name),
+                myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Subject),
                 myUI.getMessage(SptMessages.Note),
                 myUI.getMessage(SptMessages.IssueDate)};
@@ -3802,8 +3802,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 seminarsTable.getContainerDataSource().size(), id);
         item.getItemProperty(SystemSettings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
-                createTextfield(null, myUI.getMessage(SptMessages.Name),
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+                createTextfield(null, myUI.getMessage(SptMessages.Title),
                         new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
         item.getItemProperty(myUI.getMessage(SptMessages.Subject)).setValue(
                 createTextfield(null, myUI.getMessage(SptMessages.Subject),
@@ -4036,7 +4036,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth("100%");
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
             cb.setRequired(true);
@@ -4052,7 +4052,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth("100%");
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
             cb.setRequired(true);
@@ -4196,7 +4196,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             seminarsCont = new IndexedContainer();
             seminarsCont.addContainerProperty(SystemSettings.button, Button.class, null);
             seminarsCont.addContainerProperty(
-                    myUI.getMessage(SptMessages.Name), TextField.class, null);
+                    myUI.getMessage(SptMessages.Title), TextField.class, null);
             seminarsCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Subject), TextField.class, null);
             seminarsCont.addContainerProperty(
@@ -4507,9 +4507,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         item.getItemProperty(SystemSettings.acc_category_id).setValue(acc_category_id);
         item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(
                 mainPositionCB.getContainerDataSource().getContainerProperty(mainPositionCB.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(
-                workingStatCont.getContainerProperty(2, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                workingStatCont.getContainerProperty(2, myUI.getMessage(SptMessages.Title)).getValue().toString());
         employeesDataTable.clearFilters();
         employeesDataTable.setValue(id);
     }
@@ -4538,7 +4538,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.MainPosition)).setValue(mainPositionCB
                 .getContainerDataSource().getContainerProperty(mainPositionCB.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
     private void execDelete() {

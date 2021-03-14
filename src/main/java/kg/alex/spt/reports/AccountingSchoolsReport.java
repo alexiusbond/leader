@@ -104,7 +104,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
             DbSchool dbs = new DbSchool();
             dbs.connect();
             schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Name)});
+            schoolTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
             dbs.close();
         } catch (Exception e) {
             logger.error(e);

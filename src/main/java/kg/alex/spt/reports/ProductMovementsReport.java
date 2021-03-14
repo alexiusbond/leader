@@ -101,7 +101,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         stockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         stockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         stockSelect.setWidth("100%");
-        stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         stockSelect.setFilteringMode(FilteringMode.CONTAINS);
         stockSelect.addValueChangeListener(this);
 
@@ -111,7 +111,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         categorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         categorySelect.setWidth("100%");
-        categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         categorySelect.addValueChangeListener(this);
 
@@ -190,7 +190,7 @@ public class ProductMovementsReport implements Button.ClickListener,
                     excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.ProductMovementsReport) + " "
                             + productsTable.getContainerProperty(productsTable.getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
+                            myUI.getMessage(SptMessages.Title)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
                             + SystemSettings.df.format(fromDateDF.getValue())
                             + " " + tillDateDF.getCaption().toLowerCase() + " " + SystemSettings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);

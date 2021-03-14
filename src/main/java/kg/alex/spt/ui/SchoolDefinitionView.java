@@ -62,7 +62,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
-                myUI.getMessage(SptMessages.NameRu), myUI.getMessage(SptMessages.NameKg), myUI.getMessage(SptMessages.NameEn),
+                myUI.getMessage(SptMessages.TitleRu), myUI.getMessage(SptMessages.TitleKg), myUI.getMessage(SptMessages.TitleEn),
                 myUI.getMessage(SptMessages.Year), myUI.getMessage(SptMessages.Status),
                 myUI.getMessage(SptMessages.DirectorFullName), myUI.getMessage(SptMessages.Bank),
                 myUI.getMessage(SptMessages.BankAccount), myUI.getMessage(SptMessages.Address),
@@ -87,8 +87,8 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             logger.catching(e);
         }
         dataTable.setColumnCollapsingAllowed(true);
-        dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.NameKg), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.NameEn), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.TitleKg), true);
+        dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.TitleEn), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.DirectorFullName), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Bank), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.BankAccount), true);
@@ -174,19 +174,19 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         innTF.setWidth("100%");
         settingsLay.addComponent(innTF);
 
-        nameRuTF = new TextField(myUI.getMessage(SptMessages.NameRu));
+        nameRuTF = new TextField(myUI.getMessage(SptMessages.TitleRu));
         nameRuTF.setRequired(true);
         nameRuTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameRuTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameRuTF.setWidth("100%");
         settingsLay.addComponent(nameRuTF);
 
-        nameKgTF = new TextField(myUI.getMessage(SptMessages.NameKg));
+        nameKgTF = new TextField(myUI.getMessage(SptMessages.TitleKg));
         nameKgTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameKgTF.setWidth("100%");
         settingsLay.addComponent(nameKgTF);
 
-        nameEnTF = new TextField(myUI.getMessage(SptMessages.NameEn));
+        nameEnTF = new TextField(myUI.getMessage(SptMessages.TitleEn));
         nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameEnTF.setWidth("100%");
         settingsLay.addComponent(nameEnTF);
@@ -233,7 +233,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setWidth("100%");
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -312,7 +312,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 Object next = iter.next();
                                 AccCategory ac = new AccCategory();
                                 ac.setCode(sch.getCode());
-                                ac.setName(salCont.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue() + " - " + sch.getName_ru());
+                                ac.setName(salCont.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
                                 ac.setParent_code(salCont.getContainerProperty(next, myUI.getMessage(SptMessages.Code)).getValue().toString());
                                 ac.setParent_id((Integer) next);
                                 ac.setStatus_id(2);
@@ -327,7 +327,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             Item item = (myUI.getSchoolCont()).addItem(id);
                             item.getItemProperty(myUI.getMessage(SptMessages.Logo)).setValue(sch.getPhoto());
                             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
-                            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                                     codeTF.getValue() + " - " + nameRuTF.getValue());
                             item.getItemProperty(SystemSettings.year_id).setValue(
                                     myUI.getUser().getCurrent_year().getId());
@@ -349,7 +349,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             if (!school.getCode().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
                                     SystemSettings.id).getValue(), myUI.getMessage(SptMessages.Code)).getValue())
                                     || !school.getName_kg().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                    SystemSettings.id).getValue(), myUI.getMessage(SptMessages.NameRu)).getValue())) {
+                                    SystemSettings.id).getValue(), myUI.getMessage(SptMessages.TitleRu)).getValue())) {
                                 DbSalaryCategories dbsc = new DbSalaryCategories();
                                 dbsc.connect();
                                 IndexedContainer salCont = dbsc.execSQL(myUI);
@@ -361,7 +361,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                     Object next = iter.next();
                                     int id = dba.exec_id((Integer) next, school.getId());
                                     dba.exec_update_code(id, school.getCode(), salCont.getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.Name)).getValue() + " - " + school.getName_ru());
+                                            myUI.getMessage(SptMessages.Title)).getValue() + " - " + school.getName_ru());
                                     dba.exec_update_all_parent_codes(id, salCont.getContainerProperty(next,
                                             myUI.getMessage(SptMessages.Code)).getValue() + "." + school.getCode(), false);
 
@@ -372,7 +372,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                             myUI.getSchoolCont().getContainerProperty(dataTable.getValue(),
-                                    myUI.getMessage(SptMessages.Name)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
+                                    myUI.getMessage(SptMessages.Title)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
@@ -462,18 +462,18 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         codeTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Code)).getValue().toString());
         nameRuTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.NameRu)).getValue().toString());
+                myUI.getMessage(SptMessages.TitleRu)).getValue().toString());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 SystemSettings.status_id).getValue());
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.NameKg)).getValue() != null) {
+                myUI.getMessage(SptMessages.TitleKg)).getValue() != null) {
             nameKgTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.NameKg)).getValue().toString());
+                    myUI.getMessage(SptMessages.TitleKg)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.NameEn)).getValue() != null) {
+                myUI.getMessage(SptMessages.TitleEn)).getValue() != null) {
             nameEnTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.NameEn)).getValue().toString());
+                    myUI.getMessage(SptMessages.TitleEn)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.DirectorFullName)).getValue() != null) {
@@ -544,11 +544,11 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.NameKg)).setValue(nameKgTF.getValue());
+                myUI.getMessage(SptMessages.TitleKg)).setValue(nameKgTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.NameRu)).setValue(nameRuTF.getValue());
+                myUI.getMessage(SptMessages.TitleRu)).setValue(nameRuTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.NameEn)).setValue(nameEnTF.getValue());
+                myUI.getMessage(SptMessages.TitleEn)).setValue(nameEnTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.DirectorFullName)).setValue(directorFullNameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -572,16 +572,16 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
     private void addDatacontainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.NameKg)).setValue(nameKgTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.NameRu)).setValue(nameRuTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.NameEn)).setValue(nameEnTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.TitleKg)).setValue(nameKgTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.TitleRu)).setValue(nameRuTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.TitleEn)).setValue(nameEnTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.DirectorFullName)).setValue(directorFullNameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.City)).setValue(cityTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Address)).setValue(addressTF.getValue());
@@ -592,7 +592,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         item.getItemProperty(myUI.getMessage(SptMessages.Logo)).setValue(photoName);
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(SystemSettings.status_id).setValue(statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());

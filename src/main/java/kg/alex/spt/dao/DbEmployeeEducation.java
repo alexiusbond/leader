@@ -133,7 +133,7 @@ public class DbEmployeeEducation extends BaseDb {
                         if (id != 0) {
                             Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
                             if (item != null) {
-                                item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                                item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                                 cb.setValue(id);
                                 Iterator iter = container.getItemIds().iterator();
                                 while (iter.hasNext()) {
@@ -142,7 +142,7 @@ public class DbEmployeeEducation extends BaseDb {
                                             myUI.getMessage(SptMessages.University)).getValue()).getValue() == null) {
                                         item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
                                                 myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
-                                        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(newItemCaption);
+                                        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                                     }
                                 }
                             }

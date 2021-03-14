@@ -36,7 +36,7 @@ public class DbStudent extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, StudentDefinitionView sdv, String edu_sts)
             throws SQLException {
-        
+
 
         if (edu_sts.equals("") || edu_sts == null) {
             edu_sts = "-1";
@@ -111,8 +111,40 @@ public class DbStudent extends BaseDb {
         return container;
     }
 
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int scl_id, String edu_sts)
+            throws SQLException {
+
+        String sql = "SELECT s.id, s.name, s.surname, cnu.name, concat(cnu.name,' - ',cn.name) as cl_name "
+                + "FROM student as s "
+                + "left join class_name as cn on s.class_name_id = cn.id "
+                + "left join class_number as cnu on cn.class_number_id = cnu.id "
+                + "WHERE s.school_id = ? and s.education_status_id in (" + edu_sts + ") "
+                + "ORDER BY cnu.id, cn.id, s.name, s.surname;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, scl_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.ClassNumber), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("s.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+                    result.getString("s.name")
+                            + " " + result.getString("s.surname"));
+            item.getItemProperty(myUi.getMessage(SptMessages.ClassNumber)).setValue(
+                    result.getString("cnu.name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+                    result.getString("s.name") + " " +
+                            result.getString("s.surname") + " - " +
+                            result.getString("cl_name"));
+        }
+        return container;
+    }
+
     public IndexedContainer execSQL_for_import(MyVaadinUI myUi, int scl_id) throws SQLException {
-        
+
 
         String sql = "SELECT s.login, s.name, s.surname, s.middle_name, s.date_of_birth, g.name, "
                 + "concat(cnu.name,' - ',cn.name) as cl_name, sr.fullname, sr.passport, sr.work_place, "
@@ -191,7 +223,7 @@ public class DbStudent extends BaseDb {
 
     public IndexedContainer execSQL_for_orders(MyVaadinUI myUi, int scl_id,
                                                IssueOrderView iv) throws SQLException {
-        
+
 
         String sql = "SELECT s.id, s.login, s.name, s.surname, es.name, s.entering_year_id, "
                 + "concat(cnu.name,' - ',cn.name) as cl_name, s.class_name_id, "
@@ -339,12 +371,12 @@ public class DbStudent extends BaseDb {
 
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
             String fullname;
             fullname = result.getString("st.name") + " " + result.getString("st.surname");
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(fullname);
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(fullname);
         }
         return container;
     }
@@ -402,7 +434,7 @@ public class DbStudent extends BaseDb {
     }
 
     public IndexedContainer execSQLCalls(MyVaadinUI myUi, int year_id, String class_ids, CallsView cv) throws SQLException {
-        
+
 
         String sql = "select st.id, st.login, st.name, st.surname,concat(cnu.name, ' - ' , cna.name) as class_name, "
                 + "concat(sr.phone,' (',sr.fullname,')') "
@@ -439,11 +471,11 @@ public class DbStudent extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
-                    result.getString("st.login") );
+                    result.getString("st.login"));
             item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
-                    result.getString("st.name") );
+                    result.getString("st.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
-                    result.getString("st.surname") );
+                    result.getString("st.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
@@ -511,7 +543,7 @@ public class DbStudent extends BaseDb {
 
     public void execSQL_Statuses_by_classes(MyVaadinUI myUI, int year_id,
                                             StatusesReport sr) throws SQLException {
-        
+
 
         String sql = "SELECT sch.id, sch.name_ru, COUNT(IF(st.entering_year_id<="
                 + year_id + " AND cna.class_number_id IN ("
@@ -559,10 +591,10 @@ public class DbStudent extends BaseDb {
                 Object nextStatus = status_iter.next();
                 {
                     container.addContainerProperty(sr.classTable.getContainerProperty(
-                            nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                     + myUI.getMessage(SptMessages.ClassName) + " "
                                     + sr.statusMS.getContainerProperty(
-                            nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
+                            nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                             Integer.class, 0);
                 }
             }
@@ -584,30 +616,30 @@ public class DbStudent extends BaseDb {
                 while (status_iter.hasNext()) {
                     Object nextStatus = status_iter.next();
                     item.getItemProperty(sr.classTable.getContainerProperty(
-                            nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.ClassName) + " "
                             + sr.statusMS.getContainerProperty(
-                            nextStatus, myUI.getMessage(SptMessages.Name)).getValue()).setValue(
+                            nextStatus, myUI.getMessage(SptMessages.Title)).getValue()).setValue(
                             result.getInt("quantity" + nextClass + "_" + nextStatus));
                     footerVal = sr.dataTable.getColumnFooter(sr.classTable.getContainerProperty(
-                            nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                            nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                             + myUI.getMessage(SptMessages.ClassName) + " "
                             + sr.statusMS.getContainerProperty(
-                            nextStatus, myUI.getMessage(SptMessages.Name)).getValue());
+                            nextStatus, myUI.getMessage(SptMessages.Title)).getValue());
                     if (counter != 0) {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
-                                nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.ClassName) + " "
                                         + sr.statusMS.getContainerProperty(
-                                nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
+                                nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                                 (Integer.parseInt(footerVal)
                                         + result.getInt("quantity" + nextClass + "_" + nextStatus)) + "");
                     } else {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
-                                nextClass, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.ClassName) + " "
                                         + sr.statusMS.getContainerProperty(
-                                nextStatus, myUI.getMessage(SptMessages.Name)).getValue(),
+                                nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                                 result.getInt("quantity" + nextClass + "_" + nextStatus) + "");
                     }
                 }

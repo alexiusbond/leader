@@ -165,7 +165,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         school1Select.setNullSelectionAllowed(false);
         school1Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
         school1Select.setWidth("100%");
-        school1Select.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        school1Select.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         school1Select.setFilteringMode(FilteringMode.CONTAINS);
         school1Select.addValueChangeListener(this);
 
@@ -184,7 +184,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         school2Select.setNullSelectionAllowed(false);
         school2Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
         school2Select.setWidth("100%");
-        school2Select.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        school2Select.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         school2Select.setFilteringMode(FilteringMode.CONTAINS);
         school2Select.addValueChangeListener(this);
 

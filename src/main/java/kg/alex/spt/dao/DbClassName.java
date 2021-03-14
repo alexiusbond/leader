@@ -37,7 +37,7 @@ public class DbClassName extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Number), String.class, 0);
         container.addContainerProperty(SystemSettings.number_id, Integer.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.school_id, Integer.class, 0);
@@ -50,7 +50,7 @@ public class DbClassName extends BaseDb {
                     result.getString("cnum.name"));
             item.getItemProperty(SystemSettings.number_id).setValue(
                     result.getInt("cnum.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("cn.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
@@ -107,10 +107,10 @@ public class DbClassName extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("cn.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("cl_name"));
         }
         return container;

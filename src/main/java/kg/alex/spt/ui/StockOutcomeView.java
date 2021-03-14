@@ -186,7 +186,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         stockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         stockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         stockSelect.setWidth("100%");
-        stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         stockSelect.setFilteringMode(FilteringMode.CONTAINS);
         stockSelect.addValueChangeListener(this);
         settingsLay.addComponent(stockSelect, 0, 3, 1, 3);
@@ -197,7 +197,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         productCategorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         productCategorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         productCategorySelect.setWidth("100%");
-        productCategorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        productCategorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         productCategorySelect.setFilteringMode(FilteringMode.CONTAINS);
         productCategorySelect.addValueChangeListener(this);
         settingsLay.addComponent(productCategorySelect, 0, 4, 1, 4);
@@ -208,7 +208,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         fromEmployeeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         fromEmployeeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         fromEmployeeSelect.setWidth("100%");
-        fromEmployeeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        fromEmployeeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         fromEmployeeSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(fromEmployeeSelect, 0, 5, 1, 5);
 
@@ -218,7 +218,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         toEmployeeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         toEmployeeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         toEmployeeSelect.setWidth("100%");
-        toEmployeeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        toEmployeeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         toEmployeeSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(toEmployeeSelect, 0, 6, 1, 6);
 
@@ -825,17 +825,17 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 noteTF.getValue());
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Stock)).setValue(
                 stockSelect.getContainerProperty(stockSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.stock_id).setValue(
                 stockSelect.getValue());
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.FromEmployee)).setValue(
                 fromEmployeeSelect.getContainerProperty(fromEmployeeSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.from_employee_id).setValue(
                 fromEmployeeSelect.getValue());
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.ToEmployee)).setValue(
                 toEmployeeSelect.getContainerProperty(toEmployeeSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.to_employee_id).setValue(
                 toEmployeeSelect.getValue());
     }
@@ -856,18 +856,18 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 noteTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Stock)).setValue(
                 stockSelect.getContainerProperty(stockSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         item.getItemProperty(SystemSettings.stock_id).setValue(
                 stockSelect.getValue());
         item.getItemProperty(SystemSettings.acc_category_id).setValue(productCategorySelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.FromEmployee)).setValue(
                 fromEmployeeSelect.getContainerProperty(fromEmployeeSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         item.getItemProperty(SystemSettings.from_employee_id).setValue(
                 fromEmployeeSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(
                 toEmployeeSelect.getContainerProperty(toEmployeeSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         item.getItemProperty(SystemSettings.to_employee_id).setValue(
                 toEmployeeSelect.getValue());
         try {
@@ -1012,7 +1012,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth("100%");
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
             cb.setRequired(true);

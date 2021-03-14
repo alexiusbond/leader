@@ -39,7 +39,7 @@ public class DbDiscount extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Value), Double.class, 0.0);
         container.addContainerProperty(SystemSettings.discount_type_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.DiscountType), String.class, null);
@@ -51,7 +51,7 @@ public class DbDiscount extends BaseDb {
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("d.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Value)).setValue(
                     result.getDouble("d.amount"));
@@ -111,10 +111,10 @@ public class DbDiscount extends BaseDb {
         stat.setInt(1, cur_year);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.year_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("y.name"));
         }
         return container;
@@ -143,22 +143,22 @@ public class DbDiscount extends BaseDb {
         stat.setInt(1, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(SystemSettings.discount_type_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             if (result.getInt("t.discount_type_id") == 3) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount") + "%)");
             } else if (result.getInt("t.discount_type_id") == 4) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("t.name") + " - (max " + result.getString("t.amount") + "$)");
             } else if (result.getInt("t.discount_type_id") == 1) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "%");
             } else if (result.getInt("t.discount_type_id") == 2) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("t.name") + " - " + result.getString("t.amount") + "$");
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
@@ -179,22 +179,22 @@ public class DbDiscount extends BaseDb {
         stat.setInt(2, dis_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.DiscountType), Integer.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.id"));
             if (result.getInt("d.discount_type_id") == 3) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - (max " + result.getString("d.amount") + "%)");
             } else if (result.getInt("d.discount_type_id") == 4) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - (max " + result.getString("d.amount") + "$)");
             } else if (result.getInt("d.discount_type_id") == 1) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - " + result.getString("d.amount") + "%");
             } else if (result.getInt("d.discount_type_id") == 2) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - " + result.getString("d.amount") + "$");
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(

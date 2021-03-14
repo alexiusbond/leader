@@ -92,42 +92,42 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         initPayLab = new Label();
         initPayLab.setSizeUndefined();
         initPayLab.setValue(paymentsContainer.getContainerProperty(1,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         currLab = new Label();
         currLab.setSizeUndefined();
         currLab.setValue(paymentsContainer.getContainerProperty(2,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         prevLab = new Label();
         prevLab.setSizeUndefined();
         prevLab.setValue(paymentsContainer.getContainerProperty(4,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         futrLab = new Label();
         futrLab.setSizeUndefined();
         futrLab.setValue(paymentsContainer.getContainerProperty(5,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         outcomesLab = new Label();
         outcomesLab.setSizeUndefined();
         outcomesLab.setValue(paymentsContainer.getContainerProperty(3,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         earlyPayLab = new Label();
         earlyPayLab.setSizeUndefined();
         earlyPayLab.setValue(paymentsContainer.getContainerProperty(6,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         salaryLab = new Label();
         salaryLab.setSizeUndefined();
         salaryLab.setValue(salaryContainer.getContainerProperty(34,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         localSalaryLab = new Label();
         localSalaryLab.setSizeUndefined();
         localSalaryLab.setValue(salaryContainer.getContainerProperty(37,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         initPayCb = new ComboBoxMax();
         initPayCb.setNullSelectionAllowed(false);
@@ -218,27 +218,27 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         foodLab = new Label();
         foodLab.setSizeUndefined();
         foodLab.setValue(productsContainer.getContainerProperty(501,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         stationeryLab = new Label();
         stationeryLab.setSizeUndefined();
         stationeryLab.setValue(productsContainer.getContainerProperty(502,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         buildingMaterialsLab = new Label();
         buildingMaterialsLab.setSizeUndefined();
         buildingMaterialsLab.setValue(productsContainer.getContainerProperty(503,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         washingMaterialsLab = new Label();
         washingMaterialsLab.setSizeUndefined();
         washingMaterialsLab.setValue(productsContainer.getContainerProperty(504,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         otherProductsLab = new Label();
         otherProductsLab.setSizeUndefined();
         otherProductsLab.setValue(productsContainer.getContainerProperty(505,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         foodCb = new ComboBoxMax();
         foodCb.setNullSelectionAllowed(false);
@@ -349,42 +349,42 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         adminLab = new Label();
         adminLab.setSizeUndefined();
         adminLab.setValue(positionsContainer.getContainerProperty(5,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         hrLab = new Label();
         hrLab.setSizeUndefined();
         hrLab.setValue(positionsContainer.getContainerProperty(25,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         supplyManagerLab = new Label();
         supplyManagerLab.setSizeUndefined();
         supplyManagerLab.setValue(positionsContainer.getContainerProperty(17,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         warehouseManagerLab = new Label();
         warehouseManagerLab.setSizeUndefined();
         warehouseManagerLab.setValue(positionsContainer.getContainerProperty(100,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         sapat_secretaryLab = new Label();
         sapat_secretaryLab.setSizeUndefined();
         sapat_secretaryLab.setValue(positionsContainer.getContainerProperty(115,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         directorLab = new Label();
         directorLab.setSizeUndefined();
         directorLab.setValue(positionsContainer.getContainerProperty(1,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         accountentLab = new Label();
         accountentLab.setSizeUndefined();
         accountentLab.setValue(positionsContainer.getContainerProperty(2,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         supervisorLab = new Label();
         supervisorLab.setSizeUndefined();
         supervisorLab.setValue(positionsContainer.getContainerProperty(21,
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
 
         adminCb = new ComboBoxMax();
         adminCb.setNullSelectionAllowed(false);
@@ -393,7 +393,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         adminCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         adminCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         adminCb.setWidth("100%");
-        adminCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        adminCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         adminCb.setFilteringMode(FilteringMode.CONTAINS);
 
         hrCb = new ComboBoxMax();
@@ -403,7 +403,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         hrCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         hrCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         hrCb.setWidth("100%");
-        hrCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        hrCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         hrCb.setFilteringMode(FilteringMode.CONTAINS);
 
         supplyManagerCb = new ComboBoxMax();
@@ -413,7 +413,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supplyManagerCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         supplyManagerCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         supplyManagerCb.setWidth("100%");
-        supplyManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        supplyManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         supplyManagerCb.setFilteringMode(FilteringMode.CONTAINS);
 
         warehouseManagerCb = new ComboBoxMax();
@@ -423,7 +423,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         warehouseManagerCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         warehouseManagerCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         warehouseManagerCb.setWidth("100%");
-        warehouseManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        warehouseManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         warehouseManagerCb.setFilteringMode(FilteringMode.CONTAINS);
 
         sapat_secretaryCb = new ComboBoxMax();
@@ -433,7 +433,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         sapat_secretaryCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         sapat_secretaryCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         sapat_secretaryCb.setWidth("100%");
-        sapat_secretaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        sapat_secretaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         sapat_secretaryCb.setFilteringMode(FilteringMode.CONTAINS);
 
         directorCb = new ComboBoxMax();
@@ -443,7 +443,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         directorCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         directorCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         directorCb.setWidth("100%");
-        directorCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        directorCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         directorCb.setFilteringMode(FilteringMode.CONTAINS);
 
         accountentCb = new ComboBoxMax();
@@ -453,7 +453,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         accountentCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         accountentCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         accountentCb.setWidth("100%");
-        accountentCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        accountentCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         accountentCb.setFilteringMode(FilteringMode.CONTAINS);
 
         supervisorCb = new ComboBoxMax();
@@ -463,7 +463,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supervisorCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         supervisorCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         supervisorCb.setWidth("100%");
-        supervisorCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        supervisorCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         supervisorCb.setFilteringMode(FilteringMode.CONTAINS);
 
         Label captionExams = new Label();
@@ -483,7 +483,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         sebatExamCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         sebatExamCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
         sebatExamCb.setWidth("100%");
-        sebatExamCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        sebatExamCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         sebatExamCb.setFilteringMode(FilteringMode.CONTAINS);
 
         try {

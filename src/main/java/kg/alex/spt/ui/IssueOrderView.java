@@ -140,14 +140,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         orderSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         orderSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         orderSelect.setWidth("100%");
-        orderSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        orderSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         orderSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(orderSelect);
 
         classSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ClassName));
         classSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         classSelect.setWidth("100%");
-        classSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        classSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         classSelect.setFilteringMode(FilteringMode.CONTAINS);
         classSelect.setRequired(true);
         classSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -166,7 +166,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         reasonsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         reasonsMCB.setWidth("100%");
-        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
         reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         reasonsMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -539,7 +539,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                     reasons += ", ";
                 }
                 reasons += reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Name)).getValue();
+                        myUI.getMessage(SptMessages.Title)).getValue();
                 isFirst = false;
             }
             return reasons;

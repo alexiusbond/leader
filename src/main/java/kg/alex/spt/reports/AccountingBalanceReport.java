@@ -31,8 +31,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.tepi.filtertable.FilterTreeTable;
 
 import java.io.ByteArrayInputStream;
@@ -410,7 +408,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
                         Object nextProp = propIter.next();
                         cell = row.createCell(colNum);
                         cell.setCellStyle(cellStyleGreen);
-                        if (nextProp.equals(myUI.getMessage(SptMessages.Name))) {
+                        if (nextProp.equals(myUI.getMessage(SptMessages.Title))) {
                             cell.setCellValue(tables.get(k).getCaption());
                         } else if (nextProp.equals(myUI.getMessage(SptMessages.Amount))) {
                             cell.setCellValue((Double) tables.get(k).getData());

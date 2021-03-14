@@ -92,7 +92,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         classNumberSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         classNumberSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         classNumberSelect.setWidth("100%");
-        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         classNumberSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbDef = new DbDefinition();

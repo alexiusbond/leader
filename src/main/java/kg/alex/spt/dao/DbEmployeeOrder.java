@@ -164,14 +164,14 @@ public class DbEmployeeOrder extends BaseDb {
         IndexedContainer container = new IndexedContainer();
 
 
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(SystemSettings.working_status_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.visible_hr_orders, String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("o.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("o.name"));
             item.getItemProperty(SystemSettings.working_status_id).setValue(
                     result.getInt("o.working_status_id"));

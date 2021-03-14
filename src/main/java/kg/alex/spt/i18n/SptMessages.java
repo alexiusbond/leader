@@ -21,6 +21,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String OtherFunctions = generateId();
     public static final String IssueStudentOrder = generateId();
     public static final String Reports = generateId();
+    public static final String SendOrders = generateId();
     public static final String AccountingReports = generateId();
     public static final String StockReports = generateId();
     public static final String HRReports = generateId();
@@ -34,7 +35,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Welcome = generateId();
     public static final String ChangePasswordButton = generateId();
     public static final String SystemClosedNotif = generateId();
-    public static final String Name = generateId();
+    public static final String Title = generateId();
     public static final String ClassName = generateId();
     public static final String Nationality = generateId();
     public static final String Reasons = generateId();
@@ -115,7 +116,6 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String SchoolModification = generateId();
     public static final String StudentDefiniton = generateId();
     public static final String ImportStudentsFromExcel = generateId();
-    public static final String SendDiscountOrderMessage = generateId();
     public static final String AccessoriesDefinition = generateId();
     public static final String Value = generateId();
     public static final String Amount = generateId();
@@ -124,9 +124,9 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String School = generateId();
     public static final String Schools = generateId();
     public static final String Code = generateId();
-    public static final String NameRu = generateId();
-    public static final String NameKg = generateId();
-    public static final String NameEn = generateId();
+    public static final String TitleRu = generateId();
+    public static final String TitleKg = generateId();
+    public static final String TitleEn = generateId();
     public static final String DirectorFullName = generateId();
     public static final String Address = generateId();
     public static final String INN = generateId();
@@ -219,6 +219,10 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ModificationDate = generateId();
     public static final String AllStudents = generateId();
     public static final String OrdersHistory = generateId();
+    public static final String OrderNumber = generateId();
+    public static final String NumberAndDate = generateId();
+    public static final String Headline = generateId();
+    public static final String Content = generateId();
     public static final String TransferInstruction = generateId();
     public static final String Materials = generateId();
     public static final String Contract = generateId();
@@ -307,10 +311,9 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ReportType = generateId();
     public static final String PlanPayments = generateId();
     public static final String Payments = generateId();
-    public static final String MakePdfButton = generateId();
     public static final String ShowButton = generateId();
     public static final String OnlyThreeDiscountsAllowed = generateId();
-    public static final String MinistryOfEdcation = generateId();
+    public static final String MinistryOfEducation = generateId();
     public static final String InstpLanPaymentsReport = generateId();
     public static final String Student = generateId();
     public static final String Total = generateId();

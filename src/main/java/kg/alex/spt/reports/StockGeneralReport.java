@@ -104,7 +104,7 @@ public class StockGeneralReport implements Button.ClickListener,
         operationOG.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
         operationOG.setNullSelectionAllowed(false);
         operationOG.setWidth("100%");
-        operationOG.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        operationOG.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         operationOG.addValueChangeListener(this);
 
         stocksMSB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Stocks));
@@ -112,7 +112,7 @@ public class StockGeneralReport implements Button.ClickListener,
         stocksMSB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         stocksMSB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         stocksMSB.setWidth("100%");
-        stocksMSB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        stocksMSB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         stocksMSB.setFilteringMode(FilteringMode.CONTAINS);
         stocksMSB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         stocksMSB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -148,7 +148,7 @@ public class StockGeneralReport implements Button.ClickListener,
             stocksMSB.setValue(SystemSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
             operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, SystemSettings.dbOperation));
             Item item = operationOG.getContainerDataSource().addItem(0);
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(myUI.getMessage(SptMessages.General));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(myUI.getMessage(SptMessages.General));
             if (operationOG.getContainerDataSource() != null) {
                 operationOG.setValue(((IndexedContainer) operationOG.getContainerDataSource()).firstItemId());
             }
@@ -234,7 +234,7 @@ public class StockGeneralReport implements Button.ClickListener,
                     excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.StockGeneralReport) + " ("
                             + operationOG.getContainerProperty(operationOG.getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue() + ") - [" + myUI.getMessage(SptMessages.From).toLowerCase() + " "
+                            myUI.getMessage(SptMessages.Title)).getValue() + ") - [" + myUI.getMessage(SptMessages.From).toLowerCase() + " "
                             + SystemSettings.df.format(fromDateDF.getValue())
                             + " " + myUI.getMessage(SptMessages.To).toLowerCase() + " " + SystemSettings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);

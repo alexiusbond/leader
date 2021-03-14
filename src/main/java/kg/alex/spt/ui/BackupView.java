@@ -85,7 +85,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
 
     private void setDataTable() {
         container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
         container.addContainerProperty(SystemSettings.button, Button.class, null);
         try {
@@ -95,7 +95,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
                 if (listOfFiles[i].isFile()) {
                     String id = listOfFiles[i].getName();
                     Item item = container.addItem(id);
-                    item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                             listOfFiles[i].getName());
                     item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                             new Date(listOfFiles[i].lastModified()));

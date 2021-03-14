@@ -59,7 +59,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
         PERMISSION_NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.ClassCaption),
             myUI.getMessage(SptMessages.Functions)};
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
             myUI.getMessage(SptMessages.Category),
             myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
@@ -146,7 +146,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Name));
+        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -161,7 +161,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         categorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         categorySelect.setWidth("100%");
-        categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(categorySelect);
 
@@ -171,7 +171,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth("100%");
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -327,7 +327,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
         categorySelect.setValue(
                 (Integer) dataTable.getContainerProperty(dataTable.getValue(),
                         SystemSettings.hr_position_category_id).getValue());
@@ -351,14 +351,14 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void updateDatacontainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
+                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 SystemSettings.hr_position_category_id).setValue(categorySelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Category)).setValue(categorySelect
                 .getContainerProperty(categorySelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Permissions)).setValue(permJoinSingleStr());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -367,23 +367,23 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
     private void addDatacontainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
                 categorySelect.getContainerProperty(categorySelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Permissions)).setValue(permJoinSingleStr());
         item.getItemProperty(SystemSettings.hr_position_category_id).setValue(
                 categorySelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(SystemSettings.activity_status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(SystemSettings.id).setValue(id);

@@ -83,7 +83,7 @@ public class OutOfList implements Button.ClickListener,
         yearSelectMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelectMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         yearSelectMCB.setWidth("100%");
-        yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelectMCB.setFilteringMode(FilteringMode.CONTAINS);
         yearSelectMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         yearSelectMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -97,7 +97,7 @@ public class OutOfList implements Button.ClickListener,
         reasonsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         reasonsMCB.setWidth("100%");
-        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
         reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         reasonsMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -278,7 +278,7 @@ public class OutOfList implements Button.ClickListener,
                     reasons += ", ";
                 }
                 reasons += reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Name)).getValue();
+                        myUI.getMessage(SptMessages.Title)).getValue();
                 isFirst = false;
             }
             return reasons;

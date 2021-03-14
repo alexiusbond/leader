@@ -59,10 +59,10 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         this.permissionView = permissionView;
         this.withActivityStatus = withActivityStatus;
         if (this.withActivityStatus) {
-            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name),
+            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Status)};
         } else {
-            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name)};
+            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title)};
         }
         buildSettingsLayout();
 
@@ -150,7 +150,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
 
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Name));
+        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         if (dbTableName.equals(SystemSettings.classTable)) {
             nameTF.setPropertyDataSource(new ObjectProperty<Integer>(0));
             nameTF.setConverter(SystemSettings.getStringToIntegerConverter());
@@ -174,7 +174,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
             statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
             statusSelect.setWidth("100%");
-            statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+            statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
             statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
             try {
@@ -318,10 +318,10 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
 
         if (dbTableName.equals(SystemSettings.classTable)) {
             nameTF.getPropertyDataSource().setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.Name)).getValue().toString()));
+                    myUI.getMessage(SptMessages.Title)).getValue().toString()));
         } else {
             nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.Name)).getValue().toString());
+                    myUI.getMessage(SptMessages.Title)).getValue().toString());
         }
         if (withActivityStatus) {
             statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
@@ -338,7 +338,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
 
     private void updateDatacontainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
+                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         if (withActivityStatus) {
             dataTable.getContainerProperty(dataTable.getValue(),
                     myUI.getMessage(SptMessages.Status)).setValue(statusSelect.getItemCaption(statusSelect.getValue()));
@@ -350,7 +350,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
     private void addDatacontainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(SystemSettings.id).setValue(id);
         if (withActivityStatus) {

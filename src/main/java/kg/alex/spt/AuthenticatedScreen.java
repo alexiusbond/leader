@@ -44,7 +44,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     public ComboBoxMax yearSelect, schoolSelect;
     private Label header = new Label();
     private Label infoLabel, schoolLabel, yearLabel;
-    private 
+    private
 
     School scl = new School();
     int st = 0;
@@ -140,7 +140,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         }
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         schoolSelect.setContainerDataSource(myUI.getSchoolCont());
         schoolSelect.setValue(myUI.getUser().getSchool_id());
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
@@ -165,7 +165,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         }
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         setYearSel(myUI.getUser().getCurrent_year().getId());
 
         HorizontalLayout yearHl = new HorizontalLayout();
@@ -217,6 +217,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             menubar.addItem(myUI.getMessage(SptMessages.Reports), menuCommand);
         }
 
+        if (currentUser.isPermitted(SystemSettings.cnSendOrderView + ":" + SystemSettings.prmMenu)) {
+            menubar.addItem(myUI.getMessage(SptMessages.SendOrders), menuCommand);
+        }
+
         mi = menubar.addItem(myUI.getMessage(SptMessages.Salaries), null);
         if (currentUser.isPermitted(SystemSettings.cnAccrualsView + ":" + SystemSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.Accruals), menuCommand);
@@ -258,13 +262,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         }
 
         mi = menubar.addItem(myUI.getMessage(SptMessages.OtherFunctions), null);
-
-        /*if (currentUser.isPermitted(SystemSettings.cnImportFromExcelView + ":" + SystemSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ImportStudentsFromExcel), menuCommand);
-        }*/
-        /*if (currentUser.isPermitted(SystemSettings.cnMessagesView + ":" + SystemSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.MessagesDefinition), menuCommand);
-        }*/
         if (currentUser.isPermitted(SystemSettings.cnIssueOrderView + ":" + SystemSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.IssueStudentOrder), menuCommand);
         }
@@ -428,8 +425,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new IssueOrderView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ImportStudentsFromExcel))) {
                     verticalPanel.setSecondComponent(new ImportFromExcelView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendDiscountOrderMessage))) {
-                    verticalPanel.setSecondComponent(new SendDiscountOrderView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendOrders))) {
+                    verticalPanel.setSecondComponent(new SendOrderView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Reports))) {
                     verticalPanel.setSecondComponent(new ReportsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingReports))) {
@@ -566,7 +563,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                             SystemSettings.year_id).getValue());
                     myUI.getUser().getCurrent_year().setId((Integer) yearSelect.getValue());
                     myUI.getUser().getCurrent_year().setName(yearSelect.getContainerDataSource()
-                            .getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Name))
+                            .getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Title))
                             .getValue().toString());
                     updatePage();
                 } else {

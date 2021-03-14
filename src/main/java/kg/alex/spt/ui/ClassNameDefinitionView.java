@@ -54,7 +54,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Number),
-            myUI.getMessage(SptMessages.Name), myUI.getMessage(SptMessages.School),
+            myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.School),
             myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
@@ -140,7 +140,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Name));
+        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -155,7 +155,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         classNumberSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         classNumberSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         classNumberSelect.setWidth("100%");
-        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         classNumberSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(classNumberSelect);
 
@@ -165,7 +165,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth("100%");
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -305,7 +305,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
         classNumberSelect.setValue(
                 (Integer) dataTable.getContainerProperty(dataTable.getValue(),
                         SystemSettings.number_id).getValue());
@@ -321,21 +321,21 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
 
     private void updateDatacontainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
+                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 SystemSettings.number_id).setValue(classNumberSelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Number)).setValue(classNumberSelect
                 .getContainerProperty(classNumberSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 SystemSettings.status_id).setValue(statusSelect
                         .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 SystemSettings.school_id).setValue(
                         myUI.getUser().getSchool_id());
@@ -347,16 +347,16 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
     private void addDatacontainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
                 classNumberSelect.getContainerProperty(classNumberSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue());
+                        myUI.getMessage(SptMessages.Title)).getValue());
         item.getItemProperty(SystemSettings.number_id).setValue(
                 classNumberSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(SystemSettings.status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(

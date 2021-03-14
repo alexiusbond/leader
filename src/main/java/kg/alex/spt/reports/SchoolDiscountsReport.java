@@ -144,7 +144,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
@@ -152,7 +152,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         educationStatusMCB.setWidth("100%");
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -227,20 +227,20 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                     while (school_iter.hasNext()) {
                         Object next = school_iter.next();
                         dataTable.setColumnAlignment(schoolTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.Students), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(schoolTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue() + " "
+                                next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.DiscountAmount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(schoolTable.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Name)).getValue()
+                                next, myUI.getMessage(SptMessages.Title)).getValue()
                                 + " " + myUI.getMessage(SptMessages.Average) + "%", Table.Align.RIGHT);
                         try {
                             dataTable.setColumnFooter(schoolTable.getContainerProperty(
-                                    next, myUI.getMessage(SptMessages.Name)).getValue()
+                                    next, myUI.getMessage(SptMessages.Title)).getValue()
                                     + " " + myUI.getMessage(SptMessages.Average) + "%",
                                     SystemSettings.dFormat.format(Double.parseDouble(dataTable.getColumnFooter(schoolTable.getContainerProperty(
-                                            next, myUI.getMessage(SptMessages.Name)).getValue()
+                                            next, myUI.getMessage(SptMessages.Title)).getValue()
                                             + " " + myUI.getMessage(SptMessages.Average) + "%"))
                                             / dataTable.getContainerDataSource().size()));
                         } catch (Exception e) {
@@ -274,7 +274,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                         Object next = school_iter.next();
                         excelReport.getTotalsRow().getCell(i).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(i).setCellValue(
-                                dataTable.getColumnFooter(schoolTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()
+                                dataTable.getColumnFooter(schoolTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()
                                         + " " + myUI.getMessage(SptMessages.Average) + "%"));
                         i += 3;
                     }
@@ -314,7 +314,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                 discountsTable.setContainerDataSource(
                         dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
                 dbd.close();
-                discountsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Name)});
+                discountsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

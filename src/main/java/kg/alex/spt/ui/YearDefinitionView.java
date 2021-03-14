@@ -58,7 +58,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
     public YearDefinitionView(MyVaadinUI myUI, AuthenticatedScreen as) {
         this.myUI = myUI;
         this.as = as;
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name), myUI.getMessage(SptMessages.Period),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Period),
             myUI.getMessage(SptMessages.PeriodKg), myUI.getMessage(SptMessages.StartDate), myUI.getMessage(SptMessages.EndDate)};
         buildSettingsLayout();
 
@@ -144,7 +144,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new MaskedTextField(myUI.getMessage(SptMessages.Name), "####-####");
+        nameTF = new MaskedTextField(myUI.getMessage(SptMessages.Title), "####-####");
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -347,7 +347,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private void fillFields() throws ParseException {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
         period.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Period)).getValue().toString());
         periodKg.setValue(dataTable.getContainerProperty(dataTable.getValue(),
@@ -371,7 +371,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private void updateDatacontainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
+                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Period)).setValue(period.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -388,7 +388,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
     private void addDatacontainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(SystemSettings.id).setValue(id);
         item.getItemProperty(myUI.getMessage(SptMessages.Period)).setValue(

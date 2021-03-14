@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * @author Alex
  */
-public class DiscountOrder implements Serializable {
+public class OrderMessage implements Serializable {
 
     private int id;
     private String order_number;

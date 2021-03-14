@@ -106,7 +106,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
@@ -114,7 +114,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         educationStatusMCB.setWidth("100%");
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -151,7 +151,6 @@ public class AccountingGeneralReport implements Button.ClickListener,
         schoolsTable.setFilterBarVisible(true);
         schoolsTable.setFooterVisible(false);
         schoolsTable.setSelectable(true);
-        schoolsTable.setNullSelectionAllowed(false);
         schoolsTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         schoolsTable.addValueChangeListener(this);
         try {
@@ -163,7 +162,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Name)});
+        schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth("100%");
@@ -246,7 +245,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
                 String svgPaid = SVGGenerator.getInstance().withWidth(400).withHeight(100).generate(confPaid);
                 new AccountingGeneralReportPdf(myUI, svgPayments, svgPaid, svgDiscounts, schoolAcc,
                         transactionsTable, contractTtl, paymentsTable, (Integer) schoolsTable.getValue(),
-                        (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Name)).getValue(),
+                        (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Title)).getValue(),
                         SystemSettings.df.format(prevDayCal.getTime()));
             } catch (Exception e) {
                 logger.error(e);

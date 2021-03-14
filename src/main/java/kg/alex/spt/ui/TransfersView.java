@@ -845,7 +845,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth("100%");
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
             cb.setRequired(true);

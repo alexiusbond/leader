@@ -26,7 +26,6 @@ import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
@@ -65,7 +64,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         this.movement_type_id = movement_type_id;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
-            myUI.getMessage(SptMessages.Name), myUI.getMessage(SptMessages.Parent),
+            myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Parent),
             myUI.getMessage(SptMessages.Status), myUI.getMessage(SptMessages.Note)};
         buildSettingsLayout();
 
@@ -169,7 +168,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         parentSelect.addValueChangeListener(this);
         settingsLay.addComponent(parentSelect);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Name));
+        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -210,7 +209,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth("100%");
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -369,7 +368,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             parentSelect.setValue(null);
         }
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Note)).getValue() != null) {
             noteTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),

@@ -427,7 +427,7 @@ public class DbStockMovements extends BaseDb {
         stat.setInt(3, service_type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Quantity), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Measurement), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.AvaragePrice), Double.class, null);
@@ -440,15 +440,15 @@ public class DbStockMovements extends BaseDb {
             Object catNext = itr.next();
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem((Integer) catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem((Integer) parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
                     } else {
                         item.getItemProperty(myUI.getMessage(SptMessages.AvarageRate)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
@@ -523,7 +523,7 @@ public class DbStockMovements extends BaseDb {
         stat.setDate(10, new java.sql.Date(from.getTime()));
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
@@ -537,15 +537,15 @@ public class DbStockMovements extends BaseDb {
             Object catNext = itr.next();
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem((Integer) catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem((Integer) parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
                     } else {
                         item.getItemProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);

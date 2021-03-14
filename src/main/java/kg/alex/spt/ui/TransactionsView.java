@@ -597,7 +597,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             cb.setRequired(true);
             cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         }
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (dbTable != null) {
             try {
@@ -630,7 +630,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         cb.setWidth("100%");
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbAccTransactions dbac = new DbAccTransactions();

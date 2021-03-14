@@ -187,7 +187,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         while (iter.hasNext()) {
             Integer next = (Integer) iter.next();
             optionGroup.setItemCaption(next, eduContainer.getContainerProperty(next,
-                    myUI.getMessage(SptMessages.Name)).getValue().toString());
+                    myUI.getMessage(SptMessages.Title)).getValue().toString());
             if (next <= 3) {
                 optionGroup.select(next);
             }
@@ -564,7 +564,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         genderCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         genderCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         genderCB.setWidth("100%");
-        genderCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        genderCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         genderCB.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -594,7 +594,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         classCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         classCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         classCB.setWidth("100%");
-        classCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        classCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         classCB.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -616,7 +616,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         statusCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         statusCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusCB.setWidth("100%");
-        statusCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusCB.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -976,7 +976,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             InvoiceInfoPdf iip = new InvoiceInfoPdf();
             iip.setLogin(loginTF.getValue());
             iip.setClass_name(classCB.getContainerProperty(classCB.getValue(),
-                    myUI.getMessage(SptMessages.Name)).getValue().toString());
+                    myUI.getMessage(SptMessages.Title)).getValue().toString());
             iip.setStud_fullname(nameTF.getValue() + " " + surnameTF.getValue()
                     + " " + middlenameTF.getValue());
             iip.setWhopaid_fullname(((TextField) paymentsTable.getContainerProperty(source.getData(),
@@ -992,7 +992,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(SptMessages.PaymentType)).getValue())
                     .getContainerProperty(((ComboBoxMax) paymentsTable.getContainerProperty(source.getData(),
                             myUI.getMessage(SptMessages.PaymentType)).getValue()).getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue().toString());
+                            myUI.getMessage(SptMessages.Title)).getValue().toString());
             try {
                 DbStudPayment dbsp = new DbStudPayment();
                 dbsp.connect();
@@ -1180,20 +1180,20 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 myUI.getMessage(SptMessages.Amount)).getValue());
                         while (iter.hasNext()) {
                             Object next = iter.next();
-                            dis = ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                            dis = ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
-                                            myUI.getMessage(SptMessages.Name)).getValue().toString()));
+                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
+                                            myUI.getMessage(SptMessages.Title)).getValue().toString()));
                             dis = dis.substring(0, dis.indexOf(" - "));
                             allDists += dis;
 
-                            if (((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                            if (((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 1)
-                                    || ((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                                    || ((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 3)) {
                                 allDists += " - " + ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue().toString() + "%(" + SystemSettings.dFormat.format(count_amount
@@ -1202,13 +1202,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 count_amount -= count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100;
-                            } else if (((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                            } else if (((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 2)
-                                    || ((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                                    || ((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                    .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 4)) {
                                 allDists += "(" + SystemSettings.dFormat.format((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue())+ "$)";
@@ -1597,7 +1597,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.ClassName)).setValue(classCB
                 .getContainerDataSource().getContainerProperty(classCB.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 SystemSettings.education_status_id).setValue(statusCB.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -1605,7 +1605,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.EducationStatus)).setValue(statusCB
                 .getContainerDataSource().getContainerProperty(statusCB.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
 
     }
 
@@ -1630,12 +1630,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 classCB.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                 classCB.getContainerDataSource().getContainerProperty(classCB.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(SystemSettings.education_status_id).setValue(
                 statusCB.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
                 statusCB.getContainerDataSource().getContainerProperty(statusCB.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         studDataTable.clearFilters();
         studDataTable.setValue(id);
     }
@@ -2098,7 +2098,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         cb.setWidth("100%");
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbp = new DbDefinition();
@@ -2135,7 +2135,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         cb.setWidth("100%");
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
 
         if (isFromDb) {
@@ -2180,7 +2180,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         cb.setWidth("100%");
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDiscount dbd = new DbDiscount();
@@ -2206,7 +2206,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         comboMCB.setRequired(true);
         comboMCB.setImmediate(true);
         comboMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        comboMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        comboMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         comboMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
             @Override
             public boolean isShow(String filter, int page) {
@@ -2755,7 +2755,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void setDiscountsTable() {
         NATURAL_COL_ORDER_DISCOUNTS = new String[]{SystemSettings.button,
-                myUI.getMessage(SptMessages.Name),
+                myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Amount), myUI.getMessage(SptMessages.Note)};
         try {
             DbStudDiscount dbsd = new DbStudDiscount();
@@ -2860,7 +2860,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             discountCont = new IndexedContainer();
             discountCont.addContainerProperty(SystemSettings.button, Button.class, null);
             discountCont.addContainerProperty(
-                    myUI.getMessage(SptMessages.Name), ComboBoxMax.class, null);
+                    myUI.getMessage(SptMessages.Title), ComboBoxMax.class, null);
             discountCont.addContainerProperty(
                     myUI.getMessage(SptMessages.Amount), TextField.class, null);
             discountCont.addContainerProperty(
@@ -3006,7 +3006,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void addDiscountsItem() {
         NATURAL_COL_ORDER_DISCOUNTS = new String[]{SystemSettings.button,
-                myUI.getMessage(SptMessages.Name),
+                myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Amount), myUI.getMessage(SptMessages.Note)};
         discCounter++;
         String id = SystemSettings.FreshItem + (--r_table_counter);
@@ -3018,8 +3018,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 discountsTable.getContainerDataSource().size(), id);
         item.getItemProperty(SystemSettings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, true));
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
-                createComboboxDisc(0, myUI.getMessage(SptMessages.Name), id));
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+                createComboboxDisc(0, myUI.getMessage(SptMessages.Title), id));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                 createTextfieldDisc(null, null, myUI.getMessage(SptMessages.DiscountAmount), id, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
@@ -3123,7 +3123,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractCB.addValueChangeListener(this);
         contractCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         contractCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        contractCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        contractCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         contractCB.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -3270,17 +3270,17 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         if (((TextField) discountsTable.getItem(obj).getItemProperty(
                                 myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
                             if (discount_ids.contains((Integer) ((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
-                                    myUI.getMessage(SptMessages.Name)).getValue()).getValue())) {
+                                    myUI.getMessage(SptMessages.Title)).getValue()).getValue())) {
                                 Notification.show(myUI.getMessage(SptMessages.NotifSameDiscountsAreNotAllowed),
                                         Notification.Type.WARNING_MESSAGE);
                                 return false;
                             } else {
                                 discount_ids.add((Integer) ((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
-                                        myUI.getMessage(SptMessages.Name)).getValue()).getValue());
+                                        myUI.getMessage(SptMessages.Title)).getValue()).getValue());
                             }
                         }
                         if (!((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(SptMessages.Name)).getValue()).isValid()) {
+                                myUI.getMessage(SptMessages.Title)).getValue()).isValid()) {
                             Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                     Notification.Type.WARNING_MESSAGE);
                             return false;
@@ -3373,19 +3373,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private StudDiscount getStudentDiscount(int st_id, int year_id, String disc_id) {
         StudDiscount d = new StudDiscount();
         //if discount type is Free$|%. setFreeAmount()
-        if ((((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue())
+        if ((((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue())
                 .getContainerProperty(((ComboBoxMax) discountsTable
-                                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("3"))
-                || (((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue())
+                || (((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue())
                 .getContainerProperty(((ComboBoxMax) discountsTable
-                                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("4"))) {
             d.setFree_entry_amount((Double) (((TextField) discountsTable.getContainerProperty(disc_id,
                     myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue()));
         }
         d.setDiscount_id(Integer.parseInt(((ComboBoxMax) discountsTable
-                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue()).getValue().toString()));
+                .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue()).getValue().toString()));
         d.setStudent_id(st_id);
         d.setEmployee_id(myUI.getUser().getId());
         d.setYear_id(year_id);
@@ -3396,25 +3396,25 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             discountAmount = (Double) (((TextField) discountsTable.getContainerProperty(disc_id,
                     myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
             //if Discount type type is %.
-            if ((((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue())
+            if ((((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("1"))
-                    || (((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue())
+                    || (((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("3"))) {
                 d.setDiscount_value(SystemSettings.round((contr_with_disc * discountAmount / 100), 2));
                 contr_with_disc -= contr_with_disc * discountAmount / 100;
 
                 //if discount type is $.
-            } else if ((((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue())
+            } else if ((((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("2"))
-                    || (((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue())
+                    || (((ComboBoxMax) discountsTable.getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(((ComboBoxMax) discountsTable
-                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                    .getContainerProperty(disc_id, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("4"))) {
                 d.setDiscount_value(SystemSettings.round((discountAmount), 2));
                 contr_with_disc = contr_with_disc - discountAmount;
@@ -3542,7 +3542,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.EducationStatus)).setValue(statusCB
                 .getContainerProperty(statusCB.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
 
     }
 
@@ -3580,24 +3580,24 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         discountAmount = (Double) (((TextField) discountsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
                         //if Discount type type is %.
-                        if ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                        if ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(((ComboBoxMax) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("1"))
-                                || (((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                                || (((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(((ComboBoxMax) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("3"))) {
                             instCtrAmount -= instCtrAmount * discountAmount / 100;
 
                             //if discount type is $.
-                        } else if ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                        } else if ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(((ComboBoxMax) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("2"))
-                                || (((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue())
+                                || (((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(((ComboBoxMax) discountsTable
-                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Name)).getValue()).getValue(),
+                                                .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("4"))) {
                             instCtrAmount = instCtrAmount - discountAmount;
                         }
@@ -3765,11 +3765,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private void checkDiscountsTable(Property property) {
         if (discountsTable.size() > 0) {
             if ((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
-                    myUI.getMessage(SptMessages.Name)).getValue())
+                    myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(property.getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 1
                     || (Integer) ((ComboBoxMax) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
-                    myUI.getMessage(SptMessages.Name)).getValue())
+                    myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(property.getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 2) {
                 ((TextField) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
@@ -3779,15 +3779,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 ((TextField) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
                         myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().setValue(
                         (Double) ((ComboBoxMax) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
-                                myUI.getMessage(SptMessages.Name)).getValue())
+                                myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(property.getValue(),
                                         myUI.getMessage(SptMessages.Amount)).getValue());
             } else if ((Integer) ((ComboBoxMax) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
-                    myUI.getMessage(SptMessages.Name)).getValue())
+                    myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(property.getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 3
                     || (Integer) ((ComboBoxMax) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
-                    myUI.getMessage(SptMessages.Name)).getValue())
+                    myUI.getMessage(SptMessages.Title)).getValue())
                     .getContainerProperty(property.getValue(),
                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 4) {
                 ((TextField) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
@@ -3797,7 +3797,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         myUI.getMessage(SptMessages.Amount)).getValue()).addValidator(new DoubleRangeValidator(
                         myUI.getMessage(SptMessages.NotifWrongValue), 0.1,
                         (Double) ((ComboBoxMax) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),
-                                myUI.getMessage(SptMessages.Name)).getValue())
+                                myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(property.getValue(),
                                         myUI.getMessage(SptMessages.Amount)).getValue()));
                 ((TextField) discountsTable.getContainerProperty(((ComboBoxMax) property).getData(),

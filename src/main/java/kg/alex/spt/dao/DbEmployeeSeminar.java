@@ -72,9 +72,9 @@ public class DbEmployeeSeminar extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     edv.createTextfield(result.getString("es.name"),
-                            myUI.getMessage(SptMessages.Name),
+                            myUI.getMessage(SptMessages.Title),
                             new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.Subject)).setValue(
                     edv.createTextfield(result.getString("es.subject"),

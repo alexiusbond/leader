@@ -111,7 +111,7 @@ public class YearMonthReport implements Button.ClickListener,
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
@@ -119,7 +119,7 @@ public class YearMonthReport implements Button.ClickListener,
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         educationStatusMCB.setWidth("100%");
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
@@ -175,7 +175,7 @@ public class YearMonthReport implements Button.ClickListener,
             DbSchool dbs = new DbSchool();
             dbs.connect();
             schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Name)});
+            schoolTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
             dbs.close();
         } catch (Exception e) {
             logger.error(e);

@@ -26,7 +26,7 @@ public class DbYear extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Period), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.PeriodKg), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.StartDate), String.class, null);
@@ -35,7 +35,7 @@ public class DbYear extends BaseDb {
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("y.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("y.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Period)).setValue(
                     result.getString("y.period"));

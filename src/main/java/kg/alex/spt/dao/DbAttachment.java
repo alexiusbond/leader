@@ -66,7 +66,7 @@ public class DbAttachment extends BaseDb {
         stat.setInt(3, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Details), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Type), String.class, null);
         container.addContainerProperty(SystemSettings.button, Button.class, null);
@@ -74,7 +74,7 @@ public class DbAttachment extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
 
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(result.getString("name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Type)).setValue(result.getString("type"));
             item.getItemProperty(myUi.getMessage(SptMessages.Details)).setValue(result.getString("details"));
             Attachment a = new Attachment();

@@ -374,10 +374,10 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(3, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("ac.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
         }
         return container;
@@ -405,7 +405,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, school_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         while (current.before(till)) {
@@ -425,8 +425,8 @@ public class DbAccTransactions extends BaseDb {
             Object catNext = categories_iter.next();
             if (selectedIds.contains(catNext)) {
                 Item item = container.addItem((Integer) catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource())
                         .getParent(catNext);
@@ -491,7 +491,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(3, type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         Set<Integer> selectedSchools = (Set<Integer>) schoolsTable.getValue();
@@ -501,7 +501,7 @@ public class DbAccTransactions extends BaseDb {
             while (schools_iter.hasNext()) {
                 Object nextSchool = schools_iter.next();
                 if (selectedSchools.contains((Integer) nextSchool)) {
-                    container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
+                    container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
                             + SystemSettings.ymdf.format(current.getTime()), Double.class, 0.0);
                 }
             }
@@ -511,7 +511,7 @@ public class DbAccTransactions extends BaseDb {
         while (schools_iter.hasNext()) {
             Object nextSchool = schools_iter.next();
             if (selectedSchools.contains((Integer) nextSchool)) {
-                container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
+                container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
                         + myUI.getMessage(SptMessages.Total), Double.class, 0.0);
             }
         }
@@ -523,9 +523,9 @@ public class DbAccTransactions extends BaseDb {
             schools_iter = ((Set<?>) schoolsTable.getValue()).iterator();
             while (schools_iter.hasNext()) {
                 Object nextSchool = schools_iter.next();
-                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - "
+                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
                         + SystemSettings.ymdf.format(current.getTime()), "0.00");
-                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Name)).getValue() + " - " + myUI.getMessage(SptMessages.Total), "0.00");
+                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - " + myUI.getMessage(SptMessages.Total), "0.00");
             }
             current.add(Calendar.MONTH, 1);
         }
@@ -535,8 +535,8 @@ public class DbAccTransactions extends BaseDb {
             Object catNext = itr.next();
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem((Integer) catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
@@ -551,7 +551,7 @@ public class DbAccTransactions extends BaseDb {
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
             Object month = SystemSettings.ymdf.format(result.getDate("dt"));
-            Object school = schoolsTable.getContainerProperty(result.getInt("tr.school_id"), myUI.getMessage(SptMessages.Name)).getValue();
+            Object school = schoolsTable.getContainerProperty(result.getInt("tr.school_id"), myUI.getMessage(SptMessages.Title)).getValue();
             item.getItemProperty(school + " - " + month).setValue(result.getDouble("amount"));
             try {
                 t.setColumnFooter(myUI.getMessage(SptMessages.Total),
@@ -820,7 +820,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Remain), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Salary), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Ratio), Double.class, null);
@@ -831,15 +831,15 @@ public class DbAccTransactions extends BaseDb {
             Object catNext = itr.next();
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem((Integer) catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem((Integer) parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Name))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(SptMessages.Title))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
                     }
                     container.setParent(catNext, parent);
                 }
@@ -937,7 +937,7 @@ public class DbAccTransactions extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
@@ -947,7 +947,7 @@ public class DbAccTransactions extends BaseDb {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(
                     result.getDate("date(t.date_time)")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("category"));
             item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(
                     result.getString("acu.name"));

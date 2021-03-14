@@ -102,7 +102,7 @@ public class SalariesReport implements Button.ClickListener,
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         currencySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         currencySelect.setWidth("100%");
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
         try {

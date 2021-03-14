@@ -123,7 +123,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         currencySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         currencySelect.setWidth("100%");
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
         try {
@@ -197,7 +197,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 if (st.getScl_address() != null && st.getScl_phone() != null
                         && st.getScl_name_ru() != null) {
                     new CurrentAccountStatementPdf(myUI, dataTable, employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue().toString(),
+                            myUI.getMessage(SptMessages.Title)).getValue().toString(),
                             currencySelect.getItemCaption(currencySelect.getValue()), fromDateDF.getValue(), tillDateDF.getValue(), st);
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),

@@ -105,19 +105,19 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         codeTF.setWidth("100%");
 
-        nameRuTF = new TextField(myUI.getMessage(SptMessages.NameRu));
+        nameRuTF = new TextField(myUI.getMessage(SptMessages.TitleRu));
         nameRuTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameRuTF.setRequired(true);
         nameRuTF.setNullRepresentation("");
         nameRuTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameRuTF.setWidth("100%");
 
-        nameKgTF = new TextField(myUI.getMessage(SptMessages.NameKg));
+        nameKgTF = new TextField(myUI.getMessage(SptMessages.TitleKg));
         nameKgTF.setNullRepresentation("");
         nameKgTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameKgTF.setWidth("100%");
 
-        nameEnTF = new TextField(myUI.getMessage(SptMessages.NameEn));
+        nameEnTF = new TextField(myUI.getMessage(SptMessages.TitleEn));
         nameEnTF.setNullRepresentation("");
         nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameEnTF.setWidth("100%");
@@ -170,7 +170,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setWidth("100%");
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -246,7 +246,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                                 Object next = iter.next();
                                 int id = dba.exec_id((Integer) next, sch.getId());
                                 dba.exec_update_code(id, sch.getCode(), salCont.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Name)).getValue() + " - " + sch.getName_ru());
+                                        myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
                                 dba.exec_update_all_parent_codes(id, salCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Code)).getValue() + "." + sch.getCode(), false);
                             }
@@ -255,7 +255,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                         Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                 Notification.Type.HUMANIZED_MESSAGE);
                         myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
-                                myUI.getMessage(SptMessages.Name)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
+                                myUI.getMessage(SptMessages.Title)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
                         myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
                                 myUI.getMessage(SptMessages.Logo)).setValue(sch.getPhoto());
                     } else {

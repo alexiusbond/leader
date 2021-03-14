@@ -98,6 +98,7 @@ public class SystemSettings implements Serializable {
     public static final String dbEmployeeWorkExtraPosition = "hr_employee_work_extra_positions";
     public static final String dbCertificateTable = "hr_certificate";
     public static final String dbAttachmentsTable = "attachments";
+    public static final String dbEmployeeMessageTable = "employee_message";
     public static final String dbQuestion = "hr_question";
     public static final String dbActivity_status = "activity_status";
     public static final String dbAccessoriesCategory = "accessories_category";
@@ -158,6 +159,7 @@ public class SystemSettings implements Serializable {
     public static final String rnSapatSecretary = "sapat_secretary";
     public static final String cnAccessoriesDefinitionView = "AccessoriesDefinitionView";
     public static final String cnIssueOrderView = "IssueOrderView";
+    public static final String cnSendOrderView = "SendOrderView";
     public static final String cnClassNameDefinitionView = "ClassNameDefinitionView";
     public static final String cnContractDefintionView = "ContractDefintionView";
     public static final String cnLeavingReasonsDefinitionView = "LeavingReasonsDefinitionView";

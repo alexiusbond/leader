@@ -61,7 +61,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     public DiscountDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Name),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
             myUI.getMessage(SptMessages.Value), myUI.getMessage(SptMessages.DiscountType),
             myUI.getMessage(SptMessages.Year), myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
@@ -146,7 +146,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.addValueChangeListener(this);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         copyButton = new PopupButton(myUI.getMessage(SptMessages.Copy));
@@ -167,7 +167,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         discTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         discTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         discTypeSelect.setWidth("100%");
-        discTypeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        discTypeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         discTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         discTypeSelect.addValueChangeListener(this);
 
@@ -183,7 +183,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         }
         settingsLay.addComponent(discTypeSelect);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Name));
+        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -210,7 +210,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setWidth("100%");
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbDef = new DbDefinition();
@@ -371,7 +371,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
                         myUI.getMessage(SptMessages.ConfirmDiscountCopy)
                         + yearSelect.getContainerProperty(yearSelect.getValue(),
-                                myUI.getMessage(SptMessages.Name))
+                                myUI.getMessage(SptMessages.Title))
                                 .getValue().toString() + " года?",
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
@@ -429,7 +429,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).getValue().toString());
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
         valueTF.getPropertyDataSource().setValue(
                 (Double) dataTable.getContainerProperty(dataTable.getValue(),
                         myUI.getMessage(SptMessages.Value)).getValue());
@@ -451,21 +451,21 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void updateDatacontainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Name)).setValue(nameTF.getValue());
+                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Value)).setValue(
                 (Double) valueTF.getPropertyDataSource().getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.DiscountType)).setValue(discTypeSelect
                 .getContainerProperty(discTypeSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 SystemSettings.discount_type_id).setValue(
                         (Integer) discTypeSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 SystemSettings.status_id).setValue(
                         (Integer) statusSelect.getValue());
@@ -474,18 +474,18 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     private void addDatacontainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Value)).setValue(
                 (Double) valueTF.getPropertyDataSource().getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.DiscountType)).setValue(
                 discTypeSelect.getContainerProperty(discTypeSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(SystemSettings.discount_type_id).setValue(
                 (Integer) discTypeSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Name)).getValue().toString());
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(SystemSettings.status_id).setValue(
                 (Integer) statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(

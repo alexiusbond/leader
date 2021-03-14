@@ -52,7 +52,7 @@ public class HeaderFooterLandscape extends PdfPageEventHelper {
             
             ct.setSimpleColumn(rect);
             ct.setAlignment(Element.ALIGN_CENTER);
-            ct.addText(new Phrase(myUI.getMessage(SptMessages.MinistryOfEdcation), fontGray));
+            ct.addText(new Phrase(myUI.getMessage(SptMessages.MinistryOfEducation), fontGray));
             ct.addText(Chunk.NEWLINE);
             ct.addText(new Phrase(name, ordFont));
             ct.addText(Chunk.NEWLINE);

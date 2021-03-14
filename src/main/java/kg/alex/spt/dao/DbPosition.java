@@ -34,7 +34,7 @@ public class DbPosition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(SystemSettings.activity_status_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.hr_position_category_id, Integer.class, 0);
@@ -48,7 +48,7 @@ public class DbPosition extends BaseDb {
 
             item.getItemProperty(SystemSettings.activity_status_id).setValue(
                     result.getInt("st.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("p.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("st.name"));
@@ -115,11 +115,11 @@ public class DbPosition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, 0);
         container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
             item.getItemProperty(SystemSettings.position_id).setValue(
                     result.getInt("hr_position_id"));

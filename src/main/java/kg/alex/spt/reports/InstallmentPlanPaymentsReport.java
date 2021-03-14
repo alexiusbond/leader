@@ -92,7 +92,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Name));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbd = new DbDefinition();
@@ -212,7 +212,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     st.setCtr_ttl_left_sum(ttl_left);
                     st.setCtr_paid(ttl_payment);
                     st.setYear(yearSelect.getContainerProperty(yearSelect.getValue(),
-                            myUI.getMessage(SptMessages.Name)).getValue().toString());
+                            myUI.getMessage(SptMessages.Title)).getValue().toString());
                     makePdfBtn.setEnabled(true);
                     excelBtn.setEnabled(true);
                 } else {

@@ -35,12 +35,12 @@ public class DbAccCategory extends BaseDb {
         stat.setInt(1, type);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                     result.getString("code") + " - " + result.getString("c.name"));
@@ -69,14 +69,14 @@ public class DbAccCategory extends BaseDb {
         stat.setInt(3, id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(SystemSettings.acc_currency_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.employee_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                     result.getString("code") + " - " + result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
@@ -92,12 +92,12 @@ public class DbAccCategory extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                     result.getString("code") + " - " + result.getString("c.name"));
@@ -120,7 +120,7 @@ public class DbAccCategory extends BaseDb {
         stat.setInt(1, type);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Parent), String.class, null);
         container.addContainerProperty(SystemSettings.parent_id, Integer.class, 0);
@@ -138,7 +138,7 @@ public class DbAccCategory extends BaseDb {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
             item.getItemProperty(SystemSettings.id).setValue(result.getInt("c.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(
                     result.getString("code"));
@@ -170,7 +170,7 @@ public class DbAccCategory extends BaseDb {
         stat.setInt(1, type);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         t.setContainerDataSource(container);
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
@@ -180,7 +180,7 @@ public class DbAccCategory extends BaseDb {
             if (result.getInt("c.parent_id") != 0) {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
         }
     }
@@ -192,7 +192,7 @@ public class DbAccCategory extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Name), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         t.setContainerDataSource(container);
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
@@ -202,7 +202,7 @@ public class DbAccCategory extends BaseDb {
             if (result.getInt("c.parent_id") != 0) {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Name)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("name"));
         }
     }
 

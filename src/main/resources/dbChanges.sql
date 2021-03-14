@@ -44,3 +44,10 @@ ADD CONSTRAINT `fkemployee_message_order_message`
   ON DELETE RESTRICT
   ON UPDATE NO ACTION;
 
+ALTER TABLE `spt`.`discount_order_messages` 
+RENAME TO  `spt`.`order_messages` ;
+INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('admin', 'SendDiscountOrder:меню,добавление,удаление');
+UPDATE `spt`.`user_permission` SET `permissions` = 'SendOrder:меню,добавление,удаление' WHERE (`role_name` = 'sapat_secretary') and (`permissions` = 'SendDiscountOrder:меню,добавление,удаление');
+UPDATE `spt`.`user_permission` SET `permissions` = 'SendOrder:меню,добавление,удаление' WHERE (`role_name` = 'admin') and (`permissions` = 'SendDiscountOrder:меню,добавление,удаление');
+UPDATE `spt`.`user_permission` SET `permissions` = 'SendOrderView:меню,добавление,удаление' WHERE (`role_name` = 'sapat_secretary') and (`permissions` = 'SendOrder:меню,добавление,удаление');
+UPDATE `spt`.`user_permission` SET `permissions` = 'SendOrderView:меню,добавление,удаление' WHERE (`role_name` = 'admin') and (`permissions` = 'SendOrder:меню,добавление,удаление');
