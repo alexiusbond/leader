@@ -75,7 +75,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private TabSheet tabs;
     private boolean isNew;
     private Label workingStatusLb, mainPositionLb, extraPositionsLb, mainBrancLb, extraBrancesLb, totalHoursLb,
-            workingStatTtlLb, filteredLab;
+            workingStatTtlLb, filteredLab, captionSpouseInfo;
 
     private String[] NATURAL_COL_ORDER, NATURAL_COL_ORDER_PHONES, NATURAL_COL_ORDER_CHILDREN,
             NATURAL_COL_ORDER_EDU, NATURAL_COL_ORDER_WORK,
@@ -87,7 +87,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             achievementsInfoLay, profInfoLay, schoolInfoLay, ordersInfoLay;
     private HorizontalSplitPanel horSplitPanel;
     private HorizontalLayout buttonsLay;
-    private Upload photoUpl, currentUpload;
+    private Upload photoUpl;
     private File myFile;
     private Window statusWindow;
     private Button cancelButton;
@@ -234,9 +234,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             tabs.getTab(empSearchLay).setVisible(false);
         }
         tabs.addTab(contactInfoLay).setCaption(myUI.getMessage(SptMessages.ContactInfo));
-        tabs.addTab(familyInfoLay).setCaption(myUI.getMessage(SptMessages.FamilyInfo));
         tabs.addTab(profInfoLay).setCaption(myUI.getMessage(SptMessages.ProfInfo));
         tabs.addTab(achievementsInfoLay).setCaption(myUI.getMessage(SptMessages.Achievements));
+        tabs.addTab(familyInfoLay).setCaption(myUI.getMessage(SptMessages.FamilyInfo));
         tabs.addTab(extraInfoLay).setCaption(myUI.getMessage(SptMessages.ExtraInfo));
         tabs.addTab(schoolInfoLay).setCaption(myUI.getMessage(SptMessages.SchoolInfo));
         if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabActivities)) {
@@ -381,7 +381,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayFamily.setMargin(true);
 
         spouseFullnameTF = createTextfield(null, null, new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 200, false), true);
+                myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true);
         spouseFullnameTF.setCaption(myUI.getMessage(SptMessages.FullName));
         fieldsLayFamily.addComponent(spouseFullnameTF);
 
@@ -473,7 +473,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         spouseWorkPlacesTable.setSizeFull();
         spouseWorkPlacesTable.setStyleName(ValoTheme.TABLE_SMALL);
 
-        Label captionSpouseInfo = new Label();
+        captionSpouseInfo = new Label();
         captionSpouseInfo.setSizeFull();
         captionSpouseInfo.setContentMode(ContentMode.HTML);
         captionSpouseInfo.setValue(myUI.getMessage(SptMessages.SpouseInfo));
@@ -483,12 +483,12 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         familyInfoLay.setSizeFull();
         familyInfoLay.setSpacing(true);
         familyInfoLay.setMargin(true);
-        familyInfoLay.addComponent(captionSpouseInfo, 0, 0);
-        familyInfoLay.addComponent(fieldsLayFamily, 0, 1);
+        familyInfoLay.addComponent(hl, 0, 0);
+        familyInfoLay.addComponent(childrenTable, 0, 1);
+        familyInfoLay.addComponent(captionSpouseInfo, 0, 2);
+        familyInfoLay.addComponent(fieldsLayFamily, 0, 3);
         familyInfoLay.addComponent(hl2, 1, 0);
         familyInfoLay.addComponent(spouseEducationTable, 1, 1);
-        familyInfoLay.addComponent(hl, 0, 2);
-        familyInfoLay.addComponent(childrenTable, 0, 3);
         familyInfoLay.addComponent(hl3, 1, 2);
         familyInfoLay.addComponent(spouseWorkPlacesTable, 1, 3);
         familyInfoLay.setRowExpandRatio(1, 1);
@@ -1002,8 +1002,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     myUI.getMessage(SptMessages.HealthStatus)};
             DbEmployeeChildren dbech = new DbEmployeeChildren();
             dbech.connect();
-            childrenTable.setContainerDataSource(
-                    dbech.execSQL(myUI, emplID, this));
+            childrenTable.setContainerDataSource(dbech.execSQL(myUI, emplID, this));
+            System.out.println(childrenTable.size());
             dbech.close();
             childrenTable.setVisibleColumns(NATURAL_COL_ORDER_CHILDREN);
             childrenTable.setColumnExpandRatio(myUI.getMessage(SptMessages.FullName), 1);
@@ -1640,6 +1640,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
         martialStatusCB = createCombobox(0, null, SystemSettings.dbMartialStatus, true);
         martialStatusCB.setCaption(myUI.getMessage(SptMessages.MartialStatus));
+        martialStatusCB.addValueChangeListener(this);
         fieldsLayRight.addComponent(martialStatusCB);
 
         mainPositionCB = new ComboBoxMax(myUI.getMessage(SptMessages.MainPosition));
@@ -1929,6 +1930,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         statusWindow.setContent(l);
 
         cancelButton = new Button();
+        cancelButton.setImmediate(true);
         cancelButton.addClickListener(this);
         cancelButton.setId(SystemSettings.cancel_upload_button);
         cancelButton.setVisible(false);
@@ -1945,14 +1947,14 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     public Upload createUpload(String caption, boolean isPhoto) {
-        currentUpload = new Upload(null, new MyReceiver(isPhoto));
-        currentUpload.setImmediate(true);
+        Upload upl = new Upload(null, new MyReceiver(isPhoto));
+        upl.setImmediate(true);
         if (!isPhoto) {
-            currentUpload.setStyleName("with-icon");
+            upl.setStyleName("with-icon");
         }
-        currentUpload.addStyleName(ValoTheme.BUTTON_TINY);
-        currentUpload.setButtonCaption(caption);
-        currentUpload.addStartedListener(new Upload.StartedListener() {
+        upl.addStyleName(ValoTheme.BUTTON_TINY);
+        upl.setButtonCaption(caption);
+        upl.addStartedListener(new Upload.StartedListener() {
             @Override
             public void uploadStarted(Upload.StartedEvent event) {
                 // This method gets called immediatedly after upload is started
@@ -1965,33 +1967,51 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 uploadProgressBar.setVisible(true);
                 UI.getCurrent().setPollInterval(500); // hit server frequantly to get
                 cancelButton.setVisible(true);
+                cancelButton.addClickListener((Button.ClickListener) clickEvent -> {
+                    try {
+                        upl.interruptUpload();
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
+                    }
+                });
             }
         });
 
-        currentUpload.addProgressListener(new Upload.ProgressListener() {
+        upl.addProgressListener(new Upload.ProgressListener() {
             @Override
             public void updateProgress(long readBytes, long contentLength) {
                 // This method gets called several times during the update
                 if ((isPhoto && !mimeType.equals("image/jpeg")) || (!mimeType.equals("image/jpeg") && !mimeType.equals("application/pdf"))) {
-                    currentUpload.interruptUpload();
+                    try {
+                        upl.interruptUpload();
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
+                    }
                     if (isPhoto) {
                         photoName = null;
                         Notification.show(myUI.getMessage(SptMessages.OnlyJpg), Notification.Type.WARNING_MESSAGE);
                     } else {
                         fileName = null;
-                        IndexedContainer c = (IndexedContainer) currentUpload.getData();
-                        Button b = (Button) ((HorizontalLayout) c.getContainerProperty(currentUpload.getId(),
+                        IndexedContainer c = (IndexedContainer) upl.getData();
+                        Button b = (Button) ((HorizontalLayout) c.getContainerProperty(upl.getId(),
                                 myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
                         b.setEnabled(false);
                         b.setData(null);
                         Notification.show(myUI.getMessage(SptMessages.OnlyJpgOrPdf), Notification.Type.WARNING_MESSAGE);
                     }
                 } else if (contentLength >= 15000000) {
-                    currentUpload.interruptUpload();
+                    try {
+                        upl.interruptUpload();
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
+                    }
                     photoName = null;
                     fileName = null;
-                    IndexedContainer container = (IndexedContainer) currentUpload.getData();
-                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(currentUpload.getId(),
+                    IndexedContainer container = (IndexedContainer) upl.getData();
+                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(upl.getId(),
                             myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
                     b.setEnabled(false);
                     b.setData(null);
@@ -2002,7 +2022,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
 
-        currentUpload.addSucceededListener(new Upload.SucceededListener() {
+        upl.addSucceededListener(new Upload.SucceededListener() {
             @Override
             public void uploadSucceeded(Upload.SucceededEvent event) {
                 // This method gets called when the upload finished successfully
@@ -2015,8 +2035,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     }
                     photoEmb.setSource(new FileResource(myFile));
                 } else {
-                    IndexedContainer container = (IndexedContainer) currentUpload.getData();
-                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(currentUpload.getId(),
+                    IndexedContainer container = (IndexedContainer) upl.getData();
+                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(upl.getId(),
                             myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
                     Attachment attachment = null;
                     try {
@@ -2042,12 +2062,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
 
-        currentUpload.addFailedListener(new Upload.FailedListener() {
+        upl.addFailedListener(new Upload.FailedListener() {
             @Override
             public void uploadFailed(Upload.FailedEvent event) {
                 if (statusWindow != null) {
                     statusWindow.close();
                 }
+                Notification.show(myUI.getMessage(SptMessages.UploadedSuccessfully), Notification.Type.ERROR_MESSAGE);
                 try {
                     myFile.delete();
                 } catch (Exception ex) {
@@ -2057,7 +2078,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
         });
 
-        currentUpload.addFinishedListener(new Upload.FinishedListener() {
+        upl.addFinishedListener(new Upload.FinishedListener() {
             @Override
             public void uploadFinished(Upload.FinishedEvent event) {
                 if (statusWindow != null) {
@@ -2065,7 +2086,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 }
             }
         });
-        return currentUpload;
+        return upl;
     }
 
     private void clearEmployeeFields(boolean generateNewLogin) {
@@ -2227,11 +2248,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source.getId() != null && source.getId().equals(SystemSettings.cancel_upload_button)) {
-            if (currentUpload != null) {
-                currentUpload.interruptUpload();
-            }
-        } else if (source == createBtn) {
+        if (source == createBtn) {
             isNew = true;
             tabs.setSelectedTab(empSearchLay);
             clearEmployeeFields(true);
@@ -2433,13 +2450,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     insertChildren(emplID);
                                     insertEducation(emplID, 2, spouseEducationTable, delSpouseEducationIds);
                                     insertWorkPlaces(emplID, 2, spouseWorkPlacesTable, delSpouseWorkIds);
-                                    insertEmplSpouse(getEmployeeSpouse((Integer) emplID));
+                                    insertEmplSpouse(getEmployeeSpouse(emplID));
                                     setChildrenTable();
                                     setEducationTable(spouseEducationTable, spouseEducationCont, 2);
                                     setWorkTable(spouseWorkPlacesTable, spouseWorkCont, 2);
                                     setSpouseFields();
                                 } else if (tabs.getSelectedTab() == tabs.getTab(extraInfoLay).getComponent()) {
-                                    insertQuestioning((Integer) emplID);
+                                    insertQuestioning(emplID);
                                     insertEmplExtraInfo(getEmployeeExtraInfo(emplID));
                                     setQuestioningTable();
                                     setExtraInfoFields();
@@ -2758,6 +2775,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     private void insertChildren(int employee_id) {
+        System.out.println("Insert children");
         try {
             DbEmployeeChildren dbech = new DbEmployeeChildren();
             dbech.connect();
@@ -2807,6 +2825,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     private void insertEducation(int employee_id, int own_id, Table t, ArrayList<?> list) {
+        EmployeeEducation ed = null;
         try {
             DbEmployeeEducation dbed = new DbEmployeeEducation();
             dbed.connect();
@@ -2821,7 +2840,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 Iterator iter = t.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
-                    EmployeeEducation ed = new EmployeeEducation();
+                    ed = new EmployeeEducation();
                     ed.setEmployee_id(employee_id);
                     ed.setOwn_id(own_id);
                     ed.setDepartment(((TextField) t.getItem(next).getItemProperty(
@@ -2858,6 +2877,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbed.close();
             dbd.close();
         } catch (Exception ex) {
+            logger.info(ed.getId() + " " + ed.getAttachment_id());
             logger.error(ex);
             logger.catching(ex);
         }
@@ -3009,6 +3029,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     private void insertCertificates(int employee_id) {
+        EmployeeCertificate ec = null;
         try {
             DbEmployeeCertificate dbec = new DbEmployeeCertificate();
             dbec.connect();
@@ -3032,7 +3053,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 Iterator iter = certificatesTable.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
-                    EmployeeCertificate ec = new EmployeeCertificate();
+                    ec = new EmployeeCertificate();
                     ec.setEmployee_id(employee_id);
                     ec.setNote(((TextField) certificatesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Note)).getValue()).getValue());
@@ -3061,6 +3082,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbec.close();
             dbd.close();
         } catch (Exception ex) {
+            logger.info(ec.getId() + " " + ec.getAttachment_id());
             logger.error(ex);
             logger.catching(ex);
         }
@@ -3111,6 +3133,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     private void insertExams(int employee_id) {
+        EmployeeExam exam = null;
         try {
             DbEmployeeExam dbex = new DbEmployeeExam();
             dbex.connect();
@@ -3134,26 +3157,26 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 Iterator iter = examsTable.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
-                    EmployeeExam ex = new EmployeeExam();
-                    ex.setEmployee_id(employee_id);
-                    ex.setExam_id((Integer) ((ComboBox) examsTable.getItem(next).getItemProperty(
+                    exam = new EmployeeExam();
+                    exam.setEmployee_id(employee_id);
+                    exam.setExam_id((Integer) ((ComboBox) examsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Exam)).getValue()).getValue());
-                    ex.setScore((Double) ((TextField) examsTable.getItem(next).getItemProperty(
+                    exam.setScore((Double) ((TextField) examsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Score)).getValue()).getPropertyDataSource().getValue());
-                    ex.setDate_of_issue(((DateField) examsTable.getItem(next).getItemProperty(
+                    exam.setDate_of_issue(((DateField) examsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.IssueDate)).getValue()).getValue());
                     Button b = (Button) ((HorizontalLayout) examsTable.getContainerProperty(next,
                             myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
                     if (b.getData() != null) {
-                        ex.setAttachment_id(((Attachment) b.getData()).getId());
+                        exam.setAttachment_id(((Attachment) b.getData()).getId());
                     }
                     if (examsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
-                        ex.setId(Integer.parseInt(next.toString()));
-                        dbex.exec_update(ex);
+                        exam.setId(Integer.parseInt(next.toString()));
+                        dbex.exec_update(exam);
                     } else if (examsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
-                        dbex.exec_insert(ex);
+                        dbex.exec_insert(exam);
                     }
                 }
             }
@@ -3161,6 +3184,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbex.close();
             dbd.close();
         } catch (Exception ex) {
+            logger.info(exam.getId() + " " + exam.getAttachment_id());
             logger.error(ex);
             logger.catching(ex);
         }
@@ -3702,7 +3726,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 createCombobox(0, myUI.getMessage(SptMessages.Level), SystemSettings.dbLanguageLevelTable, true));
         item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         languagesTable.setVisibleColumns(NATURAL_COL_ORDER_LANGUAGES);
-
     }
 
     private void addCertificateItem() {
@@ -4304,13 +4327,21 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void insertEmplSpouse(EmployeeSpouse es) {
         try {
-            DbEmployeeSpouse dbes = new DbEmployeeSpouse();
-            dbes.connect();
-            int st = dbes.exec_insert(es);
-            if (st == 0) {
-                dbes.exec_update(es);
+            if (martialStatusCB.getValue() != null && (Integer) martialStatusCB.getValue() == 2) {
+                DbEmployeeSpouse dbes = new DbEmployeeSpouse();
+                dbes.connect();
+                int st = dbes.exec_insert(es);
+                if (st == 0) {
+                    dbes.exec_update(es);
+                }
+                dbes.close();
+            } else {
+                DbDefinition dbCon = new DbDefinition();
+                dbCon.connect();
+                dbCon.exec_delete(es.getEmployee_id() + "",
+                        SystemSettings.dbEmployeeSpouse, SystemSettings.employee_id);
+                dbCon.close();
             }
-            dbes.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -4461,7 +4492,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         es.setFullname(spouseFullnameTF.getValue());
         es.setPhone(spousePhoneTF.getValue());
         es.setHealth_notes(spouseHealthNotesTF.getValue());
-        es.setHealth_status_id((Integer) spouseHealthCB.getValue());
+        if (spouseHealthCB.getValue() != null) {
+            es.setHealth_status_id((Integer) spouseHealthCB.getValue());
+        }
         return es;
     }
 
@@ -4629,6 +4662,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         } else if (property == optionGroup) {
             setEmployeesDataTable(property.getValue().toString());
             repaint();
+        } else if (property == martialStatusCB) {
+            if (martialStatusCB.getValue() != null && (Integer) martialStatusCB.getValue() == 2) {
+                spouseHealthCB.setRequired(true);
+                spouseFullnameTF.setRequired(true);
+                fieldsLayFamily.setVisible(true);
+                captionSpouseInfo.setVisible(true);
+            } else {
+                spouseHealthCB.setRequired(false);
+                spouseFullnameTF.setRequired(false);
+                fieldsLayFamily.setVisible(false);
+                captionSpouseInfo.setVisible(false);
+            }
         } else if (property == employeesDataTable) {
             if (employeesDataTable.getItem(employeesDataTable.getValue()) != null) {
                 emplID = (Integer) employeesDataTable.getValue();

@@ -171,6 +171,7 @@ public class SptMessages_ru extends SptMessages {
             {ToThe, "на"},
             {UploadStatus, "Статус загрузки"},
             {UploadedSuccessfully, "Загружено успешно!"},
+            {UploadFailed, "Ошибка загрузки!"},
             {StudentDefiniton, "Ученики"},
             {ImportStudentsFromExcel, "Импорт учеников из Excel"},
             {Surname, "Фамилия"},

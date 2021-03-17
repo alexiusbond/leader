@@ -159,6 +159,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Functions = generateId();
     public static final String UploadStatus = generateId();
     public static final String UploadedSuccessfully = generateId();
+    public static final String UploadFailed = generateId();
     public static final String Progress = generateId();
     public static final String Product = generateId();
     public static final String Measurement = generateId();

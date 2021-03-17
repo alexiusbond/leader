@@ -74,13 +74,14 @@ public class DbEmployeeChildren extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-            EmployeeDefinitionView edv) throws SQLException {
-        
+                                    EmployeeDefinitionView edv) throws SQLException {
 
-        String sql = "SELECT ech.id, ech.fullname, ech.date_of_birth, ech.institution, ech.hr_education_status_id, ech.hr_health_status_id "
-                + "FROM hr_employee_children as ech where ech.employee_id = ? ;";
+        String sql = "SELECT ech.id, ech.fullname, ech.date_of_birth, ech.institution, " +
+                "ech.hr_education_status_id, ech.hr_health_status_id " +
+                "FROM hr_employee_children as ech where ech.employee_id = ? ;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
+        System.out.println(stat.toString());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = edv.prepareChildrenContainer();
         while (result.next()) {
@@ -108,6 +109,7 @@ public class DbEmployeeChildren extends BaseDb {
                             myUI.getMessage(SptMessages.HealthStatus), SystemSettings.dbHealthStatus, true));
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
+        System.out.println(container.size());
         return container;
     }
 }
