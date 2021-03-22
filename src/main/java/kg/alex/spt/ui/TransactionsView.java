@@ -536,8 +536,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         }
     }
 
-    public Button createButton(String description, String itemId, String Caption, boolean isDisabled, FontAwesome icon) {
-        Button btn = new Button(Caption);
+    public Button createButton(String description, String itemId, String caption, boolean isDisabled, FontAwesome icon) {
+        Button btn = new Button(caption);
         if (isDisabled) {
             btn.setEnabled(false);
         }

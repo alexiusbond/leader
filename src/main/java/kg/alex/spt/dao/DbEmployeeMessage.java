@@ -22,9 +22,14 @@ public class DbEmployeeMessage extends BaseDb {
                 + "VALUES(?,?,?,NOW());";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, em.getOrder_message_id());
-        stat.setInt(2, em.getOrder_message_id());
-        stat.setInt(3, em.getOrder_message_id());
-        return stat.executeUpdate();
+        stat.setInt(2, em.getEmployee_id());
+        stat.setInt(3, em.getMessage_status_id());
+        int st = stat.executeUpdate();
+        if (st != 0) {
+            return getLastInsertedId();
+        } else {
+            return 0;
+        }
     }
 
     public int exec_update(EmployeeMessage em) throws SQLException {

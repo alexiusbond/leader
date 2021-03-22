@@ -88,6 +88,7 @@ public class SystemSettings implements Serializable {
     public static final String crud_status = "crud_status";
     public static final String effected_by_id = "effected_by_id";
     public static final String classTable = "class_number";
+    public static final String orderMessagesTable = "order_messages";
     public static final String dbLanguageTable = "hr_language";
     public static final String dbLanguageLevelTable = "hr_language_level";
     public static final String dbExamTable = "hr_exam";
@@ -200,6 +201,7 @@ public class SystemSettings implements Serializable {
     public static final String prmLogsInfo = "логи системы";
     public static final String prmAccountingLogsSelect = "логи по бухгалтерии";
     public static final String actDelete = "удаление";
+    public static final String actPdf = "pdf";
     public static final String prmContractInfo = "информация о контракте";
     public static final String prmContractInfoLeftDebt = "информация о задолженностях";
     public static final String prmMenu = "меню";

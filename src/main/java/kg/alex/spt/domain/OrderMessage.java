@@ -20,8 +20,6 @@ public class OrderMessage implements Serializable {
     private Date date;
     private int student_id;
     private int employee_id;
-    private int to_employee_id;
-    private int message_status_id;
 
     public int getId() {
         return id;
@@ -85,21 +83,5 @@ public class OrderMessage implements Serializable {
 
     public void setEmployee_id(int employee_id) {
         this.employee_id = employee_id;
-    }
-
-    public int getTo_employee_id() {
-        return to_employee_id;
-    }
-
-    public void setTo_employee_id(int to_employee_id) {
-        this.to_employee_id = to_employee_id;
-    }
-
-    public int getMessage_status_id() {
-        return message_status_id;
-    }
-
-    public void setMessage_status_id(int message_status_id) {
-        this.message_status_id = message_status_id;
     }
 }

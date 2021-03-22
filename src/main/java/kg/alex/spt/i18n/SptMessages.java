@@ -22,6 +22,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String IssueStudentOrder = generateId();
     public static final String Reports = generateId();
     public static final String SendOrders = generateId();
+    public static final String Send = generateId();
     public static final String AccountingReports = generateId();
     public static final String StockReports = generateId();
     public static final String HRReports = generateId();
@@ -76,6 +77,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Status = generateId();
     public static final String OrderType = generateId();
     public static final String CanNotDelete = generateId();
+    public static final String CanNotDeleteRead = generateId();
     public static final String CanNotGetCurrency = generateId();
     public static final String LowBalance = generateId();
     public static final String ModifyButton = generateId();
@@ -140,6 +142,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String MovementType = generateId();
     public static final String Logo = generateId();
     public static final String ValueSaved = generateId();
+    public static final String Sent = generateId();
     public static final String FullName = generateId();
     public static final String Hobbies = generateId();
     public static final String Fobbies = generateId();
@@ -217,6 +220,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String MartialStatus = generateId();
     public static final String EnteringYear = generateId();
     public static final String Employee = generateId();
+    public static final String UnRead = generateId();
+    public static final String ToEmployees = generateId();
     public static final String ModificationDate = generateId();
     public static final String AllStudents = generateId();
     public static final String OrdersHistory = generateId();
@@ -402,6 +407,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String SilkRoadRu = generateId();
     public static final String ExportToExcel = generateId();
     public static final String ExportToPdf = generateId();
+    public static final String ViewDocument = generateId();
     public static final String HomePage = generateId();
     public static final String OtherUsers = generateId();
     public static final String OtherSchool = generateId();

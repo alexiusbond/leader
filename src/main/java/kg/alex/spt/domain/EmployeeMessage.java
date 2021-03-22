@@ -11,8 +11,17 @@ public class EmployeeMessage implements Serializable {
 
     private int id;
     private int employee_id;
+    private String employee;
     private int order_message_id;
     private int message_status_id;
+
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
+    }
 
     public int getId() {
         return id;

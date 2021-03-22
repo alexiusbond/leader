@@ -296,7 +296,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         }
                     }
                 });
-
         this.setSecondComponent(tabs);
         prepareNormalMode();
         updateInfoLayout();
@@ -1284,7 +1283,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 }
                 spouseHealthCB.setValue(es.getHealth_status_id());
             } else {
-                clearSpouseFields();
+                spouseHealthCB.setValue(null);
+                spouseFullnameTF.setValue("");
+                spousePhoneTF.setValue("");
+                spouseHealthNotesTF.setValue("");
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -1301,15 +1303,23 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             if (eei != null) {
                 if (eei.getHobbies() != null) {
                     hobbiesTF.setValue(eei.getHobbies());
+                } else {
+                    hobbiesTF.setValue("");
                 }
                 if (eei.getFobbies() != null) {
                     fobbiesTF.setValue(eei.getFobbies());
+                } else {
+                    fobbiesTF.setValue("");
                 }
                 if (eei.getHealth_notes() != null) {
                     healthNotesTA.setValue(eei.getHealth_notes());
+                } else {
+                    healthNotesTA.setValue("");
                 }
                 if (eei.getShort_notes() != null) {
                     shortNotesTA.setValue(eei.getShort_notes());
+                } else {
+                    shortNotesTA.setValue("");
                 }
                 healthCB.setValue(eei.getHealth_status_id());
             } else {
@@ -4327,7 +4337,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void insertEmplSpouse(EmployeeSpouse es) {
         try {
-            if (martialStatusCB.getValue() != null && (Integer) martialStatusCB.getValue() == 2) {
+            if (spouseHealthCB.getValue() != null &&
+                    spouseFullnameTF.getValue() != null && !spouseFullnameTF.getValue().equals("")) {
                 DbEmployeeSpouse dbes = new DbEmployeeSpouse();
                 dbes.connect();
                 int st = dbes.exec_insert(es);
@@ -4468,7 +4479,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             e.setMiddle_name(middlenameTF.getValue());
         }
         e.setGender_id((Integer) genderCB.getValue());
-        e.setBirth_date((Date) birthDateDF.getValue());
+        e.setBirth_date(birthDateDF.getValue());
         e.setNationality_id((Integer) nationalityCB.getValue());
         e.setMartial_status_id((Integer) martialStatusCB.getValue());
         e.setModified_by_id(myUI.getUser().getId());

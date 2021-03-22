@@ -5,15 +5,19 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.*;
-import kg.alex.spt.domain.ClassName;
+import kg.alex.spt.domain.EmployeeMessage;
+import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.OrderPdf;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -25,32 +29,36 @@ import org.tepi.filtertable.FilterTable;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Set;
 
 public class SendOrderView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(SendOrderView.class);
     private MyVaadinUI myUI;
-    private Button createBtn, deleteBtn, saveBtn, cancelBtn, pdfBtn;
+    private Button sendBtn;
     private ComboBoxMax schoolSelect, studentSelect;
     private ComboBoxMultiselectMax employeeMCB;
     private FilterTable dataTable;
-    private TextField numberAndDateTF, headlineTF;
+    private TextField orderNumberTF, headlineTF;
+    private DateField dateDF;
     private RichTextArea contentRTA;
     private TextArea messageTA;
-    private boolean isNew;
 
     private String[] NATURAL_COL_ORDER;
-    private VerticalLayout settingsLay;
+    private GridLayout settingsLay;
     private Subject currentUser = SecurityUtils.getSubject();
 
     public SendOrderView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
-                myUI.getMessage(SptMessages.Employee), myUI.getMessage(SptMessages.NumberAndDate),
-                myUI.getMessage(SptMessages.Student), myUI.getMessage(SptMessages.Status)};
+                myUI.getMessage(SptMessages.Employee), myUI.getMessage(SptMessages.OrderNumber),
+                myUI.getMessage(SptMessages.Student), myUI.getMessage(SptMessages.Title),
+                myUI.getMessage(SptMessages.Message), myUI.getMessage(SptMessages.Status),
+                SystemSettings.button};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -60,81 +68,48 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dataTable = new FilterTable();
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setStyleName(ValoTheme.TABLE_SMALL);
+        dataTable.addStyleName("noWrap");
         dataTable.setSizeFull();
-        dataTable.setNullSelectionAllowed(false);
-        dataTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
         dataTable.setFilterBarVisible(true);
         dataTable.setFooterVisible(true);
-        dataTable.setSelectable(true);
-        dataTable.addValueChangeListener(this);
         try {
             DbOrderMessage dbCon = new DbOrderMessage();
             dbCon.connect();
-            dbCon.execSQL(myUI, 0, dataTable);
+            if (currentUser.hasRole("admin")) {
+                dbCon.execSQL(myUI, 0, dataTable, this);
+            } else {
+                dbCon.execSQL(myUI, myUI.getUser().getId(), dataTable, this);
+            }
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Message), 1);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Date), 80);
+        dataTable.setColumnWidth(SystemSettings.button, 60);
         vl.addComponent(dataTable);
 
-        this.setSplitPosition(45, Unit.PERCENTAGE);
+        this.setSplitPosition(30, Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(settingsLay);
         this.setSecondComponent(vl);
-
-        prepareNormalMode();
     }
 
     private void buildSettingsLayout() {
 
-        settingsLay = new VerticalLayout();
+        settingsLay = new GridLayout(2, 7);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
         settingsLay.setSizeFull();
 
-        HorizontalLayout buttonsLay = new HorizontalLayout();
-        buttonsLay.setSpacing(true);
-
-        createBtn = new Button();
-        createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
-        createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        createBtn.setIcon(FontAwesome.FILE_O);
-        createBtn.addClickListener(this);
-        buttonsLay.addComponent(createBtn);
-
-        deleteBtn = new Button();
-        deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
-        deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        deleteBtn.setIcon(FontAwesome.TRASH_O);
-        deleteBtn.addClickListener(this);
-        buttonsLay.addComponent(deleteBtn);
-
-        saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
-        saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        saveBtn.setIcon(FontAwesome.FLOPPY_O);
-        saveBtn.addClickListener(this);
-        buttonsLay.addComponent(saveBtn);
-
-        cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
-        cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        cancelBtn.setIcon(FontAwesome.BAN);
-        cancelBtn.addClickListener(this);
-        buttonsLay.addComponent(cancelBtn);
-
-        pdfBtn = new Button();
-        pdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
-        pdfBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
-        pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
-        pdfBtn.addClickListener(this);
-        buttonsLay.addComponent(pdfBtn);
-        settingsLay.addComponent(buttonsLay);
+        sendBtn = new Button();
+        sendBtn.setCaption(myUI.getMessage(SptMessages.Send));
+        sendBtn.setIcon(FontAwesome.SHARE_SQUARE_O);
+        sendBtn.addClickListener(this);
+        settingsLay.addComponent(sendBtn, 0, 0, 1, 0);
 
         schoolSelect = new ComboBoxMax(myUI.getMessage(SptMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
@@ -146,16 +121,16 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
         schoolSelect.setContainerDataSource(myUI.getSchoolCont());
-        settingsLay.addComponent(schoolSelect);
+        settingsLay.addComponent(schoolSelect, 0, 1, 1, 1);
 
-        employeeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Employee));
+        employeeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ToEmployees));
         employeeMCB.setRequired(true);
         employeeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         employeeMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         employeeMCB.setWidth("100%");
         employeeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         employeeMCB.setFilteringMode(FilteringMode.CONTAINS);
-        settingsLay.addComponent(employeeMCB);
+        settingsLay.addComponent(employeeMCB, 0, 2);
 
         studentSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Student));
         studentSelect.setNullSelectionAllowed(false);
@@ -166,16 +141,26 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         studentSelect.setFilteringMode(FilteringMode.CONTAINS);
         studentSelect.addValueChangeListener(this);
-        settingsLay.addComponent(studentSelect);
+        settingsLay.addComponent(studentSelect, 1, 2);
 
-        numberAndDateTF = new TextField(myUI.getMessage(SptMessages.NumberAndDate));
-        numberAndDateTF.setRequired(true);
-        numberAndDateTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        numberAndDateTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        numberAndDateTF.setWidth("100%");
-        numberAndDateTF.addValidator(new StringLengthValidator(
+        dateDF = new DateField(myUI.getMessage(SptMessages.Date));
+        dateDF.setResolution(Resolution.MINUTE);
+        dateDF.setWidth("100%");
+        dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        dateDF.setRequired(true);
+        dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        dateDF.setDateFormat(SystemSettings.datePattern);
+        dateDF.setValue(new Date());
+        settingsLay.addComponent(dateDF, 0, 3);
+
+        orderNumberTF = new TextField(myUI.getMessage(SptMessages.OrderNumber));
+        orderNumberTF.setRequired(true);
+        orderNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        orderNumberTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        orderNumberTF.setWidth("100%");
+        orderNumberTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 25, false));
-        settingsLay.addComponent(numberAndDateTF);
+        settingsLay.addComponent(orderNumberTF, 1, 3);
 
         headlineTF = new TextField(myUI.getMessage(SptMessages.Headline));
         headlineTF.setRequired(true);
@@ -184,15 +169,14 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         headlineTF.setWidth("100%");
         headlineTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 300, false));
-        settingsLay.addComponent(headlineTF);
+        settingsLay.addComponent(headlineTF, 0, 4, 1, 4);
 
         contentRTA = new RichTextArea(myUI.getMessage(SptMessages.Content));
         contentRTA.setRequired(true);
         contentRTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         contentRTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         contentRTA.setSizeFull();
-        settingsLay.addComponent(contentRTA);
-        settingsLay.setExpandRatio(contentRTA, 1);
+        settingsLay.addComponent(contentRTA, 0, 5, 1, 5);
 
         messageTA = new TextArea(myUI.getMessage(SptMessages.Message));
         messageTA.setRows(2);
@@ -200,66 +184,47 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         messageTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         messageTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         messageTA.setWidth("100%");
-        settingsLay.addComponent(messageTA);
+        settingsLay.addComponent(messageTA, 0, 6, 1, 6);
+        settingsLay.setRowExpandRatio(5, 1);
+        settingsLay.setColumnExpandRatio(0, 2);
+        settingsLay.setColumnExpandRatio(1, 1);
 
     }
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source == createBtn) {
-            isNew = true;
-            clearFields();
-            prepareModificationMode();
-        } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
-                        }
-                    });
-        } else if (source == saveBtn) {
+        if (source == sendBtn) {
             try {
                 if (validate(settingsLay)) {
-                    DbClassName dbcn = new DbClassName();
+                    DbOrderMessage dbcn = new DbOrderMessage();
                     dbcn.connect();
-                    if (isNew) {
-                        int id = dbcn.exec_insert(getClassName(0));
-                        if (id != 0) {
-                            addDatacontainerItem(id);
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
-                                    Notification.Type.HUMANIZED_MESSAGE);
-                        } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
-                                    Notification.Type.WARNING_MESSAGE);
+                    int id = dbcn.exec_insert(getOrderMessage(0));
+                    if (id != 0) {
+                        Iterator iter = ((Set<?>) employeeMCB.getValue()).iterator();
+                        DbEmployeeMessage dbem = new DbEmployeeMessage();
+                        dbem.connect();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            EmployeeMessage employeeMessage = new EmployeeMessage();
+                            employeeMessage.setEmployee_id((Integer) next);
+                            employeeMessage.setOrder_message_id(id);
+                            employeeMessage.setMessage_status_id(2);
+                            int em_id = dbem.exec_insert(employeeMessage);
+                            employeeMessage.setId(em_id);
+                            employeeMessage.setEmployee(employeeMCB.getContainerProperty(
+                                    next, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                            addDatacontainerItem(employeeMessage);
                         }
+                        dbem.close();
+                        Notification.show(myUI.getMessage(SptMessages.Sent),
+                                Notification.Type.HUMANIZED_MESSAGE);
                     } else {
-                        int status = 0;
-                        try {
-                            status = dbcn.exec_update(
-                                    getClassName((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            SystemSettings.id).getValue()));
-                        } catch (Exception e) {
-                            logger.error(e);
-                            logger.catching(e);
-                        }
-                        if (status != 0) {
-                            updateDatacontainer();
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
-                                    Notification.Type.HUMANIZED_MESSAGE);
-                        } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
-                                    Notification.Type.WARNING_MESSAGE);
-                        }
+                        Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                Notification.Type.WARNING_MESSAGE);
                     }
                     dbcn.close();
-                    prepareNormalMode();
+                    clearFields();
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                             Notification.Type.WARNING_MESSAGE);
@@ -268,26 +233,35 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (source == cancelBtn) {
-            if (dataTable.getValue() != null) {
-                fillFields();
+        } else if (source.getId() != null && source.getId().equals(SystemSettings.actDelete)) {
+            EmployeeMessage employeeMessage = (EmployeeMessage) source.getData();
+            if ((Integer) dataTable.getContainerProperty(employeeMessage.getId(),
+                    SystemSettings.status_id).getValue() == 2) {
+                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                        myUI.getMessage(SptMessages.ConfirmDeletion),
+                        myUI.getMessage(SptMessages.Yes),
+                        myUI.getMessage(SptMessages.No),
+                        new ConfirmDialog.Listener() {
+                            @Override
+                            public void onClose(ConfirmDialog dialog) {
+                                if (dialog.isConfirmed()) {
+                                    execDelete(employeeMessage);
+                                }
+                            }
+                        });
+            } else {
+                Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+                        Notification.Type.WARNING_MESSAGE);
             }
-            prepareNormalMode();
-        } else if (source == pdfBtn) {
-            if (dataTable.getValue() != null) {
-
-            }
+        } else {
+            new OrderPdf(myUI);
         }
     }
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        if (property == dataTable) {
-            if (dataTable.getItem(dataTable.getValue()) != null) {
-                fillFields();
-            }
-        } else if (property == schoolSelect && schoolSelect.getValue() != null) {
+        if (property == schoolSelect && schoolSelect.getValue() != null) {
             try {
                 headlineTF.setValue(schoolSelect.getContainerProperty(schoolSelect.getValue(),
                         myUI.getMessage(SptMessages.TitleKg)).getValue().toString().toUpperCase()
@@ -320,116 +294,80 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         }
     }
 
-    private void prepareModificationMode() {
-        createBtn.setEnabled(false);
-        deleteBtn.setEnabled(false);
-        saveBtn.setEnabled(true);
-        cancelBtn.setEnabled(true);
-        dataTable.setEnabled(false);
-        headlineTF.setEnabled(true);
-        numberAndDateTF.setEnabled(true);
-        contentRTA.setEnabled(true);
-        messageTA.setEnabled(true);
-        schoolSelect.setEnabled(true);
-        studentSelect.setEnabled(true);
-        employeeMCB.setEnabled(true);
-    }
-
-    private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnSendOrderView + ":" + SystemSettings.actAdd)) {
-            createBtn.setEnabled(true);
-        }
-        if (currentUser.isPermitted(SystemSettings.cnSendOrderView + ":" + SystemSettings.actDelete)) {
-            deleteBtn.setEnabled(true);
-        }
-        saveBtn.setEnabled(false);
-        cancelBtn.setEnabled(false);
-        dataTable.setEnabled(true);
-        headlineTF.setEnabled(false);
-        numberAndDateTF.setEnabled(false);
-        contentRTA.setEnabled(false);
-        messageTA.setEnabled(false);
-        schoolSelect.setEnabled(false);
-        studentSelect.setEnabled(false);
-        employeeMCB.setEnabled(false);
-    }
-
-    private void fillFields() {
-        headlineTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).getValue().toString());
-        schoolSelect.setValue(
-                (Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                        SystemSettings.number_id).getValue());
-    }
-
     private void clearFields() {
         headlineTF.setValue("");
-        numberAndDateTF.setValue("");
+        orderNumberTF.setValue("");
         contentRTA.setValue("");
         messageTA.setValue("");
         schoolSelect.setValue(null);
+        dateDF.setValue(new Date());
         studentSelect.setValue(null);
         employeeMCB.setValue(null);
     }
 
-    private void updateDatacontainer() {
-        dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).setValue(headlineTF.getValue());
-        dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.number_id).setValue(schoolSelect
-                .getValue());
-        dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Number)).setValue(schoolSelect
-                .getContainerProperty(schoolSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue());
-        dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.school_id).setValue(
-                myUI.getUser().getSchool_id());
-        dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.School)).setValue(
-                myUI.getUser().getSchool_name());
-    }
-
-    private void addDatacontainerItem(int id) {
+    private void addDatacontainerItem(EmployeeMessage employeeMessage) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
-                .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
-                headlineTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
-                schoolSelect.getContainerProperty(schoolSelect.getValue(),
+                .addItemAt(0, employeeMessage.getId());
+        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                SystemSettings.df.format(dateDF.getValue()));
+        item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
+                employeeMessage.getEmployee());
+        item.getItemProperty(myUI.getMessage(SptMessages.Message)).setValue(messageTA.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(headlineTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.Student)).setValue(
+                studentSelect.getContainerProperty(studentSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue());
-        item.getItemProperty(SystemSettings.number_id).setValue(
-                schoolSelect.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
-                myUI.getUser().getSchool_name());
-        item.getItemProperty(SystemSettings.school_id).setValue(
-                myUI.getUser().getSchool_id());
-        item.getItemProperty(SystemSettings.id).setValue(id);
-        dataTable.setValue(id);
+        item.getItemProperty(SystemSettings.status_id).setValue(2);
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setSpacing(true);
+        hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton),
+                SystemSettings.actDelete, FontAwesome.BAN, employeeMessage));
+        hl.addComponent(createButton(myUI.getMessage(SptMessages.ExportToPdf),
+                SystemSettings.actPdf, FontAwesome.FILE_PDF_O, employeeMessage));
+        item.getItemProperty(SystemSettings.button).setValue(hl);
+        item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
+                myUI.getMessage(SptMessages.UnRead));
+
     }
 
-    private ClassName getClassName(int i) {
-        ClassName d = new ClassName();
-        d.setName(headlineTF.getValue());
-        d.setClass_number_id((Integer) schoolSelect.getValue());
-        d.setSchool_id(myUI.getUser().getSchool_id());
-        d.setId(i);
-        return d;
+    public Button createButton(String description, String button_id, Resource icon,
+                               EmployeeMessage employeeMessage) {
+        Button btn = new Button();
+        btn.setDescription(description);
+        btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        btn.addStyleName(ValoTheme.BUTTON_TINY);
+        btn.setIcon(icon);
+        btn.setData(employeeMessage);
+        btn.setId(button_id);
+        btn.addClickListener(this);
+        return btn;
     }
 
-    private void execDelete() {
+    private OrderMessage getOrderMessage(int i) {
+        OrderMessage om = new OrderMessage();
+        om.setMessage(messageTA.getValue());
+        om.setContent(contentRTA.getValue());
+        om.setStudent_id((Integer) studentSelect.getValue());
+        om.setDate(dateDF.getValue());
+        om.setOrder_number(orderNumberTF.getValue());
+        om.setTitle(headlineTF.getValue());
+        om.setEmployee_id(myUI.getUser().getId());
+        om.setId(i);
+        return om;
+    }
+
+    private void execDelete(EmployeeMessage employeeMessage) {
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
-            int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), SystemSettings.dbClass_name);
+            int st = dbDef.exec_delete(employeeMessage.getId(),
+                    SystemSettings.dbEmployeeMessageTable);
             if (st != 0) {
-                dataTable.getContainerDataSource().removeItem(dataTable.getValue());
-                if (dataTable.getContainerDataSource().size() != 0) {
-                    dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
-                } else {
-                    clearFields();
-                    dataTable.setValue(null);
+                dataTable.getContainerDataSource().removeItem(employeeMessage.getId());
+                try {
+                    dbDef.exec_delete(employeeMessage.getOrder_message_id(),
+                            SystemSettings.orderMessagesTable);
+                } catch (Exception e) {
                 }
             }
             dbDef.close();
