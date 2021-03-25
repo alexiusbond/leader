@@ -137,6 +137,11 @@
             <version>3.1</version>
         </dependency>
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
+        <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
@@ -195,8 +200,13 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.5.9</version>
+            <version>5.5.13</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf.tool</groupId>
+            <artifactId>xmlworker</artifactId>
+            <version>5.5.13</version>
         </dependency>
         <dependency>
             <groupId>net.coobird</groupId>
@@ -251,10 +261,9 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <!-- workaround for
-                http://code.google.com/p/google-web-toolkit/issues/detail?id=6397 -->
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
+                <version>3.1.0</version>
                 <configuration>
                     <filesets>
                         <fileset>
@@ -282,7 +291,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=878edb52-af5d-4e88-9a47-4aa288d34b3a
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=0d79257a-59bb-4103-8ccd-c2cb6901487a
                     </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>
@@ -326,6 +335,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
@@ -336,8 +346,9 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>

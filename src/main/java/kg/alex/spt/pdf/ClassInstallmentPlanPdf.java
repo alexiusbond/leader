@@ -16,11 +16,13 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudInfoPdf;
@@ -38,7 +40,6 @@ public class ClassInstallmentPlanPdf {
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
     private Date fromDate, tillDate;
-    
 
 
     public ClassInstallmentPlanPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
@@ -100,8 +101,7 @@ public class ClassInstallmentPlanPdf {
                     PdfPTable Tplan = new PdfPTable(6);
                     Tplan.setWidthPercentage(90f);
                     Tplan.setWidths(Tplan_colsWidth);
-                    Tplan.getDefaultCell().
-                            setVerticalAlignment(Element.ALIGN_BOTTOM);
+                    Tplan.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
                     Tplan.addCell(new Phrase(" №", ordFontBold));
                     Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Firstname), ordFontBold));
                     Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Surname), ordFontBold));
@@ -157,7 +157,7 @@ public class ClassInstallmentPlanPdf {
                     document.add(T2);
 
                 } catch (Exception e) {
-                        logger.error(e);
+                    logger.error(e);
                     logger.catching(e);
                 } finally {
                     if (document != null) {

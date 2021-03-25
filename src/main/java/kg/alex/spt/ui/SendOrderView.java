@@ -44,8 +44,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
     private FilterTable dataTable;
     private TextField orderNumberTF, headlineTF;
     private DateField dateDF;
-    private RichTextArea contentRTA;
-    private TextArea messageTA;
+    private TextArea contentRTA, messageTA;
 
     private String[] NATURAL_COL_ORDER;
     private GridLayout settingsLay;
@@ -171,7 +170,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 300, false));
         settingsLay.addComponent(headlineTF, 0, 4, 1, 4);
 
-        contentRTA = new RichTextArea(myUI.getMessage(SptMessages.Content));
+        contentRTA = new TextArea(myUI.getMessage(SptMessages.Content));
         contentRTA.setRequired(true);
         contentRTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         contentRTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -199,7 +198,8 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 if (validate(settingsLay)) {
                     DbOrderMessage dbcn = new DbOrderMessage();
                     dbcn.connect();
-                    int id = dbcn.exec_insert(getOrderMessage(0));
+                    OrderMessage orderMessage = getOrderMessage(0);
+                    int id = dbcn.exec_insert(orderMessage);
                     if (id != 0) {
                         Iterator iter = ((Set<?>) employeeMCB.getValue()).iterator();
                         DbEmployeeMessage dbem = new DbEmployeeMessage();
@@ -214,7 +214,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                             employeeMessage.setId(em_id);
                             employeeMessage.setEmployee(employeeMCB.getContainerProperty(
                                     next, myUI.getMessage(SptMessages.Title)).getValue().toString());
-                            addDatacontainerItem(employeeMessage);
+                            addDatacontainerItem(employeeMessage, orderMessage);
                         }
                         dbem.close();
                         Notification.show(myUI.getMessage(SptMessages.Sent),
@@ -254,7 +254,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                         Notification.Type.WARNING_MESSAGE);
             }
         } else {
-            new OrderPdf(myUI);
+            new OrderPdf(myUI, (OrderMessage) source.getData());
         }
     }
 
@@ -281,16 +281,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 logger.catching(e);
             }
         } else if (property == studentSelect && studentSelect.getValue() != null) {
-            contentRTA.setValue("<font face='Times New Roman, serif'>" +
-                    "<span style='font-size: 14px;'>Лицейдин "
+            contentRTA.setValue("Лицейдин "
                     + studentSelect.getContainerProperty(
                     studentSelect.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue()
-                    + "-классынын окуучусу <b>" + studentSelect.getContainerProperty(
+                    + "-классынын окуучусу " + studentSelect.getContainerProperty(
                     studentSelect.getValue(), myUI.getMessage(SptMessages.FullName)).getValue()
-                    + "га</b> “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
-                    "Жобосунун 3-пунктунун  негизинде <b>"
+                    + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
+                    "Жобосунун 3-пунктунун  негизинде "
                     + myUI.getUser().getCurrent_year().getName()
-                    + "-окуу жылынын окуу төлөмүндө __% жеңилдик берилсин.</b></span></font>");
+                    + "-окуу жылынын окуу төлөмүндө __% жеңилдик берилсин.");
         }
     }
 
@@ -305,7 +304,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         employeeMCB.setValue(null);
     }
 
-    private void addDatacontainerItem(EmployeeMessage employeeMessage) {
+    private void addDatacontainerItem(EmployeeMessage employeeMessage, OrderMessage orderMessage) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, employeeMessage.getId());
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
@@ -314,6 +313,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 employeeMessage.getEmployee());
         item.getItemProperty(myUI.getMessage(SptMessages.Message)).setValue(messageTA.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(headlineTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.OrderNumber)).setValue(orderNumberTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Student)).setValue(
                 studentSelect.getContainerProperty(studentSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue());
@@ -323,21 +323,20 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton),
                 SystemSettings.actDelete, FontAwesome.BAN, employeeMessage));
         hl.addComponent(createButton(myUI.getMessage(SptMessages.ExportToPdf),
-                SystemSettings.actPdf, FontAwesome.FILE_PDF_O, employeeMessage));
+                SystemSettings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
         item.getItemProperty(SystemSettings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 myUI.getMessage(SptMessages.UnRead));
 
     }
 
-    public Button createButton(String description, String button_id, Resource icon,
-                               EmployeeMessage employeeMessage) {
+    public Button createButton(String description, String button_id, Resource icon, Object data) {
         Button btn = new Button();
         btn.setDescription(description);
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.addStyleName(ValoTheme.BUTTON_TINY);
         btn.setIcon(icon);
-        btn.setData(employeeMessage);
+        btn.setData(data);
         btn.setId(button_id);
         btn.addClickListener(this);
         return btn;

@@ -265,6 +265,13 @@ public class SystemSettings implements Serializable {
             return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
                     "июля", "августа", "сентября", "октября", "ноября", "декабря"};
         }
+    });public static final SimpleDateFormat dateKg = new SimpleDateFormat(
+            "«dd» MMMMM yyyy ж.", new DateFormatSymbols() {
+        @Override
+        public String[] getMonths() {
+            return new String[]{"январь", "февраль", "март", "апрель", "май", "июнь",
+                    "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"};
+        }
     });
 
     public static StringToDoubleConverter getStringToDoubleConverter() {

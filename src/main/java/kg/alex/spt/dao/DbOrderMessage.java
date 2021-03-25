@@ -57,14 +57,14 @@ public class DbOrderMessage extends BaseDb {
     public void execSQL(MyVaadinUI myUi, int employee_id, FilterTable t, SendOrderView view) throws SQLException {
         String sql = "SELECT em.id, concat(e.name, ' ', e.surname) as employee, " +
                 "concat(st.name, ' ', st.surname) as student, om.id, " +
-                "om.creation_date, om.order_number, om.message, om.order_title, " +
+                "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, " +
                 "mst.id, mst.name FROM employee_message AS em " +
                 "left join employee as e on e.id = em.employee_id " +
                 "left join message_status as mst on mst.id = em.message_status_id " +
                 "left join order_messages as om on om.id = em.order_messages_id " +
                 "left join student as st on st.id = om.student_id ";
         if (employee_id != 0) {
-            sql += " WHERE em.employee_id = ?";
+            sql += " WHERE em.employee_id = ? order by om.creation_date desc";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
 
@@ -83,7 +83,7 @@ public class DbOrderMessage extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("em.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(
-                    result.getTimestamp("om.creation_date")));
+                    result.getDate("om.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(result.getString("employee"));
             item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
             item.getItemProperty(myUi.getMessage(SptMessages.Message)).setValue(result.getString("om.message"));
@@ -98,8 +98,13 @@ public class DbOrderMessage extends BaseDb {
             hl.setSpacing(true);
             hl.addComponent(view.createButton(myUi.getMessage(SptMessages.DeleteButton),
                     SystemSettings.actDelete, FontAwesome.BAN, employeeMessage));
+            OrderMessage orderMessage = new OrderMessage();
+            orderMessage.setTitle(result.getString("om.order_title"));
+            orderMessage.setContent(result.getString("om.order_content"));
+            orderMessage.setOrder_number(result.getString("om.order_number"));
+            orderMessage.setDate(result.getDate("om.creation_date"));
             hl.addComponent(view.createButton(myUi.getMessage(SptMessages.ExportToPdf),
-                    SystemSettings.actPdf, FontAwesome.FILE_PDF_O, employeeMessage));
+                    SystemSettings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
             item.getItemProperty(SystemSettings.button).setValue(hl);
             if (result.getInt("mst.id") == 2) {
                 unread++;
