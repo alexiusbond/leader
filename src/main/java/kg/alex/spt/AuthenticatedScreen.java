@@ -18,10 +18,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudent;
-import kg.alex.spt.dao.DbStudentOrder;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.*;
@@ -40,11 +37,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private Subject currentUser = SecurityUtils.getSubject();
     private VerticalSplitPanel verticalPanel;
     private GridLayout upperLay = new GridLayout(3, 3);
-    private Button changePassButton;
+    private Button changePassBtn, messagesBtn;
     public ComboBoxMax yearSelect, schoolSelect;
     private Label header = new Label();
     private Label infoLabel, schoolLabel, yearLabel;
-    private
 
     School scl = new School();
     int st = 0;
@@ -76,10 +72,20 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         header.setImmediate(true);
         header.setValue((myUI.getMessage(SptMessages.Welcome)).toUpperCase());
 
-        changePassButton = new Button(myUI.getMessage(SptMessages.ChangePasswordButton));
-        changePassButton.setStyleName(ValoTheme.BUTTON_LINK);
-        changePassButton.setIcon(FontAwesome.KEY);
-        changePassButton.addClickListener(this);
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setSpacing(true);
+
+        messagesBtn = new Button(myUI.getMessage(SptMessages.Messages));
+        messagesBtn.setImmediate(true);
+        repaintMessagesButton();
+        messagesBtn.addClickListener(this);
+        hl.addComponent(messagesBtn);
+
+        changePassBtn = new Button(myUI.getMessage(SptMessages.ChangePasswordButton));
+        changePassBtn.setStyleName(ValoTheme.BUTTON_LINK);
+        changePassBtn.setIcon(FontAwesome.KEY);
+        changePassBtn.addClickListener(this);
+        hl.addComponent(changePassBtn);
 
         Button logout = new Button(myUi.getMessage(SptMessages.LogoutButton));
         logout.addClickListener(new MyVaadinUI.LogoutListener(this.myUI));
@@ -89,9 +95,9 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         upperLay.setSizeFull();
         upperLay.setSpacing(false);
-
         upperLay.addComponent(buildInfoLay(), 0, 0, 2, 0);
-        upperLay.addComponent(changePassButton, 0, 1);
+        upperLay.addComponent(hl, 0, 1);
+        upperLay.setComponentAlignment(hl, Alignment.MIDDLE_LEFT);
         upperLay.addComponent(header, 1, 1);
         upperLay.setComponentAlignment(header, Alignment.MIDDLE_CENTER);
         upperLay.addComponent(logout, 2, 1);
@@ -107,7 +113,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             warning = new Label(myUI.getMessage(SptMessages.SystemClosedNotif));
             warning.setSizeUndefined();
             warning.setStyleName("mylabel");
-            changePassButton.setEnabled(false);
+            changePassBtn.setEnabled(false);
             upperLay.removeComponent(header);
             upperLay.addComponent(warning, 1, 1);
         }
@@ -158,7 +164,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 + myUI.getMessage(SptMessages.Year) + ": </b>");
 
         yearSelect = new ComboBoxMax();
-        if (currentUser.isPermitted(SystemSettings.prmChangeYear + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.prmChangeYear
+                + ":" + SystemSettings.actModify)) {
             yearSelect.setEnabled(true);
         } else {
             yearSelect.setEnabled(false);
@@ -189,7 +196,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     }
 
     private MenuBar buildMenu() {
-
         final MenuBar menubar = new MenuBar();
         menubar.setSizeFull();
         menubar.setHeight("35px");
@@ -371,6 +377,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         @Override
         public void menuSelected(MenuItem selectedItem) {
             if (selectedItem != null) {
+                repaintMessagesButton();
                 String eventPressed = selectedItem.getText();
                 if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNumberDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
@@ -480,16 +487,19 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source == changePassButton) {
+        if (source == changePassBtn) {
             this.verticalPanel.setSecondComponent(new ChangeUserData(myUI));
             header.setValue(myUI.getMessage(SptMessages.ChangeUserDataHeader)
                     .toUpperCase());
+        } else if (source == messagesBtn) {
+
         }
     }
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
+        repaintMessagesButton();
         if (property == yearSelect) {
             if (yearSelect.getValue() != null) {
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
@@ -681,6 +691,27 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             }
 
         }
+    }
+
+    private void repaintMessagesButton() {
+        System.out.println(myUI.getUser().isUnreadMessages());
+        try {
+            DbEmployeeMessage dbCon = new DbEmployeeMessage();
+            dbCon.connect();
+            myUI.getUser().setUnreadMessages(dbCon.isUnread(myUI.getUser().getId()));
+            dbCon.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        if (myUI.getUser().isUnreadMessages()) {
+            messagesBtn.setStyleName("unread");
+            messagesBtn.setIcon(FontAwesome.ENVELOPE);
+        } else {
+            messagesBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+            messagesBtn.setIcon(FontAwesome.ENVELOPE_OPEN);
+        }
+        messagesBtn.addStyleName(ValoTheme.BUTTON_SMALL);
     }
 
     private void setYearSel(int year_id) {

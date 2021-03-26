@@ -16042,6 +16042,12 @@ div.v-layout.v-horizontal.v-widget {
 	color: #ed473b;
 }
 
+.mytheme .v-button-unread {
+	color: #fff;
+	border: 2px solid #9E0000;
+	background: #ed473b;
+}
+
 .mytheme .v-slider-base:before, .mytheme .v-slider-base:after {
 	border: none !important;
 }

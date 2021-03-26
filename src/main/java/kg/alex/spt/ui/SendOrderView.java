@@ -327,7 +327,6 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         item.getItemProperty(SystemSettings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 myUI.getMessage(SptMessages.UnRead));
-
     }
 
     public Button createButton(String description, String button_id, Resource icon, Object data) {

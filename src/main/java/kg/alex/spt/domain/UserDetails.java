@@ -25,6 +25,7 @@ public class UserDetails implements Serializable {
     private String school_logo;
     private Definition current_year;
     private Date transactions_start_date;
+    private boolean isUnreadMessages;
 
     public Date getTransactions_start_date() {
         return transactions_start_date;
@@ -33,8 +34,14 @@ public class UserDetails implements Serializable {
     public void setTransactions_start_date(Date transactions_start_date) {
         this.transactions_start_date = transactions_start_date;
     }
-    
-    
+
+    public boolean isUnreadMessages() {
+        return isUnreadMessages;
+    }
+
+    public void setUnreadMessages(boolean unreadMessages) {
+        isUnreadMessages = unreadMessages;
+    }
 
     public int getSchool_type_id() {
         return school_type_id;

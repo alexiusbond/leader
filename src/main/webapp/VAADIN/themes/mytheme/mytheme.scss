@@ -20,6 +20,12 @@
     color: $v-error-indicator-color;
   }
 
+.v-button-unread {
+    color: #fff;
+    border: 2px solid #9E0000;
+    background: #ed473b;
+  }
+
   .v-slider-base:before,
   .v-slider-base:after {
     border: none !important;

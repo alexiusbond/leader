@@ -271,6 +271,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String PaymentType = generateId();
     public static final String Subject = generateId();
     public static final String Message = generateId();
+    public static final String Messages = generateId();
     public static final String Print = generateId();
     public static final String LiseContrRu = generateId();
     public static final String LiseContrKg = generateId();

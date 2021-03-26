@@ -8,6 +8,7 @@ package kg.alex.spt.dao;
 import kg.alex.spt.domain.EmployeeMessage;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DbEmployeeMessage extends BaseDb {
@@ -42,5 +43,22 @@ public class DbEmployeeMessage extends BaseDb {
         stat.setInt(3, em.getEmployee_id());
         int status = stat.executeUpdate();
         return status;
+    }
+
+    public boolean isUnread(int employee_id) throws SQLException {
+        String sql = "SELECT count(*) as val FROM employee_message " +
+                "where employee_id = ? and message_status_id = 2;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        System.out.println(stat.toString());
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            if (result.getInt("val") > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 }

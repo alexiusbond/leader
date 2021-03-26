@@ -9,6 +9,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
+
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -17,7 +18,9 @@ import java.util.ResourceBundle;
 import javax.servlet.annotation.WebServlet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import kg.alex.spt.dao.DbCurrencyRate;
+import kg.alex.spt.dao.DbEmployeeMessage;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbUserDetails;
 import kg.alex.spt.domain.UserDetails;
@@ -137,6 +140,15 @@ public class MyVaadinUI extends UI {
             DbUserDetails dbu = new DbUserDetails();
             dbu.connect();
             setUser(dbu.execSQLUserInfo(currentUser.getPrincipal().toString()));
+            dbu.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        try {
+            DbEmployeeMessage dbu = new DbEmployeeMessage();
+            dbu.connect();
+            getUser().setUnreadMessages(dbu.isUnread(getUser().getId()));
             dbu.close();
         } catch (Exception e) {
             logger.error(e);

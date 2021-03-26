@@ -273,6 +273,7 @@ public class SptMessages_ru extends SptMessages {
             {NotInserted, "Оставшиеся записи не могут быть сохранены!"},
             {Subject, "Тема"},
             {Message, "Сообщение"},
+            {Messages, "Сообщения"},
             {Print, "Распечатать"},
             {NotInserted, "Оставшиеся записи не могут быть сохранены!"},
             {LiseContrRu, "Контракт лицей(RU)"},
