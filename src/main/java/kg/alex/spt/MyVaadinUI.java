@@ -1,5 +1,6 @@
 package kg.alex.spt;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -19,6 +20,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.dao.DbCurrencyRate;
 import kg.alex.spt.dao.DbEmployeeMessage;
 import kg.alex.spt.dao.DbSchool;
@@ -49,6 +51,7 @@ public class MyVaadinUI extends UI {
     private IndexedContainer schoolCont;
     private double nbkr_currency_rate;
     private boolean isMannualRate;
+    private Button messagesBtn;
 
     @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
     @VaadinServletConfiguration(productionMode = true,
@@ -251,4 +254,31 @@ public class MyVaadinUI extends UI {
         return isMannualRate;
     }
 
+    public void repaintMessagesButton() {
+        try {
+            DbEmployeeMessage dbCon = new DbEmployeeMessage();
+            dbCon.connect();
+            getUser().setUnreadMessages(dbCon.isUnread(getUser().getId()));
+            dbCon.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        if (getUser().isUnreadMessages()) {
+            getMessagesBtn().setStyleName("unread");
+            getMessagesBtn().setIcon(FontAwesome.ENVELOPE);
+        } else {
+            getMessagesBtn().setStyleName(ValoTheme.BUTTON_FRIENDLY);
+            getMessagesBtn().setIcon(FontAwesome.ENVELOPE_OPEN);
+        }
+        getMessagesBtn().addStyleName(ValoTheme.BUTTON_SMALL);
+    }
+
+    public Button getMessagesBtn() {
+        return messagesBtn;
+    }
+
+    public void setMessagesBtn(Button messagesBtn) {
+        this.messagesBtn = messagesBtn;
+    }
 }

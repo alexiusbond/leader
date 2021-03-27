@@ -10,11 +10,13 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.OrderPdf;
 import kg.alex.spt.ui.SendOrderView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,10 +66,12 @@ public class DbOrderMessage extends BaseDb {
                 "left join order_messages as om on om.id = em.order_messages_id " +
                 "left join student as st on st.id = om.student_id ";
         if (employee_id != 0) {
-            sql += " WHERE em.employee_id = ? order by om.creation_date desc";
+            sql += " WHERE om.employee_id = ? order by om.creation_date desc";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
-
+        if (employee_id != 0) {
+            stat.setInt(1, employee_id);
+        }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
@@ -103,7 +107,7 @@ public class DbOrderMessage extends BaseDb {
             orderMessage.setContent(result.getString("om.order_content"));
             orderMessage.setOrder_number(result.getString("om.order_number"));
             orderMessage.setDate(result.getDate("om.creation_date"));
-            hl.addComponent(view.createButton(myUi.getMessage(SptMessages.ExportToPdf),
+            hl.addComponent(view.createButton(myUi.getMessage(SptMessages.ViewDocument),
                     SystemSettings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
             item.getItemProperty(SystemSettings.button).setValue(hl);
             if (result.getInt("mst.id") == 2) {

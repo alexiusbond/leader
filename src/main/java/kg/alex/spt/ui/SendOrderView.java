@@ -88,6 +88,24 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Message), 1);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Date), 80);
         dataTable.setColumnWidth(SystemSettings.button, 60);
+        dataTable.setCellStyleGenerator(new CustomTable.CellStyleGenerator() {
+            @Override
+            public String getStyle(CustomTable source, Object itemId, Object propertyId) {
+
+                if (propertyId == null) {
+                    // Styling for row
+                    if ((Integer) source.getContainerProperty(itemId,
+                            SystemSettings.status_id).getValue() == 2) {
+                        return "highlight-red";
+                    } else {
+                        return null;
+                    }
+                } else {
+                    // styling for column propertyId
+                    return null;
+                }
+            }
+        });
         vl.addComponent(dataTable);
 
         this.setSplitPosition(30, Unit.PERCENTAGE);
@@ -119,7 +137,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
-        schoolSelect.setContainerDataSource(myUI.getSchoolCont());
+        try {
+            DbSchool dbs = new DbSchool();
+            dbs.connect();
+            schoolSelect.setContainerDataSource(dbs.execSchoolSel(myUI, 1));
+            dbs.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
         settingsLay.addComponent(schoolSelect, 0, 1, 1, 1);
 
         employeeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ToEmployees));
@@ -322,7 +348,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         hl.setSpacing(true);
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton),
                 SystemSettings.actDelete, FontAwesome.BAN, employeeMessage));
-        hl.addComponent(createButton(myUI.getMessage(SptMessages.ExportToPdf),
+        hl.addComponent(createButton(myUI.getMessage(SptMessages.ViewDocument),
                 SystemSettings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
         item.getItemProperty(SystemSettings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(

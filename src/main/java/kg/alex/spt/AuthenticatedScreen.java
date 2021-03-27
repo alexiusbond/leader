@@ -37,7 +37,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private Subject currentUser = SecurityUtils.getSubject();
     private VerticalSplitPanel verticalPanel;
     private GridLayout upperLay = new GridLayout(3, 3);
-    private Button changePassBtn, messagesBtn;
+    private Button changePassBtn;
     public ComboBoxMax yearSelect, schoolSelect;
     private Label header = new Label();
     private Label infoLabel, schoolLabel, yearLabel;
@@ -75,11 +75,11 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
 
-        messagesBtn = new Button(myUI.getMessage(SptMessages.Messages));
-        messagesBtn.setImmediate(true);
-        repaintMessagesButton();
-        messagesBtn.addClickListener(this);
-        hl.addComponent(messagesBtn);
+        myUI.setMessagesBtn(new Button(myUI.getMessage(SptMessages.Messages)));
+        myUI.getMessagesBtn().setImmediate(true);
+        myUI.repaintMessagesButton();
+        myUI.getMessagesBtn().addClickListener(this);
+        hl.addComponent(myUI.getMessagesBtn());
 
         changePassBtn = new Button(myUI.getMessage(SptMessages.ChangePasswordButton));
         changePassBtn.setStyleName(ValoTheme.BUTTON_LINK);
@@ -377,7 +377,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         @Override
         public void menuSelected(MenuItem selectedItem) {
             if (selectedItem != null) {
-                repaintMessagesButton();
+                myUI.repaintMessagesButton();
                 String eventPressed = selectedItem.getText();
                 if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNumberDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
@@ -491,15 +491,17 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             this.verticalPanel.setSecondComponent(new ChangeUserData(myUI));
             header.setValue(myUI.getMessage(SptMessages.ChangeUserDataHeader)
                     .toUpperCase());
-        } else if (source == messagesBtn) {
-
+        } else if (source == myUI.getMessagesBtn()) {
+            myUI.repaintMessagesButton();
+            this.verticalPanel.setSecondComponent(new MessagesView(myUI));
+            header.setValue(myUI.getMessage(SptMessages.Messages).toUpperCase());
         }
     }
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        repaintMessagesButton();
+        myUI.repaintMessagesButton();
         if (property == yearSelect) {
             if (yearSelect.getValue() != null) {
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
@@ -691,27 +693,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             }
 
         }
-    }
-
-    private void repaintMessagesButton() {
-        System.out.println(myUI.getUser().isUnreadMessages());
-        try {
-            DbEmployeeMessage dbCon = new DbEmployeeMessage();
-            dbCon.connect();
-            myUI.getUser().setUnreadMessages(dbCon.isUnread(myUI.getUser().getId()));
-            dbCon.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-        if (myUI.getUser().isUnreadMessages()) {
-            messagesBtn.setStyleName("unread");
-            messagesBtn.setIcon(FontAwesome.ENVELOPE);
-        } else {
-            messagesBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-            messagesBtn.setIcon(FontAwesome.ENVELOPE_OPEN);
-        }
-        messagesBtn.addStyleName(ValoTheme.BUTTON_SMALL);
     }
 
     private void setYearSel(int year_id) {
