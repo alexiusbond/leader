@@ -46,7 +46,7 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudContract;
+import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
@@ -223,7 +223,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
                             ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()), null);
                     dbacc.close();
                     setSchoolAccounting(schoolAcc);
-                    DbStudContract dbsc = new DbStudContract();
+                    DbStudentContract dbsc = new DbStudentContract();
                     dbsc.connect();
                     contractTtl = dbsc.execSQL_totalsByScl(myUI, (Integer) yearSelect.getValue(),
                             SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),

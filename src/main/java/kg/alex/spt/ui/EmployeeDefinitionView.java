@@ -1002,7 +1002,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             DbEmployeeChildren dbech = new DbEmployeeChildren();
             dbech.connect();
             childrenTable.setContainerDataSource(dbech.execSQL(myUI, emplID, this));
-            System.out.println(childrenTable.size());
             dbech.close();
             childrenTable.setVisibleColumns(NATURAL_COL_ORDER_CHILDREN);
             childrenTable.setColumnExpandRatio(myUI.getMessage(SptMessages.FullName), 1);
@@ -2004,9 +2003,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         Notification.show(myUI.getMessage(SptMessages.OnlyJpg), Notification.Type.WARNING_MESSAGE);
                     } else {
                         fileName = null;
-                        IndexedContainer c = (IndexedContainer) upl.getData();
-                        Button b = (Button) ((HorizontalLayout) c.getContainerProperty(upl.getId(),
-                                myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
+                        Button b = (Button) upl.getData();
                         b.setEnabled(false);
                         b.setData(null);
                         Notification.show(myUI.getMessage(SptMessages.OnlyJpgOrPdf), Notification.Type.WARNING_MESSAGE);
@@ -2020,9 +2017,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     }
                     photoName = null;
                     fileName = null;
-                    IndexedContainer container = (IndexedContainer) upl.getData();
-                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(upl.getId(),
-                            myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
+                    Button b = (Button) upl.getData();
                     b.setEnabled(false);
                     b.setData(null);
                     Notification.show(myUI.getMessage(SptMessages.Maxsize), Notification.Type.WARNING_MESSAGE);
@@ -2045,9 +2040,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     }
                     photoEmb.setSource(new FileResource(myFile));
                 } else {
-                    IndexedContainer container = (IndexedContainer) upl.getData();
-                    Button b = (Button) ((HorizontalLayout) container.getContainerProperty(upl.getId(),
-                            myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
+                    Button b = (Button) upl.getData();
                     Attachment attachment = null;
                     try {
                         attachment = new Attachment();
@@ -2078,7 +2071,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 if (statusWindow != null) {
                     statusWindow.close();
                 }
-                Notification.show(myUI.getMessage(SptMessages.UploadedSuccessfully), Notification.Type.ERROR_MESSAGE);
+                Notification.show(myUI.getMessage(SptMessages.UploadFailed), Notification.Type.ERROR_MESSAGE);
                 try {
                     myFile.delete();
                 } catch (Exception ex) {
@@ -2490,6 +2483,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     setBranchesTable();
                                     setGradSchoolFields();
                                     updateInfoLayout();
+                                    fileName = null;
                                 } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
                                     insertLessons(emplID);
                                     updateInfoLayout();
@@ -2785,7 +2779,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     }
 
     private void insertChildren(int employee_id) {
-        System.out.println("Insert children");
         try {
             DbEmployeeChildren dbech = new DbEmployeeChildren();
             dbech.connect();
@@ -2843,6 +2836,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             dbd.connect();
             if (list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
+                    try {
+                        if (delEducationIds.get(i).getAttachmentUniqueName() != null) {
+                            File f = new File(SystemSettings.PATH_TO_UPLOADS_HR + delEducationIds.get(i).getAttachmentUniqueName());
+                            f.delete();
+                        }
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        logger.catching(ex);
+                    }
                     dbd.exec_delete(((EmployeeEducation) list.get(i)).getIdStr(), SystemSettings.dbEmployeeEducation);
                 }
             }
@@ -3613,7 +3615,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
             Upload u = createUpload("", false);
             u.setId(id);
-            u.setData(t.getContainerDataSource());
+            u.setData(b);
             hl.addComponent(u);
             item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
         }
@@ -3810,7 +3812,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
         Upload u = createUpload("", false);
         u.setId(id);
-        u.setData(certificatesTable.getContainerDataSource());
+        u.setData(b);
         hl.addComponent(u);
         item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
 
@@ -3888,7 +3890,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
         Upload u = createUpload("", false);
         u.setId(id);
-        u.setData(examsTable.getContainerDataSource());
+        u.setData(b);
         hl.addComponent(u);
         item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
         item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));

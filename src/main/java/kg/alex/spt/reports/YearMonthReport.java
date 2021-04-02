@@ -25,8 +25,8 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudContract;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.dao.DbStudentContract;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -311,7 +311,7 @@ public class YearMonthReport implements Button.ClickListener,
         if (source == generateBtn) {
             if (schoolTable.getValue() != null) {
                 try {
-                    DbStudContract dbsc = new DbStudContract();
+                    DbStudentContract dbsc = new DbStudentContract();
                     dbsc.connect();
                     String school_ids;
                     if (currentUser.hasRole(SystemSettings.rnAdmin)) {
@@ -352,7 +352,7 @@ public class YearMonthReport implements Button.ClickListener,
                 }
             }
         } else if (source == makePdfBtn) {
-            StudInfoPdf st;
+            StudentInfoPdf st;
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();

@@ -27,8 +27,8 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudPayment;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.dao.DbStudentPayment;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -213,7 +213,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
             makePdfBtn.setEnabled(true);
             excelBtn.setEnabled(true);
         } else if (source == makePdfBtn) {
-            StudInfoPdf st;
+            StudentInfoPdf st;
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
@@ -279,7 +279,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         dataTable.setRowHeaderMode(FormattedTable.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         try {
-            DbStudPayment dbsp = new DbStudPayment();
+            DbStudentPayment dbsp = new DbStudentPayment();
             dbsp.connect();
             dataTable.clear();
             total = 0;

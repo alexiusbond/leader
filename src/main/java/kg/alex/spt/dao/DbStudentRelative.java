@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import java.sql.PreparedStatement;
@@ -12,17 +13,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudRelative;
+import kg.alex.spt.domain.StudentRelative;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.StudentDefinitionView;
 
 /**
  *
- * @author eldiiar
+ * @author alex
  */
-public class DbStudRelative extends BaseDb {
+public class DbStudentRelative extends BaseDb {
 
-    public DbStudRelative() throws Exception {
+    public DbStudentRelative() throws Exception {
         super();
     }
 
@@ -41,7 +42,8 @@ public class DbStudRelative extends BaseDb {
             String id = result.getString("sr.id");
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
-                    dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id, false, false));
+                    dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id,
+                            SystemSettings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
             if (result.getInt("sr.is_main") == 1) {
                 item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
                         dw.createTextfield(result.getString("sr.fullname"),
@@ -88,7 +90,7 @@ public class DbStudRelative extends BaseDb {
         return container;
     }
 
-    public int exec_insert(StudRelative r) throws SQLException {
+    public int exec_insert(StudentRelative r) throws SQLException {
         String sql = "INSERT INTO student_relatives (student_id, fullname, "
                 + "work_place, phone, adress, passport,is_main,relatives_id) "
                 + "VALUES(?,?,?,?,?,?,?,?);";
@@ -111,7 +113,7 @@ public class DbStudRelative extends BaseDb {
         return stat.executeUpdate();
     }
     
-    public int exec_update(StudRelative sr) throws SQLException {
+    public int exec_update(StudentRelative sr) throws SQLException {
         String sql = "Update student_relatives set student_id=?, "
                 + "fullname=?, work_place=?, phone=?, adress=?, "
                 + "passport=?, is_main=?, relatives_id=? WHERE id=?;";

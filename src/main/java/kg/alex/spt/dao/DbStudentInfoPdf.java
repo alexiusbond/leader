@@ -8,16 +8,16 @@ package kg.alex.spt.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 
-public class DbStudInfoPdf extends BaseDb {
+public class DbStudentInfoPdf extends BaseDb {
 
-    public DbStudInfoPdf() throws Exception {
+    public DbStudentInfoPdf() throws Exception {
         super();
     }
 
-    public StudInfoPdf execSQL(int stud_id) throws SQLException {
-        StudInfoPdf sti = new StudInfoPdf();
+    public StudentInfoPdf execSQL(int stud_id) throws SQLException {
+        StudentInfoPdf sti = new StudentInfoPdf();
         String sql = "SELECT s.id, s.surname, s.name, s.middle_name, scl.city, scl.name_ru, scl.name_kg, scl.name_en, s.gender_id, "
                 + "scl.director_fullname, scl.adress, scl.inn, scl.bank, scl.bank_account, "
                 + "scl.school_type_id, scl.phone, sr.fullname, sr.phone, sr.passport, sr.adress, r.name_ru, r.name_ru_dec, "

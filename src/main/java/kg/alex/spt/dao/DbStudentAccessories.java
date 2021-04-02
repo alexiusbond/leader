@@ -5,28 +5,30 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudAccessories;
+import kg.alex.spt.domain.StudentAccessories;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.StudentDefinitionView;
 
 /**
- *
- * @author eldiiar
+ * @author alex
  */
-public class DbStudAccessories extends BaseDb {
+public class DbStudentAccessories extends BaseDb {
 
-    public DbStudAccessories() throws Exception {
+    public DbStudentAccessories() throws Exception {
         super();
     }
 
-    public int exec_insert(StudAccessories a) throws SQLException {
+    public int exec_insert(StudentAccessories a) throws SQLException {
         String sql = "INSERT INTO student_accessories (student_id, year_id, "
                 + "accessories_id, employee_id, modification_date) "
                 + "VALUES(?,?,?,?,NOW());";
@@ -65,9 +67,9 @@ public class DbStudAccessories extends BaseDb {
         return stat.executeUpdate();
     }
 
-        public IndexedContainer execSQL_St_Acs(MyVaadinUI myUi, int stud_id,
-            StudentDefinitionView dw, int cat_id) throws SQLException {
-        
+    public IndexedContainer execSQL_St_Acs(MyVaadinUI myUi, int stud_id,
+                                           StudentDefinitionView dw, int cat_id) throws SQLException {
+
 
         String sql = "SELECT sa.id, sa.student_id, sa.year_id, "
                 + "group_concat(sa.accessories_id separator ',') as accessories, sa.employee_id, "
@@ -90,7 +92,8 @@ public class DbStudAccessories extends BaseDb {
             String id = result.getString("sa.year_id");
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
-                    dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id, false, false));
+                    dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id,
+                            SystemSettings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     dw.createCombobox(result.getInt("sa.year_id"),
                             myUi.getMessage(SptMessages.Year), id, SystemSettings.dbYear,

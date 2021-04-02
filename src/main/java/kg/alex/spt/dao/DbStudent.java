@@ -20,7 +20,7 @@ import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.EducationStatus;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.domain.Student;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.StatusesReport;
@@ -381,7 +381,7 @@ public class DbStudent extends BaseDb {
         return container;
     }
 
-    public StudInfoPdf execStudInfo_pdf(int student_id, int year_id)
+    public StudentInfoPdf execStudInfo_pdf(int student_id, int year_id)
             throws SQLException {
         String sql = "SELECT st.login, st.photo, st.name, st.surname, sc.name_ru, sc.adress, sc.phone, sc.director_fullname, "
                 + "CONCAT(cnu.name, ' - ', cna.name) AS class_name, concat(e.name, ' ', e.surname) as fullname FROM student AS st "
@@ -400,7 +400,7 @@ public class DbStudent extends BaseDb {
         stat.setInt(2, student_id);
         stat.setInt(3, student_id);
         ResultSet result = stat.executeQuery();
-        StudInfoPdf st = new StudInfoPdf();
+        StudentInfoPdf st = new StudentInfoPdf();
         while (result.next()) {
             st.setStud_login(result.getString("st.login"));
             st.setStud_photo(result.getString("st.photo"));

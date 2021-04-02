@@ -24,7 +24,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbDiscount;
-import kg.alex.spt.dao.DbStudDiscount;
+import kg.alex.spt.dao.DbStudentDiscount;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -216,7 +216,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         if (source == generateBtn) {
             if (!((Set<?>) classTable.getValue()).isEmpty() && !((Set<?>) discountsTable.getValue()).isEmpty()) {
                 try {
-                    DbStudDiscount dbsc = new DbStudDiscount();
+                    DbStudentDiscount dbsc = new DbStudentDiscount();
                     dbsc.connect();
                     dataTable.setContainerDataSource(null);
                     dbsc.execSQL_Discounts_by_classes(myUI, (Integer) yearSelect.getValue(),

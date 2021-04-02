@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,8 +42,8 @@ public class DebtsPdf {
 
 
     public DebtsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
-            final Date fDate, final Date tDate, final StudInfoPdf st, final double ttl_plan,
-            final double total_paid, final double total_debt) {
+                    final Date fDate, final Date tDate, final StudentInfoPdf st, final double ttl_plan,
+                    final double total_paid, final double total_debt) {
         this.fromDate = fDate;
         this.tillDate = tDate;
         source1 = new StreamResource.StreamSource() {

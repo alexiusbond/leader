@@ -9,9 +9,9 @@ import java.io.Serializable;
 
 /**
  *
- * @author eldiiar
+ * @author alex
  */
-public class StudAccessories implements Serializable {
+public class StudentAccessories implements Serializable {
 
     private int id;
     private int accessories_id;

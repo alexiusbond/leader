@@ -27,7 +27,7 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentCalls;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -208,7 +208,7 @@ public class CallsReport implements Button.ClickListener,
             makePdfBtn.setEnabled(true);
             excelBtn.setEnabled(true);
         } else if (source == makePdfBtn) {
-            StudInfoPdf st;
+            StudentInfoPdf st;
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();

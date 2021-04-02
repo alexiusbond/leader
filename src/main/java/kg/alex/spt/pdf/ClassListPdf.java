@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ClassListReport;
 import org.apache.logging.log4j.LogManager;
@@ -42,7 +42,7 @@ public class ClassListPdf {
 
 
     public ClassListPdf(final MyVaadinUI myUI, final IndexedContainer dataCont,
-            final StudInfoPdf st, final ClassListReport clr) {
+                        final StudentInfoPdf st, final ClassListReport clr) {
         source1 = new StreamResource.StreamSource() {
 
             /**

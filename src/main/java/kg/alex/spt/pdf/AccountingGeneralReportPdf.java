@@ -29,7 +29,7 @@ import java.util.Iterator;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.SchoolAccounting;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
@@ -81,7 +81,7 @@ public class AccountingGeneralReportPdf {
 
                     document = new Document(PageSize.A4, 10, 10, 10, 10);
                     writer = PdfWriter.getInstance(document, buffer);
-                    StudInfoPdf st = new StudInfoPdf();
+                    StudentInfoPdf st = new StudentInfoPdf();
                     try {
                         DbSchool dbs = new DbSchool();
                         dbs.connect();

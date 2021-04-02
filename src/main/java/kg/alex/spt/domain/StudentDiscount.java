@@ -7,11 +7,7 @@ package kg.alex.spt.domain;
 
 import java.io.Serializable;
 
-/**
- *
- * @author eldiiar
- */
-public class StudDiscount implements Serializable {
+public class StudentDiscount implements Serializable {
 
     private String id;
     private int year_id;
@@ -21,6 +17,24 @@ public class StudDiscount implements Serializable {
     private double free_entry_amount;
     private double discount_value;
     private String note;
+    private int attachment_id;
+    private String attachmentUniqueName;
+
+    public int getAttachment_id() {
+        return attachment_id;
+    }
+
+    public void setAttachment_id(int attachment_id) {
+        this.attachment_id = attachment_id;
+    }
+
+    public String getAttachmentUniqueName() {
+        return attachmentUniqueName;
+    }
+
+    public void setAttachmentUniqueName(String attachmentUniqueName) {
+        this.attachmentUniqueName = attachmentUniqueName;
+    }
 
     public double getDiscount_value() {
         return discount_value;

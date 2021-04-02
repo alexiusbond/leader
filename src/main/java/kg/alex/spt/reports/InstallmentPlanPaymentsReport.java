@@ -30,14 +30,14 @@ import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbStudContract;
-import kg.alex.spt.dao.DbStudDiscount;
-import kg.alex.spt.dao.DbStudInstallmentPlan;
-import kg.alex.spt.dao.DbStudPayment;
+import kg.alex.spt.dao.DbStudentContract;
+import kg.alex.spt.dao.DbStudentDiscount;
+import kg.alex.spt.dao.DbStudentInstallmentPlan;
+import kg.alex.spt.dao.DbStudentPayment;
 import kg.alex.spt.dao.DbStudent;
-import kg.alex.spt.domain.StudContract;
-import kg.alex.spt.domain.StudInfoPdf;
-import kg.alex.spt.domain.StudPayment;
+import kg.alex.spt.domain.StudentContract;
+import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.domain.StudentPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
@@ -58,7 +58,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private EnhancedFormatExcelExport excelReport;
     private double debt, amount, plan_debt, ttl_payment, kOplate, ttl_left;
     private String discounts;
-    private StudInfoPdf st;
+    private StudentInfoPdf st;
     private FormattedTable installmentTable, paymentsTable;
     private FilterTable studentsTable, classTable;
     private ComboBoxMax yearSelect;
@@ -311,7 +311,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             installmentTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
             installmentTable.setStyleName(ValoTheme.TABLE_COMPACT);
             try {
-                DbStudInstallmentPlan dbip = new DbStudInstallmentPlan();
+                DbStudentInstallmentPlan dbip = new DbStudentInstallmentPlan();
                 dbip.connect();
                 total_inst = 0;
                 installmentCont = dbip.execSQL_InstPLan(myUI,
@@ -340,7 +340,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             paymentsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
             paymentsTable.setStyleName(ValoTheme.TABLE_COMPACT);
             try {
-                DbStudPayment dbsp = new DbStudPayment();
+                DbStudentPayment dbsp = new DbStudentPayment();
                 dbsp.connect();
                 total_pay = 0;
                 paymentsCont = dbsp.execSQL_Payment(myUI,
@@ -459,13 +459,13 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     }
 
     private void recount() {
-        StudContract c = new StudContract();
-        StudPayment sp = new StudPayment();
+        StudentContract c = new StudentContract();
+        StudentPayment sp = new StudentPayment();
         IndexedContainer discCont = new IndexedContainer();
         try {
-            DbStudContract dbsc = new DbStudContract();
-            DbStudDiscount dbsd = new DbStudDiscount();
-            DbStudPayment dbsp = new DbStudPayment();
+            DbStudentContract dbsc = new DbStudentContract();
+            DbStudentDiscount dbsd = new DbStudentDiscount();
+            DbStudentPayment dbsp = new DbStudentPayment();
             dbsc.connect();
             dbsd.connect();
             dbsp.connect();

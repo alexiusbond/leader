@@ -29,7 +29,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbDiscount;
-import kg.alex.spt.dao.DbStudDiscount;
+import kg.alex.spt.dao.DbStudentDiscount;
 import kg.alex.spt.domain.Discount;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.DefinitionsFilterGenerator;
@@ -235,7 +235,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             prepareModificationMode();
             int i = 0;
             try {
-                DbStudDiscount dbsd = new DbStudDiscount();
+                DbStudentDiscount dbsd = new DbStudentDiscount();
                 dbsd.connect();
                 i = dbsd.exec_disc_count((Integer) dataTable.getValue());
                 dbsd.close();

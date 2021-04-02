@@ -16,7 +16,7 @@ import java.sql.Types;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.School;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 
 public class DbSchool extends BaseDb {
@@ -328,8 +328,8 @@ public class DbSchool extends BaseDb {
         return logo;
     }
 
-    public StudInfoPdf execGetSchoolPdf(int scl_id) throws SQLException {
-        StudInfoPdf st = new StudInfoPdf();
+    public StudentInfoPdf execGetSchoolPdf(int scl_id) throws SQLException {
+        StudentInfoPdf st = new StudentInfoPdf();
         String sql = "SELECT sc.id, sc.name_ru, sc.adress, sc.phone, sc.director_fullname, "
                 + "concat(e.surname, ' ', e.name) as fullname FROM school as sc "
                 + "LEFT JOIN hr_employee_order AS eo ON sc.id = eo.school_id AND eo.to_date IS NULL "

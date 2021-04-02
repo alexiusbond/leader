@@ -29,7 +29,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbContract;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbStudContract;
+import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.Contract;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.DefinitionsFilterGenerator;
@@ -214,7 +214,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
             prepareModificationMode();
             int i = 0;
             try {
-                DbStudContract dbsd = new DbStudContract();
+                DbStudentContract dbsd = new DbStudentContract();
                 dbsd.connect();
                 i = dbsd.exec_contr_count((Integer) dataTable.getValue());
                 dbsd.close();

@@ -5,29 +5,32 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudInstallmentPlan;
+import kg.alex.spt.domain.StudentInstallmentPlan;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ClassInstPlanReport;
 import kg.alex.spt.reports.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
-public class DbStudInstallmentPlan extends BaseDb {
+public class DbStudentInstallmentPlan extends BaseDb {
 
-    public DbStudInstallmentPlan() throws Exception {
+    public DbStudentInstallmentPlan() throws Exception {
         super();
     }
 
     public IndexedContainer execSQL_St_InstPLan(MyVaadinUI myUI, int stud_id, int year_id,
-            StudentDefinitionView dw) throws SQLException {
-        
+                                                StudentDefinitionView dw) throws SQLException {
+
 
         String sql = "SELECT ip.id, ip.amount, ip.date_of_payment, ip.is_visible "
                 + "FROM student_installement_plan as ip "
@@ -42,7 +45,8 @@ public class DbStudInstallmentPlan extends BaseDb {
             String id = result.getString("ip.id");
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
-                    dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false));
+                    dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                            SystemSettings.dbStudentInstallement, FontAwesome.MINUS_SQUARE));
             java.util.Date date = result.getDate("ip.date_of_payment");
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(date, myUI.getMessage(SptMessages.Date), id, false, true));
@@ -54,7 +58,7 @@ public class DbStudInstallmentPlan extends BaseDb {
         return container;
     }
 
-    public int exec_insert(StudInstallmentPlan ip) throws SQLException {
+    public int exec_insert(StudentInstallmentPlan ip) throws SQLException {
         String sql = "INSERT INTO student_installement_plan (student_id, year_id, "
                 + "amount, date_of_payment, is_visible) "
                 + "VALUES(?,?,?,?,1);";
@@ -88,9 +92,9 @@ public class DbStudInstallmentPlan extends BaseDb {
     }
 
     public IndexedContainer execSQL_InstPLan(MyVaadinUI myUI, int stud_id, int year_id,
-            InstallmentPlanPaymentsReport ip)
+                                             InstallmentPlanPaymentsReport ip)
             throws SQLException {
-        
+
 
         String sql = "SELECT ip.id, ip.amount, ip.date_of_payment "
                 + "FROM student_installement_plan as ip "
@@ -115,9 +119,9 @@ public class DbStudInstallmentPlan extends BaseDb {
     }
 
     public IndexedContainer execSQL_InstPlanByClass(MyVaadinUI myUI, Date from,
-            Date till, int year_id, String class_ids, String edu_statuses_ids,
-            ClassInstPlanReport cip) throws SQLException {
-        
+                                                    Date till, int year_id, String class_ids, String edu_statuses_ids,
+                                                    ClassInstPlanReport cip) throws SQLException {
+
 
         String sql = "SELECT ip.id, ip.date_of_payment, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
                 + "st.name, st.surname, ip.amount, concat(sr.phone,' (',sr.fullname,')') as phone FROM student_installement_plan AS ip "

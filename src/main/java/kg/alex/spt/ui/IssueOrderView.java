@@ -28,7 +28,7 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbLeavingReasonsView;
-import kg.alex.spt.dao.DbStudContract;
+import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.dao.DbStudentOrder;
 import kg.alex.spt.domain.StudentOrder;
@@ -209,7 +209,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                     if (validate(settingsLay)) {
                         DbStudentOrder dbso = new DbStudentOrder();
                         dbso.connect();
-                        DbStudContract dbsc = new DbStudContract();
+                        DbStudentContract dbsc = new DbStudentContract();
                         dbsc.connect();
                         DbStudent dbs = new DbStudent();
                         dbs.connect();
@@ -427,7 +427,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         (Integer) historyTable.getContainerProperty(
                                 id, SystemSettings.from_class_id).getValue(), myUI.getUser().getId());
                 dbs.close();
-                DbStudContract dbsc = new DbStudContract();
+                DbStudentContract dbsc = new DbStudentContract();
                 dbsc.connect();
                 dbsc.exec_update_status_by_id(selected_student_id, 2, myUI.getUser().getId());
                 dbsc.close();

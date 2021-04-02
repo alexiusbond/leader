@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.DateRangeValidator;
@@ -12,6 +13,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +22,7 @@ import java.util.Date;
 
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudPayment;
+import kg.alex.spt.domain.StudentPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ClassPaymentsReport;
 import kg.alex.spt.reports.InstallmentPlanPaymentsReport;
@@ -29,13 +31,13 @@ import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-public class DbStudPayment extends BaseDb {
+public class DbStudentPayment extends BaseDb {
 
-    public DbStudPayment() throws Exception {
+    public DbStudentPayment() throws Exception {
         super();
     }
 
-    public StudPayment exec_recount_payment(int stud_id, int year_id) throws SQLException {
+    public StudentPayment exec_recount_payment(int stud_id, int year_id) throws SQLException {
         String sql = "SELECT sum(if (sp.payment_category_id!=3,sp.amount,0.0)) - "
                 + "sum(if (sp.payment_category_id=3,sp.amount,0.0)) as ttl_payment, "
                 + "sum(if(sp.payment_category_id = 1, sp.amount, 0.0)) as init_payment "
@@ -44,7 +46,7 @@ public class DbStudPayment extends BaseDb {
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
-        StudPayment sp = new StudPayment();
+        StudentPayment sp = new StudentPayment();
         if (result.next()) {
             sp.setTtl_pay(result.getDouble("ttl_payment"));
             sp.setInit_pay(result.getDouble("init_payment"));
@@ -53,8 +55,8 @@ public class DbStudPayment extends BaseDb {
     }
 
     public IndexedContainer execSQL_St_Payments(MyVaadinUI myUI, int stud_id, int year_id,
-            StudentDefinitionView dw) throws SQLException {
-        
+                                                StudentDefinitionView dw) throws SQLException {
+
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
@@ -74,7 +76,8 @@ public class DbStudPayment extends BaseDb {
             }
             String id = result.getString("sp.id");
             Item item = container.addItem(id);
-            Button btn = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false);
+            Button btn = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                    SystemSettings.dbStudentPayments, FontAwesome.MINUS_SQUARE);
             btn.setEnabled(!isDisabled);
             item.getItemProperty(SystemSettings.button).setValue(btn);
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
@@ -102,7 +105,7 @@ public class DbStudPayment extends BaseDb {
             df.setEnabled(!isDisabled);
             if (currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeOldTransactions)) {
                 df.setRangeStart(myUI.getUser().getTransactions_start_date());
-            } else if (!isDisabled){
+            } else if (!isDisabled) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MINUTE, -1441);
                 df.setRangeStart(calendar.getTime());
@@ -114,7 +117,8 @@ public class DbStudPayment extends BaseDb {
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             item.getItemProperty(myUI.getMessage(SptMessages.Print)).setValue(
-                    dw.createButton(myUI.getMessage(SptMessages.Print), id, true, false));
+                    dw.createButton(myUI.getMessage(SptMessages.Print), id,
+                            myUI.getMessage(SptMessages.Invoice), FontAwesome.PRINT));
             item.getItemProperty(SystemSettings.old_amount).setValue(result.getDouble("sp.amount"));
             item.getItemProperty(SystemSettings.old_date).setValue(result.getDate("sp.modification_date"));
             item.getItemProperty(SystemSettings.old_category).setValue(result.getInt("sp.payment_category_id"));
@@ -122,7 +126,7 @@ public class DbStudPayment extends BaseDb {
         return container;
     }
 
-    public int exec_update(StudPayment sp) throws SQLException {
+    public int exec_update(StudentPayment sp) throws SQLException {
         String sql = "update student_payments set year_id=?, "
                 + "amount=?, payment_type_id=?, payment_category_id=?, employee_id=?, "
                 + "who_paid=?, note=?, modification_date=?, dollar_rate=? WHERE id=?;";
@@ -140,7 +144,7 @@ public class DbStudPayment extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_insert(StudPayment sp, int order_num) throws SQLException {
+    public int exec_insert(StudentPayment sp, int order_num) throws SQLException {
         String sql = "INSERT INTO student_payments (student_id, year_id, "
                 + "amount, payment_type_id, payment_category_id, employee_id, "
                 + "who_paid, order_number, note, modification_date, dollar_rate) "
@@ -161,8 +165,8 @@ public class DbStudPayment extends BaseDb {
         return getLastInsertedId();
     }
 
-    public StudPayment exec_get_init_payment(int st_id, int year_id) throws SQLException {
-        StudPayment sp = null;
+    public StudentPayment exec_get_init_payment(int st_id, int year_id) throws SQLException {
+        StudentPayment sp = null;
         String sql = "SELECT sp.id, sp.amount, sp.modification_date, sp.dollar_rate, sp.student_id, sp.year_id, sp.payment_type_id," +
                 "sp.payment_category_id, sp.who_paid, sp.note FROM student_payments as sp "
                 + "where sp.student_id = ? and sp.year_id = ? and sp.payment_category_id = 1;";
@@ -171,7 +175,7 @@ public class DbStudPayment extends BaseDb {
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
-            sp = new StudPayment();
+            sp = new StudentPayment();
             sp.setId(result.getInt("sp.id"));
             sp.setAmount(result.getDouble("sp.amount"));
             sp.setModification_date(result.getTimestamp("sp.modification_date"));
@@ -227,8 +231,8 @@ public class DbStudPayment extends BaseDb {
     }
 
     public IndexedContainer execSQL_Payment(MyVaadinUI myUI, int stud_id, int year_id,
-            InstallmentPlanPaymentsReport ip)            throws SQLException {
-        
+                                            InstallmentPlanPaymentsReport ip) throws SQLException {
+
 
         String sql = "SELECT sp.id, sp.amount, sp.who_paid, sp.modification_date, "
                 + "pc.id, pc.name FROM student_payments as sp "
@@ -266,9 +270,9 @@ public class DbStudPayment extends BaseDb {
     }
 
     public IndexedContainer execSQL_PaymentsByClass(MyVaadinUI myUI, Date from,
-            Date till, int year_id, String class_ids, String edu_statuses_ids,
-            ClassPaymentsReport cpr) throws SQLException {
-        
+                                                    Date till, int year_id, String class_ids, String edu_statuses_ids,
+                                                    ClassPaymentsReport cpr) throws SQLException {
+
 
         String sql = "SELECT sp.id, sp.modification_date, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
                 + "st.name, st.surname, sp.amount, pc.name, sp.who_paid, sp.payment_category_id "

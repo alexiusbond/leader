@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import java.sql.PreparedStatement;
@@ -51,7 +52,8 @@ public class DbStudentCalls extends BaseDb {
             String id = result.getString("sc.id");
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
-                    dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id, false, false));
+                    dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                            SystemSettings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     SystemSettings.df.format(result.getDate("sc.modification_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(

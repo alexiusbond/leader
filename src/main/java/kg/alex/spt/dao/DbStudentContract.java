@@ -15,7 +15,7 @@ import java.util.Date;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.ContractTotal;
-import kg.alex.spt.domain.StudContract;
+import kg.alex.spt.domain.StudentContract;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ClassListReport;
 import kg.alex.spt.reports.DebtReport;
@@ -24,15 +24,15 @@ import kg.alex.spt.reports.YearMonthReport;
 
 /**
  *
- * @author eldiiar
+ * @author alex
  */
-public class DbStudContract extends BaseDb {
+public class DbStudentContract extends BaseDb {
 
-    public DbStudContract() throws Exception {
+    public DbStudentContract() throws Exception {
         super();
     }
 
-    public int exec_insert_st_contract(StudContract c) throws SQLException {
+    public int exec_insert_st_contract(StudentContract c) throws SQLException {
         String sql = "INSERT INTO student_contract (student_id,year_id,"
                 + "contract_id,debt,employee_id,modification_date,activity_status_id,contr_with_disc) "
                 + "VALUES(?,?,?,?,?,NOW(),?,?);";
@@ -52,7 +52,7 @@ public class DbStudContract extends BaseDb {
         }
     }
 
-    public int exec_update_st_contract(StudContract c)
+    public int exec_update_st_contract(StudentContract c)
             throws SQLException {
         String sql = "UPDATE student_contract SET contract_id=?,debt=?,employee_id=?,"
                 + "modification_date=NOW(),activity_status_id=?,contr_with_disc=? "
@@ -77,7 +77,7 @@ public class DbStudContract extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public StudContract exec_recount_contract(int stud_id, int year_id) throws SQLException {
+    public StudentContract exec_recount_contract(int stud_id, int year_id) throws SQLException {
         String sql = "SELECT sc.contract_id, sc.debt, c.amount, sc.contr_with_disc, "
                 + "sum(ip.amount) as plan_debt FROM student_contract as sc "
                 + "left join contract as c on c.id = sc.contract_id "
@@ -88,7 +88,7 @@ public class DbStudContract extends BaseDb {
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
-        StudContract c = new StudContract();
+        StudentContract c = new StudentContract();
         if (result.next()) {
             c.setContract_id(result.getInt("sc.contract_id"));
             c.setDebt(result.getDouble("sc.debt"));

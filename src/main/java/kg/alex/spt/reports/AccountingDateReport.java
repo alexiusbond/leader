@@ -30,7 +30,7 @@ import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.SchoolAccounting;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -331,7 +331,7 @@ public class AccountingDateReport implements Button.ClickListener,
                 }
             }
         } else if (source == excelBtn) {
-            StudInfoPdf st;
+            StudentInfoPdf st;
             try {
                 Calendar c = Calendar.getInstance();
                 c.setTime(fromDateDF.getValue());

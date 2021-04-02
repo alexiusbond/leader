@@ -7,7 +7,7 @@ package kg.alex.spt.domain;
 
 import java.io.Serializable;
 
-public class StudInfoPdf implements Serializable {
+public class StudentInfoPdf implements Serializable {
 
     private int stud_id;
     private String stud_login;

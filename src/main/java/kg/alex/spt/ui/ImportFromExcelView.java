@@ -17,10 +17,10 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbStudRelative;
+import kg.alex.spt.dao.DbStudentRelative;
 import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.dao.DbStudentOrder;
-import kg.alex.spt.domain.StudRelative;
+import kg.alex.spt.domain.StudentRelative;
 import kg.alex.spt.domain.Student;
 import kg.alex.spt.domain.StudentExcel;
 import kg.alex.spt.excel.ExcelUploader;
@@ -219,7 +219,7 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
             dbcl.close();
             DbStudent dbs = new DbStudent();
             dbs.connect();
-            DbStudRelative dbsr = new DbStudRelative();
+            DbStudentRelative dbsr = new DbStudentRelative();
             dbsr.connect();
             int counter = 0;
             for (int i = 0; i < list.size(); i++) {
@@ -248,7 +248,7 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
                 student.setEntering_year_id(myUI.getUser().getCurrent_year().getId());
                 student.setEmployee_id(myUI.getUser().getId());
                 student.setSchool_id(myUI.getUser().getSchool_id());
-                StudRelative relative = new StudRelative();
+                StudentRelative relative = new StudentRelative();
                 prop = relativeCont.getContainerProperty(stExcel.getRelative_type(), SystemSettings.id);
                 if (prop != null) {
                     relative.setRelatives_id((Integer) prop.getValue());

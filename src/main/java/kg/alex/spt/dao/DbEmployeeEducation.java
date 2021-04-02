@@ -171,7 +171,7 @@ public class DbEmployeeEducation extends BaseDb {
 
                 Upload upload = edv.createUpload("", false);
                 upload.setId(id);
-                upload.setData(container);
+                upload.setData(b);
                 hl.addComponent(upload);
                 item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             }

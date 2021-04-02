@@ -106,7 +106,7 @@ public class DbEmployeeExam extends BaseDb {
 
             Upload upload = edv.createUpload("", false);
             upload.setId(id);
-            upload.setData(container);
+            upload.setData(b);
             hl.addComponent(upload);
             item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));

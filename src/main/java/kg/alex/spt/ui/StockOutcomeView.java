@@ -20,7 +20,7 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.StockInvoice;
 import kg.alex.spt.domain.StockMovement;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.StockMovementsPdf;
 import kg.alex.spt.utils.*;
@@ -309,7 +309,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                StudInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
                 dbsc.close();
                 if (st.getScl_accountent_fullname() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null

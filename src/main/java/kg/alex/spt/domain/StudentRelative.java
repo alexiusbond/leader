@@ -7,11 +7,7 @@ package kg.alex.spt.domain;
 
 import java.io.Serializable;
 
-/**
- *
- * @author eldiiar
- */
-public class StudRelative implements Serializable {
+public class StudentRelative implements Serializable {
 
     private int id;
     private int student_id;

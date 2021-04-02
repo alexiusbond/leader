@@ -8,11 +8,7 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 import java.util.Set;
 
-/**
- *
- * @author eldiiar
- */
-public class StudContract implements Serializable {
+public class StudentContract implements Serializable {
 
     private int student_id;
     private int year_id;

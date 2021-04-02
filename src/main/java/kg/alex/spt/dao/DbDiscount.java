@@ -17,7 +17,7 @@ import kg.alex.spt.i18n.SptMessages;
 
 /**
  *
- * @author eldiiar
+ * @author alex
  */
 public class DbDiscount extends BaseDb {
 

@@ -22,7 +22,7 @@ import kg.alex.spt.ui.IssueOrderView;
 
 /**
  *
- * @author eldiiar
+ * @author alex
  */
 public class DbStudentOrder extends BaseDb {
 

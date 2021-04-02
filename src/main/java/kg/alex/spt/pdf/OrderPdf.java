@@ -7,8 +7,6 @@ package kg.alex.spt.pdf;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.itextpdf.tool.xml.ElementList;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
@@ -33,8 +31,8 @@ public class OrderPdf {
              *
              */
             private static final long serialVersionUID = 1L;
-            private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.TTF";
-            private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.TTF";
+            private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
+            private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
             @Override
             public InputStream getStream() {
@@ -61,7 +59,7 @@ public class OrderPdf {
                     ColumnText ct = new ColumnText(pageContentByte);
                     ct.setSimpleColumn(50, 680, 550, 50);
                     ct.addElement(new Phrase("№ " + orderMessage.getOrder_number() +
-                            "/" + SystemSettings.dateKg.format(orderMessage.getDate()), dateFont));
+                            "  " + SystemSettings.dateKg.format(orderMessage.getDate()), dateFont));
 
                     Paragraph spr = new Paragraph(orderMessage.getTitle(), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
@@ -121,7 +119,6 @@ public class OrderPdf {
         byte[] buffer = new byte[1024];
         int length;
         InputStream is = new FileInputStream(new File(SystemSettings.PATH_TO_UPLOADS + "default.css"));
-        System.out.println(is);
         while ((length = is.read(buffer)) != -1) {
             baos.write(buffer, 0, length);
         }

@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,10 +39,10 @@ public class InstallmentPlanPaymentsPdf {
     StreamResource resource;
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
-    private StudInfoPdf st;
+    private StudentInfoPdf st;
 
 
-    public InstallmentPlanPaymentsPdf(final MyVaadinUI myUI, StudInfoPdf s,
+    public InstallmentPlanPaymentsPdf(final MyVaadinUI myUI, StudentInfoPdf s,
                                       final IndexedContainer planCont,
                                       final IndexedContainer paymentsCont,
                                       final double ttl_inst, final double ttl_pay) {

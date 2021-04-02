@@ -8,7 +8,7 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class StudPayment implements Serializable {
+public class StudentPayment implements Serializable {
 
     private int id;
     private int student_id;

@@ -28,9 +28,9 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbLog;
-import kg.alex.spt.dao.DbStudContract;
-import kg.alex.spt.dao.DbStudInstallmentPlan;
-import kg.alex.spt.dao.DbStudPayment;
+import kg.alex.spt.dao.DbStudentContract;
+import kg.alex.spt.dao.DbStudentInstallmentPlan;
+import kg.alex.spt.dao.DbStudentPayment;
 import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.EducationStatus;
@@ -218,8 +218,8 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         String week_plan = null;
         String week_paid = null;
         try {
-            DbStudInstallmentPlan dbip = new DbStudInstallmentPlan();
-            DbStudPayment dbsp = new DbStudPayment();
+            DbStudentInstallmentPlan dbip = new DbStudentInstallmentPlan();
+            DbStudentPayment dbsp = new DbStudentPayment();
             dbip.connect();
             dbsp.connect();
             week_plan = dbip.execGetWeeklyPlan(myUI.getMessage(SptMessages.Students),
@@ -265,8 +265,8 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         String month_plan = null;
         String month_paid = null;
         try {
-            DbStudInstallmentPlan dbip = new DbStudInstallmentPlan();
-            DbStudPayment dbsp = new DbStudPayment();
+            DbStudentInstallmentPlan dbip = new DbStudentInstallmentPlan();
+            DbStudentPayment dbsp = new DbStudentPayment();
             dbip.connect();
             dbsp.connect();
             month_plan = dbip.execGetMonthlyPlan(myUI.getMessage(SptMessages.Students),
@@ -400,7 +400,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlLeftLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalLeft) + "</b>");
 
         try {
-            DbStudContract dbsc = new DbStudContract();
+            DbStudentContract dbsc = new DbStudentContract();
             dbsc.connect();
             tc = dbsc.execSQLTotals(myUI.getUser().getSchool_id(),
                     myUI.getUser().getCurrent_year().getId());

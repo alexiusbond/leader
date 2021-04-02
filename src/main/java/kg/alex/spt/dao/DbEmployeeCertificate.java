@@ -76,7 +76,6 @@ public class DbEmployeeCertificate extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
                                     EmployeeDefinitionView edv) throws SQLException {
-        
 
         String sql = "SELECT ec.id, ec.note, ec.given_by, ec.date_of_issue, ec.certificate_id, " +
                 "a.id, a.name, a.extension, a.unique_name " +
@@ -154,7 +153,7 @@ public class DbEmployeeCertificate extends BaseDb {
 
             Upload upload = edv.createUpload("", false);
             upload.setId(id);
-            upload.setData(container);
+            upload.setData(b);
             hl.addComponent(upload);
             item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));

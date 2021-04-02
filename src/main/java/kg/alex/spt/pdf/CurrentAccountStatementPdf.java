@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +41,7 @@ public class CurrentAccountStatementPdf {
 
 
     public CurrentAccountStatementPdf(final MyVaadinUI myUI, final Table t,
-            final String acc_category, final String currency, final Date from, final Date to, final StudInfoPdf st) {
+            final String acc_category, final String currency, final Date from, final Date to, final StudentInfoPdf st) {
         source1 = new StreamResource.StreamSource() {
 
             /**

@@ -24,7 +24,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbDiscount;
-import kg.alex.spt.dao.DbStudContract;
+import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -232,7 +232,7 @@ public class DiscountsReport implements Button.ClickListener,
             if (!((Set<?>) classTable.getValue()).isEmpty()
                     && !((Set<?>) discountsTable.getValue()).isEmpty()) {
                 try {
-                    DbStudContract dbsc = new DbStudContract();
+                    DbStudentContract dbsc = new DbStudentContract();
                     dbsc.connect();
                     dataCont = dbsc.execSQL_Discounts(myUI,
                             SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),

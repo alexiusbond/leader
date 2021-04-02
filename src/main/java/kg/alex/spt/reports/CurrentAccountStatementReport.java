@@ -26,7 +26,7 @@ import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 
 import kg.alex.spt.utils.ComboBoxMax;
@@ -188,7 +188,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 }
             }
         } else if (source == pdfBtn) {
-            StudInfoPdf st;
+            StudentInfoPdf st;
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();

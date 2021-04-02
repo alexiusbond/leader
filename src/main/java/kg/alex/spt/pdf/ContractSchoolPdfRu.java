@@ -21,7 +21,7 @@ import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbRelative;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,13 +38,13 @@ public class ContractSchoolPdfRu {
     Date aDate = new Date(System.currentTimeMillis());
     private final String nameOf = "Contract";
     private MyVaadinUI myUI;
-    private StudInfoPdf student;
+    private StudentInfoPdf student;
 
 
     private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
-    public ContractSchoolPdfRu(final MyVaadinUI ui, StudInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractSchoolPdfRu(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.student = st_info;
 

@@ -25,7 +25,7 @@ import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StockInvoice;
-import kg.alex.spt.domain.StudInfoPdf;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +44,7 @@ public class StockMovementsPdf {
 
 
     public StockMovementsPdf(final MyVaadinUI myUI, final String title, final StockInvoice stockInvoice,
-            final IndexedContainer stockMovementsCont, final StudInfoPdf schoolInfo, final String total) {
+                             final IndexedContainer stockMovementsCont, final StudentInfoPdf schoolInfo, final String total) {
 
         source1 = new StreamResource.StreamSource() {
 

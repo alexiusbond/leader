@@ -123,6 +123,11 @@ public class SystemSettings implements Serializable {
     public static final String dbOperation = "dp_service_type";
     public static final String dbAcc_category = "acc_category";
     public static final String dbRelatives = "relatives";
+    public static final String dbStudentRelatives = "student_relatives";
+    public static final String dbStudentAccessories = "student_accessories";
+    public static final String dbStudentPayments = "student_payments";
+    public static final String dbStudentCalls = "student_calls";
+    public static final String dbStudentInstallement = "student_installement_plan";
     public static final String dbMartialStatus = "hr_martial_status";
     public static final String dbMeasurement = "dp_measurement";
     public static final String dbStockMovement = "dp_stock_movements";
@@ -133,6 +138,7 @@ public class SystemSettings implements Serializable {
     public static final String hr_positionTable = "hr_position";
     public static final String dbStudent = "student";
     public static final String dbStudentContract = "student_contract";
+    public static final String dbStudentDiscount = "student_discount";
     public static final String dbDiscount = "discount";
     public static final String dbEmployee = "employee";
     public static final String dbEmployeePhoneNumber = "hr_employee_phone_number";
@@ -266,7 +272,7 @@ public class SystemSettings implements Serializable {
                     "июля", "августа", "сентября", "октября", "ноября", "декабря"};
         }
     });public static final SimpleDateFormat dateKg = new SimpleDateFormat(
-            "«dd» MMMMM yyyy ж.", new DateFormatSymbols() {
+            "dd-MMMMM yyyy-жыл", new DateFormatSymbols() {
         @Override
         public String[] getMonths() {
             return new String[]{"январь", "февраль", "март", "апрель", "май", "июнь",
