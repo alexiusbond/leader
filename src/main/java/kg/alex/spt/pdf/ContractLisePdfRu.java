@@ -64,8 +64,8 @@ public class ContractLisePdfRu {
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                     BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                    Font ordFont = new Font(baseFont, 11);
-                    Font ordBoldFont = new Font(baseFontBold, 11);
+                    Font ordFont = new Font(baseFont, 12);
+                    Font ordBoldFont = new Font(baseFontBold, 12);
                     Font boldFont = new Font(baseFontBold, 12);
                     Font font_header = new Font(baseFontBold, 13);
 
@@ -117,7 +117,7 @@ public class ContractLisePdfRu {
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                     paragraph.add(new Phrase("Образовательное учреждение " + student.getScl_name_ru()
-                            + ", именуемое в дальнейшем «Лицей», в лице директора ", ordFont));
+                            + ", именуемый в дальнейшем «Лицей», в лице директора ", ordFont));
                     String fullname;
                     String[] temp = student.getScl_dir_f_name().split(" ");
                     fullname = temp[0];
@@ -153,7 +153,7 @@ public class ContractLisePdfRu {
                     paragraph.add(new Phrase(fullname, ordBoldFont));
                     paragraph.add(new Phrase(", именуемый(ая) в дальнейшем ", ordFont));
                     paragraph.add(new Phrase("«" + student.getRel_name() + "» ", ordBoldFont));
-                    paragraph.add(new Phrase("с другой стороны, в интересах обучающегося, в соответствии с Законом Кыргызской Республики «Об образовании», заключили настоящий Договор о нижеследующем: ", ordFont));
+                    paragraph.add(new Phrase("с другой стороны, в интересах обучающегося, в соответствии с Законом Кыргызской Республики «Об образовании», заключили настоящий Договор о нижеследующем:", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 
@@ -262,7 +262,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.8. Осуществлять в установленном Уставе Лицея порядке полугодовую и годовую аттестацию Учащегося, соответствующую учебному плану лицея, утвержденному Министерства образования и науки Кыргызской Республики.", ordFont));
+                    paragraph.add(new Phrase("2.1.8. Осуществлять в установленном Уставе Лицея порядке полугодовую и годовую аттестацию Учащегося, соответствующую учебному плану Лицея, утвержденному Министерством образования и науки Кыргызской Республики.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -418,7 +418,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.7. Лицей организовывает проведение подготовительных курсов к ОРТ, кружковую работу по интересам учащихся. В связи с чем администрация лицея имеет право запретить учащимся посещение дополнительных образовательных занятий вне лицея.", ordFont));
+                    paragraph.add(new Phrase("2.2.7. Лицей организовывает проведение подготовительных курсов к ОРТ, кружковую работу по интересам учащихся. В связи с чем администрация Лицея имеет право запретить учащимся посещение дополнительных образовательных занятий вне лицея.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -449,42 +449,6 @@ public class ContractLisePdfRu {
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                     paragraph.add(new Phrase("2.2.10. При расторжении настоящего договора по непредвиденным обстоятельствам, с учетом всех понесенных расходов Лицея, сумма подлежащяя к возврату, возвращается по мере возможности Лицея, но не позднее мая следующего года. При этом данный пункт не распространяется к Учащимся, имеющим льготы.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.11. Обеспечить Обучающегося всеми необходимыми канцелярскими принадлежностями для собственного использования (тетради, цветные карандаши, точилки и т.д.).", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.12. Обеспечивать подготовку Обучающегося к занятиям в соответствии с рекомендациями педагогов Школы.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.13. Провести медицинскую диспансеризацию Обучающегося, предоставить Администрации Школы заключение медицинских специалистов о состоянии здоровья Обучающегося перед прибытием его в Школу. Предупредить медицинского сотрудника Школы о хронических заболеваниях Обучающегося (если таковые имеются).", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.14. Обеспечить выполнение Обучающимся «Правил внутреннего распорядка Школы».", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -541,7 +505,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.4. Заполнить «Анкету учащегося» (Приложение №_____), «Разрешение на самостоятельные прогулки» (Приложение №____) и «Заявление о предоставлении правдивой информации о состоянии здоровья учащегося» (Приложение №____).", ordFont));
+                    paragraph.add(new Phrase("2.3.4. Заполнить «Анкету учащегося» (Приложение №_____), «Разрешение на самостоятельные прогулки» (Приложение №____) и «Заявление о предоставлении правдивой информации о состоянии здоровья учащегося» (Приложение №____)", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -612,7 +576,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.1. Требовать от Администрации Лицея выполнения условий, изложенных в пунктах 2.1.1. – 2.1.13. настоящего Договора.", ordFont));
+                    paragraph.add(new Phrase("2.4.1. Требовать от Администрации Лицея выполнения условий, изложенных в пунктах 2.1.1. – 2.1.14. настоящего Договора.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -621,7 +585,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.4.2. Досрочно расторгнуть Договор с возмещением стоимости обучения и проживания в период пребывания Учащегося в Лицее в соответствии с п.2.2.9,2.2.10.", ordFont));
+                    paragraph.add(new Phrase("2.4.2. Досрочно расторгнуть Договор с возмещением стоимости обучения и проживания в период пребывания Учащегося в Лицее в соответствии с п.2.2.9, 2.2.10.", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 
@@ -646,9 +610,9 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("3.1.1. Оплата родительского взноса производится согласно Графику, подписанному обеими сторонами, являющегося неотъемлемой частью настоящего договора. При этом последний взнос должен быть внесен не позднее ", ordFont));
-                    paragraph.add(new Phrase("28го февраля,", ordBoldFont));
-                    paragraph.add(new Phrase(" следующего года.", ordFont));
+                    paragraph.add(new Phrase("3.1.1. Оплата родительского взноса производится ", ordFont));
+                    paragraph.add(new Phrase("согласно Графику", ordBoldFont));
+                    paragraph.add(new Phrase(", подписанному обеими сторонами, являющегося неотъемлемой частью настоящего договора. При этом последний взнос должен быть внесен не позднее 28го февраля, следующего года.  Размер родительского взноса не изменяется даже при условии перехода на дистанционную форму обучения.", ordFont));
                     document.add(paragraph);
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
@@ -668,7 +632,7 @@ public class ContractLisePdfRu {
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                     paragraph.add(new Phrase("3.1.3. Общая стоимость родительских взносов составляет ", ordFont));
                     paragraph.add(new Phrase(student.getCtr_k_oplate() + "", ordBoldFont));
-                    paragraph.add(new Phrase(" долл.США, которая производиться строго в сомах на день оплаты по курсу НБ КР.", ordFont));
+                    paragraph.add(new Phrase(" долл.США, которая производиться строго в сомах на день оплаты по курсу НБКР.", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 

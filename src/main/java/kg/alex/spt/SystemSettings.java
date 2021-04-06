@@ -265,7 +265,7 @@ public class SystemSettings implements Serializable {
     public static final String download_button = "download_button";
     public static final String cancel_upload_button = "cancel_upload_button";
     public static final SimpleDateFormat dateRu = new SimpleDateFormat(
-            "«dd» MMMMM yyyy г.", new DateFormatSymbols() {
+            "«dd» MMMMM yyyy год", new DateFormatSymbols() {
         @Override
         public String[] getMonths() {
             return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
