@@ -33,7 +33,6 @@
     <inherits name="org.vaadin.hene.popupbutton.widgetset.PopupbuttonWidgetset" />
     <inherits name="org.tepi.filtertable.gwt.FilterTableWidgetset" /> 
     <inherits name="com.vaadin.addon.charts.Widgetset" />
-    <inherits name="org.vaadin.addons.maskedtextfield.MaskedTextFieldWidgetset" />
     <inherits name="org.vaadin.simplefiledownloader.SimplefiledownloaderWidgetset" />
-
+    <inherits name="org.vaadin.inputmask.WidgetSet" />
 </module>

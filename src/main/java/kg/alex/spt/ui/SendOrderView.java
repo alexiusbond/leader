@@ -4,6 +4,8 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.MarginInfo;
@@ -20,6 +22,7 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.OrderPdf;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
+import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,8 +44,9 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
     private Button sendBtn;
     private ComboBoxMax schoolSelect, studentSelect;
     private ComboBoxMultiselectMax employeeMCB;
-    private FilterTable dataTable;
-    private TextField orderNumberTF, headlineTF;
+    private FormattedFilterTable dataTable;
+    private TextField orderNumberTF, discountTF;
+    private TextArea headlineTF;
     private DateField dateDF;
     private TextArea contentRTA, messageTA;
 
@@ -55,7 +59,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
                 myUI.getMessage(SptMessages.Employee), myUI.getMessage(SptMessages.OrderNumber),
-                myUI.getMessage(SptMessages.Student), myUI.getMessage(SptMessages.Title),
+                myUI.getMessage(SptMessages.Student), myUI.getMessage(SptMessages.Discount), myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Message), myUI.getMessage(SptMessages.Status),
                 SystemSettings.button};
         buildSettingsLayout();
@@ -64,7 +68,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         vl.setSizeFull();
         vl.setMargin(true);
 
-        dataTable = new FilterTable();
+        dataTable = new FormattedFilterTable();
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setStyleName(ValoTheme.TABLE_SMALL);
         dataTable.addStyleName("noWrap");
@@ -117,7 +121,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
     private void buildSettingsLayout() {
 
-        settingsLay = new GridLayout(2, 7);
+        settingsLay = new GridLayout(2, 8);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
         settingsLay.setSizeFull();
@@ -155,7 +159,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         employeeMCB.setWidth("100%");
         employeeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         employeeMCB.setFilteringMode(FilteringMode.CONTAINS);
-        settingsLay.addComponent(employeeMCB, 0, 2);
+        settingsLay.addComponent(employeeMCB, 0, 2, 1, 2);
 
         studentSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Student));
         studentSelect.setNullSelectionAllowed(false);
@@ -166,7 +170,20 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         studentSelect.setFilteringMode(FilteringMode.CONTAINS);
         studentSelect.addValueChangeListener(this);
-        settingsLay.addComponent(studentSelect, 1, 2);
+        settingsLay.addComponent(studentSelect, 0, 3);
+
+        ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
+        discountTF = new TextField(myUI.getMessage(SptMessages.Discount), property);
+        discountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        discountTF.setRequired(true);
+        discountTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        discountTF.setNullRepresentation("");
+        discountTF.setConverter(SystemSettings.getStringToDoubleConverter());
+        discountTF.setWidth("100%");
+        discountTF.addValidator(new DoubleRangeValidator(
+                myUI.getMessage(SptMessages.NotifWrongValue), 0.1, 100.0));
+        discountTF.addValueChangeListener(this);
+        settingsLay.addComponent(discountTF, 1, 3);
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
         dateDF.setResolution(Resolution.MINUTE);
@@ -176,7 +193,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         dateDF.setDateFormat(SystemSettings.datePattern);
         dateDF.setValue(new Date());
-        settingsLay.addComponent(dateDF, 0, 3);
+        settingsLay.addComponent(dateDF, 0, 4);
 
         orderNumberTF = new TextField(myUI.getMessage(SptMessages.OrderNumber));
         orderNumberTF.setRequired(true);
@@ -185,23 +202,25 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         orderNumberTF.setWidth("100%");
         orderNumberTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 25, false));
-        settingsLay.addComponent(orderNumberTF, 1, 3);
+        orderNumberTF.setValue("01-31/2  ");
+        settingsLay.addComponent(orderNumberTF, 1, 4);
 
-        headlineTF = new TextField(myUI.getMessage(SptMessages.Headline));
+        headlineTF = new TextArea(myUI.getMessage(SptMessages.Headline));
+        headlineTF.setRows(2);
         headlineTF.setRequired(true);
         headlineTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         headlineTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         headlineTF.setWidth("100%");
         headlineTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 300, false));
-        settingsLay.addComponent(headlineTF, 0, 4, 1, 4);
+        settingsLay.addComponent(headlineTF, 0, 5, 1, 5);
 
         contentRTA = new TextArea(myUI.getMessage(SptMessages.Content));
         contentRTA.setRequired(true);
         contentRTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         contentRTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         contentRTA.setSizeFull();
-        settingsLay.addComponent(contentRTA, 0, 5, 1, 5);
+        settingsLay.addComponent(contentRTA, 0, 6, 1, 6);
 
         messageTA = new TextArea(myUI.getMessage(SptMessages.Message));
         messageTA.setRows(2);
@@ -209,11 +228,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         messageTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         messageTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         messageTA.setWidth("100%");
-        settingsLay.addComponent(messageTA, 0, 6, 1, 6);
-        settingsLay.setRowExpandRatio(5, 1);
+        settingsLay.addComponent(messageTA, 0, 7, 1, 7);
+        settingsLay.setRowExpandRatio(6, 1);
         settingsLay.setColumnExpandRatio(0, 2);
         settingsLay.setColumnExpandRatio(1, 1);
-
     }
 
     @Override
@@ -306,7 +324,9 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (property == studentSelect && studentSelect.getValue() != null) {
+        } else if ((property == studentSelect || property == discountTF) && discountTF != null
+                && studentSelect != null && studentSelect.getValue() != null
+                && discountTF.getValue() != null) {
             contentRTA.setValue("Лицейдин "
                     + studentSelect.getContainerProperty(
                     studentSelect.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue()
@@ -315,13 +335,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
                     "Жобосунун 3-пунктунун  негизинде "
                     + myUI.getUser().getCurrent_year().getName()
-                    + "-окуу жылынын окуу төлөмүндө __% жеңилдик берилсин.");
+                    + "-окуу жылынын окуу төлөмүндө " + SystemSettings.dFormat.format(
+                    discountTF.getPropertyDataSource().getValue()) + "% жеңилдик берилсин.");
         }
     }
 
     private void clearFields() {
         headlineTF.setValue("");
         orderNumberTF.setValue("");
+        discountTF.setValue(null);
         contentRTA.setValue("");
         messageTA.setValue("");
         schoolSelect.setValue(null);
@@ -340,6 +362,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         item.getItemProperty(myUI.getMessage(SptMessages.Message)).setValue(messageTA.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(headlineTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.OrderNumber)).setValue(orderNumberTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(discountTF.getPropertyDataSource().getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Student)).setValue(
                 studentSelect.getContainerProperty(studentSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue());
@@ -374,6 +397,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         om.setStudent_id((Integer) studentSelect.getValue());
         om.setDate(dateDF.getValue());
         om.setOrder_number(orderNumberTF.getValue());
+        om.setDiscount((Double) discountTF.getPropertyDataSource().getValue());
         om.setTitle(headlineTF.getValue());
         om.setEmployee_id(myUI.getUser().getId());
         om.setId(i);

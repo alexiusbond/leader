@@ -36,8 +36,8 @@ import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.vaadin.addons.maskedtextfield.MaskedTextField;
 import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.inputmask.InputMask;
 
 public class YearDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
@@ -47,7 +47,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
     private AuthenticatedScreen as;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private Table dataTable;
-    private MaskedTextField nameTF;
+    private TextField nameTF;
     private TextField period, periodKg;
     private DateField start_date, end_date;
     private boolean isNew;
@@ -144,13 +144,16 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new MaskedTextField(myUI.getMessage(SptMessages.Title), "####-####");
+        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth("100%");
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 9, 9, false));
+        InputMask im = new InputMask("2099-2099");
+        im.extend(nameTF);
+        im.setClearIncomplete(true);
         settingsLay.addComponent(nameTF);
 
         period = new TextField(myUI.getMessage(SptMessages.Period));

@@ -72,7 +72,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private OptionGroup contLangOG;
     private FormLayout fieldsLay1, fieldsLay2;
     private int r_table_counter = 1000, receive = 2, give = 1, discCounter, contr_id;
-    private Double left, instCtrAmount, netContrAmount,
+    private Double left, instCtrAmount, netContrAmount, contract_amount,
             instFirstPay, instPlanContSum, contr_with_disc, ttl_left,
             ttl_payment, init_payment, discountAmount, debt, kOplate;
     private Button plusRelButton, plusMatGiveButton, plusInstButton, plusPayButton,
@@ -678,15 +678,22 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         } else if (source == modifyBtn) {
             if (studDataTable.getValue() != null) {
-                isNew = false;
-                photoUpl.setEnabled(true);
-                fillFields();
-                prepareModificationMode();
-                classCB.setEnabled(false);
-                addRowIftableEmpty();
-                if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
-                        && contractCB.getValue() == null) {
-                    isNewContract = true;
+                if ((tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
+                        || tabs.getSelectedTab() == tabs.getTab(payTablelay).getComponent())
+                        && debt > 0.0 && contract_amount == 0.0 && !currentUser.hasRole("admin")) {
+                    Notification.show(myUI.getMessage(SptMessages.OperationNotAllowedDueToDebt),
+                            Notification.Type.WARNING_MESSAGE);
+                } else {
+                    isNew = false;
+                    photoUpl.setEnabled(true);
+                    fillFields();
+                    prepareModificationMode();
+                    classCB.setEnabled(false);
+                    addRowIftableEmpty();
+                    if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
+                            && contractCB.getValue() == null) {
+                        isNewContract = true;
+                    }
                 }
             }
         } else if (source == plusRelButton) {
@@ -3534,6 +3541,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getUser().getCurrent_year().getId());
             ttl_payment = sp.getTtl_pay();
             init_payment = sp.getInit_pay();
+            contract_amount = c.getAmount();
+            System.out.println(contract_amount);
             kOplate = c.getContr_with_disc() + debt;
             ttl_left = (c.getContr_with_disc() + debt) - ttl_payment;
             dbsc.close();

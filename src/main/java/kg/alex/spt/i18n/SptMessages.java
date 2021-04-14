@@ -320,6 +320,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Payments = generateId();
     public static final String ShowButton = generateId();
     public static final String OnlyThreeDiscountsAllowed = generateId();
+    public static final String OperationNotAllowedDueToDebt = generateId();
     public static final String MinistryOfEducation = generateId();
     public static final String InstpLanPaymentsReport = generateId();
     public static final String Student = generateId();

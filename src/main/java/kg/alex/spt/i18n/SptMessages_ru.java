@@ -331,6 +331,7 @@ public class SptMessages_ru extends SptMessages {
             {Payments, "Оплаты"},
             {ShowButton, "Показать"},
             {OnlyThreeDiscountsAllowed, "Можно добавить только 3 скидки"},
+            {OperationNotAllowedDueToDebt, "Операция запрещена, сначала необходимо погасить долг с предыдущих лет."},
             {MinistryOfEducation, "МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ КЫРГЫЗСКОЙ РЕСПУБЛИКИ"},
             {InstpLanPaymentsReport, "ОТЧЁТ О ПЛАНЕ ОПЛАТ И ОПЛАТАХ"},
             {Student, "Ученик(ца)"},

@@ -215,8 +215,13 @@
         </dependency>
         <dependency>
             <groupId>org.vaadin.addons</groupId>
-            <artifactId>maskedtextfield</artifactId>
-            <version>0.1.6</version>
+            <artifactId>inputmask</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.12.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -286,7 +291,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=0d79257a-59bb-4103-8ccd-c2cb6901487a
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=7434c2c9-4e1a-4a32-8345-18d96e76e3c8
                     </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>
