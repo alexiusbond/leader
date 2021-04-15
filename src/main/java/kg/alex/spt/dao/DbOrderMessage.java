@@ -123,7 +123,7 @@ public class DbOrderMessage extends BaseDb {
         t.setColumnAlignment(myUi.getMessage(SptMessages.Discount), CustomTable.Align.RIGHT);
         t.setColumnFooter(myUi.getMessage(SptMessages.Title),
                 myUi.getMessage(SptMessages.UnRead) + ": " + unread);
-        t.setColumnFooter(myUi.getMessage(SptMessages.Message),
+        t.setColumnFooter(myUi.getMessage(SptMessages.Status),
                 myUi.getMessage(SptMessages.Total) + ": " + container.size());
     }
 }

@@ -121,16 +121,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
     private void buildSettingsLayout() {
 
-        settingsLay = new GridLayout(2, 8);
+        settingsLay = new GridLayout(2, 7);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
         settingsLay.setSizeFull();
-
-        sendBtn = new Button();
-        sendBtn.setCaption(myUI.getMessage(SptMessages.Send));
-        sendBtn.setIcon(FontAwesome.SHARE_SQUARE_O);
-        sendBtn.addClickListener(this);
-        settingsLay.addComponent(sendBtn, 0, 0, 1, 0);
 
         schoolSelect = new ComboBoxMax(myUI.getMessage(SptMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
@@ -150,7 +144,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             logger.error(e);
             logger.catching(e);
         }
-        settingsLay.addComponent(schoolSelect, 0, 1, 1, 1);
+        settingsLay.addComponent(schoolSelect, 0, 0, 1, 0);
 
         employeeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ToEmployees));
         employeeMCB.setRequired(true);
@@ -159,7 +153,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         employeeMCB.setWidth("100%");
         employeeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         employeeMCB.setFilteringMode(FilteringMode.CONTAINS);
-        settingsLay.addComponent(employeeMCB, 0, 2, 1, 2);
+        settingsLay.addComponent(employeeMCB, 0, 1, 1, 1);
 
         studentSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Student));
         studentSelect.setNullSelectionAllowed(false);
@@ -170,7 +164,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         studentSelect.setFilteringMode(FilteringMode.CONTAINS);
         studentSelect.addValueChangeListener(this);
-        settingsLay.addComponent(studentSelect, 0, 3);
+        settingsLay.addComponent(studentSelect, 0, 2);
 
         ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
         discountTF = new TextField(myUI.getMessage(SptMessages.Discount), property);
@@ -183,7 +177,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         discountTF.addValidator(new DoubleRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, 100.0));
         discountTF.addValueChangeListener(this);
-        settingsLay.addComponent(discountTF, 1, 3);
+        settingsLay.addComponent(discountTF, 1, 2);
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
         dateDF.setResolution(Resolution.MINUTE);
@@ -193,7 +187,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         dateDF.setDateFormat(SystemSettings.datePattern);
         dateDF.setValue(new Date());
-        settingsLay.addComponent(dateDF, 0, 4);
+        settingsLay.addComponent(dateDF, 0, 3);
 
         orderNumberTF = new TextField(myUI.getMessage(SptMessages.OrderNumber));
         orderNumberTF.setRequired(true);
@@ -203,7 +197,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         orderNumberTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 25, false));
         orderNumberTF.setValue("01-31/2  ");
-        settingsLay.addComponent(orderNumberTF, 1, 4);
+        settingsLay.addComponent(orderNumberTF, 1, 3);
 
         headlineTF = new TextArea(myUI.getMessage(SptMessages.Headline));
         headlineTF.setRows(2);
@@ -213,14 +207,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         headlineTF.setWidth("100%");
         headlineTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 300, false));
-        settingsLay.addComponent(headlineTF, 0, 5, 1, 5);
+        settingsLay.addComponent(headlineTF, 0, 4, 1, 4);
 
         contentRTA = new TextArea(myUI.getMessage(SptMessages.Content));
+        contentRTA.setRows(2);
         contentRTA.setRequired(true);
         contentRTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         contentRTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         contentRTA.setSizeFull();
-        settingsLay.addComponent(contentRTA, 0, 6, 1, 6);
+        settingsLay.addComponent(contentRTA, 0, 5, 1, 5);
 
         messageTA = new TextArea(myUI.getMessage(SptMessages.Message));
         messageTA.setRows(2);
@@ -228,8 +223,17 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         messageTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         messageTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         messageTA.setWidth("100%");
-        settingsLay.addComponent(messageTA, 0, 7, 1, 7);
-        settingsLay.setRowExpandRatio(6, 1);
+        settingsLay.addComponent(messageTA, 0, 6);
+
+        sendBtn = new Button();
+        sendBtn.setWidth("100%");
+        sendBtn.setCaption(myUI.getMessage(SptMessages.Send));
+        sendBtn.setStyleName(ValoTheme.BUTTON_LARGE);
+        sendBtn.setIcon(FontAwesome.SHARE_SQUARE_O);
+        sendBtn.addClickListener(this);
+        settingsLay.addComponent(sendBtn, 1, 6);
+        settingsLay.setComponentAlignment(sendBtn, Alignment.BOTTOM_RIGHT);
+        settingsLay.setRowExpandRatio(5, 1);
         settingsLay.setColumnExpandRatio(0, 2);
         settingsLay.setColumnExpandRatio(1, 1);
     }
@@ -342,7 +346,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
     private void clearFields() {
         headlineTF.setValue("");
-        orderNumberTF.setValue("");
+        orderNumberTF.setValue("01-31/2  ");
         discountTF.setValue(null);
         contentRTA.setValue("");
         messageTA.setValue("");

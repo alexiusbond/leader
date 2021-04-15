@@ -200,7 +200,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         menubar.setSizeFull();
         menubar.setHeight("35px");
         menubar.setAutoOpen(true);
-        // menubar.setStyleName("mymenu");
 
         MenuBar.MenuItem mi;
 

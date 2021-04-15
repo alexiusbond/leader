@@ -194,6 +194,8 @@ public class SystemSettings implements Serializable {
     public static final String cnSchoolModificationView = "SchoolModificationView";
     public static final String cnStudentDefinitionView = "StudentDefinitionView";
     public static final String cnReportsView = "ReportsView";
+    public static final String discountsTab = "DiscountsTab";
+    public static final String paymentsTab = "PaymentsTab";
     public static final String cnAccountingReportsView = "AccountingReportsView";
     public static final String cnStockReportsView = "StockReportsView";
     public static final String cnHRReportsView = "HRReportsView";

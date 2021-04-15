@@ -22,6 +22,8 @@ public class MessagesView extends VerticalLayout {
     public MessagesView(MyVaadinUI myUI) {
         this.myUI = myUI;
         setSpacing(true);
+        setMargin(true);
+        setSizeFull();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
                 myUI.getMessage(SptMessages.OrderNumber), myUI.getMessage(SptMessages.Student),
                 myUI.getMessage(SptMessages.Message), myUI.getMessage(SptMessages.Status),
@@ -32,6 +34,7 @@ public class MessagesView extends VerticalLayout {
     public void buildBody() {
 
         dataTable = new FilterTable();
+        dataTable.setSizeFull();
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setStyleName(ValoTheme.TABLE_SMALL);
         dataTable.addStyleName("noWrap");
