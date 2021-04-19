@@ -901,7 +901,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         permissionTable.setSizeFull();
         permissionTable.setStyleName(ValoTheme.TABLE_SMALL);
         try {
-            DbEmployee dbe = new DbEmployee();
+            DbDefinition dbe = new DbDefinition();
             dbe.connect();
             permissionCont = dbe.execPermissionSQL(myUI);
             dbe.close();
@@ -924,7 +924,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             }
             permissionTable.setContainerDataSource(permissionCont);
             permissionTable.setVisibleColumns(NATURAL_COL_ORDER_PERMISSIONS);
-            permissionTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Functions), 1);
+            permissionTable.setColumnWidth(myUI.getMessage(SptMessages.ClassCaption), 235);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);

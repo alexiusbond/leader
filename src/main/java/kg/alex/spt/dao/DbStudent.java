@@ -275,7 +275,6 @@ public class DbStudent extends BaseDb {
     }
 
     public int exec_insert(Student s) throws SQLException {
-        SystemSettings sysSetting = new SystemSettings();
         String sql = "INSERT ignore INTO student (login, password, name, "
                 + "surname, middle_name, date_of_birth, photo, school_id, gender_id, "
                 + "education_status_id,entering_year_id,class_name_id,employee_id, "

@@ -79,8 +79,14 @@ public class DbStudentPayment extends BaseDb {
             Button btn = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
                     SystemSettings.dbStudentPayments, FontAwesome.MINUS_SQUARE);
             btn.setEnabled(!isDisabled);
+            if (!currentUser.isPermitted(SystemSettings.paymentsTab + ":" + SystemSettings.actDelete)) {
+                btn.setEnabled(false);
+            }
             item.getItemProperty(SystemSettings.button).setValue(btn);
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            if (!currentUser.isPermitted(SystemSettings.paymentsTab + ":" + SystemSettings.actModify)) {
+                isDisabled = true;
+            }
             ComboBoxMax cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
                     myUI.getMessage(SptMessages.PaymentCategoryType), id, true, false);
             cb.setId(myUI.getMessage(SptMessages.Payments));
@@ -116,9 +122,11 @@ public class DbStudentPayment extends BaseDb {
             tf = dw.createTextfieldNote(result.getString("sp.note"), myUI.getMessage(SptMessages.Note), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
-            item.getItemProperty(myUI.getMessage(SptMessages.Print)).setValue(
-                    dw.createButton(myUI.getMessage(SptMessages.Print), id,
-                            myUI.getMessage(SptMessages.Invoice), FontAwesome.PRINT));
+            Button b = dw.createButton(myUI.getMessage(SptMessages.Print), id,
+                    myUI.getMessage(SptMessages.Invoice), FontAwesome.PRINT);
+            b.setEnabled(currentUser.isPermitted(SystemSettings.paymentsTab
+                    + ":" + SystemSettings.actPrint));
+            item.getItemProperty(myUI.getMessage(SptMessages.Print)).setValue(b);
             item.getItemProperty(SystemSettings.old_amount).setValue(result.getDouble("sp.amount"));
             item.getItemProperty(SystemSettings.old_date).setValue(result.getDate("sp.modification_date"));
             item.getItemProperty(SystemSettings.old_category).setValue(result.getInt("sp.payment_category_id"));

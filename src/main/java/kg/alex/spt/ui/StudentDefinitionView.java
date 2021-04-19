@@ -1353,7 +1353,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             initialPaymentTF.setEnabled(true);
         }
         discountsTable.setEnabled(true);
-        plusDiscButton.setEnabled(true);
+        if (currentUser.isPermitted(SystemSettings.discountsTable + ":" + SystemSettings.actAdd)) {
+            plusDiscButton.setEnabled(true);
+        }
         divideBtn.setEnabled(true);
         divideTF.setEnabled(true);
         plusInstButton.setEnabled(true);
@@ -1368,7 +1370,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         plusRelButton.setEnabled(true);
         plusMatGiveButton.setEnabled(true);
         plusMatReceiveButton.setEnabled(true);
-        plusPayButton.setEnabled(true);
+        if (currentUser.isPermitted(SystemSettings.paymentsTab + ":" + SystemSettings.actAdd)) {
+            plusPayButton.setEnabled(true);
+        }
         plusCallButton.setEnabled(true);
         relativesTable.setEnabled(true);
         paymentsTable.setEnabled(true);
@@ -1477,37 +1481,37 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             Component component = iterator.next();
             TabSheet.Tab tab = tabs.getTab(component);
             if (tab.getComponent() == contractTabLay) {
-                if (currentUser.isPermitted(SystemSettings.cnStudentDefinitionView + ":" + SystemSettings.prmTabContract)) {
+                if (currentUser.isPermitted(SystemSettings.contractTab + ":" + SystemSettings.prmMenu)) {
                     tab.setEnabled(true);
                 } else {
                     tab.setEnabled(false);
                 }
             } else if (tab.getComponent() == payTablelay) {
-                if (currentUser.isPermitted(SystemSettings.cnStudentDefinitionView + ":" + SystemSettings.prmTabPayments)) {
+                if (currentUser.isPermitted(SystemSettings.paymentsTab + ":" + SystemSettings.prmMenu)) {
                     tab.setEnabled(true);
                 } else {
                     tab.setEnabled(false);
                 }
             } else if (tab.getComponent() == callsTableLay) {
-                if (currentUser.isPermitted(SystemSettings.cnStudentDefinitionView + ":" + SystemSettings.prmTabCalls)) {
+                if (currentUser.isPermitted(SystemSettings.callsTab + ":" + SystemSettings.prmMenu)) {
                     tab.setEnabled(true);
                 } else {
                     tab.setEnabled(false);
                 }
             } else if (tab.getComponent() == famTableLay) {
-                if (currentUser.isPermitted(SystemSettings.cnStudentDefinitionView + ":" + SystemSettings.prmTabFamilyTab)) {
+                if (currentUser.isPermitted(SystemSettings.familyTab + ":" + SystemSettings.prmMenu)) {
                     tab.setEnabled(true);
                 } else {
                     tab.setEnabled(false);
                 }
             } else if (tab.getComponent() == acsGiveTableLay) {
-                if (currentUser.isPermitted(SystemSettings.cnStudentDefinitionView + ":" + SystemSettings.prmTabAccessoriesGive)) {
+                if (currentUser.isPermitted(SystemSettings.giveAccessoriesTab + ":" + SystemSettings.prmMenu)) {
                     tab.setEnabled(true);
                 } else {
                     tab.setEnabled(false);
                 }
             } else if (tab.getComponent() == acsReceiveTableLay) {
-                if (currentUser.isPermitted(SystemSettings.cnStudentDefinitionView + ":" + SystemSettings.prmTabAccessoriesReceive)) {
+                if (currentUser.isPermitted(SystemSettings.takeAccessoriesTab + ":" + SystemSettings.prmMenu)) {
                     tab.setEnabled(true);
                 } else {
                     tab.setEnabled(false);
@@ -3089,9 +3093,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         Item item;
         item = ((IndexedContainer) discountsTable.getContainerDataSource()).addItemAt(
                 discountsTable.getContainerDataSource().size(), id);
-        item.getItemProperty(SystemSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                        SystemSettings.dbStudentDiscount, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(SystemSettings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                SystemSettings.dbStudentDiscount, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 createComboboxDisc(0, myUI.getMessage(SptMessages.Title), id));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -3266,16 +3269,18 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTabLay.addComponent(instPlanLay, 5, 0);
         contractTabLay.setComponentAlignment(instPlanLay, Alignment.TOP_RIGHT);
         contractTabLay.setRowExpandRatio(2, 1);
-        contractTabLay.addComponent(plusDiscButton, 1, 1);
-        contractTabLay.setComponentAlignment(plusDiscButton, Alignment.BOTTOM_RIGHT);
         contractTabLay.addComponent(currDate, 2, 1);
         contractTabLay.addComponent(divideTF, 3, 1);
         contractTabLay.addComponent(divideBtn, 4, 1);
         contractTabLay.setComponentAlignment(divideBtn, Alignment.BOTTOM_LEFT);
         contractTabLay.addComponent(plusInstButton, 5, 1);
         contractTabLay.setComponentAlignment(plusInstButton, Alignment.BOTTOM_RIGHT);
-        contractTabLay.addComponent(discountsTable, 0, 2, 1, 2);
         contractTabLay.addComponent(installmentTable, 2, 2, 5, 2);
+        if (currentUser.isPermitted(SystemSettings.discountsTable + ":" + SystemSettings.prmMenu)) {
+            contractTabLay.addComponent(plusDiscButton, 1, 1);
+            contractTabLay.setComponentAlignment(plusDiscButton, Alignment.BOTTOM_RIGHT);
+            contractTabLay.addComponent(discountsTable, 0, 2, 1, 2);
+        }
 
         contractTabLay.setColumnExpandRatio(0, 1);
         contractTabLay.setColumnExpandRatio(1, 1);
@@ -3542,7 +3547,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             ttl_payment = sp.getTtl_pay();
             init_payment = sp.getInit_pay();
             contract_amount = c.getAmount();
-            System.out.println(contract_amount);
             kOplate = c.getContr_with_disc() + debt;
             ttl_left = (c.getContr_with_disc() + debt) - ttl_payment;
             dbsc.close();

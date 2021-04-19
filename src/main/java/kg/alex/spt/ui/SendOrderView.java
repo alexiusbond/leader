@@ -6,6 +6,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.MarginInfo;
@@ -91,6 +92,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dataTable.setVisibleColumns(NATURAL_COL_ORDER);
         dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Message), 1);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Date), 80);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Title), 240);
         dataTable.setColumnWidth(SystemSettings.button, 60);
         dataTable.setCellStyleGenerator(new CustomTable.CellStyleGenerator() {
             @Override
@@ -166,16 +168,16 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentSelect.addValueChangeListener(this);
         settingsLay.addComponent(studentSelect, 0, 2);
 
-        ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
+        ObjectProperty<Integer> property = new ObjectProperty<Integer>(0);
         discountTF = new TextField(myUI.getMessage(SptMessages.Discount), property);
         discountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         discountTF.setRequired(true);
         discountTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         discountTF.setNullRepresentation("");
-        discountTF.setConverter(SystemSettings.getStringToDoubleConverter());
+        discountTF.setConverter(SystemSettings.getStringToIntegerConverter());
         discountTF.setWidth("100%");
-        discountTF.addValidator(new DoubleRangeValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 0.1, 100.0));
+        discountTF.addValidator(new IntegerRangeValidator(
+                myUI.getMessage(SptMessages.NotifWrongValue), 1, 100));
         discountTF.addValueChangeListener(this);
         settingsLay.addComponent(discountTF, 1, 2);
 
@@ -339,8 +341,8 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
                     "Жобосунун 3-пунктунун  негизинде "
                     + myUI.getUser().getCurrent_year().getName()
-                    + "-окуу жылынын окуу төлөмүндө " + SystemSettings.dFormat.format(
-                    discountTF.getPropertyDataSource().getValue()) + "% жеңилдик берилсин.");
+                    + "-окуу жылынын окуу төлөмүндө " +
+                    discountTF.getPropertyDataSource().getValue() + "% жеңилдик берилсин.");
         }
     }
 
@@ -401,7 +403,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         om.setStudent_id((Integer) studentSelect.getValue());
         om.setDate(dateDF.getValue());
         om.setOrder_number(orderNumberTF.getValue());
-        om.setDiscount((Double) discountTF.getPropertyDataSource().getValue());
+        om.setDiscount((Integer) discountTF.getPropertyDataSource().getValue());
         om.setTitle(headlineTF.getValue());
         om.setEmployee_id(myUI.getUser().getId());
         om.setId(i);

@@ -194,8 +194,14 @@ public class SystemSettings implements Serializable {
     public static final String cnSchoolModificationView = "SchoolModificationView";
     public static final String cnStudentDefinitionView = "StudentDefinitionView";
     public static final String cnReportsView = "ReportsView";
-    public static final String discountsTab = "DiscountsTab";
+    public static final String discountsTable = "DiscountsTable";
     public static final String paymentsTab = "PaymentsTab";
+    public static final String callsTab = "CallsTab";
+    public static final String takeAccessoriesTab = "TakeAccessoriesTab";
+    public static final String giveAccessoriesTab = "GiveAccessoriesTab";
+    public static final String contractTab = "ContractTab";
+    public static final String familyTab = "FamilyTab";
+    public static final String actPrint = "распечатка";
     public static final String cnAccountingReportsView = "AccountingReportsView";
     public static final String cnStockReportsView = "StockReportsView";
     public static final String cnHRReportsView = "HRReportsView";
@@ -212,7 +218,7 @@ public class SystemSettings implements Serializable {
     public static final String actPdf = "pdf";
     public static final String prmContractInfo = "информация о контракте";
     public static final String prmContractInfoLeftDebt = "информация о задолженностях";
-    public static final String prmMenu = "меню";
+    public static final String prmMenu = "показ в меню";
     public static final String prmContractVisible = "видимость контракта";
     public static final String actCopy = "копирование";
     public static final String prmPlanPayments = "план оплат и оплаты";
@@ -235,12 +241,6 @@ public class SystemSettings implements Serializable {
     public static final String prmLessonHoursReport = "отчет по количеству преподаваемых часов";
     public static final String prmCallsReport = "отчет о вызовах";
     public static final String prmOutOfReport = "отчет о выбывших";
-    public static final String prmTabContract = "вкладка контракта";
-    public static final String prmTabPayments = "вкладка оплат";
-    public static final String prmTabCalls = "вкладка звонков";
-    public static final String prmTabFamilyTab = "вкладка информации о семье";
-    public static final String prmTabAccessoriesGive = "вкладка выданных материалов";
-    public static final String prmTabAccessoriesReceive = "вкладка полученных материалов";
     public static final String prmTabActivities = "вкладка деятельности";
     public static final String prmTabOrders = "вкладка приказов";
     public static final String prmTabSearch = "вкладка поиска";

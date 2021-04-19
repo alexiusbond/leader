@@ -282,7 +282,8 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer execPermissionSQL(MyVaadinUI myUi) throws SQLException {
-        String sql = "SELECT p.java_class_name, p.caption, p.permissions FROM permissions as p;";
+        String sql = "SELECT p.java_class_name, p.caption, p.permissions FROM permissions as p " +
+                "order by p.caption";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();

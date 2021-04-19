@@ -20,13 +20,13 @@ public class OrderMessage implements Serializable {
     private Date date;
     private int student_id;
     private int employee_id;
-    private double discount;
+    private int discount;
 
-    public double getDiscount() {
+    public int getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(int discount) {
         this.discount = discount;
     }
 

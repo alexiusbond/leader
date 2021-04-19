@@ -137,7 +137,7 @@ public class ContractSchoolPdfRu {
                     paragraph.add(new Phrase(fullname, ordBoldFont));
                     paragraph.add(new Phrase(", действующего на основании Устава, утвержденного согласно ст.10 Закона Кыргызской Республики «Об образовании», с одной стороны, ", ordFont));
                     paragraph.add(new Phrase(student.getRel_fullname() + ", ", ordBoldFont));
-                    paragraph.add(new Phrase("являющаяся(щийся) ", ordFont));
+                    paragraph.add(new Phrase(" и являющаяся(щийся) ", ordFont));
                     paragraph.add(new Phrase(student.getRel_name_dec(), ordBoldFont));
                     paragraph.add(new Phrase(" Обучающегося " + student.getClass_name() + " класса ", ordFont));
 
@@ -185,7 +185,7 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("1.2. Родители обязуются вносить оплату за образовательные услуги согласно пункту 3 (Условия оплаты Родителей за образовательные услуги) данного Договора.", ordFont));
+                    paragraph.add(new Phrase("1.2. 1.2.\tРодители обязуются вносить оплату за образовательные услуги согласно пункту 3 (Условия оплаты Родителей за образовательные услуги) данного Договора.", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 
@@ -257,7 +257,7 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.3. При несвоевременной оплате Родителем взноса, с извещением Родителя ограничить доступ посещения Обучающегося ко всем формам учебных и не учебных занятий и использования материально-технических условий (занятий, библиотеки, столовой, кружков, этюдов и тд., не допускать на экзамены, не выставлять оценки Эдупэйдж). Помимо этого без предупреждения Родителя ", ordFont));
+                    paragraph.add(new Phrase("2.2.3. При несвоевременной оплате Родителем взноса, с извещением Родителя ограничить доступ посещения Обучающегося ко всем формам учебных и не учебных занятий и использования материально-технических условий (занятий, библиотеки, столовой, кружков, этюдов и тд., не допускать на экзамены, не выставлять оценки “Эдупэйдж”, “Emektep”). Помимо этого без предупреждения Родителя ", ordFont));
                     paragraph.add(new Phrase("аннулируются ", ordBoldFont));
                     paragraph.add(new Phrase("предоставленные Школой скидки (скидки за успеваемость, призерам олимпиад, скидка за высший балл при поступлении и тд).", ordFont));
                     document.add(paragraph);
@@ -312,6 +312,15 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationLeft(30);
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("2.2.7. Во взаимодействии со структурными подразделениями Лицея, осуществляющими организацию внутриобъектного и пропускного режимов, обеспечить безопасность Учащегося.", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
                     paragraph.add(new Phrase("2.3. Родители обязаны:", boldFont));
                     document.add(paragraph);
 
@@ -348,7 +357,7 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.4. Компенсировать материальный ущерб за причиненный Обучающимся ущерб имуществу Школы.", ordFont));
+                    paragraph.add(new Phrase("2.3.4. Обеспечить Обучающегося всеми необходимыми канцелярскими принадлежностями для собственного использования (тетради, альбомы, ручки, цветные карандаши, точилки и т.д.).", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -357,7 +366,7 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.5. Содействовать и участвовать в традиционных мероприятиях Школы, предусматривающих участие всех участников образовательного процесса.", ordFont));
+                    paragraph.add(new Phrase("2.3.5. Компенсировать материальный ущерб за причиненный Обучающимся ущерб имуществу Школы.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -366,7 +375,7 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.6. Согласовать с Администрацией Школы осуществление подвоза детей в Школу и обратно.", ordFont));
+                    paragraph.add(new Phrase("2.3.6. Содействовать и участвовать в традиционных мероприятиях Школы, предусматривающих участие всех участников образовательного процесса.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -375,7 +384,7 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.7. Родители ответственны за сохранность учебников, выданных Школой. В случае порчи или утери, возмещают полностью.", ordFont));
+                    paragraph.add(new Phrase("2.3.7. Согласовать с Администрацией Школы осуществление подвоза детей в Школу и обратно.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -384,7 +393,25 @@ public class ContractSchoolPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.8. Известить Администрацию Школы в течении 5 рабочих дней об изменении места жительства и/или контактных телефонов.", ordFont));
+                    paragraph.add(new Phrase("2.3.8. Родители ответственны за сохранность учебников, выданных Школой. В случае порчи или утери, возмещают полностью.", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("2.3.9. Известить Администрацию Школы в течении 5 рабочих дней об изменении места жительства и/или контактных телефонов.", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("2.3.10. Вне территории Школы, ответственность за жизнь и безопасность Учащегося Школа не несет.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();

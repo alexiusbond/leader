@@ -70,7 +70,7 @@ public class DbOrderMessage extends BaseDb {
         if (employee_id != 0) {
             sql += " WHERE om.employee_id = ? ";
         }
-        sql += "order by om.creation_date desc";
+        sql += "order by om.creation_date desc, CAST(substring(order_number, 9, 15) AS SIGNED) desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (employee_id != 0) {
             stat.setInt(1, employee_id);
@@ -83,7 +83,7 @@ public class DbOrderMessage extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Message), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Student), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Discount), Double.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Discount), Integer.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(SystemSettings.button, HorizontalLayout.class, null);
         container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
@@ -94,7 +94,7 @@ public class DbOrderMessage extends BaseDb {
                     result.getDate("om.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(result.getString("employee"));
             item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Discount)).setValue(result.getDouble("discount"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Discount)).setValue(result.getInt("discount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Message)).setValue(result.getString("om.message"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("om.order_title"));
             item.getItemProperty(myUi.getMessage(SptMessages.OrderNumber)).setValue(result.getString("om.order_number"));

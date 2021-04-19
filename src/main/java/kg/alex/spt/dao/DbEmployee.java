@@ -577,26 +577,4 @@ public class DbEmployee extends BaseDb {
         int status = stat.executeUpdate();
         return status;
     }
-
-    public IndexedContainer execPermissionSQL(MyVaadinUI myUi) throws SQLException {
-        String sql = "SELECT p.java_class_name, p.caption, p.permissions FROM permissions as p;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        ResultSet result = stat.executeQuery();
-        IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassCaption), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Value), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Functions), ComboBoxMultiselectMax.class, null);
-
-        while (result.next()) {
-            Item item = container.addItem(result.getString("p.java_class_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("p.java_class_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassCaption)).setValue(
-                    result.getString("p.caption"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Value)).setValue(
-                    result.getString("p.permissions"));
-        }
-        return container;
-    }
 }

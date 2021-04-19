@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
@@ -25,6 +26,9 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.ClassDiscountsReport;
 import kg.alex.spt.reports.SchoolDiscountsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
+import kg.alex.spt.utils.ComboBoxMax;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 public class DbStudentDiscount extends BaseDb {
 
@@ -112,6 +116,7 @@ public class DbStudentDiscount extends BaseDb {
 
     public IndexedContainer execSQL_St_Discounts(MyVaadinUI myUI, int stud_id, int year_id,
                                                  StudentDefinitionView dw) throws SQLException {
+        Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sd.id, sd.free_entry_amount, sd.discount_id, sd.note, "
                 + "d.discount_type_id, d.id, d.amount, a.id, a.name, a.extension, a.unique_name "
                 + "FROM student_discount as sd "
@@ -126,12 +131,16 @@ public class DbStudentDiscount extends BaseDb {
         while (result.next()) {
             String id = result.getString("sd.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
+            Button b =
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                            SystemSettings.dbStudentDiscount, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
-                    dw.createComboboxDisc(result.getInt("d.id"),
-                            myUI.getMessage(SptMessages.Title), id));
+                            SystemSettings.dbStudentDiscount, FontAwesome.MINUS_SQUARE);
+            if (!currentUser.isPermitted(SystemSettings.discountsTable + ":" + SystemSettings.actDelete)) {
+                b.setEnabled(false);
+            }
+            item.getItemProperty(SystemSettings.button).setValue(b);
+            ComboBoxMax cb = dw.createComboboxDisc(result.getInt("d.id"),
+                    myUI.getMessage(SptMessages.Title), id);
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb);
             if (result.getString("d.discount_type_id").equals("1")
                     || result.getString("d.discount_type_id").equals("2")) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -142,15 +151,20 @@ public class DbStudentDiscount extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                         dw.createTextfieldDisc(result.getDouble("sd.free_entry_amount"),
                                 result.getDouble("d.amount"),
-                                myUI.getMessage(SptMessages.DiscountAmount), id, false));
+                                myUI.getMessage(SptMessages.DiscountAmount), id,
+                                !currentUser.isPermitted(SystemSettings.discountsTable + ":" + SystemSettings.actModify)));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
-                    dw.createTextfield(result.getString("sd.note"),
-                            myUI.getMessage(SptMessages.Note), id, true, false));
+            TextField tf = dw.createTextfield(result.getString("sd.note"),
+                    myUI.getMessage(SptMessages.Note), id, true, false);
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
-
-            Button b = dw.createButton(myUI.getMessage(SptMessages.DownLoad), id,
+            if (!currentUser.isPermitted(SystemSettings.discountsTable + ":" + SystemSettings.actModify)) {
+                tf.setEnabled(false);
+                hl.setEnabled(false);
+                cb.setEnabled(false);
+            }
+            b = dw.createButton(myUI.getMessage(SptMessages.DownLoad), id,
                     SystemSettings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setEnabled(false);
