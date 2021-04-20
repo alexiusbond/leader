@@ -66,10 +66,10 @@ public class ContractSchoolPdfRu {
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                     BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                    Font ordFont = new Font(baseFont, 11);
-                    Font ordBoldFont = new Font(baseFontBold, 11);
-                    Font boldFont = new Font(baseFontBold, 12);
-                    Font font_header = new Font(baseFontBold, 13);
+                    Font ordFont = new Font(baseFont, 10);
+                    Font ordBoldFont = new Font(baseFontBold, 10);
+                    Font boldFont = new Font(baseFontBold, 11);
+                    Font font_header = new Font(baseFontBold, 11);
 
                     document.open();
 
@@ -619,6 +619,7 @@ public class ContractSchoolPdfRu {
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 
+                    //document.newPage();
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);
                     paragraph.setIndentationLeft(30);
