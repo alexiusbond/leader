@@ -337,7 +337,7 @@ public class DbSchool extends BaseDb {
                 + "LEFT JOIN hr_position AS hrp ON eo.hr_position_id = hrp.id "
                 + "LEFT JOIN position AS p ON hrp.id = p.hr_position_id "
                 + "LEFT JOIN employee AS e ON eo.employee_id = e.id "
-                + "where sc.id = ? AND ord.working_status_id = 2 and p.id = 2 limit 1;";
+                + "where sc.id = ? AND ord.working_status_id = 2 and p.id = 2 order by e.priority desc limit 1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();

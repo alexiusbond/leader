@@ -781,8 +781,8 @@ public class ContractSchoolPdfRu {
                     while (iter1.hasNext()) {
                         Object obj = iter1.next();
                         TContract.addCell(new Phrase(n + "", ordFont));
-                        TContract.addCell(new Phrase(((DateField) instPlanCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.Date)).getValue()).getValue().toString(), ordFont));
+                        TContract.addCell(new Phrase(SystemSettings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
+                                myUI.getMessage(SptMessages.Date)).getValue()).getValue()), ordFont));
                         TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getValue(), ordFont));
                         TContract.addCell(new Phrase("", ordFont));

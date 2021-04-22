@@ -416,7 +416,7 @@ public class DbStudent extends BaseDb {
     }
 
     public int exec_delete(int id) throws SQLException {
-        String sql = "delete sc, sd, ip, sp, sr, sa, so, sre, sca from student as st "
+        String sql = "delete sc, sd, ip, sp, sr, sa, so, sca from student as st "
                 + "left join student_payments as sp on sp.student_id = st.id "
                 + "left join student_contract as sc on sc.student_id = st.id "
                 + "left join student_discount as sd on sd.student_id = st.id "
@@ -424,7 +424,6 @@ public class DbStudent extends BaseDb {
                 + "left join student_relatives as sr on sr.student_id = st.id "
                 + "left join student_accessories as sa on sa.student_id = st.id "
                 + "left join student_orders as so on so.student_id = st.id "
-                + "left join student_returns as sre on sre.student_id = st.id "
                 + "left join student_calls as sca on sca.student_id = st.id "
                 + "where st.id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);

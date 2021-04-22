@@ -609,8 +609,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void buildContractLayout() {
-
-        modifyBtn.setEnabled(true);
         contractLay = new VerticalLayout();
         contractLay.setMargin(true);
 
@@ -3592,7 +3590,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         }
         if (currentUser.isPermitted(SystemSettings.cnStudentDefinitionView + ":" + SystemSettings.prmContractInfo)) {
-            modifyBtn.setEnabled(true);
             contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + SystemSettings.dFormat.format(c.getAmount()) + " $");
             discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts);
             if (debt > 0) {
