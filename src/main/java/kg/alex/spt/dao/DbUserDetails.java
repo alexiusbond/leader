@@ -8,11 +8,14 @@ package kg.alex.spt.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.UserDetails;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 /**
- *
  * @author alex
  */
 public class DbUserDetails extends BaseDb {
@@ -22,13 +25,16 @@ public class DbUserDetails extends BaseDb {
     }
 
     public UserDetails execSQLUserInfo(String login) throws SQLException {
+        Subject currentUser = SecurityUtils.getSubject();
         String sql = "select e.id, ord.working_status_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
-                + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, y.id, y.name, sch.transactions_start_date "
+                + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, "
+                + "y.id, y.name, y2.id, y2.name, sch.transactions_start_date "
                 + "from employee as e "
                 + "left join hr_employee_order as eo on eo.employee_id=e.id and eo.to_date IS NULL "
                 + "left join hr_orders as ord on ord.id=eo.hr_orders_id "
                 + "left join school as sch on eo.school_id=sch.id "
                 + "left join year as y on sch.year_id=y.id "
+                + "left join year as y2 on e.year_id=y2.id "
                 + "where e.login=? and ord.working_status_id IS NOT NULL";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -45,7 +51,11 @@ public class DbUserDetails extends BaseDb {
             user.setSchool_name(result.getString("sch.name_ru"));
             user.setSchool_code(result.getString("sch.code"));
             user.setSchool_logo(result.getString("sch.photo"));
-            user.setCurrent_year(new Definition(result.getInt("y.id"), result.getString("y.name")));
+            if (currentUser.hasRole(SystemSettings.rnSapatSecretary)) {
+                user.setCurrent_year(new Definition(result.getInt("y2.id"), result.getString("y2.name")));
+            } else {
+                user.setCurrent_year(new Definition(result.getInt("y.id"), result.getString("y.name")));
+            }
             user.setTransactions_start_date(result.getDate("sch.transactions_start_date"));
         }
         return user;

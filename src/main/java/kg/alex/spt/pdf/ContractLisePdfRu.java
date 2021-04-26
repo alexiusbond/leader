@@ -235,7 +235,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.5. Разместить Учащегося на весь период обучения в благоустроенном общежитии с наличием коммунальных удобств. В случае расторжения контракта право на проживание в общежитии Учащимся утрачивается.", ordFont));
+                    paragraph.add(new Phrase("2.1.5. Разместить Учащегося на период обучения, утвержденный МОиН КР, в благоустроенном общежитии с наличием коммунальных удобств. В случае расторжения контракта право на проживание в общежитии Учащимся утрачивается.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -443,7 +443,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.9. Лицей организовывает проведение подготовительных курсов к ОРТ, кружковую работу по интересам учащихся. В связи с чем администрация Лицея имеет право запретить учащимся посещение дополнительных образовательных занятий вне лицея.", ordFont));
+                    paragraph.add(new Phrase("2.2.9. Лицей по желанию и согласованию с родителями, организовывает проведение подготовительных курсов к ОРТ, TOEFL, SAT, IELTS и т.д., кружковую работу по интересам учащихся, за отдельную плату. В связи с чем администрация Лицея имеет право запретить учащимся посещение дополнительных образовательных занятий вне лицея.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -452,7 +452,7 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.10. Учащимся, состоящим на диспансерном учете по хроническим заболеваниям (эпилепсии, астмы, порока сердца, энуреза и др.) особые условия не предоставляются.", ordFont));
+                    paragraph.add(new Phrase("2.2.10. Учащимся, состоящим на диспансерном учете по хроническим заболеваниям (эпилепсии, астмы, порока сердца, энуреза и др.) особые условия не предоставляются. Родители, либо законные представители Учащихся, обязаны предупредить в письменном виде медицинского сотрудника Лицея о хронических заболеваниях Учащегося.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -461,19 +461,19 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.11. Учащимся, состоящим на диспансерном учете по хроническим заболеваниям (эпилепсии, астмы, порока сердца, энуреза и др.) особые условия не предоставляются.", ordFont));
-                    document.add(paragraph);
-
-                    paragraph = new Paragraph();
-                    paragraph.setFirstLineIndent(30);
-                    paragraph.setIndentationLeft(30);
-                    paragraph.setIndentationRight(30);
-                    paragraph.setLeading(15);
-                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.12. Удержать ", ordFont));
+                    paragraph.add(new Phrase("2.2.11. Удержать ", ordFont));
                     paragraph.add(new Phrase("сумму родительского взноса за текущую четверть", ordBoldFont));
                     paragraph.add(new Phrase(", при расторжении  настоящего договора по инициативе Родителя, при этом ранее предусмотренные скидки ", ordFont));
                     paragraph.add(new Phrase("не учитываются.", ordBoldFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("2.2.12. При расторжении настоящего договора по непредвиденным обстоятельствам, с учетом всех понесенных расходов Лицея, сумма подлежащяя к возврату, возвращается по мере возможности Лицея, но не позднее мая следующего года.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -539,7 +539,34 @@ public class ContractLisePdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.3.3. Провести полную медицинскую диспансеризацию Учащегося, предоставить Администрации Лицея заключение медицинских специалистов о состоянии здоровья Учащегося перед прибытием его в Лицей.", ordFont));
+                    paragraph.add(new Phrase("2.3.3. Провести полную медицинскую диспансеризацию Учащегося, предоставить Администрации Лицея заключение медицинских специалистов о состоянии здоровья Учащегося перед прибытием его в Лицей. Дать письменное согласие или отказ от медицинских услуг:", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("а) при необходимости оказания медицинской помощи Учащимся;", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("б) услуг психолога", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("В случае необходимости в дорогостоящих препаратах либо вызове частной медицинской скорой помощи, оплатить расходы.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
