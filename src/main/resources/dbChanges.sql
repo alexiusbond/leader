@@ -1,3 +1,9 @@
-ALTER TABLE `spt`.`employee`
-    ADD COLUMN `priority` TINYINT(1) NOT NULL DEFAULT ''1'' AFTER `modification_date`;
-UPDATE `spt`.`employee` SET `priority` = '2' WHERE (`id` = '47') and (`login` = '100036') and (`nationality_id` = '176') and (`gender_id` = '1') and (`hr_martial_status_id` = '2') and (`employee_id` = '47');
+ALTER TABLE `spt`.`order_messages` 
+DROP FOREIGN KEY `fk_discount_order_messages_student101`;
+ALTER TABLE `spt`.`order_messages` 
+ADD COLUMN `student` VARCHAR(200) NULL DEFAULT NULL AFTER `discount`,
+CHANGE COLUMN `student_id` `student_id` INT NULL DEFAULT NULL ;
+ALTER TABLE `spt`.`order_messages` 
+ADD CONSTRAINT `fk_discount_order_messages_student101`
+  FOREIGN KEY (`student_id`)
+  REFERENCES `spt`.`student` (`id`);

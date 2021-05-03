@@ -420,6 +420,7 @@ public class SptMessages_ru extends SptMessages {
             {ExportToPdf, "Экспорт в Pdf"},
             {ViewDocument, "Посмотреть документ"},
             {HomePage, "Главная"},
+            {Other, "Другое"},
             {OtherUsers, "Другие пользователи"},
             {OtherSchool, "Другая школа"},
             {ForThisWeek, "За эту неделю"},

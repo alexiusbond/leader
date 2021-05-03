@@ -411,6 +411,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ExportToPdf = generateId();
     public static final String ViewDocument = generateId();
     public static final String HomePage = generateId();
+    public static final String Other = generateId();
     public static final String OtherUsers = generateId();
     public static final String OtherSchool = generateId();
     public static final String ForThisWeek = generateId();

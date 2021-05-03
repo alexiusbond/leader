@@ -363,8 +363,8 @@ public class DbAccTransactions extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type_id, int school_id, int id) throws SQLException {
         String sql = "select ac.id, concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as name "
                 + "from acc_category as ac where ac.acc_type_id=? and (ac.activity_status_id = 2 or ac.id = ? "
-                + "or (select t.amount_usd from view_accurals as t where t.acc_category_id = ac.id)  "
-                + "> (select t.amount_usd from view_total_transactions as t where t.acc_category_id = ac.id)) "
+                + "or round((select t.amount_usd from view_accurals as t where t.acc_category_id = ac.id), 2)  "
+                + "> round((select t.amount_usd from view_total_transactions as t where t.acc_category_id = ac.id), 2)) "
                 + "and ac.parent_id is not null and (ac.school_id is null or ac.school_id=?) "
                 + "and ac.parent_id not in (select acc_category_id from dp_product_category) "
                 + "order by ifnull(concat(ac.parent_code,'.',ac.code), ac.code) asc;";

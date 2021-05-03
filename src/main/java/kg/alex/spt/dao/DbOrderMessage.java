@@ -35,8 +35,8 @@ public class DbOrderMessage extends BaseDb {
 
     public int exec_insert(OrderMessage d) throws SQLException {
         String sql = "INSERT INTO order_messages (message, order_number, " +
-                "order_title, order_content, student_id, creation_date, employee_id, discount) "
-                + "VALUES(?,?,?,?,?,?,?,?);";
+                "order_title, order_content, student_id, creation_date, employee_id, discount, student) "
+                + "VALUES(?,?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (d.getMessage() != null) {
             stat.setString(1, d.getMessage());
@@ -46,10 +46,19 @@ public class DbOrderMessage extends BaseDb {
         stat.setString(2, d.getOrder_number());
         stat.setString(3, d.getTitle());
         stat.setString(4, d.getContent());
-        stat.setInt(5, d.getStudent_id());
+        if (d.getStudent_id() != 0) {
+            stat.setInt(5, d.getStudent_id());
+        } else {
+            stat.setNull(5, Types.INTEGER);
+        }
         stat.setDate(6, new Date(d.getDate().getTime()));
         stat.setInt(7, d.getEmployee_id());
         stat.setDouble(8, d.getDiscount());
+        if (d.getStudent() != null) {
+            stat.setString(9, d.getStudent());
+        } else {
+            stat.setNull(9, Types.VARCHAR);
+        }
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -60,8 +69,8 @@ public class DbOrderMessage extends BaseDb {
 
     public void execSQL(MyVaadinUI myUi, int employee_id, FilterTable t, SendOrderView view) throws SQLException {
         String sql = "SELECT em.id, concat(e.name, ' ', e.surname) as employee, " +
-                "concat(st.name, ' ', st.surname) as student, om.id, om.discount, " +
-                "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, " +
+                "concat(st.name, ' ', st.surname) as student, om.id, om.discount, om.student as student_info, " +
+                "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, om.student_id, " +
                 "mst.id, mst.name FROM employee_message AS em " +
                 "left join employee as e on e.id = em.employee_id " +
                 "left join message_status as mst on mst.id = em.message_status_id " +
@@ -93,7 +102,11 @@ public class DbOrderMessage extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(
                     result.getDate("om.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(result.getString("employee"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
+            if (result.getInt("om.student_id") == 0) {
+                item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student_info"));
+            } else {
+                item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
+            }
             item.getItemProperty(myUi.getMessage(SptMessages.Discount)).setValue(result.getInt("discount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Message)).setValue(result.getString("om.message"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("om.order_title"));

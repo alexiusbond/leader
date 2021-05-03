@@ -17,10 +17,19 @@ public class OrderMessage implements Serializable {
     private String title;
     private String content;
     private String message;
+    private String student;
     private Date date;
     private int student_id;
     private int employee_id;
     private int discount;
+
+    public String getStudent() {
+        return student;
+    }
+
+    public void setStudent(String student) {
+        this.student = student;
+    }
 
     public int getDiscount() {
         return discount;
