@@ -166,7 +166,8 @@ public class DbStudentDiscount extends BaseDb {
             }
             b = dw.createButton(myUI.getMessage(SptMessages.DownLoad), id,
                     SystemSettings.download_button, FontAwesome.DOWNLOAD);
-            b.setStyleName(ValoTheme.BUTTON_SMALL);
+            b.setStyleName("unread");
+            b.addStyleName(ValoTheme.BUTTON_SMALL);
             b.setEnabled(false);
             b.setData(null);
             if (result.getInt("a.id") != 0) {
@@ -177,6 +178,8 @@ public class DbStudentDiscount extends BaseDb {
                 a.setName(result.getString("a.name"));
                 b.setData(a);
                 b.setEnabled(true);
+                b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+                b.addStyleName(ValoTheme.BUTTON_SMALL);
             }
             hl.addComponent(b);
 

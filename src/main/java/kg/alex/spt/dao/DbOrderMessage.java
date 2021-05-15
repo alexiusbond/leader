@@ -67,7 +67,7 @@ public class DbOrderMessage extends BaseDb {
         }
     }
 
-    public void execSQL(MyVaadinUI myUi, int employee_id, FilterTable t, SendOrderView view) throws SQLException {
+    public IndexedContainer execSQL(MyVaadinUI myUi, int employee_id, FilterTable t, SendOrderView view) throws SQLException {
         String sql = "SELECT em.id, concat(e.name, ' ', e.surname) as employee, " +
                 "concat(st.name, ' ', st.surname) as student, om.id, om.discount, om.student as student_info, " +
                 "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, om.student_id, " +
@@ -132,11 +132,14 @@ public class DbOrderMessage extends BaseDb {
                 unread++;
             }
         }
-        t.setContainerDataSource(container);
-        t.setColumnAlignment(myUi.getMessage(SptMessages.Discount), CustomTable.Align.RIGHT);
-        t.setColumnFooter(myUi.getMessage(SptMessages.Title),
-                myUi.getMessage(SptMessages.UnRead) + ": " + unread);
-        t.setColumnFooter(myUi.getMessage(SptMessages.Status),
-                myUi.getMessage(SptMessages.Total) + ": " + container.size());
+        if (t != null) {
+            t.setContainerDataSource(container);
+            t.setColumnAlignment(myUi.getMessage(SptMessages.Discount), CustomTable.Align.RIGHT);
+            t.setColumnFooter(myUi.getMessage(SptMessages.Title),
+                    myUi.getMessage(SptMessages.UnRead) + ": " + unread);
+            t.setColumnFooter(myUi.getMessage(SptMessages.Status),
+                    myUi.getMessage(SptMessages.Total) + ": " + container.size());
+        }
+        return container;
     }
 }

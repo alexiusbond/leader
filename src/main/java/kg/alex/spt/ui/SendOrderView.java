@@ -20,6 +20,7 @@ import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.OrderPdf;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedFilterTable;
@@ -40,13 +41,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
     static final Logger logger = LogManager.getLogger(SendOrderView.class);
     private MyVaadinUI myUI;
-    private Button sendBtn;
+    private Button sendBtn, excelBtn;
     private ComboBoxMax schoolSelect, studentSelect;
     private ComboBoxMultiselectMax employeeMCB;
     private FormattedFilterTable dataTable;
+    private Table tableForExport;
     private TextField orderNumberTF, discountTF, studentTF;
     private DateField dateDF;
     private TextArea contentRTA, messageTA, headlineTA;
+    private EnhancedFormatExcelExport excelReport;
 
     private String[] NATURAL_COL_ORDER;
     private GridLayout settingsLay;
@@ -65,6 +68,12 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
+        vl.setSpacing(true);
+
+        tableForExport = new Table();
+        tableForExport.setHeight("1%");
+        tableForExport.setVisible(false);
+        vl.addComponent(tableForExport);
 
         dataTable = new FormattedFilterTable();
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
@@ -110,6 +119,16 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             }
         });
         vl.addComponent(dataTable);
+
+        excelBtn = new Button();
+        excelBtn.setCaption(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setStyleName(ValoTheme.BUTTON_PRIMARY);
+        excelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        excelBtn.setIcon(FontAwesome.SHARE_SQUARE_O);
+        excelBtn.addClickListener(this);
+        vl.addComponent(excelBtn);
+        vl.setComponentAlignment(excelBtn, Alignment.BOTTOM_RIGHT);
+        vl.setExpandRatio(dataTable, 1);
 
         this.setSplitPosition(30, Unit.PERCENTAGE);
         this.setSizeFull();
@@ -282,6 +301,31 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                             Notification.Type.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+        } else if (source == excelBtn) {
+            try {
+                if (dataTable.getContainerDataSource().size() != 0) {
+                    DbOrderMessage dbCon = new DbOrderMessage();
+                    dbCon.connect();
+                    if (currentUser.hasRole("admin")) {
+                        tableForExport.setContainerDataSource(dbCon.execSQL(myUI, 0, null, this));
+                    } else {
+                        tableForExport.setContainerDataSource(
+                                dbCon.execSQL(myUI, myUI.getUser().getId(), null, this));
+                    }
+                    dbCon.close();
+                    tableForExport.setColumnCollapsingAllowed(true);
+                    tableForExport.setColumnCollapsed(SystemSettings.button, true);
+                    tableForExport.setColumnCollapsed(SystemSettings.status_id, true);
+                    excelReport = new EnhancedFormatExcelExport(tableForExport, "sheet1");
+                    excelReport.excludeCollapsedColumns();
+                    excelReport.setReportTitle(myUI.getMessage(SptMessages.SendOrders));
+                    excelReport.setDisplayTotals(true);
+                    excelReport.export();
                 }
             } catch (Exception e) {
                 logger.error(e);

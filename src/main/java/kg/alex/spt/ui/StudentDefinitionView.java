@@ -555,6 +555,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         fieldsLay2.addComponent(genderCB);
 
         birthDate = new DateField(myUI.getMessage(SptMessages.DateOfBirth));
+        birthDate.setRangeEnd(new Date());
         birthDate.setWidth("100%");
         birthDate.setStyleName(ValoTheme.DATEFIELD_TINY);
         birthDate.setRequired(true);
@@ -1931,6 +1932,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     photoEmb.setSource(new FileResource(myFile));
                 } else {
                     Button b = (Button) upl.getData();
+                    b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+                    b.addStyleName(ValoTheme.BUTTON_SMALL);
                     Attachment attachment = null;
                     try {
                         attachment = new Attachment();
@@ -3104,7 +3107,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         hl.setSpacing(true);
 
         Button b = createButton(myUI.getMessage(SptMessages.DownLoad), null, SystemSettings.download_button, FontAwesome.DOWNLOAD);
-        b.setStyleName(ValoTheme.BUTTON_SMALL);
+        b.setStyleName("unread");
+        b.addStyleName(ValoTheme.BUTTON_SMALL);
         b.setEnabled(false);
         hl.addComponent(b);
 

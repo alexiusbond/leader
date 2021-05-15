@@ -338,7 +338,11 @@ public class ExcelExport extends TableExport {
         final CellRangeAddress cra;
         if (rowHeaders) {
             titleCell = titleRow.createCell(1);
-            cra = new CellRangeAddress(0, 0, 1, getPropIds().size() - 1);
+            int num = getPropIds().size() - 1;
+            if (num > 255) {
+                num = 255;
+            }
+            cra = new CellRangeAddress(0, 0, 1, num);
             sheet.addMergedRegion(cra);
         } else {
             titleCell = titleRow.createCell(0);
