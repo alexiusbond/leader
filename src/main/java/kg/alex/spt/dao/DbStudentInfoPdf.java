@@ -18,7 +18,7 @@ public class DbStudentInfoPdf extends BaseDb {
 
     public StudentInfoPdf execSQL(int stud_id) throws SQLException {
         StudentInfoPdf sti = new StudentInfoPdf();
-        String sql = "SELECT s.id, s.surname, s.name, s.middle_name, scl.city, scl.name_ru, scl.name_kg, scl.name_en, s.gender_id, "
+        String sql = "SELECT s.id, s.login, s.surname, s.name, s.middle_name, scl.city, scl.name_ru, scl.name_kg, scl.name_en, s.gender_id, "
                 + "scl.director_fullname, scl.adress, scl.inn, scl.bank, scl.bank_account, "
                 + "scl.school_type_id, scl.phone, sr.fullname, sr.phone, sr.passport, sr.adress, r.name_ru, r.name_ru_dec, "
                 + "y.period, y.period_kg, y.name, "
@@ -36,6 +36,7 @@ public class DbStudentInfoPdf extends BaseDb {
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             sti.setStud_id(result.getInt("s.id"));
+            sti.setStud_login(result.getString("s.login"));
             sti.setStud_name(result.getString("s.name"));
             sti.setStud_surname(result.getString("s.surname"));
             if (result.getString("s.middle_name") == null

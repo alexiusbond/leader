@@ -724,6 +724,9 @@ public class ContractSchoolPdfRu {
                     text15.setIndentationRight(30);
                     text15.add(new Phrase("График оплаты", boldFont));
                     text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("ID ученика: ", ordFont));
+                    text15.add(new Phrase(student.getStud_login(), ordBoldFont));
+                    text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Ф.И.О. Ученика: ", ordFont));
                     text15.add(new Phrase(student.getStud_sur_name() + " "
                             + student.getStud_name() + " " + student.getStud_middle_name(), ordBoldFont));

@@ -876,6 +876,9 @@ public class ContractLisePdfKg {
                     text15.setIndentationRight(30);
                     text15.add(new Phrase("Төлөө графиги", boldFont));
                     text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Окуучунун ID: ", ordFont));
+                    text15.add(new Phrase(student.getStud_login(), ordBoldFont));
+                    text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Окуучунун аты, жөнү: ", ordFont));
                     text15.add(new Phrase(student.getStud_sur_name() + " "
                             + student.getStud_name() + " " + student.getStud_middle_name(), ordBoldFont));

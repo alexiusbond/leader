@@ -21,6 +21,7 @@ import java.io.InputStream;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.AccTransaction;
+import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.TransactionsView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,7 +46,6 @@ public class TransactionInvoicePDF {
                 buffer = new ByteArrayOutputStream();
 
                 try {
-                    
 
 
                     document = new Document(PageSize.A4, 10, 10, 10, 10);
@@ -162,7 +162,11 @@ public class TransactionInvoicePDF {
                     orderTable.addCell(cell);
 
                     Paragraph recievedPar = new Paragraph();
-                    recievedPar.add(new Chunk("Получил: ", bold_font));
+                    if (orderName.equals(myUI.getMessage(SptMessages.IncomeOrder))) {
+                        recievedPar.add(new Chunk("Выдал: ", bold_font));
+                    } else {
+                        recievedPar.add(new Chunk("Получил: ", bold_font));
+                    }
                     if (tr.getFrom_to_employee() != null) {
                         recievedPar.add(new Chunk(tr.getFrom_to_employee(), underlined_font));
                     } else {
@@ -175,7 +179,11 @@ public class TransactionInvoicePDF {
                     orderTable.addCell(new Phrase("Подпись _____________", bold_font));
 
                     Paragraph accPar = new Paragraph();
-                    accPar.add(new Chunk("Выдал: ", bold_font));
+                    if (orderName.equals(myUI.getMessage(SptMessages.IncomeOrder))) {
+                        accPar.add(new Chunk("Получил: ", bold_font));
+                    } else {
+                        accPar.add(new Chunk("Выдал: ", bold_font));
+                    }
                     accPar.add(new Chunk(tr.getEmployee(), underlined_font));
                     cell = new PdfPCell(accPar);
                     cell.setLeading(20, 0);
