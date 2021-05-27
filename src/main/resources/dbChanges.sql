@@ -1,8 +1,8 @@
-USE `spt`;
+USE `grmt`;
 DROP procedure IF EXISTS `process_statuses`;
 
 DELIMITER $$
-USE `spt`$$
+USE `grmt`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `process_statuses`(y_id int)
 BEGIN
 DECLARE done BOOLEAN DEFAULT 0;
@@ -53,11 +53,11 @@ END$$
 
 DELIMITER ;
 
-USE `spt`;
+USE `grmt`;
 DROP procedure IF EXISTS `processyears`;
 
 DELIMITER $$
-USE `spt`$$
+USE `grmt`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `processyears`()
 BEGIN
 DECLARE done BOOLEAN DEFAULT 0;

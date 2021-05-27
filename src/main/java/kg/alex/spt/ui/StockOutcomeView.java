@@ -286,6 +286,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             logger.catching(e);
         }
         invoicesTable.setVisibleColumns(NATURAL_COL_ORDER);
+        invoicesTable.setPageLength(5);
         invoicesTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), CustomTable.Align.RIGHT);
     }
 
