@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
-public class Test {
+public class AuthenticatedScreenTest {
     public static void main(String[] args) {
 
         ChromeOptions opt = new ChromeOptions();
