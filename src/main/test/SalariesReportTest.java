@@ -65,6 +65,5 @@ public class SalariesReportTest {
                 .until(ExpectedConditions.elementToBeClickable(
                         By.xpath("/html/body/div[1]/div/div[2]/div/div/div/div/div[3]/div/div/div[1]/div/div[3]/div/div[6]")));
         element.click();
-
     }
 }

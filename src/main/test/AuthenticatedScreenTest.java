@@ -41,6 +41,5 @@ public class AuthenticatedScreenTest {
                         By.xpath("/html/body/div[1]/div/div[2]/div/div/div/div" +
                                 "/div[3]/div/div[2]/div/div/div[5]/div")));
         element.click();
-
     }
 }
