@@ -27,7 +27,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbLeavingReasonsView;
+import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.dao.DbStudentOrder;
@@ -180,7 +180,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
 
         try {
             DbDefinition dbDef = new DbDefinition();
-            DbLeavingReasonsView dblr = new DbLeavingReasonsView();
+            DbLeavingReasons dblr = new DbLeavingReasons();
             dbDef.connect();
             dblr.connect();
             orderSelect.setContainerDataSource(

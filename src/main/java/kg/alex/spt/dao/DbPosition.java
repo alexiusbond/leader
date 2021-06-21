@@ -26,7 +26,7 @@ public class DbPosition extends BaseDb {
 
 
         String sql = "SELECT p.id, p.name, st.id, st.name, pc.id, pc.name, p.default_permissions, pos.id "
-                + "FROM spt.hr_position AS p "
+                + "FROM hr_position AS p "
                 + "LEFT JOIN activity_status AS st ON p.activity_status_id = st.id "
                 + "LEFT JOIN hr_position_category AS pc ON p.hr_position_category_id = pc.id "
                 + "LEFT JOIN position AS pos ON pos.hr_position_id = p.id "

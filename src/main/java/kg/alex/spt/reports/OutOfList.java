@@ -24,7 +24,7 @@ import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbLeavingReasonsView;
+import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.dao.DbStudentOrder;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -110,7 +110,7 @@ public class OutOfList implements Button.ClickListener,
 
         try {
             DbDefinition dbd = new DbDefinition();
-            DbLeavingReasonsView dblr = new DbLeavingReasonsView();
+            DbLeavingReasons dblr = new DbLeavingReasons();
             dbd.connect();
             dblr.connect();
             yearSelectMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));

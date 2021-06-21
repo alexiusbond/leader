@@ -15,9 +15,9 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.LeavingReason;
 import kg.alex.spt.i18n.SptMessages;
 
-public class DbLeavingReasonsView extends BaseDb {
+public class DbLeavingReasons extends BaseDb {
 
-    public DbLeavingReasonsView() throws Exception {
+    public DbLeavingReasons() throws Exception {
         super();
     }
 
@@ -25,7 +25,7 @@ public class DbLeavingReasonsView extends BaseDb {
             throws SQLException {
         
 
-        String sql = "SELECT lr.id, lr.name, lr.activity_status_id, ac.name FROM spt.order_reason as lr "
+        String sql = "SELECT lr.id, lr.name, lr.activity_status_id, ac.name FROM order_reason as lr "
                 + "left join activity_status as ac on ac.id = lr.activity_status_id "
                 + "order by lr.id asc, lr.activity_status_id desc;";
 

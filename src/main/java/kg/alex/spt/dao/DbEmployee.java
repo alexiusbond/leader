@@ -26,7 +26,6 @@ import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeesCount;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +46,7 @@ public class DbEmployee extends BaseDb {
                 + "ELSE NULL END), '') AS director, "
                 + "IFNULL(GROUP_CONCAT(CASE WHEN p.id = 2 THEN CONCAT(e.surname, ' ', e.name) "
                 + "ELSE NULL END), '') AS accountent "
-                + "FROM spt.school AS scl "
+                + "FROM school AS scl "
                 + "LEFT JOIN hr_employee_order AS eo ON scl.id = eo.school_id AND eo.to_date IS NULL "
                 + "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id "
                 + "LEFT JOIN hr_position AS hrp ON eo.hr_position_id = hrp.id "

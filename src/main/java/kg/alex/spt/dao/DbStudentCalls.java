@@ -89,7 +89,7 @@ public class DbStudentCalls extends BaseDb {
 
         String sql = "SELECT sc.id, st.name, st.surname, DATE(sc.modification_date) AS date, "
                 + "CONCAT(cnu.name, ' - ', cna.name) AS class_name, sc.note, concat(e.name, ' ', e.surname) as fullname "
-                + "FROM spt.student_calls AS sc LEFT JOIN student AS st ON sc.student_id = st.id "
+                + "FROM student_calls AS sc LEFT JOIN student AS st ON sc.student_id = st.id "
                 + "LEFT JOIN employee AS e ON sc.employee_id = e.id LEFT JOIN "
                 + "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so "
                 + "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) "

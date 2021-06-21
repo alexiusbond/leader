@@ -8,10 +8,12 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.ContractTotal;
@@ -23,7 +25,6 @@ import kg.alex.spt.reports.DiscountsReport;
 import kg.alex.spt.reports.YearMonthReport;
 
 /**
- *
  * @author alex
  */
 public class DbStudentContract extends BaseDb {
@@ -190,7 +191,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public IndexedContainer execSQL_ClassList(MyVaadinUI myUI, String class_ids, int year_id,
-            String edu_statuses_ids, ClassListReport clr) throws SQLException {
+                                              String edu_statuses_ids, ClassListReport clr) throws SQLException {
         clr.activeStudents = 0;
         clr.discountedStudents = 0;
         clr.debts = 0;
@@ -301,8 +302,8 @@ public class DbStudentContract extends BaseDb {
     }
 
     public IndexedContainer execSQL_Discounts(MyVaadinUI myUI, String class_ids,
-            String discounts_ids, int year_id,
-            String edu_statuses_ids, DiscountsReport dr) throws SQLException {
+                                              String discounts_ids, int year_id,
+                                              String edu_statuses_ids, DiscountsReport dr) throws SQLException {
         dr.activeStudents = 0;
         dr.discountedStudents = 0;
         dr.debts = 0;
@@ -399,7 +400,7 @@ public class DbStudentContract extends BaseDb {
                         myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                        - result.getDouble("sc.net_payments"));
+                                - result.getDouble("sc.net_payments"));
                 dr.lefts += (Double) item.getItemProperty(
                         myUI.getMessage(SptMessages.Left)).getValue();
             }
@@ -411,7 +412,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public void execSQL_Yearly_by_classes(MyVaadinUI myUI, String school_ids,
-            String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
+                                          String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
 
 
         String sql = "SELECT sch.id, sch.name_ru, sch.code, CONCAT(cln.name, ' - ', cl.name) AS class, "
@@ -520,7 +521,7 @@ public class DbStudentContract extends BaseDb {
                 ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                        - result.getDouble("payments"));
+                                - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
                     item.getItemProperty(SystemSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
@@ -566,7 +567,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public void execSQL_Monthly_by_classes(MyVaadinUI myUI, String school_ids,
-            String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
+                                           String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
 
 
         String sql = "SELECT months.name, months.id, s_temp.id, s_temp.name_ru, s_temp.code, i_temp.amn, p_temp.amn FROM months "
@@ -619,7 +620,7 @@ public class DbStudentContract extends BaseDb {
                     ymr.paids = 0.0;
                     ymr.lefts = 0.0;
                 }
-                t = ymr.createTable(result.getString("s_temp.code") + " - " +result.getString("s_temp.name_ru"));
+                t = ymr.createTable(result.getString("s_temp.code") + " - " + result.getString("s_temp.name_ru"));
                 ymr.rightLay.addComponent(t);
                 school_id = result.getInt("s_temp.id");
             }
@@ -636,12 +637,12 @@ public class DbStudentContract extends BaseDb {
                 ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
-                        - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
+                                - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
                     item.getItemProperty(SystemSettings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100.0
-                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
+                                    / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
                 }
             }
         }
@@ -780,7 +781,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids,
-            String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
+                                       String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
 
 
         String sql = "SELECT sch.name_ru, sch.code, "
@@ -846,12 +847,12 @@ public class DbStudentContract extends BaseDb {
                 ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                        - result.getDouble("payments"));
+                                - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
                     item.getItemProperty(SystemSettings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
+                                    / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
 
                 }
             }
@@ -891,7 +892,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public void execSQL_Monthly(MyVaadinUI myUI, String school_ids, String edu_statuses_ids,
-            int year_id, YearMonthReport ymr) throws SQLException {
+                                int year_id, YearMonthReport ymr) throws SQLException {
 
 
         String sql = "select months.name, months.id, i_temp.amn, p_temp.amn FROM months "
@@ -952,12 +953,12 @@ public class DbStudentContract extends BaseDb {
                 ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
-                        - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
+                                - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
                     item.getItemProperty(SystemSettings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
+                                    / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
                 }
             }
         }
@@ -1019,8 +1020,8 @@ public class DbStudentContract extends BaseDb {
     }
 
     public IndexedContainer execSQL_DebtsByClass(MyVaadinUI myUI, Date from,
-            Date till, int year_id, String class_ids, String edu_statuses_ids,
-            DebtReport dr) throws SQLException {
+                                                 Date till, int year_id, String class_ids, String edu_statuses_ids,
+                                                 DebtReport dr) throws SQLException {
         String sql = "SELECT st.id, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
                 + "st.name, st.surname, ip_temp.amount AS inst_plan, sp_temp.amount AS paid "
                 + "FROM student AS st LEFT JOIN "
@@ -1092,7 +1093,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public ContractTotal execSQL_totalsByScl(MyVaadinUI myUI, int year_id, String edu_statuses_ids,
-            int school_id) throws SQLException {
+                                             int school_id) throws SQLException {
         String sql = "SELECT count(st.id) as ttl_students, "
                 + "SUM(c.amount) AS contract, SUM(sc.debt) AS debt, "
                 + "(SUM(c.amount) - SUM(sc.contr_with_disc)) AS disc,  "
@@ -1134,15 +1135,10 @@ public class DbStudentContract extends BaseDb {
     }
 
     public boolean execSQL_isLastContract(int st_id, int year_id) throws SQLException {
-        String sql = "SELECT "
-                + "    IFNULL(IF(sc.year_id <= ?, TRUE, FALSE), TRUE) AS isLastContract "
-                + "FROM "
-                + "    spt.student_contract as sc  "
-                + "    left join student as st on st.id = sc.student_id  "
-                + "WHERE "
-                + "    st.id = ?  "
-                + "ORDER BY sc.id DESC "
-                + "LIMIT 1;";
+        String sql = "SELECT IFNULL(IF(sc.year_id <= ?, TRUE, FALSE), TRUE) AS isLastContract " +
+                "FROM student_contract as sc " +
+                "left join student as st on st.id = sc.student_id " +
+                "WHERE st.id = ? ORDER BY sc.id DESC LIMIT 1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, st_id);

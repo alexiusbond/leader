@@ -26,7 +26,7 @@ import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbLeavingReasonsView;
+import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.domain.LeavingReason;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedFilterTable;
@@ -193,7 +193,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
-                    DbLeavingReasonsView dbDis = new DbLeavingReasonsView();
+                    DbLeavingReasons dbDis = new DbLeavingReasons();
                     dbDis.connect();
                     if (isNew) {
                         LeavingReason c = getLeavingReason(0);
@@ -379,7 +379,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
 
     private void setTable_options() {
         try {
-            DbLeavingReasonsView dblr = new DbLeavingReasonsView();
+            DbLeavingReasons dblr = new DbLeavingReasons();
             dblr.connect();
             dataTable.setContainerDataSource(dblr.execSQL(myUI));
             dblr.close();

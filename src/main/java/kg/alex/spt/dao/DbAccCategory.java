@@ -111,7 +111,7 @@ public class DbAccCategory extends BaseDb {
         
 
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.parent_id, s.name, c.activity_status_id, "
-                + "c2.name, c.note FROM spt.acc_category as c "
+                + "c2.name, c.note FROM acc_category as c "
                 + "left join activity_status as s on c.activity_status_id = s.id "
                 + "left join acc_category as c2 on c.parent_id = c2.id where c.acc_type_id = ? and c.school_id is null "
                 + "group by c.id "

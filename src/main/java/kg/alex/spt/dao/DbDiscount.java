@@ -30,7 +30,7 @@ public class DbDiscount extends BaseDb {
         
 
         String sql = "SELECT d.id, d.name, d.amount, d.activity_status_id, dt.name,"
-                + "d.discount_type_id, ac.name, d.year_id, y.name FROM spt.discount as d "
+                + "d.discount_type_id, ac.name, d.year_id, y.name FROM discount as d "
                 + "left join discount_type as dt on dt.id=d.discount_type_id "
                 + "left join year as y on y.id=d.year_id "
                 + "left join activity_status as ac on ac.id=d.activity_status_id "
