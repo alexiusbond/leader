@@ -341,6 +341,23 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             menubar.removeItem(mi);
         }
 
+        mi = menubar.addItem(myUI.getMessage(SptMessages.Inventory), null);
+        if (currentUser.isPermitted(SystemSettings.cnInventoryOrganizationView + ":" + SystemSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.InventoryOrganization), menuCommand);
+        }
+        if (currentUser.isPermitted(SystemSettings.cnInventoryLiquidationView + ":" + SystemSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.InventoryLiquidation), menuCommand);
+        }
+        if (currentUser.isPermitted(SystemSettings.cnInventoryReportsView + ":" + SystemSettings.prmMenu)) {
+            if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
+                mi.addSeparator();
+            }
+            mi.addItem(myUI.getMessage(SptMessages.InventoryReports), menuCommand);
+        }
+        if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
+            menubar.removeItem(mi);
+        }
+
         mi = menubar.addItem(myUI.getMessage(SptMessages.HR), null);
         if (currentUser.isPermitted(SystemSettings.cnHRDefinitionView + ":" + SystemSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.PositionDefinition), menuCommand);

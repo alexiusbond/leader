@@ -25,6 +25,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Send = generateId();
     public static final String AccountingReports = generateId();
     public static final String StockReports = generateId();
+    public static final String InventoryReports = generateId();
     public static final String HRReports = generateId();
     public static final String PeriodKg = generateId();
     public static final String Period = generateId();
@@ -441,6 +442,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ExpensesDefinition = generateId();
     public static final String StockIncome = generateId();
     public static final String StockOutcome = generateId();
+    public static final String InventoryOrganization = generateId();
+    public static final String InventoryLiquidation = generateId();
     public static final String StocksDefinition = generateId();
     public static final String Operation = generateId();
     public static final String FromEmployee = generateId();
@@ -472,6 +475,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String LastExpenseDate = generateId();
     public static final String Accounting = generateId();
     public static final String Stock = generateId();
+    public static final String Inventory = generateId();
     public static final String Stocks = generateId();
     public static final String WeekLogs = generateId();
     public static final String SystemLogs = generateId();

@@ -35,4 +35,5 @@
     <inherits name="com.vaadin.addon.charts.Widgetset" />
     <inherits name="org.vaadin.simplefiledownloader.SimplefiledownloaderWidgetset" />
     <inherits name="org.vaadin.inputmask.WidgetSet" />
+
 </module>

@@ -182,6 +182,8 @@ public class SystemSettings implements Serializable {
     public static final String cnStockDefinitionView = "StockDefinitionView";
     public static final String cnStockIncomeView = "StockIncomeView";
     public static final String cnStockOutcomeView = "StockOutcomeView";
+    public static final String cnInventoryOrganizationView = "InventoryOrganizationView";
+    public static final String cnInventoryLiquidationView = "InventoryLiquidationView";
     public static final String cnTransactionsView = "TransactionsView";
     public static final String cnAccrualsView = "AccrualsView";
     public static final String cnShortTermDebtsView = "ShortTermDebtsView";
@@ -204,6 +206,7 @@ public class SystemSettings implements Serializable {
     public static final String actPrint = "распечатка";
     public static final String cnAccountingReportsView = "AccountingReportsView";
     public static final String cnStockReportsView = "StockReportsView";
+    public static final String cnInventoryReportsView = "InventoryReportsView";
     public static final String cnHRReportsView = "HRReportsView";
     public static final String actAdd = "добавление";
     public static final String actModify = "изменение";
