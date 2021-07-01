@@ -21,8 +21,10 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccessories;
@@ -54,7 +56,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
-            myUI.getMessage(SptMessages.Category), myUI.getMessage(SptMessages.Status)};
+                myUI.getMessage(SptMessages.Category), myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -170,9 +172,9 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
             categorySelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbAccessoriesCategory));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbAccessoriesCategory, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -203,13 +205,13 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
                     new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                        @Override
+                        public void onClose(ConfirmDialog dialog) {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {

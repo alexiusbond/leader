@@ -52,6 +52,9 @@ public class SystemSettings implements Serializable {
     public static final String transfered = " [переведен]";
     public static final String number_id = "number_id";
     public static final String status_id = "status_id";
+    public static final String block_id = "block_id";
+    public static final String room_id = "room_id";
+    public static final String floor_id = "floor_id";
     public static final String acc_category_id = "acc_category_id";
     public static final String parent_id = "parent_id";
     public static final String school_type_id = "school_type_id";
@@ -94,6 +97,9 @@ public class SystemSettings implements Serializable {
     public static final String dbExamTable = "hr_exam";
     public static final String positionCategoryTable = "hr_position_category";
     public static final String dbBranchTable = "hr_branch";
+    public static final String dbInventoryCategoryTable = "dm_inventory_category";
+    public static final String dbInventoryBrandTable = "dm_brand";
+    public static final String dbInventoryTitleTable = "dm_title";
     public static final String dbUniversityTable = "hr_university";
     public static final String dbWork_placeTable = "hr_work_place";
     public static final String dbEmployeeWorkExtraPosition = "hr_employee_work_extra_positions";
@@ -103,6 +109,7 @@ public class SystemSettings implements Serializable {
     public static final String dbEmployeeMessageTable = "employee_message";
     public static final String dbQuestion = "hr_question";
     public static final String dbActivity_status = "activity_status";
+    public static final String dbFloor = "dm_floor";
     public static final String dbAccessoriesCategory = "accessories_category";
     public static final String dbGender = "gender";
     public static final String dbCountry = "hr_country";
@@ -115,6 +122,8 @@ public class SystemSettings implements Serializable {
     public static final String dbPaymentType = "payment_type";
     public static final String dbWorking_status = "working_status";
     public static final String dbClass_name = "class_name";
+    public static final String dbBlock = "dm_block";
+    public static final String dbRoom = "dm_room";
     public static final String db_dp_invoice = "dp_invoice";
     public static final String dbAccInvoice = "acc_invoice";
     public static final String db_acc_invoice_id = "acc_invoice_id";
@@ -131,6 +140,7 @@ public class SystemSettings implements Serializable {
     public static final String dbMartialStatus = "hr_martial_status";
     public static final String dbMeasurement = "dp_measurement";
     public static final String dbStockMovement = "dp_stock_movements";
+    public static final String dbInventoryMovement = "dm_inventory_movements";
     public static final String dbTransfers = "acc_transfers";
     public static final String dbNationality = "nationality";
     public static final String dbEducationStatus = "education_status";
@@ -169,10 +179,13 @@ public class SystemSettings implements Serializable {
     public static final String cnIssueOrderView = "IssueOrderView";
     public static final String cnSendOrderView = "SendOrderView";
     public static final String cnClassNameDefinitionView = "ClassNameDefinitionView";
-    public static final String cnContractDefintionView = "ContractDefintionView";
+    public static final String cnBlockDefinitionView = "BlockDefinitionView";
+    public static final String cnRoomDefinitionView = "RoomDefinitionView";
+    public static final String cnContractDefinitionView = "ContractDefinitionView";
     public static final String cnLeavingReasonsDefinitionView = "LeavingReasonsDefinitionView";
     public static final String cnDefinitionView = "DefinitionView";
     public static final String cnHRDefinitionView = "HRDefinitionView";
+    public static final String cnInventoryDefinitionView = "InventoryDefinitionView";
     public static final String cnHomePageView = "HomePageView";
     public static final String cnDiscountDefinitionView = "DiscountDefinitionView";
     public static final String cnExpensesDefinitionView = "ExpensesDefinitionView";

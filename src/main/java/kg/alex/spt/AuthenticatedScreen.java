@@ -249,7 +249,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (currentUser.isPermitted(SystemSettings.cnDiscountDefinitionView + ":" + SystemSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.DiscountDefinition), menuCommand);
         }
-        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.prmMenu)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefinitionView + ":" + SystemSettings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.ContractDefinition), menuCommand);
         }
         if (currentUser.isPermitted(SystemSettings.cnSchoolDefinitionView + ":" + SystemSettings.prmMenu)) {
@@ -342,11 +342,22 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         }
 
         mi = menubar.addItem(myUI.getMessage(SptMessages.Inventory), null);
-        if (currentUser.isPermitted(SystemSettings.cnInventoryOrganizationView + ":" + SystemSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.InventoryOrganization), menuCommand);
+        if (currentUser.isPermitted(SystemSettings.cnInventoryDefinitionView + ":" + SystemSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.InventoryCategoryDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(SptMessages.BlockDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(SptMessages.RoomDefinition), menuCommand);
         }
-        if (currentUser.isPermitted(SystemSettings.cnInventoryLiquidationView + ":" + SystemSettings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.InventoryLiquidation), menuCommand);
+        if (currentUser.isPermitted(SystemSettings.cnInventoryOrganizationView + ":" + SystemSettings.prmMenu)
+                || currentUser.isPermitted(SystemSettings.cnInventoryLiquidationView + ":" + SystemSettings.prmMenu)) {
+            if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
+                mi.addSeparator();
+            }
+            if (currentUser.isPermitted(SystemSettings.cnInventoryOrganizationView + ":" + SystemSettings.prmMenu)) {
+                mi.addItem(myUI.getMessage(SptMessages.InventoryOrganization), menuCommand);
+            }
+            if (currentUser.isPermitted(SystemSettings.cnInventoryLiquidationView + ":" + SystemSettings.prmMenu)) {
+                mi.addItem(myUI.getMessage(SptMessages.InventoryLiquidation), menuCommand);
+            }
         }
         if (currentUser.isPermitted(SystemSettings.cnInventoryReportsView + ":" + SystemSettings.prmMenu)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
@@ -422,8 +433,15 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.BranchDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, SystemSettings.dbBranchTable, true, SystemSettings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryCategoryDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, SystemSettings.dbInventoryCategoryTable, false, SystemSettings.cnInventoryDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNameDefinition))) {
                     verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BlockDefinition))) {
+                    verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.RoomDefinition))) {
+                    verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.PositionDefinition))) {
                     verticalPanel.setSecondComponent(new PositionDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.DiscountDefinition))) {
@@ -481,6 +499,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockIncome))) {
                     verticalPanel.setSecondComponent(new StockIncomeView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryOrganization))) {
+                    verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockOutcome))) {
                     verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Settings))) {
@@ -619,6 +639,12 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     SptMessages.ClassNameDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
             } else if (header.getValue().equals(((String) myUI.getMessage(
+                    SptMessages.BlockDefinition)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
+            } else if (header.getValue().equals(((String) myUI.getMessage(
+                    SptMessages.RoomDefinition)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
+            } else if (header.getValue().equals(((String) myUI.getMessage(
                     SptMessages.DiscountDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
             } else if (header.getValue().equals(((String) myUI.getMessage(
@@ -699,6 +725,9 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals(((String) myUI.getMessage(
                     SptMessages.StockIncome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockIncomeView(myUI));
+            } else if (header.getValue().equals(((String) myUI.getMessage(
+                    SptMessages.InventoryOrganization)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
             } else if (header.getValue().equals(((String) myUI.getMessage(
                     SptMessages.StockOutcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockOutcomeView(myUI));

@@ -425,7 +425,7 @@ public class DbEmployee extends BaseDb {
             try {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUi, SystemSettings.hr_positionTable));
+                cb.setContainerDataSource(dbp.exec_for_select(myUi, SystemSettings.hr_positionTable, true));
                 dbp.close();
             } catch (Exception e) {
                 logger.error(e);

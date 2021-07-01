@@ -78,7 +78,7 @@ public class StatusesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -130,8 +130,8 @@ public class StatusesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            statusMS.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
-            classTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.classTable));
+            statusMS.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
+            classTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.classTable, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

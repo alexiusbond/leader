@@ -144,9 +144,9 @@ public class StockGeneralReport implements Button.ClickListener,
             DbProductCategories dbPC = new DbProductCategories();
             dbPC.connect();
             stocksMSB.setContainerDataSource(
-                    dbCon.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id()));
+                    dbCon.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id(), true));
             stocksMSB.setValue(SystemSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
-            operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, SystemSettings.dbOperation));
+            operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, SystemSettings.dbOperation, true));
             Item item = operationOG.getContainerDataSource().addItem(0);
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(myUI.getMessage(SptMessages.General));
             if (operationOG.getContainerDataSource() != null) {
@@ -250,7 +250,7 @@ public class StockGeneralReport implements Button.ClickListener,
                         excelReport.getTotalsRow().getCell(4).setCellFormula(null);
                         excelReport.getTotalsRow().getCell(4).setCellValue(
                                 dataTable.getColumnFooter(myUI.getMessage(SptMessages.StockOutcome)
-                                + " - " + myUI.getMessage(SptMessages.Amount)));
+                                        + " - " + myUI.getMessage(SptMessages.Amount)));
                         excelReport.getTotalsRow().getCell(5).setCellFormula(null);
                     } else {
                         excelReport.getTotalsRow().getCell(1).setCellFormula(null);

@@ -603,7 +603,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             try {
                 DbDefinition dbd = new DbDefinition();
                 dbd.connect();
-                cb.setContainerDataSource(dbd.exec_for_select(myUI, dbTable));
+                cb.setContainerDataSource(dbd.exec_for_select(myUI, dbTable, true));
                 dbd.close();
             } catch (Exception e) {
                 logger.error(e);

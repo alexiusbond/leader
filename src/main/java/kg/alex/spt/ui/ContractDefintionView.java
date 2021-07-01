@@ -195,7 +195,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -361,16 +361,16 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnContractDefintionView + ":" + SystemSettings.actCopy)) {
+        if (currentUser.isPermitted(SystemSettings.cnContractDefinitionView + ":" + SystemSettings.actCopy)) {
             copyButton.setEnabled(true);
         }
         saveBtn.setEnabled(false);

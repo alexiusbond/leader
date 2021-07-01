@@ -69,8 +69,11 @@ public class DbDefinition extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName) throws SQLException {
-        String sql = "select t.id, t.name from " + dbTableName + " as t order by t.id desc;";
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName, boolean isDesc) throws SQLException {
+        String sql = "select t.id, t.name from " + dbTableName + " as t order by t.id ";
+        if (isDesc) {
+            sql += "desc";
+        }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -83,9 +86,13 @@ public class DbDefinition extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName, int school_id) throws SQLException {
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName,
+                                            int school_id, boolean isDesc) throws SQLException {
         String sql = "select t.id, t.name from " + dbTableName + " as t where t.school_id = ? "
-                + "and t.activity_status_id = 2 order by t.id desc;";
+                + "and t.activity_status_id = 2 order by t.id";
+        if (isDesc) {
+            sql += " desc";
+        }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();

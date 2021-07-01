@@ -129,7 +129,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency));
+            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

@@ -4097,7 +4097,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             if (dbtable != null) {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable));
+                cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable, true));
                 dbp.close();
             }
         } catch (Exception ex) {

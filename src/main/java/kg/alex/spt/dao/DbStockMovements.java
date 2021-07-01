@@ -46,11 +46,10 @@ public class DbStockMovements extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int invoice_id, StockIncomeView v)
             throws SQLException {
 
-
         String sql = "SELECT t.id, t.amount, t.remain, t.price, t.acc_category_id, t.dp_measurement_id, t.note, t.currency_rate, rmn.remain "
                 + "FROM dp_stock_movements as t "
                 + "left join dp_invoice as inv on inv.id = t.invoice_id "
-                + "left join view_remains as rmn on rmn.acc_category_id = t.acc_category_id and rmn.stock_id = inv.to_stock_id and rmn.dp_measurement_id = t.dp_measurement_id "
+                + "left join view_stock_remains as rmn on rmn.acc_category_id = t.acc_category_id and rmn.stock_id = inv.to_stock_id and rmn.dp_measurement_id = t.dp_measurement_id "
                 + "where t.invoice_id = ? order by t.id;";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -163,7 +162,7 @@ public class DbStockMovements extends BaseDb {
                 + "sum(t.currency_rate*t.amount) as currency_rate, rmn.remain, "
                 + "t.dp_stock_movements_id FROM dp_stock_movements as t "
                 + "left join dp_invoice as inv on inv.id = t.invoice_id "
-                + "left join view_remains as rmn "
+                + "left join view_stock_remains as rmn "
                 + "on rmn.acc_category_id = t.acc_category_id and rmn.stock_id = inv.from_stock_id and rmn.dp_measurement_id = t.dp_measurement_id "
                 + "where t.invoice_id = ? group by t.order_number order by t.id";
 
@@ -254,7 +253,7 @@ public class DbStockMovements extends BaseDb {
             stat.setInt(9, smv.getStock_movement_id());
             exec_update_remain(smv.getStock_movement_id(), -smv.getQuantity());
         } else {
-            stat.setNull(9, Types.VARCHAR);
+            stat.setNull(9, Types.INTEGER);
         }
         stat.setInt(10, smv.getOrder_number());
         int st = stat.executeUpdate();
@@ -279,7 +278,7 @@ public class DbStockMovements extends BaseDb {
         if (smv.getStock_movement_id() != 0) {
             stat.setInt(7, smv.getStock_movement_id());
         } else {
-            stat.setNull(7, Types.VARCHAR);
+            stat.setNull(7, Types.INTEGER);
         }
         stat.setInt(8, smv.getId());
         return stat.executeUpdate();
@@ -305,7 +304,7 @@ public class DbStockMovements extends BaseDb {
     }
 
     public double execSQL_remain(int acc_category_id, int measurement_id, int stock_id) throws SQLException {
-        String sql = "SELECT remain FROM view_remains where acc_category_id = ? and dp_measurement_id = ? and stock_id = ?;";
+        String sql = "SELECT remain FROM view_stock_remains where acc_category_id = ? and dp_measurement_id = ? and stock_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_category_id);
         stat.setDouble(2, measurement_id);

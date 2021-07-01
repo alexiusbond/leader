@@ -175,7 +175,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             discTypeSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbDiscountType));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbDiscountType, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -216,7 +216,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);

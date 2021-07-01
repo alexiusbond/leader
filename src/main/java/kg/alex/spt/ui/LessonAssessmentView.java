@@ -98,7 +98,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             classNumberSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.classTable));
+                    dbDef.exec_for_select(myUI, SystemSettings.classTable, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);

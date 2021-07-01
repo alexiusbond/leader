@@ -178,9 +178,9 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
             categorySelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.positionCategoryTable));
+                    dbDef.exec_for_select(myUI, SystemSettings.positionCategoryTable, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);

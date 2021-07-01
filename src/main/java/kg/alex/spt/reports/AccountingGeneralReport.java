@@ -129,7 +129,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
             dbd.connect();
             yearSelect.setContainerDataSource(dbd.exec_years_with_dates(myUI));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
+                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

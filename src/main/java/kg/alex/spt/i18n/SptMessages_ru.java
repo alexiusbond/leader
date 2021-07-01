@@ -1,5 +1,7 @@
 package kg.alex.spt.i18n;
 
+import sun.security.krb5.internal.crypto.Des;
+
 public class SptMessages_ru extends SptMessages {
 
     static final Object[][] contents_ru = {
@@ -37,6 +39,10 @@ public class SptMessages_ru extends SptMessages {
             {SystemClosedNotif, "Извините! Система находится под техническим обслуживанием. "
                     + "Пожалуйста, попробуйте позже!"},
             {Title, "Название"},
+            {Description, "Описание"},
+            {Block, "Блок"},
+            {Room, "Помещение"},
+            {Floor, "Этаж"},
             {Type, "Тип"},
             {MovementType, "Тип передвижения"},
             {Number, "Номер"},
@@ -71,6 +77,8 @@ public class SptMessages_ru extends SptMessages {
             {LessonAssessment, "Назначение уроков"},
             {Branch, "Область преподавания"},
             {ClassNameDefinition, "Определение названий класса"},
+            {BlockDefinition, "Определение блоков"},
+            {RoomDefinition, "Определение помещений"},
             {PositionDefinition, "Определение должностей"},
             {CanNotDelete, "Данная запись используется в других таблицах, вы не можете ее удалить!"},
             {CanNotDelete, "Данная запись прочитана адресатом, вы не можете ее удалить!"},
@@ -100,6 +108,8 @@ public class SptMessages_ru extends SptMessages {
             {Cancel, "Отмена"},
             {No, "Нет"},
             {ValueCanNotBeSaved, "Значение не может быть сохранено!"},
+            {ValueIsUsed, "Значение не может быть изменено, так как используется в коде инвентаря!"},
+            {RoomIsUsed, "Невозможно сохранить! Для данного помещения накладная была создана ранее."},
             {ValueSaved, "Значения сохранены успешно!"},
             {Sent, "Сообщения отправлены успешно!"},
             {ValuesCanNotBeCopied, "Значения не могут быть скопированы!"},
@@ -254,6 +264,8 @@ public class SptMessages_ru extends SptMessages {
             {FamilyInfo, "Информация о семье"},
             {Id, "Id"},
             {Amount, "Сумма"},
+            {PurchaseYear, "Год приобретения"},
+            {LifeTime, "Срок службы"},
             {PreviousYearDebt, "Долг пред. гг."},
             {Debt, "Долг"},
             {FreeAmount, "Своя сумма"},
@@ -289,6 +301,7 @@ public class SptMessages_ru extends SptMessages {
             {OnlyInt, "Only Integers allowed!"},
             {PaymentCategoryType, "Категория оплаты"},
             {Category, "Категория"},
+            {Brand, "Марка"},
             {Set, "Задать"},
             {MaterialsGive, "Выдача материалов"},
             {MaterialsReceive, "Прием материалов"},
@@ -504,6 +517,7 @@ public class SptMessages_ru extends SptMessages {
             {For30Days, "За последние 30 дней"},
             {ForAllDays, "За всё время"},
             {LeavingReasonsDefinition, "Определение причин уходов"},
+            {InventoryCategoryDefinition, "Определение категорий инвентаря"},
             {ShowByEducationStatuses, "Показать по академическим статусам"},
             {ShowByWorkingStatuses, "Показать по статусам"},
             {ByDateReport, "Отчет по датам"},

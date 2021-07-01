@@ -148,7 +148,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            eduContainer = dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus);
+            eduContainer = dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true);
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -546,7 +546,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             genderCB.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbGender));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbGender, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -599,7 +599,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusCB.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbEducationStatus));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -2174,7 +2174,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbDefinition dbp = new DbDefinition();
             dbp.connect();
-            cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable));
+            cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable, true));
             dbp.close();
         } catch (Exception e) {
             logger.error(e);

@@ -107,9 +107,9 @@ public class DiscountsReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus));
+                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

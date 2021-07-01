@@ -202,7 +202,7 @@ public class DbAccTransactions extends BaseDb {
                 try {
                     DbDefinition dbd = new DbDefinition();
                     dbd.connect();
-                    currenciesContainer = dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency);
+                    currenciesContainer = dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency, true);
                     cb.setContainerDataSource(currenciesContainer);
                     dbd.close();
                 } catch (Exception e) {

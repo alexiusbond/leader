@@ -113,7 +113,7 @@ public class OutOfList implements Button.ClickListener,
             DbLeavingReasons dblr = new DbLeavingReasons();
             dbd.connect();
             dblr.connect();
-            yearSelectMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
+            yearSelectMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
             reasonsMCB.setContainerDataSource(
                     dblr.exec_for_select(myUI, true));
             dblr.close();

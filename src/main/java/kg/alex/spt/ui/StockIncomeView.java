@@ -264,7 +264,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             stockSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id()));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id(), true));
             dbDef.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
@@ -1007,7 +1007,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             if (dbtable != null) {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable));
+                cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable, true));
                 dbp.close();
             }
         } catch (Exception e) {

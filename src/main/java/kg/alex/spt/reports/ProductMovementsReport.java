@@ -119,7 +119,7 @@ public class ProductMovementsReport implements Button.ClickListener,
             DbDefinition dbCon = new DbDefinition();
             dbCon.connect();
             stockSelect.setContainerDataSource(
-                    dbCon.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id()));
+                    dbCon.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id(), true));
             dbCon.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();

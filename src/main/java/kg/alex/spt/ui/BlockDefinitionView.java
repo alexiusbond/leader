@@ -1,69 +1,51 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.server.Sizeable;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
+import kg.alex.spt.dao.DbBlock;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.domain.Definition;
+import kg.alex.spt.dao.DbInventoryInvoice;
+import kg.alex.spt.domain.Block;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 
-public class DefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Iterator;
+
+public class BlockDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(DefinitionView.class);
+    static final Logger logger = LogManager.getLogger(BlockDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
+    private ComboBoxMax statusSelect;
     private Table dataTable;
     private TextField nameTF;
-    private ComboBoxMax statusSelect;
-    private boolean withActivityStatus;
-    private String dbTableName;
     private boolean isNew;
 
     private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private Subject currentUser = SecurityUtils.getSubject();
-    private String permissionView;
 
-    public DefinitionView(MyVaadinUI myUI, String dbTName, boolean withActivityStatus, String permissionView) {
-        this.dbTableName = dbTName;
+    public BlockDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
-        this.permissionView = permissionView;
-        this.withActivityStatus = withActivityStatus;
-        if (this.withActivityStatus) {
-            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
-                myUI.getMessage(SptMessages.Status)};
-        } else {
-            NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title)};
-        }
+
+        NATURAL_COL_ORDER = new String[]{
+                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -75,11 +57,10 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         dataTable.setSelectable(true);
         dataTable.addValueChangeListener(this);
         try {
-            DbDefinition dbDef = new DbDefinition();
-            dbDef.connect();
-            dataTable.setContainerDataSource(
-                    dbDef.execSQL(myUI, dbTableName, this.withActivityStatus, false));
-            dbDef.close();
+            DbBlock dbCon = new DbBlock();
+            dbCon.connect();
+            dataTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
+            dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -91,7 +72,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         dataTable.setNullSelectionAllowed(false);
         vl.addComponent(dataTable);
 
-        this.setSplitPosition(24, Sizeable.Unit.PERCENTAGE);
+        this.setSplitPosition(24, Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(settingsLay);
@@ -147,48 +128,37 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
-
         settingsLay.addComponent(buttonsLay);
 
         nameTF = new TextField(myUI.getMessage(SptMessages.Title));
-        if (dbTableName.equals(SystemSettings.classTable)) {
-            nameTF.setPropertyDataSource(new ObjectProperty<Integer>(0));
-            nameTF.setConverter(SystemSettings.getStringToIntegerConverter());
-            nameTF.addValidator(new IntegerRangeValidator(
-                    myUI.getMessage(SptMessages.NotifWrongValue), 0, null));
-        } else {
-            nameTF.setPropertyDataSource(new ObjectProperty<String>(""));
-        }
-        nameTF.setNullRepresentation("");
-        nameTF.setNullSettingAllowed(false);
-        nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequired(true);
+        nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth("100%");
+        nameTF.addValidator(new StringLengthValidator(
+                myUI.getMessage(SptMessages.NotifWrongValue), 1, 50, false));
         settingsLay.addComponent(nameTF);
 
-        if (withActivityStatus) {
-            statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
-            statusSelect.setNullSelectionAllowed(false);
-            statusSelect.setRequired(true);
-            statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-            statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-            statusSelect.setWidth("100%");
-            statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-            statusSelect.setFilteringMode(FilteringMode.CONTAINS);
+        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect.setNullSelectionAllowed(false);
+        statusSelect.setRequired(true);
+        statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        statusSelect.setWidth("100%");
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-            try {
-                DbDefinition dbDef = new DbDefinition();
-                dbDef.connect();
-                statusSelect.setContainerDataSource(
-                        dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
-                dbDef.close();
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
-            }
-            settingsLay.addComponent(statusSelect);
+        try {
+            DbDefinition dbDef = new DbDefinition();
+            dbDef.connect();
+            statusSelect.setContainerDataSource(
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+            dbDef.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
         }
+        settingsLay.addComponent(statusSelect);
 
     }
 
@@ -204,28 +174,28 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             isNew = true;
             clearFields();
             prepareModificationMode();
-            nameTF.setEnabled(true);
             nameTF.focus();
+            statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
             ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
                     new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                        @Override
+                        public void onClose(ConfirmDialog dialog) {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
-                    DbDefinition dbDef = new DbDefinition();
-                    dbDef.connect();
+                    DbBlock dbCon = new DbBlock();
+                    dbCon.connect();
                     if (isNew) {
-                        int id = dbDef.exec_insert(getDefinition(0), dbTableName, withActivityStatus);
+                        int id = dbCon.exec_insert(getBlock(0));
                         if (id != 0) {
                             addDatacontainerItem(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
@@ -235,26 +205,41 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
-                        int status = 0;
+                        boolean isUsed = false;
                         try {
-                            status = dbDef.exec_update(
-                                    getDefinition(
-                                            (Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                                    SystemSettings.id).getValue()), dbTableName, withActivityStatus);
+                            DbInventoryInvoice dbii = new DbInventoryInvoice();
+                            dbii.connect();
+                            isUsed = dbii.isUsed((Integer) dataTable.getContainerProperty(
+                                    dataTable.getValue(), SystemSettings.id).getValue(), 0);
+                            dbii.close();
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
                         }
-                        if (status != 0) {
-                            updateDatacontainer();
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
-                                    Notification.Type.HUMANIZED_MESSAGE);
-                        } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                        if (isUsed) {
+                            Notification.show(myUI.getMessage(SptMessages.ValueIsUsed),
                                     Notification.Type.WARNING_MESSAGE);
+                        } else {
+                            int status = 0;
+                            try {
+                                status = dbCon.exec_update(
+                                        getBlock((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                                                SystemSettings.id).getValue()));
+                            } catch (Exception e) {
+                                logger.error(e);
+                                logger.catching(e);
+                            }
+                            if (status != 0) {
+                                updateDatacontainer();
+                                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                        Notification.Type.HUMANIZED_MESSAGE);
+                            } else {
+                                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                        Notification.Type.WARNING_MESSAGE);
+                            }
                         }
                     }
-                    dbDef.close();
+                    dbCon.close();
                     prepareNormalMode();
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
@@ -290,61 +275,47 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         cancelBtn.setEnabled(true);
         dataTable.setEnabled(false);
         nameTF.setEnabled(true);
-        if (withActivityStatus) {
-            statusSelect.setEnabled(true);
-        }
+        statusSelect.setEnabled(true);
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(permissionView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(SystemSettings.cnBlockDefinitionView + ":" + SystemSettings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(permissionView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(SystemSettings.cnBlockDefinitionView + ":" + SystemSettings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(permissionView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(SystemSettings.cnBlockDefinitionView + ":" + SystemSettings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         dataTable.setEnabled(true);
         nameTF.setEnabled(false);
-        if (withActivityStatus) {
-            statusSelect.setEnabled(false);
-        }
+        statusSelect.setEnabled(false);
     }
 
     private void fillFields() {
-
-        if (dbTableName.equals(SystemSettings.classTable)) {
-            nameTF.getPropertyDataSource().setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.Title)).getValue().toString()));
-        } else {
-            nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.Title)).getValue().toString());
-        }
-        if (withActivityStatus) {
-            statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.activity_status_id).getValue());
-        }
+        nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Title)).getValue().toString());
+        statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                SystemSettings.status_id).getValue());
     }
 
     private void clearFields() {
         nameTF.setValue("");
-        if (withActivityStatus) {
-            statusSelect.setValue(2);
-        }
+        statusSelect.setValue(null);
     }
 
     private void updateDatacontainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
-        if (withActivityStatus) {
-            dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.Status)).setValue(statusSelect.getItemCaption(statusSelect.getValue()));
-            dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
-        }
+        dataTable.getContainerProperty(dataTable.getValue(),
+                SystemSettings.status_id).setValue(statusSelect.getValue());
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
+                getContainerProperty(statusSelect.getValue(),
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
     private void addDatacontainerItem(int id) {
@@ -352,23 +323,22 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
+                statusSelect.getContainerProperty(statusSelect.getValue(),
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+        item.getItemProperty(SystemSettings.status_id).setValue(
+                statusSelect.getValue());
         item.getItemProperty(SystemSettings.id).setValue(id);
-        if (withActivityStatus) {
-            item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
-                    statusSelect.getItemCaption(statusSelect.getValue()));
-            item.getItemProperty(SystemSettings.activity_status_id).setValue((Integer) statusSelect.getValue());
-        }
         dataTable.setValue(id);
     }
 
-    private Definition getDefinition(int id) {
-        Definition d = new Definition();
-        d.setName(nameTF.getPropertyDataSource().getValue().toString());
-        d.setId(id);
-        if (withActivityStatus) {
-            d.setActivity_status_id((Integer) statusSelect.getValue());
-        }
-        return d;
+    private Block getBlock(int i) {
+        Block block = new Block();
+        block.setName(nameTF.getValue());
+        block.setStatus_id((Integer) statusSelect.getValue());
+        block.setSchool_id(myUI.getUser().getSchool_id());
+        block.setId(i);
+        return block;
     }
 
     private void execDelete() {
@@ -377,7 +347,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), dbTableName);
+                    SystemSettings.id).getValue(), SystemSettings.dbBlock);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {
@@ -418,5 +388,9 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             }
         }
         return result;
+    }
+
+    public Component getNewObj() {
+        return new BlockDefinitionView(myUI);
     }
 }

@@ -254,9 +254,9 @@ public class HRLessonHoursReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
-            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWorking_status));
-            branchTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
+            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWorking_status, true));
+            branchTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable, true));
             positionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
                     currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
             positionTable.setVisibleColumns(NATURAL_COL_ORDER);

@@ -97,7 +97,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

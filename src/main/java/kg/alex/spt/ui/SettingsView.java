@@ -489,15 +489,15 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            adminCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            hrCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            supplyManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            warehouseManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            sapat_secretaryCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            directorCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            accountentCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            supervisorCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable));
-            sebatExamCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbExamTable));
+            adminCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            hrCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            supplyManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            warehouseManagerCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            sapat_secretaryCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            directorCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            accountentCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            supervisorCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.hr_positionTable, true));
+            sebatExamCb.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbExamTable, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

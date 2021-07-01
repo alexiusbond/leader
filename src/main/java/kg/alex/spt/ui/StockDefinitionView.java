@@ -161,7 +161,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status));
+                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);

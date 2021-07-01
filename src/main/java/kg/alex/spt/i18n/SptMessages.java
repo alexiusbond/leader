@@ -38,6 +38,10 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ChangePasswordButton = generateId();
     public static final String SystemClosedNotif = generateId();
     public static final String Title = generateId();
+    public static final String Description = generateId();
+    public static final String Block = generateId();
+    public static final String Floor = generateId();
+    public static final String Room = generateId();
     public static final String ClassName = generateId();
     public static final String Nationality = generateId();
     public static final String Reasons = generateId();
@@ -74,6 +78,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String LessonAssessment = generateId();
     public static final String Branch = generateId();
     public static final String ClassNameDefinition = generateId();
+    public static final String BlockDefinition = generateId();
+    public static final String RoomDefinition = generateId();
     public static final String PositionDefinition = generateId();
     public static final String Status = generateId();
     public static final String OrderType = generateId();
@@ -106,6 +112,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Cancel = generateId();
     public static final String No = generateId();
     public static final String ValueCanNotBeSaved = generateId();
+    public static final String ValueIsUsed = generateId();
+    public static final String RoomIsUsed = generateId();
     public static final String YouCanNotModifyOrDeleteConfirmed = generateId();
     public static final String ValuesCanNotBeCopied = generateId();
     public static final String ValuesCopied = generateId();
@@ -122,6 +130,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String AccessoriesDefinition = generateId();
     public static final String Value = generateId();
     public static final String Amount = generateId();
+    public static final String PurchaseYear = generateId();
+    public static final String LifeTime = generateId();
     public static final String MaxValue = generateId();
     public static final String DiscountType = generateId();
     public static final String School = generateId();
@@ -284,6 +294,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String OnlyInt = generateId();
     public static final String PaymentCategoryType = generateId();
     public static final String Category = generateId();
+    public static final String Brand = generateId();
     public static final String Set = generateId();
     public static final String MaterialsReceive = generateId();
     public static final String MaterialsGive = generateId();
@@ -495,6 +506,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String For30Days = generateId();
     public static final String ForAllDays = generateId();
     public static final String LeavingReasonsDefinition = generateId();
+    public static final String InventoryCategoryDefinition = generateId();
     public static final String ShowByEducationStatuses = generateId();
     public static final String ShowByWorkingStatuses = generateId();
     public static final String ByDateReport = generateId();
