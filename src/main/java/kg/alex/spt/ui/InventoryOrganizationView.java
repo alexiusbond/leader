@@ -17,8 +17,9 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.*;
+import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.InventoryInvoice;
-import kg.alex.spt.domain.StockMovement;
+import kg.alex.spt.domain.InventoryMovement;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedFilterTable;
@@ -451,10 +452,22 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             Object changedItemId = ((AbstractField) property).getId();
             if (((AbstractField) property).getData() != null && (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
                     || ((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Price)))) {
+
                 TextField quantityTF = (TextField) movementsTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Quantity)).getValue();
                 TextField priceTF = (TextField) movementsTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Price)).getValue();
+                if (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
+                        && quantityTF != null && quantityTF.getPropertyDataSource().getValue() != null) {
+                    movementsTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Remain)).setValue(
+                            (Integer) movementsTable.getContainerProperty(changedItemId,
+                                    myUI.getMessage(SptMessages.Remain)).getValue() -
+                                    ((Integer) movementsTable.getContainerProperty(changedItemId,
+                                            SystemSettings.quantity_id).getValue() -
+                                            (Integer) quantityTF.getPropertyDataSource().getValue()));
+                    movementsTable.getContainerProperty(changedItemId, SystemSettings.quantity_id).setValue(
+                            quantityTF.getPropertyDataSource().getValue());
+                }
                 if (priceTF != null && priceTF.getPropertyDataSource().getValue() != null
                         && quantityTF != null && quantityTF.getPropertyDataSource().getValue() != null) {
                     movementsTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Amount)).setValue(
@@ -778,7 +791,6 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         } else {
             btn.setDescription(myUI.getMessage(SptMessages.CanNotDelete));
         }
-        btn.setWidth("100%");
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.addStyleName(ValoTheme.BUTTON_TINY);
         btn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -891,12 +903,64 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                         roomSelect.getContainerProperty(roomSelect.getValue(),
                                 myUI.getMessage(SptMessages.Room)).getValue() + "-" +
                         movementsTable.size());
-        item.getItemProperty(myUI.getMessage(SptMessages.Brand)).setValue(
+        final ComboBoxMax cb =
                 createCombobox(0, myUI.getMessage(SptMessages.Brand),
-                        SystemSettings.dbInventoryBrandTable, true, true));
-        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+                        SystemSettings.dbInventoryBrandTable, true, true);
+        cb.setNewItemsAllowed(true);
+        cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
+            @Override
+            public void addNewItem(String newItemCaption) {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbInventoryBrandTable, false);
+                    dbd.close();
+                    if (id != 0) {
+                        Iterator iter = movementsTable.getContainerDataSource().getItemIds().iterator();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            Item item = ((IndexedContainer) ((ComboBox) movementsTable.getContainerDataSource().getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Brand)).getValue()).getContainerDataSource()).addItem(id);
+                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                            cb.setValue(id);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            }
+        });
+        item.getItemProperty(myUI.getMessage(SptMessages.Brand)).setValue(cb);
+        final ComboBoxMax cb2 =
                 createCombobox(0, myUI.getMessage(SptMessages.Title),
-                        SystemSettings.dbInventoryTitleTable, true, true));
+                        SystemSettings.dbInventoryTitleTable, true, true);
+        cb2.setNewItemsAllowed(true);
+        cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
+            @Override
+            public void addNewItem(String newItemCaption) {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbInventoryTitleTable, false);
+                    dbd.close();
+                    if (id != 0) {
+                        Iterator iter = movementsTable.getContainerDataSource().getItemIds().iterator();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            Item item = ((IndexedContainer) ((ComboBox) movementsTable.getContainerDataSource().getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Title)).getValue()).getContainerDataSource()).addItem(id);
+                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                            cb2.setValue(id);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            }
+        });
+        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb2);
         item.getItemProperty(myUI.getMessage(SptMessages.PurchaseYear)).setValue(
                 createDateFiled(new Date(), myUI.getMessage(SptMessages.PurchaseYear),
                         null, Resolution.YEAR, SystemSettings.yearPattern));
@@ -921,7 +985,10 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         item.getItemProperty(myUI.getMessage(SptMessages.Price)).setValue(tf);
         item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         movementsTable.setVisibleColumns(NATURAL_COL_ORDER_MOVEMENTS);
-        movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Title), 1);
+        movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Quantity), 1);
+        movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Price), 1);
+        movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LifeTime), 1);
+        movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.PurchaseYear), 1);
         movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
         movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
         movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
@@ -960,7 +1027,10 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             movementsTable.setContainerDataSource(dbCon.execSQL(myUI, invID, this));
             dbCon.close();
             movementsTable.setVisibleColumns(NATURAL_COL_ORDER_MOVEMENTS);
-            movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Title), 1);
+            movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Quantity), 1);
+            movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Price), 1);
+            movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LifeTime), 1);
+            movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.PurchaseYear), 1);
             movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
             movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
             movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
@@ -989,42 +1059,45 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
 
     private void insertMovements(int invoice_id) {
         try {
-            DbStockMovements dbCon = new DbStockMovements();
+            DbInventoryMovements dbCon = new DbInventoryMovements();
             dbCon.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             if (delMovementIds.size() > 0) {
                 for (int i = 0; i < delMovementIds.size(); i++) {
-                    dbd.exec_delete(delMovementIds.get(i), SystemSettings.dbStockMovement);
+                    dbd.exec_delete(delMovementIds.get(i), SystemSettings.dbInventoryMovement);
                 }
             }
             if (movementsTable.getContainerDataSource().size() > 0) {
                 Iterator iter = movementsTable.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
-                    StockMovement smv = new StockMovement();
-                    smv.setInvoice_id(invoice_id);
-                    smv.setPrice((Double) ((TextField) movementsTable.getItem(next).getItemProperty(
+                    InventoryMovement imv = new InventoryMovement();
+                    imv.setInvoice_id(invoice_id);
+                    imv.setPrice((Double) ((TextField) movementsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Price)).getValue()).getPropertyDataSource().getValue());
-                    smv.setRate((Double) movementsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Rate)).getValue());
-                    smv.setQuantity((Double) ((TextField) movementsTable.getItem(next).getItemProperty(
+                    imv.setQuantity((Integer) ((TextField) movementsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue());
-                    smv.setNote(((TextField) movementsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString());
-                    smv.setAcc_category_id((Integer) ((ComboBoxMax) movementsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Product)).getValue()).getValue());
-                    ComboBoxMax cb = (ComboBoxMax) movementsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Measurement)).getValue();
-                    smv.setMeasurement_id((Integer) cb.getValue());
+                    imv.setLifeTime((Integer) ((TextField) movementsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.LifeTime)).getValue()).getPropertyDataSource().getValue());
+                    imv.setPurchase_date(((DateField) movementsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.PurchaseYear)).getValue()).getValue());
+                    imv.setInventory_category_id((Integer) ((ComboBoxMax) movementsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Category)).getValue()).getValue());
+                    imv.setTitle_id((Integer) ((ComboBoxMax) movementsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Title)).getValue()).getValue());
+                    imv.setBrand_id((Integer) ((ComboBoxMax) movementsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Brand)).getValue()).getValue());
+                    imv.setCode(movementsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Code)).getValue().toString());
 
                     if (movementsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
-                        smv.setId(Integer.parseInt(next.toString()));
-                        dbCon.exec_update(smv);
+                        imv.setId(Integer.parseInt(next.toString()));
+                        dbCon.exec_update(imv);
                     } else if (movementsTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
-                        dbCon.exec_insert(smv);
+                        dbCon.exec_insert(imv);
                     }
                 }
             }

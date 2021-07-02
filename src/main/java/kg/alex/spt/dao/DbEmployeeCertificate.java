@@ -114,20 +114,13 @@ public class DbEmployeeCertificate extends BaseDb {
                         int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbCertificateTable, false);
                         dbd.close();
                         if (id != 0) {
-                            Item item = ((IndexedContainer) cb2.getContainerDataSource()).addItem(id);
-                            if (item != null) {
+                            Iterator iter = container.getItemIds().iterator();
+                            while (iter.hasNext()) {
+                                Object next = iter.next();
+                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                        myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id);
                                 item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                                 cb2.setValue(id);
-                                Iterator iter = container.getItemIds().iterator();
-                                while (iter.hasNext()) {
-                                    Object next = iter.next();
-                                    if (((ComboBox) container.getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.Certificate)).getValue()).getValue() == null) {
-                                        item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                                myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id);
-                                        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                    }
-                                }
                             }
                         }
                     } catch (Exception e) {

@@ -131,20 +131,13 @@ public class DbEmployeeEducation extends BaseDb {
                         int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbUniversityTable, false);
                         dbd.close();
                         if (id != 0) {
-                            Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
-                            if (item != null) {
+                            Iterator iter = container.getItemIds().iterator();
+                            while (iter.hasNext()) {
+                                Object next = iter.next();
+                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                        myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
                                 item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                                 cb.setValue(id);
-                                Iterator iter = container.getItemIds().iterator();
-                                while (iter.hasNext()) {
-                                    Object next = iter.next();
-                                    if (((ComboBox) container.getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.University)).getValue()).getValue() == null) {
-                                        item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                                myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
-                                        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                    }
-                                }
                             }
                         }
                     } catch (Exception e) {

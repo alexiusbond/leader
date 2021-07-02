@@ -89,7 +89,7 @@ public class DbInventoryInvoice extends BaseDb {
 
     public int execSQL_max_invoice_number(int school_id, int activity_status_id) throws SQLException {
         String sql = "SELECT max(invoice_number) as inv_num FROM dm_invoice " +
-                "WHERE school_id = ? and service_type_id = ?;";
+                "WHERE school_id = ? and activity_status_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, activity_status_id);

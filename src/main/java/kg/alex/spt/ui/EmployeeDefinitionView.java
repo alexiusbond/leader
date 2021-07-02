@@ -3568,25 +3568,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbUniversityTable, false);
                     dbd.close();
                     if (id != 0) {
-                        Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
-                        if (item != null) {
+                        Iterator iter = c.getItemIds().iterator();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            Item item = ((IndexedContainer) ((ComboBox) c.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
                             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb.setValue(id);
-                            Iterator iter = t.getContainerDataSource().getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                if (((ComboBox) t.getContainerDataSource().getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.University)).getValue()).getValue() == null) {
-                                    item = ((IndexedContainer) ((ComboBox) t.getContainerDataSource().getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
-                                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                }
-                            }
                         }
                     }
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    logger.catching(ex);
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             }
         });
@@ -3682,25 +3675,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbWork_placeTable, false);
                     dbd.close();
                     if (id != 0) {
-                        Item item = ((IndexedContainer) cb2.getContainerDataSource()).addItem(id);
-                        if (item != null) {
+                        Iterator iter = c.getItemIds().iterator();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            Item item = ((IndexedContainer) ((ComboBox) c.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id);
                             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb2.setValue(id);
-                            Iterator iter = c.getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                if (((ComboBox) c.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.WorkPlace)).getValue()).getValue() == null) {
-                                    item = ((IndexedContainer) ((ComboBox) c.getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id);
-                                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                }
-                            }
                         }
                     }
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    logger.catching(ex);
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             }
         });
@@ -3778,25 +3764,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                     int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbCertificateTable, false);
                     dbd.close();
                     if (id != 0) {
-                        Item item = ((IndexedContainer) cb.getContainerDataSource()).addItem(id);
-                        if (item != null) {
+                        Iterator iter = certificatesTable.getContainerDataSource().getItemIds().iterator();
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            Item item = ((IndexedContainer) ((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id);
                             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb.setValue(id);
-                            Iterator iter = certificatesTable.getContainerDataSource().getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                if (((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Certificate)).getValue()).getValue() == null) {
-                                    item = ((IndexedContainer) ((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
-                                            myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id);
-                                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                }
-                            }
                         }
                     }
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    logger.catching(ex);
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             }
         });

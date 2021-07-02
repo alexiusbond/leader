@@ -11,9 +11,12 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
+import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.InventoryMovement;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.InventoryOrganizationView;
@@ -22,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.Iterator;
 
 public class DbInventoryMovements extends BaseDb {
 
@@ -54,12 +58,62 @@ public class DbInventoryMovements extends BaseDb {
                     v.createCombobox(result.getInt("t.inventory_category_id"),
                             myUi.getMessage(SptMessages.Category),
                             SystemSettings.dbInventoryCategoryTable, true, true));
-            item.getItemProperty(myUi.getMessage(SptMessages.Brand)).setValue(
-                    v.createCombobox(result.getInt("t.brand_id"), myUi.getMessage(SptMessages.Brand),
-                            SystemSettings.dbInventoryBrandTable, true, true));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
-                    v.createCombobox(result.getInt("t.title_id"), myUi.getMessage(SptMessages.Title),
-                            SystemSettings.dbInventoryTitleTable, true, true));
+            final ComboBoxMax cb = v.createCombobox(result.getInt("t.brand_id"), myUi.getMessage(SptMessages.Brand),
+                    SystemSettings.dbInventoryBrandTable, true, true);
+            cb.setNewItemsAllowed(true);
+            cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
+                @Override
+                public void addNewItem(String newItemCaption) {
+                    try {
+                        DbDefinition dbd = new DbDefinition();
+                        dbd.connect();
+                        int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbInventoryBrandTable, false);
+                        dbd.close();
+                        if (id != 0) {
+                            Iterator iter = container.getItemIds().iterator();
+                            while (iter.hasNext()) {
+                                Object next = iter.next();
+                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                        myUi.getMessage(SptMessages.Brand)).getValue()).getContainerDataSource()).addItem(id);
+                                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                                cb.setValue(id);
+                            }
+                        }
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                }
+            });
+            item.getItemProperty(myUi.getMessage(SptMessages.Brand)).setValue(cb);
+            final ComboBoxMax cb2 = v.createCombobox(result.getInt("t.title_id"), myUi.getMessage(SptMessages.Title),
+                    SystemSettings.dbInventoryTitleTable, true, true);
+            cb2.setNewItemsAllowed(true);
+            cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
+                @Override
+                public void addNewItem(String newItemCaption) {
+                    try {
+                        DbDefinition dbd = new DbDefinition();
+                        dbd.connect();
+                        int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbInventoryTitleTable, false);
+                        dbd.close();
+                        if (id != 0) {
+                            Iterator iter = container.getItemIds().iterator();
+                            while (iter.hasNext()) {
+                                Object next = iter.next();
+                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                        myUi.getMessage(SptMessages.Title)).getValue()).getContainerDataSource()).addItem(id);
+                                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                                cb2.setValue(id);
+                            }
+                        }
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                }
+            });
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(cb2);
             item.getItemProperty(myUi.getMessage(SptMessages.PurchaseYear)).setValue(
                     v.createDateFiled(result.getDate("t.purchase_date"),
                             myUi.getMessage(SptMessages.PurchaseYear), null, Resolution.YEAR, SystemSettings.yearPattern));
@@ -110,8 +164,8 @@ public class DbInventoryMovements extends BaseDb {
 
     public int exec_insert(InventoryMovement inventoryMovement) throws SQLException {
         String sql = "INSERT INTO dm_inventory_movements (invoice_id,inventory_category_id, "
-                + "title_id,brand_id,quantity,price,remain,code,purchase_date,life_time,inventory_movement_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?);";
+                + "title_id,brand_id,quantity,price,remain,code,purchase_date,life_time," +
+                "inventory_movement_id,creation_date) VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW());";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inventoryMovement.getInvoice_id());
         stat.setInt(2, inventoryMovement.getInventory_category_id());
@@ -119,14 +173,15 @@ public class DbInventoryMovements extends BaseDb {
         stat.setInt(4, inventoryMovement.getBrand_id());
         stat.setInt(5, inventoryMovement.getQuantity());
         stat.setDouble(6, inventoryMovement.getPrice());
-        stat.setInt(7, inventoryMovement.getRemain());
+        stat.setInt(7, inventoryMovement.getQuantity());
         stat.setString(8, inventoryMovement.getCode());
         stat.setDate(9, new Date(inventoryMovement.getPurchase_date().getTime()));
+        stat.setInt(10, inventoryMovement.getLifeTime());
         if (inventoryMovement.getInventory_movement_id() != 0) {
-            stat.setInt(10, inventoryMovement.getInventory_movement_id());
+            stat.setInt(11, inventoryMovement.getInventory_movement_id());
             exec_update_remain(inventoryMovement.getInventory_movement_id(), -inventoryMovement.getQuantity());
         } else {
-            stat.setNull(10, Types.INTEGER);
+            stat.setNull(11, Types.INTEGER);
         }
 
         int st = stat.executeUpdate();
