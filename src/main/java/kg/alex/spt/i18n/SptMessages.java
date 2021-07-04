@@ -460,6 +460,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String FromEmployee = generateId();
     public static final String ToEmployee = generateId();
     public static final String InvoiceNumber = generateId();
+    public static final String SearchByCode = generateId();
     public static final String Parent = generateId();
     public static final String Settings = generateId();
     public static final String AccountingSettings = generateId();

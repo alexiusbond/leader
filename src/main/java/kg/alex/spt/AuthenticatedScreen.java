@@ -501,6 +501,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new StockIncomeView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryOrganization))) {
                     verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryLiquidation))) {
+                    verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockOutcome))) {
                     verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Settings))) {
@@ -624,116 +626,119 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
     private void updatePage() {
         if (header.getValue() != null) {
-            if (header.getValue().equals(((String) myUI.getMessage(
+            if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ClassNumberDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DefinitionView(
                         myUI, SystemSettings.classTable, false, SystemSettings.cnDefinitionView));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.YearDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.BranchDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DefinitionView(
                         myUI, SystemSettings.dbBranchTable, true, SystemSettings.cnHRDefinitionView));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ClassNameDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.BlockDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.RoomDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.DiscountDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ContractDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ContractDefintionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.AccessoriesDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.LeavingReasonsDefinition)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.LeavingReasonsDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.SchoolDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.EmployeeDefinition)).toUpperCase())
-                    || header.getValue().equals(((String) myUI.getMessage(
+                    || header.getValue().equals((myUI.getMessage(
                     SptMessages.MyInfo)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.SchoolModification)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SchoolModificationView(
                         myUI, myUI.getUser().getSchool_id()));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StudentDefiniton)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.Reports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ReportsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.AccountingReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StockReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockReportsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.LessonAssessment)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.HRReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HRReportsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ImportStudentsFromExcel)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ImportFromExcelView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.IssueStudentOrder)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.IssueStudentOrder)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new IssueOrderView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.Backup)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BackupView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.Calls)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new CallsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.HomePage)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HomePageView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.Welcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HomePageView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.Transactions)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransactionsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.Accruals)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Accruals)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
                         SystemSettings.cnAccrualsView, 2, 1));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.ShortTermDebts)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.ShortTermDebts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
                         SystemSettings.cnShortTermDebtsView, 4, 4));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.ReturnableAssets)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.ReturnableAssets)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
                         SystemSettings.cnReturnableAssetsView, 3, 3));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.Payouts)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Payouts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new PayoutsView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.IncomesDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 1));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StocksDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StockIncome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockIncomeView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.InventoryOrganization)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(
+            } else if (header.getValue().equals((myUI.getMessage(
+                    SptMessages.InventoryLiquidation)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
+            } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StockOutcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.Outcomes)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Outcomes)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 2));
-            } else if (header.getValue().equals(((String) myUI.getMessage(SptMessages.Settings)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Settings)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SettingsView(myUI));
             }
 

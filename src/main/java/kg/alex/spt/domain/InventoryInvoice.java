@@ -11,10 +11,46 @@ public class InventoryInvoice extends Invoice implements Serializable {
 
     private int id;
     private int room_id;
+    private String block;
+    private String floor;
+    private String room;
+    private String employee;
     private String invoiceNumberStr;
     private int employee_id;
     private int school_id;
     private int activity_status_id;
+
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
+    }
+
+    public String getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
+        this.block = block;
+    }
+
+    public String getFloor() {
+        return floor;
+    }
+
+    public void setFloor(String floor) {
+        this.floor = floor;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
 
     @Override
     public int getSchool_id() {

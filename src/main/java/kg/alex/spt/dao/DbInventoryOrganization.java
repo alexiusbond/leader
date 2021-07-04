@@ -17,7 +17,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.Definition;
-import kg.alex.spt.domain.InventoryMovement;
+import kg.alex.spt.domain.InventoryOrganization;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.InventoryOrganizationView;
 import kg.alex.spt.utils.ComboBoxMax;
@@ -27,11 +27,11 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.Iterator;
 
-public class DbInventoryMovements extends BaseDb {
+public class DbInventoryOrganization extends BaseDb {
 
-    static final Logger logger = LogManager.getLogger(DbInventoryMovements.class);
+    static final Logger logger = LogManager.getLogger(DbInventoryOrganization.class);
 
-    public DbInventoryMovements() throws Exception {
+    public DbInventoryOrganization() throws Exception {
         super();
     }
 
@@ -41,19 +41,19 @@ public class DbInventoryMovements extends BaseDb {
         String sql = "SELECT t.id, t.quantity, t.price, t.inventory_category_id, t.title_id, "
                 + "t.brand_id, t.remain, t.code, "
                 + "t.purchase_date, t.life_time  "
-                + "FROM dm_inventory_movements as t where t.invoice_id = ? order by t.id;";
+                + "FROM dm_inventory_organization as t where t.invoice_id = ? order by t.id;";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
         ResultSet result = stat.executeQuery();
-        IndexedContainer container = v.prepareMovementsContainer();
+        IndexedContainer container = v.prepareInventoriesContainer();
         double totalAmount = 0.0;
         int totalQuantity = 0;
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbInventoryMovement, true));
+                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbInventoryOrganization, true));
             item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(
                     v.createCombobox(result.getInt("t.inventory_category_id"),
                             myUi.getMessage(SptMessages.Category),
@@ -151,38 +151,32 @@ public class DbInventoryMovements extends BaseDb {
             totalAmount += result.getInt("t.quantity") * result.getDouble("t.price");
             totalQuantity += result.getInt("t.quantity");
         }
-        v.setMovementsFooter(totalAmount, totalQuantity);
+        v.setInventoriesFooter(totalAmount, totalQuantity);
         return container;
     }
 
     public int exec_delete(int invoice_id) throws SQLException {
-        String sql = "DELETE FROM dm_inventory_movements WHERE invoice_id = ?";
+        String sql = "DELETE FROM dm_inventory_organization WHERE invoice_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
         return stat.executeUpdate();
     }
 
-    public int exec_insert(InventoryMovement inventoryMovement) throws SQLException {
-        String sql = "INSERT INTO dm_inventory_movements (invoice_id,inventory_category_id, "
+    public int exec_insert(InventoryOrganization inventoryOrganization) throws SQLException {
+        String sql = "INSERT INTO dm_inventory_organization (invoice_id,inventory_category_id, "
                 + "title_id,brand_id,quantity,price,remain,code,purchase_date,life_time," +
-                "inventory_movement_id,creation_date) VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW());";
+                "creation_date) VALUES(?,?,?,?,?,?,?,?,?,?,NOW());";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, inventoryMovement.getInvoice_id());
-        stat.setInt(2, inventoryMovement.getInventory_category_id());
-        stat.setInt(3, inventoryMovement.getTitle_id());
-        stat.setInt(4, inventoryMovement.getBrand_id());
-        stat.setInt(5, inventoryMovement.getQuantity());
-        stat.setDouble(6, inventoryMovement.getPrice());
-        stat.setInt(7, inventoryMovement.getQuantity());
-        stat.setString(8, inventoryMovement.getCode());
-        stat.setDate(9, new Date(inventoryMovement.getPurchase_date().getTime()));
-        stat.setInt(10, inventoryMovement.getLifeTime());
-        if (inventoryMovement.getInventory_movement_id() != 0) {
-            stat.setInt(11, inventoryMovement.getInventory_movement_id());
-            exec_update_remain(inventoryMovement.getInventory_movement_id(), -inventoryMovement.getQuantity());
-        } else {
-            stat.setNull(11, Types.INTEGER);
-        }
+        stat.setInt(1, inventoryOrganization.getInvoice_id());
+        stat.setInt(2, inventoryOrganization.getInventory_category_id());
+        stat.setInt(3, inventoryOrganization.getTitle_id());
+        stat.setInt(4, inventoryOrganization.getBrand_id());
+        stat.setInt(5, inventoryOrganization.getQuantity());
+        stat.setDouble(6, inventoryOrganization.getPrice());
+        stat.setInt(7, inventoryOrganization.getQuantity());
+        stat.setString(8, inventoryOrganization.getCode());
+        stat.setDate(9, new Date(inventoryOrganization.getPurchase_date().getTime()));
+        stat.setInt(10, inventoryOrganization.getLifeTime());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -192,43 +186,37 @@ public class DbInventoryMovements extends BaseDb {
         }
     }
 
-    public int exec_update(InventoryMovement inventoryMovement) throws SQLException {
-        String sql = "update dm_inventory_movements set "
+    public int exec_update(InventoryOrganization inventoryOrganization) throws SQLException {
+        String sql = "update dm_inventory_organization set "
                 + "inventory_category_id = ?, title_id = ?, brand_id = ?, remain = remain - quantity + ?, "
-                + "quantity = ?, price = ?, code = ?, inventory_movement_id = ?, purchase_date = ?, life_time = ? "
+                + "quantity = ?, price = ?, code = ?, purchase_date = ?, life_time = ? "
                 + "WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, inventoryMovement.getInventory_category_id());
-        stat.setInt(2, inventoryMovement.getTitle_id());
-        stat.setInt(3, inventoryMovement.getBrand_id());
-        stat.setInt(4, inventoryMovement.getQuantity());
-        stat.setInt(5, inventoryMovement.getQuantity());
-        stat.setDouble(6, inventoryMovement.getPrice());
-        stat.setString(7, inventoryMovement.getCode());
-        if (inventoryMovement.getInventory_movement_id() != 0) {
-            stat.setInt(8, inventoryMovement.getInventory_movement_id());
-        } else {
-            stat.setNull(8, Types.INTEGER);
-        }
-        stat.setDate(9, new Date(inventoryMovement.getPurchase_date().getTime()));
-        stat.setInt(10, inventoryMovement.getLifeTime());
-        stat.setInt(11, inventoryMovement.getId());
+        stat.setInt(1, inventoryOrganization.getInventory_category_id());
+        stat.setInt(2, inventoryOrganization.getTitle_id());
+        stat.setInt(3, inventoryOrganization.getBrand_id());
+        stat.setInt(4, inventoryOrganization.getQuantity());
+        stat.setInt(5, inventoryOrganization.getQuantity());
+        stat.setDouble(6, inventoryOrganization.getPrice());
+        stat.setString(7, inventoryOrganization.getCode());
+        stat.setDate(8, new Date(inventoryOrganization.getPurchase_date().getTime()));
+        stat.setInt(9, inventoryOrganization.getLifeTime());
+        stat.setInt(10, inventoryOrganization.getId());
         return stat.executeUpdate();
     }
 
     public int exec_update_remain(int id, int quantity) throws SQLException {
-        String sql = "update dm_inventory_movements set remain = remain + ? WHERE id = ?;";
+        String sql = "update dm_inventory_organization set remain = remain + ? WHERE id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, quantity);
         stat.setInt(2, id);
         return stat.executeUpdate();
     }
 
-    public int exec_delete(InventoryMovement inventoryMovement) throws SQLException {
-        exec_update_remain(inventoryMovement.getInventory_movement_id(), inventoryMovement.getQuantity());
-        String sql = "DELETE FROM dm_inventory_movements WHERE id = ?";
+    public int exec_delete(InventoryOrganization inventoryOrganization) throws SQLException {
+        String sql = "DELETE FROM dm_inventory_organization WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, inventoryMovement.getId());
+        stat.setInt(1, inventoryOrganization.getId());
         return stat.executeUpdate();
     }
 }

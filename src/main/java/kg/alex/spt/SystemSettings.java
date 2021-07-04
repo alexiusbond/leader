@@ -44,6 +44,7 @@ public class SystemSettings implements Serializable {
     public static final String dateTimeMinPattern = "dd-MM-yyyy HH:mm";
     public static final SimpleDateFormat dtmf = new SimpleDateFormat(dateTimeMinPattern);
     public static final SimpleDateFormat ymdf = new SimpleDateFormat(yearMonthPattern);
+    public static final SimpleDateFormat ydf = new SimpleDateFormat(yearPattern);
 
     public static final String id = "id";
     public static final String count = "count";
@@ -125,6 +126,7 @@ public class SystemSettings implements Serializable {
     public static final String dbBlock = "dm_block";
     public static final String dbRoom = "dm_room";
     public static final String db_dp_invoice = "dp_invoice";
+    public static final String db_dm_invoice = "dm_invoice";
     public static final String dbAccInvoice = "acc_invoice";
     public static final String db_acc_invoice_id = "acc_invoice_id";
     public static final String invoice_id = "invoice_id";
@@ -136,11 +138,12 @@ public class SystemSettings implements Serializable {
     public static final String dbStudentAccessories = "student_accessories";
     public static final String dbStudentPayments = "student_payments";
     public static final String dbStudentCalls = "student_calls";
-    public static final String dbStudentInstallement = "student_installement_plan";
+    public static final String dbStudentInstallment = "student_installement_plan";
     public static final String dbMartialStatus = "hr_martial_status";
     public static final String dbMeasurement = "dp_measurement";
     public static final String dbStockMovement = "dp_stock_movements";
-    public static final String dbInventoryMovement = "dm_inventory_movements";
+    public static final String dbInventoryOrganization = "dm_inventory_organization";
+    public static final String dbInventoryLiquidation = "dm_inventory_liquidation";
     public static final String dbTransfers = "acc_transfers";
     public static final String dbNationality = "nationality";
     public static final String dbEducationStatus = "education_status";

@@ -468,6 +468,7 @@ public class SptMessages_ru extends SptMessages {
             {InventoryOrganization, "Организация инвентаря"},
             {InventoryLiquidation, "Ликвидация инвентаря"},
             {InvoiceNumber, "Номер накладной"},
+            {SearchByCode, "Поиск по коду"},
             {Operation, "Операция"},
             {FromEmployee, "Выдал"},
             {ToEmployee, "Принял"},

@@ -975,7 +975,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (tabs.getSelectedTab() == tabs.getTab(acsReceiveTableLay).getComponent()) {
             acsReceiveTable.removeItem(event.getButton().getData().toString());
         } else if (source.getId() != null
-                && source.getId().equals(SystemSettings.dbStudentInstallement)) {
+                && source.getId().equals(SystemSettings.dbStudentInstallment)) {
             installmentTable.removeItem(event.getButton().getData().toString());
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
@@ -3136,7 +3136,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     installmentTable.getContainerDataSource().size(), id);
             item.getItemProperty(SystemSettings.button).setValue(
                     createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                            SystemSettings.dbStudentInstallement, FontAwesome.MINUS_SQUARE));
+                            SystemSettings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     createDateField(currDate.getValue(), myUI.getMessage(SptMessages.Date), id, false, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -3172,7 +3172,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         installmentTable.getContainerDataSource().size(), id);
                 item.getItemProperty(SystemSettings.button).setValue(
                         createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                                SystemSettings.dbStudentInstallement, FontAwesome.MINUS_SQUARE));
+                                SystemSettings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
                 item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                         createDateField(cal.getTime(), myUI.getMessage(SptMessages.Date), id, false, true));
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(

@@ -8,7 +8,7 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class InventoryMovement implements Serializable {
+public class InventoryOrganization implements Serializable {
 
     private int id;
     private int invoice_id;
@@ -21,15 +21,6 @@ public class InventoryMovement implements Serializable {
     private int remain;
     private int lifeTime;
     private Date purchase_date;
-    private int inventory_movement_id;
-
-    public int getInventory_movement_id() {
-        return inventory_movement_id;
-    }
-
-    public void setInventory_movement_id(int inventory_movement_id) {
-        this.inventory_movement_id = inventory_movement_id;
-    }
 
     public int getId() {
         return id;

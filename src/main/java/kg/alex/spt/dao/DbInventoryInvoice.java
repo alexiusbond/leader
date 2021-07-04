@@ -36,7 +36,7 @@ public class DbInventoryInvoice extends BaseDb {
                 "LEFT JOIN dm_block AS block ON block.id = room.block_id " +
                 "LEFT JOIN dm_floor AS floor ON floor.id = room.floor_id " +
                 "LEFT JOIN employee AS e ON e.id = t.employee_id " +
-                "LEFT JOIN dm_inventory_movements AS mov ON mov.invoice_id = t.id " +
+                "LEFT JOIN dm_inventory_organization AS mov ON mov.invoice_id = t.id " +
                 "WHERE t.school_id = ? AND t.activity_status_id = ? " +
                 "GROUP BY t.id ORDER BY t.invoice_number DESC;";
         PreparedStatement stat = dbCon.prepareStatement(sql);

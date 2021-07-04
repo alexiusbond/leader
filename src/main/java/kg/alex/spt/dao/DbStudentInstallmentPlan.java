@@ -46,7 +46,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                            SystemSettings.dbStudentInstallement, FontAwesome.MINUS_SQUARE));
+                            SystemSettings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             java.util.Date date = result.getDate("ip.date_of_payment");
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(date, myUI.getMessage(SptMessages.Date), id, false, true));
