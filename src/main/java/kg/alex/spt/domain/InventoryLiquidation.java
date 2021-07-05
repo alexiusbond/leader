@@ -14,6 +14,15 @@ public class InventoryLiquidation implements Serializable {
     private int invoice_id;
     private int inventory_id;
     private int quantity;
+    private int remain;
+
+    public int getRemain() {
+        return remain;
+    }
+
+    public void setRemain(int remain) {
+        this.remain = remain;
+    }
 
     public int getInventory_id() {
         return inventory_id;

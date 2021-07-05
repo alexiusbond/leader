@@ -44,8 +44,8 @@ public class ExistsValidator implements Validator {
             if (((ComboBoxMax) container.getItem(next).getItemProperty(
                     propertyName).getValue()).getValue() != null &&
                     comboBox != container.getItem(next).getItemProperty(propertyName).getValue()
-                    && (int) ((ComboBoxMax) container.getItem(next).getItemProperty(
-                    propertyName).getValue()).getValue() == (int) value) {
+                    && value.equals(((ComboBoxMax) container.getItem(next).getItemProperty(
+                    propertyName).getValue()).getValue() + "")) {
                 return false;
             }
         }

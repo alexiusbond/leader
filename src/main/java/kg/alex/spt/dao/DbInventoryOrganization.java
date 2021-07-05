@@ -12,6 +12,7 @@ import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
@@ -35,13 +36,47 @@ public class DbInventoryOrganization extends BaseDb {
         super();
     }
 
+    public IndexedContainer execSQL_for_select(MyVaadinUI myUi, int room_id)
+            throws SQLException {
+
+        String sql = "SELECT io.id, concat('[', io.code, '] ', category.name, ' - ', brand.name, " +
+                "' - ',  title.name) as title, r.remain, io.code FROM dm_invoice AS t " +
+                "LEFT JOIN dm_inventory_organization AS io ON io.invoice_id = t.id " +
+                "LEFT JOIN view_inventory_remains AS r ON r.inventory_id = io.id " +
+                "LEFT JOIN dm_title AS title ON io.title_id = title.id " +
+                "LEFT JOIN dm_brand AS brand ON io.brand_id = brand.id " +
+                "LEFT JOIN dm_inventory_category AS category ON io.inventory_category_id = category.id " +
+                "WHERE t.room_id = ? and t.activity_status_id = 2 " +
+                "ORDER BY io.inventory_category_id, brand.id, title.name;";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, room_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Remain), Integer.class, 0);
+        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getString("io.code"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+                    result.getString("title"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(
+                    result.getInt("r.remain"));
+            item.getItemProperty(SystemSettings.id).setValue(result.getInt("io.id"));
+        }
+        return container;
+    }
+
+
     public IndexedContainer execSQL(MyVaadinUI myUi, int invoice_id, InventoryOrganizationView v)
             throws SQLException {
 
         String sql = "SELECT t.id, t.quantity, t.price, t.inventory_category_id, t.title_id, "
-                + "t.brand_id, t.remain, t.code, "
-                + "t.purchase_date, t.life_time  "
-                + "FROM dm_inventory_organization as t where t.invoice_id = ? order by t.id;";
+                + "t.brand_id, r.remain, t.code, t.purchase_date, t.life_time "
+                + "FROM dm_inventory_organization as t "
+                + "left join view_inventory_remains as r on r.inventory_id = t.id "
+                + "where t.invoice_id = ? order by t.id;";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
@@ -123,8 +158,8 @@ public class DbInventoryOrganization extends BaseDb {
                             new IntegerRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 1, null),
                             new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter(), true));
             int minVal = 1;
-            if (result.getInt("t.remain") < result.getInt("t.quantity")) {
-                minVal = result.getInt("t.quantity") - result.getInt("t.remain");
+            if (result.getInt("r.remain") < result.getInt("t.quantity")) {
+                minVal = result.getInt("t.quantity") - result.getInt("r.remain");
             }
             TextField tf = v.createTextfieldWithProperty(
                     result.getInt("t.quantity"), myUi.getMessage(SptMessages.Quantity),
@@ -145,7 +180,7 @@ public class DbInventoryOrganization extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Price)).setValue(tf);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getInt("t.quantity") * result.getDouble("t.price"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getInt("t.remain"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getInt("r.remain"));
             item.getItemProperty(myUi.getMessage(SptMessages.Code)).setValue(result.getString("t.code"));
             item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             totalAmount += result.getInt("t.quantity") * result.getDouble("t.price");
@@ -164,8 +199,8 @@ public class DbInventoryOrganization extends BaseDb {
 
     public int exec_insert(InventoryOrganization inventoryOrganization) throws SQLException {
         String sql = "INSERT INTO dm_inventory_organization (invoice_id,inventory_category_id, "
-                + "title_id,brand_id,quantity,price,remain,code,purchase_date,life_time," +
-                "creation_date) VALUES(?,?,?,?,?,?,?,?,?,?,NOW());";
+                + "title_id,brand_id,quantity,price,code,purchase_date,life_time," +
+                "creation_date) VALUES(?,?,?,?,?,?,?,?,?,NOW());";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inventoryOrganization.getInvoice_id());
         stat.setInt(2, inventoryOrganization.getInventory_category_id());
@@ -173,10 +208,9 @@ public class DbInventoryOrganization extends BaseDb {
         stat.setInt(4, inventoryOrganization.getBrand_id());
         stat.setInt(5, inventoryOrganization.getQuantity());
         stat.setDouble(6, inventoryOrganization.getPrice());
-        stat.setInt(7, inventoryOrganization.getQuantity());
-        stat.setString(8, inventoryOrganization.getCode());
-        stat.setDate(9, new Date(inventoryOrganization.getPurchase_date().getTime()));
-        stat.setInt(10, inventoryOrganization.getLifeTime());
+        stat.setString(7, inventoryOrganization.getCode());
+        stat.setDate(8, new Date(inventoryOrganization.getPurchase_date().getTime()));
+        stat.setInt(9, inventoryOrganization.getLifeTime());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -188,7 +222,7 @@ public class DbInventoryOrganization extends BaseDb {
 
     public int exec_update(InventoryOrganization inventoryOrganization) throws SQLException {
         String sql = "update dm_inventory_organization set "
-                + "inventory_category_id = ?, title_id = ?, brand_id = ?, remain = remain - quantity + ?, "
+                + "inventory_category_id = ?, title_id = ?, brand_id = ?, "
                 + "quantity = ?, price = ?, code = ?, purchase_date = ?, life_time = ? "
                 + "WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -196,20 +230,11 @@ public class DbInventoryOrganization extends BaseDb {
         stat.setInt(2, inventoryOrganization.getTitle_id());
         stat.setInt(3, inventoryOrganization.getBrand_id());
         stat.setInt(4, inventoryOrganization.getQuantity());
-        stat.setInt(5, inventoryOrganization.getQuantity());
-        stat.setDouble(6, inventoryOrganization.getPrice());
-        stat.setString(7, inventoryOrganization.getCode());
-        stat.setDate(8, new Date(inventoryOrganization.getPurchase_date().getTime()));
-        stat.setInt(9, inventoryOrganization.getLifeTime());
-        stat.setInt(10, inventoryOrganization.getId());
-        return stat.executeUpdate();
-    }
-
-    public int exec_update_remain(int id, int quantity) throws SQLException {
-        String sql = "update dm_inventory_organization set remain = remain + ? WHERE id = ?;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, quantity);
-        stat.setInt(2, id);
+        stat.setDouble(5, inventoryOrganization.getPrice());
+        stat.setString(6, inventoryOrganization.getCode());
+        stat.setDate(7, new Date(inventoryOrganization.getPurchase_date().getTime()));
+        stat.setInt(8, inventoryOrganization.getLifeTime());
+        stat.setInt(9, inventoryOrganization.getId());
         return stat.executeUpdate();
     }
 

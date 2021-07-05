@@ -504,7 +504,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(SptMessages.CanNotDeleteRead),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

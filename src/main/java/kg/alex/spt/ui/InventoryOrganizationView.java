@@ -448,7 +448,8 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             invoiceNumberTF.addValueChangeListener(this);
         } else {
             Object changedItemId = ((AbstractField) property).getId();
-            if (((AbstractField) property).getData() != null && (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
+            if (((AbstractField) property).getData() != null
+                    && (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
                     || ((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Price)))) {
 
                 TextField quantityTF = (TextField) inventoriesTable.getContainerProperty(changedItemId,
@@ -457,6 +458,10 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                         myUI.getMessage(SptMessages.Price)).getValue();
                 if (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
                         && quantityTF != null && quantityTF.getPropertyDataSource().getValue() != null) {
+                    if (inventoriesTable.getContainerProperty(changedItemId,
+                            myUI.getMessage(SptMessages.Remain)).getValue() == null) {
+                        inventoriesTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Remain)).setValue(0);
+                    }
                     inventoriesTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Remain)).setValue(
                             (Integer) inventoriesTable.getContainerProperty(changedItemId,
                                     myUI.getMessage(SptMessages.Remain)).getValue() -
@@ -471,8 +476,8 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                     inventoriesTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Amount)).setValue(
                             (Integer) quantityTF.getPropertyDataSource().getValue()
                                     * (Double) priceTF.getPropertyDataSource().getValue());
-                    repaintInventoriesFooter();
                 }
+                repaintInventoriesFooter();
             }
         }
     }
@@ -994,6 +999,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         inventoriesTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
         inventoriesTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
         inventoriesTable.setColumnAlignment(myUI.getMessage(SptMessages.Price), Table.Align.RIGHT);
+        repaintInventoriesFooter();
     }
 
     private void repaintCodes() {
@@ -1049,10 +1055,16 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             Iterator iter = inventoriesTable.getItemIds().iterator();
             while (iter.hasNext()) {
                 Object next = iter.next();
-                totalAmount += (Double) inventoriesTable.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Amount)).getValue();
-                totalQuantity += (Integer) ((TextField) inventoriesTable.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue();
+                if (inventoriesTable.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Amount)).getValue() != null) {
+                    totalAmount += (Double) inventoriesTable.getContainerProperty(next,
+                            myUI.getMessage(SptMessages.Amount)).getValue();
+                }
+                if (((TextField) inventoriesTable.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue() != null) {
+                    totalQuantity += (Integer) ((TextField) inventoriesTable.getContainerProperty(next,
+                            myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue();
+                }
             }
         }
         setInventoriesFooter(totalAmount, totalQuantity);

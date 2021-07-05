@@ -1,7 +1,5 @@
 package kg.alex.spt.i18n;
 
-import sun.security.krb5.internal.crypto.Des;
-
 public class SptMessages_ru extends SptMessages {
 
     static final Object[][] contents_ru = {
@@ -81,7 +79,7 @@ public class SptMessages_ru extends SptMessages {
             {RoomDefinition, "Определение помещений"},
             {PositionDefinition, "Определение должностей"},
             {CanNotDelete, "Данная запись используется в других таблицах, вы не можете ее удалить!"},
-            {CanNotDelete, "Данная запись прочитана адресатом, вы не можете ее удалить!"},
+            {CanNotDeleteRead, "Данная запись прочитана адресатом, вы не можете ее удалить!"},
             {CanNotGetCurrency, "Невозможно получить курс доллара!"},
             {LowBalance, "Вы не можете совершить данную операцию! Превышение доступного баланса на "},
             {CreateButton, "Создать новую запись"},
@@ -499,6 +497,7 @@ public class SptMessages_ru extends SptMessages {
             {Accounting, "Бухгалтерия"},
             {Stock, "Склад"},
             {Inventory, "Инвентаризация"},
+            {InventoryItem, "Инвентарь"},
             {Stocks, "Склады"},
             {WeekLogs, "Логи за неделю"},
             {SystemLogs, "Логи основной системы"},
