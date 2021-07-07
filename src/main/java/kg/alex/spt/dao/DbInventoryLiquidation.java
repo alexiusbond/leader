@@ -56,13 +56,13 @@ public class DbInventoryLiquidation extends BaseDb {
             try {
                 DbInventoryOrganization dbCon = new DbInventoryOrganization();
                 dbCon.connect();
-                cb.setContainerDataSource(dbCon.execSQL_for_select(myUi, result.getInt("i.room_id")));
+                cb.setContainerDataSource(dbCon.execSQL_for_select(myUi, result.getInt("i.room_id"), invoice_id));
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
             }
-            cb.setValue(result.getString("io.code"));
+            cb.setValue(result.getString("io.code").toLowerCase());
             cb.addValueChangeListener(v);
             cb.setId(id);
             cb.setData(myUi.getMessage(SptMessages.InventoryItem));
@@ -76,7 +76,6 @@ public class DbInventoryLiquidation extends BaseDb {
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
             item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
-            item.getItemProperty(SystemSettings.quantity_id).setValue(result.getInt("t.quantity"));
             item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getInt("r.remain"));
             item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             totalQuantity += result.getInt("t.quantity");

@@ -79,6 +79,7 @@ public class SptMessages_ru extends SptMessages {
             {RoomDefinition, "Определение помещений"},
             {PositionDefinition, "Определение должностей"},
             {CanNotDelete, "Данная запись используется в других таблицах, вы не можете ее удалить!"},
+            {InventoryNotFound, "Инвентарь не найден!"},
             {CanNotDeleteRead, "Данная запись прочитана адресатом, вы не можете ее удалить!"},
             {CanNotGetCurrency, "Невозможно получить курс доллара!"},
             {LowBalance, "Вы не можете совершить данную операцию! Превышение доступного баланса на "},

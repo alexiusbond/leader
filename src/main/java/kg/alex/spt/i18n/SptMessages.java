@@ -84,6 +84,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Status = generateId();
     public static final String OrderType = generateId();
     public static final String CanNotDelete = generateId();
+    public static final String InventoryNotFound = generateId();
     public static final String CanNotDeleteRead = generateId();
     public static final String CanNotGetCurrency = generateId();
     public static final String LowBalance = generateId();

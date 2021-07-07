@@ -28,9 +28,9 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
-public class InventoryOrganizationPdf {
+public class InventoryLiquidationPdf {
 
-    static final Logger logger = LogManager.getLogger(InventoryOrganizationPdf.class);
+    static final Logger logger = LogManager.getLogger(InventoryLiquidationPdf.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;
@@ -39,9 +39,9 @@ public class InventoryOrganizationPdf {
     private Document document = null;
 
 
-    public InventoryOrganizationPdf(final MyVaadinUI myUI, final String title, final InventoryInvoice invoice,
-                                    final IndexedContainer inventoriesCont, final String totalQuantity,
-                                    String totalAmount, final StudentInfoPdf schoolInfo) {
+    public InventoryLiquidationPdf(final MyVaadinUI myUI, final String title, final InventoryInvoice invoice,
+                                   final IndexedContainer inventoriesCont, final String totalQuantity,
+                                   final StudentInfoPdf schoolInfo) {
 
         source1 = new StreamResource.StreamSource() {
 
@@ -59,10 +59,10 @@ public class InventoryOrganizationPdf {
 
                 try {
 
-                    document = new Document(PageSize.A4.rotate(), 10, 10, 60, 30);
+                    document = new Document(PageSize.A4, 10, 10, 60, 30);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterLandscape event = new HeaderFooterLandscape(myUI,
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI,
                             schoolInfo.getScl_name_ru(), schoolInfo.getScl_address(), schoolInfo.getScl_phone());
                     writer.setPageEvent(event);
 
@@ -114,22 +114,15 @@ public class InventoryOrganizationPdf {
                     document.add(Thead);
                     document.add(new Paragraph(20, " "));
 
-                    float[] Tpayments_colsWidth = {0.75f, 2f, 2f, 2f, 6f, 1.8f, 1.8f, 1.6f, 2.1f, 1.3f};
-                    PdfPTable table = new PdfPTable(10);
+                    float[] Tpayments_colsWidth = {0.75f, 5f, 1f};
+                    PdfPTable table = new PdfPTable(3);
                     table.setWidthPercentage(90f);
                     table.setWidths(Tpayments_colsWidth);
                     table.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     table.addCell(new Phrase(" №", ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Code), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Category), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Brand), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Title), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(SptMessages.InventoryItem), ordFontBold));
                     table.addCell(new Phrase(myUI.getMessage(SptMessages.Quantity), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Price), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.PurchaseYear), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.LifeTime), ordFontBold));
 
                     Iterator iter1 = inventoriesCont.getItemIds().iterator();
                     int y = 0;
@@ -139,33 +132,12 @@ public class InventoryOrganizationPdf {
                     while (iter1.hasNext()) {
                         Object next = iter1.next();
                         table.addCell(new Phrase(y + "", tableFont));
-                        table.addCell(new Phrase(inventoriesCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Code)).getValue().toString(), tableFont));
                         ComboBoxMax cb = (ComboBoxMax) inventoriesCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Category)).getValue();
-                        table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
-                        cb = (ComboBoxMax) inventoriesCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Brand)).getValue();
-                        table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
-                        cb = (ComboBoxMax) inventoriesCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Title)).getValue();
+                                myUI.getMessage(SptMessages.InventoryItem)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         TextField tf = (TextField) inventoriesCont.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.Quantity)).getValue();
-                        table.addCell(new Phrase(
-                                tf.getPropertyDataSource().getValue() + "", tableFont));
-                        tf = (TextField) inventoriesCont.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Price)).getValue();
-                        table.addCell(new Phrase(SystemSettings.dFormat.format(
-                                tf.getPropertyDataSource().getValue()), tableFont));
-                        table.addCell(new Phrase(SystemSettings.dFormat.format(inventoriesCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
-                        DateField df = (DateField) inventoriesCont.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.PurchaseYear)).getValue();
-                        table.addCell(new Phrase(SystemSettings.ydf.format(df.getValue()), tableFont));
-                        tf = (TextField) inventoriesCont.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.LifeTime)).getValue();
                         table.addCell(new Phrase(
                                 tf.getPropertyDataSource().getValue() + "", tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -174,15 +146,7 @@ public class InventoryOrganizationPdf {
 
                     table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(" ", ordFontBold));
                     table.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": " + totalQuantity, ordFontBold));
-                    table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": " + totalAmount, ordFontBold));
-                    table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(" ", ordFontBold));
                     document.add(table);
 
                     document.add(new Paragraph(30, " "));

@@ -12,7 +12,6 @@ import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
@@ -25,7 +24,10 @@ import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.*;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 
 public class DbInventoryOrganization extends BaseDb {
@@ -36,11 +38,13 @@ public class DbInventoryOrganization extends BaseDb {
         super();
     }
 
-    public IndexedContainer execSQL_for_select(MyVaadinUI myUi, int room_id)
+    public IndexedContainer execSQL_for_select(MyVaadinUI myUi, int room_id, int invoice_id)
             throws SQLException {
 
         String sql = "SELECT io.id, concat('[', io.code, '] ', category.name, ' - ', brand.name, " +
-                "' - ',  title.name) as title, r.remain, io.code FROM dm_invoice AS t " +
+                "' - ',  title.name) as title, r.remain, io.code, " +
+                "(select t.quantity from dm_inventory_liquidation as t where t.invoice_id = ? and t.inventory_id = io.id) as quantity " +
+                "FROM dm_invoice AS t " +
                 "LEFT JOIN dm_inventory_organization AS io ON io.invoice_id = t.id " +
                 "LEFT JOIN view_inventory_remains AS r ON r.inventory_id = io.id " +
                 "LEFT JOIN dm_title AS title ON io.title_id = title.id " +
@@ -50,19 +54,23 @@ public class DbInventoryOrganization extends BaseDb {
                 "ORDER BY io.inventory_category_id, brand.id, title.name;";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, room_id);
+        stat.setInt(1, invoice_id);
+        stat.setInt(2, room_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Remain), Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Quantity), Integer.class, 0);
         container.addContainerProperty(SystemSettings.id, Integer.class, 0);
 
         while (result.next()) {
-            Item item = container.addItem(result.getString("io.code"));
+            Item item = container.addItem(result.getString("io.code").toLowerCase());
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("title"));
             item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(
                     result.getInt("r.remain"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(
+                    result.getInt("quantity"));
             item.getItemProperty(SystemSettings.id).setValue(result.getInt("io.id"));
         }
         return container;
