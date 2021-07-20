@@ -16,13 +16,11 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.*;
-import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.domain.InventoryLiquidation;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InventoryLiquidationPdf;
-import kg.alex.spt.pdf.InventoryOrganizationPdf;
 import kg.alex.spt.utils.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,13 +29,11 @@ import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.inputmask.InputMask;
-import org.vaadin.inputmask.client.Alias;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
 public class InventoryLiquidationView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
