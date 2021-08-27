@@ -220,7 +220,6 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     }
 
     private void buildSearchLayout() {
-
         invoicesTable = new FormattedFilterTable();
         invoicesTable.setFilterDecorator(new MyFilterDecorator(myUI));
         invoicesTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -243,7 +242,6 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         invoicesTable.setPageLength(5);
         invoicesTable.setVisibleColumns(NATURAL_COL_ORDER);
         invoicesTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), CustomTable.Align.RIGHT);
-
     }
 
     @Override

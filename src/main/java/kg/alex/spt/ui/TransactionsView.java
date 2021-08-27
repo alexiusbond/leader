@@ -1042,7 +1042,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                     incomesTable.getContainerProperty(item_id, SystemSettings.old_rate).setValue(
                             Double.parseDouble(((TextField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
                     incomesTable.getContainerProperty(item_id, SystemSettings.old_currency).setValue(
-                            (Integer) ((ComboBoxMax) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                            ((ComboBoxMax) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     incomesTable.getContainerProperty(item_id, SystemSettings.old_date).setValue(
                             ((DateField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Date)).getValue()).getValue());
                     incomesTable.getContainerProperty(item_id, SystemSettings.from_employee_id).setValue(myUI.getUser().getFullname());

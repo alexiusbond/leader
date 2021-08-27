@@ -28,7 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 public class TransactionInvoicePDF {
 
-    static final Logger logger = LogManager.getLogger(TransactionsView.class);
+    static final Logger logger = LogManager.getLogger(TransactionInvoicePDF.class);
     private byte[] b = null;
     private StreamResource.StreamSource source1 = null;
     ByteArrayOutputStream buffer = null;

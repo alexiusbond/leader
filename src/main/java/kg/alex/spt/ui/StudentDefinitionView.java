@@ -6,6 +6,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.*;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
+import kg.alex.spt.pdf.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
@@ -34,15 +35,7 @@ import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.pdf.ContractCambridgePdfEn;
-import kg.alex.spt.pdf.ContractCambridgePdfRu;
-import kg.alex.spt.pdf.ContractLisePdfKg;
-import kg.alex.spt.pdf.ContractLisePdfRu;
-import kg.alex.spt.pdf.ContractSchoolPdfKg;
-import kg.alex.spt.pdf.ContractSchoolPdfRu;
-import kg.alex.spt.pdf.ContractSilkPdfRu;
 import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.pdf.InvoicePDF;
 import kg.alex.spt.utils.MyFilterDecorator;
 import kg.alex.spt.utils.MyFilterGenerator;
 import net.coobird.thumbnailator.Thumbnails;
@@ -446,7 +439,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contLangOG.addItem(myUI.getMessage(SptMessages.LiseContrKg));
         contLangOG.addItem(myUI.getMessage(SptMessages.SchoolContrRu));
         contLangOG.addItem(myUI.getMessage(SptMessages.SchoolContrKg));
-        contLangOG.addItem(myUI.getMessage(SptMessages.SilkRoadRu));
+        contLangOG.addItem(myUI.getMessage(SptMessages.CambridgeOshContrRu));
         contLangOG.addItem(myUI.getMessage(SptMessages.CambridgeContrRu));
         contLangOG.addItem(myUI.getMessage(SptMessages.CambridgeContrEn));
 
@@ -1265,8 +1258,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrKg))) {
                                 new ContractSchoolPdfKg(myUI, studInfo, instPlanCont);
                                 contLangOG.setValue(null);
-                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SilkRoadRu))) {
-                                new ContractSilkPdfRu(myUI, studInfo, instPlanCont);
+                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeOshContrRu))) {
+                                new ContractCambridgeOshPdfRu(myUI, studInfo, instPlanCont);
                                 contLangOG.setValue(null);
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrRu))) {
                                 new ContractCambridgePdfRu(myUI, studInfo, instPlanCont);

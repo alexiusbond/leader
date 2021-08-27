@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.util.Calendar;
 
 public class OrderPdf {
 
@@ -73,7 +74,12 @@ public class OrderPdf {
                     ct.addElement(paragraph);
                     ct.addElement(new Paragraph(45, " "));
 
-                    Image img = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + "signature.jpg");
+                    Image img;
+                    if (orderMessage.getDate().after(SystemSettings.df.parse("25-08-2021"))) {
+                        img = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + "signature.png");
+                    } else {
+                        img = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + "signature.jpg");
+                    }
                     img.setAlignment(Image.RIGHT);
                     img.scaleAbsolute(250, 110);
                     float[] Tdate_colsWidth = {1.0f, 1.0f, 1.0f};
@@ -84,7 +90,11 @@ public class OrderPdf {
                     Tdate.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
                     Tdate.addCell(new Phrase("президент", fontBold));
                     Tdate.addCell(img);
-                    Tdate.addCell(new Phrase("Орхан Инанды", fontBold));
+                    if (orderMessage.getDate().after(SystemSettings.df.parse("25-08-2021"))) {
+                        Tdate.addCell(new Phrase("Кудайбердиев Н.Ш.", fontBold));
+                    } else {
+                        Tdate.addCell(new Phrase("Орхан Инанды", fontBold));
+                    }
                     ct.addElement(Tdate);
 
                     ct.go();

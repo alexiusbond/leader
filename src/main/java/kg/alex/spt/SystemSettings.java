@@ -292,7 +292,8 @@ public class SystemSettings implements Serializable {
             return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
                     "июля", "августа", "сентября", "октября", "ноября", "декабря"};
         }
-    });public static final SimpleDateFormat dateKg = new SimpleDateFormat(
+    });
+    public static final SimpleDateFormat dateKg = new SimpleDateFormat(
             "dd-MMMMM yyyy-жыл", new DateFormatSymbols() {
         @Override
         public String[] getMonths() {
@@ -415,8 +416,9 @@ public class SystemSettings implements Serializable {
     public static IndexedContainer copyContainer(Container source) {
         IndexedContainer cont = new IndexedContainer();
 
-        for (Object prop : source.getContainerPropertyIds())
+        for (Object prop : source.getContainerPropertyIds()) {
             cont.addContainerProperty(prop, source.getType(prop), null);
+        }
 
         for (Object id : source.getItemIds()) {
             Item sourceItem = source.getItem(id);

@@ -352,7 +352,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == saveBtn) {
-            if (!validateTable(data1Table, true) || !validateTable(data1Table, true)) {
+            if (!validateTable(data1Table, true) || !validateTable(data2Table, true)) {
                 Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                         Notification.Type.WARNING_MESSAGE);
             } else {

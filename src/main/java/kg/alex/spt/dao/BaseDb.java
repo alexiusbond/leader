@@ -45,7 +45,6 @@ public class BaseDb {
     }
 
     public int getLastInsertedId() throws SQLException {
-
         String sql = "select last_insert_id() as id";
         int id = 0;
 

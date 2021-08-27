@@ -305,7 +305,8 @@ public class DbAccTransactions extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_update(AccTransaction t, String by_column_name, int by_column_value, Connection conn) throws SQLException {
+    public int exec_update(AccTransaction t, String by_column_name,
+                           int by_column_value, Connection conn) throws SQLException {
 
         String sql = "update acc_transactions set date_time=?, "
                 + "amount=?, acc_currency_id=?, currency_rate=?, note=?, acc_category_id=?, "

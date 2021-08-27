@@ -429,7 +429,7 @@ public class SptMessages_ru extends SptMessages {
             {ContractType, "Тип контракта"},
             {ContractRu, "Котракт(RU)"},
             {DiscountAmount, "Сумма скидки"},
-            {SilkRoadRu, "Силк Роад(RU)"},
+            {CambridgeOshContrRu, "Контракт Кэмбридж ОШ(RU)"},
             {ExportToPdf, "Экспорт в Pdf"},
             {ViewDocument, "Посмотреть документ"},
             {HomePage, "Главная"},

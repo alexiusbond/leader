@@ -419,7 +419,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ContractType = generateId();
     public static final String ContractRu = generateId();
     public static final String DiscountAmount = generateId();
-    public static final String SilkRoadRu = generateId();
+    public static final String CambridgeOshContrRu = generateId();
     public static final String ExportToExcel = generateId();
     public static final String ExportToPdf = generateId();
     public static final String ViewDocument = generateId();
