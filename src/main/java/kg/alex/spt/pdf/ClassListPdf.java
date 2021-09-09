@@ -38,8 +38,6 @@ public class ClassListPdf {
     StreamResource resource = null;
     private Document document = null;
     Date aDate = new Date(System.currentTimeMillis());
-    
-
 
     public ClassListPdf(final MyVaadinUI myUI, final IndexedContainer dataCont,
                         final StudentInfoPdf st, final ClassListReport clr) {

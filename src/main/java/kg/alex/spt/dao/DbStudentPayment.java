@@ -57,7 +57,6 @@ public class DbStudentPayment extends BaseDb {
     public IndexedContainer execSQL_St_Payments(MyVaadinUI myUI, int stud_id, int year_id,
                                                 StudentDefinitionView dw) throws SQLException {
 
-
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
                 + "sp.who_paid, sp.note, sp.modification_date, "

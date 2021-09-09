@@ -2702,8 +2702,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
                 ordersTable.removeItem(event.getButton().getData().toString().replace("_", ""));
             } else {
-                eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(event.getButton().getData().toString()).getItemProperty(
-                        myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
+                if (((ComboBox) ordersTable.getItem(event.getButton().getId()).getItemProperty(
+                        myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != null) {
+                    eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(event.getButton().getId()).getItemProperty(
+                            myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
+                }
                 ordersTable.removeItem(event.getButton().getData().toString());
             }
         } else if (source.getId().equals(SystemSettings.download_button)) {

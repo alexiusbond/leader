@@ -20,7 +20,7 @@
     color: $v-error-indicator-color;
   }
 
-.v-button-unread {
+  .v-button-unread {
     color: #fff;
     border: 2px solid #9E0000;
     background: #ed473b;
@@ -207,23 +207,31 @@
   .v-upload .v-button {
     height: 27px;
   }
+
   .v-tabsheet-framed.padded-tabbar > .v-tabsheet-tabcontainer {
     border: 0px;
     padding-top: 0px;
   }
+
   .v-label-success, .v-label-failure {
     background: #F0F9E7;
     border: 1px solid #2c9720;
     border-radius: 0px;
     padding: 1px 16px 1px 32px;
   }
+
   .v-label-success:before, .v-label-failure:before {
     margin-left: -25px;
+  }
+
+  .v-table-cell-wrapper {
+    margin-left: 1px;
   }
 
   .v-table-noWrap .v-table-cell-wrapper {
     white-space: normal;
     overflow: hidden;
+    margin-left: 2px;
   }
 
   .v-table-noWrap tr.v-selected {
@@ -237,6 +245,10 @@
 
   .v-table-noWrapFooter .v-table-footer-wrap {
     white-space: normal;
+  }
+
+  .v-table-noWrapFooter .v-table-cell-wrapper {
+    margin-left: 2px;
   }
 
   .v-loading-indicator {

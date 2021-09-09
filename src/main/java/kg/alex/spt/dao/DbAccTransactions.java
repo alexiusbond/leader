@@ -388,7 +388,6 @@ public class DbAccTransactions extends BaseDb {
                                   FilterTreeTable categoriesTable, Calendar from, Calendar till, FormattedTreeTable t)
             throws SQLException {
 
-
         Set<Integer> selectedIds = SystemSettings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
         String sql = "SELECT cat.id, cat.parent_id, CONCAT(ifnull(concat(cat.parent_code,'.',cat.code), cat.code), ' - ', cat.name) AS name, "
                 + "sum(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt "
@@ -909,8 +908,7 @@ public class DbAccTransactions extends BaseDb {
 
     public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, Date from_date, Date till_date,
                                                 FilterTreeTable categoriesTable) throws SQLException {
-
-
+        
         Set<Integer> selectedIds = new HashSet<Integer>();
         selectedIds.addAll((Set<Integer>) categoriesTable.getValue());
         Iterator iter = ((Set<Integer>) categoriesTable.getValue()).iterator();
