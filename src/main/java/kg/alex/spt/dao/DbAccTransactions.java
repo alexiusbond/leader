@@ -801,7 +801,6 @@ public class DbAccTransactions extends BaseDb {
     public void exec_account_remains(MyVaadinUI myUI, FilterTreeTable categoriesTable, int currency_id, int school_id,
                                      FormattedTreeTable t) throws SQLException {
 
-
         Set<Integer> selectedCategoryIds = SystemSettings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
@@ -903,12 +902,14 @@ public class DbAccTransactions extends BaseDb {
         }
         t.setColumnFooter(myUI.getMessage(SptMessages.Remain), SystemSettings.dFormat.format(total_remains));
         t.setColumnFooter(myUI.getMessage(SptMessages.Salary), SystemSettings.dFormat.format(total_salaries));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Ratio), SystemSettings.dFormat.format(total_remains / total_salaries));
+        if (total_salaries != 0.0) {
+            t.setColumnFooter(myUI.getMessage(SptMessages.Ratio), SystemSettings.dFormat.format(total_remains / total_salaries));
+        }
     }
 
     public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, Date from_date, Date till_date,
                                                 FilterTreeTable categoriesTable) throws SQLException {
-        
+
         Set<Integer> selectedIds = new HashSet<Integer>();
         selectedIds.addAll((Set<Integer>) categoriesTable.getValue());
         Iterator iter = ((Set<Integer>) categoriesTable.getValue()).iterator();

@@ -213,7 +213,7 @@ public class StockGeneralReport implements Button.ClickListener,
                         dbCon.exec_stock_operations(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(), (Integer) operationOG.getValue(),
                                 SystemSettings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvaragePrice), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AveragePrice), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvarageRate), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                     }

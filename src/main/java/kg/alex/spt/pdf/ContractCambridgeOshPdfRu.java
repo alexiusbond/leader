@@ -222,7 +222,7 @@ public class ContractCambridgeOshPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.4. Сохранить место за Учащимся в случае пропуска занятий по уважительным причинам.", ordFont));
+                    paragraph.add(new Phrase("2.1.4. Обеспечить Учащегося двухразовым питанием (завтрак и обед).", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -231,7 +231,7 @@ public class ContractCambridgeOshPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.5. Проявлять уважение к личности Учащегося, не допускать физического и психологического насилия, обеспечить условия укрепления  нравственного, физического и психологического здоровья, эмоционального благополучия Учащегося с учетом его индивидуальных особенностей.", ordFont));
+                    paragraph.add(new Phrase("2.1.5. Сохранить место за Учащимся в случае пропуска занятий по уважительным причинам.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -240,7 +240,16 @@ public class ContractCambridgeOshPdfRu {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.1.6. Отвечать за жизнь и здоровье Учащегося в период его пребывания в Школе, при условии неукоснительного соблюдения им  «Правил Внутреннего Распорядка».", ordFont));
+                    paragraph.add(new Phrase("2.1.6. Проявлять уважение к личности Учащегося, не допускать физического и психологического насилия, обеспечить условия укрепления  нравственного, физического и психологического здоровья, эмоционального благополучия Учащегося с учетом его индивидуальных особенностей.", ordFont));
+                    document.add(paragraph);
+
+                    paragraph = new Paragraph();
+                    paragraph.setFirstLineIndent(30);
+                    paragraph.setIndentationLeft(30);
+                    paragraph.setIndentationRight(30);
+                    paragraph.setLeading(15);
+                    paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                    paragraph.add(new Phrase("2.1.7. Отвечать за жизнь и здоровье Учащегося в период его пребывания в Школе, при условии неукоснительного соблюдения им  «Правил Внутреннего Распорядка».", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
 

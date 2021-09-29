@@ -16254,9 +16254,14 @@ div.v-layout.v-horizontal.v-widget {
 	margin-left: -25px;
 }
 
+.mytheme .v-table-cell-wrapper {
+	margin-left: 1px;
+}
+
 .mytheme .v-table-noWrap .v-table-cell-wrapper {
 	white-space: normal;
 	overflow: hidden;
+	margin-left: 2px;
 }
 
 .mytheme .v-table-noWrap tr.v-selected {
@@ -16270,6 +16275,10 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .v-table-noWrapFooter .v-table-footer-wrap {
 	white-space: normal;
+}
+
+.mytheme .v-table-noWrapFooter .v-table-cell-wrapper {
+	margin-left: 2px;
 }
 
 .mytheme .v-loading-indicator {

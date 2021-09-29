@@ -21,7 +21,6 @@ public class DbRelative extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
-        
 
         String sql = "SELECT sr.fullname, sr.work_place, sr.phone, "
                 + "sr.adress, sr.passport, sr.relatives_id, sr.is_main "

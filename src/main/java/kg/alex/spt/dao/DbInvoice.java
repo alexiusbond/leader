@@ -30,7 +30,6 @@ public class DbInvoice extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id, String viewName, Property.ValueChangeListener listener) throws SQLException {
-        
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
@@ -97,7 +96,6 @@ public class DbInvoice extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id) throws SQLException {
-        
 
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
                 + "sum(if(tr.acc_currency_id != 2, tr.amount/tr.currency_rate, tr.amount)) as amount, inv.note "

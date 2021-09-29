@@ -51,7 +51,6 @@ public class DbAccCategory extends BaseDb {
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, int id, boolean withParents) throws SQLException {
-        
 
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code, sc.acc_currency_id, "
                 + "c.employee_id from acc_category as c "

@@ -185,7 +185,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Salaries = generateId();
     public static final String Ratio = generateId();
     public static final String Price = generateId();
-    public static final String AvaragePrice = generateId();
+    public static final String AveragePrice = generateId();
     public static final String Upload = generateId();
     public static final String OnlyJpg = generateId();
     public static final String OnlyJpgOrPdf = generateId();

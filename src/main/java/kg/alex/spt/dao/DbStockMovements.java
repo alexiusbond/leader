@@ -429,7 +429,7 @@ public class DbStockMovements extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Quantity), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Measurement), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.AvaragePrice), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.AveragePrice), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.AvarageRate), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         t.setContainerDataSource(container);
@@ -451,7 +451,7 @@ public class DbStockMovements extends BaseDb {
                     } else {
                         item.getItemProperty(myUI.getMessage(SptMessages.AvarageRate)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(SptMessages.AvaragePrice)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(SptMessages.AveragePrice)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
                 }
@@ -471,7 +471,7 @@ public class DbStockMovements extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Measurement)).setValue(result.getString("measurement"));
             total_amount += result.getDouble("total");
             if (result.getDouble("amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.AvaragePrice)).setValue(
+                item.getItemProperty(myUI.getMessage(SptMessages.AveragePrice)).setValue(
                         result.getDouble("total") / result.getDouble("amount"));
                 item.getItemProperty(myUI.getMessage(SptMessages.AvarageRate)).setValue(
                         result.getDouble("currency_rate") / result.getDouble("amount"));
