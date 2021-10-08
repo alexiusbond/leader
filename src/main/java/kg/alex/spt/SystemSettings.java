@@ -201,6 +201,7 @@ public class SystemSettings implements Serializable {
     public static final String cnInventoryOrganizationView = "InventoryOrganizationView";
     public static final String cnInventoryLiquidationView = "InventoryLiquidationView";
     public static final String cnTransactionsView = "TransactionsView";
+    public static final String cnMessagesView = "MessagesView";
     public static final String cnAccrualsView = "AccrualsView";
     public static final String cnShortTermDebtsView = "ShortTermDebtsView";
     public static final String cnReturnableAssetsView = "ReturnableAssetsView";
@@ -225,6 +226,7 @@ public class SystemSettings implements Serializable {
     public static final String cnInventoryReportsView = "InventoryReportsView";
     public static final String cnHRReportsView = "HRReportsView";
     public static final String actAdd = "добавление";
+    public static final String actReadMessages = "просмотр всех сообщений школы";
     public static final String actModify = "изменение";
     public static final String prmChangeOldTransactions = "изменение старых записей";
     public static final String prmChangeCurrencyRate = "изменение общего курса доллара";

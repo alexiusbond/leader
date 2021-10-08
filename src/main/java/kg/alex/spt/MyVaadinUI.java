@@ -151,7 +151,7 @@ public class MyVaadinUI extends UI {
         try {
             DbEmployeeMessage dbu = new DbEmployeeMessage();
             dbu.connect();
-            getUser().setUnreadMessages(dbu.isUnread(getUser().getId()));
+            getUser().setUnreadMessages(dbu.isUnread(getUser().getId(), getUser().getSchool_id()));
             dbu.close();
         } catch (Exception e) {
             logger.error(e);
@@ -258,7 +258,7 @@ public class MyVaadinUI extends UI {
         try {
             DbEmployeeMessage dbCon = new DbEmployeeMessage();
             dbCon.connect();
-            getUser().setUnreadMessages(dbCon.isUnread(getUser().getId()));
+            getUser().setUnreadMessages(dbCon.isUnread(getUser().getId(), getUser().getSchool_id()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);

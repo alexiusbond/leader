@@ -539,7 +539,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        myUI.repaintMessagesButton();
         if (property == yearSelect) {
             if (yearSelect.getValue() != null) {
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
@@ -622,6 +621,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 }
             }
         }
+        myUI.repaintMessagesButton();
     }
 
     private void updatePage() {
@@ -640,6 +640,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ClassNameDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
+            } else if (header.getValue().equals((myUI.getMessage(
+                    SptMessages.Messages)).toUpperCase())) {
+                myUI.repaintMessagesButton();
+                verticalPanel.setSecondComponent(new MessagesView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.BlockDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));

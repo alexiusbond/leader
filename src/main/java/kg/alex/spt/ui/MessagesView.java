@@ -10,6 +10,8 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 
 public class MessagesView extends VerticalLayout {
@@ -18,6 +20,7 @@ public class MessagesView extends VerticalLayout {
     private MyVaadinUI myUI;
     private FilterTable dataTable;
     private String[] NATURAL_COL_ORDER;
+    private Subject currentUser = SecurityUtils.getSubject();
 
     public MessagesView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -44,7 +47,11 @@ public class MessagesView extends VerticalLayout {
         try {
             DbEmployeeMessage dbCon = new DbEmployeeMessage();
             dbCon.connect();
-            dbCon.execSQL(myUI, myUI.getUser().getId(), dataTable);
+            if (currentUser.isPermitted(SystemSettings.cnMessagesView + ":" + SystemSettings.actReadMessages)) {
+                dbCon.execSQL(myUI, myUI.getUser().getId(), myUI.getUser().getSchool_id(), dataTable);
+            } else {
+                dbCon.execSQL(myUI, myUI.getUser().getId(), 0, dataTable);
+            }
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);

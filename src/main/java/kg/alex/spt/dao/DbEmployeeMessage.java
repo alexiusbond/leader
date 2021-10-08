@@ -59,7 +59,7 @@ public class DbEmployeeMessage extends BaseDb {
         return status;
     }
 
-    public void execSQL(MyVaadinUI myUi, int employee_id, FilterTable t) throws SQLException {
+    public void execSQL(MyVaadinUI myUi, int employee_id, int school_id, FilterTable t) throws SQLException {
         String sql = "SELECT om.id, e.id, concat(st.name, ' ', st.surname) as student, " +
                 "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, " +
                 "mst.id, mst.name FROM employee_message AS em " +
@@ -67,10 +67,15 @@ public class DbEmployeeMessage extends BaseDb {
                 "left join message_status as mst on mst.id = em.message_status_id " +
                 "left join order_messages as om on om.id = em.order_messages_id " +
                 "left join student as st on st.id = om.student_id " +
-                "WHERE em.employee_id = ? order by mst.id desc, om.creation_date desc";
+                "WHERE em.employee_id = ? OR em.employee_id IN " +
+                "(SELECT eo.employee_id FROM hr_employee_order AS eo " +
+                "WHERE eo.school_id = ? AND eo.hr_orders_id = 1 AND " +
+                "(eo.to_date IS NULL OR eo.to_date >= NOW())) " +
+                "order by mst.id desc, om.creation_date desc";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
+        stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
@@ -142,11 +147,15 @@ public class DbEmployeeMessage extends BaseDb {
                 myUi.getMessage(SptMessages.Total) + ": " + container.size());
     }
 
-    public boolean isUnread(int employee_id) throws SQLException {
-        String sql = "SELECT count(*) as val FROM employee_message " +
-                "where employee_id = ? and message_status_id = 2;";
+    public boolean isUnread(int employee_id, int school_id) throws SQLException {
+        String sql = "SELECT count(*) as val FROM employee_message as em " +
+                "WHERE em.employee_id = ? OR em.employee_id IN " +
+                "(SELECT eo.employee_id FROM hr_employee_order AS eo " +
+                "WHERE eo.school_id = ? AND eo.hr_orders_id = 1 AND " +
+                "(eo.to_date IS NULL OR eo.to_date >= NOW())) and message_status_id = 2;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
+        stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             if (result.getInt("val") > 0) {
