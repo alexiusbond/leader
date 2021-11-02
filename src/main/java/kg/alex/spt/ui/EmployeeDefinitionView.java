@@ -63,11 +63,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private Table documentsDataTable;
     private int emplID;
     private OptionGroup optionGroup;
-    private TextField nameTF, loginTF, passwordTF, surnameTF, middlenameTF;
-    private TextField birth_placeTF, emailTF;
-    private TextField spouseFullnameTF, spousePhoneTF;
-    private TextField hobbiesTF, fobbiesTF, spouseHealthNotesTF;
-    private TextArea addessTA, healthNotesTA, shortNotesTA;
+    private CheckBox canBeAdvisor;
+    private TextField nameTF, loginTF, passwordTF, surnameTF, middlenameTF,
+            birth_placeTF, emailTF, spouseFullnameTF, spousePhoneTF,
+            spouseHealthNotesTF, hobbiesTF, fobbiesTF;
+    private TextArea addressTA, healthNotesTA, shortNotesTA;
     private DateField birthDateDF, gradSchoolStartDF, gradSchoolEndDF;
     private ComboBoxMax genderCB, nationalityCB, martialStatusCB, mainPositionCB, citizenshipCB,
             spouseHealthCB, healthCB, contractCategoryCB, gradSchoolCB;
@@ -84,7 +84,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             NATURAL_COL_ORDER_PERMISSIONS, NATURAL_COL_ORDER_ORDERS;
     private VerticalLayout infoLay, documentsLay;
     private GridLayout gridEmployeeLay, empSearchLay, contactInfoLay, familyInfoLay, extraInfoLay,
-            achievementsInfoLay, profInfoLay, schoolInfoLay, ordersInfoLay;
+            achievementsInfoLay, profInfoLay, ordersInfoLay;
+    private VerticalLayout schoolInfoLay, permissionsLay;
     private HorizontalSplitPanel horSplitPanel;
     private HorizontalLayout buttonsLay;
     private Upload photoUpl;
@@ -103,10 +104,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             plusExamButton, plusSeminarButton, plusCertificateButton, plusLanguageButton,
             plusEducationButton, plusWorkPlaceButton, plusBranchButton, plusLessonsButton, plusOrdersButton;
     private int r_table_counter = 1000;
-    private IndexedContainer phonesCont, childrenCont, spouseEducationCont,
-            spouseWorkCont, examsCont, languagesCont,
-            seminarsCont, certificatesCont, educationCont, workPlacesCont, branchesCont,
-            lessonsCont, permissionCont, ordersCont;
+    private IndexedContainer phonesCont, childrenCont, spouseEducationCont, spouseWorkCont,
+            educationCont, workPlacesCont, examsCont, languagesCont, seminarsCont,
+            certificatesCont, branchesCont, lessonsCont, permissionCont, ordersCont;
     private ArrayList<String> delPhoneIds = new ArrayList<>();
     private ArrayList<String> delChildIds = new ArrayList<>();
     private ArrayList<EmployeeEducation> delSpouseEducationIds = new ArrayList<>();
@@ -222,6 +222,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         buildAchievementsLayout();
         buildProfLayout();
         buildSchoolInfoLayout();
+        buildPermissionsLayout();
         buildOrdersLayout();
         buildDocumentsLayout();
 
@@ -238,9 +239,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         tabs.addTab(achievementsInfoLay).setCaption(myUI.getMessage(SptMessages.Achievements));
         tabs.addTab(familyInfoLay).setCaption(myUI.getMessage(SptMessages.FamilyInfo));
         tabs.addTab(extraInfoLay).setCaption(myUI.getMessage(SptMessages.ExtraInfo));
-        tabs.addTab(schoolInfoLay).setCaption(myUI.getMessage(SptMessages.SchoolInfo));
-        if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabActivities)) {
+        tabs.addTab(schoolInfoLay).setCaption(myUI.getMessage(SptMessages.EduActivitiesInfo));
+        if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabEduActivities)) {
             tabs.getTab(schoolInfoLay).setVisible(false);
+        }
+        tabs.addTab(permissionsLay).setCaption(myUI.getMessage(SptMessages.Permissions));
+        if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabPermissions)) {
+            tabs.getTab(permissionsLay).setVisible(false);
         }
         tabs.addTab(ordersInfoLay).setCaption(myUI.getMessage(SptMessages.OrdersHistory));
         if (!currentUser.isPermitted(SystemSettings.cnEmployeeDefinitionView + ":" + SystemSettings.prmTabOrders)) {
@@ -277,9 +282,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                             setWorkTable(workPlacesTable, workPlacesCont, 1);
                             setBranchesTable();
                             setGradSchoolFields();
-                        } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay
-                                && emplID != 0) {
+                        } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay && emplID != 0) {
                             setLessonsTable();
+                            canBeAdvisor.setValue((Boolean) employeesDataTable.getContainerProperty(
+                                    emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
+                        } else if (event.getTabSheet().getSelectedTab() == permissionsLay && emplID != 0) {
                             if (employeesDataTable.getContainerDataSource().
                                     getContainerProperty(emplID, myUI.getMessage(
                                             SptMessages.Permissions)).getValue() != null) {
@@ -322,15 +329,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         emailTF.setCaption(SystemSettings.email);
         fieldsLayContacts.addComponent(emailTF);
 
-        addessTA = new TextArea(myUI.getMessage(SptMessages.Address));
-        addessTA.setRequired(true);
-        addessTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        addessTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        addessTA.setWidth("100%");
-        addessTA.setRows(7);
-        addessTA.addValidator(new StringLengthValidator(
+        addressTA = new TextArea(myUI.getMessage(SptMessages.Address));
+        addressTA.setRequired(true);
+        addressTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
+        addressTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        addressTA.setWidth("100%");
+        addressTA.setRows(7);
+        addressTA.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 400, false));
-        fieldsLayContacts.addComponent(addessTA);
+        fieldsLayContacts.addComponent(addressTA);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth("100%");
@@ -864,6 +871,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void buildSchoolInfoLayout() {
 
+        canBeAdvisor = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
+        canBeAdvisor.setWidth("100%");
+
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth("100%");
 
@@ -888,6 +898,18 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         lessonsTable.setSizeFull();
         lessonsTable.setStyleName(ValoTheme.TABLE_SMALL);
 
+        schoolInfoLay = new VerticalLayout();
+        schoolInfoLay.setSizeFull();
+        schoolInfoLay.setSpacing(true);
+        schoolInfoLay.setMargin(true);
+        schoolInfoLay.addComponent(canBeAdvisor);
+        schoolInfoLay.addComponent(hl);
+        schoolInfoLay.addComponent(lessonsTable);
+        schoolInfoLay.setExpandRatio(lessonsTable, 1);
+    }
+
+    private void buildPermissionsLayout() {
+
         Label captionPermissions = new Label();
         captionPermissions.setWidth("100%");
         captionPermissions.setHeight("27px");
@@ -895,8 +917,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         captionPermissions.setValue(myUI.getMessage(SptMessages.Permissions));
         captionPermissions.setStyleName("tableCpt");
 
-        NATURAL_COL_ORDER_PERMISSIONS = new String[]{myUI.getMessage(SptMessages.ClassCaption),
-                myUI.getMessage(SptMessages.Functions)};
+        NATURAL_COL_ORDER_PERMISSIONS = new String[]{
+                myUI.getMessage(SptMessages.Functions), myUI.getMessage(SptMessages.ClassCaption)};
         permissionTable = new FormattedTable();
         permissionTable.setSizeFull();
         permissionTable.setStyleName(ValoTheme.TABLE_SMALL);
@@ -930,17 +952,13 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.catching(ex);
         }
 
-        schoolInfoLay = new GridLayout(2, 2);
-        schoolInfoLay.setSizeFull();
-        schoolInfoLay.setSpacing(true);
-        schoolInfoLay.setMargin(true);
-        schoolInfoLay.addComponent(hl, 0, 0);
-        schoolInfoLay.addComponent(lessonsTable, 0, 1);
-        schoolInfoLay.addComponent(captionPermissions, 1, 0);
-        schoolInfoLay.addComponent(permissionTable, 1, 1);
-        schoolInfoLay.setRowExpandRatio(1, 1);
-        schoolInfoLay.setColumnExpandRatio(0, 1.2F);
-        schoolInfoLay.setColumnExpandRatio(1, 0.9F);
+        permissionsLay = new VerticalLayout();
+        permissionsLay.setSizeFull();
+        permissionsLay.setSpacing(true);
+        permissionsLay.setMargin(true);
+        permissionsLay.addComponent(captionPermissions);
+        permissionsLay.addComponent(permissionTable);
+        permissionsLay.setExpandRatio(permissionTable, 1);
     }
 
     private Set<?> convertStrToSet(String str) {
@@ -1253,7 +1271,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             EmployeeContact ec = dbec.execSQL(emplID);
             dbec.close();
             if (ec != null) {
-                addessTA.setValue(ec.getAddress());
+                addressTA.setValue(ec.getAddress());
                 birth_placeTF.setValue(ec.getBirth_place());
                 emailTF.setValue(ec.getEmail());
                 citizenshipCB.setValue(ec.getCitizenship_id());
@@ -1368,6 +1386,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         enableUploads(educationTable);
         profInfoLay.setEnabled(true);
         schoolInfoLay.setEnabled(true);
+        permissionsLay.setEnabled(true);
         ordersInfoLay.setEnabled(true);
         photoUpl.setEnabled(true);
 
@@ -1412,6 +1431,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayRight.setEnabled(false);
         achievementsInfoLay.setEnabled(false);
         schoolInfoLay.setEnabled(false);
+        permissionsLay.setEnabled(false);
         profInfoLay.setEnabled(false);
         ordersInfoLay.setEnabled(false);
         photoUpl.setEnabled(false);
@@ -1433,6 +1453,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             } else if (tab.getComponent() == profInfoLay) {
                 tab.setEnabled(true);
             } else if (tab.getComponent() == schoolInfoLay) {
+                tab.setEnabled(true);
+            } else if (tab.getComponent() == permissionsLay) {
                 tab.setEnabled(true);
             } else if (tab.getComponent() == ordersInfoLay) {
                 tab.setEnabled(true);
@@ -2122,7 +2144,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void clearContactFields() {
         phonesTable.removeAllItems();
-        addessTA.setValue("");
+        addressTA.setValue("");
         emailTF.setValue("");
         birth_placeTF.setValue("");
         citizenshipCB.setValue(null);
@@ -2234,6 +2256,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             setGradSchoolFields();
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
             setLessonsTable();
+            canBeAdvisor.setValue((Boolean) employeesDataTable.getContainerProperty(
+                    emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
+        } else if (tabs.getSelectedTab() == tabs.getTab(permissionsLay).getComponent()) {
             if (employeesDataTable != null && employeesDataTable.getContainerDataSource().
                     getContainerProperty(emplID, myUI.getMessage(
                             SptMessages.Permissions)).getValue() != null) {
@@ -2485,8 +2510,14 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     updateInfoLayout();
                                     fileName = null;
                                 } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
+                                    dbe.exec_update(emplID, canBeAdvisor.getValue());
+                                    employeesDataTable.getContainerProperty(emplID,
+                                            myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(
+                                                    canBeAdvisor.getValue());
                                     insertLessons(emplID);
                                     updateInfoLayout();
+                                    setLessonsTable();
+                                } else if (tabs.getSelectedTab() == tabs.getTab(permissionsLay).getComponent()) {
                                     dbe.exec_delete_perm(oldLogin);
                                     List<String> extra_position_ids = null;
                                     if (employeesDataTable.getContainerProperty(emplID, SystemSettings.extra_position_ids).getValue() != null) {
@@ -2501,7 +2532,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                             && (extra_position_ids == null || !extra_position_ids.contains("115"))) {
                                         insertPermissions(loginTF.getValue());
                                     }
-                                    setLessonsTable();
                                     if (employeesDataTable != null && employeesDataTable.getContainerDataSource().
                                             getContainerProperty(emplID, myUI.getMessage(
                                                     SptMessages.Permissions)).getValue() != null) {
@@ -4475,7 +4505,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         EmployeeContact ec = new EmployeeContact();
         ec.setEmployee_id(employee_id);
         ec.setEmail(emailTF.getValue());
-        ec.setAddress(addessTA.getValue());
+        ec.setAddress(addressTA.getValue());
         ec.setBirth_place(birth_placeTF.getValue());
         ec.setCitizenship_id((Integer) citizenshipCB.getValue());
         return ec;
@@ -4622,14 +4652,15 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 clearSpouseFields();
                 clearExtraInfoFields();
                 clearGradSchoolFields();
+                canBeAdvisor.setValue(false);
                 questioningTable.removeAllItems();
                 clearAchievementsFields();
                 clearProfFields();
                 lessonsTable.removeAllItems();
                 ordersTable.removeAllItems();
                 workingStatCont.getContainerProperty((Integer) employeesDataTable
-                        .getContainerProperty(emplID,
-                                SystemSettings.working_status_id).getValue(), SystemSettings.count)
+                                .getContainerProperty(emplID,
+                                        SystemSettings.working_status_id).getValue(), SystemSettings.count)
                         .setValue(((Integer) workingStatCont.getContainerProperty((Integer) employeesDataTable
                                         .getContainerProperty(emplID,
                                                 SystemSettings.working_status_id).getValue(),

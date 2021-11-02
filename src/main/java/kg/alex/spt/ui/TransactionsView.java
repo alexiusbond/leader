@@ -293,7 +293,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             if (expensesTable.getContainerProperty(source.getData(), myUI.getMessage(SptMessages.Category)) != null) {
                 t = expensesTable;
                 acc_type_id = 2;
-                orderName = myUI.getMessage(SptMessages.ExpenceOrder);
+                orderName = myUI.getMessage(SptMessages.ExpenseOrder);
             } else if (incomesTable.getContainerProperty(source.getData(), myUI.getMessage(SptMessages.Category)) != null) {
                 t = incomesTable;
                 acc_type_id = 1;

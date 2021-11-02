@@ -262,7 +262,8 @@ public class SystemSettings implements Serializable {
     public static final String prmLessonHoursReport = "отчет по количеству преподаваемых часов";
     public static final String prmCallsReport = "отчет о вызовах";
     public static final String prmOutOfReport = "отчет о выбывших";
-    public static final String prmTabActivities = "вкладка деятельности";
+    public static final String prmTabPermissions = "вкладка разрешений";
+    public static final String prmTabEduActivities = "вкладка образовательной деятельности";
     public static final String prmTabOrders = "вкладка приказов";
     public static final String prmTabSearch = "вкладка поиска";
     public static final String prmChangeYear = "ChangeYear";

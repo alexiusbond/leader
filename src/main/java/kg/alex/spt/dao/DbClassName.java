@@ -22,7 +22,6 @@ public class DbClassName extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id) throws SQLException {
-        
 
         String sql = "SELECT cn.id, cn.name, cn.school_id, sc.name_ru, cnum.id, cnum.name, "
                 + "cn.activity_status_id, ac.name FROM class_name as cn "

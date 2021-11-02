@@ -200,8 +200,14 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label othersLab = new Label();
         othersLab.setContentMode(ContentMode.HTML);
         othersLab.setStyleName(ValoTheme.LABEL_SMALL);
-        othersLab.setValue(emp.getOthers());
+        if (emp.getOthers()!=null && emp.getOthers().length() > 85) {
+            othersLab.setValue(emp.getOthers().substring(0, 80) + "...");
+        } else {
+            othersLab.setValue(emp.getOthers());
+        }
         layout.addComponent(othersLab);
+        layout.setColumnExpandRatio(0, 2);
+        layout.setColumnExpandRatio(1, 3);
         return layout;
     }
 
@@ -362,6 +368,8 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         layout.addComponent(new Label(ed.getOutof()));
         layout.addComponent(graduatedLab);
         layout.addComponent(new Label(ed.getGraduated()));
+        layout.setColumnExpandRatio(0, 2);
+        layout.setColumnExpandRatio(1, 3);
         return layout;
     }
 

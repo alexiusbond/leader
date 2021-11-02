@@ -38,6 +38,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ChangePasswordButton = generateId();
     public static final String SystemClosedNotif = generateId();
     public static final String Title = generateId();
+    public static final String ValidityMonths = generateId();
     public static final String Description = generateId();
     public static final String Block = generateId();
     public static final String Floor = generateId();
@@ -192,10 +193,11 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Maxsize = generateId();
     public static final String Surname = generateId();
     public static final String Firstname = generateId();
+    public static final String CanBeAdvisor = generateId();
     public static final String Middlename = generateId();
     public static final String DateOfBirth = generateId();
     public static final String GraduationSchool = generateId();
-    public static final String ExpenceOrder = generateId();
+    public static final String ExpenseOrder = generateId();
     public static final String IncomeOrder = generateId();
     public static final String GraduatedSchool = generateId();
     public static final String End = generateId();
@@ -218,7 +220,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String DownLoad = generateId();
     public static final String Languages = generateId();
     public static final String ExtraInfo = generateId();
-    public static final String SchoolInfo = generateId();
+    public static final String EduActivitiesInfo = generateId();
     public static final String ListOfDocuments = generateId();
     public static final String SpouseWorkPlaces = generateId();
     public static final String SpouseEducation = generateId();

@@ -29,7 +29,7 @@ public class ProductMovementsReport implements Button.ClickListener,
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn;
     private HorizontalSplitPanel spltPanel;
-    private ComboBoxMax stockSelect, categorySelect;
+    private ComboBoxMax schoolSelect, stockSelect, categorySelect;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;
@@ -46,7 +46,7 @@ public class ProductMovementsReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 5);
+        leftGrid = new GridLayout(4, 6);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -115,12 +115,28 @@ public class ProductMovementsReport implements Button.ClickListener,
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         categorySelect.addValueChangeListener(this);
 
+
+        schoolSelect = new ComboBoxMax(myUI.getMessage(SptMessages.School));
+        schoolSelect.setNullSelectionAllowed(false);
+        schoolSelect.setRequired(true);
+        schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        schoolSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        schoolSelect.setWidth("100%");
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
+        schoolSelect.addValueChangeListener(this);
         try {
-            DbDefinition dbCon = new DbDefinition();
-            dbCon.connect();
-            stockSelect.setContainerDataSource(
-                    dbCon.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id(), true));
-            dbCon.close();
+            DbSchool dbs = new DbSchool();
+            dbs.connect();
+            schoolSelect.setContainerDataSource(dbs.execSchoolSel(myUI, 1));
+            dbs.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        schoolSelect.setValue(myUI.getUser().getSchool_id());
+
+        try {
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
             categorySelect.setContainerDataSource(dbpc.execSQL_for_select(myUI));
@@ -131,14 +147,15 @@ public class ProductMovementsReport implements Button.ClickListener,
         }
         stockSelect.setValue(SystemSettings.convertToSet(stockSelect.getContainerDataSource().getItemIds()));
 
-        leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
-        leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
-        leftGrid.addComponent(stockSelect, 0, 1, 3, 1);
-        leftGrid.addComponent(categorySelect, 0, 2, 3, 2);
-        leftGrid.addComponent(productsTable, 0, 3, 3, 3);
-        leftGrid.addComponent(generateBtn, 0, 4, 2, 4);
-        leftGrid.addComponent(excelBtn, 3, 4);
-        leftGrid.setRowExpandRatio(3, 1);
+        leftGrid.addComponent(schoolSelect, 0, 0, 3, 0);
+        leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
+        leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
+        leftGrid.addComponent(stockSelect, 0, 2, 3, 2);
+        leftGrid.addComponent(categorySelect, 0, 3, 3, 3);
+        leftGrid.addComponent(productsTable, 0, 4, 3, 4);
+        leftGrid.addComponent(generateBtn, 0, 5, 2, 5);
+        leftGrid.addComponent(excelBtn, 3, 5);
+        leftGrid.setRowExpandRatio(4, 1);
         ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -215,7 +232,8 @@ public class ProductMovementsReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
-            if (property == productsTable || property == tillDateDF || property == fromDateDF
+            if (property == productsTable || property == schoolSelect ||
+                    property == tillDateDF || property == fromDateDF
                     || property == stockSelect || property == categorySelect) {
                 excelBtn.setEnabled(false);
                 dataTable.setContainerDataSource(null);
@@ -234,6 +252,17 @@ public class ProductMovementsReport implements Button.ClickListener,
                 }
             } else {
                 productsTable.getContainerDataSource().removeAllItems();
+            }
+        } else if (property == schoolSelect) {
+            try {
+                DbDefinition dbCon = new DbDefinition();
+                dbCon.connect();
+                stockSelect.setContainerDataSource(dbCon.exec_for_select(myUI,
+                        SystemSettings.dbStock, (Integer) schoolSelect.getValue(), true));
+                dbCon.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
         }
     }

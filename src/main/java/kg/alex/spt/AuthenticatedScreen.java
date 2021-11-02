@@ -415,8 +415,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, SystemSettings.dbLanguageTable, false, SystemSettings.cnHRDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExamDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, SystemSettings.dbExamTable, false, SystemSettings.cnHRDefinitionView));
+                    verticalPanel.setSecondComponent(new ExamDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.UniversityDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, SystemSettings.dbUniversityTable, false, SystemSettings.cnHRDefinitionView));

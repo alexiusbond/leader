@@ -1,6 +1,7 @@
 package kg.alex.spt.reports;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -10,11 +11,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
-import kg.alex.spt.dao.DbAccCategory;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbProductCategories;
-import kg.alex.spt.dao.DbStockMovements;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTreeTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -33,6 +31,7 @@ public class StockGeneralReport implements Button.ClickListener,
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private HorizontalSplitPanel spltPanel;
+    private ComboBoxMax schoolSelect;
     private ComboBoxMultiselectMax stocksMSB;
     private OptionGroup operationOG;
     private GridLayout leftGrid;
@@ -50,7 +49,7 @@ public class StockGeneralReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 6);
+        leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -124,6 +123,26 @@ public class StockGeneralReport implements Button.ClickListener,
         stocksMSB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         stocksMSB.addValueChangeListener(this);
 
+        schoolSelect = new ComboBoxMax(myUI.getMessage(SptMessages.School));
+        schoolSelect.setNullSelectionAllowed(false);
+        schoolSelect.setRequired(true);
+        schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        schoolSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        schoolSelect.setWidth("100%");
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
+        schoolSelect.addValueChangeListener(this);
+        try {
+            DbSchool dbs = new DbSchool();
+            dbs.connect();
+            schoolSelect.setContainerDataSource(dbs.execSchoolSel(myUI, 1));
+            dbs.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        schoolSelect.setValue(myUI.getUser().getSchool_id());
+
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllCategories));
         selectAllBtn.setWidth("100%");
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
@@ -143,9 +162,6 @@ public class StockGeneralReport implements Button.ClickListener,
             dbAc.connect();
             DbProductCategories dbPC = new DbProductCategories();
             dbPC.connect();
-            stocksMSB.setContainerDataSource(
-                    dbCon.exec_for_select(myUI, SystemSettings.dbStock, myUI.getUser().getSchool_id(), true));
-            stocksMSB.setValue(SystemSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
             operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, SystemSettings.dbOperation, true));
             Item item = operationOG.getContainerDataSource().addItem(0);
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(myUI.getMessage(SptMessages.General));
@@ -164,15 +180,16 @@ public class StockGeneralReport implements Button.ClickListener,
         stocksMSB.setValue(SystemSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
 
         leftGrid.addComponent(operationOG, 0, 0, 3, 0);
-        leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
-        leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
-        leftGrid.addComponent(stocksMSB, 0, 2, 3, 2);
-        leftGrid.addComponent(selectAllBtn, 0, 3, 1, 3);
-        leftGrid.addComponent(deselectAllBtn, 2, 3, 3, 3);
-        leftGrid.addComponent(productsTable, 0, 4, 3, 4);
-        leftGrid.addComponent(generateBtn, 0, 5, 2, 5);
-        leftGrid.addComponent(excelBtn, 3, 5);
-        leftGrid.setRowExpandRatio(4, 1);
+        leftGrid.addComponent(schoolSelect, 0, 1, 3, 1);
+        leftGrid.addComponent(fromDateDF, 0, 2, 1, 2);
+        leftGrid.addComponent(tillDateDF, 2, 2, 3, 2);
+        leftGrid.addComponent(stocksMSB, 0, 3, 3, 3);
+        leftGrid.addComponent(selectAllBtn, 0, 4, 1, 4);
+        leftGrid.addComponent(deselectAllBtn, 2, 4, 3, 4);
+        leftGrid.addComponent(productsTable, 0, 5, 3, 5);
+        leftGrid.addComponent(generateBtn, 0, 6, 2, 6);
+        leftGrid.addComponent(excelBtn, 3, 6);
+        leftGrid.setRowExpandRatio(5, 1);
         ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -276,9 +293,23 @@ public class StockGeneralReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
-            if (property == productsTable || property == tillDateDF || property == fromDateDF || property == stocksMSB || property == operationOG) {
+            if (property == productsTable || property == schoolSelect ||
+                    property == tillDateDF || property == fromDateDF || property == stocksMSB || property == operationOG) {
                 excelBtn.setEnabled(false);
                 dataTable.getContainerDataSource().removeAllItems();
+            }
+        }
+        if (property == schoolSelect) {
+            try {
+                DbDefinition dbCon = new DbDefinition();
+                dbCon.connect();
+                stocksMSB.setContainerDataSource(dbCon.exec_for_select(myUI, SystemSettings.dbStock,
+                        (Integer) schoolSelect.getValue(), true));
+                stocksMSB.setValue(SystemSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
+                dbCon.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
         }
     }

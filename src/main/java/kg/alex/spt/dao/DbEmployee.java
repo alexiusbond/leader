@@ -52,7 +52,7 @@ public class DbEmployee extends BaseDb {
                 + "LEFT JOIN hr_position AS hrp ON eo.hr_position_id = hrp.id "
                 + "LEFT JOIN position AS p ON hrp.id = p.hr_position_id "
                 + "LEFT JOIN employee AS e ON eo.employee_id = e.id "
-                + "WHERE eo.school_id = ? AND ord.working_status_id = 2;";
+                + "WHERE eo.school_id = ? AND ord.working_status_id = 2";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -73,7 +73,7 @@ public class DbEmployee extends BaseDb {
         if (working_statuses.equals("") || working_statuses == null) {
             working_statuses = "-1";
         }
-        String sql = "SELECT e.id, e.login, e.name, e.surname, e.middle_name, e.date_of_birth, e.photo, "
+        String sql = "SELECT e.id, e.login, e.name, e.surname, e.middle_name, e.date_of_birth, e.photo, e.can_advisor, "
                 + "g.id, g.name, n.id, n.name, m.id, m.name, ws.name, ws.id, p.name, p.id, ord.visible_hr_orders, "
                 + "group_concat(DISTINCT p2.id ORDER BY eo2.id ASC separator ', ') as extra_position_ids, "
                 + "group_concat(DISTINCT p2.name ORDER BY eo2.id ASC separator ', ') as extra_positions, cat.id, "
@@ -141,6 +141,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(SystemSettings.is_modifiable, Boolean.class, true);
         container.addContainerProperty(SystemSettings.visible_hr_orders, String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.CanBeAdvisor), Boolean.class, null);
         container.addContainerProperty(SystemSettings.id, Integer.class, 0);
 
         Iterator iter = workingStatCont.getItemIds().iterator();
@@ -190,6 +191,8 @@ public class DbEmployee extends BaseDb {
             if (result.getInt("eo3.id") != 0) {
                 item.getItemProperty(SystemSettings.is_modifiable).setValue(false);
             }
+            item.getItemProperty(myUi.getMessage(SptMessages.CanBeAdvisor)).setValue(
+                    result.getBoolean("e.can_advisor"));
             item.getItemProperty(SystemSettings.visible_hr_orders).setValue(result.getString("ord.visible_hr_orders"));
             item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(result.getString("permissions"));
             item.getItemProperty(SystemSettings.position_id).setValue(result.getInt("p.id"));
@@ -327,7 +330,6 @@ public class DbEmployee extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id) throws SQLException {
-
 
         String sql = "SELECT e.id, e.login, e.name, e.surname, e.photo, p.id, p.name, eo.from_date, eo.note, ebh.lessons, ebh.hours, ebh.extra, "
                 + "es.fullname, GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 1, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS main_branch, "
@@ -516,6 +518,15 @@ public class DbEmployee extends BaseDb {
         stat.setInt(9, e.getModified_by_id());
         stat.setString(10, e.getPhoto());
         stat.setInt(11, e.getId());
+        int status = stat.executeUpdate();
+        return status;
+    }
+
+    public int exec_update(int id, boolean canBeAdvisor) throws SQLException {
+        String sql = "UPDATE employee SET can_advisor = ? WHERE id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setBoolean(1, canBeAdvisor);
+        stat.setInt(2, id);
         int status = stat.executeUpdate();
         return status;
     }
