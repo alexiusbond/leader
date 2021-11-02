@@ -53,8 +53,8 @@ import org.vaadin.simplefiledownloader.SimpleFileDownloader;
 /**
  * @author alex
  */
-public class EmployeeDefinitionView extends VerticalSplitPanel implements Button.ClickListener,
-        Property.ValueChangeListener {
+public class EmployeeDefinitionView extends HorizontalSplitPanel
+        implements Button.ClickListener, Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(EmployeeDefinitionView.class);
     private MyVaadinUI myUI;
@@ -71,7 +71,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
     private DateField birthDateDF, gradSchoolStartDF, gradSchoolEndDF;
     private ComboBoxMax genderCB, nationalityCB, martialStatusCB, mainPositionCB, citizenshipCB,
             spouseHealthCB, healthCB, contractCategoryCB, gradSchoolCB;
-    private FormLayout fieldsLayRight, fieldsLayLeft, fieldsLayContacts, fieldsLayFamily, fieldsLayExtra;
+    private FormLayout formLay, fieldsLayContacts, fieldsLayFamily, fieldsLayExtra;
     private TabSheet tabs;
     private boolean isNew;
     private Label workingStatusLb, mainPositionLb, extraPositionsLb, mainBrancLb, extraBrancesLb, totalHoursLb,
@@ -83,10 +83,9 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             NATURAL_COL_ORDER_LANGUAGES, NATURAL_COL_ORDER_CERTIFICATES, NATURAL_COL_ORDER_BRANCHES, NATURAL_COL_ORDER_LESSONS,
             NATURAL_COL_ORDER_PERMISSIONS, NATURAL_COL_ORDER_ORDERS;
     private VerticalLayout infoLay, documentsLay;
-    private GridLayout gridEmployeeLay, empSearchLay, contactInfoLay, familyInfoLay, extraInfoLay,
+    private GridLayout empSearchLay, contactInfoLay, familyInfoLay, extraInfoLay,
             achievementsInfoLay, profInfoLay, ordersInfoLay;
-    private VerticalLayout schoolInfoLay, permissionsLay;
-    private HorizontalSplitPanel horSplitPanel;
+    private VerticalLayout schoolInfoLay, permissionsLay, leftLay;
     private HorizontalLayout buttonsLay;
     private Upload photoUpl;
     private File myFile;
@@ -129,7 +128,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             emplID = myUI.getUser().getId();
         }
         buildButtonsLayout();
-        buildEmployeeGridLayout();
+        buildLeftLayout();
         try {
             DbDefinition dbed = new DbDefinition();
             dbed.connect();
@@ -139,13 +138,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.error(ex);
             logger.catching(ex);
         }
-
-        horSplitPanel = new HorizontalSplitPanel();
-        horSplitPanel.setSplitPosition(76, Sizeable.Unit.PERCENTAGE);
-        horSplitPanel.setSizeFull();
-        horSplitPanel.setLocked(true);
-        horSplitPanel.setFirstComponent(gridEmployeeLay);
-        horSplitPanel.setSecondComponent(infoLay);
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.Surname),
                 myUI.getMessage(SptMessages.Firstname),
@@ -211,10 +203,10 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         empSearchLay.setComponentAlignment(optionGroup, Alignment.MIDDLE_RIGHT);
         empSearchLay.setComponentAlignment(eduStatusLab, Alignment.MIDDLE_RIGHT);
 
-        this.setSplitPosition(40, Sizeable.Unit.PERCENTAGE);
+        this.setSplitPosition(25, Sizeable.Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
-        this.setFirstComponent(horSplitPanel);
+        this.setFirstComponent(leftLay);
 
         buildContactsLayout();
         buildFamilyLayout();
@@ -303,7 +295,11 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                         }
                     }
                 });
-        this.setSecondComponent(tabs);
+        VerticalLayout vl = new VerticalLayout();
+        vl.setSizeFull();
+        vl.setMargin(new MarginInfo(true, false, false, false));
+        vl.addComponent(tabs);
+        this.setSecondComponent(vl);
         prepareNormalMode();
         updateInfoLayout();
         employeesDataTable.setValue(emplID);
@@ -314,7 +310,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayContacts = new FormLayout();
         fieldsLayContacts.setWidth("100%");
         fieldsLayContacts.setSpacing(false);
-        fieldsLayContacts.setMargin(new MarginInfo(false, false, false, true));
+        fieldsLayContacts.setMargin(false);
 
         citizenshipCB = createCombobox(0, null, SystemSettings.dbCountry, true);
         citizenshipCB.setCaption(myUI.getMessage(SptMessages.Citizenship));
@@ -381,127 +377,110 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void buildFamilyLayout() {
 
+        familyInfoLay = new GridLayout(2, 8);
+        familyInfoLay.setWidth("100%");
+        familyInfoLay.setSpacing(true);
+        familyInfoLay.setMargin(true);
+        familyInfoLay.setColumnExpandRatio(0, 1);
+
+        captionSpouseInfo = new Label();
+        captionSpouseInfo.setWidth("100%");
+        captionSpouseInfo.setContentMode(ContentMode.HTML);
+        captionSpouseInfo.setValue(myUI.getMessage(SptMessages.SpouseInfo));
+        captionSpouseInfo.setStyleName("tableCpt");
+        familyInfoLay.addComponent(captionSpouseInfo, 0, 0, 1, 0);
+
         fieldsLayFamily = new FormLayout();
-        fieldsLayFamily.setSizeFull();
+        fieldsLayFamily.setWidth("100%");
         fieldsLayFamily.setSpacing(false);
-        fieldsLayFamily.setMargin(true);
+        fieldsLayFamily.setMargin(false);
+        familyInfoLay.addComponent(fieldsLayFamily, 0, 1, 1, 1);
 
         spouseFullnameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true);
         spouseFullnameTF.setCaption(myUI.getMessage(SptMessages.FullName));
+        spouseFullnameTF.setWidth("50%");
         fieldsLayFamily.addComponent(spouseFullnameTF);
 
         spousePhoneTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 100, true), false);
         spousePhoneTF.setCaption(myUI.getMessage(SptMessages.Phone));
+        spousePhoneTF.setWidth("50%");
         fieldsLayFamily.addComponent(spousePhoneTF);
 
         spouseHealthCB = createCombobox(0, null, SystemSettings.dbHealthStatus, true);
         spouseHealthCB.setCaption(myUI.getMessage(SptMessages.HealthStatus));
+        spouseHealthCB.setWidth("50%");
         fieldsLayFamily.addComponent(spouseHealthCB);
 
         spouseHealthNotesTF = new TextField(myUI.getMessage(SptMessages.HealthNotes));
         spouseHealthNotesTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        spouseHealthNotesTF.setWidth("100%");
+        spouseHealthNotesTF.setWidth("50%");
         spouseHealthNotesTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 350, true));
         fieldsLayFamily.addComponent(spouseHealthNotesTF);
-
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
-
-        Label captionChildren = new Label();
-        captionChildren.setSizeFull();
-        captionChildren.setContentMode(ContentMode.HTML);
-        captionChildren.setValue(myUI.getMessage(SptMessages.Children));
-        captionChildren.setStyleName("tableCpt");
-
-        plusChildButton = new Button(myUI.getMessage(SptMessages.AddRecord));
-        plusChildButton.setStyleName(ValoTheme.BUTTON_SMALL);
-        plusChildButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        plusChildButton.setIcon(FontAwesome.PLUS_SQUARE);
-        plusChildButton.addClickListener(this);
-
-        hl.addComponent(captionChildren);
-        hl.setSpacing(true);
-        hl.addComponent(plusChildButton);
-        hl.setExpandRatio(captionChildren, 1);
-
-        childrenTable = new FormattedTable();
-        childrenTable.setSizeFull();
-        childrenTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        HorizontalLayout hl2 = new HorizontalLayout();
-        hl2.setWidth("100%");
 
         Label captionSpouseEducation = new Label();
         captionSpouseEducation.setSizeFull();
         captionSpouseEducation.setContentMode(ContentMode.HTML);
         captionSpouseEducation.setValue(myUI.getMessage(SptMessages.SpouseEducation));
         captionSpouseEducation.setStyleName("tableCpt");
+        familyInfoLay.addComponent(captionSpouseEducation, 0, 2);
 
         plusSpouseEducationButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusSpouseEducationButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusSpouseEducationButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusSpouseEducationButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusSpouseEducationButton.addClickListener(this);
-
-        hl2.addComponent(captionSpouseEducation);
-        hl2.setSpacing(true);
-        hl2.addComponent(plusSpouseEducationButton);
-        hl2.setExpandRatio(captionSpouseEducation, 1);
+        familyInfoLay.addComponent(plusSpouseEducationButton, 1, 2);
 
         spouseEducationTable = new FormattedTable();
         spouseEducationTable.setSizeFull();
         spouseEducationTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        HorizontalLayout hl3 = new HorizontalLayout();
-        hl3.setWidth("100%");
+        spouseEducationTable.setPageLength(8);
+        familyInfoLay.addComponent(spouseEducationTable, 0, 3, 1, 3);
 
         Label captionSpouseWorkPlaces = new Label();
         captionSpouseWorkPlaces.setSizeFull();
         captionSpouseWorkPlaces.setContentMode(ContentMode.HTML);
         captionSpouseWorkPlaces.setValue(myUI.getMessage(SptMessages.SpouseWorkPlaces));
         captionSpouseWorkPlaces.setStyleName("tableCpt");
+        familyInfoLay.addComponent(captionSpouseWorkPlaces, 0, 4);
 
         plusSpouseWorkPlacesButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusSpouseWorkPlacesButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusSpouseWorkPlacesButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusSpouseWorkPlacesButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusSpouseWorkPlacesButton.addClickListener(this);
-
-        hl3.addComponent(captionSpouseWorkPlaces);
-        hl3.setSpacing(true);
-        hl3.addComponent(plusSpouseWorkPlacesButton);
-        hl3.setExpandRatio(captionSpouseWorkPlaces, 1);
+        familyInfoLay.addComponent(plusSpouseWorkPlacesButton, 1, 4);
 
         spouseWorkPlacesTable = new FormattedTable();
         spouseWorkPlacesTable.setSizeFull();
         spouseWorkPlacesTable.setStyleName(ValoTheme.TABLE_SMALL);
+        spouseWorkPlacesTable.setPageLength(8);
+        familyInfoLay.addComponent(spouseWorkPlacesTable, 0, 5, 1, 5);
 
-        captionSpouseInfo = new Label();
-        captionSpouseInfo.setSizeFull();
-        captionSpouseInfo.setContentMode(ContentMode.HTML);
-        captionSpouseInfo.setValue(myUI.getMessage(SptMessages.SpouseInfo));
-        captionSpouseInfo.setStyleName("tableCpt");
 
-        familyInfoLay = new GridLayout(2, 4);
-        familyInfoLay.setSizeFull();
-        familyInfoLay.setSpacing(true);
-        familyInfoLay.setMargin(true);
-        familyInfoLay.addComponent(hl, 0, 0);
-        familyInfoLay.addComponent(childrenTable, 0, 1);
-        familyInfoLay.addComponent(captionSpouseInfo, 0, 2);
-        familyInfoLay.addComponent(fieldsLayFamily, 0, 3);
-        familyInfoLay.addComponent(hl2, 1, 0);
-        familyInfoLay.addComponent(spouseEducationTable, 1, 1);
-        familyInfoLay.addComponent(hl3, 1, 2);
-        familyInfoLay.addComponent(spouseWorkPlacesTable, 1, 3);
-        familyInfoLay.setRowExpandRatio(1, 1);
-        familyInfoLay.setRowExpandRatio(3, 1);
-        familyInfoLay.setColumnExpandRatio(0, 1.3f);
-        familyInfoLay.setColumnExpandRatio(1, 1.7f);
-    }
+        Label captionChildren = new Label();
+        captionChildren.setSizeFull();
+        captionChildren.setContentMode(ContentMode.HTML);
+        captionChildren.setValue(myUI.getMessage(SptMessages.Children));
+        captionChildren.setStyleName("tableCpt");
+        familyInfoLay.addComponent(captionChildren, 0, 6);
+
+        plusChildButton = new Button(myUI.getMessage(SptMessages.AddRecord));
+        plusChildButton.setStyleName(ValoTheme.BUTTON_SMALL);
+        plusChildButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        plusChildButton.setIcon(FontAwesome.PLUS_SQUARE);
+        plusChildButton.addClickListener(this);
+        familyInfoLay.addComponent(plusChildButton, 1, 6);
+
+        childrenTable = new FormattedTable();
+        childrenTable.setSizeFull();
+        childrenTable.setStyleName(ValoTheme.TABLE_SMALL);
+        childrenTable.setPageLength(8);
+        familyInfoLay.addComponent(childrenTable, 0, 7, 1, 7);
+            }
 
 
     private void buildDocumentsLayout() {
@@ -530,7 +509,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         fieldsLayExtra = new FormLayout();
         fieldsLayExtra.setSizeFull();
         fieldsLayExtra.setSpacing(false);
-        fieldsLayExtra.setMargin(true);
+        fieldsLayExtra.setMargin(false);
 
         healthCB = createCombobox(0, null, SystemSettings.dbHealthStatus, true);
         healthCB.setCaption(myUI.getMessage(SptMessages.HealthStatus));
@@ -593,134 +572,107 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
     private void buildAchievementsLayout() {
 
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        achievementsInfoLay = new GridLayout(2, 8);
+        achievementsInfoLay.setWidth("100%");
+        achievementsInfoLay.setSpacing(true);
+        achievementsInfoLay.setMargin(true);
+        achievementsInfoLay.setColumnExpandRatio(0, 1);
 
         Label captionExams = new Label();
         captionExams.setSizeFull();
         captionExams.setContentMode(ContentMode.HTML);
         captionExams.setValue(myUI.getMessage(SptMessages.Exams));
         captionExams.setStyleName("tableCpt");
+        achievementsInfoLay.addComponent(captionExams, 0, 0);
 
         plusExamButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusExamButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusExamButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusExamButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusExamButton.addClickListener(this);
-
-        hl.addComponent(captionExams);
-        hl.setSpacing(true);
-        hl.addComponent(plusExamButton);
-        hl.setExpandRatio(captionExams, 1);
+        achievementsInfoLay.addComponent(plusExamButton, 1, 0);
 
         examsTable = new FormattedTable();
         examsTable.setSizeFull();
         examsTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        HorizontalLayout hl2 = new HorizontalLayout();
-        hl2.setWidth("100%");
+        examsTable.setPageLength(8);
+        achievementsInfoLay.addComponent(examsTable, 0, 1, 1, 1);
 
         Label captionSeminars = new Label();
         captionSeminars.setSizeFull();
         captionSeminars.setContentMode(ContentMode.HTML);
         captionSeminars.setValue(myUI.getMessage(SptMessages.Seminars));
         captionSeminars.setStyleName("tableCpt");
+        achievementsInfoLay.addComponent(captionSeminars, 0, 2);
 
         plusSeminarButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusSeminarButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusSeminarButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusSeminarButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusSeminarButton.addClickListener(this);
-
-        hl2.addComponent(captionSeminars);
-        hl2.setSpacing(true);
-        hl2.addComponent(plusSeminarButton);
-        hl2.setExpandRatio(captionSeminars, 1);
+        achievementsInfoLay.addComponent(plusSeminarButton, 1, 2);
 
         seminarsTable = new FormattedTable();
         seminarsTable.setSizeFull();
         seminarsTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        HorizontalLayout hl3 = new HorizontalLayout();
-        hl3.setWidth("100%");
+        seminarsTable.setPageLength(8);
+        achievementsInfoLay.addComponent(seminarsTable, 0, 3, 1, 3);
 
         Label captionCertificates = new Label();
         captionCertificates.setSizeFull();
         captionCertificates.setContentMode(ContentMode.HTML);
         captionCertificates.setValue(myUI.getMessage(SptMessages.Certificates));
         captionCertificates.setStyleName("tableCpt");
+        achievementsInfoLay.addComponent(captionCertificates, 0, 4);
 
         plusCertificateButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusCertificateButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusCertificateButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusCertificateButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusCertificateButton.addClickListener(this);
-
-        hl3.addComponent(captionCertificates);
-        hl3.setSpacing(true);
-        hl3.addComponent(plusCertificateButton);
-        hl3.setExpandRatio(captionCertificates, 1);
+        achievementsInfoLay.addComponent(plusCertificateButton, 1, 4);
 
         certificatesTable = new FormattedTable();
         certificatesTable.setSizeFull();
         certificatesTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        HorizontalLayout hl4 = new HorizontalLayout();
-        hl4.setWidth("100%");
+        certificatesTable.setPageLength(8);
+        achievementsInfoLay.addComponent(certificatesTable, 0, 5, 1, 5);
 
         Label captionLanguages = new Label();
         captionLanguages.setSizeFull();
         captionLanguages.setContentMode(ContentMode.HTML);
         captionLanguages.setValue(myUI.getMessage(SptMessages.Languages));
         captionLanguages.setStyleName("tableCpt");
+        achievementsInfoLay.addComponent(captionLanguages, 0, 6);
 
         plusLanguageButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusLanguageButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusLanguageButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusLanguageButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusLanguageButton.addClickListener(this);
-
-        hl4.addComponent(captionLanguages);
-        hl4.setSpacing(true);
-        hl4.addComponent(plusLanguageButton);
-        hl4.setExpandRatio(captionLanguages, 1);
+        achievementsInfoLay.addComponent(plusLanguageButton, 1, 6);
 
         languagesTable = new FormattedTable();
         languagesTable.setSizeFull();
         languagesTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        achievementsInfoLay = new GridLayout(2, 4);
-        achievementsInfoLay.setSizeFull();
-        achievementsInfoLay.setSpacing(true);
-        achievementsInfoLay.setMargin(true);
-        achievementsInfoLay.addComponent(hl4, 0, 0);
-        achievementsInfoLay.addComponent(languagesTable, 0, 1);
-        achievementsInfoLay.addComponent(hl, 0, 2);
-        achievementsInfoLay.addComponent(examsTable, 0, 3);
-        achievementsInfoLay.addComponent(hl3, 1, 0);
-        achievementsInfoLay.addComponent(certificatesTable, 1, 1);
-        achievementsInfoLay.addComponent(hl2, 1, 2);
-        achievementsInfoLay.addComponent(seminarsTable, 1, 3);
-        achievementsInfoLay.setRowExpandRatio(1, 1);
-        achievementsInfoLay.setRowExpandRatio(3, 1);
-        achievementsInfoLay.setColumnExpandRatio(1, 1.2F);
-        achievementsInfoLay.setColumnExpandRatio(0, 0.8F);
+        languagesTable.setPageLength(8);
+        achievementsInfoLay.addComponent(languagesTable, 0, 7, 1, 7);
     }
 
     private void buildProfLayout() {
 
-        GridLayout gl = new GridLayout(3, 4);
-        gl.setSpacing(true);
-        gl.setSizeFull();
-        gl.setColumnExpandRatio(0, 1);
-        gl.setRowExpandRatio(3, 1);
+        profInfoLay = new GridLayout(3, 8);
+        profInfoLay.setSpacing(true);
+        profInfoLay.setMargin(true);
+        profInfoLay.setWidth("100%");
+        profInfoLay.setColumnExpandRatio(0, 1);
 
         Label captionGradSchool = new Label();
         captionGradSchool.setWidth("100%");
         captionGradSchool.setContentMode(ContentMode.HTML);
         captionGradSchool.setValue(myUI.getMessage(SptMessages.GraduationSchool));
         captionGradSchool.setStyleName("tableCpt");
-        gl.addComponent(captionGradSchool, 0, 0, 2, 0);
+        profInfoLay.addComponent(captionGradSchool, 0, 0, 2, 0);
 
         gradSchoolCB = createCombobox(0, null, null, true);
         gradSchoolCB.setCaption(myUI.getMessage(SptMessages.GraduationSchool));
@@ -736,101 +688,80 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             logger.catching(ex);
         }
         gradSchoolCB.setValue(0);
-        gl.addComponent(gradSchoolCB, 0, 1);
+        profInfoLay.addComponent(gradSchoolCB, 0, 1);
 
         gradSchoolStartDF = createDateField(null, null,
                 myUI.getMessage(SptMessages.Start),
                 true, SystemSettings.yearPattern, Resolution.YEAR);
         gradSchoolStartDF.setSizeUndefined();
         gradSchoolStartDF.setResolution(Resolution.YEAR);
-        gl.addComponent(gradSchoolStartDF, 1, 1);
+        profInfoLay.addComponent(gradSchoolStartDF, 1, 1);
 
         gradSchoolEndDF = createDateField(null, null,
                 myUI.getMessage(SptMessages.End),
                 true, SystemSettings.yearPattern, Resolution.YEAR);
         gradSchoolEndDF.setResolution(Resolution.YEAR);
-        gl.addComponent(gradSchoolEndDF, 2, 1);
+        profInfoLay.addComponent(gradSchoolEndDF, 2, 1);
 
         Label captionBranches = new Label();
         captionBranches.setSizeFull();
         captionBranches.setContentMode(ContentMode.HTML);
         captionBranches.setValue(myUI.getMessage(SptMessages.Branches));
         captionBranches.setStyleName("tableCpt");
-        gl.addComponent(captionBranches, 0, 2, 1, 2);
+        profInfoLay.addComponent(captionBranches, 0, 2, 1, 2);
 
         plusBranchButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusBranchButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusBranchButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusBranchButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusBranchButton.addClickListener(this);
-        gl.addComponent(plusBranchButton, 2, 2);
+        profInfoLay.addComponent(plusBranchButton, 2, 2);
 
         branchesTable = new FormattedTable();
         branchesTable.setSizeFull();
         branchesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        gl.addComponent(branchesTable, 0, 3, 2, 3);
-
-        HorizontalLayout hl2 = new HorizontalLayout();
-        hl2.setWidth("100%");
+        branchesTable.setPageLength(8);
+        profInfoLay.addComponent(branchesTable, 0, 3, 2, 3);
 
         Label captionEducation = new Label();
         captionEducation.setSizeFull();
         captionEducation.setContentMode(ContentMode.HTML);
         captionEducation.setValue(myUI.getMessage(SptMessages.Education));
         captionEducation.setStyleName("tableCpt");
+        profInfoLay.addComponent(captionEducation, 0, 4, 1, 4);
 
         plusEducationButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusEducationButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusEducationButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusEducationButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusEducationButton.addClickListener(this);
-
-        hl2.addComponent(captionEducation);
-        hl2.setSpacing(true);
-        hl2.addComponent(plusEducationButton);
-        hl2.setExpandRatio(captionEducation, 1);
+        profInfoLay.addComponent(plusEducationButton, 2, 4);
 
         educationTable = new FormattedTable();
         educationTable.setSizeFull();
         educationTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        HorizontalLayout hl3 = new HorizontalLayout();
-        hl3.setWidth("100%");
+        educationTable.setPageLength(8);
+        profInfoLay.addComponent(educationTable, 0, 5, 2, 5);
 
         Label captionWorkPlaces = new Label();
         captionWorkPlaces.setSizeFull();
         captionWorkPlaces.setContentMode(ContentMode.HTML);
         captionWorkPlaces.setValue(myUI.getMessage(SptMessages.WorkPlaces));
         captionWorkPlaces.setStyleName("tableCpt");
+        profInfoLay.addComponent(captionWorkPlaces, 0, 6, 1, 6);
 
         plusWorkPlaceButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusWorkPlaceButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusWorkPlaceButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusWorkPlaceButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusWorkPlaceButton.addClickListener(this);
-
-        hl3.addComponent(captionWorkPlaces);
-        hl3.setSpacing(true);
-        hl3.addComponent(plusWorkPlaceButton);
-        hl3.setExpandRatio(captionWorkPlaces, 1);
+        profInfoLay.addComponent(plusWorkPlaceButton, 2, 6);
 
         workPlacesTable = new FormattedTable();
         workPlacesTable.setSizeFull();
         workPlacesTable.setStyleName(ValoTheme.TABLE_SMALL);
-
-        profInfoLay = new GridLayout(2, 4);
-        profInfoLay.setSizeFull();
-        profInfoLay.setSpacing(true);
-        profInfoLay.setMargin(true);
-        profInfoLay.addComponent(gl, 0, 0, 0, 3);
-        profInfoLay.addComponent(hl2, 1, 0);
-        profInfoLay.addComponent(educationTable, 1, 1);
-        profInfoLay.addComponent(hl3, 1, 2);
-        profInfoLay.addComponent(workPlacesTable, 1, 3);
-        profInfoLay.setRowExpandRatio(1, 1);
-        profInfoLay.setRowExpandRatio(3, 1);
-        profInfoLay.setColumnExpandRatio(0, 0.6F);
-        profInfoLay.setColumnExpandRatio(1, 1.4F);
+        workPlacesTable.setPageLength(8);
+        profInfoLay.addComponent(workPlacesTable, 0, 7, 2, 7);
     }
 
     private void buildOrdersLayout() {
@@ -947,6 +878,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             permissionTable.setContainerDataSource(permissionCont);
             permissionTable.setVisibleColumns(NATURAL_COL_ORDER_PERMISSIONS);
             permissionTable.setColumnWidth(myUI.getMessage(SptMessages.ClassCaption), 235);
+            permissionTable.setPageLength(0);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1378,8 +1310,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         contactInfoLay.setEnabled(true);
         familyInfoLay.setEnabled(true);
         extraInfoLay.setEnabled(true);
-        fieldsLayLeft.setEnabled(true);
-        fieldsLayRight.setEnabled(true);
+        formLay.setEnabled(true);
         achievementsInfoLay.setEnabled(true);
         enableUploads(certificatesTable);
         enableUploads(examsTable);
@@ -1427,8 +1358,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         contactInfoLay.setEnabled(false);
         familyInfoLay.setEnabled(false);
         extraInfoLay.setEnabled(false);
-        fieldsLayLeft.setEnabled(false);
-        fieldsLayRight.setEnabled(false);
+        formLay.setEnabled(false);
         achievementsInfoLay.setEnabled(false);
         schoolInfoLay.setEnabled(false);
         permissionsLay.setEnabled(false);
@@ -1498,31 +1428,32 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         employeesDataTable.setVisibleColumns(NATURAL_COL_ORDER);
     }
 
-    private void buildEmployeeGridLayout() {
-        gridEmployeeLay = new GridLayout(3, 3);
-        gridEmployeeLay.setSpacing(true);
-        gridEmployeeLay.setMargin(true);
-        gridEmployeeLay.setWidth("95%");
+    private void buildLeftLayout() {
+        leftLay = new VerticalLayout();
+        leftLay.setSpacing(true);
+        leftLay.setMargin(true);
+        leftLay.setWidth("100%");
 
-        buildphotoLayout();
-        buildFieldsLayoutLeft();
-        buildFieldsLayoutRight();
+        buildPhotoLayout();
+        buildFormLayout();
         buildInfoLayout();
 
-        gridEmployeeLay.addComponent(buttonsLay, 0, 0, 2, 0);
-        gridEmployeeLay.addComponent(photoEmb, 0, 1);
-        gridEmployeeLay.addComponent(photoUpl, 0, 2);
-        gridEmployeeLay.addComponent(fieldsLayLeft, 1, 1, 1, 2);
-        gridEmployeeLay.addComponent(fieldsLayRight, 2, 1, 2, 2);
-        //gridEmployeeLay.setRowExpandRatio(1, 1);
-        gridEmployeeLay.setColumnExpandRatio(1, 1);
-        gridEmployeeLay.setColumnExpandRatio(2, 1);
+        Label lb = new Label(myUI.getMessage(SptMessages.MainInfo));
+        lb.setStyleName(ValoTheme.LABEL_LARGE);
+        lb.setSizeUndefined();
+
+        leftLay.addComponent(buttonsLay);
+        leftLay.addComponent(lb);
+        leftLay.setComponentAlignment(lb, Alignment.MIDDLE_CENTER);
+        leftLay.addComponent(infoLay);
+        leftLay.addComponent(photoEmb);
+        leftLay.addComponent(photoUpl);
+        leftLay.addComponent(formLay);
     }
 
     private void buildInfoLayout() {
 
         infoLay = new VerticalLayout();
-        infoLay.setMargin(true);
 
         workingStatusLb = new Label();
         workingStatusLb.setContentMode(ContentMode.HTML);
@@ -1604,16 +1535,16 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         }
     }
 
-    private void buildFieldsLayoutLeft() {
-        fieldsLayLeft = new FormLayout();
-        fieldsLayLeft.setSpacing(false);
-        fieldsLayLeft.setMargin(false);
+    private void buildFormLayout() {
+        formLay = new FormLayout();
+        formLay.setSpacing(false);
+        formLay.setMargin(false);
 
         loginTF = createTextfield(null, null, new RegexpValidator("^[1-9][0-9][0-9][0-9][0-9][0-9]$", true,
                 myUI.getMessage(SptMessages.NotifWrongValue)), true);
         loginTF.setCaption(myUI.getMessage(SptMessages.Id));
         loginTF.addValueChangeListener(this);
-        fieldsLayLeft.addComponent(loginTF);
+        formLay.addComponent(loginTF);
 
         HorizontalLayout passwordLay = new HorizontalLayout();
         passwordLay.setCaption(myUI.getMessage(SptMessages.Password));
@@ -1634,45 +1565,39 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         generateBtn.addClickListener(this);
         passwordLay.addComponent(generateBtn);
         passwordLay.setComponentAlignment(generateBtn, Alignment.BOTTOM_RIGHT);
-        fieldsLayLeft.addComponent(passwordLay);
+        formLay.addComponent(passwordLay);
 
         surnameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false), true);
         surnameTF.setCaption(myUI.getMessage(SptMessages.Surname));
-        fieldsLayLeft.addComponent(surnameTF);
+        formLay.addComponent(surnameTF);
 
         nameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false), true);
         nameTF.setCaption(myUI.getMessage(SptMessages.Firstname));
-        fieldsLayLeft.addComponent(nameTF);
+        formLay.addComponent(nameTF);
 
         middlenameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 100, true), false);
         middlenameTF.setCaption(myUI.getMessage(SptMessages.Middlename));
-        fieldsLayLeft.addComponent(middlenameTF);
+        formLay.addComponent(middlenameTF);
 
         birthDateDF = createDateField(new Date(), null, myUI.getMessage(SptMessages.DateOfBirth),
                 true, SystemSettings.datePattern, Resolution.DAY);
-        fieldsLayLeft.addComponent(birthDateDF);
-    }
-
-    private void buildFieldsLayoutRight() {
-        fieldsLayRight = new FormLayout();
-        fieldsLayRight.setSpacing(false);
-        fieldsLayRight.setMargin(false);
+        formLay.addComponent(birthDateDF);
 
         genderCB = createCombobox(0, null, SystemSettings.dbGender, true);
         genderCB.setCaption(myUI.getMessage(SptMessages.Gender));
-        fieldsLayRight.addComponent(genderCB);
+        formLay.addComponent(genderCB);
 
         nationalityCB = createCombobox(0, null, SystemSettings.dbNationality, true);
         nationalityCB.setCaption(myUI.getMessage(SptMessages.Nationality));
-        fieldsLayRight.addComponent(nationalityCB);
+        formLay.addComponent(nationalityCB);
 
         martialStatusCB = createCombobox(0, null, SystemSettings.dbMartialStatus, true);
         martialStatusCB.setCaption(myUI.getMessage(SptMessages.MartialStatus));
         martialStatusCB.addValueChangeListener(this);
-        fieldsLayRight.addComponent(martialStatusCB);
+        formLay.addComponent(martialStatusCB);
 
         mainPositionCB = new ComboBoxMax(myUI.getMessage(SptMessages.MainPosition));
         mainPositionCB.setNullSelectionAllowed(false);
@@ -1682,7 +1607,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         mainPositionCB.setWidth("100%");
         mainPositionCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         mainPositionCB.setFilteringMode(FilteringMode.CONTAINS);
-        fieldsLayRight.addComponent(mainPositionCB);
+        formLay.addComponent(mainPositionCB);
 
         try {
             DbDefinition dbDef = new DbDefinition();
@@ -1712,7 +1637,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                 + ":" + SystemSettings.prmContractVisible)) {
             contractCategoryCB.setVisible(false);
         }
-        fieldsLayRight.addComponent(contractCategoryCB);
+        formLay.addComponent(contractCategoryCB);
 
         try {
             DbSalaryCategories dbCon = new DbSalaryCategories();
@@ -1726,7 +1651,8 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         contractCategoryCB.setValue(((IndexedContainer) contractCategoryCB.getContainerDataSource()).lastItemId());
     }
 
-    private void buildphotoLayout() {
+
+    private void buildPhotoLayout() {
         photoEmb = new Embedded();
         photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
         photoEmb.setImmediate(true);
@@ -1739,7 +1665,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
 
         buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
-        buttonsLay.setSizeFull();
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
@@ -1778,13 +1703,6 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
-
-        Label lb = new Label(myUI.getMessage(SptMessages.MainInfo));
-        lb.setStyleName(ValoTheme.LABEL_LARGE);
-        lb.setSizeUndefined();
-        buttonsLay.addComponent(lb);
-        buttonsLay.setComponentAlignment(lb, Alignment.MIDDLE_CENTER);
-        buttonsLay.setExpandRatio(lb, 1);
 
     }
 
@@ -2333,7 +2251,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
             fileName = null;
         } else if (source == saveBtn) {
             try {
-                if (validate(horSplitPanel, false)) {
+                if (validate(leftLay, false)) {
                     if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()
                             && (!validateTable(phonesTable, true, false) || !validate(contactInfoLay, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
@@ -2513,7 +2431,7 @@ public class EmployeeDefinitionView extends VerticalSplitPanel implements Button
                                     dbe.exec_update(emplID, canBeAdvisor.getValue());
                                     employeesDataTable.getContainerProperty(emplID,
                                             myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(
-                                                    canBeAdvisor.getValue());
+                                            canBeAdvisor.getValue());
                                     insertLessons(emplID);
                                     updateInfoLayout();
                                     setLessonsTable();
