@@ -50,7 +50,7 @@ public class SystemSettings implements Serializable {
     public static final String count = "count";
     public static final String email = "E-mail";
     public static final String resigned = " [уволен]";
-    public static final String transfered = " [переведен]";
+    public static final String transferred = " [переведен]";
     public static final String number_id = "number_id";
     public static final String status_id = "status_id";
     public static final String block_id = "block_id";

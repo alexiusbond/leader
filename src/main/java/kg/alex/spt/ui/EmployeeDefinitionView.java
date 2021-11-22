@@ -3281,7 +3281,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     if (delOrderIds.get(i).getOrder_id() == 6 || delOrderIds.get(i).getOrder_id() == 5) {
                         DbAccCategory dbAc = new DbAccCategory();
                         dbAc.connect();
-                        String namePostfix = SystemSettings.transfered;
+                        String namePostfix = SystemSettings.transferred;
                         if (delOrderIds.get(i).getOrder_id() == 6) {
                             namePostfix = SystemSettings.resigned;
                         }
@@ -3368,7 +3368,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             AccCategory ac = dbAc.exec_sql(employee_id, eo.getFrom_to_school_id(), eo.getSchool_id());
                             dbAc.exec_insert(ac);
                             dbAc.exec_update_activity_status((Integer) employeesDataTable.getContainerProperty(employee_id,
-                                    SystemSettings.acc_category_id).getValue(), 1, SystemSettings.transfered);
+                                    SystemSettings.acc_category_id).getValue(), 1, SystemSettings.transferred);
                             dbAc.close();
                         }
                     }
