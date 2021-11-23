@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.addon.charts.Chart;
@@ -62,13 +62,13 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
-public class AccountingGeneralReport implements Button.ClickListener,
+public class GeneralReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(AccountingGeneralReport.class);
+    static final Logger logger = LogManager.getLogger(GeneralReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, PDFBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid, totalsGrid;
     private VerticalLayout rightLay;
     private FormattedTable transactionsTable, paymentsTable;
@@ -86,9 +86,9 @@ public class AccountingGeneralReport implements Button.ClickListener,
     private ContractTotal contractTtl;
     private Calendar prevDayCal;
 
-    public AccountingGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public GeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         prevDayCal = Calendar.getInstance();
         buildLeftPanel();
         buildRightLayout();
@@ -189,8 +189,8 @@ public class AccountingGeneralReport implements Button.ClickListener,
         }
         leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
         leftGrid.addComponent(PDFBtn, 3, 3);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
 
     }
 
@@ -206,7 +206,7 @@ public class AccountingGeneralReport implements Button.ClickListener,
         buildTotalContract();
         buildPaymentsLayout();
 
-        spltPanel.setSecondComponent(rightLay);
+        splitPanel.setSecondComponent(rightLay);
     }
 
     @Override

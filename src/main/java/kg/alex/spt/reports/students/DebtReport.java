@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.students;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -27,12 +27,12 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudentInstallmentPlan;
+import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
-import kg.alex.spt.pdf.ClassInstallmentPlanPdf;
+import kg.alex.spt.pdf.DebtsPdf;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -40,14 +40,14 @@ import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
-public class ClassInstPlanReport implements Button.ClickListener,
+public class DebtReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(ClassInstPlanReport.class);
+    static final Logger logger = LogManager.getLogger(DebtReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private EnhancedFormatExcelExport excelReport;
     private GridLayout leftGrid;
     private FilterTable classTable;
@@ -58,16 +58,16 @@ public class ClassInstPlanReport implements Button.ClickListener,
     private IndexedContainer installmentCont;
     private Date fromDate, tillDate;
     private String[] NATURAL_COL_ORDER;
-    public double total;
+    public double inst_total, paid_total, debt_total;
 
-    public ClassInstPlanReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public DebtReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
-        NATURAL_COL_ORDER = new String[]{
-            myUI.getMessage(SptMessages.Firstname), myUI.getMessage(SptMessages.Surname),
-            myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.Phone),
-            myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Firstname),
+            myUI.getMessage(SptMessages.Surname),
+            myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.InstallmentPlan),
+            myUI.getMessage(SptMessages.Paid), myUI.getMessage(SptMessages.Debt)};
     }
 
     private void buildLeftPanel() {
@@ -200,8 +200,8 @@ public class ClassInstPlanReport implements Button.ClickListener,
         leftGrid.addComponent(makePdfBtn, 2, 5);
         leftGrid.addComponent(excelBtn, 3, 5);
         leftGrid.setRowExpandRatio(3, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     @Override
@@ -224,10 +224,10 @@ public class ClassInstPlanReport implements Button.ClickListener,
                             && st.getScl_name_ru() != null) {
                         fromDate = fromDateDF.getValue();
                         tillDate = tillDateDF.getValue();
-                        new ClassInstallmentPlanPdf(myUI, installmentCont,
+                        new DebtsPdf(myUI, installmentCont,
                                 yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(SptMessages.Title)).getValue().toString(),
-                                fromDate, tillDate, st, total);
+                                fromDate, tillDate, st, inst_total, paid_total, debt_total);
                     } else {
 
                         Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
@@ -249,7 +249,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.InstpLanPaymentsReport));
+                    excelReport.setReportTitle(myUI.getMessage(SptMessages.DebtReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
                 }
@@ -279,26 +279,34 @@ public class ClassInstPlanReport implements Button.ClickListener,
         dataTable.setRowHeaderMode(FormattedTable.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         try {
-            DbStudentInstallmentPlan dbip = new DbStudentInstallmentPlan();
-            dbip.connect();
+            DbStudentContract dbsc = new DbStudentContract();
+            dbsc.connect();
             dataTable.clear();
-            total = 0;
-            installmentCont = dbip.execSQL_InstPlanByClass(myUI,
+            inst_total = 0;
+            paid_total = 0;
+            debt_total = 0;
+            installmentCont = dbsc.execSQL_DebtsByClass(myUI,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
                     SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
                     SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
             dataTable.setContainerDataSource(installmentCont);
-            dbip.close();
+            dbsc.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
-        dataTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.dFormat.format(total));
+        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
+        dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan),
+                SystemSettings.dFormat.format(inst_total));
+        dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+                SystemSettings.dFormat.format(paid_total));
+        dataTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+                SystemSettings.dFormat.format(debt_total));
         dataTable.setVisibleColumns(NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
-        spltPanel.setSecondComponent(vl);
+        splitPanel.setSecondComponent(vl);
     }
 }

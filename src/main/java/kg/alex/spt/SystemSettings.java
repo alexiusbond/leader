@@ -260,6 +260,7 @@ public class SystemSettings implements Serializable {
     public static final String prmCurrentAccountStatement = "выписка по текущему счету";
     public static final String prmSalariesReport = "отчет по выплатам";
     public static final String prmLessonHoursReport = "отчет по количеству преподаваемых часов";
+    public static final String prmHrGeneralReport = "общий отчет по кадрам";
     public static final String prmCallsReport = "отчет о вызовах";
     public static final String prmOutOfReport = "отчет о выбывших";
     public static final String prmTabPermissions = "вкладка разрешений";

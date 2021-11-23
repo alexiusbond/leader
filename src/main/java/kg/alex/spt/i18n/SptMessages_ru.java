@@ -405,6 +405,7 @@ public class SptMessages_ru extends SptMessages {
             {CurrentAccountStatementReport, "Выписка по текущему счету"},
             {SalariesReport, "Отчет по выплатам"},
             {HRLessonHoursReport, "Отчет по кол-ву преподаваемых часов"},
+            {HRGeneralReport, "Общий отчет по кадрам"},
             {MonthReport, "Отчет по месяцам"},
             {AccountingBalanceReport, "Балансовый отчет"},
             {ProductMovementsReport, "Отчет по передвижениям товара"},

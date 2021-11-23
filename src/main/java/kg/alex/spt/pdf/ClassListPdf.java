@@ -25,7 +25,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.ClassListReport;
+import kg.alex.spt.reports.students.ClassListReport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

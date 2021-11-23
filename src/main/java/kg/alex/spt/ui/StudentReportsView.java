@@ -11,22 +11,22 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.CallsReport;
-import kg.alex.spt.reports.ClassDiscountsReport;
-import kg.alex.spt.reports.ClassInstPlanReport;
-import kg.alex.spt.reports.ClassListReport;
-import kg.alex.spt.reports.ClassPaymentsReport;
-import kg.alex.spt.reports.DebtReport;
-import kg.alex.spt.reports.DiscountsReport;
-import kg.alex.spt.reports.InstallmentPlanPaymentsReport;
-import kg.alex.spt.reports.OutOfList;
-import kg.alex.spt.reports.SchoolDiscountsReport;
-import kg.alex.spt.reports.StatusesReport;
-import kg.alex.spt.reports.YearMonthReport;
+import kg.alex.spt.reports.students.CallsReport;
+import kg.alex.spt.reports.students.ClassDiscountsReport;
+import kg.alex.spt.reports.students.ClassInstPlanReport;
+import kg.alex.spt.reports.students.ClassListReport;
+import kg.alex.spt.reports.students.ClassPaymentsReport;
+import kg.alex.spt.reports.students.DebtReport;
+import kg.alex.spt.reports.students.DiscountsReport;
+import kg.alex.spt.reports.students.InstallmentPlanPaymentsReport;
+import kg.alex.spt.reports.students.OutOfList;
+import kg.alex.spt.reports.students.SchoolDiscountsReport;
+import kg.alex.spt.reports.students.StatusesReport;
+import kg.alex.spt.reports.students.YearMonthReport;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-public class ReportsView extends HorizontalSplitPanel implements Property.ValueChangeListener {
+public class StudentReportsView extends HorizontalSplitPanel implements Property.ValueChangeListener {
 
     private MyVaadinUI myUI;
     private ComboBoxMax repTypeSelect;
@@ -34,7 +34,7 @@ public class ReportsView extends HorizontalSplitPanel implements Property.ValueC
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
 
-    public ReportsView(MyVaadinUI myUI) {
+    public StudentReportsView(MyVaadinUI myUI) {
         this.myUI = myUI;
         buildGridLayouts();
         this.setSplitPosition(23, Sizeable.Unit.PERCENTAGE);

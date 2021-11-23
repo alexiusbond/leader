@@ -15,7 +15,7 @@ import java.util.Date;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.CallsReport;
+import kg.alex.spt.reports.students.CallsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
 public class DbStudentCalls extends BaseDb {

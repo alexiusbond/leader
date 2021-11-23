@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -43,14 +43,14 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.tepi.filtertable.FilterTreeTable;
 
-public class AccountingDateReport implements Button.ClickListener,
+public class DateReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(AccountingDateReport.class);
+    static final Logger logger = LogManager.getLogger(DateReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn,
             selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     public FormattedTable incomesDataTable, outcomesDataTable;
@@ -62,9 +62,9 @@ public class AccountingDateReport implements Button.ClickListener,
     private HorizontalLayout infoLay;
     private SchoolAccounting schoolAcc;
 
-    public AccountingDateReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public DateReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
     }
@@ -181,8 +181,8 @@ public class AccountingDateReport implements Button.ClickListener,
         leftGrid.addComponent(excelBtn, 3, 5);
         leftGrid.setRowExpandRatio(2, 1);
         leftGrid.setRowExpandRatio(4, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     private void buildRightLayout() {
@@ -238,7 +238,7 @@ public class AccountingDateReport implements Button.ClickListener,
         ttlLab.setWidth("100%");
         infoLay.addComponent(ttlLab);
 
-        spltPanel.setSecondComponent(rightLayout);
+        splitPanel.setSecondComponent(rightLayout);
     }
 
     @Override

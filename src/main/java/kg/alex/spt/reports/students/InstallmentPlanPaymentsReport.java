@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.students;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -53,7 +53,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     static final Logger logger = LogManager.getLogger(InstallmentPlanPaymentsReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid, rightGrid;
     private EnhancedFormatExcelExport excelReport;
     private double debt, amount, plan_debt, ttl_payment, kOplate, ttl_left;
@@ -71,9 +71,9 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private String[] NATURAL_COL_ORDER;
     public double total_inst, total_pay;
 
-    public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
                 myUI.getMessage(SptMessages.Amount),
@@ -183,8 +183,8 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         leftGrid.addComponent(excelBtn, 3, 4);
         leftGrid.setRowExpandRatio(1, 1);
         leftGrid.setRowExpandRatio(2, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     @Override
@@ -364,7 +364,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             paymentsTable.setVisibleColumns(NATURAL_COL_ORDER);
             rightGrid.setRowExpandRatio(4, 1);
         }
-        spltPanel.setSecondComponent(rightGrid);
+        splitPanel.setSecondComponent(rightGrid);
     }
 
     private void buildContractInfo() {

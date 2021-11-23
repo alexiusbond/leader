@@ -23,7 +23,7 @@ import kg.alex.spt.domain.EducationStatus;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.domain.Student;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.StatusesReport;
+import kg.alex.spt.reports.students.StatusesReport;
 import kg.alex.spt.ui.CallsView;
 import kg.alex.spt.ui.IssueOrderView;
 import kg.alex.spt.ui.StudentDefinitionView;

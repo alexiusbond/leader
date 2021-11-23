@@ -17,7 +17,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudentOrder;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.OutOfList;
+import kg.alex.spt.reports.students.OutOfList;
 import kg.alex.spt.ui.IssueOrderView;
 
 /**

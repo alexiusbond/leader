@@ -18,8 +18,8 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudentInstallmentPlan;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.ClassInstPlanReport;
-import kg.alex.spt.reports.InstallmentPlanPaymentsReport;
+import kg.alex.spt.reports.students.ClassInstPlanReport;
+import kg.alex.spt.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
 public class DbStudentInstallmentPlan extends BaseDb {

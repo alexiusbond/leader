@@ -468,7 +468,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendOrders))) {
                     verticalPanel.setSecondComponent(new SendOrderView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Reports))) {
-                    verticalPanel.setSecondComponent(new ReportsView(myUI));
+                    verticalPanel.setSecondComponent(new StudentReportsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingReports))) {
                     verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockReports))) {
@@ -677,7 +677,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.Reports)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new ReportsView(myUI));
+                verticalPanel.setSecondComponent(new StudentReportsView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.AccountingReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccountingReportsView(myUI));

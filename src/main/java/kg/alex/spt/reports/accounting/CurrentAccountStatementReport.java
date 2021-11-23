@@ -3,50 +3,56 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
-import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomTable;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
+import java.util.Date;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
+import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+
 import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.FormattedTreeTable;
+import kg.alex.spt.pdf.CurrentAccountStatementPdf;
+import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTreeTable;
 
-public class SalariesReport implements Button.ClickListener,
+public class CurrentAccountStatementReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(SalariesReport.class);
+    static final Logger logger = LogManager.getLogger(CurrentAccountStatementReport.class);
     private MyVaadinUI myUI;
-    private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
-    private HorizontalSplitPanel spltPanel;
+    private Button generateBtn, pdfBtn;
+    private HorizontalSplitPanel splitPanel;
     private ComboBoxMax currencySelect;
     private GridLayout leftGrid;
-    public FormattedTreeTable dataTable;
+    private DateField fromDateDF, tillDateDF;
+    public FormattedTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
 
-    private EnhancedFormatExcelExport excelReport;
-
-    public SalariesReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public CurrentAccountStatementReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
     }
@@ -62,9 +68,7 @@ public class SalariesReport implements Button.ClickListener,
         employeeCategoriesTable.setStyleName(ValoTheme.TABLE_SMALL);
         employeeCategoriesTable.setSizeFull();
         employeeCategoriesTable.setNullSelectionAllowed(false);
-        employeeCategoriesTable.setMultiSelect(true);
         employeeCategoriesTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
-        employeeCategoriesTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         employeeCategoriesTable.setFilterBarVisible(true);
         employeeCategoriesTable.setFooterVisible(false);
         employeeCategoriesTable.setSelectable(true);
@@ -74,8 +78,7 @@ public class SalariesReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, 2, employeeCategoriesTable,
-                    Integer.toString(myUI.getUser().getSchool_id()), true);
+            dbac.execSQL_for_select_as_tree(myUI, 2, employeeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
@@ -88,13 +91,31 @@ public class SalariesReport implements Button.ClickListener,
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
-        excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
-        excelBtn.setEnabled(false);
-        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
-        excelBtn.addClickListener(this);
+        pdfBtn = new Button();
+        pdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        pdfBtn.setWidth("100%");
+        pdfBtn.setEnabled(false);
+        pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
+        pdfBtn.addClickListener(this);
+
+        fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
+        fromDateDF.setWidth("100%");
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setRequired(true);
+        fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        fromDateDF.setDateFormat(SystemSettings.datePattern);
+        fromDateDF.setValue(new Date());
+        fromDateDF.addValueChangeListener(this);
+
+        tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
+        tillDateDF.setWidth("100%");
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setRequired(true);
+        tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        tillDateDF.setDateFormat(SystemSettings.datePattern);
+        tillDateDF.setValue(new Date());
+        tillDateDF.addValueChangeListener(this);
 
         currencySelect = new ComboBoxMax(myUI.getMessage(SptMessages.Currency));
         currencySelect.setNullSelectionAllowed(false);
@@ -116,59 +137,49 @@ public class SalariesReport implements Button.ClickListener,
         }
         currencySelect.setValue(2);
 
-        selectAllBtn = new Button(myUI.getMessage(SptMessages.AllCategories));
-        selectAllBtn.setWidth("100%");
-        selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
-        selectAllBtn.addClickListener(this);
-
-        deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllBtn.setWidth("100%");
-        deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
-        deselectAllBtn.addClickListener(this);
-
-        leftGrid.addComponent(currencySelect, 0, 0, 3, 0);
-        leftGrid.addComponent(selectAllBtn, 0, 1, 1, 1);
-        leftGrid.addComponent(deselectAllBtn, 2, 1, 3, 1);
+        leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
+        leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
+        leftGrid.addComponent(currencySelect, 0, 1, 3, 1);
         leftGrid.addComponent(employeeCategoriesTable, 0, 2, 3, 2);
         leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
-        leftGrid.addComponent(excelBtn, 3, 3);
+        leftGrid.addComponent(pdfBtn, 3, 3);
         leftGrid.setRowExpandRatio(2, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     private void buildRightLayout() {
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTreeTable();
+        dataTable = new FormattedTable();
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.addStyleName("noWrapHeader");
         vl.addComponent(dataTable);
-        spltPanel.setSecondComponent(vl);
+        splitPanel.setSecondComponent(vl);
     }
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            if (employeeCategoriesTable.getValue() != null && currencySelect.isValid()) {
+            if (employeeCategoriesTable.getValue() != null && currencySelect.isValid() && fromDateDF.isValid() && tillDateDF.isValid()) {
                 try {
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
-                    dbat.exec_account_remains(myUI, employeeCategoriesTable,
-                            (Integer) currencySelect.getValue(), myUI.getUser().getSchool_id(), dataTable);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Salary), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Ratio), Table.Align.RIGHT);
+                    dbat.exec_current_account_state(myUI, (Integer) employeeCategoriesTable.getValue(), fromDateDF.getValue(),
+                            tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool_id());
+
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Accrual), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Payout), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
-                        excelBtn.setEnabled(true);
+                        pdfBtn.setEnabled(true);
                     }
                     dbat.close();
                 } catch (Exception e) {
@@ -176,36 +187,36 @@ public class SalariesReport implements Button.ClickListener,
                     logger.catching(e);
                 }
             }
-        } else if (source == excelBtn) {
+        } else if (source == pdfBtn) {
+            StudentInfoPdf st;
             try {
-                excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
-                        + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
-                excelReport.setReportTitle(myUI.getMessage(SptMessages.SalariesReport) + " ("
-                        + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
-                excelReport.setDisplayTotals(true);
-                excelReport.convertTable();
-                excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellValue(
-                        dataTable.getColumnFooter(myUI.getMessage(SptMessages.Ratio)));
-                excelReport.sendConverted();
+                DbSchool dbsc = new DbSchool();
+                dbsc.connect();
+                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                dbsc.close();
+                if (st.getScl_address() != null && st.getScl_phone() != null
+                        && st.getScl_name_ru() != null) {
+                    new CurrentAccountStatementPdf(myUI, dataTable, employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
+                            myUI.getMessage(SptMessages.Title)).getValue().toString(),
+                            currencySelect.getItemCaption(currencySelect.getValue()), fromDateDF.getValue(), tillDateDF.getValue(), st);
+                } else {
+                    Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
+                            Notification.Type.WARNING_MESSAGE);
+                }
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (source == selectAllBtn) {
-            employeeCategoriesTable.setValue(employeeCategoriesTable.getContainerDataSource().getItemIds());
-        } else if (source == deselectAllBtn) {
-            employeeCategoriesTable.setValue(null);
         }
     }
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
-        if (excelBtn.isEnabled()) {
-            if (property == employeeCategoriesTable || property == currencySelect) {
-                excelBtn.setEnabled(false);
-                dataTable.getContainerDataSource().removeAllItems();
+        if (pdfBtn.isEnabled()) {
+            if (property == employeeCategoriesTable || property == tillDateDF || property == fromDateDF || property == currencySelect) {
+                pdfBtn.setEnabled(false);
+                dataTable.setContainerDataSource(null);
             }
         }
     }

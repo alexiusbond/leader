@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.students;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -50,7 +50,7 @@ public class YearMonthReport implements Button.ClickListener,
     private Subject currentUser = SecurityUtils.getSubject();
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private FilterTable schoolTable;
     private ComboBoxMax yearSelect;
@@ -66,9 +66,9 @@ public class YearMonthReport implements Button.ClickListener,
     public double contracts = 0.0, discounts = 0.0, debts = 0.0, nets = 0.0,
             paids = 0.0, lefts = 0.0, inst_plans = 0.0;
 
-    public YearMonthReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public YearMonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
         NATURAL_COL_ORDER_YEAR = new String[]{myUI.getMessage(SptMessages.ClassName),
@@ -228,8 +228,8 @@ public class YearMonthReport implements Button.ClickListener,
         leftGrid.addComponent(generateBtn, 0, 5, 1, 5);
         leftGrid.addComponent(makePdfBtn, 2, 5);
         leftGrid.addComponent(excelBtn, 3, 5);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     private void buildRightLayout() {
@@ -238,7 +238,7 @@ public class YearMonthReport implements Button.ClickListener,
         rightLay.setSpacing(true);
         rightLay.setWidth("100%");
         rightLay.setImmediate(true);
-        spltPanel.setSecondComponent(rightLay);
+        splitPanel.setSecondComponent(rightLay);
     }
 
     public FormattedTable createTable(String caption) {

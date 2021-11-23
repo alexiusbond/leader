@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -42,14 +42,14 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.tepi.filtertable.FilterTreeTable;
 
-public class AccountingMonthReport implements Button.ClickListener,
+public class MonthReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(AccountingMonthReport.class);
+    static final Logger logger = LogManager.getLogger(MonthReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
             selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     public FormattedTreeTable incomesDataTable, outcomesDataTable;
@@ -61,9 +61,9 @@ public class AccountingMonthReport implements Button.ClickListener,
     private Subject currentUser = SecurityUtils.getSubject();
     private Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
 
-    public AccountingMonthReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public MonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
     }
@@ -231,8 +231,8 @@ public class AccountingMonthReport implements Button.ClickListener,
         leftGrid.addComponent(excelBtn, 3, 7);
         leftGrid.setRowExpandRatio(4, 1);
         leftGrid.setRowExpandRatio(6, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
 
     }
 
@@ -261,7 +261,7 @@ public class AccountingMonthReport implements Button.ClickListener,
         outcomesDataTable.addStyleName("noWrapHeader");
         outcomesDataTable.addStyleName("noWrapFooter");
 
-        spltPanel.setSecondComponent(rightLayout);
+        splitPanel.setSecondComponent(rightLayout);
     }
 
     @Override

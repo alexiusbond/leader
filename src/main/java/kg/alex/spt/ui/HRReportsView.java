@@ -1,5 +1,6 @@
 package kg.alex.spt.ui;
 
+import kg.alex.spt.reports.hr.HRGeneralReport;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable;
@@ -10,7 +11,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.HRLessonHoursReport;
+import kg.alex.spt.reports.hr.HRLessonHoursReport;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -21,7 +22,6 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
 
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
-    public HorizontalSplitPanel mainPage;
 
     public HRReportsView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -54,6 +54,9 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
         repTypeSelect.setWidth("100%");
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
+        if (currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmHrGeneralReport)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.HRGeneralReport));
+        }
         if (currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmLessonHoursReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.HRLessonHoursReport));
         }
@@ -68,7 +71,9 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
             leftGrid.removeComponent(0, 1);
             if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.HRLessonHoursReport))) {
                 new HRLessonHoursReport(myUI, this);
-            } 
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.HRGeneralReport))) {
+                new HRGeneralReport(myUI, this);
+            }
         }
     }
 

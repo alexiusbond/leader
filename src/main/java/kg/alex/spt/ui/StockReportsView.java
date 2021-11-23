@@ -10,8 +10,8 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.ProductMovementsReport;
-import kg.alex.spt.reports.StockGeneralReport;
+import kg.alex.spt.reports.stock.ProductMovementsReport;
+import kg.alex.spt.reports.stock.StockGeneralReport;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -23,8 +23,6 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
 
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
-    public HorizontalSplitPanel mainPage;
-
     public StockReportsView(MyVaadinUI myUI) {
         this.myUI = myUI;
         buildGridLayouts();

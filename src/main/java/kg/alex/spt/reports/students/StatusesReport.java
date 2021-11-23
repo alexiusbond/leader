@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.students;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -44,7 +44,7 @@ public class StatusesReport implements Button.ClickListener,
     private MyVaadinUI myUI;
     private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
             selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private ComboBoxMax yearSelect;
     public ComboBoxMultiselectMax statusMS;
@@ -54,9 +54,9 @@ public class StatusesReport implements Button.ClickListener,
 
     private Subject currentUser = SecurityUtils.getSubject();
 
-    public StatusesReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public StatusesReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
     }
@@ -204,8 +204,8 @@ public class StatusesReport implements Button.ClickListener,
         leftGrid.addComponent(generateBtn, 0, 6, 2, 6);
         leftGrid.addComponent(excelBtn, 3, 6);
         leftGrid.setRowExpandRatio(3, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
 
     }
 
@@ -219,9 +219,9 @@ public class StatusesReport implements Button.ClickListener,
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.addStyleName("noWrapHeader");
-        spltPanel.setSecondComponent(dataTable);
+        splitPanel.setSecondComponent(dataTable);
         vl.addComponent(dataTable);
-        spltPanel.setSecondComponent(vl);
+        splitPanel.setSecondComponent(vl);
     }
 
     @Override

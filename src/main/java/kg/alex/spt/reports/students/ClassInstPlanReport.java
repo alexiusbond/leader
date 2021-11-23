@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.students;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -18,6 +18,7 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.Date;
@@ -26,12 +27,12 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudentCalls;
+import kg.alex.spt.dao.DbStudentInstallmentPlan;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
-import kg.alex.spt.pdf.ClassCallsPdf;
+import kg.alex.spt.pdf.ClassInstallmentPlanPdf;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -39,31 +40,34 @@ import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
-public class CallsReport implements Button.ClickListener,
+public class ClassInstPlanReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(CallsReport.class);
+    static final Logger logger = LogManager.getLogger(ClassInstPlanReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
+    private EnhancedFormatExcelExport excelReport;
     private GridLayout leftGrid;
     private FilterTable classTable;
     private ComboBoxMax yearSelect;
     private ComboBoxMultiselectMax educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
-    private EnhancedFormatExcelExport excelReport;
-    private IndexedContainer callsCont;
+    private IndexedContainer installmentCont;
     private Date fromDate, tillDate;
+    private String[] NATURAL_COL_ORDER;
+    public double total;
 
-    public int total;
-
-    public CallsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public ClassInstPlanReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
-        buildRightPanel();
+        NATURAL_COL_ORDER = new String[]{
+            myUI.getMessage(SptMessages.Firstname), myUI.getMessage(SptMessages.Surname),
+            myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.Phone),
+            myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount)};
     }
 
     private void buildLeftPanel() {
@@ -196,15 +200,15 @@ public class CallsReport implements Button.ClickListener,
         leftGrid.addComponent(makePdfBtn, 2, 5);
         leftGrid.addComponent(excelBtn, 3, 5);
         leftGrid.setRowExpandRatio(3, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            setRightTable();
+            buildRightPanel();
             makePdfBtn.setEnabled(true);
             excelBtn.setEnabled(true);
         } else if (source == makePdfBtn) {
@@ -220,11 +224,12 @@ public class CallsReport implements Button.ClickListener,
                             && st.getScl_name_ru() != null) {
                         fromDate = fromDateDF.getValue();
                         tillDate = tillDateDF.getValue();
-                        new ClassCallsPdf(myUI, callsCont,
+                        new ClassInstallmentPlanPdf(myUI, installmentCont,
                                 yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(SptMessages.Title)).getValue().toString(),
                                 fromDate, tillDate, st, total);
                     } else {
+
                         Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);
                     }
@@ -243,14 +248,10 @@ public class CallsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.CallsReport));
+                    excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
+                    excelReport.setReportTitle(myUI.getMessage(SptMessages.InstpLanPaymentsReport));
                     excelReport.setDisplayTotals(true);
-                    excelReport.convertTable();
-                    excelReport.getTotalsRow().getCell(0).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(5).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(5).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.WhoCalled)));
-                    excelReport.sendConverted();
+                    excelReport.export();
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -277,28 +278,27 @@ public class CallsReport implements Button.ClickListener,
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(FormattedTable.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
-        vl.addComponent(dataTable);
-        spltPanel.setSecondComponent(vl);
-    }
-
-    private void setRightTable() {
         try {
-            DbStudentCalls dbsc = new DbStudentCalls();
-            dbsc.connect();
+            DbStudentInstallmentPlan dbip = new DbStudentInstallmentPlan();
+            dbip.connect();
             dataTable.clear();
             total = 0;
-            callsCont = dbsc.execSQL_getCallsReport(myUI,
+            installmentCont = dbip.execSQL_InstPlanByClass(myUI,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
                     SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
                     SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
-            dataTable.setContainerDataSource(callsCont);
-            dbsc.close();
+            dataTable.setContainerDataSource(installmentCont);
+            dbip.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setColumnFooter(myUI.getMessage(SptMessages.WhoCalled),
+        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
+        dataTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
                 myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.dFormat.format(total));
+        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        vl.addComponent(dataTable);
+        splitPanel.setSecondComponent(vl);
     }
 }

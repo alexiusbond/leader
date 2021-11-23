@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
@@ -40,14 +40,14 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.*;
 
-public class AccountingBalanceReport implements Button.ClickListener,
+public class BalanceReport implements Button.ClickListener,
         Property.ValueChangeListener, Serializable {
 
-    static final Logger logger = LogManager.getLogger(AccountingBalanceReport.class);
+    static final Logger logger = LogManager.getLogger(BalanceReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, selectAllAssertsBtn, deselectAllAssertsBtn,
             selectAllDebtsBtn, deselectAllDebtsBtn, excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     public FormattedTreeTable assertsDataTable, debtsDataTable;
@@ -60,9 +60,9 @@ public class AccountingBalanceReport implements Button.ClickListener,
     private Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
     private FileDownloader fd;
 
-    public AccountingBalanceReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public BalanceReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         tabSheet = new TabSheet();
         tabSheet.setSizeFull();
@@ -73,7 +73,7 @@ public class AccountingBalanceReport implements Button.ClickListener,
         vl.setMargin(true);
         vl.addComponent(tabSheet);
 
-        spltPanel.setSecondComponent(vl);
+        splitPanel.setSecondComponent(vl);
     }
 
     private void buildLeftPanel() {
@@ -194,8 +194,8 @@ public class AccountingBalanceReport implements Button.ClickListener,
         leftGrid.addComponent(excelBtn, 3, 5);
         leftGrid.setRowExpandRatio(2, 1);
         leftGrid.setRowExpandRatio(4, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     private VerticalLayout buildRightLayout() {

@@ -397,6 +397,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String CurrentAccountStatementReport = generateId();
     public static final String SalariesReport = generateId();
     public static final String HRLessonHoursReport = generateId();
+    public static final String HRGeneralReport = generateId();
     public static final String Yearly = generateId();
     public static final String Monthly = generateId();
     public static final String Total_Active = generateId();

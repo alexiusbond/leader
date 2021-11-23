@@ -35,7 +35,7 @@ import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.AccountingSchoolsReport;
+import kg.alex.spt.reports.accounting.SchoolsReport;
 import kg.alex.spt.ui.PayoutsView;
 import kg.alex.spt.ui.TransactionsView;
 import kg.alex.spt.utils.ComboBoxMax;
@@ -627,7 +627,7 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public void exec_schools_accounting(MyVaadinUI myUI, String school_ids, Date from_date, Date till_date,
-                                        AccountingSchoolsReport sar) throws SQLException {
+                                        SchoolsReport sar) throws SQLException {
 
 
         String sql = "SELECT sch.id, sch.name_ru, "

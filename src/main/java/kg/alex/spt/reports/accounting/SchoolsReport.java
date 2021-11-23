@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -31,22 +31,22 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
 
-public class AccountingSchoolsReport implements Button.ClickListener,
+public class SchoolsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(AccountingSchoolsReport.class);
+    static final Logger logger = LogManager.getLogger(SchoolsReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     public FormattedTable dataTable;
     private DateField fromDateDF, tillDateDF;
     public FilterTable schoolTable;
     private EnhancedFormatExcelExport excelReport;
 
-    public AccountingSchoolsReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public SchoolsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
     }
@@ -133,8 +133,8 @@ public class AccountingSchoolsReport implements Button.ClickListener,
         leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
         leftGrid.addComponent(excelBtn, 3, 3);
         leftGrid.setRowExpandRatio(2, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
 
     }
 
@@ -149,7 +149,7 @@ public class AccountingSchoolsReport implements Button.ClickListener,
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.addStyleName("noWrapHeader");
         vl.addComponent(dataTable);
-        spltPanel.setSecondComponent(vl);
+        splitPanel.setSecondComponent(vl);
     }
 
     @Override

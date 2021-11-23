@@ -1,6 +1,6 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.reports.*;
+import kg.alex.spt.reports.accounting.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable;
@@ -22,7 +22,6 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
 
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
-    public HorizontalSplitPanel mainPage;
 
     public AccountingReportsView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -86,19 +85,19 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
             if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.MonthReport))) {
-                new AccountingMonthReport(myUI, this);
+                new MonthReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SchoolAccountingReport))) {
-                new AccountingSchoolsReport(myUI, this);
+                new SchoolsReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ByDateReport))) {
-                new AccountingDateReport(myUI, this);
+                new DateReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.GeneralAccountingReport))) {
-                new AccountingGeneralReport(myUI, this);
+                new GeneralReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.CurrentAccountStatementReport))) {
                 new CurrentAccountStatementReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SalariesReport))) {
                 new SalariesReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.AccountingBalanceReport))) {
-                new AccountingBalanceReport(myUI, this);
+                new BalanceReport(myUI, this);
             }
         }
     }

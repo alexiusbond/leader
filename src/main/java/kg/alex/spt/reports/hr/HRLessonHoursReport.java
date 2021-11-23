@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.reports;
+package kg.alex.spt.reports.hr;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
@@ -51,9 +51,9 @@ public class HRLessonHoursReport implements Button.ClickListener,
     static final Logger logger = LogManager.getLogger(HRLessonHoursReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn, selectAllBranchesBtn, deselectAllBranchesBtn, selectAllPositionsBtn, deselectAllPositionsBtn, selectAllExtraPositionsBtn, deselectAllExtraPositionsBtn;
-    private HorizontalSplitPanel spltPanel;
+    private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
-    public FilterTable schoolTable, branchTable, positionTable, extraPositionTable;
+    private FilterTable schoolTable, branchTable, positionTable, extraPositionTable;
     private ComboBoxMultiselectMax workingStatusesMCB;
     private ComboBoxMax yearSelect;
     private EnhancedFormatExcelExport excelReport;
@@ -62,10 +62,10 @@ public class HRLessonHoursReport implements Button.ClickListener,
     private Subject currentUser = SecurityUtils.getSubject();
     private VerticalLayout vl = new VerticalLayout();
 
-    public HRLessonHoursReport(final MyVaadinUI ui, final HorizontalSplitPanel spltPanel) {
+    public HRLessonHoursReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title)};
-        this.spltPanel = spltPanel;
+        this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
     }
@@ -122,7 +122,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         }
 
         GridLayout schoolsGrid = new GridLayout(2, 2);
-        schoolsGrid.setMargin(new MarginInfo(true, false));
+        schoolsGrid.setMargin(new MarginInfo(true, false, false, false));
         schoolsGrid.setSizeFull();
         schoolsGrid.setSpacing(true);
         schoolsGrid.addComponent(selectAllSchoolsBtn);
@@ -157,7 +157,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         branchTable.addValueChangeListener(this);
 
         GridLayout branchesGrid = new GridLayout(2, 2);
-        branchesGrid.setMargin(new MarginInfo(true, false));
+        branchesGrid.setMargin(new MarginInfo(true, false, false, false));
         branchesGrid.setSizeFull();
         branchesGrid.setSpacing(true);
         branchesGrid.addComponent(selectAllBranchesBtn);
@@ -192,7 +192,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         positionTable.addValueChangeListener(this);
 
         GridLayout positionsGrid = new GridLayout(2, 2);
-        positionsGrid.setMargin(new MarginInfo(true, false));
+        positionsGrid.setMargin(new MarginInfo(true, false, false, false));
         positionsGrid.setSizeFull();
         positionsGrid.setSpacing(true);
         positionsGrid.addComponent(selectAllPositionsBtn);
@@ -227,7 +227,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         extraPositionTable.addValueChangeListener(this);
 
         GridLayout extraPositionsGrid = new GridLayout(2, 2);
-        extraPositionsGrid.setMargin(new MarginInfo(true, false));
+        extraPositionsGrid.setMargin(new MarginInfo(true, false, false, false));
         extraPositionsGrid.setSizeFull();
         extraPositionsGrid.setSpacing(true);
         extraPositionsGrid.addComponent(selectAllExtraPositionsBtn);
@@ -303,15 +303,15 @@ public class HRLessonHoursReport implements Button.ClickListener,
         leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
         leftGrid.addComponent(excelBtn, 3, 3);
         leftGrid.setRowExpandRatio(1, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
-        ((GridLayout) spltPanel.getFirstComponent()).setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
 
     private void buildRightLayout() {
         vl.setWidth("100%");
         vl.setSpacing(true);
         vl.setMargin(true);
-        spltPanel.setSecondComponent(vl);
+        splitPanel.setSecondComponent(vl);
     }
 
     @Override
