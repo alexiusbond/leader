@@ -58,9 +58,9 @@ public class DbStudent extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Surname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Middlename), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.DateOfBirth), Date.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Photo), String.class, null);
         container.addContainerProperty(SystemSettings.gender_id, Integer.class, 0);
@@ -80,11 +80,11 @@ public class DbStudent extends BaseDb {
             Item item = container.addItem(result.getInt("s.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("s.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("s.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("s.surname"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Middlename)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.MiddleName)).setValue(
                     result.getString("s.middle_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.DateOfBirth)).setValue(
                     result.getDate("s.date_of_birth"));
@@ -161,9 +161,9 @@ public class DbStudent extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Surname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Middlename), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Gender), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.DateOfBirth), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
@@ -188,11 +188,11 @@ public class DbStudent extends BaseDb {
             Item item = container.addItem(result.getString("s.login"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("s.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("s.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("s.surname"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Middlename)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.MiddleName)).setValue(
                     result.getString("s.middle_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Gender)).setValue(
                     result.getString("g.name"));
@@ -240,8 +240,8 @@ public class DbStudent extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(SystemSettings.button, Button.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(SystemSettings.class_id, Integer.class, 0);
@@ -256,9 +256,9 @@ public class DbStudent extends BaseDb {
                             result.getString("s.id"), FontAwesome.INFO));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("s.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("s.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("s.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
                     result.getString("es.name"));
@@ -470,9 +470,9 @@ public class DbStudent extends BaseDb {
             Item item = container.addItem(result.getInt("st.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));

@@ -320,8 +320,8 @@ public class DbStudentOrder extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Year), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Reasons), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FromClass), String.class, null);
@@ -334,9 +334,9 @@ public class DbStudentOrder extends BaseDb {
             Item item = container.addItem(result.getInt("st.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                     result.getString("y.name"));

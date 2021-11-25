@@ -139,11 +139,11 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
         container.addContainerProperty(
                 myUI.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(
-                myUI.getMessage(SptMessages.Firstname), String.class, null);
+                myUI.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(
-                myUI.getMessage(SptMessages.Surname), String.class, null);
+                myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(
-                myUI.getMessage(SptMessages.Middlename), String.class, null);
+                myUI.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(
                 myUI.getMessage(SptMessages.Gender), String.class, null);
         container.addContainerProperty(
@@ -172,11 +172,11 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
             if (item != null) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                         list.get(i).getLogin());
-                item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+                item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                         list.get(i).getName());
-                item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+                item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                         list.get(i).getSur_name());
-                item.getItemProperty(myUI.getMessage(SptMessages.Middlename)).setValue(
+                item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(
                         list.get(i).getMiddle_name());
                 item.getItemProperty(myUI.getMessage(SptMessages.Gender)).setValue(
                         list.get(i).getGender());

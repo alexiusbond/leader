@@ -139,8 +139,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.catching(ex);
         }
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.Surname),
-                myUI.getMessage(SptMessages.Firstname),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.LastName),
+                myUI.getMessage(SptMessages.FirstName),
                 myUI.getMessage(SptMessages.WorkingStatus),
                 myUI.getMessage(SptMessages.MainPosition)};
 
@@ -480,7 +480,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         childrenTable.setStyleName(ValoTheme.TABLE_SMALL);
         childrenTable.setPageLength(8);
         familyInfoLay.addComponent(childrenTable, 0, 7, 1, 7);
-            }
+    }
 
 
     private void buildDocumentsLayout() {
@@ -1569,17 +1569,17 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         surnameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false), true);
-        surnameTF.setCaption(myUI.getMessage(SptMessages.Surname));
+        surnameTF.setCaption(myUI.getMessage(SptMessages.LastName));
         formLay.addComponent(surnameTF);
 
         nameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false), true);
-        nameTF.setCaption(myUI.getMessage(SptMessages.Firstname));
+        nameTF.setCaption(myUI.getMessage(SptMessages.FirstName));
         formLay.addComponent(nameTF);
 
         middlenameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 100, true), false);
-        middlenameTF.setCaption(myUI.getMessage(SptMessages.Middlename));
+        middlenameTF.setCaption(myUI.getMessage(SptMessages.MiddleName));
         formLay.addComponent(middlenameTF);
 
         birthDateDF = createDateField(new Date(), null, myUI.getMessage(SptMessages.DateOfBirth),
@@ -2118,27 +2118,27 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         loginTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, myUI.getMessage(SptMessages.Id)).getValue().toString());
         nameTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, myUI.getMessage(SptMessages.Firstname)).getValue().toString());
+                emplID, myUI.getMessage(SptMessages.FirstName)).getValue().toString());
         surnameTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, myUI.getMessage(SptMessages.Surname)).getValue().toString());
+                emplID, myUI.getMessage(SptMessages.LastName)).getValue().toString());
         if (employeesDataTable.getContainerDataSource().getContainerProperty(
-                emplID, myUI.getMessage(SptMessages.Middlename)).getValue() != null) {
+                emplID, myUI.getMessage(SptMessages.MiddleName)).getValue() != null) {
             middlenameTF.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
-                    emplID, myUI.getMessage(SptMessages.Middlename)).getValue().toString());
+                    emplID, myUI.getMessage(SptMessages.MiddleName)).getValue().toString());
         } else {
             middlenameTF.setValue("");
         }
-        genderCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
+        genderCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, SystemSettings.gender_id).getValue());
         birthDateDF.setValue((Date) employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, myUI.getMessage(SptMessages.DateOfBirth)).getValue());
-        nationalityCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
+        nationalityCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, SystemSettings.nationality_id).getValue());
-        martialStatusCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
+        martialStatusCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, SystemSettings.martial_status_id).getValue());
-        mainPositionCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
+        mainPositionCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, SystemSettings.position_id).getValue());
-        contractCategoryCB.setValue((Integer) employeesDataTable.getContainerDataSource().getContainerProperty(
+        contractCategoryCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, SystemSettings.salary_category_id).getValue());
         if (employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.Photo)).getValue() != null) {
@@ -2527,9 +2527,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
                         myUI.getMessage(SptMessages.ConfirmStudentDeletion)
                                 + " " + employeesDataTable.getContainerProperty(emplID,
-                                myUI.getMessage(SptMessages.Firstname)).getValue().toString()
+                                myUI.getMessage(SptMessages.FirstName)).getValue().toString()
                                 + " " + employeesDataTable.getContainerProperty(emplID,
-                                myUI.getMessage(SptMessages.Surname)).getValue().toString()
+                                myUI.getMessage(SptMessages.LastName)).getValue().toString()
                                 + "?",
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
@@ -4466,9 +4466,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(loginTF.getValue());
         item.getItemProperty(SystemSettings.id).setValue(id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(surnameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Middlename)).setValue(middlenameTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(nameTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(surnameTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(middlenameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(birthDateDF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Photo)).setValue(photoName);
         item.getItemProperty(myUI.getMessage(SptMessages.Permissions)).setValue(
@@ -4494,11 +4494,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.Id)).setValue(loginTF.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                myUI.getMessage(SptMessages.Firstname)).setValue(nameTF.getValue());
+                myUI.getMessage(SptMessages.FirstName)).setValue(nameTF.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                myUI.getMessage(SptMessages.Surname)).setValue(surnameTF.getValue());
+                myUI.getMessage(SptMessages.LastName)).setValue(surnameTF.getValue());
         employeesDataTable.getContainerProperty(emplID,
-                myUI.getMessage(SptMessages.Middlename)).setValue(middlenameTF.getValue());
+                myUI.getMessage(SptMessages.MiddleName)).setValue(middlenameTF.getValue());
         employeesDataTable.getContainerProperty(emplID,
                 myUI.getMessage(SptMessages.Photo)).setValue(photoName);
         employeesDataTable.getContainerProperty(emplID,
@@ -4577,8 +4577,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 lessonsTable.removeAllItems();
                 ordersTable.removeAllItems();
                 workingStatCont.getContainerProperty((Integer) employeesDataTable
-                                .getContainerProperty(emplID,
-                                        SystemSettings.working_status_id).getValue(), SystemSettings.count)
+                        .getContainerProperty(emplID,
+                                SystemSettings.working_status_id).getValue(), SystemSettings.count)
                         .setValue(((Integer) workingStatCont.getContainerProperty((Integer) employeesDataTable
                                         .getContainerProperty(emplID,
                                                 SystemSettings.working_status_id).getValue(),

@@ -65,7 +65,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{
-            myUI.getMessage(SptMessages.Firstname), myUI.getMessage(SptMessages.Surname),
+            myUI.getMessage(SptMessages.FirstName), myUI.getMessage(SptMessages.LastName),
             myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.Phone),
             myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount)};
     }

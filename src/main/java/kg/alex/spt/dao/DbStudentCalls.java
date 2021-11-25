@@ -113,17 +113,17 @@ public class DbStudentCalls extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.WhoCalled), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sc.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));

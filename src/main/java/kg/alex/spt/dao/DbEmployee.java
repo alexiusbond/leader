@@ -119,9 +119,9 @@ public class DbEmployee extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Surname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Middlename), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.DateOfBirth), Date.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Photo), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.MainPosition), String.class, null);
@@ -155,11 +155,11 @@ public class DbEmployee extends BaseDb {
             item.getItemProperty(SystemSettings.id).setValue(result.getInt("e.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("e.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("e.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("e.surname"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Middlename)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.MiddleName)).setValue(
                     result.getString("e.middle_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.DateOfBirth)).setValue(
                     result.getDate("e.date_of_birth"));
@@ -367,8 +367,8 @@ public class DbEmployee extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.MainPosition), ComboBoxMax.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FromDate), DateField.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), TextField.class, null);
@@ -389,9 +389,9 @@ public class DbEmployee extends BaseDb {
             Item item = container.addItem(result.getInt("e.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("e.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("e.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("e.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.Position)).setValue(
                     result.getString("p.name"));
@@ -587,5 +587,97 @@ public class DbEmployee extends BaseDb {
         stat.setString(2, oldroleName);
         int status = stat.executeUpdate();
         return status;
+    }
+
+    public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, String school_ids, String positionIds,
+                                    String extraPositionIds, String workingStatusIds, String genderIds,
+                                    String nationalityIds, String martialStatusIds, String advisorIds,
+                                    String salaryCategoryIds, String citizenshipIds) throws SQLException {
+
+        String sql = "SELECT e.id, e.name, e.surname, e.middle_name, e.date_of_birth, e.can_advisor, g.name, n.name, " +
+                "m.name, ws.name, p.name, GROUP_CONCAT(DISTINCT p2.name ORDER BY eo2.id ASC SEPARATOR ', ') AS extra_positions, " +
+                "GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 1, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS main_branch, " +
+                "GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 2, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS extra_branches, " +
+                "ebh.hours, ebh.extra, sch.name_ru, sch.code, sal.name, cntr.name FROM employee AS e " +
+                "LEFT JOIN gender AS g ON g.id = e.gender_id " +
+                "LEFT JOIN nationality AS n ON n.id = e.nationality_id " +
+                "LEFT JOIN hr_employee_contacts AS cont ON cont.employee_id = e.id " +
+                "LEFT JOIN hr_country AS cntr ON cntr.id = cont.hr_country_id " +
+                "LEFT JOIN hr_martial_status AS m ON m.id = e.hr_martial_status_id " +
+                "LEFT JOIN hr_employee_branch AS eb ON eb.employee_id = e.id " +
+                "LEFT JOIN hr_branch AS br ON br.id = eb.hr_branch_id " +
+                "LEFT JOIN hr_employee_order AS eo ON eo.id = (SELECT MAX(id) FROM hr_employee_order WHERE employee_id = e.id " +
+                "AND to_date IS NULL AND school_id IN (" + school_ids + ")) " +
+                "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id " +
+                "LEFT JOIN position AS pos ON p.id = pos.hr_position_id " +
+                "LEFT JOIN hr_employee_order AS eo2 ON eo2.employee_id = e.id AND eo2.hr_orders_id = 2 " +
+                "AND (eo2.to_date IS NULL OR eo2.to_date >= NOW()) " +
+                "LEFT JOIN hr_position AS p2 ON p2.id = eo2.hr_position_id " +
+                "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id " +
+                "LEFT JOIN working_status AS ws ON ord.working_status_id = ws.id " +
+                "LEFT JOIN (SELECT SUM(hours) AS hours, SUM(extra_hours) AS extra, employee_id AS e_id, year_id AS y_id, " +
+                "school_id AS sch_id FROM hr_employee_branch_hours GROUP BY employee_id , year_id , school_id) AS ebh " +
+                "ON ebh.e_id = e.id AND ebh.y_id = ? AND ebh.sch_id = eo.school_id " +
+                "LEFT JOIN school AS sch ON sch.id = eo.school_id " +
+                "LEFT JOIN acc_category AS cat ON e.id = cat.employee_id " +
+                "LEFT JOIN acc_category AS cat2 ON cat.parent_id = cat2.id " +
+                "LEFT JOIN hr_salary_category AS sal ON cat2.parent_id = sal.acc_category_id " +
+                "WHERE eo.school_id IN (" + school_ids + ") AND ord.working_status_id IS NOT NULL " +
+                "AND ws.id IN (" + workingStatusIds + ") AND p.id IN (" + positionIds + ") " +
+                "AND g.id IN (" + genderIds + ") AND n.id IN (" + nationalityIds + ") AND m.id IN (" + martialStatusIds +
+                ") AND e.can_advisor IN (" + advisorIds + ") AND sal.id IN (" + salaryCategoryIds + ") AND cntr.id IN (" + citizenshipIds + ") ";
+        if (extraPositionIds != null) {
+            sql += "AND p2.id IN (" + extraPositionIds + ") ";
+        }
+        sql += "GROUP BY e.id ORDER BY sch.id , e.id DESC";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, year_id);
+        System.out.println(stat);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.School), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.MiddleName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.DateOfBirth), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ContractType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Position), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Hours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.MainBranch), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraBranches), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.CanBeAdvisor), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Gender), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Nationality), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Citizenship), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.MartialStatus), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("e.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(result.getString("sch.code") + " - " +
+                    result.getString("sch.name_ru"));
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("e.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("e.surname"));
+            item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(result.getString("e.middle_name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(SystemSettings.df.format(
+                    result.getDate("e.date_of_birth")));
+            item.getItemProperty(myUI.getMessage(SptMessages.ContractType)).setValue(result.getString("sal.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Position)).setValue(result.getString("p.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(result.getString("extra_positions"));
+            item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(result.getString("main_branch"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(result.getString("extra_branches"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Gender)).setValue(result.getString("g.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Nationality)).setValue(result.getString("n.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Citizenship)).setValue(result.getString("cntr.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.MartialStatus)).setValue(result.getString("m.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(result.getString("ws.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(result.getInt("e.can_advisor") == 1 ?
+                    myUI.getMessage(SptMessages.Yes) : myUI.getMessage(SptMessages.No));
+            item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(result.getInt("ebh.hours"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(result.getInt("ebh.extra"));
+        }
+        return container;
     }
 }

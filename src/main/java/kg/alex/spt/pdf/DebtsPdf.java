@@ -104,8 +104,8 @@ public class DebtsPdf {
                     Tplan.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     Tplan.addCell(new Phrase(" №", ordFontBold));
-                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Firstname), ordFontBold));
-                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Surname), ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName), ordFontBold));
+                    Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.LastName), ordFontBold));
                     Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
                     Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.InstallmentPlan), ordFontBold));
                     Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Paid), ordFontBold));
@@ -120,9 +120,9 @@ public class DebtsPdf {
                         Object next = iter.next();
                         Tplan.addCell(new Phrase(i + "", tableFont));
                         Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Firstname)).getValue().toString(), tableFont));
+                                myUI.getMessage(SptMessages.FirstName)).getValue().toString(), tableFont));
                         Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Surname)).getValue().toString(), tableFont));
+                                myUI.getMessage(SptMessages.LastName)).getValue().toString(), tableFont));
                         Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
                         Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);

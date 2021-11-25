@@ -66,8 +66,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id),
-            myUI.getMessage(SptMessages.Firstname),
-            myUI.getMessage(SptMessages.Surname),
+            myUI.getMessage(SptMessages.FirstName),
+            myUI.getMessage(SptMessages.LastName),
             myUI.getMessage(SptMessages.MainPosition),
             myUI.getMessage(SptMessages.FromDate),
             myUI.getMessage(SptMessages.Note)};
@@ -89,8 +89,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         search1TF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         search1TF.setWidth("100%");
         search1TF.setInputPrompt(myUI.getMessage(SptMessages.Search) + " ("
-                + myUI.getMessage(SptMessages.Id) + " / " + myUI.getMessage(SptMessages.Firstname) + " / "
-                + myUI.getMessage(SptMessages.Surname) + " / " + myUI.getMessage(SptMessages.Position) + ")");
+                + myUI.getMessage(SptMessages.Id) + " / " + myUI.getMessage(SptMessages.FirstName) + " / "
+                + myUI.getMessage(SptMessages.LastName) + " / " + myUI.getMessage(SptMessages.Position) + ")");
         search1TF.addValueChangeListener(this);
         gl.addComponent(search1TF);
 
@@ -98,8 +98,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         search2TF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         search2TF.setWidth("100%");
         search1TF.setInputPrompt(myUI.getMessage(SptMessages.Search) + " ("
-                + myUI.getMessage(SptMessages.Id) + " / " + myUI.getMessage(SptMessages.Firstname) + " / "
-                + myUI.getMessage(SptMessages.Surname) + " / " + myUI.getMessage(SptMessages.Position) + ")");
+                + myUI.getMessage(SptMessages.Id) + " / " + myUI.getMessage(SptMessages.FirstName) + " / "
+                + myUI.getMessage(SptMessages.LastName) + " / " + myUI.getMessage(SptMessages.Position) + ")");
         search2TF.addValueChangeListener(this);
         gl.addComponent(search2TF);
 
@@ -242,8 +242,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         fullnameLb.setWidth("100%");
         fullnameLb.setContentMode(ContentMode.HTML);
         fullnameLb.setStyleName(ValoTheme.LABEL_SUCCESS);
-        fullnameLb.setValue("<b>" + myUI.getMessage(SptMessages.FullName) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).getValue()
-                + " " + item.getItemProperty(myUI.getMessage(SptMessages.Surname)).getValue());
+        fullnameLb.setValue("<b>" + myUI.getMessage(SptMessages.FullName) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).getValue()
+                + " " + item.getItemProperty(myUI.getMessage(SptMessages.LastName)).getValue());
         gl.addComponent(fullnameLb, 2, 0);
 
         Label mainPositionLb = new Label();
@@ -396,8 +396,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         } else if (data1Table != null && data1Table.size() > 0 && property == search1TF) {
             if (property.getValue() != null && property.getValue().toString().length() > 1) {
                 Container.Filter filter = new Or(
-                        new SimpleStringFilter(myUI.getMessage(SptMessages.Firstname), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(SptMessages.Surname), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(SptMessages.FirstName), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(SptMessages.LastName), property.getValue().toString(), true, false),
                         new SimpleStringFilter(myUI.getMessage(SptMessages.Id), property.getValue().toString(), true, false),
                         new SimpleStringFilter(myUI.getMessage(SptMessages.Position), property.getValue().toString(), true, false));
 
@@ -409,8 +409,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         } else if (data2Table != null && data2Table.size() > 0 && property == search2TF) {
             if (property.getValue() != null && property.getValue().toString().length() > 1) {
                 Container.Filter filter = new Or(
-                        new SimpleStringFilter(myUI.getMessage(SptMessages.Firstname), property.getValue().toString(), true, false),
-                        new SimpleStringFilter(myUI.getMessage(SptMessages.Surname), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(SptMessages.FirstName), property.getValue().toString(), true, false),
+                        new SimpleStringFilter(myUI.getMessage(SptMessages.LastName), property.getValue().toString(), true, false),
                         new SimpleStringFilter(myUI.getMessage(SptMessages.Id), property.getValue().toString(), true, false),
                         new SimpleStringFilter(myUI.getMessage(SptMessages.Position), property.getValue().toString(), true, false));
 

@@ -311,17 +311,17 @@ public class DbStudentPayment extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(SystemSettings.payment_category_id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.WhoPaid), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));

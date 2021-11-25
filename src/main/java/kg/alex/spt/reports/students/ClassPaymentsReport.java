@@ -64,8 +64,8 @@ public class ClassPaymentsReport implements Button.ClickListener,
         this.myUI = ui;
         this.splitPanel = splitPanel;
         buildLeftPanel();
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Firstname),
-            myUI.getMessage(SptMessages.Surname),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.FirstName),
+            myUI.getMessage(SptMessages.LastName),
             myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.PaymentCategoryType),
             myUI.getMessage(SptMessages.WhoPaid), myUI.getMessage(SptMessages.Date),
             myUI.getMessage(SptMessages.Amount)};

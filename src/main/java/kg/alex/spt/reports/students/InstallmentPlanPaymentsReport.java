@@ -441,13 +441,13 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             nameLab = new Label();
             nameLab.setSizeFull();
             nameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            nameLab.setValue(myUI.getMessage(SptMessages.Firstname) + ": " + st.getStud_name());
+            nameLab.setValue(myUI.getMessage(SptMessages.FirstName) + ": " + st.getStud_name());
             rightGrid.addComponent(nameLab, 1, 1, 2, 1);
 
             surnameLab = new Label();
             surnameLab.setSizeFull();
             surnameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            surnameLab.setValue(myUI.getMessage(SptMessages.Surname) + ": " + st.getStud_sur_name());
+            surnameLab.setValue(myUI.getMessage(SptMessages.LastName) + ": " + st.getStud_sur_name());
             rightGrid.addComponent(surnameLab, 1, 2, 2, 2);
 
             classLab = new Label();

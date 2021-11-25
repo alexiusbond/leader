@@ -103,8 +103,8 @@ public class ClassListPdf {
                     dataTable.addCell(new Phrase(" №", ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Id), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.EducationStatus), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Firstname), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Surname), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.LastName), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.DiscountType), ordFontBold));
@@ -127,9 +127,9 @@ public class ClassListPdf {
                         dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.EducationStatus)).getValue().toString(), tableFont));
                         dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Firstname)).getValue().toString(), tableFont));
+                                myUI.getMessage(SptMessages.FirstName)).getValue().toString(), tableFont));
                         dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Surname)).getValue().toString(), tableFont));
+                                myUI.getMessage(SptMessages.LastName)).getValue().toString(), tableFont));
                         dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);

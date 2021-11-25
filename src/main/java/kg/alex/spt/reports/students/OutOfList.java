@@ -60,8 +60,8 @@ public class OutOfList implements Button.ClickListener,
         buildRightLayout();
         NATURAL_COL_ORDER = new String[]{
             myUI.getMessage(SptMessages.Id),
-            myUI.getMessage(SptMessages.Firstname),
-            myUI.getMessage(SptMessages.Surname),
+            myUI.getMessage(SptMessages.FirstName),
+            myUI.getMessage(SptMessages.LastName),
             myUI.getMessage(SptMessages.Year),
             myUI.getMessage(SptMessages.Reasons),
             myUI.getMessage(SptMessages.FromClass),

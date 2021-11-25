@@ -127,8 +127,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         horSplitPanel.setSecondComponent(contractLay);
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id),
-                myUI.getMessage(SptMessages.Firstname),
-                myUI.getMessage(SptMessages.Surname), myUI.getMessage(SptMessages.ClassName),
+                myUI.getMessage(SptMessages.FirstName),
+                myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
                 myUI.getMessage(SptMessages.EducationStatus),
                 myUI.getMessage(SptMessages.EnteringYear)};
 
@@ -498,7 +498,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(SptMessages.NotifWrongValue)));
         fieldsLay1.addComponent(loginTF);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Firstname));
+        nameTF = new TextField(myUI.getMessage(SptMessages.FirstName));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -507,7 +507,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         fieldsLay1.addComponent(nameTF);
 
-        surnameTF = new TextField(myUI.getMessage(SptMessages.Surname));
+        surnameTF = new TextField(myUI.getMessage(SptMessages.LastName));
         surnameTF.setRequired(true);
         surnameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         surnameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -516,7 +516,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         fieldsLay1.addComponent(surnameTF);
 
-        middlenameTF = new TextField(myUI.getMessage(SptMessages.Middlename));
+        middlenameTF = new TextField(myUI.getMessage(SptMessages.MiddleName));
         middlenameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         middlenameTF.setWidth("100%");
         fieldsLay1.addComponent(middlenameTF);
@@ -731,9 +731,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
                         myUI.getMessage(SptMessages.ConfirmStudentDeletion)
                                 + " " + studDataTable.getContainerProperty(studDataTable.getValue(),
-                                myUI.getMessage(SptMessages.Firstname)).getValue().toString()
+                                myUI.getMessage(SptMessages.FirstName)).getValue().toString()
                                 + " " + studDataTable.getContainerProperty(studDataTable.getValue(),
-                                myUI.getMessage(SptMessages.Surname)).getValue().toString()
+                                myUI.getMessage(SptMessages.LastName)).getValue().toString()
                                 + "?",
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
@@ -1520,16 +1520,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 studDataTable.getValue(), myUI.getMessage(SptMessages.Id))
                 .getValue().toString());
         nameTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
-                studDataTable.getValue(), myUI.getMessage(SptMessages.Firstname))
+                studDataTable.getValue(), myUI.getMessage(SptMessages.FirstName))
                 .getValue().toString());
         surnameTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
-                studDataTable.getValue(), myUI.getMessage(SptMessages.Surname))
+                studDataTable.getValue(), myUI.getMessage(SptMessages.LastName))
                 .getValue().toString());
         if (studDataTable.getContainerDataSource().getContainerProperty(
-                studDataTable.getValue(), myUI.getMessage(SptMessages.Middlename))
+                studDataTable.getValue(), myUI.getMessage(SptMessages.MiddleName))
                 .getValue() != null) {
             middlenameTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
-                    studDataTable.getValue(), myUI.getMessage(SptMessages.Middlename))
+                    studDataTable.getValue(), myUI.getMessage(SptMessages.MiddleName))
                     .getValue().toString());
         }
         genderCB.setValue((Integer) studDataTable.getContainerDataSource().getContainerProperty(
@@ -1600,11 +1600,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.Id)).setValue(loginTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(SptMessages.Firstname)).setValue(nameTF.getValue());
+                myUI.getMessage(SptMessages.FirstName)).setValue(nameTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(SptMessages.Surname)).setValue(surnameTF.getValue());
+                myUI.getMessage(SptMessages.LastName)).setValue(surnameTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(SptMessages.Middlename)).setValue(middlenameTF.getValue());
+                myUI.getMessage(SptMessages.MiddleName)).setValue(middlenameTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.Photo)).setValue(photoName);
         studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -1631,11 +1631,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                 loginTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                 surnameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Middlename)).setValue(
+        item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(
                 middlenameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
                 birthDate.getValue());
@@ -2518,9 +2518,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         + studDataTable.getContainerProperty(studDataTable.getValue(),
                         myUI.getMessage(SptMessages.Id)).getValue().toString() + " "
                         + studDataTable.getContainerProperty(studDataTable.getValue(),
-                        myUI.getMessage(SptMessages.Firstname)).getValue().toString() + " "
+                        myUI.getMessage(SptMessages.FirstName)).getValue().toString() + " "
                         + studDataTable.getContainerProperty(studDataTable.getValue(),
-                        myUI.getMessage(SptMessages.Surname)).getValue().toString());
+                        myUI.getMessage(SptMessages.LastName)).getValue().toString());
                 sp.setEmplooyee_id(myUI.getUser().getId());
                 sp.setSchool_id(myUI.getUser().getSchool_id());
                 tr.setAmount(sp.getAmount());
@@ -2706,9 +2706,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 + studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.Id)).getValue().toString() + " "
                 + studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(SptMessages.Firstname)).getValue().toString() + " "
+                myUI.getMessage(SptMessages.FirstName)).getValue().toString() + " "
                 + studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(SptMessages.Surname)).getValue().toString());
+                myUI.getMessage(SptMessages.LastName)).getValue().toString());
         sp.setEmplooyee_id(myUI.getUser().getId());
         sp.setSchool_id(myUI.getUser().getSchool_id());
         sp.setModification_date(((DateField) item.getItemProperty(

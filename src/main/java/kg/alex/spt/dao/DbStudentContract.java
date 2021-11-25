@@ -238,8 +238,8 @@ public class DbStudentContract extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
@@ -257,9 +257,9 @@ public class DbStudentContract extends BaseDb {
                     result.getString("edu.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class"));
@@ -348,8 +348,8 @@ public class DbStudentContract extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
@@ -364,9 +364,9 @@ public class DbStudentContract extends BaseDb {
                     result.getString("edu.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class"));
@@ -1066,16 +1066,16 @@ public class DbStudentContract extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Firstname), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Surname), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.InstallmentPlan), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, 0.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Firstname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Surname)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));

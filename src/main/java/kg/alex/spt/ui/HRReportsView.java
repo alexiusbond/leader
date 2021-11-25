@@ -36,7 +36,7 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
 
     private void buildGridLayouts() {
 
-        leftGrid = new GridLayout(1, 2);
+        leftGrid = new GridLayout(1, 3);
         leftGrid.setMargin(true);
         leftGrid.setSpacing(true);
         leftGrid.setSizeFull();

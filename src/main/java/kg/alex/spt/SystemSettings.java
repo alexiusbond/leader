@@ -140,6 +140,7 @@ public class SystemSettings implements Serializable {
     public static final String dbStudentCalls = "student_calls";
     public static final String dbStudentInstallment = "student_installement_plan";
     public static final String dbMartialStatus = "hr_martial_status";
+    public static final String dbSalaryCategory = "hr_salary_category";
     public static final String dbMeasurement = "dp_measurement";
     public static final String dbStockMovement = "dp_stock_movements";
     public static final String dbInventoryOrganization = "dm_inventory_organization";

@@ -60,8 +60,8 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         this.myUI = myUI;
 
         STUDENTS_NATURAL_COL_ORDER = new String[]{SystemSettings.button,
-            myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.Firstname),
-            myUI.getMessage(SptMessages.Surname), myUI.getMessage(SptMessages.ClassName),
+            myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.FirstName),
+            myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
             myUI.getMessage(SptMessages.EducationStatus)};
         HISTORY_NATURAL_COL_ORDER = new String[]{SystemSettings.button,
             myUI.getMessage(SptMessages.OrderType), myUI.getMessage(SptMessages.FromClass),
@@ -359,9 +359,9 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 historyTable.setVisibleColumns(HISTORY_NATURAL_COL_ORDER);
                 historyTable.setCaption(myUI.getMessage(SptMessages.OrdersHistory) + " - "
                         + studentsTable.getContainerProperty(selected_student_id,
-                                myUI.getMessage(SptMessages.Firstname)).getValue() + " "
+                                myUI.getMessage(SptMessages.FirstName)).getValue() + " "
                         + studentsTable.getContainerProperty(selected_student_id,
-                                myUI.getMessage(SptMessages.Surname)).getValue());
+                                myUI.getMessage(SptMessages.LastName)).getValue());
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

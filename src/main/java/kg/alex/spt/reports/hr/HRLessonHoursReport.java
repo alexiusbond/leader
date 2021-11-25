@@ -24,10 +24,12 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
@@ -50,7 +52,9 @@ public class HRLessonHoursReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(HRLessonHoursReport.class);
     private MyVaadinUI myUI;
-    private Button generateBtn, excelBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn, selectAllBranchesBtn, deselectAllBranchesBtn, selectAllPositionsBtn, deselectAllPositionsBtn, selectAllExtraPositionsBtn, deselectAllExtraPositionsBtn;
+    private Button generateBtn, excelBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
+            selectAllBranchesBtn, deselectAllBranchesBtn, selectAllPositionsBtn, deselectAllPositionsBtn,
+            selectAllExtraPositionsBtn, deselectAllExtraPositionsBtn;
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private FilterTable schoolTable, branchTable, positionTable, extraPositionTable;
@@ -76,7 +80,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -303,6 +307,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
         leftGrid.addComponent(excelBtn, 3, 3);
         leftGrid.setRowExpandRatio(1, 1);
+        ((GridLayout) splitPanel.getFirstComponent()).removeComponent(0, 2);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -403,10 +408,10 @@ public class HRLessonHoursReport implements Button.ClickListener,
                                 Item item = container.getItem("t");
                                 item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                                         (Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue()
-                                        + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.Hours)).getValue());
+                                                + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.Hours)).getValue());
                                 item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                                         (Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue()
-                                        + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.ExtraHours)).getValue());
+                                                + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.ExtraHours)).getValue());
                                 totalEmpl += Integer.parseInt((dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.Employee)).getValue()
                                         .toString().replace(myUI.getMessage(SptMessages.TotalEmployees), "")));
                                 item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
@@ -433,32 +438,32 @@ public class HRLessonHoursReport implements Button.ClickListener,
                                             branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue());
                                     item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                                             (Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue()
-                                            + (Integer) dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.Hours)).getValue());
+                                                    + (Integer) dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.Hours)).getValue());
                                     item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                                             (Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue()
-                                            + (Integer) dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.ExtraHours)).getValue());
+                                                    + (Integer) dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.ExtraHours)).getValue());
                                     item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
                                             myUI.getMessage(SptMessages.TotalEmployees)
-                                            + (Integer.parseInt(item.getItemProperty(myUI.getMessage(SptMessages.Employee)).getValue().toString()
+                                                    + (Integer.parseInt(item.getItemProperty(myUI.getMessage(SptMessages.Employee)).getValue().toString()
                                                     .replace(myUI.getMessage(SptMessages.TotalEmployees), ""))
-                                            + Integer.parseInt(dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.Employee)).getValue().toString()
+                                                    + Integer.parseInt(dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.Employee)).getValue().toString()
                                                     .replace(myUI.getMessage(SptMessages.TotalEmployees), ""))));
                                     item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
                                             myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch)
-                                            + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": "
-                                            + (Integer.parseInt(item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue().toString()
+                                                    + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": "
+                                                    + (Integer.parseInt(item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue().toString()
                                                     .replace(myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch)
                                                             + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": ", ""))
-                                            + Integer.parseInt(dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.MainBranch)).getValue().toString()
+                                                    + Integer.parseInt(dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.MainBranch)).getValue().toString()
                                                     .replace(myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch)
                                                             + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": ", ""))));
                                     item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(
                                             myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch)
-                                            + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": "
-                                            + (Integer.parseInt(item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString()
+                                                    + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": "
+                                                    + (Integer.parseInt(item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString()
                                                     .replace(myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch)
                                                             + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": ", ""))
-                                            + Integer.parseInt(dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString()
+                                                    + Integer.parseInt(dataTable.getContainerProperty("s" + branchId, myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString()
                                                     .replace(myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch)
                                                             + branchTable.getContainerProperty(branchId, myUI.getMessage(SptMessages.Title)).getValue() + ": ", ""))));
                                 }

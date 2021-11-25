@@ -338,6 +338,20 @@ public class DbDefinition extends BaseDb {
         return container;
     }
 
+
+    public IndexedContainer execSQL_yes_no(MyVaadinUI myUi) {
+
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+
+        Item item = container.addItem(1);
+        item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(myUi.getMessage(SptMessages.Yes));
+        item = container.addItem(0);
+        item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(myUi.getMessage(SptMessages.No));
+
+        return container;
+    }
+
     public int execSQL_login() throws SQLException {
         String sql = "SELECT l.login FROM logins AS l LEFT JOIN employee AS e ON l.login = e.login WHERE e.login IS NULL LIMIT 1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);

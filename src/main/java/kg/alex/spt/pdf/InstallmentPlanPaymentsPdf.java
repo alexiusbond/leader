@@ -110,11 +110,11 @@ public class InstallmentPlanPaymentsPdf {
                             + ": " + st.getStud_login(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Contract)
                             + ": $" + st.getCtr_contract_sum(), ordFont));
-                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Firstname)
+                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName)
                             + ": " + st.getStud_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Discount)
                             + ": " + st.getCtr_discountStr(), ordFont));
-                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Surname)
+                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.LastName)
                             + ": " + st.getStud_sur_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt)
                             + ": $" + st.getCtr_debt(), ordFont));

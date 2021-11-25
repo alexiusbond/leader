@@ -64,8 +64,8 @@ public class DebtReport implements Button.ClickListener,
         this.myUI = ui;
         this.splitPanel = splitPanel;
         buildLeftPanel();
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Firstname),
-            myUI.getMessage(SptMessages.Surname),
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.FirstName),
+            myUI.getMessage(SptMessages.LastName),
             myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.InstallmentPlan),
             myUI.getMessage(SptMessages.Paid), myUI.getMessage(SptMessages.Debt)};
     }
