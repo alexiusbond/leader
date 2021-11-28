@@ -10,7 +10,6 @@ import java.io.Serializable;
 public class EmployeeContact implements Serializable {
 
     private int employee_id;
-    private int citizenship_id;
     private String email;
     private String address;
     private String birth_place;
@@ -27,20 +26,6 @@ public class EmployeeContact implements Serializable {
      */
     public void setEmployee_id(int employee_id) {
         this.employee_id = employee_id;
-    }
-
-    /**
-     * @return the citizenship_id
-     */
-    public int getCitizenship_id() {
-        return citizenship_id;
-    }
-
-    /**
-     * @param citizenship_id the citizenship_id to set
-     */
-    public void setCitizenship_id(int citizenship_id) {
-        this.citizenship_id = citizenship_id;
     }
 
     /**

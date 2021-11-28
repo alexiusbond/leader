@@ -16333,3 +16333,35 @@ div.v-layout.v-horizontal.v-widget {
 	background-size: 12px 16px;
 	background-position: center;
 }
+
+.mytheme .v-grid .v-grid-tablewrapper .v-grid-header .v-grid-row .v-grid-cell, .mytheme .v-grid .v-grid-tablewrapper .v-grid-header .v-grid-row .frozen, .mytheme .v-grid .v-grid-tablewrapper .v-grid-header .v-grid-row .v-grid-cell-focused {
+	white-space: nowrap;
+	font-size: 12px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+	font-weight: bold;
+	height: 28px;
+	line-height: 13px;
+}
+
+.mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row .v-grid-cell, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row .frozen, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row .v-grid-cell-focused, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row-stripe .v-grid-cell, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row-stripe .frozen, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row-stripe .v-grid-cell-focused, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row-has-data .v-grid-cell, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row-has-data .frozen, .mytheme .v-grid .v-grid-tablewrapper .v-grid-body .v-grid-row-has-data .v-grid-cell-focused {
+	font-size: 11px;
+	padding-top: 8px;
+	padding-bottom: 6px;
+	padding-left: 6px;
+	padding-right: 6px;
+	height: 27px;
+	line-height: 13px;
+}
+
+.mytheme .v-grid .v-grid-tablewrapper .v-grid-footer .v-grid-row .v-grid-cell, .mytheme .v-grid .v-grid-tablewrapper .v-grid-footer .v-grid-row .frozen, .mytheme .v-grid .v-grid-tablewrapper .v-grid-footer .v-grid-row .v-grid-cell-focused {
+	white-space: nowrap;
+	font-size: 12px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+	font-weight: bold;
+	height: 28px;
+	line-height: 13px;
+}
+
+.mytheme .align-right {
+	text-align: right;
+}

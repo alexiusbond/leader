@@ -70,6 +70,7 @@ public class SystemSettings implements Serializable {
     public static final String salary_category_id = "salary_category_id";
     public static final String gender_id = "gender_id";
     public static final String nationality_id = "nationality_id";
+    public static final String citizenship_id = "hr_country_id";
     public static final String martial_status_id = "martial_status_id";
     public static final String activity_status_id = "activity_status_id";
     public static final String working_status_id = "working_status_id";

@@ -6,8 +6,8 @@
 package kg.alex.spt.reports.hr;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -20,15 +20,13 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
-import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.tepi.filtertable.FilterTable;
-import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class HRGeneralReport implements Button.ClickListener,
@@ -36,299 +34,27 @@ public class HRGeneralReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(HRGeneralReport.class);
     private MyVaadinUI myUI;
-    private Button generateBtn, excelBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
-            selectAllPositionsBtn, deselectAllPositionsBtn, selectAllExtraPositionsBtn, deselectAllExtraPositionsBtn;
+    private Button generateBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
-    private FilterTable schoolTable, positionTable, extraPositionTable;
-    private ComboBoxMultiselectMax workingStatusesMCB, genderMCB, nationalityMCB, citizenshipMCB, martialStatusMCB, canBeAdvisorMCB, contractTypeMCB;
+    private VerticalLayout leftLay;
+    private ComboBoxMultiselectMax schoolsMCB, positionsMCB, extraPositionsMCB, workingStatusesMCB, genderMCB, nationalityMCB,
+            citizenshipMCB, martialStatusMCB, canBeAdvisorMCB, contractTypeMCB, gradSchoolMCB, healthStatusMCB, examMCB,
+            mainBranchMCB, extraBranchMCB, universityMCB, workPlaceMCB, certificateMCB, languageMCB;
     private ComboBoxMax yearSelect;
     private EnhancedFormatExcelExport excelReport;
-    private String[] NATURAL_COL_ORDER;
+    private Grid.FooterRow footer;
 
     private Subject currentUser = SecurityUtils.getSubject();
-    public FormattedTable dataTable;
+    public Grid dataGrid;
 
     public HRGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title)};
         this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
     }
 
     private void buildLeftPanel() {
-
-        Panel p = new Panel();
-        p.setSizeFull();
-        p.setStyleName(ValoTheme.PANEL_BORDERLESS);
-
-        leftGrid = new GridLayout(4, 14);
-        leftGrid.setWidth("100%");
-        leftGrid.setSpacing(true);
-
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
-        yearSelect.setNullSelectionAllowed(false);
-        yearSelect.setRequired(true);
-        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        yearSelect.setFilteringMode(FilteringMode.CONTAINS);
-
-        selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
-        selectAllSchoolsBtn.setWidth("100%");
-        selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
-        selectAllSchoolsBtn.addClickListener(this);
-
-        deselectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllSchoolsBtn.setWidth("100%");
-        deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
-        deselectAllSchoolsBtn.addClickListener(this);
-
-        schoolTable = new FilterTable();
-        schoolTable.setFilterDecorator(new MyFilterDecorator(myUI));
-        schoolTable.setStyleName(ValoTheme.TABLE_SMALL);
-        schoolTable.setWidth("100%");
-        schoolTable.setPageLength(5);
-        schoolTable.setNullSelectionAllowed(false);
-        schoolTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
-        schoolTable.setFilterBarVisible(true);
-        schoolTable.setFooterVisible(false);
-        schoolTable.setSelectable(true);
-        schoolTable.setNullSelectionAllowed(false);
-        schoolTable.setMultiSelect(true);
-        schoolTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
-        try {
-            DbSchool dbs = new DbSchool();
-            dbs.connect();
-            schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns(NATURAL_COL_ORDER);
-            dbs.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-
-        selectAllPositionsBtn = new Button(myUI.getMessage(SptMessages.AllPositions));
-        selectAllPositionsBtn.setWidth("100%");
-        selectAllPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        selectAllPositionsBtn.setIcon(FontAwesome.CHECK_SQUARE);
-        selectAllPositionsBtn.addClickListener(this);
-
-        deselectAllPositionsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllPositionsBtn.setWidth("100%");
-        deselectAllPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        deselectAllPositionsBtn.setIcon(FontAwesome.MINUS_SQUARE);
-        deselectAllPositionsBtn.addClickListener(this);
-
-        positionTable = new FilterTable();
-        positionTable.setFilterDecorator(new MyFilterDecorator(myUI));
-        positionTable.setStyleName(ValoTheme.TABLE_SMALL);
-        positionTable.setWidth("100%");
-        positionTable.setPageLength(5);
-        positionTable.setNullSelectionAllowed(false);
-        positionTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
-        positionTable.setFilterBarVisible(true);
-        positionTable.setFooterVisible(false);
-        positionTable.setSelectable(true);
-        positionTable.setNullSelectionAllowed(false);
-        positionTable.setMultiSelect(true);
-        positionTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
-
-        selectAllExtraPositionsBtn = new Button(myUI.getMessage(SptMessages.AllExtraPositions));
-        selectAllExtraPositionsBtn.setWidth("100%");
-        selectAllExtraPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        selectAllExtraPositionsBtn.setIcon(FontAwesome.CHECK_SQUARE);
-        selectAllExtraPositionsBtn.addClickListener(this);
-
-        deselectAllExtraPositionsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllExtraPositionsBtn.setWidth("100%");
-        deselectAllExtraPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
-        deselectAllExtraPositionsBtn.setIcon(FontAwesome.MINUS_SQUARE);
-        deselectAllExtraPositionsBtn.addClickListener(this);
-
-        extraPositionTable = new FilterTable();
-        extraPositionTable.setFilterDecorator(new MyFilterDecorator(myUI));
-        extraPositionTable.setStyleName(ValoTheme.TABLE_SMALL);
-        extraPositionTable.setWidth("100%");
-        extraPositionTable.setPageLength(5);
-        extraPositionTable.setNullSelectionAllowed(false);
-        extraPositionTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
-        extraPositionTable.setFilterBarVisible(true);
-        extraPositionTable.setFooterVisible(false);
-        extraPositionTable.setSelectable(true);
-        extraPositionTable.setNullSelectionAllowed(false);
-        extraPositionTable.setMultiSelect(true);
-        extraPositionTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
-        extraPositionTable.addValueChangeListener(this);
-
-        workingStatusesMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.WorkingStatus));
-        workingStatusesMCB.setRequired(true);
-        workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        workingStatusesMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        workingStatusesMCB.setWidth("100%");
-        workingStatusesMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        workingStatusesMCB.setFilteringMode(FilteringMode.CONTAINS);
-        workingStatusesMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        workingStatusesMCB.setShowSelectedOnTop(false);
-        workingStatusesMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
-        workingStatusesMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-
-        genderMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Gender));
-        genderMCB.setRequired(true);
-        genderMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        genderMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        genderMCB.setWidth("100%");
-        genderMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        genderMCB.setFilteringMode(FilteringMode.CONTAINS);
-        genderMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        genderMCB.setShowSelectedOnTop(false);
-        genderMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
-        genderMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-
-        nationalityMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Nationality));
-        nationalityMCB.setRequired(true);
-        nationalityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        nationalityMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nationalityMCB.setWidth("100%");
-        nationalityMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        nationalityMCB.setFilteringMode(FilteringMode.CONTAINS);
-        nationalityMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        nationalityMCB.setShowSelectedOnTop(false);
-        nationalityMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
-        nationalityMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-
-        citizenshipMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Citizenship));
-        citizenshipMCB.setRequired(true);
-        citizenshipMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        citizenshipMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        citizenshipMCB.setWidth("100%");
-        citizenshipMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        citizenshipMCB.setFilteringMode(FilteringMode.CONTAINS);
-        citizenshipMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        citizenshipMCB.setShowSelectedOnTop(false);
-        citizenshipMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
-        citizenshipMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-
-        martialStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.MartialStatus));
-        martialStatusMCB.setRequired(true);
-        martialStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        martialStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        martialStatusMCB.setWidth("100%");
-        martialStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        martialStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        martialStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        martialStatusMCB.setShowSelectedOnTop(false);
-        martialStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
-        martialStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-
-        canBeAdvisorMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.CanBeAdvisor));
-        canBeAdvisorMCB.setRequired(true);
-        canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        canBeAdvisorMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        canBeAdvisorMCB.setWidth("100%");
-        canBeAdvisorMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        canBeAdvisorMCB.setFilteringMode(FilteringMode.CONTAINS);
-        canBeAdvisorMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        canBeAdvisorMCB.setShowSelectedOnTop(false);
-        canBeAdvisorMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
-        canBeAdvisorMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-
-        contractTypeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ContractType));
-        contractTypeMCB.setRequired(true);
-        contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        contractTypeMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        contractTypeMCB.setWidth("100%");
-        contractTypeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        contractTypeMCB.setFilteringMode(FilteringMode.CONTAINS);
-        contractTypeMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        contractTypeMCB.setShowSelectedOnTop(false);
-        contractTypeMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
-        contractTypeMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-
-        try {
-            DbDefinition dbd = new DbDefinition();
-            dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
-            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWorking_status, false));
-            genderMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbGender, false));
-            nationalityMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbNationality, false));
-            citizenshipMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbCountry, false));
-            martialStatusMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbMartialStatus, false));
-            contractTypeMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbSalaryCategory, false));
-            canBeAdvisorMCB.setContainerDataSource(dbd.execSQL_yes_no(myUI));
-            positionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
-            positionTable.setVisibleColumns(NATURAL_COL_ORDER);
-            extraPositionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
-            extraPositionTable.setVisibleColumns(NATURAL_COL_ORDER);
-            dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-
-        workingStatusesMCB.setValue(SystemSettings.convertToSet(workingStatusesMCB.getContainerDataSource().getItemIds()));
-        workingStatusesMCB.addValueChangeListener(this);
-        genderMCB.setValue(SystemSettings.convertToSet(genderMCB.getContainerDataSource().getItemIds()));
-        genderMCB.addValueChangeListener(this);
-        nationalityMCB.setValue(SystemSettings.convertToSet(nationalityMCB.getContainerDataSource().getItemIds()));
-        nationalityMCB.addValueChangeListener(this);
-        citizenshipMCB.setValue(SystemSettings.convertToSet(citizenshipMCB.getContainerDataSource().getItemIds()));
-        citizenshipMCB.addValueChangeListener(this);
-        martialStatusMCB.setValue(SystemSettings.convertToSet(martialStatusMCB.getContainerDataSource().getItemIds()));
-        martialStatusMCB.addValueChangeListener(this);
-        canBeAdvisorMCB.setValue(SystemSettings.convertToSet(canBeAdvisorMCB.getContainerDataSource().getItemIds()));
-        canBeAdvisorMCB.addValueChangeListener(this);
-        contractTypeMCB.setValue(SystemSettings.convertToSet(contractTypeMCB.getContainerDataSource().getItemIds()));
-        contractTypeMCB.addValueChangeListener(this);
-        schoolTable.setValue(SystemSettings.convertToSet(schoolTable.getContainerDataSource().getItemIds()));
-        schoolTable.addValueChangeListener(this);
-        positionTable.setValue(SystemSettings.convertToSet(positionTable.getContainerDataSource().getItemIds()));
-        positionTable.addValueChangeListener(this);
-
-        yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
-        yearSelect.addValueChangeListener(this);
-
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth("100%");
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -353,25 +79,293 @@ public class HRGeneralReport implements Button.ClickListener,
 
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(hl, 0, 2);
 
-        leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
-        leftGrid.addComponent(selectAllSchoolsBtn, 0, 1, 1, 1);
-        leftGrid.addComponent(deselectAllSchoolsBtn, 2, 1, 3, 1);
-        leftGrid.addComponent(schoolTable, 0, 2, 3, 2);
-        leftGrid.addComponent(selectAllPositionsBtn, 0, 3, 1, 3);
-        leftGrid.addComponent(deselectAllPositionsBtn, 2, 3, 3, 3);
-        leftGrid.addComponent(positionTable, 0, 4, 3, 4);
-        leftGrid.addComponent(selectAllExtraPositionsBtn, 0, 5, 1, 5);
-        leftGrid.addComponent(deselectAllExtraPositionsBtn, 2, 5, 3, 5);
-        leftGrid.addComponent(extraPositionTable, 0, 6, 3, 6);
-        leftGrid.addComponent(workingStatusesMCB, 0, 7, 3, 7);
-        leftGrid.addComponent(genderMCB, 0, 8, 3, 8);
-        leftGrid.addComponent(nationalityMCB, 0, 9, 3, 9);
-        leftGrid.addComponent(citizenshipMCB, 0, 10, 3, 10);
-        leftGrid.addComponent(martialStatusMCB, 0, 11, 3, 11);
-        leftGrid.addComponent(canBeAdvisorMCB, 0, 12, 3, 12);
-        leftGrid.addComponent(contractTypeMCB, 0, 13, 3, 13);
+        Panel p = new Panel();
+        p.setSizeFull();
+        p.setStyleName(ValoTheme.PANEL_BORDERLESS);
 
-        p.setContent(leftGrid);
+        leftLay = new VerticalLayout();
+        leftLay.setWidth("100%");
+        leftLay.setSpacing(true);
+
+        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
+        yearSelect.setNullSelectionAllowed(false);
+        yearSelect.setRequired(true);
+        yearSelect.addValueChangeListener(this);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setWidth("100%");
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+        leftLay.addComponent(yearSelect);
+
+        schoolsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Schools));
+        schoolsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        schoolsMCB.addValueChangeListener(this);
+        schoolsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        schoolsMCB.setWidth("100%");
+        schoolsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        schoolsMCB.setFilteringMode(FilteringMode.CONTAINS);
+        schoolsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        schoolsMCB.setShowSelectAllButton((filter, page) -> true);
+        schoolsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(schoolsMCB);
+
+        positionsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Positions));
+        positionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        positionsMCB.addValueChangeListener(this);
+        positionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        positionsMCB.setWidth("100%");
+        positionsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        positionsMCB.setFilteringMode(FilteringMode.CONTAINS);
+        positionsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        positionsMCB.setShowSelectAllButton((filter, page) -> true);
+        positionsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(positionsMCB);
+
+        extraPositionsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ExtraPositions));
+        extraPositionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        extraPositionsMCB.addValueChangeListener(this);
+        extraPositionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        extraPositionsMCB.setWidth("100%");
+        extraPositionsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        extraPositionsMCB.setFilteringMode(FilteringMode.CONTAINS);
+        extraPositionsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        extraPositionsMCB.setShowSelectedOnTop(false);
+        extraPositionsMCB.setShowSelectAllButton((filter, page) -> true);
+        extraPositionsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(extraPositionsMCB);
+
+        workingStatusesMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.WorkingStatuses));
+        workingStatusesMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        workingStatusesMCB.addValueChangeListener(this);
+        workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        workingStatusesMCB.setWidth("100%");
+        workingStatusesMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        workingStatusesMCB.setFilteringMode(FilteringMode.CONTAINS);
+        workingStatusesMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        workingStatusesMCB.setShowSelectAllButton((filter, page) -> true);
+        workingStatusesMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(workingStatusesMCB);
+
+        genderMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Genders));
+        genderMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        genderMCB.addValueChangeListener(this);
+        genderMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        genderMCB.setWidth("100%");
+        genderMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        genderMCB.setFilteringMode(FilteringMode.CONTAINS);
+        genderMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        genderMCB.setShowSelectAllButton((filter, page) -> true);
+        genderMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(genderMCB);
+
+        nationalityMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Nationalities));
+        nationalityMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        nationalityMCB.addValueChangeListener(this);
+        nationalityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        nationalityMCB.setWidth("100%");
+        nationalityMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        nationalityMCB.setFilteringMode(FilteringMode.CONTAINS);
+        nationalityMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        nationalityMCB.setShowSelectAllButton((filter, page) -> true);
+        nationalityMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(nationalityMCB);
+
+        citizenshipMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Citizenships));
+        citizenshipMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        citizenshipMCB.addValueChangeListener(this);
+        citizenshipMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        citizenshipMCB.setWidth("100%");
+        citizenshipMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        citizenshipMCB.setFilteringMode(FilteringMode.CONTAINS);
+        citizenshipMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        citizenshipMCB.setShowSelectAllButton((filter, page) -> true);
+        citizenshipMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(citizenshipMCB);
+
+        martialStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.MartialStatuses));
+        martialStatusMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        martialStatusMCB.addValueChangeListener(this);
+        martialStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        martialStatusMCB.setWidth("100%");
+        martialStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        martialStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
+        martialStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        martialStatusMCB.setShowSelectAllButton((filter, page) -> true);
+        martialStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(martialStatusMCB);
+
+        canBeAdvisorMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.CanBeAdvisors));
+        canBeAdvisorMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        canBeAdvisorMCB.addValueChangeListener(this);
+        canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        canBeAdvisorMCB.setWidth("100%");
+        canBeAdvisorMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        canBeAdvisorMCB.setFilteringMode(FilteringMode.CONTAINS);
+        canBeAdvisorMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        canBeAdvisorMCB.setShowSelectAllButton((filter, page) -> true);
+        canBeAdvisorMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(canBeAdvisorMCB);
+
+        contractTypeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ContractTypes));
+        contractTypeMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        contractTypeMCB.addValueChangeListener(this);
+        contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        contractTypeMCB.setWidth("100%");
+        contractTypeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        contractTypeMCB.setFilteringMode(FilteringMode.CONTAINS);
+        contractTypeMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        contractTypeMCB.setShowSelectAllButton((filter, page) -> true);
+        contractTypeMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(contractTypeMCB);
+
+        gradSchoolMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.GraduationSchools));
+        gradSchoolMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        gradSchoolMCB.addValueChangeListener(this);
+        gradSchoolMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        gradSchoolMCB.setWidth("100%");
+        gradSchoolMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        gradSchoolMCB.setFilteringMode(FilteringMode.CONTAINS);
+        gradSchoolMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        gradSchoolMCB.setShowSelectAllButton((filter, page) -> true);
+        gradSchoolMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(gradSchoolMCB);
+
+        healthStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.HealthStatuses));
+        healthStatusMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        healthStatusMCB.addValueChangeListener(this);
+        healthStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        healthStatusMCB.setWidth("100%");
+        healthStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        healthStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
+        healthStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        healthStatusMCB.setShowSelectAllButton((filter, page) -> true);
+        healthStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(healthStatusMCB);
+
+        examMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Exams));
+        examMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        examMCB.addValueChangeListener(this);
+        examMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        examMCB.setWidth("100%");
+        examMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        examMCB.setFilteringMode(FilteringMode.CONTAINS);
+        examMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        examMCB.setShowSelectAllButton((filter, page) -> true);
+        examMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(examMCB);
+
+        mainBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.MainBranches));
+        mainBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        mainBranchMCB.addValueChangeListener(this);
+        mainBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        mainBranchMCB.setWidth("100%");
+        mainBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        mainBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
+        mainBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        mainBranchMCB.setShowSelectAllButton((filter, page) -> true);
+        mainBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(mainBranchMCB);
+
+        extraBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ExtraBranches));
+        extraBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        extraBranchMCB.addValueChangeListener(this);
+        extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        extraBranchMCB.setWidth("100%");
+        extraBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        extraBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
+        extraBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        extraBranchMCB.setShowSelectAllButton((filter, page) -> true);
+        extraBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(extraBranchMCB);
+
+        universityMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Education));
+        universityMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        universityMCB.addValueChangeListener(this);
+        universityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        universityMCB.setWidth("100%");
+        universityMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        universityMCB.setFilteringMode(FilteringMode.CONTAINS);
+        universityMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        universityMCB.setShowSelectAllButton((filter, page) -> true);
+        universityMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(universityMCB);
+
+        workPlaceMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.WorkPlaces));
+        workPlaceMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        workPlaceMCB.addValueChangeListener(this);
+        workPlaceMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        workPlaceMCB.setWidth("100%");
+        workPlaceMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        workPlaceMCB.setFilteringMode(FilteringMode.CONTAINS);
+        workPlaceMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        workPlaceMCB.setShowSelectAllButton((filter, page) -> true);
+        workPlaceMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(workPlaceMCB);
+
+        certificateMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Certificates));
+        certificateMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        certificateMCB.addValueChangeListener(this);
+        certificateMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        certificateMCB.setWidth("100%");
+        certificateMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        certificateMCB.setFilteringMode(FilteringMode.CONTAINS);
+        certificateMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        certificateMCB.setShowSelectAllButton((filter, page) -> true);
+        certificateMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(certificateMCB);
+
+        languageMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Languages));
+        languageMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        languageMCB.addValueChangeListener(this);
+        languageMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        languageMCB.setWidth("100%");
+        languageMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        languageMCB.setFilteringMode(FilteringMode.CONTAINS);
+        languageMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        languageMCB.setShowSelectAllButton((filter, page) -> true);
+        languageMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(languageMCB);
+
+        try {
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
+            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWorking_status, false));
+            genderMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbGender, false));
+            nationalityMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbNationality, false));
+            citizenshipMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbCountry, false));
+            martialStatusMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbMartialStatus, false));
+            contractTypeMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbSalaryCategory, false));
+            healthStatusMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbHealthStatus, false));
+            examMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbExamTable, false));
+            mainBranchMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable, false));
+            extraBranchMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable, false));
+            universityMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbUniversityTable, false));
+            workPlaceMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWork_placeTable, false));
+            certificateMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbCertificateTable, false));
+            languageMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbLanguageTable, false));
+            canBeAdvisorMCB.setContainerDataSource(dbd.execSQL_yes_no(myUI));
+            positionsMCB.setContainerDataSource(dbd.exec_positions_for_select(myUI,
+                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
+            extraPositionsMCB.setContainerDataSource(dbd.exec_positions_for_select(myUI,
+                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
+            dbd.close();
+            DbSchool dbCon = new DbSchool();
+            dbCon.connect();
+            schoolsMCB.setContainerDataSource(dbCon.execSchoolSel(myUI, "1,3,4,5,6"));
+            gradSchoolMCB.setContainerDataSource(dbCon.execSchoolSel(myUI, "1,3,4"));
+            Item item = gradSchoolMCB.getContainerDataSource().addItem(-1);
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(myUI.getMessage(SptMessages.OtherSchool));
+            dbCon.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+
+        yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+
+        p.setContent(leftLay);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(p, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -380,14 +374,14 @@ public class HRGeneralReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTable();
-        dataTable.setFooterVisible(true);
-        dataTable.setSizeFull();
-        dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
-        dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
-        dataTable.addStyleName("noWrapHeader");
-        dataTable.setColumnFooter(myUI.getMessage(SptMessages.School), myUI.getMessage(SptMessages.Total));
-        vl.addComponent(dataTable);
+        dataGrid = new Grid();
+        dataGrid.setFooterVisible(true);
+        dataGrid.setSizeFull();
+        dataGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        dataGrid.setStyleName(ValoTheme.TABLE_COMPACT);
+        dataGrid.addStyleName("noWrapHeader");
+        dataGrid.addStyleName("noWrap");
+        vl.addComponent(dataGrid);
         splitPanel.setSecondComponent(vl);
     }
 
@@ -396,35 +390,51 @@ public class HRGeneralReport implements Button.ClickListener,
         final Button source = event.getButton();
         if (source == generateBtn) {
             if (yearSelect.isValid() && workingStatusesMCB.isValid()) {
-                if (!((Set<?>) schoolTable.getValue()).isEmpty() && !((Set<?>) positionTable.getValue()).isEmpty()) {
-                    try {
-                        DbEmployee dbEmployee = new DbEmployee();
-                        dbEmployee.connect();
-                        dataTable.setContainerDataSource(dbEmployee.execSQL(myUI, (Integer) yearSelect.getValue(),
-                                SystemSettings.convertCollectionToStr((Set<?>) schoolTable.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) positionTable.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) extraPositionTable.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) workingStatusesMCB.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) genderMCB.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) nationalityMCB.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) martialStatusMCB.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) canBeAdvisorMCB.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) contractTypeMCB.getValue()),
-                                SystemSettings.convertCollectionToStr((Set<?>) citizenshipMCB.getValue())));
-                        dbEmployee.close();
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
+                try {
+                    Map<String, String> params = new HashMap<>();
+                    insertParameter(params, myUI.getMessage(SptMessages.Schools), schoolsMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Positions), positionsMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.ExtraPositions), extraPositionsMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.WorkingStatuses), workingStatusesMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Genders), genderMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Nationalities), nationalityMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.MartialStatuses), martialStatusMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.CanBeAdvisors), canBeAdvisorMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.ContractTypes), contractTypeMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Citizenships), citizenshipMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.GraduationSchools), gradSchoolMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.HealthStatuses), healthStatusMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.MainBranches), mainBranchMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.ExtraPositions), extraPositionsMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Education), universityMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.WorkPlaces), workPlaceMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Certificates), certificateMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Languages), languageMCB);
+
+                    DbEmployee dbEmployee = new DbEmployee();
+                    dbEmployee.connect();
+                    dataGrid.setContainerDataSource(dbEmployee.execSQL(myUI, (Integer) yearSelect.getValue(), params));
+                    dbEmployee.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+                dataGrid.setCellStyleGenerator((Grid.CellReference cellReference) -> {
+                    if (cellReference.getProperty().getType() == Double.class
+                            || cellReference.getProperty().getType() == Integer.class) {
+                        return "align-right";
+                    } else {
+                        return null;
                     }
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.FirstName), dataTable.size() + "");
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Hours), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.ExtraHours), Table.Align.RIGHT);
-                    if (dataTable.getContainerDataSource().size() != 0) {
-                        excelBtn.setEnabled(true);
-                    }
-                } else {
-                    Notification.show(myUI.getMessage(SptMessages.RequiredField),
-                            Notification.Type.WARNING_MESSAGE);
+                });
+                if (footer == null) {
+                    footer = dataGrid.appendFooterRow();
+                }
+                footer.getCell(myUI.getMessage(SptMessages.School)).setText(myUI.getMessage(SptMessages.Total));
+                footer.getCell(myUI.getMessage(SptMessages.LastName)).setText(dataGrid.getContainerDataSource().size() + "");
+                dataGrid.setSizeFull();
+                if (dataGrid.getContainerDataSource().size() != 0) {
+                    excelBtn.setEnabled(true);
                 }
             } else {
                 Notification.show(myUI.getMessage(SptMessages.RequiredField),
@@ -432,27 +442,30 @@ public class HRGeneralReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             try {
-                excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.HRGeneralReport));
+                Table t = new Table();
+                t.setContainerDataSource(dataGrid.getContainerDataSource());
+
+                Window w = new Window();
+                w.setModal(true);
+                myUI.addWindow(w);
+                w.setContent(t);
+
+                excelReport = new EnhancedFormatExcelExport(t, myUI.getMessage(SptMessages.HRGeneralReport));
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.HRGeneralReport));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.sendConverted();
+                w.close();
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (source == selectAllSchoolsBtn) {
-            schoolTable.setValue(schoolTable.getContainerDataSource().getItemIds());
-        } else if (source == deselectAllSchoolsBtn) {
-            schoolTable.setValue(null);
-        } else if (source == selectAllPositionsBtn) {
-            positionTable.setValue(positionTable.getContainerDataSource().getItemIds());
-        } else if (source == deselectAllPositionsBtn) {
-            positionTable.setValue(null);
-        } else if (source == selectAllExtraPositionsBtn) {
-            extraPositionTable.setValue(extraPositionTable.getContainerDataSource().getItemIds());
-        } else if (source == deselectAllExtraPositionsBtn) {
-            extraPositionTable.setValue(null);
+        }
+    }
+
+    private void insertParameter(Map<String, String> params, String key, ComboBoxMultiselectMax cb) {
+        if (cb.getContainerDataSource().size() != ((Set<?>) schoolsMCB.getValue()).size()) {
+            params.put(key, SystemSettings.convertCollectionToStr((Set<?>) schoolsMCB.getValue()));
         }
     }
 

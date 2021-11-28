@@ -5,13 +5,6 @@
  */
 package kg.alex.spt.ui;
 
-import com.vaadin.server.*;
-import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.*;
-import kg.alex.spt.dao.*;
-import kg.alex.spt.domain.*;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -19,27 +12,26 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.Sizeable;
+import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.io.*;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.*;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
+import kg.alex.spt.dao.*;
+import kg.alex.spt.domain.*;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.utils.GenerateRandomString;
-import kg.alex.spt.utils.MyFilterDecorator;
-import kg.alex.spt.utils.MyFilterGenerator;
+import kg.alex.spt.utils.*;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +41,10 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
+
+import java.io.*;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.*;
 
 /**
  * @author alex
@@ -311,10 +307,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         fieldsLayContacts.setWidth("100%");
         fieldsLayContacts.setSpacing(false);
         fieldsLayContacts.setMargin(false);
-
-        citizenshipCB = createCombobox(0, null, SystemSettings.dbCountry, true);
-        citizenshipCB.setCaption(myUI.getMessage(SptMessages.Citizenship));
-        fieldsLayContacts.addComponent(citizenshipCB);
 
         birth_placeTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 250, false), true);
@@ -1206,7 +1198,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 addressTA.setValue(ec.getAddress());
                 birth_placeTF.setValue(ec.getBirth_place());
                 emailTF.setValue(ec.getEmail());
-                citizenshipCB.setValue(ec.getCitizenship_id());
             } else {
                 clearContactFields();
             }
@@ -1593,6 +1584,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         nationalityCB = createCombobox(0, null, SystemSettings.dbNationality, true);
         nationalityCB.setCaption(myUI.getMessage(SptMessages.Nationality));
         formLay.addComponent(nationalityCB);
+
+        citizenshipCB = createCombobox(0, null, SystemSettings.dbCountry, true);
+        citizenshipCB.setCaption(myUI.getMessage(SptMessages.Citizenship));
+        formLay.addComponent(citizenshipCB);
 
         martialStatusCB = createCombobox(0, null, SystemSettings.dbMartialStatus, true);
         martialStatusCB.setCaption(myUI.getMessage(SptMessages.MartialStatus));
@@ -2053,6 +2048,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         genderCB.setValue(null);
         birthDateDF.setValue(null);
         nationalityCB.setValue(null);
+        citizenshipCB.setValue(null);
         martialStatusCB.setValue(null);
         mainPositionCB.setValue(null);
         contractCategoryCB.setValue(((IndexedContainer) contractCategoryCB.getContainerDataSource()).lastItemId());
@@ -2065,7 +2061,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         addressTA.setValue("");
         emailTF.setValue("");
         birth_placeTF.setValue("");
-        citizenshipCB.setValue(null);
     }
 
     private void clearSpouseFields() {
@@ -2134,6 +2129,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 emplID, myUI.getMessage(SptMessages.DateOfBirth)).getValue());
         nationalityCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, SystemSettings.nationality_id).getValue());
+        citizenshipCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
+                emplID, SystemSettings.citizenship_id).getValue());
         martialStatusCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
                 emplID, SystemSettings.martial_status_id).getValue());
         mainPositionCB.setValue(employeesDataTable.getContainerDataSource().getContainerProperty(
@@ -3124,8 +3121,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     exam.setEmployee_id(employee_id);
                     exam.setExam_id((Integer) ((ComboBox) examsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Exam)).getValue()).getValue());
-                    exam.setScore((Double) ((TextField) examsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Score)).getValue()).getPropertyDataSource().getValue());
+                    exam.setScore(((TextField) examsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Score)).getValue()).getValue());
                     exam.setDate_of_issue(((DateField) examsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.IssueDate)).getValue()).getValue());
                     Button b = (Button) ((HorizontalLayout) examsTable.getContainerProperty(next,
@@ -3803,9 +3800,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.Exam), SystemSettings.dbExamTable, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(
-                createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Score),
-                        new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                        new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter()));
+                createTextfield(null, myUI.getMessage(SptMessages.Score),
+                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 10, false), true));
         item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                 createDateField(null, myUI.getMessage(SptMessages.IssueDate),
                         null, true, SystemSettings.datePattern, Resolution.DAY));
@@ -4413,6 +4409,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         e.setGender_id((Integer) genderCB.getValue());
         e.setBirth_date(birthDateDF.getValue());
         e.setNationality_id((Integer) nationalityCB.getValue());
+        e.setCitizenship_id((Integer) citizenshipCB.getValue());
         e.setMartial_status_id((Integer) martialStatusCB.getValue());
         e.setModified_by_id(myUI.getUser().getId());
         e.setId(id);
@@ -4425,7 +4422,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         ec.setEmail(emailTF.getValue());
         ec.setAddress(addressTA.getValue());
         ec.setBirth_place(birth_placeTF.getValue());
-        ec.setCitizenship_id((Integer) citizenshipCB.getValue());
         return ec;
     }
 
@@ -4476,6 +4472,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         myUI.getMessage(SptMessages.Permissions)).getValue());
         item.getItemProperty(SystemSettings.gender_id).setValue(genderCB.getValue());
         item.getItemProperty(SystemSettings.nationality_id).setValue(nationalityCB.getValue());
+        item.getItemProperty(SystemSettings.citizenship_id).setValue(citizenshipCB.getValue());
         item.getItemProperty(SystemSettings.martial_status_id).setValue(martialStatusCB.getValue());
         item.getItemProperty(SystemSettings.position_id).setValue(mainPositionCB.getValue());
         item.getItemProperty(SystemSettings.salary_category_id).setValue(contractCategoryCB.getValue());
@@ -4507,6 +4504,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 SystemSettings.gender_id).setValue(genderCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
                 SystemSettings.nationality_id).setValue(nationalityCB.getValue());
+        employeesDataTable.getContainerProperty(emplID,
+                SystemSettings.citizenship_id).setValue(citizenshipCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
                 SystemSettings.martial_status_id).setValue(martialStatusCB.getValue());
         employeesDataTable.getContainerProperty(emplID,
@@ -4577,8 +4576,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 lessonsTable.removeAllItems();
                 ordersTable.removeAllItems();
                 workingStatCont.getContainerProperty((Integer) employeesDataTable
-                        .getContainerProperty(emplID,
-                                SystemSettings.working_status_id).getValue(), SystemSettings.count)
+                                .getContainerProperty(emplID,
+                                        SystemSettings.working_status_id).getValue(), SystemSettings.count)
                         .setValue(((Integer) workingStatCont.getContainerProperty((Integer) employeesDataTable
                                         .getContainerProperty(emplID,
                                                 SystemSettings.working_status_id).getValue(),

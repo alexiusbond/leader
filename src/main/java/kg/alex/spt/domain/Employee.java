@@ -22,6 +22,15 @@ public class Employee implements Serializable {
     private int martial_status_id;
     private String photo;
     private int modified_by_id;
+    private int citizenship_id;
+
+    public int getCitizenship_id() {
+        return citizenship_id;
+    }
+
+    public void setCitizenship_id(int citizenship_id) {
+        this.citizenship_id = citizenship_id;
+    }
 
     /**
      * @return the id

@@ -303,4 +303,84 @@
     background-size: 12px 16px;
     background-position: center;
   }
+
+  .v-grid {
+    .v-grid-scroller, .v-grid-scroller-horizontal {
+    }
+
+    .v-grid-tablewrapper {
+      .v-grid-header {
+        .v-grid-row {
+          .v-grid-cell, .frozen, .v-grid-cell-focused {
+            white-space: nowrap;
+            font-size: 12px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            height: 28px;
+            line-height: 13px;
+          }
+        }
+      }
+
+      .v-grid-body {
+        .v-grid-row,
+        .v-grid-row-stripe,
+        .v-grid-row-has-data {
+          .v-grid-cell, .frozen, .v-grid-cell-focused {
+            font-size: 11px;
+            padding-top: 8px;
+            padding-bottom: 6px;
+            padding-left: 6px;
+            padding-right: 6px;
+            height: 27px;
+            line-height: 13px;
+          }
+        }
+      }
+
+      .v-grid-footer {
+        .v-grid-row {
+          .v-grid-cell, .frozen, .v-grid-cell-focused {
+            white-space: nowrap;
+            font-size: 12px;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            height: 28px;
+            line-height: 13px;
+          }
+        }
+      }
+    }
+
+    .v-grid-header-deco {
+    }
+
+    .v-grid-footer-deco {
+    }
+
+    .v-grid-horizontal-scrollbar-deco {
+    }
+
+    .v-grid-editor {
+      .v-grid-editor-cells {
+      }
+
+      .v-grid-editor-footer {
+        .v-grid-editor-message {
+        }
+
+        .v-grid-editor-buttons {
+          .v-grid-editor-save {
+          }
+
+          .v-grid-editor-cancel {
+          }
+        }
+      }
+    }
+  }
+
+  .align-right {
+    text-align: right;
+  }
 }

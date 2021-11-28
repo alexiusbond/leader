@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -39,7 +40,7 @@ public class DbEmployeeExam extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ex.getEmployee_id());
         stat.setInt(2, ex.getExam_id());
-        stat.setDouble(3, ex.getScore());
+        stat.setString(3, ex.getScore());
         stat.setDate(4, new java.sql.Date(ex.getDate_of_issue().getTime()));
         stat.setInt(5, ex.getAttachment_id());
         int st = stat.executeUpdate();
@@ -55,16 +56,14 @@ public class DbEmployeeExam extends BaseDb {
                 + "hr_exam_id=?, score=?, date_of_issue=?, attachment_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ex.getExam_id());
-        stat.setDouble(2, ex.getScore());
+        stat.setString(2, ex.getScore());
         stat.setDate(3, new java.sql.Date(ex.getDate_of_issue().getTime()));
         stat.setInt(4, ex.getAttachment_id());
         stat.setInt(5, ex.getId());
         return stat.executeUpdate();
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
-                                    EmployeeDefinitionView edv) throws SQLException {
-        
+    public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id, EmployeeDefinitionView edv) throws SQLException {
 
         String sql = "SELECT ex.id, ex.hr_exam_id, ex.score, ex.date_of_issue, ex.attachment_id, " +
                 "a.id, a.name, a.extension, a.unique_name " +
@@ -79,17 +78,13 @@ public class DbEmployeeExam extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(SystemSettings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
                     id, SystemSettings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(
-                    edv.createCombobox(result.getInt("ex.hr_exam_id"),
-                            myUI.getMessage(SptMessages.Exam), SystemSettings.dbExamTable, true));
+            item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(edv.createCombobox(result.getInt("ex.hr_exam_id"),
+                    myUI.getMessage(SptMessages.Exam), SystemSettings.dbExamTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(
-                    edv.createTextfieldWithProperty(result.getDouble("ex.score"), myUI.getMessage(SptMessages.Score),
-                            new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                            new ObjectProperty<>(0.0), SystemSettings.getStringToDoubleConverter()));
-            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
-                    edv.createDateField(result.getDate("ex.date_of_issue"),
-                            myUI.getMessage(SptMessages.IssueDate), null,
-                            true, SystemSettings.datePattern, Resolution.DAY));
+                    edv.createTextfield(result.getString("ex.score"), myUI.getMessage(SptMessages.Score),
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 10, false), true));
+            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(edv.createDateField(result.getDate("ex.date_of_issue"),
+                    myUI.getMessage(SptMessages.IssueDate), null, true, SystemSettings.datePattern, Resolution.DAY));
 
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);

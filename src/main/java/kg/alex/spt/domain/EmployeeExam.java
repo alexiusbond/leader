@@ -13,7 +13,7 @@ public class EmployeeExam implements Serializable {
     private int id;
     private int employee_id;
     private int exam_id;
-    private double score;
+    private String score;
     private Date date_of_issue;
     private String idStr;
     private int attachment_id;
@@ -102,14 +102,14 @@ public class EmployeeExam implements Serializable {
     /**
      * @return the score
      */
-    public double getScore() {
+    public String getScore() {
         return score;
     }
 
     /**
      * @param score the score to set
      */
-    public void setScore(double score) {
+    public void setScore(String score) {
         this.score = score;
     }
 

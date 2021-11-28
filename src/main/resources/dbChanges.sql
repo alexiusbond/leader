@@ -82,3 +82,46 @@ UPDATE `spt`.`hr_country` SET `name` = 'США' WHERE (`id` = '618');
 UPDATE `spt`.`hr_country` SET `name` = 'Узбекистан' WHERE (`id` = '621');
 UPDATE `spt`.`hr_country` SET `name` = 'Венесуэлла' WHERE (`id` = '623');
 UPDATE `spt`.`hr_country` SET `name` = 'Замбия' WHERE (`id` = '630');
+ALTER TABLE `spt`.`employee` 
+ADD COLUMN `hr_country_id` INT NOT NULL DEFAULT '510' AFTER `can_advisor`;
+ALTER TABLE `spt`.`employee` 
+ADD INDEX `fk_employee_country_idx` (`hr_country_id` ASC) VISIBLE;
+ALTER TABLE `spt`.`employee` 
+ADD CONSTRAINT `fk_employee_country1`
+  FOREIGN KEY (`hr_country_id`)
+  REFERENCES `spt`.`hr_country` (`id`)
+  ON DELETE RESTRICT
+  ON UPDATE NO ACTION;
+update ignore employee e set e.hr_country_id = (select hr_country_id from hr_employee_contacts where employee_id = e.id);
+ALTER TABLE `spt`.`hr_employee_contacts` 
+DROP FOREIGN KEY `fk_hr_employee_contacts_hr_country1`;
+ALTER TABLE `spt`.`hr_employee_contacts` 
+DROP COLUMN `hr_country_id`,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`id`, `employee_id`),
+DROP INDEX `fk_hr_employee_contacts_hr_country_idx` ;
+UPDATE `spt`.`school` SET `school_type_id` = '7' WHERE (`id` = '16') and (`year_id` = '6') and (`activity_status_id` = '2') and (`school_type_id` = '1');
+
+delete ignore FROM spt.hr_certificate;
+delete ignore FROM spt.hr_university;
+delete ignore FROM spt.hr_work_place;
+
+ALTER TABLE `spt`.`hr_employee_exam` 
+CHANGE COLUMN `score` `score` VARCHAR(10) NOT NULL ;
+update hr_employee_branch set hr_branch_id = 18 where hr_branch_id = 29;
+DELETE FROM `spt`.`hr_branch` WHERE (`id` = '29') and (`activity_status_id` = '2');
+update hr_employee_branch set hr_branch_id = 19 where hr_branch_id = 30;
+DELETE FROM `spt`.`hr_branch` WHERE (`id` = '30') and (`activity_status_id` = '2');
+
+INSERT INTO `spt`.`hr_employee_order` (`hr_orders_id`, `employee_id`, `school_id`, `hr_position_id`, `from_date`, `modification_date`, `m_employee_id`, `can_not_delete`) VALUES ('6', '1537', '19', '12', '2020-09-18', '2020-09-23 12:16:33', '29', '0');
+UPDATE `spt`.`hr_employee_order` SET `effected_by_id` = '6836' WHERE (`id` = '1480') and (`hr_orders_id` = '1') and (`employee_id` = '1537') and (`school_id` = '19') and (`hr_position_id` = '12') and (`m_employee_id` = '29');
+INSERT INTO `spt`.`hr_employee_order` (`hr_orders_id`, `employee_id`, `school_id`, `hr_position_id`, `from_date`, `modification_date`, `m_employee_id`, `can_not_delete`) VALUES ('6', '1468', '19', '3', '2020-09-23', '2020-09-23 12:10:26', '29', '0');
+UPDATE `spt`.`hr_employee_order` SET `effected_by_id` = '6837' WHERE (`id` = '1411') and (`hr_orders_id` = '1') and (`employee_id` = '1468') and (`school_id` = '19') and (`hr_position_id` = '3') and (`m_employee_id` = '29');
+INSERT INTO `spt`.`hr_employee_order` (`hr_orders_id`, `employee_id`, `school_id`, `hr_position_id`, `from_date`, `modification_date`, `m_employee_id`, `can_not_delete`) VALUES ('6', '2017', '28', '14', '2020-09-18', '2020-09-18 12:16:07', '1', '0');
+UPDATE `spt`.`hr_employee_order` SET `effected_by_id` = '6838' WHERE (`id` = '1960') and (`hr_orders_id` = '1') and (`employee_id` = '2017') and (`school_id` = '28') and (`hr_position_id` = '14') and (`m_employee_id` = '1');
+INSERT INTO `spt`.`hr_employee_order` (`hr_orders_id`, `employee_id`, `school_id`, `hr_position_id`, `from_date`, `modification_date`, `m_employee_id`, `can_not_delete`) VALUES ('1', '153', '1', '3', '2021-01-01', '2021-01-01', '1', '1');
+UPDATE `spt`.`hr_employee_order` SET `school_id` = '15' WHERE (`id` = '6839') and (`hr_orders_id` = '1') and (`employee_id` = '153') and (`school_id` = '1') and (`hr_position_id` = '3') and (`m_employee_id` = '1');
+INSERT INTO `spt`.`hr_employee_order` (`hr_orders_id`, `employee_id`, `school_id`, `hr_position_id`, `from_date`, `modification_date`, `m_employee_id`, `can_not_delete`) VALUES ('6', '1010', '12', '10', '2020-09-25', '2020-09-25 15:33:55', '1035', '0');
+UPDATE `spt`.`hr_employee_order` SET `effected_by_id` = '6840' WHERE (`id` = '953') and (`hr_orders_id` = '1') and (`employee_id` = '1010') and (`school_id` = '12') and (`hr_position_id` = '10') and (`m_employee_id` = '1035');
+INSERT INTO `spt`.`hr_employee_order` (`hr_orders_id`, `employee_id`, `school_id`, `hr_position_id`, `from_date`, `modification_date`, `m_employee_id`, `can_not_delete`) VALUES ('6', '1370', '17', '10', '2020-09-18', '2020-11-25 16:21:22', '2947', '0');
+UPDATE `spt`.`hr_employee_order` SET `effected_by_id` = '6841' WHERE (`id` = '1313') and (`hr_orders_id` = '1') and (`employee_id` = '1370') and (`school_id` = '17') and (`hr_position_id` = '10') and (`m_employee_id` = '2947');

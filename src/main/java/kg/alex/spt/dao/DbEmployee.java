@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
@@ -74,7 +75,7 @@ public class DbEmployee extends BaseDb {
             working_statuses = "-1";
         }
         String sql = "SELECT e.id, e.login, e.name, e.surname, e.middle_name, e.date_of_birth, e.photo, e.can_advisor, "
-                + "g.id, g.name, n.id, n.name, m.id, m.name, ws.name, ws.id, p.name, p.id, ord.visible_hr_orders, "
+                + "g.id, g.name, n.id, n.name, m.id, m.name, ws.name, ws.id, p.name, p.id, cntr.name, cntr.id, ord.visible_hr_orders, "
                 + "group_concat(DISTINCT p2.id ORDER BY eo2.id ASC separator ', ') as extra_position_ids, "
                 + "group_concat(DISTINCT p2.name ORDER BY eo2.id ASC separator ', ') as extra_positions, cat.id, "
                 + "group_concat(DISTINCT if(eb.hr_importance_id = 1, br.name, null) ORDER BY eb.id ASC separator ', ') as main_branch, "
@@ -82,6 +83,7 @@ public class DbEmployee extends BaseDb {
                 + "group_concat(DISTINCT up.permissions separator ';') as permissions, ebh.hours, ebh.extra, eo3.id, cat.parent_id "
                 + "FROM employee AS e LEFT JOIN gender AS g ON g.id = e.gender_id "
                 + "LEFT JOIN nationality AS n ON n.id = e.nationality_id "
+                + "LEFT JOIN hr_country AS cntr ON cntr.id = e.hr_country_id "
                 + "LEFT JOIN hr_martial_status AS m ON m.id = e.hr_martial_status_id "
                 + "LEFT JOIN hr_employee_branch AS eb ON eb.employee_id = e.id "
                 + "LEFT JOIN hr_branch AS br ON br.id = eb.hr_branch_id "
@@ -133,6 +135,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.WorkingStatus), String.class, null);
         container.addContainerProperty(SystemSettings.gender_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.nationality_id, Integer.class, 0);
+        container.addContainerProperty(SystemSettings.citizenship_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.martial_status_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.working_status_id, Integer.class, 0);
         container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
@@ -185,6 +188,8 @@ public class DbEmployee extends BaseDb {
                     result.getInt("g.id"));
             item.getItemProperty(SystemSettings.nationality_id).setValue(
                     result.getInt("n.id"));
+            item.getItemProperty(SystemSettings.citizenship_id).setValue(
+                    result.getInt("cntr.id"));
             item.getItemProperty(SystemSettings.martial_status_id).setValue(
                     result.getInt("m.id"));
             item.getItemProperty(SystemSettings.working_status_id).setValue(
@@ -469,8 +474,8 @@ public class DbEmployee extends BaseDb {
     public int exec_insert(Employee e) throws SQLException {
         String sql = "INSERT ignore INTO employee (login, password, name, "
                 + "surname, middle_name, date_of_birth, photo, gender_id, "
-                + "hr_martial_status_id,nationality_id,employee_id,modification_date) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW());";
+                + "hr_martial_status_id,nationality_id,employee_id,modification_date,hr_country_id) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW(),?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, e.getLogin());
         stat.setString(2, e.getPassword());
@@ -487,6 +492,7 @@ public class DbEmployee extends BaseDb {
         stat.setInt(9, e.getMartial_status_id());
         stat.setInt(10, e.getNationality_id());
         stat.setInt(11, e.getModified_by_id());
+        stat.setInt(12, e.getCitizenship_id());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -501,8 +507,8 @@ public class DbEmployee extends BaseDb {
         if (pass != null && !pass.equals("")) {
             sql += ("password='" + pass + "',");
         }
-        sql += "date_of_birth=?, nationality_id=?, gender_id=?, hr_martial_status_id=?, employee_id=?, photo=?, modification_date=NOW() "
-                + "WHERE id=?";
+        sql += "date_of_birth = ?, nationality_id = ?, gender_id = ?, hr_martial_status_id = ?, employee_id = ?, " +
+                "photo = ?, modification_date = NOW(), hr_country_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, e.getLogin());
         stat.setString(2, e.getName());
@@ -518,7 +524,8 @@ public class DbEmployee extends BaseDb {
         stat.setInt(8, e.getMartial_status_id());
         stat.setInt(9, e.getModified_by_id());
         stat.setString(10, e.getPhoto());
-        stat.setInt(11, e.getId());
+        stat.setInt(11, e.getCitizenship_id());
+        stat.setInt(12, e.getId());
         int status = stat.executeUpdate();
         return status;
     }
@@ -589,25 +596,42 @@ public class DbEmployee extends BaseDb {
         return status;
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, String school_ids, String positionIds,
-                                    String extraPositionIds, String workingStatusIds, String genderIds,
-                                    String nationalityIds, String martialStatusIds, String advisorIds,
-                                    String salaryCategoryIds, String citizenshipIds) throws SQLException {
+    public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, Map<String, String> params) throws SQLException {
 
         String sql = "SELECT e.id, e.name, e.surname, e.middle_name, e.date_of_birth, e.can_advisor, g.name, n.name, " +
                 "m.name, ws.name, p.name, GROUP_CONCAT(DISTINCT p2.name ORDER BY eo2.id ASC SEPARATOR ', ') AS extra_positions, " +
-                "GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 1, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS main_branch, " +
-                "GROUP_CONCAT(DISTINCT IF(eb.hr_importance_id = 2, br.name, NULL) ORDER BY eb.id ASC SEPARATOR ', ') AS extra_branches, " +
-                "ebh.hours, ebh.extra, sch.name_ru, sch.code, sal.name, cntr.name FROM employee AS e " +
+                "mbr.name  AS main_branch, " +
+                "GROUP_CONCAT(DISTINCT ebr.name ORDER BY eeb.id ASC SEPARATOR ', ') AS extra_branches, " +
+                "GROUP_CONCAT(DISTINCT concat(ex.name, ' - ', ee.score) ORDER BY ex.id ASC SEPARATOR ', ') AS exams, " +
+                "GROUP_CONCAT(DISTINCT concat(uni.name, ' - ', el.name) ORDER BY edu.id ASC SEPARATOR ', ') AS education, " +
+                "GROUP_CONCAT(DISTINCT concat(wp.name, ' - ', wpos.name) ORDER BY ew.id ASC SEPARATOR ', ') AS work, " +
+                "(SELECT GROUP_CONCAT(DISTINCT sem.name ORDER BY sem.id ASC SEPARATOR ', ') FROM hr_employee_seminar AS sem " +
+                "WHERE sem.employee_id = e.id) AS sems, " +
+                "GROUP_CONCAT(DISTINCT cert.name ORDER BY ec.id ASC SEPARATOR ', ') AS certs, " +
+                "GROUP_CONCAT(DISTINCT concat(lang.name, ' - ', lev.name) ORDER BY elan.id ASC SEPARATOR ', ') AS langs, " +
+                "ebh.hours, ebh.extra, concat(sch.code, ' - ', sch.name_ru) as school, sch2.name_ru as grad_school, " +
+                "sal.name, cntr.name, hs.name FROM employee AS e " +
                 "LEFT JOIN gender AS g ON g.id = e.gender_id " +
                 "LEFT JOIN nationality AS n ON n.id = e.nationality_id " +
-                "LEFT JOIN hr_employee_contacts AS cont ON cont.employee_id = e.id " +
-                "LEFT JOIN hr_country AS cntr ON cntr.id = cont.hr_country_id " +
+                "LEFT JOIN hr_country AS cntr ON cntr.id = e.hr_country_id " +
                 "LEFT JOIN hr_martial_status AS m ON m.id = e.hr_martial_status_id " +
-                "LEFT JOIN hr_employee_branch AS eb ON eb.employee_id = e.id " +
-                "LEFT JOIN hr_branch AS br ON br.id = eb.hr_branch_id " +
-                "LEFT JOIN hr_employee_order AS eo ON eo.id = (SELECT MAX(id) FROM hr_employee_order WHERE employee_id = e.id " +
-                "AND to_date IS NULL AND school_id IN (" + school_ids + ")) " +
+                "LEFT JOIN hr_employee_branch AS meb ON meb.employee_id = e.id AND meb.hr_importance_id = 1 " +
+                "LEFT JOIN hr_branch AS mbr ON mbr.id = meb.hr_branch_id " +
+                "LEFT JOIN hr_employee_branch AS eeb ON eeb.employee_id = e.id AND eeb.hr_importance_id = 2 " +
+                "LEFT JOIN hr_branch AS ebr ON ebr.id = eeb.hr_branch_id " +
+                "LEFT JOIN hr_employee_education AS edu ON edu.employee_id = e.id AND edu.hr_own_id = 1 " +
+                "LEFT JOIN hr_university AS uni ON uni.id = edu.hr_university_id " +
+                "LEFT JOIN hr_education_level AS el ON el.id = edu.education_level_id " +
+                "LEFT JOIN hr_employee_work AS ew ON ew.employee_id = e.id AND ew.hr_own_id = 1 " +
+                "LEFT JOIN hr_work_place AS wp ON wp.id = ew.hr_work_place_id " +
+                "LEFT JOIN hr_position AS wpos ON wpos.id = ew.position_id " +
+                "LEFT JOIN hr_employee_order AS eo ON eo.id = (SELECT MAX(eo.id) FROM hr_employee_order as eo " +
+                "LEFT JOIN hr_orders as o on o.id = eo.hr_orders_id WHERE eo.employee_id = e.id " +
+                "AND eo.to_date IS NULL AND o.working_status_id IS NOT NULL ";
+        if (params.get(myUI.getMessage(SptMessages.Schools)) != null) {
+            sql += "AND school_id IN (" + params.get(myUI.getMessage(SptMessages.Schools)) + ")";
+        }
+        sql += ") " +
                 "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id " +
                 "LEFT JOIN position AS pos ON p.id = pos.hr_position_id " +
                 "LEFT JOIN hr_employee_order AS eo2 ON eo2.employee_id = e.id AND eo2.hr_orders_id = 2 " +
@@ -622,42 +646,122 @@ public class DbEmployee extends BaseDb {
                 "LEFT JOIN acc_category AS cat ON e.id = cat.employee_id " +
                 "LEFT JOIN acc_category AS cat2 ON cat.parent_id = cat2.id " +
                 "LEFT JOIN hr_salary_category AS sal ON cat2.parent_id = sal.acc_category_id " +
-                "WHERE eo.school_id IN (" + school_ids + ") AND ord.working_status_id IS NOT NULL " +
-                "AND ws.id IN (" + workingStatusIds + ") AND p.id IN (" + positionIds + ") " +
-                "AND g.id IN (" + genderIds + ") AND n.id IN (" + nationalityIds + ") AND m.id IN (" + martialStatusIds +
-                ") AND e.can_advisor IN (" + advisorIds + ") AND sal.id IN (" + salaryCategoryIds + ") AND cntr.id IN (" + citizenshipIds + ") ";
-        if (extraPositionIds != null) {
-            sql += "AND p2.id IN (" + extraPositionIds + ") ";
+                "LEFT JOIN hr_employee_grad_school AS gr_sh ON gr_sh.employee_id = e.id " +
+                "LEFT JOIN school AS sch2 ON gr_sh.school_id = sch2.id " +
+                "LEFT JOIN hr_employee_extra_info AS ei ON ei.employee_id = e.id " +
+                "LEFT JOIN hr_health_status AS hs ON ei.hr_health_status_id = hs.id " +
+                "LEFT JOIN hr_employee_exam AS ee ON ee.employee_id = e.id " +
+                "LEFT JOIN hr_exam AS ex ON ee.hr_exam_id = ex.id " +
+                "LEFT JOIN hr_employee_certificate AS ec ON ec.employee_id = e.id " +
+                "LEFT JOIN hr_certificate AS cert ON ec.certificate_id = cert.id " +
+                "LEFT JOIN hr_employee_language AS elan ON elan.employee_id = e.id " +
+                "LEFT JOIN hr_language AS lang ON elan.hr_language_id = lang.id " +
+                "LEFT JOIN hr_language_level AS lev ON elan.hr_language_level_id = lev.id " +
+                "WHERE 1 ";
+        if (params.get(myUI.getMessage(SptMessages.Schools)) != null) {
+            sql += "AND eo.school_id IN (" + params.get(myUI.getMessage(SptMessages.Schools)) + ") ";
         }
-        sql += "GROUP BY e.id ORDER BY sch.id , e.id DESC";
+        if (params.get(myUI.getMessage(SptMessages.WorkingStatuses)) != null) {
+            sql +=
+                    "AND ws.id IN (" + params.get(myUI.getMessage(SptMessages.WorkingStatuses)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Positions)) != null) {
+            sql += "AND p.id IN (" + params.get(myUI.getMessage(SptMessages.Positions)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Genders)) != null) {
+            sql += "AND g.id IN (" + params.get(myUI.getMessage(SptMessages.Genders)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Nationalities)) != null) {
+            sql += "AND n.id IN (" + params.get(myUI.getMessage(SptMessages.Nationalities)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.MartialStatuses)) != null) {
+            sql += "AND m.id IN (" + params.get(myUI.getMessage(SptMessages.MartialStatuses)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.CanBeAdvisors)) != null) {
+            sql += "AND e.can_advisor IN (" + params.get(myUI.getMessage(SptMessages.CanBeAdvisors)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.ContractTypes)) != null) {
+            sql += "AND sal.id IN (" + params.get(myUI.getMessage(SptMessages.ContractTypes)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Citizenships)) != null) {
+            sql += "AND cntr.id IN (" + params.get(myUI.getMessage(SptMessages.Citizenships)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.ExtraPositions)) != null) {
+            sql += "AND p2.id IN (" + params.get(myUI.getMessage(SptMessages.ExtraPositions)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Education)) != null) {
+            sql += "AND edu.id IN (" + params.get(myUI.getMessage(SptMessages.Education)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.WorkPlaces)) != null) {
+            sql += "AND wp.id IN (" + params.get(myUI.getMessage(SptMessages.WorkPlaces)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Certificates)) != null) {
+            sql += "AND cert.id IN (" + params.get(myUI.getMessage(SptMessages.Certificates)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Languages)) != null) {
+            sql += "AND lang.id IN (" + params.get(myUI.getMessage(SptMessages.Languages)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.GraduationSchools)) != null) {
+            if (params.get(myUI.getMessage(SptMessages.GraduationSchools)).contains("-1")) {
+                sql += "AND (sch2.id IN (" + params.get(myUI.getMessage(SptMessages.GraduationSchools)) + ") OR sch2.id IS NULL) ";
+            } else {
+                sql += "AND sch2.id IN (" + params.get(myUI.getMessage(SptMessages.GraduationSchools)) + ") ";
+            }
+        }
+        if (params.get(myUI.getMessage(SptMessages.HealthStatuses)) != null) {
+            sql += "AND hs.id IN (" + params.get(myUI.getMessage(SptMessages.HealthStatuses)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.Exams)) != null) {
+            sql += "AND ex.id IN (" + params.get(myUI.getMessage(SptMessages.Exams)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.MainBranches)) != null) {
+            sql += "AND mbr.id IN (" + params.get(myUI.getMessage(SptMessages.MainBranches)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.ExtraBranches)) != null) {
+            sql += "AND ebr.id IN (" + params.get(myUI.getMessage(SptMessages.ExtraBranches)) + ") ";
+        }
+        sql += "GROUP BY e.id ORDER BY sch.id, e.surname, e.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(SystemSettings.button, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.School), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DateOfBirth), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ContractType), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Position), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Gender), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Nationality), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Citizenship), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.MartialStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.HealthStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.GraduationSchools),
+                String.class, myUI.getMessage(SptMessages.OtherSchool));
+        container.addContainerProperty(myUI.getMessage(SptMessages.Education), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.WorkPlaces), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Hours), Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.MainBranch), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraBranches), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.CanBeAdvisor), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Gender), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Nationality), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Citizenship), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.MartialStatus), String.class, null);
-
+        container.addContainerProperty(myUI.getMessage(SptMessages.Exams), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Seminars), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Certificates), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Languages), String.class, null);
+        int i = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(result.getString("sch.code") + " - " +
-                    result.getString("sch.name_ru"));
+            item.getItemProperty(SystemSettings.button).setValue(++i);
+            item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(result.getString("school"));
+            if (result.getString("grad_school") != null) {
+                item.getItemProperty(myUI.getMessage(SptMessages.GraduationSchools)).setValue(result.getString("grad_school"));
+            }
             item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("e.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("e.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(result.getString("e.middle_name"));
@@ -673,10 +777,17 @@ public class DbEmployee extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Citizenship)).setValue(result.getString("cntr.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.MartialStatus)).setValue(result.getString("m.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(result.getString("ws.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.HealthStatus)).setValue(result.getString("hs.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Education)).setValue(result.getString("education"));
+            item.getItemProperty(myUI.getMessage(SptMessages.WorkPlaces)).setValue(result.getString("work"));
             item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(result.getInt("e.can_advisor") == 1 ?
                     myUI.getMessage(SptMessages.Yes) : myUI.getMessage(SptMessages.No));
             item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(result.getInt("ebh.hours"));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(result.getInt("ebh.extra"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Exams)).setValue(result.getString("exams"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Seminars)).setValue(result.getString("sems"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Certificates)).setValue(result.getString("certs"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Languages)).setValue(result.getString("langs"));
         }
         return container;
     }
