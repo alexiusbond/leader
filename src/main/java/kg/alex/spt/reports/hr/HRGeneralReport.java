@@ -87,17 +87,6 @@ public class HRGeneralReport implements Button.ClickListener,
         leftLay.setWidth("100%");
         leftLay.setSpacing(true);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
-        yearSelect.setNullSelectionAllowed(false);
-        yearSelect.setRequired(true);
-        yearSelect.addValueChangeListener(this);
-        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        yearSelect.setFilteringMode(FilteringMode.CONTAINS);
-        leftLay.addComponent(yearSelect);
-
         schoolsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Schools));
         schoolsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         schoolsMCB.addValueChangeListener(this);
@@ -147,6 +136,18 @@ public class HRGeneralReport implements Button.ClickListener,
         workingStatusesMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(workingStatusesMCB);
 
+        contractTypeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ContractTypes));
+        contractTypeMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        contractTypeMCB.addValueChangeListener(this);
+        contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        contractTypeMCB.setWidth("100%");
+        contractTypeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        contractTypeMCB.setFilteringMode(FilteringMode.CONTAINS);
+        contractTypeMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        contractTypeMCB.setShowSelectAllButton((filter, page) -> true);
+        contractTypeMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(contractTypeMCB);
+
         genderMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Genders));
         genderMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         genderMCB.addValueChangeListener(this);
@@ -195,42 +196,6 @@ public class HRGeneralReport implements Button.ClickListener,
         martialStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(martialStatusMCB);
 
-        canBeAdvisorMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.CanBeAdvisors));
-        canBeAdvisorMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
-        canBeAdvisorMCB.addValueChangeListener(this);
-        canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        canBeAdvisorMCB.setWidth("100%");
-        canBeAdvisorMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        canBeAdvisorMCB.setFilteringMode(FilteringMode.CONTAINS);
-        canBeAdvisorMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        canBeAdvisorMCB.setShowSelectAllButton((filter, page) -> true);
-        canBeAdvisorMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-        leftLay.addComponent(canBeAdvisorMCB);
-
-        contractTypeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ContractTypes));
-        contractTypeMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
-        contractTypeMCB.addValueChangeListener(this);
-        contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        contractTypeMCB.setWidth("100%");
-        contractTypeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        contractTypeMCB.setFilteringMode(FilteringMode.CONTAINS);
-        contractTypeMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        contractTypeMCB.setShowSelectAllButton((filter, page) -> true);
-        contractTypeMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-        leftLay.addComponent(contractTypeMCB);
-
-        gradSchoolMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.GraduationSchools));
-        gradSchoolMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
-        gradSchoolMCB.addValueChangeListener(this);
-        gradSchoolMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        gradSchoolMCB.setWidth("100%");
-        gradSchoolMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        gradSchoolMCB.setFilteringMode(FilteringMode.CONTAINS);
-        gradSchoolMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        gradSchoolMCB.setShowSelectAllButton((filter, page) -> true);
-        gradSchoolMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-        leftLay.addComponent(gradSchoolMCB);
-
         healthStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.HealthStatuses));
         healthStatusMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         healthStatusMCB.addValueChangeListener(this);
@@ -243,41 +208,17 @@ public class HRGeneralReport implements Button.ClickListener,
         healthStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(healthStatusMCB);
 
-        examMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Exams));
-        examMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
-        examMCB.addValueChangeListener(this);
-        examMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        examMCB.setWidth("100%");
-        examMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        examMCB.setFilteringMode(FilteringMode.CONTAINS);
-        examMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        examMCB.setShowSelectAllButton((filter, page) -> true);
-        examMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-        leftLay.addComponent(examMCB);
-
-        mainBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.MainBranches));
-        mainBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
-        mainBranchMCB.addValueChangeListener(this);
-        mainBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        mainBranchMCB.setWidth("100%");
-        mainBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        mainBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
-        mainBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        mainBranchMCB.setShowSelectAllButton((filter, page) -> true);
-        mainBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-        leftLay.addComponent(mainBranchMCB);
-
-        extraBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ExtraBranches));
-        extraBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
-        extraBranchMCB.addValueChangeListener(this);
-        extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        extraBranchMCB.setWidth("100%");
-        extraBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        extraBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
-        extraBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        extraBranchMCB.setShowSelectAllButton((filter, page) -> true);
-        extraBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-        leftLay.addComponent(extraBranchMCB);
+        gradSchoolMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.GraduationSchools));
+        gradSchoolMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        gradSchoolMCB.addValueChangeListener(this);
+        gradSchoolMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        gradSchoolMCB.setWidth("100%");
+        gradSchoolMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        gradSchoolMCB.setFilteringMode(FilteringMode.CONTAINS);
+        gradSchoolMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        gradSchoolMCB.setShowSelectAllButton((filter, page) -> true);
+        gradSchoolMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(gradSchoolMCB);
 
         universityMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Education));
         universityMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
@@ -303,6 +244,30 @@ public class HRGeneralReport implements Button.ClickListener,
         workPlaceMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(workPlaceMCB);
 
+        languageMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Languages));
+        languageMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        languageMCB.addValueChangeListener(this);
+        languageMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        languageMCB.setWidth("100%");
+        languageMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        languageMCB.setFilteringMode(FilteringMode.CONTAINS);
+        languageMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        languageMCB.setShowSelectAllButton((filter, page) -> true);
+        languageMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(languageMCB);
+
+        examMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Exams));
+        examMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        examMCB.addValueChangeListener(this);
+        examMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        examMCB.setWidth("100%");
+        examMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        examMCB.setFilteringMode(FilteringMode.CONTAINS);
+        examMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        examMCB.setShowSelectAllButton((filter, page) -> true);
+        examMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(examMCB);
+
         certificateMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Certificates));
         certificateMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         certificateMCB.addValueChangeListener(this);
@@ -315,17 +280,52 @@ public class HRGeneralReport implements Button.ClickListener,
         certificateMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(certificateMCB);
 
-        languageMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Languages));
-        languageMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
-        languageMCB.addValueChangeListener(this);
-        languageMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        languageMCB.setWidth("100%");
-        languageMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        languageMCB.setFilteringMode(FilteringMode.CONTAINS);
-        languageMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        languageMCB.setShowSelectAllButton((filter, page) -> true);
-        languageMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
-        leftLay.addComponent(languageMCB);
+        mainBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.MainBranches));
+        mainBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        mainBranchMCB.addValueChangeListener(this);
+        mainBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        mainBranchMCB.setWidth("100%");
+        mainBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        mainBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
+        mainBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        mainBranchMCB.setShowSelectAllButton((filter, page) -> true);
+        mainBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(mainBranchMCB);
+
+        extraBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ExtraBranches));
+        extraBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        extraBranchMCB.addValueChangeListener(this);
+        extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        extraBranchMCB.setWidth("100%");
+        extraBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        extraBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
+        extraBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        extraBranchMCB.setShowSelectAllButton((filter, page) -> true);
+        extraBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(extraBranchMCB);
+
+        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
+        yearSelect.setNullSelectionAllowed(false);
+        yearSelect.setRequired(true);
+        yearSelect.addValueChangeListener(this);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setWidth("100%");
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+        leftLay.addComponent(yearSelect);
+
+        canBeAdvisorMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.CanBeAdvisors));
+        canBeAdvisorMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
+        canBeAdvisorMCB.addValueChangeListener(this);
+        canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        canBeAdvisorMCB.setWidth("100%");
+        canBeAdvisorMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        canBeAdvisorMCB.setFilteringMode(FilteringMode.CONTAINS);
+        canBeAdvisorMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        canBeAdvisorMCB.setShowSelectAllButton((filter, page) -> true);
+        canBeAdvisorMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        leftLay.addComponent(canBeAdvisorMCB);
 
         try {
             DbDefinition dbd = new DbDefinition();
@@ -396,20 +396,21 @@ public class HRGeneralReport implements Button.ClickListener,
                     insertParameter(params, myUI.getMessage(SptMessages.Positions), positionsMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.ExtraPositions), extraPositionsMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.WorkingStatuses), workingStatusesMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.ContractTypes), contractTypeMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.Genders), genderMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.Nationalities), nationalityMCB);
-                    insertParameter(params, myUI.getMessage(SptMessages.MartialStatuses), martialStatusMCB);
-                    insertParameter(params, myUI.getMessage(SptMessages.CanBeAdvisors), canBeAdvisorMCB);
-                    insertParameter(params, myUI.getMessage(SptMessages.ContractTypes), contractTypeMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.Citizenships), citizenshipMCB);
-                    insertParameter(params, myUI.getMessage(SptMessages.GraduationSchools), gradSchoolMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.MartialStatuses), martialStatusMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.HealthStatuses), healthStatusMCB);
-                    insertParameter(params, myUI.getMessage(SptMessages.MainBranches), mainBranchMCB);
-                    insertParameter(params, myUI.getMessage(SptMessages.ExtraPositions), extraPositionsMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.GraduationSchools), gradSchoolMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.Education), universityMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.WorkPlaces), workPlaceMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.CanBeAdvisors), canBeAdvisorMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.Exams), examMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.Certificates), certificateMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.Languages), languageMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.MainBranches), mainBranchMCB);
+                    insertParameter(params, myUI.getMessage(SptMessages.ExtraPositions), extraPositionsMCB);
 
                     DbEmployee dbEmployee = new DbEmployee();
                     dbEmployee.connect();
@@ -464,8 +465,8 @@ public class HRGeneralReport implements Button.ClickListener,
     }
 
     private void insertParameter(Map<String, String> params, String key, ComboBoxMultiselectMax cb) {
-        if (cb.getContainerDataSource().size() != ((Set<?>) schoolsMCB.getValue()).size()) {
-            params.put(key, SystemSettings.convertCollectionToStr((Set<?>) schoolsMCB.getValue()));
+        if (cb.getContainerDataSource().size() != ((Set<?>) cb.getValue()).size()) {
+            params.put(key, SystemSettings.convertCollectionToStr((Set<?>) cb.getValue()));
         }
     }
 

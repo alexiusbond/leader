@@ -197,7 +197,7 @@ public class SptMessages_ru extends SptMessages {
             {FirstName, "Имя"},
             {MiddleName, "Отчество"},
             {CanBeAdvisor, "Может быть куратором"},
-            {CanBeAdvisors, "Можут быть кураторами"},
+            {CanBeAdvisors, "Могут быть кураторами"},
             {DateOfBirth, "Дата рождения"},
             {Institution, "Учебное заведение"},
             {BirthPlace, "Место рождения"},
