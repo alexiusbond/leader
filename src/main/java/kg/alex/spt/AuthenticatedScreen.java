@@ -380,17 +380,18 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             mi.addItem(myUI.getMessage(SptMessages.QuestionDefinition), menuCommand);
         }
         if (mi.getChildren() != null && !mi.getChildren().isEmpty() && (currentUser.isPermitted(SystemSettings.cnEmployeeTransferView + ":" + SystemSettings.prmMenu)
-                || currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmMenu))) {
+                || currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmMenu)
+                || currentUser.isPermitted(SystemSettings.cnLessonAssessmentView + ":" + SystemSettings.prmMenu))) {
             mi.addSeparator();
-            if (currentUser.isPermitted(SystemSettings.cnEmployeeTransferView + ":" + SystemSettings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.EmployeeTransfer), menuCommand);
-            }
-            if (currentUser.isPermitted(SystemSettings.cnLessonAssessmentView + ":" + SystemSettings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.LessonAssessment), menuCommand);
-            }
-            if (currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.HRReports), menuCommand);
-            }
+        }
+        if (currentUser.isPermitted(SystemSettings.cnEmployeeTransferView + ":" + SystemSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.EmployeeTransfer), menuCommand);
+        }
+        if (currentUser.isPermitted(SystemSettings.cnLessonAssessmentView + ":" + SystemSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.LessonAssessment), menuCommand);
+        }
+        if (currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.HRReports), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);

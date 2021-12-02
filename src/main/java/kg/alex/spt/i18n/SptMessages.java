@@ -543,6 +543,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ToThe = generateId();
     public static final String Country = generateId();
     public static final String EduLevel = generateId();
+    public static final String CorrectionType = generateId();
+    public static final String Correction = generateId();
 
     private static String generateId() {
         return new Integer(ids++).toString();

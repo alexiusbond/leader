@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class AuthenticatedScreenTest {
     public static void main(String[] args) {
-
+/*
         ChromeOptions opt = new ChromeOptions();
         opt.setAcceptInsecureCerts(true);
         System.setProperty("webdriver.chrome.driver", "/home/chromedriver_win32/chromedriver.exe");
@@ -41,5 +41,6 @@ public class AuthenticatedScreenTest {
                         By.xpath("/html/body/div[1]/div/div[2]/div/div/div/div" +
                                 "/div[3]/div/div[2]/div/div/div[5]/div")));
         element.click();
+        */
     }
 }

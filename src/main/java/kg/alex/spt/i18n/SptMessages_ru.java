@@ -174,7 +174,7 @@ public class SptMessages_ru extends SptMessages {
             {Maxsize, "Размер файла не может превышать 15 МБ"},
             {OnlyJpg, "Вы можете загружать фотографии только в формате JPEG"},
             {OnlyJpgOrPdf, "Вы можете загружать файлы только в формате JPEG или PDF"},
-                        {Upload, "Загрузить"},
+            {Upload, "Загрузить"},
             {Progress, "Прогресс"},
             {Product, "Продукт"},
             {Measurement, "Ед. измерения"},
@@ -549,7 +549,9 @@ public class SptMessages_ru extends SptMessages {
             {ExistsInvoiceNotification, "Накладная с выбранной датой уже существует!"},
             {YouCanNotModifyOrDeleteConfirmed, "Вы не можете удалить или изменить подтвержденную накладную!"},
             {Country, "Страна"},
-            {EduLevel, "Степень"},};
+            {EduLevel, "Степень"},
+            {CorrectionType, "Тип корректировки"},
+            {Correction, "Корректировка"},};
 
     @Override
 

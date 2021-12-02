@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SalariesReportTest {
     public static void main(String[] args) {
-
+/*
         ChromeOptions opt = new ChromeOptions();
         opt.setAcceptInsecureCerts(true);
         System.setProperty("webdriver.chrome.driver", "/home/chromedriver_win32/chromedriver.exe");
@@ -64,6 +64,6 @@ public class SalariesReportTest {
         element = (new WebDriverWait(driver, 10))
                 .until(ExpectedConditions.elementToBeClickable(
                         By.xpath("/html/body/div[1]/div/div[2]/div/div/div/div/div[3]/div/div/div[1]/div/div[3]/div/div[6]")));
-        element.click();
+        element.click();*/
     }
 }

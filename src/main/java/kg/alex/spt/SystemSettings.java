@@ -94,6 +94,7 @@ public class SystemSettings implements Serializable {
     public static final String effected_by_id = "effected_by_id";
     public static final String classTable = "class_number";
     public static final String orderMessagesTable = "order_messages";
+    public static final String dbStudentContractCorrection = "student_contract_correction";
     public static final String dbLanguageTable = "hr_language";
     public static final String dbLanguageLevelTable = "hr_language_level";
     public static final String dbExamTable = "hr_exam";

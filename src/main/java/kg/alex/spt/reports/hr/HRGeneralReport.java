@@ -433,6 +433,7 @@ public class HRGeneralReport implements Button.ClickListener,
                 }
                 footer.getCell(myUI.getMessage(SptMessages.School)).setText(myUI.getMessage(SptMessages.Total));
                 footer.getCell(myUI.getMessage(SptMessages.LastName)).setText(dataGrid.getContainerDataSource().size() + "");
+                dataGrid.setFrozenColumnCount(4);
                 dataGrid.setSizeFull();
                 if (dataGrid.getContainerDataSource().size() != 0) {
                     excelBtn.setEnabled(true);
