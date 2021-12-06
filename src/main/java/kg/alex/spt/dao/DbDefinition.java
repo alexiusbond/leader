@@ -363,17 +363,21 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer exec_correction_types(MyVaadinUI myUi) throws SQLException {
-        String sql = "select t.id, concat('(', t.type, ') ', t.name) as name " +
+        String sql = "select t.id, concat('(', t.type, ') ', t.name) as name, t.type " +
                 "from correction_type as t order by t.type, t.name";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(SystemSettings.correction_type_id, Double.class, 1.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
+            if (result.getString("t.type").equals("-")) {
+                item.getItemProperty(SystemSettings.correction_type_id).setValue(-1.0);
+            }
         }
         return container;
     }

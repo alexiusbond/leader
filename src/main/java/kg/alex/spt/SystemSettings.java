@@ -65,6 +65,7 @@ public class SystemSettings implements Serializable {
     public static final String year_id = "year_id";
     public static final String school_id = "school_id";
     public static final String discount_type_id = "discount_type_id";
+    public static final String correction_type_id = "correction_type_id";
     public static final String position_id = "position_id";
     public static final String extra_position_ids = "extra_position_ids";
     public static final String salary_category_id = "salary_category_id";
@@ -94,7 +95,7 @@ public class SystemSettings implements Serializable {
     public static final String effected_by_id = "effected_by_id";
     public static final String classTable = "class_number";
     public static final String orderMessagesTable = "order_messages";
-    public static final String dbStudentContractCorrection = "student_contract_correction";
+    public static final String dbStudentCorrection = "student_correction";
     public static final String dbLanguageTable = "hr_language";
     public static final String dbLanguageLevelTable = "hr_language_level";
     public static final String dbExamTable = "hr_exam";
@@ -217,6 +218,7 @@ public class SystemSettings implements Serializable {
     public static final String cnStudentDefinitionView = "StudentDefinitionView";
     public static final String cnReportsView = "ReportsView";
     public static final String discountsTable = "DiscountsTable";
+    public static final String correctionsTable = "CorrectionsTable";
     public static final String paymentsTab = "PaymentsTab";
     public static final String callsTab = "CallsTab";
     public static final String takeAccessoriesTab = "TakeAccessoriesTab";
@@ -275,7 +277,7 @@ public class SystemSettings implements Serializable {
     public static final String prmProductMovementsReport = "отчет по передвижениям товара";
     public static final String prmStockGeneralReport = "общий отчет по складам";
     public static final String prmConfirmationControl = "контроль подтверждений";
-    public static final String button = "##";
+    public static final String button = "  ";
     public static final String FreshItem = "fresh";
     public static final String cnBackupView = "BackupView";
     public static final String cnCallsView = "CallsView";

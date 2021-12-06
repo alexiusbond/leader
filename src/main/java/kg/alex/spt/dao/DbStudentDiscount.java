@@ -617,8 +617,7 @@ public class DbStudentDiscount extends BaseDb {
     }
 
     public int exec_update_emp_id(int emp_id, String id) throws SQLException {
-        String sql = "UPDATE student_discount SET employee_id=? "
-                + "WHERE id=?";
+        String sql = "UPDATE student_discount SET employee_id=? WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setString(2, id);

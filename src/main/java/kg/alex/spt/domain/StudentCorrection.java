@@ -1,23 +1,22 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 
-public class StudentContractCorrection implements Serializable {
+public class StudentCorrection implements Serializable {
     private String id;
     private double amount;
     private String note;
-    private Date registration_date;
-    private int student_contract_id;
+    private int student_id;
+    private int year_id;
     private int correction_type_id;
     private int employee_id;
 
-    public Date getRegistration_date() {
-        return registration_date;
+    public int getYear_id() {
+        return year_id;
     }
 
-    public void setRegistration_date(Date registration_date) {
-        this.registration_date = registration_date;
+    public void setYear_id(int year_id) {
+        this.year_id = year_id;
     }
 
     public String getId() {
@@ -44,12 +43,12 @@ public class StudentContractCorrection implements Serializable {
         this.note = note;
     }
 
-    public int getStudent_contract_id() {
-        return student_contract_id;
+    public int getStudent_id() {
+        return student_id;
     }
 
-    public void setStudent_contract_id(int student_contract_id) {
-        this.student_contract_id = student_contract_id;
+    public void setStudent_id(int student_id) {
+        this.student_id = student_id;
     }
 
     public int getCorrection_type_id() {

@@ -17,7 +17,6 @@ public class StudentInfoPdf implements Serializable {
     private String stud_middle_name;
     private String stud_class_name;
     private String scl_name_ru;
-    private String scl_name_en;
     private String scl_name_kg;
     private int scl_contr_type;
     private String scl_year_name;
@@ -50,7 +49,16 @@ public class StudentInfoPdf implements Serializable {
     private double ctr_paid;
     private String ctr_discountStr;
     private String ctr_discountPerc;
+    private String ctr_Correction;
     private boolean isStudentFeminitive;
+
+    public String getCtr_Correction() {
+        return ctr_Correction;
+    }
+
+    public void setCtr_Correction(String ctr_Correction) {
+        this.ctr_Correction = ctr_Correction;
+    }
 
     public double getCtr_paid() {
         return ctr_paid;

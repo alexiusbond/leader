@@ -20,7 +20,25 @@ public class StudentContract implements Serializable {
     private Set discount_ids;
     private double freeAmount;
     private double plan_debt;
+    private double correction;
     private double contr_with_disc;
+    private String correctionDetails;
+
+    public double getCorrection() {
+        return correction;
+    }
+
+    public void setCorrection(double correction) {
+        this.correction = correction;
+    }
+
+    public String getCorrectionDetails() {
+        return correctionDetails;
+    }
+
+    public void setCorrectionDetails(String correctionDetails) {
+        this.correctionDetails = correctionDetails;
+    }
 
     public double getContr_with_disc() {
         return contr_with_disc;

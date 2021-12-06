@@ -444,6 +444,7 @@ public class SptMessages_ru extends SptMessages {
             {ContractTypes, "Типы контрактов"},
             {ContractRu, "Котракт(RU)"},
             {DiscountAmount, "Сумма скидки"},
+            {CorrectionAmount, "Сумма корректировки"},
             {CambridgeOshContrRu, "Контракт Кэмбридж ОШ(RU)"},
             {ExportToPdf, "Экспорт в Pdf"},
             {ViewDocument, "Посмотреть документ"},

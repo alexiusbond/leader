@@ -79,9 +79,10 @@ public class DbStudentContract extends BaseDb {
     }
 
     public StudentContract exec_recount_contract(int stud_id, int year_id) throws SQLException {
-        String sql = "SELECT sc.contract_id, sc.debt, c.amount, sc.contr_with_disc, "
+        String sql = "SELECT sc.contract_id, sc.debt, c.amount, sc.contr_with_disc, vc.details, vc.amount, "
                 + "sum(ip.amount) as plan_debt FROM student_contract as sc "
                 + "left join contract as c on c.id = sc.contract_id "
+                + "LEFT JOIN view_corrections as vc on vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN student_installement_plan as ip on sc.student_id = ip.student_id "
                 + "and sc.year_id = ip.year_id AND ((ip.is_visible=1 and ip.date_of_payment <= now()) or ip.is_visible=0) "
                 + "where sc.student_id = ? and sc.year_id = ? ;";
@@ -96,10 +97,8 @@ public class DbStudentContract extends BaseDb {
             c.setAmount(result.getDouble("c.amount"));
             c.setContr_with_disc(result.getDouble("sc.contr_with_disc"));
             c.setPlan_debt(result.getDouble("plan_debt"));
-        } else {
-            c.setDebt(0.0);
-            c.setAmount(0.0);
-            c.setPlan_debt(0.0);
+            c.setCorrection(result.getDouble("vc.amount"));
+            c.setCorrectionDetails(result.getString("vc.details"));
         }
         return c;
     }
