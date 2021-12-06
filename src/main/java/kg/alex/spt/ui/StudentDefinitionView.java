@@ -823,7 +823,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (validateRelativesTable(relativesTable)) {
                         if (validateAcsGiveTable(acsGiveTable)) {
                             if (validateAcsReceiveTable(acsReceiveTable)) {
-                                if (validateContractsTab(contractTabLay)) {
+                                if (validateContractsTab(contractTabLay) && validateDiscountsTable() && validateCorrectionsTable() && validateInstallmentTable()) {
                                     if (validatePaymentsTable(paymentsTable)) {
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
@@ -995,9 +995,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         } else if (source.getId() != null
                 && source.getId().equals(SystemSettings.dbStudentDiscount)) {
-            if (initialPaymentTF.isValid()) {
-                recountInstPlanLabel();
-            }
             discCounter--;
             StudentDiscount sd = new StudentDiscount();
             sd.setId(source.getData().toString());
@@ -1008,13 +1005,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             delDiscIds.add(sd);
             discountsTable.removeItem(event.getButton().getData().toString());
-        } else if (source.getId() != null
-                && source.getId().equals(SystemSettings.dbStudentCorrection)) {
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
             }
+        } else if (source.getId() != null
+                && source.getId().equals(SystemSettings.dbStudentCorrection)) {
             delCorrectionIds.add(source.getData().toString());
             correctionsTable.removeItem(event.getButton().getData().toString());
+            if (initialPaymentTF.isValid()) {
+                recountInstPlanLabel();
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(payTablelay).getComponent() && source.getCaption() == null) {
             AccTransaction tr;
             delPayIds.add(source.getData().toString());
@@ -3448,11 +3448,120 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     }
 
+    private Boolean validateDiscountsTable() {
+        ArrayList<Integer> discount_ids = new ArrayList<Integer>();
+        Iterator iter = discountsTable.getItemIds().iterator();
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (!((TextField) discountsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
+            }
+            if (((TextField) discountsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                if (discount_ids.contains((Integer) ((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Title)).getValue()).getValue())) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifSameDiscountsAreNotAllowed),
+                            Notification.Type.WARNING_MESSAGE);
+                    return false;
+                } else {
+                    discount_ids.add((Integer) ((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
+                            myUI.getMessage(SptMessages.Title)).getValue()).getValue());
+                }
+            }
+            if (!((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Title)).getValue()).isValid()) {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Boolean validateCorrectionsTable() {
+        ArrayList<Integer> correction_ids = new ArrayList<Integer>();
+        Iterator iter = correctionsTable.getItemIds().iterator();
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (!((TextField) correctionsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
+            }
+            if (((TextField) correctionsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                if (correction_ids.contains((Integer) ((ComboBoxMax) correctionsTable.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Title)).getValue()).getValue())) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifSameCorrectionsAreNotAllowed),
+                            Notification.Type.WARNING_MESSAGE);
+                    return false;
+                } else {
+                    correction_ids.add((Integer) ((ComboBoxMax) correctionsTable.getItem(obj).getItemProperty(
+                            myUI.getMessage(SptMessages.Title)).getValue()).getValue());
+                }
+            }
+            if (!((ComboBoxMax) correctionsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Title)).getValue()).isValid()) {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Boolean validateInstallmentTable() {
+        ArrayList<String> dates = new ArrayList<>();
+        Iterator iter = instPlanCont.getItemIds().iterator();
+        Double amount = 0.0;
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (!((TextField) installmentTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
+            }
+            if (!((DateField) installmentTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
+            }
+            if (((DateField) installmentTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
+                if (dates.contains(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Date)).getValue()).getValue()))) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifSameDatesAreNotAllowed),
+                            Notification.Type.WARNING_MESSAGE);
+                    return false;
+                } else {
+                    dates.add(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
+                            myUI.getMessage(SptMessages.Date)).getValue()).getValue()));
+                }
+            }
+            if ((Integer) installmentTable.getItem(obj).getItemProperty(
+                    SystemSettings.status_id).getValue() != 0) {
+                amount += (Double) (((TextField) installmentTable.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+            }
+        }
+        recount();
+        if (SystemSettings.round(instCtrAmount, 2) != SystemSettings.round(amount, 2)) {
+            Notification.show(myUI.getMessage(SptMessages.NotifWrongSumInstSum),
+                    Notification.Type.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
     private Boolean validateContractsTab(ComponentContainer layout) {
         if (tabs.getSelectedTab() == tabs.getTab(layout).getComponent()) {
             Iterator<Component> it = layout.iterator();
-            ArrayList<String> dates = new ArrayList<>();
-            ArrayList<Integer> discount_ids = new ArrayList<Integer>();
             while (it.hasNext()) {
                 Component next = it.next();
                 if (next instanceof ComboBoxMax) {
@@ -3466,76 +3575,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                         return false;
-                    }
-                } else if (next instanceof Table && next != discountsTable) {
-                    Iterator iter = instPlanCont.getItemIds().iterator();
-                    Double amount = 0.0;
-                    while (iter.hasNext()) {
-                        Object obj = iter.next();
-                        if (!((TextField) installmentTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
-                            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                                    Notification.Type.WARNING_MESSAGE);
-                            return false;
-                        }
-                        if (!((DateField) installmentTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
-                            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                                    Notification.Type.WARNING_MESSAGE);
-                            return false;
-                        }
-                        if (((DateField) installmentTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
-                            if (dates.contains(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
-                                    myUI.getMessage(SptMessages.Date)).getValue()).getValue()))) {
-                                Notification.show(myUI.getMessage(SptMessages.NotifSameDatesAreNotAllowed),
-                                        Notification.Type.WARNING_MESSAGE);
-                                return false;
-                            } else {
-                                dates.add(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
-                                        myUI.getMessage(SptMessages.Date)).getValue()).getValue()));
-                            }
-                        }
-                        if ((Integer) installmentTable.getItem(obj).getItemProperty(
-                                SystemSettings.status_id).getValue() != 0) {
-                            amount += (Double) (((TextField) installmentTable.getItem(obj).getItemProperty(
-                                    myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
-                        }
-                    }
-                    recount();
-                    if (SystemSettings.round(instCtrAmount, 2) != SystemSettings.round(amount, 2)) {
-                        Notification.show(myUI.getMessage(SptMessages.NotifWrongSumInstSum),
-                                Notification.Type.WARNING_MESSAGE);
-                        return false;
-                    }
-                } else if (next instanceof Table && next != installmentTable) {
-                    Iterator iter = discountsTable.getItemIds().iterator();
-                    while (iter.hasNext()) {
-                        Object obj = iter.next();
-                        if (!((TextField) discountsTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
-                            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                                    Notification.Type.WARNING_MESSAGE);
-                            return false;
-                        }
-                        if (((TextField) discountsTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
-                            if (discount_ids.contains((Integer) ((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
-                                    myUI.getMessage(SptMessages.Title)).getValue()).getValue())) {
-                                Notification.show(myUI.getMessage(SptMessages.NotifSameDiscountsAreNotAllowed),
-                                        Notification.Type.WARNING_MESSAGE);
-                                return false;
-                            } else {
-                                discount_ids.add((Integer) ((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
-                                        myUI.getMessage(SptMessages.Title)).getValue()).getValue());
-                            }
-                        }
-                        if (!((ComboBoxMax) discountsTable.getItem(obj).getItemProperty(
-                                myUI.getMessage(SptMessages.Title)).getValue()).isValid()) {
-                            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                                    Notification.Type.WARNING_MESSAGE);
-                            return false;
-                        }
                     }
                 }
             }
@@ -3835,6 +3874,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void recountInstPlanLabel() {
+        System.out.println("Recount inst labels");
         if (contractCB.getValue() != null) {
             instCtrAmount = 0.0;
             netContrAmount = 0.0;
@@ -3843,6 +3883,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             instCtrAmount = Double.parseDouble(contractCB.getContainerProperty(contractCB.getValue(),
                     myUI.getMessage(SptMessages.Amount)).getValue().toString());
 
+            System.out.println(instCtrAmount);
+            System.out.println(discountsTable.size());
+            System.out.println(discountCont.size());
             if (discountsTable.size() > 0) {
                 Iterator iter = discountsTable.getItemIds().iterator();
                 while (iter.hasNext()) {
@@ -3861,7 +3904,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                 .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("3"))) {
                             instCtrAmount -= instCtrAmount * discountAmount / 100;
-
+                            System.out.println(instCtrAmount);
                             //if discount type is $.
                         } else if ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(((ComboBoxMax) discountsTable
@@ -3872,6 +3915,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                 .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("4"))) {
                             instCtrAmount = instCtrAmount - discountAmount;
+                            System.out.println(instCtrAmount);
                         }
                     }
                 }

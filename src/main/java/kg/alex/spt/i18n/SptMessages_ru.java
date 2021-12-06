@@ -399,6 +399,7 @@ public class SptMessages_ru extends SptMessages {
             {CanNotSaveIdNumber, "Этот ID номер уже используется"},
             {NotifEmptyTable, "Таблица не может быть пустой"},
             {NotifSameDiscountsAreNotAllowed, "Нельзя использовать одну и ту же скидку дважды"},
+            {NotifSameCorrectionsAreNotAllowed, "Нельзя использовать одну и ту же корректировку дважды"},
             {NotifSameDatesAreNotAllowed, "Выбраны две одинаковые даты в плане оплат"},
             {NotifWrongSumInstSum, "Неверные сумма и сумма плана оплат"},
             {CanNotModify, "Данная запись используется в других таблицах, вы не можете ее изменить!"},

@@ -388,6 +388,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String CanNotSaveIdNumber = generateId();
     public static final String NotifEmptyTable = generateId();
     public static final String NotifSameDiscountsAreNotAllowed = generateId();
+    public static final String NotifSameCorrectionsAreNotAllowed = generateId();
     public static final String NotifSameDatesAreNotAllowed = generateId();
     public static final String NotifWrongSumInstSum = generateId();
     public static final String CanNotModify = generateId();
