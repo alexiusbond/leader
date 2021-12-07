@@ -198,8 +198,9 @@ public class DbStudentContract extends BaseDb {
         clr.paids = 0;
         clr.contracts = 0;
         clr.discounts = 0;
+        clr.corrections = 0;
         clr.lefts = 0;
-        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, sc.debt, vc.amount, "
+        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, sc.debt, vc.amount, vc.full_details, "
                 + "sc.contr_with_disc, sc.net_payments, edu.id, sr.fullname, sr.phone, "
                 + "rel.name, GROUP_CONCAT(DISTINCT "
                 + "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') "
@@ -244,6 +245,7 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Discount), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.CorrectionType), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, null);
@@ -284,6 +286,7 @@ public class DbStudentContract extends BaseDb {
                 } else {
                     item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(0.0);
                 }
+                item.getItemProperty(myUI.getMessage(SptMessages.CorrectionType)).setValue(result.getString("vc.full_details"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(result.getDouble("vc.amount"));
                 clr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(result.getDouble("sc.debt"));
@@ -316,7 +319,7 @@ public class DbStudentContract extends BaseDb {
         dr.discounts = 0;
         dr.corrections = 0;
         dr.lefts = 0;
-        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, sc.debt, vc.amount, "
+        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, sc.debt, vc.amount, vc.full_details, "
                 + "sc.contr_with_disc, sc.net_payments, edu.id, GROUP_CONCAT(DISTINCT "
                 + "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') "
                 + "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') "
@@ -359,6 +362,7 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Discount), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.CorrectionType), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, null);
@@ -391,6 +395,8 @@ public class DbStudentContract extends BaseDb {
                 } else {
                     item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(0.0);
                 }
+                item.getItemProperty(myUI.getMessage(SptMessages.CorrectionType)).setValue(
+                        result.getString("vc.full_details"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
                         result.getDouble("vc.amount"));
                 dr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
@@ -425,6 +431,7 @@ public class DbStudentContract extends BaseDb {
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
                 + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
+                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), vc.amount, 0)) AS corrections, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
                 + "sc.contr_with_disc, 0)) AS contr_with_disc, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), sc.debt, 0)) AS debts, "
@@ -447,6 +454,7 @@ public class DbStudentContract extends BaseDb {
                 + "ELSE stud_o.to_class_name_id END WHERE stud.school_id IN (" + school_ids + ") "
                 + "AND stud.entering_year_id <= ?) AS st ON cl.id = st.t_class_id "
                 + "LEFT JOIN student_contract AS sc ON sc.student_id = st.t_st_id AND sc.year_id = ? "
+                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
                 + "WHERE cl.school_id IN (" + school_ids + ") GROUP BY cl.id "
                 + "ORDER BY CAST(sch.code AS UNSIGNED), cln.id, cl.id;";
@@ -472,6 +480,8 @@ public class DbStudentContract extends BaseDb {
                         t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
                                 SystemSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
                     }
+                    t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                            SystemSettings.dFormat.format(ymr.corrections));
                     t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
                             SystemSettings.dFormat.format(ymr.debts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Net),
@@ -488,6 +498,7 @@ public class DbStudentContract extends BaseDb {
                     ymr.contracts = 0.0;
                     ymr.discounts = 0.0;
                     ymr.debts = 0.0;
+                    ymr.corrections = 0.0;
                     ymr.nets = 0.0;
                     ymr.paids = 0.0;
                     ymr.lefts = 0.0;
@@ -515,11 +526,14 @@ public class DbStudentContract extends BaseDb {
                             (100 * result.getDouble("disc")) / result.getDouble("contr"));
                 }
                 ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+                        result.getDouble("corrections"));
+                ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
                         result.getDouble("debts"));
                 ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("contr_with_disc") + result.getDouble("debts"));
+                        result.getDouble("contr_with_disc") + result.getDouble("debts") + result.getDouble("corrections"));
                 ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("payments"));
@@ -547,6 +561,8 @@ public class DbStudentContract extends BaseDb {
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
                     SystemSettings.dFormat.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                    SystemSettings.dFormat.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                     SystemSettings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
@@ -562,6 +578,7 @@ public class DbStudentContract extends BaseDb {
             ymr.contracts = 0.0;
             ymr.discounts = 0.0;
             ymr.debts = 0.0;
+            ymr.corrections = 0.0;
             ymr.nets = 0.0;
             ymr.paids = 0.0;
             ymr.lefts = 0.0;
@@ -681,6 +698,7 @@ public class DbStudentContract extends BaseDb {
                 + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
                 + "sc.contr_with_disc, 0)) AS contr_with_disc, "
+                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), vc.amount, 0)) AS corrections, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), sc.debt, 0)) AS debts, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), sc.net_payments,0)) "
                 + "AS payments, COUNT(st.t_st_id) AS stud_num, "
@@ -700,6 +718,7 @@ public class DbStudentContract extends BaseDb {
                 + "ELSE stud_o.to_class_name_id END WHERE stud.school_id IN (" + school_ids + ") "
                 + "AND stud.entering_year_id <= ?) AS st ON cl.id = st.t_class_id "
                 + "LEFT JOIN student_contract AS sc ON sc.student_id = st.t_st_id AND sc.year_id = ? "
+                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
                 + "WHERE cl.school_id IN (" + school_ids + ") GROUP BY cln.id "
                 + "ORDER BY cln.id;";
@@ -724,6 +743,9 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
                         result.getDouble("contr"));
                 ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+                        result.getDouble("corrections"));
+                ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
                         result.getDouble("disc"));
                 if (result.getDouble("contr") != 0) {
@@ -735,7 +757,7 @@ public class DbStudentContract extends BaseDb {
                         result.getDouble("debts"));
                 ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("contr_with_disc") + result.getDouble("debts"));
+                        result.getDouble("contr_with_disc") + result.getDouble("debts")+ result.getDouble("corrections"));
                 ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("payments"));
@@ -756,6 +778,8 @@ public class DbStudentContract extends BaseDb {
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
                     SystemSettings.dFormat.format(ymr.contracts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                    SystemSettings.dFormat.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
                     SystemSettings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
@@ -777,6 +801,7 @@ public class DbStudentContract extends BaseDb {
             ymr.totalStudents = 0;
             ymr.totalActive = 0;
             ymr.contracts = 0.0;
+            ymr.corrections = 0.0;
             ymr.discounts = 0.0;
             ymr.debts = 0.0;
             ymr.nets = 0.0;
@@ -795,6 +820,7 @@ public class DbStudentContract extends BaseDb {
                 + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), sc.contr_with_disc, 0)) "
                 + "AS contr_with_disc, "
+                + "SUM(IF(es.id IN (" + edu_statuses_ids + "), vc.amount, 0)) AS corrections, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), sc.debt,0)) AS debts, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), sc.net_payments,0)) "
                 + "AS payments, COUNT(st.id) AS stud_num, "
@@ -808,6 +834,7 @@ public class DbStudentContract extends BaseDb {
                 + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
                 + "LEFT JOIN education_status AS es ON es.id = stud_o.to_education_status_id "
                 + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? "
+                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
                 + "WHERE st.entering_year_id <= ? "
                 + "OR st.entering_year_id IS NULL GROUP BY sch.id "
@@ -834,6 +861,9 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
                         result.getDouble("contr"));
                 ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+                        result.getDouble("corrections"));
+                ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
                         result.getDouble("disc"));
                 if (result.getDouble("contr") != 0) {
@@ -867,6 +897,8 @@ public class DbStudentContract extends BaseDb {
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
                     SystemSettings.dFormat.format(ymr.contracts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                    SystemSettings.dFormat.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
                     SystemSettings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
@@ -888,6 +920,7 @@ public class DbStudentContract extends BaseDb {
             ymr.totalStudents = 0;
             ymr.totalActive = 0;
             ymr.contracts = 0.0;
+            ymr.corrections = 0.0;
             ymr.discounts = 0.0;
             ymr.debts = 0.0;
             ymr.nets = 0.0;

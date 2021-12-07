@@ -234,3 +234,38 @@ VIEW `view_corrections` AS
         (`student_correction` `scc`
         LEFT JOIN `correction_type` `amr_t` ON ((`scc`.`correction_type_id` = `amr_t`.`id`)))
     GROUP BY `scc`.`student_id` , `scc`.`year_id`;
+
+USE `spt`;
+CREATE 
+     OR REPLACE ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `view_corrections` AS
+    SELECT 
+        GROUP_CONCAT(DISTINCT '(',
+            `amr_t`.`type`,
+            ') ',
+            `amr_t`.`name`
+            ORDER BY `amr_t`.`id` ASC
+            SEPARATOR ', ') AS `names`,
+        GROUP_CONCAT(DISTINCT '(',
+            `amr_t`.`type`,
+            ') ',
+            `amr_t`.`name`, ' ', `scc`.`amount`, ' $'
+            ORDER BY `amr_t`.`id` ASC
+            SEPARATOR ', ') AS `full_details`,
+        GROUP_CONCAT(DISTINCT `amr_t`.`type`, `scc`.`amount`, ' $'
+            ORDER BY `amr_t`.`id` ASC
+            SEPARATOR ', ') AS `details`,
+        GROUP_CONCAT(DISTINCT `scc`.`note`
+            ORDER BY `scc`.`id` ASC
+            SEPARATOR ', ') AS `notes`,
+        `scc`.`student_id` AS `student_id`,
+        `scc`.`year_id` AS `year_id`,
+        SUM(IF((`amr_t`.`type` = '+'),
+            `scc`.`amount`,
+            -(`scc`.`amount`))) AS `amount`
+    FROM
+        (`student_correction` `scc`
+        LEFT JOIN `correction_type` `amr_t` ON ((`scc`.`correction_type_id` = `amr_t`.`id`)))
+    GROUP BY `scc`.`student_id` , `scc`.`year_id`;

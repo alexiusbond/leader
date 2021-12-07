@@ -20,7 +20,9 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.util.Set;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
@@ -63,7 +65,7 @@ public class YearMonthReport implements Button.ClickListener,
     public VerticalLayout rightLay;
     private OptionGroup type;
     public int totalStudents = 0, totalActive = 0;
-    public double contracts = 0.0, discounts = 0.0, debts = 0.0, nets = 0.0,
+    public double contracts = 0.0, discounts = 0.0, debts = 0.0, corrections = 0.0, nets = 0.0,
             paids = 0.0, lefts = 0.0, inst_plans = 0.0;
 
     public YearMonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -72,32 +74,34 @@ public class YearMonthReport implements Button.ClickListener,
         buildLeftPanel();
         buildRightLayout();
         NATURAL_COL_ORDER_YEAR = new String[]{myUI.getMessage(SptMessages.ClassName),
-            myUI.getMessage(SptMessages.Total_Active),
-            myUI.getMessage(SptMessages.Contract),
-            myUI.getMessage(SptMessages.Discount),
-            myUI.getMessage(SptMessages.DiscountPercentage),
-            myUI.getMessage(SptMessages.PreviousYearDebt),
-            myUI.getMessage(SptMessages.Net),
-            myUI.getMessage(SptMessages.Paid),
-            myUI.getMessage(SptMessages.Left),
-            SystemSettings.percentage};
+                myUI.getMessage(SptMessages.Total_Active),
+                myUI.getMessage(SptMessages.Contract),
+                myUI.getMessage(SptMessages.Discount),
+                myUI.getMessage(SptMessages.DiscountPercentage),
+                myUI.getMessage(SptMessages.Correction),
+                myUI.getMessage(SptMessages.PreviousYearDebt),
+                myUI.getMessage(SptMessages.Net),
+                myUI.getMessage(SptMessages.Paid),
+                myUI.getMessage(SptMessages.Left),
+                SystemSettings.percentage};
 
         NATURAL_COL_ORDER_SUMMARY = new String[]{myUI.getMessage(SptMessages.School),
-            myUI.getMessage(SptMessages.Total_Active),
-            myUI.getMessage(SptMessages.Contract),
-            myUI.getMessage(SptMessages.Discount),
-            myUI.getMessage(SptMessages.DiscountPercentage),
-            myUI.getMessage(SptMessages.PreviousYearDebt),
-            myUI.getMessage(SptMessages.Net),
-            myUI.getMessage(SptMessages.Paid),
-            myUI.getMessage(SptMessages.Left),
-            SystemSettings.percentage};
+                myUI.getMessage(SptMessages.Total_Active),
+                myUI.getMessage(SptMessages.Contract),
+                myUI.getMessage(SptMessages.Discount),
+                myUI.getMessage(SptMessages.DiscountPercentage),
+                myUI.getMessage(SptMessages.Correction),
+                myUI.getMessage(SptMessages.PreviousYearDebt),
+                myUI.getMessage(SptMessages.Net),
+                myUI.getMessage(SptMessages.Paid),
+                myUI.getMessage(SptMessages.Left),
+                SystemSettings.percentage};
 
         NATURAL_COL_ORDER_MONTH = new String[]{myUI.getMessage(SptMessages.Month),
-            myUI.getMessage(SptMessages.InstPlanDebt),
-            myUI.getMessage(SptMessages.Paid),
-            myUI.getMessage(SptMessages.Left),
-            SystemSettings.percentage};
+                myUI.getMessage(SptMessages.InstPlanDebt),
+                myUI.getMessage(SptMessages.Paid),
+                myUI.getMessage(SptMessages.Left),
+                SystemSettings.percentage};
     }
 
     private void buildLeftPanel() {
@@ -249,6 +253,7 @@ public class YearMonthReport implements Button.ClickListener,
             container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.Discount), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.DiscountPercentage), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, null);
         } else if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Summary))) {
@@ -257,6 +262,7 @@ public class YearMonthReport implements Button.ClickListener,
             container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.Discount), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.DiscountPercentage), Double.class, null);
+            container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
             container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, null);
         } else {
@@ -285,6 +291,7 @@ public class YearMonthReport implements Button.ClickListener,
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total_Active), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
         } else {

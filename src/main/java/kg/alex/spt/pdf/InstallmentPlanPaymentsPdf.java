@@ -97,7 +97,7 @@ public class InstallmentPlanPaymentsPdf {
                     document.add(new Paragraph(24, " "));
                     document.add(spr);
                     document.add(new Paragraph(30, " "));
-                    float[] Thead_colsWidth = {2f, 2f, 2f};
+                    float[] Thead_colsWidth = {0.9f, 1.4f, 0.9f};
                     PdfPTable Thead = new PdfPTable(3);
                     Thead.setWidthPercentage(90f);
                     Thead.setWidths(Thead_colsWidth);

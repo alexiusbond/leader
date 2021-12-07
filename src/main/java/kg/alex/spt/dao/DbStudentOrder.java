@@ -9,10 +9,12 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudentOrder;
@@ -21,7 +23,6 @@ import kg.alex.spt.reports.students.OutOfList;
 import kg.alex.spt.ui.IssueOrderView;
 
 /**
- *
  * @author alex
  */
 public class DbStudentOrder extends BaseDb {
@@ -32,7 +33,7 @@ public class DbStudentOrder extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int student_id, IssueOrderView iv)
             throws SQLException {
-        
+
 
         String sql = "SELECT so.id, o.name, from_edu.name, from_edu.id, to_edu.name, y.name, "
                 + "concat(from_class_number.name,' - ', from_class_name.name) as from_class, "
@@ -164,7 +165,7 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public int exec_update_from_class(StudentOrder so, int old_class_name_id,
-            int order_id) throws SQLException {
+                                      int order_id) throws SQLException {
         String sql = "UPDATE student_orders set from_class_name_id=? "
                 + "where from_class_name_id=? and year_id=? and student_id=? and id>=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -196,7 +197,7 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public int exec_update_to_class(StudentOrder so, int old_class_name_id,
-            int order_id) throws SQLException {
+                                    int order_id) throws SQLException {
         String sql = "UPDATE student_orders set to_class_name_id=? "
                 + "where to_class_name_id=? and year_id=? and student_id=? and id>=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -252,7 +253,7 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public int insertNewStCtrOrder(int id, int class_id, int stat_id, int year_id,
-            int emp_id) throws SQLException {
+                                   int emp_id) throws SQLException {
         String sql = "insert ignore into student_orders (student_id, orders_id, from_class_name_id, "
                 + "to_class_name_id, from_education_status_id, to_education_status_id, "
                 + "year_id, modification_date,employee_id) "
@@ -289,14 +290,14 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public IndexedContainer execSQL_outOf(MyVaadinUI myUI, String year_ids, String from_class_ids,
-            String reasons, int school_id, OutOfList ol)
+                                          String reasons, int school_id, OutOfList ol)
             throws SQLException {
         if (reasons != null) {
             reasons = reasons.replace(", ", "|");
         }
         String sql = "SELECT st.id, st.login, st.name, st.surname, so.reason, y.name, CONCAT(from_cl.name, ' - ', from_cln.name) AS from_class, "
-                + "    CONCAT(to_cl.name, ' - ', to_cln.name) AS to_class, date(so.modification_date), sc.debt, sc.contr_with_disc, sc.net_payments "
-                + "FROM student_orders AS so  "
+                + "CONCAT(to_cl.name, ' - ', to_cln.name) AS to_class, date(so.modification_date), sc.debt, sc.contr_with_disc, sc.net_payments, "
+                + "vc.amount FROM student_orders AS so  "
                 + "LEFT JOIN student AS st ON st.id = so.student_id "
                 + "LEFT JOIN year AS y ON y.id = so.year_id "
                 + "LEFT JOIN class_name AS from_cln ON from_cln.id = so.from_class_name_id "
@@ -304,6 +305,7 @@ public class DbStudentOrder extends BaseDb {
                 + "LEFT JOIN class_name AS to_cln ON to_cln.id = so.to_class_name_id "
                 + "LEFT JOIN class_number AS to_cl ON to_cl.id = to_cln.class_number_id "
                 + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = so.year_id "
+                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "WHERE so.year_id IN (" + year_ids + ") "
                 + "	AND so.from_class_name_id IN (" + from_class_ids + ") ";
         if (reasons != null) {
@@ -348,15 +350,15 @@ public class DbStudentOrder extends BaseDb {
                     result.getString("to_class"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     result.getString("date(so.modification_date)"));
-            ol.nets += result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc");
+            ol.nets += result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount");
             ol.paids += result.getDouble("sc.net_payments");
             item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                    result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc"));
+                    result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                     result.getDouble("sc.net_payments"));
             item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
-                    (result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc")
-                    - (result.getDouble("sc.net_payments"))));
+                    (result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount")
+                            - (result.getDouble("sc.net_payments"))));
         }
         return container;
     }

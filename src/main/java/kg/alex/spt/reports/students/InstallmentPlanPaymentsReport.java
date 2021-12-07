@@ -57,14 +57,14 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private GridLayout leftGrid, rightGrid;
     private EnhancedFormatExcelExport excelReport;
     private double debt, amount, plan_debt, ttl_payment, kOplate, ttl_left;
-    private String discounts;
+    private String discounts, corrections;
     private StudentInfoPdf st;
     private FormattedTable installmentTable, paymentsTable;
     private FilterTable studentsTable, classTable;
     private ComboBoxMax yearSelect;
     private IndexedContainer installmentCont, paymentsCont;
     private CheckBox paymentsCkb, instPlanCkb;
-    private Label debtLab, contractLab, discountLab,correctionLab, planDebt, netLab, paidLab,
+    private Label debtLab, contractLab, discountLab, correctionLab, planDebt, netLab, paidLab,
             leftLab, loginLab, nameLab, surnameLab, classLab;
     private Embedded photoEmb;
 
@@ -208,6 +208,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     st.setCtr_debt(debt);
                     st.setCtr_instplan_debt(plan_debt - ttl_payment);
                     st.setCtr_discountStr(discounts);
+                    st.setCtr_Correction(corrections);
                     st.setCtr_k_oplate(kOplate);
                     st.setCtr_ttl_left_sum(ttl_left);
                     st.setCtr_paid(ttl_payment);
@@ -481,8 +482,8 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     (Integer) yearSelect.getValue());
             ttl_payment = sp.getTtl_pay();
             plan_debt = c.getPlan_debt() - total_pay;
-            kOplate = c.getContr_with_disc() + debt;
-            ttl_left = (c.getContr_with_disc() + debt) - ttl_payment;
+            kOplate = c.getContr_with_disc() + debt + c.getCorrection();
+            ttl_left = (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection();
             dbsc.close();
             dbsd.close();
             dbsp.close();
@@ -524,6 +525,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 }
             }
         }
+        corrections = c.getCorrectionDetails();
         contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + SystemSettings.dFormat.format(c.getAmount()) + " $");
         discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts);
         correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + c.getCorrectionDetails());
@@ -533,12 +535,14 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         }
         debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + SystemSettings.dFormat.format(debt) + " $");
-        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + SystemSettings.dFormat.format(c.getContr_with_disc() + debt) + " $");
+        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + SystemSettings.dFormat.format(c.getContr_with_disc() + debt + c.getCorrection()) + " $");
         paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + SystemSettings.dFormat.format(ttl_payment) + " $");
-        leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + SystemSettings.dFormat.format((c.getContr_with_disc() + debt) - ttl_payment) + " $");
+        leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + SystemSettings.dFormat.format(
+                (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + " $");
         if ((c.getPlan_debt() - ttl_payment) > 0) {
             planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
-            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(c.getPlan_debt() - ttl_payment) + " $");
+            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(
+                    c.getPlan_debt() - ttl_payment + c.getCorrection()) + " $");
         } else {
             planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
             planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(0.0) + " $");
