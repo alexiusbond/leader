@@ -11,6 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbRelative;
@@ -39,7 +41,7 @@ public class ContractLisePdfRu {
     private final String nameOf = "Contract";
     private MyVaadinUI myUI;
     private StudentInfoPdf student;
-    
+
 
     private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
@@ -935,11 +937,18 @@ public class ContractLisePdfRu {
 //                        text15.add(new Phrase(" (" + student.getCtr_discountPerc() + ")", ordFont));
                     }
                     text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Корректировка: ", ordFont));
+                    if (student.getCtr_Correction() != null) {
+                        text15.add(new Phrase(student.getCtr_Correction(), ordBoldFont));
+                    }
+                    text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Предоплата: ", ordFont));
                     text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                    text15.add(new Phrase(" долларов США.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Остаток: ", ordFont));
                     text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                    text15.add(new Phrase(" долларов США.", ordFont));
                     document.add(text15);
                     document.add(new Paragraph(10, " "));
 

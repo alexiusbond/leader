@@ -97,8 +97,8 @@ public class InstallmentPlanPaymentsPdf {
                     document.add(new Paragraph(24, " "));
                     document.add(spr);
                     document.add(new Paragraph(30, " "));
-                    float[] Thead_colsWidth = {2f, 2f};
-                    PdfPTable Thead = new PdfPTable(2);
+                    float[] Thead_colsWidth = {2f, 2f, 2f};
+                    PdfPTable Thead = new PdfPTable(3);
                     Thead.setWidthPercentage(90f);
                     Thead.setWidths(Thead_colsWidth);
 
@@ -106,29 +106,29 @@ public class InstallmentPlanPaymentsPdf {
                     Thead.getDefaultCell().setFixedHeight(15f);
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Student), ordFontBold));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), ordFontBold));
+                    Thead.addCell(new Phrase(" ", ordFontBold));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Id)
                             + ": " + st.getStud_login(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Contract)
                             + ": $" + st.getCtr_contract_sum(), ordFont));
+                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Net)
+                            + ": $" + st.getCtr_k_oplate(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName)
                             + ": " + st.getStud_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Discount)
                             + ": " + st.getCtr_discountStr(), ordFont));
-                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.LastName)
-                            + ": " + st.getStud_sur_name(), ordFont));
-                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt)
-                            + ": $" + st.getCtr_debt(), ordFont));
-                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName)
-                            + ": " + st.getStud_class_name(), ordFont));
-                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Net)
-                            + ": $" + st.getCtr_k_oplate(), ordFont));
-                    Thead.addCell(new Phrase());
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Paid)
                             + ": $" + st.getCtr_paid(), ordFont));
-                    Thead.addCell(new Phrase());
+                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.LastName)
+                            + ": " + st.getStud_sur_name(), ordFont));
+                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Correction)
+                            + ": $" + st.getCtr_Correction(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Left)
                             + ": $" + SystemSettings.dFormat.format(st.getCtr_ttl_left_sum()), ordFont));
-                    Thead.addCell(new Phrase());
+                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName)
+                            + ": " + st.getStud_class_name(), ordFont));
+                    Thead.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt)
+                            + ": $" + st.getCtr_debt(), ordFont));
                     if (st.getCtr_instplan_debt() > 0) {
                         Thead.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt)
                                 + ": $" + SystemSettings.dFormat.format(st.getCtr_instplan_debt()), ordFont));

@@ -717,11 +717,18 @@ public class ContractSchoolPdfKg {
 //                        text15.add(new Phrase(" (" + student.getCtr_discountPerc() + ")", ordFont));
                     }
                     text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Тууралоо: ", ordFont));
+                    if (student.getCtr_Correction() != null) {
+                        text15.add(new Phrase(student.getCtr_Correction(), ordBoldFont));
+                    }
+                    text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Алдын ала төлөм: ", ordFont));
                     text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                    text15.add(new Phrase(" АКШ доллары.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Калган төлөм: ", ordFont));
                     text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                    text15.add(new Phrase(" АКШ доллары.", ordFont));
                     document.add(text15);
                     document.add(new Paragraph(10, " "));
 

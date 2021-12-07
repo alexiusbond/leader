@@ -64,8 +64,8 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private ComboBoxMax yearSelect;
     private IndexedContainer installmentCont, paymentsCont;
     private CheckBox paymentsCkb, instPlanCkb;
-    private Label debtLab, contractLab, discountLab, planDebt, netLab, paidLab,
-            leftLab, emptyLab, loginLab, nameLab, surnameLab, classLab;
+    private Label debtLab, contractLab, discountLab,correctionLab, planDebt, netLab, paidLab,
+            leftLab, loginLab, nameLab, surnameLab, classLab;
     private Embedded photoEmb;
 
     private String[] NATURAL_COL_ORDER;
@@ -381,43 +381,44 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ":");
         rightGrid.addComponent(discountLab, 3, 1, 4, 1);
 
+        correctionLab = new Label();
+        correctionLab.setSizeFull();
+        correctionLab.setStyleName(ValoTheme.LABEL_SUCCESS);
+        correctionLab.setValue(myUI.getMessage(SptMessages.Discount) + ":");
+        rightGrid.addComponent(correctionLab, 3, 2, 4, 2);
+
         debtLab = new Label();
         debtLab.setSizeFull();
         debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ":");
-        rightGrid.addComponent(debtLab, 3, 2, 4, 2);
+        rightGrid.addComponent(debtLab, 3, 3, 4, 3);
 
         netLab = new Label();
         netLab.setSizeFull();
         netLab.setContentMode(ContentMode.HTML);
         netLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         netLab.setValue(myUI.getMessage(SptMessages.Net) + ":");
-        rightGrid.addComponent(netLab, 3, 3, 4, 3);
+        rightGrid.addComponent(netLab, 5, 0, 6, 0);
 
         paidLab = new Label();
         paidLab.setSizeFull();
         paidLab.setContentMode(ContentMode.HTML);
         paidLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ":");
-        rightGrid.addComponent(paidLab, 5, 0, 6, 0);
+        rightGrid.addComponent(paidLab, 5, 1, 6, 1);
 
         leftLab = new Label();
         leftLab.setSizeFull();
         leftLab.setContentMode(ContentMode.HTML);
         leftLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         leftLab.setValue(myUI.getMessage(SptMessages.Left) + ":");
-        rightGrid.addComponent(leftLab, 5, 1, 6, 1);
+        rightGrid.addComponent(leftLab, 5, 2, 6, 2);
 
         planDebt = new Label();
         planDebt.setSizeFull();
         planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
         planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ":");
-        rightGrid.addComponent(planDebt, 5, 2, 6, 2);
-
-        emptyLab = new Label();
-        emptyLab.setSizeFull();
-        emptyLab.setValue("");
-        rightGrid.addComponent(emptyLab, 5, 3, 6, 3);
+        rightGrid.addComponent(planDebt, 5, 3, 6, 3);
     }
 
     private void buildStudInfo() {
@@ -525,6 +526,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         }
         contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + SystemSettings.dFormat.format(c.getAmount()) + " $");
         discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts);
+        correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + c.getCorrectionDetails());
         if (debt > 0) {
             debtLab.setStyleName(ValoTheme.LABEL_FAILURE);
         } else {

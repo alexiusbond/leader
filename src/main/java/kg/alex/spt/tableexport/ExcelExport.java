@@ -336,7 +336,7 @@ public class ExcelExport extends TableExport {
         titleRow.setHeightInPoints(45);
         final Cell titleCell;
         final CellRangeAddress cra;
-        if (rowHeaders) {
+        if (rowHeaders && getPropIds().size() > 2) {
             titleCell = titleRow.createCell(1);
             int num = getPropIds().size() - 1;
             if (num > 255) {

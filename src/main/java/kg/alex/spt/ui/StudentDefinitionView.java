@@ -1236,7 +1236,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 3)) {
                                 allDists += " - " + ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue().toString() + "%(" + SystemSettings.dFormat.format(count_amount
+                                        .getPropertyDataSource().getValue().toString() + "% (" + SystemSettings.dFormat.format(count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100) + "$)";
                                 count_amount -= count_amount
@@ -1262,6 +1262,24 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         }
                         studInfo.setCtr_discountStr(allDists);
                         studInfo.setCtr_discountPerc(discountsStr);
+                    }
+                    if (correctionsTable.size() > 0) {
+                        Iterator iter = correctionsTable.getItemIds().iterator();
+                        String allCorrections = "";
+                        String dis = "";
+                        while (iter.hasNext()) {
+                            Object next = iter.next();
+                            dis = ((((ComboBoxMax) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
+                                    .getContainerProperty(((ComboBoxMax) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
+                                            myUI.getMessage(SptMessages.Title)).getValue().toString()));
+                            allCorrections += dis;
+                            allCorrections += " (" + SystemSettings.dFormat.format(((TextField) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
+                                    .getPropertyDataSource().getValue()) + "$)";
+                            if (iter.hasNext()) {
+                                allCorrections += ", ";
+                            }
+                        }
+                        studInfo.setCtr_Correction(allCorrections);
                     }
                     studInfo.setCtr_init_payment(instFirstPay);
                     studInfo.setCtr_k_oplate(kOplate);
@@ -3874,7 +3892,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void recountInstPlanLabel() {
-        System.out.println("Recount inst labels");
         if (contractCB.getValue() != null) {
             instCtrAmount = 0.0;
             netContrAmount = 0.0;
@@ -3883,9 +3900,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             instCtrAmount = Double.parseDouble(contractCB.getContainerProperty(contractCB.getValue(),
                     myUI.getMessage(SptMessages.Amount)).getValue().toString());
 
-            System.out.println(instCtrAmount);
-            System.out.println(discountsTable.size());
-            System.out.println(discountCont.size());
             if (discountsTable.size() > 0) {
                 Iterator iter = discountsTable.getItemIds().iterator();
                 while (iter.hasNext()) {
@@ -3904,7 +3918,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                 .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("3"))) {
                             instCtrAmount -= instCtrAmount * discountAmount / 100;
-                            System.out.println(instCtrAmount);
                             //if discount type is $.
                         } else if ((((ComboBoxMax) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(((ComboBoxMax) discountsTable
@@ -3915,7 +3928,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                 .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString().equals("4"))) {
                             instCtrAmount = instCtrAmount - discountAmount;
-                            System.out.println(instCtrAmount);
                         }
                     }
                 }

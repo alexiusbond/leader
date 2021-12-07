@@ -16,11 +16,13 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.domain.StudentInfoPdf;
@@ -93,9 +95,9 @@ public class ClassListPdf {
 
                     //installment plan table
                     float[] Tplan_colsWidth = {
-                        0.1f, 0.22f, 0.23f, 0.4f, 0.4f, 0.15f, 0.25f, 0.68f,
-                        0.21f, 0.25f, 0.25f, 0.25f, 0.25f,};
-                    PdfPTable dataTable = new PdfPTable(13);
+                            0.1f, 0.22f, 0.20f, 0.4f, 0.4f, 0.15f, 0.25f, 0.43f, 0.25f,
+                            0.21f, 0.25f, 0.25f, 0.25f, 0.25f,};
+                    PdfPTable dataTable = new PdfPTable(14);
                     dataTable.setWidthPercentage(90f);
                     dataTable.setWidths(Tplan_colsWidth);
                     dataTable.getDefaultCell().
@@ -109,6 +111,7 @@ public class ClassListPdf {
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.DiscountType), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discount), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Correction), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Net), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Paid), ordFontBold));
@@ -150,6 +153,8 @@ public class ClassListPdf {
                                 dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                                 dataTable.addCell(new Phrase("0.00", tableFont));
                             }
+                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Correction)).getValue()), tableFont));
                             dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
                             dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,

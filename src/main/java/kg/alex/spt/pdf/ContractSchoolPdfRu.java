@@ -754,11 +754,18 @@ public class ContractSchoolPdfRu {
 //                        text15.add(new Phrase(" (" + student.getCtr_discountPerc() + ")", ordFont));
                     }
                     text15.add(Chunk.NEWLINE);
+                    text15.add(new Phrase("Корректировка: ", ordFont));
+                    if (student.getCtr_Correction() != null) {
+                        text15.add(new Phrase(student.getCtr_Correction(), ordBoldFont));
+                    }
+                    text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Предоплата: ", ordFont));
                     text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                    text15.add(new Phrase(" долларов США.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Остаток: ", ordFont));
                     text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                    text15.add(new Phrase(" долларов США.", ordFont));
                     document.add(text15);
                     document.add(new Paragraph(10, " "));
 

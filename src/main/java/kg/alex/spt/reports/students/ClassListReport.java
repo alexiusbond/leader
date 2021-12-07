@@ -20,7 +20,9 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.util.Set;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
@@ -55,7 +57,7 @@ public class ClassListReport implements Button.ClickListener,
 
     private String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
-    public double contracts, discounts, debts, nets, paids, lefts;
+    public double contracts, discounts, corrections, debts, nets, paids, lefts;
 
     public ClassListReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -63,20 +65,21 @@ public class ClassListReport implements Button.ClickListener,
         buildLeftPanel();
         buildRightLayout();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id),
-            myUI.getMessage(SptMessages.EducationStatus),
-            myUI.getMessage(SptMessages.FirstName),
-            myUI.getMessage(SptMessages.LastName),
-            myUI.getMessage(SptMessages.ClassName),
-            myUI.getMessage(SptMessages.Contract),
-            myUI.getMessage(SptMessages.DiscountType),
-            myUI.getMessage(SptMessages.Discount),
-            myUI.getMessage(SptMessages.PreviousYearDebt),
-            myUI.getMessage(SptMessages.Net),
-            myUI.getMessage(SptMessages.Paid),
-            myUI.getMessage(SptMessages.Left),
-            myUI.getMessage(SptMessages.Relative),
-            myUI.getMessage(SptMessages.FullName),
-            myUI.getMessage(SptMessages.Phone)};
+                myUI.getMessage(SptMessages.EducationStatus),
+                myUI.getMessage(SptMessages.FirstName),
+                myUI.getMessage(SptMessages.LastName),
+                myUI.getMessage(SptMessages.ClassName),
+                myUI.getMessage(SptMessages.Contract),
+                myUI.getMessage(SptMessages.DiscountType),
+                myUI.getMessage(SptMessages.Discount),
+                myUI.getMessage(SptMessages.Correction),
+                myUI.getMessage(SptMessages.PreviousYearDebt),
+                myUI.getMessage(SptMessages.Net),
+                myUI.getMessage(SptMessages.Paid),
+                myUI.getMessage(SptMessages.Left),
+                myUI.getMessage(SptMessages.Relative),
+                myUI.getMessage(SptMessages.FullName),
+                myUI.getMessage(SptMessages.Phone)};
     }
 
     private void buildLeftPanel() {
@@ -227,6 +230,7 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setVisibleColumns(NATURAL_COL_ORDER);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
@@ -239,6 +243,8 @@ public class ClassListReport implements Button.ClickListener,
                             SystemSettings.dFormat.format(contracts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
                             SystemSettings.dFormat.format(discounts));
+                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                            SystemSettings.dFormat.format(corrections));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
                             SystemSettings.dFormat.format(debts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
