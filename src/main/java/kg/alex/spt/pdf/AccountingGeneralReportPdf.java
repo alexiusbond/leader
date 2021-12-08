@@ -229,6 +229,8 @@ public class AccountingGeneralReportPdf {
                     ttlContrTable.addCell(new Phrase(contrTtl.getTtl_debt() + "", normal_font));
                     ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalDiscount), normal_bold_font));
                     ttlContrTable.addCell(new Phrase(contrTtl.getTtl_disc() + "", normal_font));
+                    ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalCorrection), normal_bold_font));
+                    ttlContrTable.addCell(new Phrase(contrTtl.getTtl_correction() + "", normal_font));
                     ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.Net), normal_bold_font));
                     ttlContrTable.addCell(new Phrase(contrTtl.getTtl_net() + "", normal_font));
                     ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalPayment), normal_bold_font));

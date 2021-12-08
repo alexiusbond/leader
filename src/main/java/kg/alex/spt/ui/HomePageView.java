@@ -374,7 +374,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
     }
 
     private GridLayout buildTotalContract() {
-        GridLayout layout = new GridLayout(2, 6);
+        GridLayout layout = new GridLayout(2, 7);
         layout.setWidth("100%");
 
         Label caption = new Label();
@@ -391,6 +391,11 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlDiscLab.setContentMode(ContentMode.HTML);
         ttlDiscLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlDiscLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDiscount) + "</b>");
+
+        Label ttlCorrectionLab = new Label();
+        ttlCorrectionLab.setContentMode(ContentMode.HTML);
+        ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalCorrection) + "</b>");
 
         Label ttlDebtLab = new Label();
         ttlDebtLab.setContentMode(ContentMode.HTML);
@@ -420,6 +425,8 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_contract()) + "$"));
         layout.addComponent(ttlDiscLab);
         layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_disc()) + "$"));
+        layout.addComponent(ttlContractLab);
+        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_correction()) + "$"));
         layout.addComponent(ttlDebtLab);
         layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_debt()) + "$"));
         layout.addComponent(ttlPaymentLab);
@@ -442,6 +449,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logTablecaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
 
         logTable = new Table();
+        logTable.setStyleName(ValoTheme.TABLE_SMALL);
         logTable.setStyleName(ValoTheme.TABLE_SMALL);
         logTable.addStyleName("noWrap");
         logTable.setSizeFull();

@@ -278,7 +278,7 @@ public class GeneralReport implements Button.ClickListener,
 
     private void buildTotalContract() {
         //labels
-        totalsGrid = new GridLayout(4, 8);
+        totalsGrid = new GridLayout(4, 9);
         totalsGrid.setWidth("100%");
 
         Label caption = new Label();
@@ -323,6 +323,12 @@ public class GeneralReport implements Button.ClickListener,
         ttlDiscLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlDiscLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDiscount) + "</b>");
 
+        Label ttlCorrectionLab = new Label();
+        ttlCorrectionLab.setWidth("100%");
+        ttlCorrectionLab.setContentMode(ContentMode.HTML);
+        ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalCorrection) + "</b>");
+
         Label ttlNetLab = new Label();
         ttlNetLab.setWidth("100%");
         ttlNetLab.setContentMode(ContentMode.HTML);
@@ -346,9 +352,10 @@ public class GeneralReport implements Button.ClickListener,
         totalsGrid.addComponent(ttlContractLab, 0, 2);
         totalsGrid.addComponent(ttlDebtLab, 0, 3);
         totalsGrid.addComponent(ttlDiscLab, 0, 4);
-        totalsGrid.addComponent(ttlNetLab, 0, 5);
-        totalsGrid.addComponent(ttlPaymentLab, 0, 6);
-        totalsGrid.addComponent(ttlLeftLab, 0, 7);
+        totalsGrid.addComponent(ttlCorrectionLab, 0, 5);
+        totalsGrid.addComponent(ttlNetLab, 0, 6);
+        totalsGrid.addComponent(ttlPaymentLab, 0, 7);
+        totalsGrid.addComponent(ttlLeftLab, 0, 8);
         totalsGrid.addComponent(discountsCaption, 2, 0);
         totalsGrid.addComponent(paymentsCaption, 3, 0);
 
@@ -564,9 +571,10 @@ public class GeneralReport implements Button.ClickListener,
             totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_contract()) + "$"), 1, 2);
             totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_debt()) + "$"), 1, 3);
             totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_disc()) + "$"), 1, 4);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_net()) + "$"), 1, 5);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_payments()) + "$"), 1, 6);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_left()) + "$"), 1, 7);
+            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_correction()) + "$"), 1, 5);
+            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_net()) + "$"), 1, 6);
+            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_payments()) + "$"), 1, 7);
+            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_left()) + "$"), 1, 8);
             //draw discounts chart
             double totalDisc = contractTtl.getTtl_net() + contractTtl.getTtl_disc();
             if (totalDisc != 0.0) {

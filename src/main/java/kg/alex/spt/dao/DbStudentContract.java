@@ -691,7 +691,6 @@ public class DbStudentContract extends BaseDb {
     public void execSQL_Yearly_by_class_numbers(MyVaadinUI myUI, String school_ids,
                                                 String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
 
-
         String sql = "SELECT cln.name AS class, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
                 + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
@@ -757,7 +756,7 @@ public class DbStudentContract extends BaseDb {
                         result.getDouble("debts"));
                 ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("contr_with_disc") + result.getDouble("debts")+ result.getDouble("corrections"));
+                        result.getDouble("contr_with_disc") + result.getDouble("debts") + result.getDouble("corrections"));
                 ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("payments"));
@@ -769,7 +768,6 @@ public class DbStudentContract extends BaseDb {
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
                     item.getItemProperty(SystemSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
-
                 }
             }
         }
@@ -812,7 +810,6 @@ public class DbStudentContract extends BaseDb {
 
     public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids,
                                        String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
-
 
         String sql = "SELECT sch.name_ru, sch.code, "
                 + "SUM(IF(es.id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
@@ -888,7 +885,6 @@ public class DbStudentContract extends BaseDb {
                     item.getItemProperty(SystemSettings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                                     / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
-
                 }
             }
         }
@@ -931,7 +927,6 @@ public class DbStudentContract extends BaseDb {
 
     public void execSQL_Monthly(MyVaadinUI myUI, String school_ids, String edu_statuses_ids,
                                 int year_id, YearMonthReport ymr) throws SQLException {
-
 
         String sql = "select months.name, months.id, i_temp.amn, p_temp.amn FROM months "
                 + "left join ("
@@ -1035,9 +1030,10 @@ public class DbStudentContract extends BaseDb {
     public ContractTotal execSQLTotals(int scl_id, int year_id)
             throws SQLException {
         String sql = "SELECT sum(c.amount) as contract, sum(sc.debt) as debt, "
-                + "(sum(c.amount)-sum(sc.contr_with_disc)) as disc, "
+                + "(sum(c.amount)-sum(sc.contr_with_disc)) as disc, sum(vc.amount) as correction, "
                 + "(sum(sc.net_payments)) as payment "
                 + "FROM student_contract as sc "
+                + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? "
                 + "left join student as st on st.id = sc.student_id "
                 + "left join contract as c on sc.contract_id = c.id "
                 + "where st.school_id = ? and sc.year_id = ?;";
@@ -1050,9 +1046,11 @@ public class DbStudentContract extends BaseDb {
             ct.setTtl_contract(result.getDouble("contract"));
             ct.setTtl_debt(result.getDouble("debt"));
             ct.setTtl_disc(result.getDouble("disc"));
+            ct.setTtl_correction(result.getDouble("correction"));
             ct.setTtl_payments(result.getDouble("payment"));
             ct.setTtl_left(result.getDouble("debt") + result.getDouble("contract")
-                    - result.getDouble("disc") - result.getDouble("payment"));
+                    - result.getDouble("disc") - result.getDouble("payment")
+                    + result.getDouble("correction"));
         }
         return ct;
     }
@@ -1135,11 +1133,11 @@ public class DbStudentContract extends BaseDb {
         String sql = "SELECT count(st.id) as ttl_students, "
                 + "SUM(c.amount) AS contract, SUM(sc.debt) AS debt, "
                 + "(SUM(c.amount) - SUM(sc.contr_with_disc)) AS disc,  "
-                + "(SUM(sc.contr_with_disc) + SUM(sc.debt)) AS net,  "
-                + "(SUM(sc.net_payments)) AS payment "
-                + "FROM "
-                + "student AS st "
+                + "(SUM(sc.contr_with_disc) + SUM(sc.debt) + SUM(vc.amount)) AS net, "
+                + "SUM(vc.amount) AS correction, SUM(sc.net_payments) AS payment "
+                + "FROM student AS st "
                 + "LEFT JOIN student_contract AS sc ON st.id = sc.student_id and sc.year_id = ? "
+                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
                 + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
                 + "FROM student_orders AS so "
@@ -1165,6 +1163,7 @@ public class DbStudentContract extends BaseDb {
             ct.setTtl_contract(result.getDouble("contract"));
             ct.setTtl_debt(result.getDouble("debt"));
             ct.setTtl_disc(result.getDouble("disc"));
+            ct.setTtl_correction(result.getDouble("correction"));
             ct.setTtl_payments(result.getDouble("payment"));
             ct.setTtl_net(result.getDouble("net"));
             ct.setTtl_left(result.getDouble("net") - result.getDouble("payment"));

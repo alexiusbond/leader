@@ -460,6 +460,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String TotalContractStudents = generateId();
     public static final String TotalContract = generateId();
     public static final String TotalDiscount = generateId();
+    public static final String TotalCorrection = generateId();
     public static final String TotalDebt = generateId();
     public static final String TotalPayment = generateId();
     public static final String TotalLeft = generateId();

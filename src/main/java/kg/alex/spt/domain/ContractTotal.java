@@ -12,10 +12,19 @@ public class ContractTotal implements Serializable {
     private Double ttl_contract;
     private Double ttl_debt;
     private Double ttl_disc;
+    private Double ttl_correction;
     private Double ttl_payments;
     private Double ttl_left;
     private Double ttl_net;
     private int ttl_students;
+
+    public Double getTtl_correction() {
+        return ttl_correction;
+    }
+
+    public void setTtl_correction(Double ttl_correction) {
+        this.ttl_correction = ttl_correction;
+    }
 
     public Double getTtl_net() {
         return ttl_net;

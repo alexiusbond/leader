@@ -469,6 +469,7 @@ public class SptMessages_ru extends SptMessages {
             {TotalContractStudents, "Общая сумма"},
             {TotalContract, "Котрактов: "},
             {TotalDiscount, "Скидок: "},
+            {TotalCorrection, "Корректировок: "},
             {TotalDebt, "Долгов с пред. гг.: "},
             {TotalPayment, "Платежей: "},
             {TotalLeft, "Остатков: "},
