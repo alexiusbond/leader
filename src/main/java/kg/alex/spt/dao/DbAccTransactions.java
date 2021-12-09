@@ -445,8 +445,10 @@ public class DbAccTransactions extends BaseDb {
             String month = SystemSettings.ymdf.format(result.getDate("dt"));
             item.getItemProperty(month).setValue(result.getDouble("amount"));
             try {
-                t.setColumnFooter(myUI.getMessage(SptMessages.Total), SystemSettings.dFormat.format(Double.parseDouble(t.getColumnFooter(myUI.getMessage(SptMessages.Total))) + result.getDouble("amount")));
-                t.setColumnFooter(month, SystemSettings.dFormat.format(Double.parseDouble(t.getColumnFooter(month))
+                t.setColumnFooter(myUI.getMessage(SptMessages.Total), SystemSettings.dFormat.format(
+                        SystemSettings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
+                                + result.getDouble("amount")));
+                t.setColumnFooter(month, SystemSettings.dFormat.format(SystemSettings.dFormat.parse(t.getColumnFooter(month)).doubleValue()
                         + result.getDouble("amount")));
             } catch (Exception e) {
                 logger.error(e);
@@ -555,14 +557,15 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(school + " - " + month).setValue(result.getDouble("amount"));
             try {
                 t.setColumnFooter(myUI.getMessage(SptMessages.Total),
-                        SystemSettings.dFormat.format(Double.parseDouble(t.getColumnFooter(myUI.getMessage(SptMessages.Total)))
+                        SystemSettings.dFormat.format(SystemSettings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(school + " - " + myUI.getMessage(SptMessages.Total),
-                        SystemSettings.dFormat.format(Double.parseDouble(t.getColumnFooter(school + " - " + myUI.getMessage(SptMessages.Total)))
+                        SystemSettings.dFormat.format(SystemSettings.dFormat.parse(t.getColumnFooter(school
+                                + " - " + myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(school + " - " + month,
                         SystemSettings.dFormat.format(
-                                Double.parseDouble(t.getColumnFooter(school + " - " + month))
+                                SystemSettings.dFormat.parse(t.getColumnFooter(school + " - " + month)).doubleValue()
                                         + result.getDouble("amount")));
             } catch (Exception e) {
                 logger.error(e);
@@ -664,6 +667,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Transactions), Double.class, 0.0);
         double ttlInc = 0;
         double ttlExp = 0;
+        double ttlPrev = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("sch.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
@@ -686,17 +690,20 @@ public class DbAccTransactions extends BaseDb {
                     result.getDouble("incTtl") + result.getDouble("prev_balance") - result.getDouble("expTtl"));
             item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(c.getTime()) + ")").setValue(
                     result.getDouble("prev_balance"));
+            ttlPrev += result.getDouble("prev_balance");
         }
         sar.dataTable.setContainerDataSource(container);
 
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.School),
                 myUI.getMessage(SptMessages.Total));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.IncomesTotal),
-                SystemSettings.round(ttlInc, 2) + "");
+                SystemSettings.dFormat.format(ttlInc));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.ExpensesTotal),
-                SystemSettings.round(ttlExp, 2) + "");
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total),
-                SystemSettings.round((ttlInc - ttlExp), 2) + "");
+                SystemSettings.dFormat.format(ttlExp));
+        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Balance)+ " (" + SystemSettings.df.format(c.getTime()) + ")",
+                SystemSettings.dFormat.format(ttlPrev));
+        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Transactions),
+                SystemSettings.dFormat.format(ttlInc - ttlExp));
     }
 
     public double exec_salary_balance(int school_id, int acc_category_id, Date till) throws SQLException {

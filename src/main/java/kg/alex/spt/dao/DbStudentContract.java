@@ -1040,7 +1040,6 @@ public class DbStudentContract extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         ContractTotal ct = new ContractTotal();
         while (result.next()) {
@@ -1134,7 +1133,7 @@ public class DbStudentContract extends BaseDb {
         String sql = "SELECT count(st.id) as ttl_students, "
                 + "SUM(c.amount) AS contract, SUM(sc.debt) AS debt, "
                 + "(SUM(c.amount) - SUM(sc.contr_with_disc)) AS disc,  "
-                + "(SUM(sc.contr_with_disc) + SUM(sc.debt) + SUM(vc.amount)) AS net, "
+                + "(SUM(sc.contr_with_disc) + SUM(sc.debt) + IFNULL(SUM(vc.amount), 0.0)) AS net, "
                 + "SUM(vc.amount) AS correction, SUM(sc.net_payments) AS payment "
                 + "FROM student AS st "
                 + "LEFT JOIN student_contract AS sc ON st.id = sc.student_id and sc.year_id = ? "

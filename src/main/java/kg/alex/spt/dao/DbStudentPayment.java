@@ -372,7 +372,7 @@ public class DbStudentPayment extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + result.getString("week_paid");
+            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("week_paid"));
         }
         return s;
     }
@@ -391,7 +391,7 @@ public class DbStudentPayment extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + result.getString("month_paid");
+            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("month_paid"));
         }
         return s;
     }

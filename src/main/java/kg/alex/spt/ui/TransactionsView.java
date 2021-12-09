@@ -370,11 +370,11 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                     TextField tf = null;
                     try {
                         tf = (TextField) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Amount)).getValue();
-                        double amount = Double.parseDouble(tf.getValue());
+                        double amount = SystemSettings.dFormat.parse(tf.getValue()).doubleValue();
                         boolean isKGS = (Integer) ((ComboBoxMax) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1;
                         if (isKGS) {
                             amount = SystemSettings.round(amount
-                                    / Double.parseDouble(((TextField) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()), 2);
+                                    / SystemSettings.dFormat.parse(((TextField) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()).doubleValue(), 2);
                         }
                         if (amount > 0.0) {
                             double old_amount = (Double) expensesTable.getContainerProperty(itemId, SystemSettings.old_amount).getValue();
@@ -390,7 +390,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                                 tf.removeAllValidators();
                                 double limit = tr.getLimit();
                                 if (isKGS) {
-                                    limit = limit * Double.parseDouble(((TextField) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue());
+                                    limit = limit * SystemSettings.dFormat.parse(((TextField) expensesTable.getContainerProperty(
+                                            itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()).doubleValue();
                                 }
                                 tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + SystemSettings.dFormat.format(tr.getOverlimit())
                                         + " $ (" + SystemSettings.df.format(tr.getDate()) + ")", 0.1, SystemSettings.round(limit, 2)));
@@ -426,11 +427,12 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                     TextField tf = null;
                     try {
                         tf = (TextField) incomesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Amount)).getValue();
-                        double amount = Double.parseDouble(tf.getValue());
+                        double amount = SystemSettings.dFormat.parse(tf.getValue()).doubleValue();
                         boolean isKGS = (Integer) ((ComboBoxMax) incomesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1;
                         if (isKGS) {
                             amount = SystemSettings.round(amount
-                                    / Double.parseDouble(((TextField) incomesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()), 2);
+                                    / SystemSettings.dFormat.parse(((TextField) incomesTable.getContainerProperty(
+                                    itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()).doubleValue(), 2);
                         }
                         if (amount > 0.0) {
                             double old_amount = (Double) incomesTable.getContainerProperty(itemId, SystemSettings.old_amount).getValue();
@@ -438,7 +440,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                                 old_amount = SystemSettings.round(old_amount / (Double) incomesTable.getContainerProperty(itemId, SystemSettings.old_rate).getValue(), 2);
                             }
                             if (amount <= old_amount || DateUtils.truncate(((DateField) incomesTable.getContainerProperty(itemId,
-                                    myUI.getMessage(SptMessages.Date)).getValue()).getValue(), java.util.Calendar.DAY_OF_MONTH)
+                                            myUI.getMessage(SptMessages.Date)).getValue()).getValue(), java.util.Calendar.DAY_OF_MONTH)
                                     .compareTo((Date) incomesTable.getContainerProperty(itemId, SystemSettings.old_date).getValue()) != 0) {
                                 DbAccTransactions dbTr = new DbAccTransactions();
                                 dbTr.connect();
@@ -449,7 +451,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                                     tf.removeAllValidators();
                                     double limit = tr.getLimit();
                                     if (isKGS) {
-                                        limit = limit * Double.parseDouble(((TextField) incomesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue());
+                                        limit = limit * SystemSettings.dFormat.parse(((TextField) incomesTable.getContainerProperty(
+                                                itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()).doubleValue();
                                     }
                                     tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + SystemSettings.dFormat.format(tr.getOverlimit())
                                             + " $ (" + SystemSettings.df.format(tr.getDate()) + ")", SystemSettings.round(limit, 2), null));
@@ -644,7 +647,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         cb.setNullSelectionAllowed(false);
         cb.setData(itemId);
         cb.setValue(value);
-            cb.addValueChangeListener(this);
+        cb.addValueChangeListener(this);
         cb.setId(tableName);
         return cb;
     }
@@ -772,7 +775,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                         myUI.getMessage(SptMessages.Incomes)));
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(
                 createCombobox(2, myUI.getMessage(SptMessages.Currency), id,
-                SystemSettings.dbAcc_currency, false, true, true));
+                        SystemSettings.dbAcc_currency, false, true, true));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(createTextfieldDouble(null, myUI.getMessage(SptMessages.Rate), id, true,
                 !currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeCurrencyRate), null));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -944,8 +947,9 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                 double amount = (Double) tf.getPropertyDataSource().getValue();
                 if ((Integer) ((ComboBoxMax) incomesTable.getContainerProperty(source.getData().toString(),
                         myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1) {
-                    amount = SystemSettings.round(amount / Double.parseDouble(((TextField) incomesTable.getContainerProperty(
-                            source.getData().toString(), myUI.getMessage(SptMessages.Rate)).getValue()).getValue()), 2);
+                    amount = SystemSettings.round(amount / SystemSettings.dFormat.parse(
+                            ((TextField) incomesTable.getContainerProperty(source.getData().toString(),
+                                    myUI.getMessage(SptMessages.Rate)).getValue()).getValue()).doubleValue(), 2);
                 }
                 AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
                         ((DateField) incomesTable.getContainerProperty(source.getData().toString(),
@@ -1038,9 +1042,9 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                 recount();
                 if (incomesTable.getContainerProperty(item_id, SystemSettings.button) != null) {
                     incomesTable.getContainerProperty(item_id, SystemSettings.old_amount).setValue(
-                            Double.parseDouble(((TextField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Amount)).getValue()).getValue()));
+                            SystemSettings.dFormat.parse(((TextField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Amount)).getValue()).getValue()));
                     incomesTable.getContainerProperty(item_id, SystemSettings.old_rate).setValue(
-                            Double.parseDouble(((TextField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
+                            SystemSettings.dFormat.parse(((TextField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
                     incomesTable.getContainerProperty(item_id, SystemSettings.old_currency).setValue(
                             ((ComboBoxMax) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     incomesTable.getContainerProperty(item_id, SystemSettings.old_date).setValue(
@@ -1048,9 +1052,9 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                     incomesTable.getContainerProperty(item_id, SystemSettings.from_employee_id).setValue(myUI.getUser().getFullname());
                 } else if (expensesTable.getContainerProperty(item_id, SystemSettings.button) != null) {
                     expensesTable.getContainerProperty(item_id, SystemSettings.old_amount).setValue(
-                            Double.parseDouble(((TextField) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Amount)).getValue()).getValue()));
+                            SystemSettings.dFormat.parse(((TextField) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Amount)).getValue()).getValue()));
                     expensesTable.getContainerProperty(item_id, SystemSettings.old_rate).setValue(
-                            Double.parseDouble(((TextField) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
+                            SystemSettings.dFormat.parse(((TextField) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
                     expensesTable.getContainerProperty(item_id, SystemSettings.old_currency).setValue(
                             (Integer) ((ComboBoxMax) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     expensesTable.getContainerProperty(item_id, SystemSettings.from_employee_id).setValue(myUI.getUser().getFullname());
@@ -1080,15 +1084,15 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     }
 
     private void recount() {
-        incomeTtlLab.setValue(myUI.getMessage(SptMessages.IncomesTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_income(), 2) + "$");
-        expenseTtlLab.setValue(myUI.getMessage(SptMessages.ExpensesTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_outcome(), 2) + "$");
-        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": " + SystemSettings.round(
-                (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$" + "</b>");
+        incomeTtlLab.setValue(myUI.getMessage(SptMessages.IncomesTotal) + ": " + SystemSettings.dFormat.format(schoolAcc.getTotal_income()) + "$");
+        expenseTtlLab.setValue(myUI.getMessage(SptMessages.ExpensesTotal) + ": " + SystemSettings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
+        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": " + SystemSettings.dFormat.format(
+                (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$" + "</b>");
         Calendar c = Calendar.getInstance();
         c.setTime(fromDateDF.getValue());
         c.add(Calendar.DAY_OF_MONTH, -1);
         prev_balanceLab.setValue(myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(c.getTime()) + "): "
-                + SystemSettings.round(schoolAcc.getPrevious_balance(), 2) + "$");
+                + SystemSettings.dFormat.format(schoolAcc.getPrevious_balance()) + "$");
     }
 
     private void getTotals() {

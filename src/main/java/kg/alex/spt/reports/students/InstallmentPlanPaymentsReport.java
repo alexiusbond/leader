@@ -525,27 +525,27 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 }
             }
         }
-        corrections = c.getCorrectionDetails();
-        contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + SystemSettings.dFormat.format(c.getAmount()) + " $");
+        corrections = c.getCorrectionDetails() == null ? "0.00$" : c.getCorrectionDetails();
+        contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + SystemSettings.dFormat.format(c.getAmount()) + "$");
         discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts);
-        correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + c.getCorrectionDetails());
+        correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + corrections);
         if (debt > 0) {
             debtLab.setStyleName(ValoTheme.LABEL_FAILURE);
         } else {
             debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         }
-        debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + SystemSettings.dFormat.format(debt) + " $");
-        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + SystemSettings.dFormat.format(c.getContr_with_disc() + debt + c.getCorrection()) + " $");
-        paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + SystemSettings.dFormat.format(ttl_payment) + " $");
+        debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + SystemSettings.dFormat.format(debt) + "$");
+        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + SystemSettings.dFormat.format(c.getContr_with_disc() + debt + c.getCorrection()) + "$");
+        paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + SystemSettings.dFormat.format(ttl_payment) + "$");
         leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + SystemSettings.dFormat.format(
-                (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + " $");
+                (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + "$");
         if ((c.getPlan_debt() - ttl_payment) > 0) {
             planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
             planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(
-                    c.getPlan_debt() - ttl_payment + c.getCorrection()) + " $");
+                    c.getPlan_debt() - ttl_payment + c.getCorrection()) + "$");
         } else {
             planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
-            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(0.0) + " $");
+            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + SystemSettings.dFormat.format(0.0) + "$");
         }
     }
 }

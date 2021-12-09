@@ -291,6 +291,7 @@ public class YearMonthReport implements Button.ClickListener,
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total_Active), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.DiscountPercentage), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
@@ -298,6 +299,7 @@ public class YearMonthReport implements Button.ClickListener,
             dataTable.setVisibleColumns(NATURAL_COL_ORDER_MONTH);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
         }
+        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Left), Table.Align.RIGHT);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
         dataTable.setColumnAlignment(SystemSettings.percentage, Table.Align.RIGHT);
         if (container.size() != 0) {

@@ -182,7 +182,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + result.getString("week_plan");
+            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("week_plan"));
         }
         return s;
     }
@@ -202,7 +202,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + result.getString("month_plan");
+            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("month_plan"));
         }
         return s;
     }

@@ -10,6 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
+import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 
 import java.io.Serializable;
@@ -32,8 +33,7 @@ public class SystemSettings implements Serializable {
 
     public static final String PATH_TO_UPLOADS = "/home/logo/";
     public static final String PATH_TO_UPLOADS_HR = "/home/logo/hr/";
-    public static final DecimalFormat dFormat = new DecimalFormat("0.00");
-    public static final DecimalFormat dMonth = new DecimalFormat("00");
+    public static final DecimalFormat dFormat = new DecimalFormat("#,##0.00");
     public static final String datePattern = "dd-MM-yyyy";
     public static final String yearMonthPattern = "MM-yyyy";
     public static final String yearPattern = "yyyy";
@@ -311,14 +311,32 @@ public class SystemSettings implements Serializable {
         }
     });
 
+    public static NumberFormat getNumberFormat() {
+        NumberFormat format = NumberFormat.getNumberInstance();
+        format.setGroupingUsed(true);
+        format.setMaximumFractionDigits(2);
+        format.setMinimumFractionDigits(2);
+        return format;
+    }
+
     public static StringToDoubleConverter getStringToDoubleConverter() {
         StringToDoubleConverter plainConverter = new StringToDoubleConverter() {
             @Override
             protected java.text.NumberFormat getFormat(Locale locale) {
-                NumberFormat format = super.getFormat(Locale.ENGLISH);
-                format.setGroupingUsed(false);
-                format.setMaximumFractionDigits(2);
-                format.setMinimumFractionDigits(2);
+                return getNumberFormat();
+            }
+        };
+        return plainConverter;
+    }
+
+    public static StringToFloatConverter getStringToFloatConverter() {
+        StringToFloatConverter plainConverter = new StringToFloatConverter() {
+            @Override
+            protected java.text.NumberFormat getFormat(Locale locale) {
+                NumberFormat format = NumberFormat.getNumberInstance();
+                format.setGroupingUsed(true);
+                format.setMaximumFractionDigits(4);
+                format.setMinimumFractionDigits(4);
                 return format;
             }
         };
@@ -330,7 +348,7 @@ public class SystemSettings implements Serializable {
             @Override
             protected java.text.NumberFormat getFormat(Locale locale) {
                 NumberFormat format = super.getFormat(Locale.ENGLISH);
-                format.setGroupingUsed(false);
+                format.setGroupingUsed(true);
                 format.setMaximumFractionDigits(0);
                 return format;
             }
@@ -340,7 +358,7 @@ public class SystemSettings implements Serializable {
 
     public static Set<?> convertToSet(Collection<?> coll) {
         Iterator iter = coll.iterator();
-        HashSet<Integer> hs = new HashSet<Integer>();
+        HashSet<Integer> hs = new HashSet<>();
         while (iter.hasNext()) {
             Object next = iter.next();
             hs.add((Integer) next);

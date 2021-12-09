@@ -565,6 +565,7 @@ public class GeneralReport implements Button.ClickListener,
             totalsGrid.removeComponent(1, 5);
             totalsGrid.removeComponent(1, 6);
             totalsGrid.removeComponent(1, 7);
+            totalsGrid.removeComponent(1, 8);
         }
         if (contractTtl != null) {
             totalsGrid.addComponent(new Label(contractTtl.getTtl_students() + ""), 1, 1);

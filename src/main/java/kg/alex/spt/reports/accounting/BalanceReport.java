@@ -322,10 +322,12 @@ public class BalanceReport implements Button.ClickListener,
                             dbtr.connect();
                             schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
                                     end_date.getTime(), SystemSettings.convertCollectionToStr(catIds));
-                            assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_income(), 2) + "$</b>");
-                            debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": " + SystemSettings.round(schoolAcc.getTotal_outcome(), 2) + "$</b>");
-                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.round(
-                                    (schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()), 2) + "$</b>");
+                            assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " +
+                                    SystemSettings.dFormat.format(schoolAcc.getTotal_income()) + "$</b>");
+                            debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": "
+                                    + SystemSettings.dFormat.format(schoolAcc.getTotal_outcome()) + "$</b>");
+                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.dFormat.format(
+                                    (schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$</b>");
                             assertsDataTable.setData(schoolAcc.getTotal_income());
                             debtsDataTable.setData(schoolAcc.getTotal_outcome());
                             ttlLab.setData(schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome());
