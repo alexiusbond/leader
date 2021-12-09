@@ -3500,79 +3500,83 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private Boolean validateCorrectionsTable() {
-        ArrayList<Integer> correction_ids = new ArrayList<Integer>();
-        Iterator iter = correctionsTable.getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (!((TextField) correctionsTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
-                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                        Notification.Type.WARNING_MESSAGE);
-                return false;
-            }
-            if (((TextField) correctionsTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
-                if (correction_ids.contains((Integer) ((ComboBoxMax) correctionsTable.getItem(obj).getItemProperty(
-                        myUI.getMessage(SptMessages.Title)).getValue()).getValue())) {
-                    Notification.show(myUI.getMessage(SptMessages.NotifSameCorrectionsAreNotAllowed),
+        if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
+            ArrayList<Integer> correction_ids = new ArrayList<Integer>();
+            Iterator iter = correctionCont.getItemIds().iterator();
+            while (iter.hasNext()) {
+                Object obj = iter.next();
+                if (!((TextField) correctionCont.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                     return false;
-                } else {
-                    correction_ids.add((Integer) ((ComboBoxMax) correctionsTable.getItem(obj).getItemProperty(
-                            myUI.getMessage(SptMessages.Title)).getValue()).getValue());
                 }
-            }
-            if (!((ComboBoxMax) correctionsTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(SptMessages.Title)).getValue()).isValid()) {
-                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                        Notification.Type.WARNING_MESSAGE);
-                return false;
+                if (((TextField) correctionCont.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                    if (correction_ids.contains((Integer) ((ComboBoxMax) correctionCont.getItem(obj).getItemProperty(
+                            myUI.getMessage(SptMessages.Title)).getValue()).getValue())) {
+                        Notification.show(myUI.getMessage(SptMessages.NotifSameCorrectionsAreNotAllowed),
+                                Notification.Type.WARNING_MESSAGE);
+                        return false;
+                    } else {
+                        correction_ids.add((Integer) ((ComboBoxMax) correctionCont.getItem(obj).getItemProperty(
+                                myUI.getMessage(SptMessages.Title)).getValue()).getValue());
+                    }
+                }
+                if (!((ComboBoxMax) correctionCont.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Title)).getValue()).isValid()) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                            Notification.Type.WARNING_MESSAGE);
+                    return false;
+                }
             }
         }
         return true;
     }
 
     private Boolean validateInstallmentTable() {
-        ArrayList<String> dates = new ArrayList<>();
-        Iterator iter = instPlanCont.getItemIds().iterator();
-        Double amount = 0.0;
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (!((TextField) installmentTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
-                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                        Notification.Type.WARNING_MESSAGE);
-                return false;
-            }
-            if (!((DateField) installmentTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
-                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
-                        Notification.Type.WARNING_MESSAGE);
-                return false;
-            }
-            if (((DateField) installmentTable.getItem(obj).getItemProperty(
-                    myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
-                if (dates.contains(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
-                        myUI.getMessage(SptMessages.Date)).getValue()).getValue()))) {
-                    Notification.show(myUI.getMessage(SptMessages.NotifSameDatesAreNotAllowed),
+        if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
+            ArrayList<String> dates = new ArrayList<>();
+            Iterator iter = instPlanCont.getItemIds().iterator();
+            Double amount = 0.0;
+            while (iter.hasNext()) {
+                Object obj = iter.next();
+                if (!((TextField) installmentTable.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Amount)).getValue()).isValid()) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                     return false;
-                } else {
-                    dates.add(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
-                            myUI.getMessage(SptMessages.Date)).getValue()).getValue()));
+                }
+                if (!((DateField) installmentTable.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
+                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                            Notification.Type.WARNING_MESSAGE);
+                    return false;
+                }
+                if (((DateField) installmentTable.getItem(obj).getItemProperty(
+                        myUI.getMessage(SptMessages.Date)).getValue()).isValid()) {
+                    if (dates.contains(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
+                            myUI.getMessage(SptMessages.Date)).getValue()).getValue()))) {
+                        Notification.show(myUI.getMessage(SptMessages.NotifSameDatesAreNotAllowed),
+                                Notification.Type.WARNING_MESSAGE);
+                        return false;
+                    } else {
+                        dates.add(SystemSettings.df.format((Date) ((DateField) installmentTable.getItem(obj).getItemProperty(
+                                myUI.getMessage(SptMessages.Date)).getValue()).getValue()));
+                    }
+                }
+                if ((Integer) installmentTable.getItem(obj).getItemProperty(
+                        SystemSettings.status_id).getValue() != 0) {
+                    amount += (Double) (((TextField) installmentTable.getItem(obj).getItemProperty(
+                            myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
                 }
             }
-            if ((Integer) installmentTable.getItem(obj).getItemProperty(
-                    SystemSettings.status_id).getValue() != 0) {
-                amount += (Double) (((TextField) installmentTable.getItem(obj).getItemProperty(
-                        myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+            recount();
+            if (SystemSettings.round(instCtrAmount, 2) != SystemSettings.round(amount, 2)) {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongSumInstSum),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
             }
-        }
-        recount();
-        if (SystemSettings.round(instCtrAmount, 2) != SystemSettings.round(amount, 2)) {
-            Notification.show(myUI.getMessage(SptMessages.NotifWrongSumInstSum),
-                    Notification.Type.WARNING_MESSAGE);
-            return false;
         }
         return true;
     }

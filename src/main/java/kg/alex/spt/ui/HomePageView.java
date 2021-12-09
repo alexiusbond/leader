@@ -425,7 +425,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_contract()) + "$"));
         layout.addComponent(ttlDiscLab);
         layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_disc()) + "$"));
-        layout.addComponent(ttlContractLab);
+        layout.addComponent(ttlCorrectionLab);
         layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_correction()) + "$"));
         layout.addComponent(ttlDebtLab);
         layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_debt()) + "$"));

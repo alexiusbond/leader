@@ -1033,13 +1033,14 @@ public class DbStudentContract extends BaseDb {
                 + "(sum(c.amount)-sum(sc.contr_with_disc)) as disc, sum(vc.amount) as correction, "
                 + "(sum(sc.net_payments)) as payment "
                 + "FROM student_contract as sc "
-                + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? "
+                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "left join student as st on st.id = sc.student_id "
                 + "left join contract as c on sc.contract_id = c.id "
                 + "where st.school_id = ? and sc.year_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, year_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         ContractTotal ct = new ContractTotal();
         while (result.next()) {
