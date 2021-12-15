@@ -6,19 +6,17 @@
 package kg.alex.spt.ui;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
+import com.vaadin.ui.*;
+import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.pdf.CallsPdf;
+import kg.alex.spt.pdf.ClassListPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.MultiSelectMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomTable;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.Set;
@@ -40,11 +38,11 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     static final Logger logger = LogManager.getLogger(CallsView.class);
     private MyVaadinUI myUI;
-    private VerticalLayout leftLay;
+    private GridLayout leftLay;
     private FormattedTable dataTable;
     private EnhancedFormatExcelExport excelReport;
     private FilterTable classTable;
-    private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
+    private Button generateBtn, excelBtn, makePdfBtn, selectAllBtn, deselectAllBtn;
     private IndexedContainer container;
 
     public double total;
@@ -67,6 +65,30 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             buildRightPanel();
             if (dataTable.size() != 0) {
                 excelBtn.setEnabled(true);
+                makePdfBtn.setEnabled(true);
+            }
+        } else if (source == makePdfBtn) {
+            StudentInfoPdf st;
+            try {
+                DbSchool dbsc = new DbSchool();
+                dbsc.connect();
+                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                dbsc.close();
+                if (st.getScl_accountent_fullname() != null) {
+                    if (st.getScl_address() != null && st.getScl_phone() != null
+                            && st.getScl_name_ru() != null) {
+                        new CallsPdf(myUI, dataTable, st);
+                    } else {
+                        Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
+                                Notification.Type.WARNING_MESSAGE);
+                    }
+                } else {
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                            Notification.Type.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
         } else if (source == excelBtn) {
             try {
@@ -100,7 +122,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                         myUI.getUser().getCurrent_year().getId(),
                         myUI.getUser().getId(),
                         ((TextField) dataTable.getContainerProperty(source.getData(),
-                                myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString());
+                                myUI.getMessage(SptMessages.Note)).getValue()).getValue());
                 if (i != 0) {
                     dataTable.getContainerProperty(source.getData(), myUI.getMessage(SptMessages.LastCall))
                             .setValue(dbsc.exec_getLastCall((Integer) source.getData()));
@@ -120,11 +142,12 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         Property property = event.getProperty();
         if (property == classTable) {
             excelBtn.setEnabled(false);
+            makePdfBtn.setEnabled(false);
         }
     }
 
     private void buildLeftPanel() {
-        leftLay = new VerticalLayout();
+        leftLay = new GridLayout(4, 3);
         leftLay.setMargin(new MarginInfo(true, false, true, true));
         leftLay.setSpacing(true);
         leftLay.setSizeFull();
@@ -153,11 +176,6 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             logger.catching(e);
         }
 
-        GridLayout buttonSelLay = new GridLayout(2, 1);
-        buttonSelLay.setMargin(false);
-        buttonSelLay.setSpacing(true);
-        buttonSelLay.setWidth("100%");
-
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
         selectAllBtn.setWidth("100%");
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
@@ -169,14 +187,6 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);
-
-        buttonSelLay.addComponent(selectAllBtn, 0, 0);
-        buttonSelLay.addComponent(deselectAllBtn, 1, 0);
-
-        GridLayout buttonLay = new GridLayout(2, 1);
-        buttonLay.setMargin(false);
-        buttonLay.setSpacing(true);
-        buttonLay.setWidth("100%");
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth("100%");
@@ -192,13 +202,21 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        buttonLay.addComponent(generateBtn, 0, 0);
-        buttonLay.addComponent(excelBtn, 1, 0);
+        makePdfBtn = new Button();
+        makePdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        makePdfBtn.setWidth("100%");
+        makePdfBtn.setEnabled(false);
+        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
+        makePdfBtn.addClickListener(this);
 
-        leftLay.addComponent(buttonSelLay);
-        leftLay.addComponent(classTable);
-        leftLay.addComponent(buttonLay);
-        leftLay.setExpandRatio(classTable, 1);
+        leftLay.addComponent(selectAllBtn, 0, 0, 1, 0);
+        leftLay.addComponent(deselectAllBtn, 2, 0, 3, 0);
+        leftLay.addComponent(classTable, 0, 1, 3, 1);
+        leftLay.addComponent(generateBtn, 0, 2, 1, 2);
+        leftLay.addComponent(makePdfBtn, 2, 2);
+        leftLay.addComponent(excelBtn, 3, 2);
+        leftLay.setRowExpandRatio(1, 1);
     }
 
     private void buildRightPanel() {
@@ -226,8 +244,11 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         }
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
                 + SystemSettings.dFormat.format(total));
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 150);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 350);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.PlanDebtDate), 85);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastPayment), 150);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.LastPayment), Table.Align.RIGHT);
 
         vl.addComponent(dataTable);
         this.setSecondComponent(vl);
@@ -245,7 +266,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         return btn;
     }
 
-    public TextField createTextfieldNote(int itemId) {
+    public TextField createTextField(int itemId) {
         TextField tf = new TextField();
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
         tf.setWidth("100%");

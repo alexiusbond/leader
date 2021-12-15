@@ -433,7 +433,6 @@ public class DbStudent extends BaseDb {
 
     public IndexedContainer execSQLCalls(MyVaadinUI myUi, int year_id, String class_ids, CallsView cv) throws SQLException {
 
-
         String sql = "select st.id, st.login, st.name, st.surname,concat(cnu.name, ' - ' , cna.name) as class_name, "
                 + "concat(sr.phone,' (',sr.fullname,')') "
                 + "as is_main, MAX(IF(ip.is_visible = 1, ip.date_of_payment, NULL)) AS plan_debt_date, "
@@ -492,7 +491,7 @@ public class DbStudent extends BaseDb {
                 item.getItemProperty(myUi.getMessage(SptMessages.LastPayment)).setValue(result.getString("last_payment"));
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(
-                    cv.createTextfieldNote(result.getInt("st.id")));
+                    cv.createTextField(result.getInt("st.id")));
             item.getItemProperty(SystemSettings.button).setValue(cv.createButton(result.getInt("st.id")));
         }
         return container;
