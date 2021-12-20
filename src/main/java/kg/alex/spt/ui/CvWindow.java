@@ -1,0 +1,380 @@
+package kg.alex.spt.ui;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.FileResource;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.SystemSettings;
+import kg.alex.spt.dao.*;
+import kg.alex.spt.domain.Employee;
+import kg.alex.spt.domain.EmployeeExtraInfo;
+import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.FormattedTable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
+
+public class CvWindow extends Window {
+    static final Logger logger = LogManager.getLogger(CvWindow.class);
+    private MyVaadinUI myUI;
+
+    public CvWindow(MyVaadinUI myUI, Employee employee, EmployeeExtraInfo employeeExtraInfo, String year) {
+        this.myUI = myUI;
+        this.setWidth("90%");
+        this.setHeight("90%");
+        this.setModal(true);
+
+        VerticalLayout mainLay = new VerticalLayout();
+        mainLay.setWidth("100%");
+        mainLay.setSpacing(true);
+        mainLay.setMargin(true);
+        this.setContent(mainLay);
+
+        GridLayout gl = new GridLayout(4, 16);
+        gl.setMargin(new MarginInfo(true, true));
+        gl.setWidth("100%");
+        gl.setSpacing(true);
+        gl.setColumnExpandRatio(0, 1.5f);
+        gl.setColumnExpandRatio(1, 1.1f);
+        gl.setColumnExpandRatio(2, 1.1f);
+        gl.setColumnExpandRatio(3, 1.5f);
+        mainLay.addComponent(gl);
+
+        GridLayout rightGl = new GridLayout(2, 20);
+        rightGl.setColumnExpandRatio(0, 2);
+        rightGl.setColumnExpandRatio(1, 1);
+        rightGl.setWidth("100%");
+        gl.addComponent(rightGl, 0, 0, 0, 4);
+
+        rightGl.addComponent(createLabel(employee.getSurname() + " " + employee.getName(),
+                new String[]{ValoTheme.LABEL_HUGE, ValoTheme.LABEL_BOLD}), 0, 0, 1, 0);
+
+        java.util.Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+        java.util.Calendar bd = Calendar.getInstance();
+        bd.setTime(employee.getBirth_date());
+        Label l = createLabel((now.get(Calendar.YEAR) - bd.get(Calendar.YEAR))
+                        + " " + SystemSettings.generateYearPostfix(now.get(Calendar.YEAR) - bd.get(Calendar.YEAR)),
+                new String[]{ValoTheme.LABEL_SUCCESS});
+        rightGl.addComponent(l, 1, 1);
+        rightGl.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+
+        Embedded photoEmb = new Embedded();
+        if (employee.getPhoto() != null) {
+            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR
+                    + employee.getPhoto())));
+        } else {
+            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
+        }
+        photoEmb.setImmediate(true);
+        photoEmb.setHeight("200px");
+        rightGl.addComponent(photoEmb, 0, 2, 1, 2);
+
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.WorkingStatus) + ": </b>" + employeeExtraInfo.getWorkingStatus(), null),
+                0, 3, 1, 3);
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.MainPosition) + ": </b>" + employeeExtraInfo.getMainPosition(), null),
+                0, 4, 1, 4);
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.ExtraPositions) + ": </b>" + employeeExtraInfo.getExtraPositions(), null),
+                0, 5, 1, 5);
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.MainBranch) + ": </b>" + employeeExtraInfo.getMainBranch(), null),
+                0, 6, 1, 6);
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.ExtraBranches) + ": </b>" + employeeExtraInfo.getExtraBranches(), null),
+                0, 7, 1, 7);
+        rightGl.addComponent(createLabel("<b>" + myUI.getMessage(SptMessages.TotalHours) + year + ": </b>"
+                        + employeeExtraInfo.getHours() + ", <b>" + myUI.getMessage(SptMessages.ExtraHours) + ": </b>"
+                        + employeeExtraInfo.getExtraHours(), null),
+                0, 8, 1, 8);
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.CanBeAdvisor) + ": </b>" + (employeeExtraInfo.isCanBeAdvisor() ?
+                        myUI.getMessage(SptMessages.Yes) : myUI.getMessage(SptMessages.No)), null),
+                0, 9, 1, 9);
+
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.Languages) + ": </b>" + employeeExtraInfo.getLanguages(), null),
+                0, 10, 1, 10);
+
+        l = createLabel(myUI.getMessage(SptMessages.MainInfo),
+                new String[]{ValoTheme.LABEL_BOLD, ValoTheme.LABEL_LARGE});
+        l.setWidthUndefined();
+        gl.addComponent(l, 1, 0, 2, 0);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        Table infoTable = new Table();
+        infoTable.setWidth("100%");
+        infoTable.setSortEnabled(false);
+        infoTable.setStyleName(ValoTheme.TABLE_NO_STRIPES);
+        infoTable.addStyleName(ValoTheme.TABLE_NO_HEADER);
+        infoTable.addStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
+        infoTable.addStyleName(ValoTheme.TABLE_BORDERLESS);
+        infoTable.addStyleName(ValoTheme.TABLE_COMPACT);
+        infoTable.setColumnAlignment(myUI.getMessage(SptMessages.ClassCaption), Table.Align.RIGHT);
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.ClassCaption), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Content), String.class, null);
+        addInfoItem(container, myUI.getMessage(SptMessages.Id), employee.getLogin());
+        addInfoItem(container, myUI.getMessage(SptMessages.LastName), employee.getSurname());
+        addInfoItem(container, myUI.getMessage(SptMessages.FirstName), employee.getName());
+        addInfoItem(container, myUI.getMessage(SptMessages.MiddleName), employee.getMiddle_name());
+        addInfoItem(container, myUI.getMessage(SptMessages.Gender), employeeExtraInfo.getGender());
+        addInfoItem(container, myUI.getMessage(SptMessages.DateAndPlaceOfBirth),
+                SystemSettings.df.format(employee.getBirth_date()) + (employeeExtraInfo.getBirth_place() == null ?
+                        "" : ", " + employeeExtraInfo.getBirth_place()));
+        addInfoItem(container, myUI.getMessage(SptMessages.Nationality), employeeExtraInfo.getNationality());
+        addInfoItem(container, myUI.getMessage(SptMessages.Citizenship), employeeExtraInfo.getCitizenship());
+        addInfoItem(container, myUI.getMessage(SptMessages.MartialStatus), employeeExtraInfo.getMartialStatus());
+        addInfoItem(container, myUI.getMessage(SptMessages.HealthStatus), employeeExtraInfo.getHealth_notes());
+        infoTable.setContainerDataSource(container);
+        infoTable.setPageLength(container.size());
+        gl.addComponent(infoTable, 1, 1, 2, 1);
+        gl.setRowExpandRatio(1, 1);
+
+        VerticalLayout contactsVl = new VerticalLayout();
+        contactsVl.setWidth("100%");
+        contactsVl.setSpacing(true);
+
+        contactsVl.addComponent(createLabel("<i class=\"fa fa-university\"></i><b> "
+                + myUI.getMessage(SptMessages.School) + ": </b>" + employeeExtraInfo.getSchool(), null));
+        contactsVl.addComponent(createLabel("<i class=\"fa fa-envelope\"></i><b> Email: </b>"
+                + employeeExtraInfo.getEmail(), null));
+        contactsVl.addComponent(createLabel("<i class=\"fa fa-phone-square\"></i><b> "
+                + myUI.getMessage(SptMessages.PhoneNumbers) + ": </b>"
+                + employeeExtraInfo.getPhones(), null));
+        contactsVl.addComponent(createLabel("<i class=\"fa fa-map-marker\"></i><b> "
+                + myUI.getMessage(SptMessages.Address) + ": </b>"
+                + employeeExtraInfo.getAddress(), null));
+        contactsVl.addComponent(createLabel("<i class=\"fa fa-users\"></i><b> "
+                + myUI.getMessage(SptMessages.SpouseInfo) + ": </b>"
+                + employeeExtraInfo.getFamilyInfo(), null));
+        contactsVl.addComponent(createLabel("<i class=\"fa fa-child\"></i><b> "
+                + myUI.getMessage(SptMessages.Children) + ": </b>"
+                + employeeExtraInfo.getChildren(), null));
+        gl.addComponent(contactsVl, 3, 1);
+
+        l = createLabel(myUI.getMessage(SptMessages.Education),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 1, 2, 3, 2);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable educationTable = new FormattedTable();
+        educationTable.setWidth("100%");
+        educationTable.setColumnReorderingAllowed(false);
+        educationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        educationTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        educationTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeEducation dbCon = new DbEmployeeEducation();
+            dbCon.connect();
+            educationTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId(), 1));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        educationTable.setPageLength(educationTable.size());
+        gl.addComponent(educationTable, 1, 3, 3, 3);
+
+        l = createLabel(myUI.getMessage(SptMessages.WorkPlaces),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 1, 4, 3, 4);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable workPlacesTable = new FormattedTable();
+        workPlacesTable.setWidth("100%");
+        workPlacesTable.setColumnReorderingAllowed(false);
+        workPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        workPlacesTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        workPlacesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeWork dbCon = new DbEmployeeWork();
+            dbCon.connect();
+            workPlacesTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId(), 1));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        workPlacesTable.setPageLength(workPlacesTable.size());
+        gl.addComponent(workPlacesTable, 0, 5, 3, 5);
+
+        l = createLabel(myUI.getMessage(SptMessages.Exams),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 0, 6, 1, 6);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable examsTable = new FormattedTable();
+        examsTable.setWidth("100%");
+        examsTable.setColumnReorderingAllowed(false);
+        examsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        examsTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        examsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeExam dbCon = new DbEmployeeExam();
+            dbCon.connect();
+            examsTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId()));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        examsTable.setPageLength(examsTable.size());
+        gl.addComponent(examsTable, 0, 7, 1, 7);
+
+        l = createLabel(myUI.getMessage(SptMessages.Seminars),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 2, 6, 3, 6);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable seminarsTable = new FormattedTable();
+        seminarsTable.setWidth("100%");
+        seminarsTable.setColumnReorderingAllowed(false);
+        seminarsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        seminarsTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        seminarsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeSeminar dbCon = new DbEmployeeSeminar();
+            dbCon.connect();
+            seminarsTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId()));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        seminarsTable.setPageLength(seminarsTable.size());
+        gl.addComponent(seminarsTable, 2, 7, 3, 7);
+
+        l = createLabel(myUI.getMessage(SptMessages.Certificates),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 0, 8, 1, 8);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable certificatesTable = new FormattedTable();
+        certificatesTable.setWidth("100%");
+        certificatesTable.setColumnReorderingAllowed(false);
+        certificatesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        certificatesTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        certificatesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeCertificate dbCon = new DbEmployeeCertificate();
+            dbCon.connect();
+            certificatesTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId()));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        certificatesTable.setPageLength(certificatesTable.size());
+        gl.addComponent(certificatesTable, 0, 9, 1, 9);
+
+        l = createLabel(myUI.getMessage(SptMessages.SpouseEducation),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 0, 10, 3, 10);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable spouseEducationTable = new FormattedTable();
+        spouseEducationTable.setWidth("100%");
+        spouseEducationTable.setColumnReorderingAllowed(false);
+        spouseEducationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        spouseEducationTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        spouseEducationTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeEducation dbCon = new DbEmployeeEducation();
+            dbCon.connect();
+            spouseEducationTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId(), 2));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        spouseEducationTable.setPageLength(spouseEducationTable.size());
+        gl.addComponent(spouseEducationTable, 0, 11, 3, 11);
+
+        l = createLabel(myUI.getMessage(SptMessages.SpouseWorkPlaces),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 0, 12, 3, 12);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable spouseWorkPlacesTable = new FormattedTable();
+        spouseWorkPlacesTable.setWidth("100%");
+        spouseWorkPlacesTable.setColumnReorderingAllowed(false);
+        spouseWorkPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        spouseWorkPlacesTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        spouseWorkPlacesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeWork dbCon = new DbEmployeeWork();
+            dbCon.connect();
+            spouseWorkPlacesTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId(), 2));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        spouseWorkPlacesTable.setPageLength(spouseWorkPlacesTable.size());
+        gl.addComponent(spouseWorkPlacesTable, 0, 13, 3, 13);
+
+        l = createLabel(myUI.getMessage(SptMessages.Children),
+                new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
+        l.setWidthUndefined();
+        gl.addComponent(l, 0, 14, 3, 14);
+        gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
+
+        FormattedTable childrenTable = new FormattedTable();
+        childrenTable.setWidth("100%");
+        childrenTable.setColumnReorderingAllowed(false);
+        childrenTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
+        childrenTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        childrenTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        try {
+            DbEmployeeChildren dbCon = new DbEmployeeChildren();
+            dbCon.connect();
+            childrenTable.setContainerDataSource(dbCon.execSQL(myUI, employee.getId()));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        childrenTable.setPageLength(childrenTable.size());
+        gl.addComponent(childrenTable, 0, 15, 3, 15);
+
+    }
+
+    private void addInfoItem(IndexedContainer container, String caption, String content) {
+        Item item = container.addItem(container.size() + 1);
+        item.getItemProperty(myUI.getMessage(SptMessages.ClassCaption)).setValue(caption);
+        item.getItemProperty(myUI.getMessage(SptMessages.Content)).setValue(content);
+    }
+
+    private Label createLabel(String value, String[] styles) {
+        Label l = new Label();
+        l.setContentMode(ContentMode.HTML);
+        l.setValue(value);
+        if (styles != null) {
+            for (int i = 0; i < styles.length; i++) {
+                if (i == 0) {
+                    l.setStyleName(styles[i]);
+                } else {
+                    l.addStyleName(styles[i]);
+                }
+            }
+        }
+        return l;
+    }
+}

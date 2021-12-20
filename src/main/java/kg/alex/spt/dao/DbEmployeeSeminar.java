@@ -60,7 +60,6 @@ public class DbEmployeeSeminar extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
                                     EmployeeDefinitionView edv) throws SQLException {
 
-
         String sql = "SELECT es.id, es.name, es.subject, es.note, es.date_of_issue FROM hr_employee_seminar as es "
                 + "where es.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -89,6 +88,29 @@ public class DbEmployeeSeminar extends BaseDb {
                             myUI.getMessage(SptMessages.IssueDate), null,
                             true, SystemSettings.datePattern, Resolution.DAY));
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+        }
+        return container;
+    }
+
+    public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id) throws SQLException {
+
+        String sql = "SELECT es.id, es.name, es.subject, es.note, es.date_of_issue FROM hr_employee_seminar as es "
+                + "where es.employee_id = ?;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Subject), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.IssueDate), String.class, null);
+        while (result.next()) {
+            String id = result.getString("es.id");
+            Item item = container.addItem(id);
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("es.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Subject)).setValue(result.getString("es.subject"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("es.note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(SystemSettings.df.format(result.getDate("es.date_of_issue")));
         }
         return container;
     }

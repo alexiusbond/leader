@@ -73,6 +73,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String UniversityDefinition = generateId();
     public static final String QuestionDefinition = generateId();
     public static final String University = generateId();
+    public static final String EducationalOrganization = generateId();
     public static final String Department = generateId();
     public static final String BranchDefinition = generateId();
     public static final String Branches = generateId();
@@ -92,6 +93,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String CanNotGetCurrency = generateId();
     public static final String LowBalance = generateId();
     public static final String ModifyButton = generateId();
+    public static final String CvButton = generateId();
     public static final String DeleteButton = generateId();
     public static final String Details = generateId();
     public static final String SaveButton = generateId();
@@ -548,6 +550,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String EduLevel = generateId();
     public static final String CorrectionType = generateId();
     public static final String Correction = generateId();
+    public static final String Any = generateId();
+    public static final String DateAndPlaceOfBirth = generateId();
 
     private static String generateId() {
         return new Integer(ids++).toString();

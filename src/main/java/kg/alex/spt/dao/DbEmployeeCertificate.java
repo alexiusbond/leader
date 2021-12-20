@@ -153,4 +153,27 @@ public class DbEmployeeCertificate extends BaseDb {
         }
         return container;
     }
+
+    public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id) throws SQLException {
+
+        String sql = "SELECT ec.id, ec.note, ec.given_by, ec.date_of_issue, c.name FROM hr_employee_certificate AS ec " +
+                "LEFT JOIN hr_certificate AS c ON c.id = ec.certificate_id WHERE ec.employee_id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Certificate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.GivenBy), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.IssueDate), String.class, null);
+        while (result.next()) {
+            String id = result.getString("ec.id");
+            Item item = container.addItem(id);
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("ec.note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.GivenBy)).setValue(result.getString("ec.given_by"));
+            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(SystemSettings.df.format(result.getDate("ec.date_of_issue")));
+            item.getItemProperty(myUI.getMessage(SptMessages.Certificate)).setValue(result.getString("c.name"));
+        }
+        return container;
+    }
 }

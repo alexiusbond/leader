@@ -87,7 +87,6 @@ public class DbEmployeeWork extends BaseDb {
 
     public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
                                     EmployeeDefinitionView edv) throws SQLException {
-        final 
 
         String sql = "SELECT ew.id, ew.hr_work_place_id, ew.position_id, " +
                 "group_concat(ep.position_id separator ',') as extra_positions, " +
@@ -175,6 +174,43 @@ public class DbEmployeeWork extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Sapat)).setValue(
                     edv.createCheckBox(result.getBoolean("ew.is_sapat"), myUI.getMessage(SptMessages.Sapat)));
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+        }
+        return container;
+    }
+
+    public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id) throws SQLException {
+
+        String sql = "SELECT ew.id, wp.name, p.name, GROUP_CONCAT(p2.name SEPARATOR ',') AS extra_positions, ew.start_date, ew.end_date, " +
+                "ws.name, ew.is_sapat FROM hr_employee_work AS ew " +
+                "LEFT JOIN hr_employee_work_extra_positions AS ep ON ep.hr_employee_work_id = ew.id " +
+                "LEFT JOIN hr_position AS p2 ON ep.position_id = p2.id " +
+                "LEFT JOIN hr_work_place AS wp ON ew.hr_work_place_id = wp.id " +
+                "LEFT JOIN hr_position AS p ON ew.position_id = p.id " +
+                "LEFT JOIN working_status AS ws ON ew.working_status_id = ws.id " +
+                "WHERE ew.employee_id = ? AND ew.hr_own_id = ? GROUP BY ew.id";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        stat.setInt(2, own_id);
+        ResultSet result = stat.executeQuery();
+        final IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.WorkPlace), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Sapat), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.MainPosition), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraPositions), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Period), String.class, null);
+
+        while (result.next()) {
+            String id = result.getString("ew.id");
+            Item item = container.addItem(id);
+            item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(result.getString("wp.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Sapat)).setValue(result.getInt("ew.is_sapat") == 1 ?
+                    myUI.getMessage(SptMessages.Yes) : myUI.getMessage(SptMessages.No));
+            item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(result.getString("p.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(result.getString("extra_positions"));
+            item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(result.getString("ws.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Period)).setValue("с " + SystemSettings.df.format(result.getDate("ew.start_date"))
+                    + " по " + SystemSettings.df.format(result.getDate("ew.end_date")));
         }
         return container;
     }

@@ -8,6 +8,7 @@ package kg.alex.spt.reports.hr;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -43,6 +44,7 @@ public class HRGeneralReport implements Button.ClickListener,
     private ComboBoxMax yearSelect;
     private EnhancedFormatExcelExport excelReport;
     private Grid.FooterRow footer;
+    private TextField nameTF, surnameTF;
 
     private Subject currentUser = SecurityUtils.getSubject();
     public Grid dataGrid;
@@ -98,6 +100,18 @@ public class HRGeneralReport implements Button.ClickListener,
         schoolsMCB.setShowSelectAllButton((filter, page) -> true);
         schoolsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(schoolsMCB);
+
+        nameTF = new TextField(myUI.getMessage(SptMessages.FirstName));
+        nameTF.setInputPrompt(myUI.getMessage(SptMessages.Any));
+        nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        nameTF.setWidth("100%");
+        leftLay.addComponent(nameTF);
+
+        surnameTF = new TextField(myUI.getMessage(SptMessages.LastName));
+        surnameTF.setInputPrompt(myUI.getMessage(SptMessages.Any));
+        surnameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        surnameTF.setWidth("100%");
+        leftLay.addComponent(surnameTF);
 
         positionsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Positions));
         positionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
@@ -389,7 +403,7 @@ public class HRGeneralReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            if (yearSelect.isValid() && workingStatusesMCB.isValid()) {
+            if (yearSelect.isValid()) {
                 try {
                     Map<String, String> params = new HashMap<>();
                     insertParameter(params, myUI.getMessage(SptMessages.Schools), schoolsMCB);
@@ -411,6 +425,8 @@ public class HRGeneralReport implements Button.ClickListener,
                     insertParameter(params, myUI.getMessage(SptMessages.Languages), languageMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.MainBranches), mainBranchMCB);
                     insertParameter(params, myUI.getMessage(SptMessages.ExtraPositions), extraPositionsMCB);
+                    params.put(myUI.getMessage(SptMessages.FirstName), nameTF.getValue());
+                    params.put(myUI.getMessage(SptMessages.LastName), surnameTF.getValue());
 
                     DbEmployee dbEmployee = new DbEmployee();
                     dbEmployee.connect();

@@ -69,6 +69,7 @@ public class SptMessages_ru extends SptMessages {
             {UniversityDefinition, "Определение университетов"},
             {QuestionDefinition, "Определение вопросов"},
             {University, "Университет"},
+            {EducationalOrganization, "Учебное заведение"},
             {Department, "Специальность"},
             {BranchDefinition, "Определение уроков"},
             {Branches, "Области преподавания"},
@@ -87,6 +88,7 @@ public class SptMessages_ru extends SptMessages {
             {LowBalance, "Вы не можете совершить данную операцию! Превышение доступного баланса на "},
             {CreateButton, "Создать новую запись"},
             {ModifyButton, "Изменить запись"},
+            {CvButton, "Резюме"},
             {DeleteButton, "Удалить запись"},
             {Details, "Детали"},
             {SaveButton, "Сохранить"},
@@ -554,7 +556,10 @@ public class SptMessages_ru extends SptMessages {
             {Country, "Страна"},
             {EduLevel, "Степень"},
             {CorrectionType, "Тип корректировки"},
-            {Correction, "Корректировка"},};
+            {Correction, "Корректировка"},
+            {Any, "Любое"},
+            {DateAndPlaceOfBirth, "Дата и место рождения"},
+    };
 
     @Override
 

@@ -16150,6 +16150,12 @@ div.v-layout.v-horizontal.v-widget {
 	color: white;
 }
 
+.mytheme .v-label-labelIcon {
+	font-size: 16px;
+	line-height: normal;
+	color: #47612d;
+}
+
 .mytheme .v-label-tableCpt {
 	font-size: 13px;
 	font-weight: bold;

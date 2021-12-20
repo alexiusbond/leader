@@ -117,6 +117,7 @@ public class DbEmployee extends BaseDb {
         stat.setInt(2, school_id);
         stat.setInt(3, school_id);
         stat.setInt(4, school_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
@@ -718,6 +719,14 @@ public class DbEmployee extends BaseDb {
         }
         if (params.get(myUI.getMessage(SptMessages.ExtraBranches)) != null) {
             sql += "AND ebr.id IN (" + params.get(myUI.getMessage(SptMessages.ExtraBranches)) + ") ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.FirstName)) != null
+                && !params.get(myUI.getMessage(SptMessages.FirstName)).equals("")) {
+            sql += "AND e.name LIKE  '%" + params.get(myUI.getMessage(SptMessages.FirstName)) + "%' ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.LastName)) != null
+                && !params.get(myUI.getMessage(SptMessages.LastName)).equals("")) {
+            sql += "AND e.surname LIKE  '%" + params.get(myUI.getMessage(SptMessages.LastName)) + "%' ";
         }
         sql += "GROUP BY e.id ORDER BY sch.id, e.surname, e.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);

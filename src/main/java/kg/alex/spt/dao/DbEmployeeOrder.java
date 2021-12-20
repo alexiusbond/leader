@@ -121,7 +121,6 @@ public class DbEmployeeOrder extends BaseDb {
 
     public int exec_update_after_insert(EmployeeOrder eo) throws SQLException {
 
-
         String sql = "update hr_employee_order as eo "
                 + "left join hr_orders as o on o.id = eo.hr_orders_id "
                 + "set eo.effected_by_id=?, eo.to_date=? "

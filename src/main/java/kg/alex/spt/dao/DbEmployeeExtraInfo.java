@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
 import kg.alex.spt.domain.EmployeeExtraInfo;
 
 public class DbEmployeeExtraInfo extends BaseDb {
@@ -28,8 +29,8 @@ public class DbEmployeeExtraInfo extends BaseDb {
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (!eei.getFobbies().equals("") && eei.getFobbies() != null) {
-            stat.setString(4, eei.getFobbies());
+        if (!eei.getPhobias().equals("") && eei.getPhobias() != null) {
+            stat.setString(4, eei.getPhobias());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
@@ -61,8 +62,8 @@ public class DbEmployeeExtraInfo extends BaseDb {
         } else {
             stat.setNull(2, Types.VARCHAR);
         }
-        if (!eei.getFobbies().equals("") && eei.getFobbies() != null) {
-            stat.setString(3, eei.getFobbies());
+        if (!eei.getPhobias().equals("") && eei.getPhobias() != null) {
+            stat.setString(3, eei.getPhobias());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
@@ -81,7 +82,8 @@ public class DbEmployeeExtraInfo extends BaseDb {
     }
 
     public EmployeeExtraInfo execSQL(int employee_id) throws SQLException {
-        String sql = "SELECT * FROM hr_employee_extra_info AS eei LEFT JOIN hr_health_status AS hs ON hs.id = eei.hr_health_status_id WHERE eei.employee_id = ?;";
+        String sql = "SELECT * FROM hr_employee_extra_info AS eei " +
+                "LEFT JOIN hr_health_status AS hs ON hs.id = eei.hr_health_status_id WHERE eei.employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
@@ -89,10 +91,67 @@ public class DbEmployeeExtraInfo extends BaseDb {
         while (result.next()) {
             eei = new EmployeeExtraInfo();
             eei.setHobbies(result.getString("eei.hobbies"));
-            eei.setFobbies(result.getString("eei.fobbies"));
+            eei.setPhobias(result.getString("eei.fobbies"));
             eei.setShort_notes(result.getString("eei.info"));
             eei.setHealth_notes(result.getString("eei.health_notes"));
             eei.setHealth_status_id(result.getInt("hs.id"));
+            break;
+        }
+        return eei;
+    }
+
+    public EmployeeExtraInfo execSQL_for_cv(int employee_id) throws SQLException {
+        String sql = "SELECT n.name, g.name, m.name, c.name, sal.name, ei.health_notes, ei.hobbies, " +
+                "ei.fobbies, h.name, cont.email, cont.address, cont.birth_place, fam.fullname, fam.health_notes, h2.name, " +
+                "(select count(id) from hr_employee_children as ch where ch.employee_id = e.id) as children, " +
+                "GROUP_CONCAT(l.name ORDER BY l.name ASC SEPARATOR ', ') as langs, " +
+                "GROUP_CONCAT(ph.number ORDER BY ph.id ASC SEPARATOR ', ') as phones " +
+                "FROM employee AS e " +
+                "LEFT JOIN hr_employee_extra_info AS ei ON e.id = ei.employee_id " +
+                "LEFT JOIN hr_health_status AS h ON h.id = ei.hr_health_status_id " +
+                "LEFT JOIN hr_employee_phone_number AS ph ON ph.employee_id = e.id " +
+                "LEFT JOIN hr_employee_contacts AS cont ON cont.employee_id = e.id " +
+                "LEFT JOIN nationality AS n ON n.id = e.nationality_id " +
+                "LEFT JOIN hr_martial_status AS m ON m.id = e.hr_martial_status_id " +
+                "LEFT JOIN hr_country AS c ON c.id = e.hr_country_id " +
+                "LEFT JOIN gender AS g ON g.id = e.gender_id " +
+                "LEFT JOIN acc_category AS cat ON cat.employee_id = e.id AND cat.activity_status_id = 2 " +
+                "LEFT JOIN acc_category AS cat2 ON cat2.id = cat.parent_id " +
+                "LEFT JOIN hr_salary_category AS sal ON sal.acc_category_id = cat2.parent_id " +
+                "LEFT JOIN hr_employee_language AS el ON el.employee_id = e.id " +
+                "LEFT JOIN hr_language AS l ON el.hr_language_id = l.id " +
+                "LEFT JOIN hr_employee_spouse AS fam ON fam.employee_id = e.id " +
+                "LEFT JOIN hr_health_status AS h2 ON h2.id = fam.hr_health_status_id " +
+                "WHERE e.id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        ResultSet result = stat.executeQuery();
+        EmployeeExtraInfo eei = null;
+        while (result.next()) {
+            eei = new EmployeeExtraInfo();
+            eei.setMartialStatus(result.getString("m.name"));
+            eei.setNationality(result.getString("n.name"));
+            eei.setCitizenship(result.getString("c.name"));
+            eei.setSalaryCategory(result.getString("sal.name"));
+            eei.setGender(result.getString("g.name"));
+            eei.setLanguages(result.getString("langs"));
+            eei.setPhobias(result.getString("ei.fobbies"));
+            eei.setHobbies(result.getString("ei.hobbies"));
+            if (result.getString("h.name") != null) {
+                eei.setHealth_notes(result.getString("h.name") + (result.getString("ei.health_notes") == null ?
+                        "" : ", " + result.getString("ei.health_notes")));
+            } else {
+                eei.setHealth_notes("");
+            }
+            if (result.getString("fam.fullname") != null) {
+                eei.setFamilyInfo(result.getString("fam.fullname") + " (" + result.getString("h2.name")
+                        + (result.getString("fam.health_notes") == null ? "" : " - " + result.getString("fam.health_notes")) + ")");
+            }
+            eei.setChildren(result.getInt("children"));
+            eei.setPhones(result.getString("phones"));
+            eei.setAddress(result.getString("cont.address"));
+            eei.setEmail(result.getString("cont.email"));
+            eei.setBirth_place(result.getString("cont.birth_place"));
             break;
         }
         return eei;

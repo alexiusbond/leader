@@ -85,7 +85,6 @@ public class DbEmployeeEducation extends BaseDb {
 
     public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
                                     EmployeeDefinitionView edv) throws SQLException {
-        final 
 
         String sql = "SELECT ed.id, ed.hr_university_id, ed.department, ed.start_date, ed.end_date, ed.country_id, "
                 + "ed.education_level_id, a.id, a.name, a.extension, a.unique_name FROM hr_employee_education as ed "
@@ -169,6 +168,47 @@ public class DbEmployeeEducation extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             }
             item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+        }
+        return container;
+    }
+
+    public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id) throws SQLException {
+
+        String sql = "SELECT 0 as id, null as country, CASE WHEN gs.id is not null and gs.school_id is null THEN 'Другое' ELSE s.name_ru END as org, " +
+                "null as dep, 'Среднее образование' as level, " +
+                "CONCAT(YEAR(gs.start_date), '-', YEAR(gs.end_date)) AS period " +
+                "FROM hr_employee_grad_school as gs " +
+                "left join school as s on s.id = gs.school_id " +
+                "where gs.employee_id = ? " +
+                "UNION SELECT ed.id as id, c.name as country, u.name as org, ed.department as dep, l.name as level, " +
+                "CONCAT(YEAR(ed.start_date), '-', YEAR(ed.end_date)) AS period " +
+                "FROM hr_employee_education AS ed " +
+                "LEFT JOIN hr_country AS c ON c.id = ed.country_id " +
+                "LEFT JOIN hr_university AS u ON u.id = ed.hr_university_id " +
+                "LEFT JOIN hr_education_level AS l ON l.id = ed.education_level_id " +
+                "WHERE ed.employee_id = ? AND ed.hr_own_id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        stat.setInt(2, employee_id);
+        stat.setInt(3, own_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.EduLevel), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.EducationalOrganization), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Department), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Country), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Period), String.class, null);
+        while (result.next()) {
+            if (own_id == 2 && result.getInt("id") == 0) {
+                continue;
+            }
+            String id = result.getString("id");
+            Item item = container.addItem(id);
+            item.getItemProperty(myUI.getMessage(SptMessages.Department)).setValue(result.getString("dep"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Period)).setValue(result.getString("period"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Country)).setValue(result.getString("country"));
+            item.getItemProperty(myUI.getMessage(SptMessages.EducationalOrganization)).setValue(result.getString("org"));
+            item.getItemProperty(myUI.getMessage(SptMessages.EduLevel)).setValue(result.getString("level"));
         }
         return container;
     }

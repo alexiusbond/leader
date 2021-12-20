@@ -108,4 +108,25 @@ public class DbEmployeeExam extends BaseDb {
         }
         return container;
     }
+
+    public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id) throws SQLException {
+
+        String sql = "SELECT ex.id, e.name, ex.score, ex.date_of_issue FROM hr_employee_exam AS ex " +
+                "LEFT JOIN hr_exam AS e ON e.id = ex.hr_exam_id WHERE ex.employee_id = ?;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Exam), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Score), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.IssueDate), String.class, null);
+        while (result.next()) {
+            String id = result.getString("ex.id");
+            Item item = container.addItem(id);
+            item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(result.getString("e.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(result.getString("ex.score"));
+            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(SystemSettings.df.format(result.getDate("ex.date_of_issue")));
+        }
+        return container;
+    }
 }

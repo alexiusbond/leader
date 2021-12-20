@@ -110,4 +110,32 @@ public class DbEmployeeChildren extends BaseDb {
         }
         return container;
     }
+
+    public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id) throws SQLException {
+
+        String sql = "SELECT ech.id, ech.fullname, ech.date_of_birth, ech.institution, es.name, h.name " +
+                "FROM hr_employee_children AS ech " +
+                "LEFT JOIN hr_health_status AS h ON h.id = ech.hr_health_status_id " +
+                "LEFT JOIN hr_education_status AS es ON es.id = ech.hr_education_status_id " +
+                "WHERE ech.employee_id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.DateOfBirth), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Institution), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.HealthStatus), String.class, null);
+        while (result.next()) {
+            String id = result.getString("ech.id");
+            Item item = container.addItem(id);
+            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(result.getString("ech.fullname"));
+            item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(SystemSettings.df.format(result.getDate("ech.date_of_birth")));
+            item.getItemProperty(myUI.getMessage(SptMessages.Institution)).setValue(result.getString("ech.institution"));
+            item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(result.getString("es.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.HealthStatus)).setValue(result.getString("h.name"));
+        }
+        return container;
+    }
 }
