@@ -5,10 +5,12 @@
  */
 package kg.alex.spt.dao;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
@@ -598,7 +600,7 @@ public class DbEmployee extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, Map<String, String> params) throws SQLException {
 
-        String sql = "SELECT e.id, e.name, e.surname, e.middle_name, e.date_of_birth, e.can_advisor, g.name, n.name, " +
+        String sql = "SELECT e.id, e.login, e.photo, e.name, e.surname, e.middle_name, e.date_of_birth, e.can_advisor, g.name, n.name, " +
                 "m.name, ws.name, p.name, GROUP_CONCAT(DISTINCT p2.name ORDER BY eo2.id ASC SEPARATOR ', ') AS extra_positions, " +
                 "mbr.name  AS main_branch, " +
                 "GROUP_CONCAT(DISTINCT ebr.name ORDER BY eeb.id ASC SEPARATOR ', ') AS extra_branches, " +
@@ -733,15 +735,18 @@ public class DbEmployee extends BaseDb {
         stat.setInt(1, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(SystemSettings.button, Integer.class, 0);
+        container.addContainerProperty(" ", Integer.class, 0);
+        container.addContainerProperty(SystemSettings.button, String.class, "CV");
         container.addContainerProperty(myUI.getMessage(SptMessages.School), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Photo), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DateOfBirth), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ContractType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Position), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.MainPosition), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraPositions), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Gender), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Nationality), String.class, null);
@@ -764,8 +769,10 @@ public class DbEmployee extends BaseDb {
         int i = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(SystemSettings.button).setValue(++i);
+            item.getItemProperty(" ").setValue(++i);
             item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(result.getString("school"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(result.getString("e.login"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Photo)).setValue(result.getString("e.photo"));
             if (result.getString("grad_school") != null) {
                 item.getItemProperty(myUI.getMessage(SptMessages.GraduationSchools)).setValue(result.getString("grad_school"));
             }
@@ -775,7 +782,7 @@ public class DbEmployee extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(SystemSettings.df.format(
                     result.getDate("e.date_of_birth")));
             item.getItemProperty(myUI.getMessage(SptMessages.ContractType)).setValue(result.getString("sal.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Position)).setValue(result.getString("p.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(result.getString("p.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(result.getString("extra_positions"));
             item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(result.getString("main_branch"));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(result.getString("extra_branches"));

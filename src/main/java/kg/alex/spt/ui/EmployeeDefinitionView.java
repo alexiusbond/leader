@@ -2269,7 +2269,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 employeeExtraInfo.setWorkingStatus(item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).getValue().toString());
                 employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue());
                 employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue());
-                employeeExtraInfo.setCanBeAdvisor((Boolean) item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
+                employeeExtraInfo.setCanBeAdvisor((Boolean) item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).getValue() ?
+                        myUI.getMessage(SptMessages.Yes) : myUI.getMessage(SptMessages.No));
                 myUI.addWindow(new CvWindow(myUI, employee, employeeExtraInfo, myUI.getUser().getCurrent_year().getName()));
             }
         } else if (source == cancelBtn) {

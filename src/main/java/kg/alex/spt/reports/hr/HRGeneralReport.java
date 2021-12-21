@@ -8,17 +8,27 @@ package kg.alex.spt.reports.hr;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.GeneratedPropertyContainer;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
+import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.SystemSettings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbEmployee;
+import kg.alex.spt.dao.DbEmployeeExtraInfo;
 import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.domain.Employee;
+import kg.alex.spt.domain.EmployeeExtraInfo;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
+import kg.alex.spt.ui.CvWindow;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +36,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -430,7 +442,28 @@ public class HRGeneralReport implements Button.ClickListener,
 
                     DbEmployee dbEmployee = new DbEmployee();
                     dbEmployee.connect();
-                    dataGrid.setContainerDataSource(dbEmployee.execSQL(myUI, (Integer) yearSelect.getValue(), params));
+                    IndexedContainer container = dbEmployee.execSQL(myUI, (Integer) yearSelect.getValue(), params);
+                    GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(container);
+                    gpc.addGeneratedProperty(SystemSettings.button,
+                            new PropertyValueGenerator<Component>() {
+                                @Override
+                                public Component getValue(Item item, Object itemId, Object propertyId) {
+                                    Button button = new Button("CV");
+                                    button.setStyleName(ValoTheme.BUTTON_LINK);
+                                    button.addStyleName(ValoTheme.BUTTON_TINY);
+                                    button.addStyleName("cv");
+                                    button.setId(itemId + "");
+                                    button.addClickListener(HRGeneralReport.this);
+                                    return button;
+                                }
+
+                                @Override
+                                public Class<Component> getType() {
+                                    return Component.class;
+                                }
+                            });
+                    dataGrid.setContainerDataSource(gpc);
+                    dataGrid.getColumn(SystemSettings.button).setRenderer(new ComponentRenderer());
                     dbEmployee.close();
                 } catch (Exception e) {
                     logger.error(e);
@@ -449,8 +482,10 @@ public class HRGeneralReport implements Button.ClickListener,
                 }
                 footer.getCell(myUI.getMessage(SptMessages.School)).setText(myUI.getMessage(SptMessages.Total));
                 footer.getCell(myUI.getMessage(SptMessages.LastName)).setText(dataGrid.getContainerDataSource().size() + "");
-                dataGrid.setFrozenColumnCount(4);
+                dataGrid.setFrozenColumnCount(5);
                 dataGrid.setSizeFull();
+                dataGrid.getColumn(myUI.getMessage(SptMessages.Id)).setHidden(true);
+                dataGrid.getColumn(myUI.getMessage(SptMessages.Photo)).setHidden(true);
                 if (dataGrid.getContainerDataSource().size() != 0) {
                     excelBtn.setEnabled(true);
                 }
@@ -478,6 +513,54 @@ public class HRGeneralReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
+        } else {
+            Employee employee = new Employee();
+            int emp_id = Integer.parseInt(event.getButton().getId());
+            Item item = dataGrid.getContainerDataSource().getItem(emp_id);
+            employee.setId(emp_id);
+            employee.setLogin(item.getItemProperty(myUI.getMessage(SptMessages.Id)).getValue().toString());
+            employee.setName(item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).getValue().toString());
+            employee.setSurname(item.getItemProperty(myUI.getMessage(SptMessages.LastName)).getValue().toString());
+            if (item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).getValue() != null) {
+                employee.setMiddle_name(item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).getValue().toString());
+            }
+            if (item.getItemProperty(myUI.getMessage(SptMessages.Photo)).getValue() != null) {
+                employee.setPhoto(item.getItemProperty(myUI.getMessage(SptMessages.Photo)).getValue().toString());
+            }
+            try {
+                employee.setBirth_date(SystemSettings.df.parse(item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).getValue().toString()));
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+
+            EmployeeExtraInfo employeeExtraInfo = null;
+            try {
+                DbEmployeeExtraInfo dbCon = new DbEmployeeExtraInfo();
+                dbCon.connect();
+                employeeExtraInfo = dbCon.execSQL_for_cv(emp_id);
+                dbCon.close();
+            } catch (Exception ex) {
+                logger.error(ex);
+                ex.printStackTrace();
+            }
+
+            employeeExtraInfo.setMainPosition(item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
+            if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue() != null) {
+                employeeExtraInfo.setExtraPositions(item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue().toString());
+            }
+            if (item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue() != null) {
+                employeeExtraInfo.setMainBranch(item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
+            }
+            if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue() != null) {
+                employeeExtraInfo.setExtraBranches(item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString());
+            }
+            employeeExtraInfo.setSchool(item.getItemProperty(myUI.getMessage(SptMessages.School)).getValue().toString());
+            employeeExtraInfo.setWorkingStatus(item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).getValue().toString());
+            employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue());
+            employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue());
+            employeeExtraInfo.setCanBeAdvisor(item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).getValue().toString());
+            myUI.addWindow(new CvWindow(myUI, employee, employeeExtraInfo, yearSelect.getItemCaption(yearSelect.getValue())));
         }
     }
 

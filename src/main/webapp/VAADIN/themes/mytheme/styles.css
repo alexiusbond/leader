@@ -16048,6 +16048,12 @@ div.v-layout.v-horizontal.v-widget {
 	background: #ed473b;
 }
 
+.mytheme .v-button-cv {
+	height: 14px;
+	padding: 0 8px;
+	font-size: 10px;
+}
+
 .mytheme .v-slider-base:before, .mytheme .v-slider-base:after {
 	border: none !important;
 }
@@ -16148,12 +16154,6 @@ div.v-layout.v-horizontal.v-widget {
 	font-size: 16px;
 	line-height: normal;
 	color: white;
-}
-
-.mytheme .v-label-labelIcon {
-	font-size: 16px;
-	line-height: normal;
-	color: #47612d;
 }
 
 .mytheme .v-label-tableCpt {

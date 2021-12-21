@@ -22,7 +22,7 @@ public class EmployeeExtraInfo implements Serializable {
     private int hours;
     private int extraHours;
     private String workingStatus;
-    private boolean canBeAdvisor;
+    private String canBeAdvisor;
     private String salaryCategory;
     private String nationality;
     private String citizenship;
@@ -281,11 +281,11 @@ public class EmployeeExtraInfo implements Serializable {
         this.workingStatus = workingStatus;
     }
 
-    public boolean isCanBeAdvisor() {
+    public String getCanBeAdvisor() {
         return canBeAdvisor;
     }
 
-    public void setCanBeAdvisor(boolean canBeAdvisor) {
+    public void setCanBeAdvisor(String canBeAdvisor) {
         this.canBeAdvisor = canBeAdvisor;
     }
 }

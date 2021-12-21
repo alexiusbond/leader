@@ -254,6 +254,11 @@
             <artifactId>simplefiledownloader</artifactId>
             <version>1.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>de.datenhahn.vaadin</groupId>
+            <artifactId>componentrenderer</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -290,7 +295,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=f08f4433-79ba-4fe4-abff-10ec0c24003e
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=d2013f0b-ae29-4f57-b38e-6bac0a9af106
                     </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>

@@ -97,8 +97,7 @@ public class CvWindow extends Window {
                         + employeeExtraInfo.getExtraHours(), null),
                 0, 8, 1, 8);
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.CanBeAdvisor) + ": </b>" + (employeeExtraInfo.isCanBeAdvisor() ?
-                        myUI.getMessage(SptMessages.Yes) : myUI.getMessage(SptMessages.No)), null),
+                        myUI.getMessage(SptMessages.CanBeAdvisor) + ": </b>" + employeeExtraInfo.getCanBeAdvisor(), null),
                 0, 9, 1, 9);
 
         rightGl.addComponent(createLabel("<b>" +
