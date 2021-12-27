@@ -24,7 +24,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.domain.LeavingReason;
@@ -155,7 +155,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+                    dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -211,7 +211,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
                         try {
                             status = dbDis.exec_update(
                                     getLeavingReason((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            SystemSettings.id).getValue()));
+                                            Settings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -267,13 +267,13 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnLeavingReasonsDefinitionView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(Settings.cnLeavingReasonsDefinitionView + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnLeavingReasonsDefinitionView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(Settings.cnLeavingReasonsDefinitionView + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnLeavingReasonsDefinitionView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(Settings.cnLeavingReasonsDefinitionView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -287,7 +287,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
         statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).getValue().toString()));
+                Settings.status_id).getValue().toString()));
 
     }
 
@@ -304,7 +304,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).setValue(
+                Settings.status_id).setValue(
                         (Integer) statusSelect.getValue());
     }
 
@@ -316,9 +316,9 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(SystemSettings.status_id).setValue(
+        item.getItemProperty(Settings.status_id).setValue(
                 (Integer) statusSelect.getValue());
-        item.getItemProperty(SystemSettings.id).setValue(id);
+        item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -335,7 +335,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), SystemSettings.dbOrderReason);
+                    Settings.id).getValue(), Settings.dbOrderReason);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

@@ -8,7 +8,7 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -51,10 +51,10 @@ public class DbInventoryInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Quantity), Integer.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Employee), String.class, null);
-        container.addContainerProperty(SystemSettings.block_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.floor_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.room_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.employee_id, Integer.class, 0);
+        container.addContainerProperty(Settings.block_id, Integer.class, 0);
+        container.addContainerProperty(Settings.floor_id, Integer.class, 0);
+        container.addContainerProperty(Settings.room_id, Integer.class, 0);
+        container.addContainerProperty(Settings.employee_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
 
         while (result.next()) {
@@ -65,12 +65,12 @@ public class DbInventoryInvoice extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Room)).setValue(result.getString("room"));
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(result.getString("employee"));
             item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(result.getInt("quantity"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.dtmf.format(
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format(
                     result.getTimestamp("t.creation_date")));
-            item.getItemProperty(SystemSettings.block_id).setValue(result.getInt("block.id"));
-            item.getItemProperty(SystemSettings.floor_id).setValue(result.getInt("floor.id"));
-            item.getItemProperty(SystemSettings.room_id).setValue(result.getInt("room.id"));
-            item.getItemProperty(SystemSettings.employee_id).setValue(result.getInt("e.id"));
+            item.getItemProperty(Settings.block_id).setValue(result.getInt("block.id"));
+            item.getItemProperty(Settings.floor_id).setValue(result.getInt("floor.id"));
+            item.getItemProperty(Settings.room_id).setValue(result.getInt("room.id"));
+            item.getItemProperty(Settings.employee_id).setValue(result.getInt("e.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
         }
         return container;

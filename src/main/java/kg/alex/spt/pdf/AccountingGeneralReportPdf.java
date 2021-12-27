@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
@@ -116,7 +116,7 @@ public class AccountingGeneralReportPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", normal_font));
-                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), date_normal_font));
+                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), date_normal_font));
                     document.add(Tdate);
 
                     //информация по кассе
@@ -146,13 +146,13 @@ public class AccountingGeneralReportPdf {
                     accInfoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Transactions) + ":", normal_font));
 
                     accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                    accInfoTable.addCell(new Phrase(SystemSettings.dFormat.format(sclAccInfo.getTotal_income()) + "$", normal_font));
+                    accInfoTable.addCell(new Phrase(Settings.dFormat.format(sclAccInfo.getTotal_income()) + "$", normal_font));
                     accInfoTable.addCell(new Phrase(sclAccInfo.getLast_income_date(), normal_font));
-                    accInfoTable.addCell(new Phrase(SystemSettings.dFormat.format(sclAccInfo.getTotal_outcome()) + "$", normal_font));
+                    accInfoTable.addCell(new Phrase(Settings.dFormat.format(sclAccInfo.getTotal_outcome()) + "$", normal_font));
                     accInfoTable.addCell(new Phrase(sclAccInfo.getLast_outcome_date(), normal_font));
-                    accInfoTable.addCell(new Phrase(SystemSettings.dFormat.format(sclAccInfo.getPrevious_balance()) + "$", normal_font));
+                    accInfoTable.addCell(new Phrase(Settings.dFormat.format(sclAccInfo.getPrevious_balance()) + "$", normal_font));
                     accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                    accInfoTable.addCell(new Phrase(SystemSettings.dFormat.format(sclAccInfo.getPrevious_balance() + sclAccInfo.getTotal_income()
+                    accInfoTable.addCell(new Phrase(Settings.dFormat.format(sclAccInfo.getPrevious_balance() + sclAccInfo.getTotal_income()
                             - sclAccInfo.getTotal_outcome()) + "$", normal_font));
 
                     document.add(accInfoTable);
@@ -190,15 +190,15 @@ public class AccountingGeneralReportPdf {
                         accTransTable.addCell(new Phrase(accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Month)).getValue().toString(), normal_font));
                         accTransTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        accTransTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
+                        accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.InstallmentPlan)).getValue()), normal_font));
-                        accTransTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
+                        accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Payments)).getValue()), normal_font));
-                        accTransTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
+                        accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Incomes)).getValue()), normal_font));
-                        accTransTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
+                        accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Outcomes)).getValue()), normal_font));
-                        accTransTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
+                        accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Difference)).getValue()), normal_font));
                         i++;
 
@@ -283,11 +283,11 @@ public class AccountingGeneralReportPdf {
                         inPaymentsTable.addCell(new Phrase(paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Month)).getValue().toString(), normal_font));
                         inPaymentsTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        inPaymentsTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) paymentsTable.getContainerProperty(next,
+                        inPaymentsTable.addCell(new Phrase(Settings.dFormat.format((Double) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.InstallmentPlan)).getValue()), normal_font));
-                        inPaymentsTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) paymentsTable.getContainerProperty(next,
+                        inPaymentsTable.addCell(new Phrase(Settings.dFormat.format((Double) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Payments)).getValue()), normal_font));
-                        inPaymentsTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) paymentsTable.getContainerProperty(next,
+                        inPaymentsTable.addCell(new Phrase(Settings.dFormat.format((Double) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Debt)).getValue()), normal_font));
                         x++;
                     }

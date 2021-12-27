@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeBranch;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
@@ -71,11 +71,11 @@ public class DbEmployeeBranch extends BaseDb {
         while (result.next()) {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(Settings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeBranch, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Branch)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Branch), SystemSettings.dbBranchTable, true));
+                            myUI.getMessage(SptMessages.Branch), Settings.dbBranchTable, true));
             if (result.getInt("ex.hr_importance_id") == 1) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Main)).setValue(
                         edv.createCheckBox(true, myUI.getMessage(SptMessages.Main)));
@@ -83,7 +83,7 @@ public class DbEmployeeBranch extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Main)).setValue(
                         edv.createCheckBox(false, myUI.getMessage(SptMessages.Main)));
             }
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

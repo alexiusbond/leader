@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.InvoiceInfoPdf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,7 +80,7 @@ public class InvoicePDF {
                     dateTable.addCell(new Phrase("Номер документа", normal_font));
                     dateTable.addCell(new Phrase("Дата составления", normal_font));
                     dateTable.addCell(new Phrase(" ", normal_font));
-                    dateTable.addCell(new Phrase(SystemSettings.dtmf.format(student.getPayment_date()), normal_font));
+                    dateTable.addCell(new Phrase(Settings.dtmf.format(student.getPayment_date()), normal_font));
 
                     float[] orderTableWidth = {0.6f, 0.4f};
                     PdfPTable orderTable = new PdfPTable(2);
@@ -99,7 +99,7 @@ public class InvoicePDF {
                     cell.setPaddingBottom(20);
                     orderTable.addCell(cell);
 
-                    Image logo = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + student.getScl_logo());
+                    Image logo = Image.getInstance(Settings.PATH_TO_UPLOADS + student.getScl_logo());
                     logo.setAlignment(Image.MIDDLE);
                     logo.scaleAbsolute(70, 70);
                     cell = new PdfPCell(logo);

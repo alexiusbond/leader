@@ -31,7 +31,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbEmployeeLessons;
 import kg.alex.spt.dao.DbSchool;
@@ -258,21 +258,21 @@ public class HRLessonHoursReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
-            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWorking_status, true));
-            branchTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable, true));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
+            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbWorking_status, true));
+            branchTable.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbBranchTable, true));
             positionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
+                    currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
             positionTable.setVisibleColumns(NATURAL_COL_ORDER);
             extraPositionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
+                    currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
             extraPositionTable.setVisibleColumns(NATURAL_COL_ORDER);
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        workingStatusesMCB.setValue(SystemSettings.convertToSet(
+        workingStatusesMCB.setValue(Settings.convertToSet(
                 workingStatusesMCB.getContainerDataSource().getItemIds()));
         workingStatusesMCB.addValueChangeListener(this);
 
@@ -397,10 +397,10 @@ public class HRLessonHoursReport implements Button.ClickListener,
                             }
 
                             dataTable.setContainerDataSource(dbel.execSQLHours(myUI, (Integer) yearSelect.getValue(), next,
-                                    SystemSettings.convertCollectionToStr((Set<?>) branchTable.getValue()),
-                                    SystemSettings.convertCollectionToStr((Set<?>) positionTable.getValue()),
-                                    SystemSettings.convertCollectionToStr((Set<?>) extraPositionTable.getValue()),
-                                    SystemSettings.convertCollectionToStr((Set<?>) workingStatusesMCB.getValue())));
+                                    Settings.convertCollectionToStr((Set<?>) branchTable.getValue()),
+                                    Settings.convertCollectionToStr((Set<?>) positionTable.getValue()),
+                                    Settings.convertCollectionToStr((Set<?>) extraPositionTable.getValue()),
+                                    Settings.convertCollectionToStr((Set<?>) workingStatusesMCB.getValue())));
                             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Hours), Table.Align.RIGHT);
                             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.ExtraHours), Table.Align.RIGHT);
                             if (((Set<?>) schoolTable.getValue()).size() > 1) {

@@ -10,7 +10,7 @@ import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 
 public class MyFilterDecorator implements FilterDecorator, Serializable {
@@ -88,7 +88,7 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
     }
 
     public DateFormat getDateFormat(Object propertyId) {
-        return SystemSettings.df;
+        return Settings.df;
     }
 
     @Override

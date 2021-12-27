@@ -42,7 +42,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.util.*;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
@@ -129,13 +129,13 @@ public class GeneralReport implements Button.ClickListener,
             dbd.connect();
             yearSelect.setContainerDataSource(dbd.exec_years_with_dates(myUI));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
+                    dbd.exec_for_select(myUI, Settings.dbEducationStatus, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(SystemSettings.convertToSet(
+        educationStatusMCB.setValue(Settings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
         educationStatusMCB.addValueChangeListener(this);
 
@@ -180,7 +180,7 @@ public class GeneralReport implements Button.ClickListener,
 
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
         leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
-        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
+        if (currentUser.hasRole(Settings.rnAdmin)) {
             leftGrid.setSizeFull();
             leftGrid.addComponent(schoolsTable, 0, 2, 3, 2);
             leftGrid.setRowExpandRatio(2, 1);
@@ -226,7 +226,7 @@ public class GeneralReport implements Button.ClickListener,
                     DbStudentContract dbsc = new DbStudentContract();
                     dbsc.connect();
                     contractTtl = dbsc.execSQL_totalsByScl(myUI, (Integer) yearSelect.getValue(),
-                            SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             (Integer) schoolsTable.getValue());
                     dbsc.close();
                     setTotalContract(contractTtl);
@@ -246,7 +246,7 @@ public class GeneralReport implements Button.ClickListener,
                 new AccountingGeneralReportPdf(myUI, svgPayments, svgPaid, svgDiscounts, schoolAcc,
                         transactionsTable, contractTtl, paymentsTable, (Integer) schoolsTable.getValue(),
                         (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Title)).getValue(),
-                        SystemSettings.df.format(prevDayCal.getTime()));
+                        Settings.df.format(prevDayCal.getTime()));
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -272,7 +272,7 @@ public class GeneralReport implements Button.ClickListener,
         if (event.getProperty() == yearSelect) {
             prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue());
             prevDayCal.add(Calendar.DAY_OF_MONTH, -1);
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
         }
     }
 
@@ -440,7 +440,7 @@ public class GeneralReport implements Button.ClickListener,
         prevBalanceLbl = new Label();
         prevBalanceLbl.setContentMode(ContentMode.HTML);
         prevBalanceLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(prevDayCal.getTime())
+        prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime())
                 + "): </b>");
         hl.addComponent(prevBalanceLbl);
 
@@ -534,24 +534,24 @@ public class GeneralReport implements Button.ClickListener,
     private void setSchoolAccounting(SchoolAccounting schoolAcc) {
         if (schoolAcc != null) {
             incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal)
-                    + ": </b>" + SystemSettings.dFormat.format(schoolAcc.getTotal_income()) + "$");
+                    + ": </b>" + Settings.dFormat.format(schoolAcc.getTotal_income()) + "$");
             incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate)
                     + ": </b>" + schoolAcc.getLast_income_date());
             outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal)
-                    + ": </b>" + SystemSettings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
+                    + ": </b>" + Settings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
             outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate)
                     + ": </b>" + schoolAcc.getLast_outcome_date());
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance)
-                    + " (" + SystemSettings.df.format(prevDayCal.getTime())
+                    + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + "$");
             totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Transactions)
-                    + ": </b>" + SystemSettings.dFormat.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
+                    + ": </b>" + Settings.dFormat.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
         } else {
             incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
             incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
             outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
             outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
             totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": </b>");
         }
     }
@@ -569,21 +569,21 @@ public class GeneralReport implements Button.ClickListener,
         }
         if (contractTtl != null) {
             totalsGrid.addComponent(new Label(contractTtl.getTtl_students() + ""), 1, 1);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_contract()) + "$"), 1, 2);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_debt()) + "$"), 1, 3);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_disc()) + "$"), 1, 4);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_correction()) + "$"), 1, 5);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_net()) + "$"), 1, 6);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_payments()) + "$"), 1, 7);
-            totalsGrid.addComponent(new Label(SystemSettings.dFormat.format(contractTtl.getTtl_left()) + "$"), 1, 8);
+            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_contract()) + "$"), 1, 2);
+            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_debt()) + "$"), 1, 3);
+            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_disc()) + "$"), 1, 4);
+            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_correction()) + "$"), 1, 5);
+            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_net()) + "$"), 1, 6);
+            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_payments()) + "$"), 1, 7);
+            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_left()) + "$"), 1, 8);
             //draw discounts chart
             double totalDisc = contractTtl.getTtl_net() + contractTtl.getTtl_disc();
             if (totalDisc != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), SystemSettings.round(contractTtl.getTtl_disc() * 100 / totalDisc, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(contractTtl.getTtl_disc() * 100 / totalDisc, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.Net) + ": ", SystemSettings.round(contractTtl.getTtl_net() * 100 / totalDisc, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.Net) + ": ", Settings.round(contractTtl.getTtl_net() * 100 / totalDisc, 2)));
                 confDisc.setSeries(series);
             }
 
@@ -592,10 +592,10 @@ public class GeneralReport implements Button.ClickListener,
             double totalPay = contractTtl.getTtl_left() + contractTtl.getTtl_payments();
             if (totalPay != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), SystemSettings.round(contractTtl.getTtl_left() * 100 / totalPay, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(contractTtl.getTtl_left() * 100 / totalPay, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), SystemSettings.round(contractTtl.getTtl_payments() * 100 / totalPay, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(contractTtl.getTtl_payments() * 100 / totalPay, 2)));
                 confPaid.setSeries(series);
             }
             chartPaid.drawChart(confPaid);
@@ -607,7 +607,7 @@ public class GeneralReport implements Button.ClickListener,
             DbAccTransactions dbsc = new DbAccTransactions();
             dbsc.connect();
             dbsc.execSQL_Plan_Payments(myUI, (Integer) yearSelect.getValue(),
-                    SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                    Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                     (Integer) schoolsTable.getValue(),
                     new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()).getTime()),
                     new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()).getTime()),

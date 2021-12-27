@@ -12,7 +12,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbExam;
 import kg.alex.spt.domain.Exam;
@@ -145,7 +145,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         validityTF.setRequired(true);
         validityTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         validityTF.setNullRepresentation("");
-        validityTF.setConverter(SystemSettings.getStringToIntegerConverter());
+        validityTF.setConverter(Settings.getStringToIntegerConverter());
         validityTF.setWidth("100%");
         validityTF.addValidator(new IntegerRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, null));
@@ -164,7 +164,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+                    dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -221,7 +221,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
                         try {
                             status = dbCon.exec_update(
                                     getExam((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            SystemSettings.id).getValue()));
+                                            Settings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -293,7 +293,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         validityTF.getPropertyDataSource().setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.ValidityMonths)).getValue());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).getValue());
+                Settings.status_id).getValue());
     }
 
     private void clearFields() {
@@ -309,7 +309,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
                 myUI.getMessage(SptMessages.ValidityMonths)).setValue(
                 validityTF.getPropertyDataSource().getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).setValue(statusSelect.getValue());
+                Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
@@ -326,9 +326,9 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(SystemSettings.status_id).setValue(
+        item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
-        item.getItemProperty(SystemSettings.id).setValue(id);
+        item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -347,7 +347,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), SystemSettings.dbExamTable);
+                    Settings.id).getValue(), Settings.dbExamTable);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

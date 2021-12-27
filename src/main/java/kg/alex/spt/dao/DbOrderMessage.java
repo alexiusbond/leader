@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.CustomTable;
 import com.vaadin.ui.HorizontalLayout;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
@@ -91,12 +91,12 @@ public class DbOrderMessage extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Student), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Discount), Integer.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.button, HorizontalLayout.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.button, HorizontalLayout.class, null);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
         int unread = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("em.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.df.format(
                     result.getDate("om.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(result.getString("employee"));
             if (result.getInt("om.student_id") == 0) {
@@ -109,22 +109,22 @@ public class DbOrderMessage extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("om.order_title"));
             item.getItemProperty(myUi.getMessage(SptMessages.OrderNumber)).setValue(result.getString("om.order_number"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(result.getString("mst.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(result.getInt("mst.id"));
+            item.getItemProperty(Settings.status_id).setValue(result.getInt("mst.id"));
             EmployeeMessage employeeMessage = new EmployeeMessage();
             employeeMessage.setId(result.getInt("em.id"));
             employeeMessage.setOrder_message_id(result.getInt("om.id"));
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
             hl.addComponent(view.createButton(myUi.getMessage(SptMessages.DeleteButton),
-                    SystemSettings.actDelete, FontAwesome.BAN, employeeMessage));
+                    Settings.actDelete, FontAwesome.BAN, employeeMessage));
             OrderMessage orderMessage = new OrderMessage();
             orderMessage.setTitle(result.getString("om.order_title"));
             orderMessage.setContent(result.getString("om.order_content"));
             orderMessage.setOrder_number(result.getString("om.order_number"));
             orderMessage.setDate(result.getDate("om.creation_date"));
             hl.addComponent(view.createButton(myUi.getMessage(SptMessages.ViewDocument),
-                    SystemSettings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
-            item.getItemProperty(SystemSettings.button).setValue(hl);
+                    Settings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
+            item.getItemProperty(Settings.button).setValue(hl);
             if (result.getInt("mst.id") == 2) {
                 unread++;
             }

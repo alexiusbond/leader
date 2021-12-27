@@ -11,12 +11,11 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.OrderPdf;
-import kg.alex.spt.ui.SendOrderView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
@@ -83,18 +82,18 @@ public class DbEmployeeMessage extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Message), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Student), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.button, Button.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.button, Button.class, null);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
         int unread = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("om.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.df.format(
                     result.getDate("om.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
             item.getItemProperty(myUi.getMessage(SptMessages.Message)).setValue(result.getString("om.message"));
             item.getItemProperty(myUi.getMessage(SptMessages.OrderNumber)).setValue(result.getString("om.order_number"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(result.getString("mst.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(result.getInt("mst.id"));
+            item.getItemProperty(Settings.status_id).setValue(result.getInt("mst.id"));
             OrderMessage orderMessage = new OrderMessage();
             orderMessage.setId(result.getInt("om.id"));
             orderMessage.setEmployee_id(result.getInt("e.id"));
@@ -117,12 +116,12 @@ public class DbEmployeeMessage extends BaseDb {
                         OrderMessage om = (OrderMessage) clickEvent.getButton().getData();
                         dbCon.exec_update(om.getId(), om.getEmployee_id(), 1);
                         dbCon.close();
-                        t.getContainerProperty(om.getId(), SystemSettings.status_id).setValue(1);
+                        t.getContainerProperty(om.getId(), Settings.status_id).setValue(1);
                         t.getContainerProperty(om.getId(), myUi.getMessage(SptMessages.Status))
                                 .setValue(myUi.getMessage(SptMessages.UnRead));
-                        int unread = Integer.parseInt(t.getColumnFooter(SystemSettings.status_id));
+                        int unread = Integer.parseInt(t.getColumnFooter(Settings.status_id));
                         if (unread > 0) {
-                            t.setColumnFooter(SystemSettings.status_id, (--unread) + "");
+                            t.setColumnFooter(Settings.status_id, (--unread) + "");
                             t.setColumnFooter(myUi.getMessage(SptMessages.Status),
                                     myUi.getMessage(SptMessages.UnRead) + ": " + unread);
                         }
@@ -134,13 +133,13 @@ public class DbEmployeeMessage extends BaseDb {
                     new OrderPdf(myUi, (OrderMessage) clickEvent.getButton().getData());
                 }
             });
-            item.getItemProperty(SystemSettings.button).setValue(btn);
+            item.getItemProperty(Settings.button).setValue(btn);
             if (result.getInt("mst.id") == 2) {
                 unread++;
             }
         }
         t.setContainerDataSource(container);
-        t.setColumnFooter(SystemSettings.status_id, unread + "");
+        t.setColumnFooter(Settings.status_id, unread + "");
         t.setColumnFooter(myUi.getMessage(SptMessages.Status),
                 myUi.getMessage(SptMessages.UnRead) + ": " + unread);
         t.setColumnFooter(myUi.getMessage(SptMessages.Message),

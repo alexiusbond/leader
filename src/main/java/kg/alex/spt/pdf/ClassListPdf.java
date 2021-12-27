@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassListReport;
@@ -84,7 +84,7 @@ public class ClassListPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassList), fontBold);
@@ -138,7 +138,7 @@ public class ClassListPdf {
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         if (dataCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Contract)).getValue() != null) {
-                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Contract)).getValue()), tableFont));
                             dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             if (dataCont.getContainerProperty(next,
@@ -146,22 +146,22 @@ public class ClassListPdf {
                                 dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString(), tableFont));
                                 dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                                dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                                dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Discount)).getValue()), tableFont));
                             } else {
                                 dataTable.addCell(new Phrase(" ", tableFont));
                                 dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                                 dataTable.addCell(new Phrase("0.00", tableFont));
                             }
-                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Correction)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Net)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(SystemSettings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Left)).getValue()), tableFont));
                             dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         } else {
@@ -184,14 +184,14 @@ public class ClassListPdf {
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
-                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.contracts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.contracts), tableFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discounted)
                             + clr.discountedStudents, tableFontBold));
-                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.discounts), tableFontBold));
-                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.debts), tableFontBold));
-                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.nets), tableFontBold));
-                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.paids), tableFontBold));
-                    dataTable.addCell(new Phrase(SystemSettings.dFormat.format(clr.lefts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.discounts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.debts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.nets), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.paids), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.lefts), tableFontBold));
 
                     document.add(dataTable);
 

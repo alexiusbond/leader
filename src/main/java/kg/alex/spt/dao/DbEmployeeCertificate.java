@@ -17,7 +17,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeCertificate;
@@ -88,8 +88,8 @@ public class DbEmployeeCertificate extends BaseDb {
         while (result.next()) {
             String id = result.getString("ec.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(Settings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                     edv.createTextfield(result.getString("ec.note"),
                             myUI.getMessage(SptMessages.Note),
@@ -101,9 +101,9 @@ public class DbEmployeeCertificate extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("ec.date_of_issue"),
                             myUI.getMessage(SptMessages.IssueDate), null,
-                            true, SystemSettings.datePattern, Resolution.DAY));
+                            true, Settings.datePattern, Resolution.DAY));
             final ComboBoxMax cb2 = edv.createCombobox(result.getInt("ec.certificate_id"),
-                    myUI.getMessage(SptMessages.Certificate), SystemSettings.dbCertificateTable, true);
+                    myUI.getMessage(SptMessages.Certificate), Settings.dbCertificateTable, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
                 @Override
@@ -111,7 +111,7 @@ public class DbEmployeeCertificate extends BaseDb {
                     try {
                         DbDefinition dbd = new DbDefinition();
                         dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbCertificateTable, false);
+                        int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbCertificateTable, false);
                         dbd.close();
                         if (id != 0) {
                             Iterator iter = container.getItemIds().iterator();
@@ -139,7 +139,7 @@ public class DbEmployeeCertificate extends BaseDb {
             a.setUnique_name(result.getString("a.unique_name"));
             a.setExtension(result.getString("a.extension"));
             a.setName(result.getString("a.name"));
-            Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, SystemSettings.download_button, FontAwesome.DOWNLOAD);
+            Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);
             hl.addComponent(b);
@@ -149,7 +149,7 @@ public class DbEmployeeCertificate extends BaseDb {
             upload.setData(b);
             hl.addComponent(upload);
             item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }
@@ -171,7 +171,7 @@ public class DbEmployeeCertificate extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("ec.note"));
             item.getItemProperty(myUI.getMessage(SptMessages.GivenBy)).setValue(result.getString("ec.given_by"));
-            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(SystemSettings.df.format(result.getDate("ec.date_of_issue")));
+            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(Settings.df.format(result.getDate("ec.date_of_issue")));
             item.getItemProperty(myUI.getMessage(SptMessages.Certificate)).setValue(result.getString("c.name"));
         }
         return container;

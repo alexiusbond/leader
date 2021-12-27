@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.AccCategory;
 import kg.alex.spt.i18n.SptMessages;
 import org.tepi.filtertable.FilterTreeTable;
@@ -71,16 +71,16 @@ public class DbAccCategory extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(SystemSettings.acc_currency_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.employee_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
+        container.addContainerProperty(Settings.employee_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                     result.getString("code") + " - " + result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
-            item.getItemProperty(SystemSettings.acc_currency_id).setValue(result.getInt("sc.acc_currency_id"));
-            item.getItemProperty(SystemSettings.employee_id).setValue(result.getInt("c.employee_id"));
+            item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("sc.acc_currency_id"));
+            item.getItemProperty(Settings.employee_id).setValue(result.getInt("c.employee_id"));
         }
         return container;
     }
@@ -107,7 +107,7 @@ public class DbAccCategory extends BaseDb {
     }
 
     public void execSQL(MyVaadinUI myUI, int type, TreeTable t) throws SQLException {
-        
+
 
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.parent_id, s.name, c.activity_status_id, "
                 + "c2.name, c.note FROM acc_category as c "
@@ -122,10 +122,10 @@ public class DbAccCategory extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Parent), String.class, null);
-        container.addContainerProperty(SystemSettings.parent_id, Integer.class, 0);
+        container.addContainerProperty(Settings.parent_id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
         t.setContainerDataSource(container);
         while (result.next()) {
@@ -136,18 +136,18 @@ public class DbAccCategory extends BaseDb {
             if (result.getInt("c.parent_id") != 0) {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("c.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("c.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(
                     result.getString("code"));
             item.getItemProperty(myUI.getMessage(SptMessages.Parent)).setValue(
                     result.getString("c2.name"));
-            item.getItemProperty(SystemSettings.parent_id).setValue(
+            item.getItemProperty(Settings.parent_id).setValue(
                     result.getInt("c.parent_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                     result.getString("s.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("c.activity_status_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                     result.getString("c.note"));
@@ -179,8 +179,7 @@ public class DbAccCategory extends BaseDb {
             if (result.getInt("c.parent_id") != 0) {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
-                    result.getString("name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("name"));
         }
     }
 

@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
@@ -41,9 +41,9 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.TitleRu), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.TitleEn), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.year_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.school_type_id, Integer.class, 0);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.year_id, Integer.class, 0);
+        container.addContainerProperty(Settings.school_type_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.DirectorFullName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.City), String.class, null);
@@ -53,7 +53,7 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.BankAccount), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Logo), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
@@ -67,11 +67,11 @@ public class DbSchool extends BaseDb {
                     result.getString("s.name_en"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("s.activity_status_id"));
-            item.getItemProperty(SystemSettings.year_id).setValue(
+            item.getItemProperty(Settings.year_id).setValue(
                     result.getInt("s.year_id"));
-            item.getItemProperty(SystemSettings.school_type_id).setValue(
+            item.getItemProperty(Settings.school_type_id).setValue(
                     result.getInt("s.school_type_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     result.getString("y.name"));
@@ -91,7 +91,7 @@ public class DbSchool extends BaseDb {
                     result.getString("s.phone"));
             item.getItemProperty(myUi.getMessage(SptMessages.Logo)).setValue(
                     result.getString("s.photo"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("s.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("s.id"));
         }
         return container;
     }
@@ -283,7 +283,7 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.TitleKg), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Logo), String.class, null);
-        container.addContainerProperty(SystemSettings.year_id, Integer.class, 0);
+        container.addContainerProperty(Settings.year_id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
@@ -291,7 +291,7 @@ public class DbSchool extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.TitleKg)).setValue(result.getString("s.name_kg"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("s.code"));
             item.getItemProperty(myUI.getMessage(SptMessages.Logo)).setValue(result.getString("s.photo"));
-            item.getItemProperty(SystemSettings.year_id).setValue(result.getInt("s.year_id"));
+            item.getItemProperty(Settings.year_id).setValue(result.getInt("s.year_id"));
         }
         return container;
     }

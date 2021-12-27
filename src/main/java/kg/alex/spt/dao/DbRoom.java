@@ -8,7 +8,7 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Room;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -41,10 +41,10 @@ public class DbRoom extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Description), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.block_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.floor_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.block_id, Integer.class, 0);
+        container.addContainerProperty(Settings.floor_id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("r.id"));
@@ -58,13 +58,13 @@ public class DbRoom extends BaseDb {
                     result.getString("r.description"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("r.activity_status_id"));
-            item.getItemProperty(SystemSettings.floor_id).setValue(
+            item.getItemProperty(Settings.floor_id).setValue(
                     result.getInt("r.floor_id"));
-            item.getItemProperty(SystemSettings.block_id).setValue(
+            item.getItemProperty(Settings.block_id).setValue(
                     result.getInt("r.block_id"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("r.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("r.id"));
         }
         return container;
     }

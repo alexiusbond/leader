@@ -19,10 +19,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.ui.TransactionsView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -73,7 +72,7 @@ public class TransactionInvoicePDF {
                     dateTable.addCell(new Phrase("Номер документа", normal_font));
                     dateTable.addCell(new Phrase("Дата составления", normal_font));
                     dateTable.addCell(new Phrase(String.format("%07d", tr.getOrder_number()), normal_font));
-                    dateTable.addCell(new Phrase(SystemSettings.dtmf.format(tr.getDate()), normal_font));
+                    dateTable.addCell(new Phrase(Settings.dtmf.format(tr.getDate()), normal_font));
 
                     float[] orderTableWidth = {0.6f, 0.4f};
                     PdfPTable orderTable = new PdfPTable(2);
@@ -94,7 +93,7 @@ public class TransactionInvoicePDF {
 
                     Image logo = null;
                     try {
-                        logo = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + logo_name);
+                        logo = Image.getInstance(Settings.PATH_TO_UPLOADS + logo_name);
                         logo.setAlignment(Image.MIDDLE);
                         logo.scaleAbsolute(70, 70);
                         cell = new PdfPCell(logo);
@@ -131,9 +130,9 @@ public class TransactionInvoicePDF {
                     Paragraph sumPar = new Paragraph();
                     sumPar.add(new Chunk("Сумма цифрами: ", bold_font));
                     if (tr.getCurrency_id() == 2) {
-                        sumPar.add(new Chunk(SystemSettings.dFormat.format(tr.getAmount()) + " USD", underlined_font));
+                        sumPar.add(new Chunk(Settings.dFormat.format(tr.getAmount()) + " USD", underlined_font));
                     } else {
-                        sumPar.add(new Chunk(SystemSettings.dFormat.format(tr.getAmount()) + " KGS", underlined_font));
+                        sumPar.add(new Chunk(Settings.dFormat.format(tr.getAmount()) + " KGS", underlined_font));
                     }
 
                     cell = new PdfPCell(sumPar);

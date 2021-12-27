@@ -11,7 +11,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.InventoryLiquidation;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.InventoryLiquidationView;
@@ -49,8 +49,8 @@ public class DbInventoryLiquidation extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbInventoryLiquidation, true));
+            item.getItemProperty(Settings.button).setValue(
+                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbInventoryLiquidation, true));
             ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.InventoryItem),
                     null, true, true, true);
             try {
@@ -71,13 +71,13 @@ public class DbInventoryLiquidation extends BaseDb {
                     result.getInt("t.quantity"), myUi.getMessage(SptMessages.Quantity),
                     new IntegerRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue),
                             1, result.getInt("r.remain") + result.getInt("t.quantity")),
-                    new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter(), true);
+                    new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter(), true);
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
             item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
             item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getInt("r.remain"));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             totalQuantity += result.getInt("t.quantity");
         }
         v.setInventoriesFooter(totalQuantity);

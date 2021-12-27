@@ -10,7 +10,6 @@ import com.vaadin.ui.*;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.pdf.CallsPdf;
-import kg.alex.spt.pdf.ClassListPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -22,7 +21,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.util.Set;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.dao.DbStudentCalls;
@@ -94,14 +93,14 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     dataTable.setColumnCollapsingAllowed(true);
-                    dataTable.setColumnCollapsed(SystemSettings.button, true);
+                    dataTable.setColumnCollapsed(Settings.button, true);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), true);
                     excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.excludeCollapsedColumns();
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.Calls));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
-                    dataTable.setColumnCollapsed(SystemSettings.button, false);
+                    dataTable.setColumnCollapsed(Settings.button, false);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), false);
                     dataTable.setColumnCollapsingAllowed(false);
                 }
@@ -236,14 +235,14 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             total = 0;
             dataTable.setContainerDataSource(dbst.execSQLCalls(myUI,
                     myUI.getUser().getCurrent_year().getId(),
-                    SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
+                    Settings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
             dbst.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
-                + SystemSettings.dFormat.format(total));
+                + Settings.dFormat.format(total));
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 350);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.PlanDebtDate), 85);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastPayment), 150);
@@ -287,7 +286,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         container.addContainerProperty(myUI.getMessage(SptMessages.LastCall), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastPayment), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
-        container.addContainerProperty(SystemSettings.button, Button.class, null);
+        container.addContainerProperty(Settings.button, Button.class, null);
         return container;
     }
 }

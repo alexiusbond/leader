@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
@@ -71,8 +71,8 @@ public class DbAccTransactions extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    pav.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbAcc_transactions));
+            item.getItemProperty(Settings.button).setValue(
+                    pav.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbAcc_transactions));
             ComboBoxMax cb = pav.createCombobox(0, myUi.getMessage(SptMessages.Category), null, true, true);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
@@ -86,28 +86,28 @@ public class DbAccTransactions extends BaseDb {
             cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(cb);
-            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
             cb = pav.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(SptMessages.Currency),
-                    SystemSettings.dbAcc_currency, true, false);
+                    Settings.dbAcc_currency, true, false);
             cb.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Currency)).setValue(cb);
-            item.getItemProperty(SystemSettings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
+            item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = pav.createTextfieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(), true);
+                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = pav.createTextfieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(),
-                    currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeCurrencyRate));
+                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(),
+                    currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(pav.createTextfield(
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
                 total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
             } else {
@@ -151,7 +151,7 @@ public class DbAccTransactions extends BaseDb {
             Item item = container.addItem(id);
             boolean isDisabled = result.getBoolean("isDisabled");
             if (!isDisabled) {
-                isDisabled = !(currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeOldTransactions) || result.getBoolean("isNotOld"));
+                isDisabled = !(currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions) || result.getBoolean("isNotOld"));
             }
             String tableName = myUI.getMessage(SptMessages.Outcomes);
             HorizontalLayout hl = new HorizontalLayout();
@@ -182,7 +182,7 @@ public class DbAccTransactions extends BaseDb {
                         logger.catching(e);
                     }
                 } else {
-                    cb.setContainerDataSource(SystemSettings.copyContainer(employeesContainer));
+                    cb.setContainerDataSource(Settings.copyContainer(employeesContainer));
                 }
                 cb.setValue(result.getInt("t.from_to_employee_id"));
                 cb.addValueChangeListener(dw);
@@ -190,11 +190,11 @@ public class DbAccTransactions extends BaseDb {
                 cb.setEnabled(!isDisabled);
                 item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(cb);
             }
-            item.getItemProperty(SystemSettings.from_employee_id).setValue(result.getString("fullname"));
-            item.getItemProperty(SystemSettings.order_number).setValue(result.getInt("t.order_number"));
+            item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
+            item.getItemProperty(Settings.order_number).setValue(result.getInt("t.order_number"));
             hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.Print), id,
                     myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
-            item.getItemProperty(SystemSettings.button).setValue(hl);
+            item.getItemProperty(Settings.button).setValue(hl);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(result.getTimestamp("t.date_time"), myUI.getMessage(SptMessages.Date), id, isDisabled, tableName));
             ComboBoxMax cb = dw.createCombobox(0, myUI.getMessage(SptMessages.Currency), id, null, isDisabled, true, false);
@@ -202,7 +202,7 @@ public class DbAccTransactions extends BaseDb {
                 try {
                     DbDefinition dbd = new DbDefinition();
                     dbd.connect();
-                    currenciesContainer = dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency, true);
+                    currenciesContainer = dbd.exec_for_select(myUI, Settings.dbAcc_currency, true);
                     cb.setContainerDataSource(currenciesContainer);
                     dbd.close();
                 } catch (Exception e) {
@@ -210,20 +210,20 @@ public class DbAccTransactions extends BaseDb {
                     logger.catching(e);
                 }
             } else {
-                cb.setContainerDataSource(SystemSettings.copyContainer(currenciesContainer));
+                cb.setContainerDataSource(Settings.copyContainer(currenciesContainer));
             }
             cb.setValue(result.getInt("t.acc_currency_id"));
             cb.addValueChangeListener(dw);
             item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(dw.createTextfieldDouble(result.getDouble("t.amount"),
                     myUI.getMessage(SptMessages.Amount), id, false, isDisabled, tableName));
-            item.getItemProperty(SystemSettings.old_amount).setValue(result.getDouble("t.amount"));
-            item.getItemProperty(SystemSettings.old_rate).setValue(result.getDouble("t.currency_rate"));
-            item.getItemProperty(SystemSettings.old_currency).setValue(result.getInt("t.acc_currency_id"));
-            item.getItemProperty(SystemSettings.old_date).setValue(result.getDate("t.date_time"));
+            item.getItemProperty(Settings.old_amount).setValue(result.getDouble("t.amount"));
+            item.getItemProperty(Settings.old_rate).setValue(result.getDouble("t.currency_rate"));
+            item.getItemProperty(Settings.old_currency).setValue(result.getInt("t.acc_currency_id"));
+            item.getItemProperty(Settings.old_date).setValue(result.getDate("t.date_time"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(dw.createTextfieldNote(result.getString("t.note"),
                     myUI.getMessage(SptMessages.Note), id, isDisabled));
-            if (!isDisabled && !currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeCurrencyRate)) {
+            if (!isDisabled && !currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                 isDisabled = true;
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(dw.createTextfieldDouble(result.getDouble("currency_rate"),
@@ -388,13 +388,13 @@ public class DbAccTransactions extends BaseDb {
                                   FilterTreeTable categoriesTable, Calendar from, Calendar till, FormattedTreeTable t)
             throws SQLException {
 
-        Set<Integer> selectedIds = SystemSettings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
+        Set<Integer> selectedIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
         String sql = "SELECT cat.id, cat.parent_id, CONCAT(ifnull(concat(cat.parent_code,'.',cat.code), cat.code), ' - ', cat.name) AS name, "
                 + "sum(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt "
                 + "FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
-                + SystemSettings.convertCollectionToStr(selectedIds)
+                + Settings.convertCollectionToStr(selectedIds)
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
                 + "AND tr.school_id = ? "
                 + "GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time) ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
@@ -409,14 +409,14 @@ public class DbAccTransactions extends BaseDb {
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         while (current.before(till)) {
-            container.addContainerProperty(SystemSettings.ymdf.format(current.getTime()), Double.class, 0.0);
+            container.addContainerProperty(Settings.ymdf.format(current.getTime()), Double.class, 0.0);
             current.add(Calendar.MONTH, 1);
         }
         container.addContainerProperty(myUI.getMessage(SptMessages.Total), Double.class, 0.0);
         t.setContainerDataSource(container);
         current.setTime(from.getTime());
         while (current.before(till)) {
-            t.setColumnFooter(SystemSettings.ymdf.format(current.getTime()), "0.00");
+            t.setColumnFooter(Settings.ymdf.format(current.getTime()), "0.00");
             current.add(Calendar.MONTH, 1);
         }
         t.setColumnFooter(myUI.getMessage(SptMessages.Total), "0.00");
@@ -424,17 +424,15 @@ public class DbAccTransactions extends BaseDb {
         while (categories_iter.hasNext()) {
             Object catNext = categories_iter.next();
             if (selectedIds.contains(catNext)) {
-                Item item = container.addItem((Integer) catNext);
+                Item item = container.addItem(catNext);
                 item.getItemProperty(myUI.getMessage(SptMessages.Title))
                         .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
-                Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource())
-                        .getParent(catNext);
+                Object parent = (categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
                     container.setParent(catNext, parent);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource())
-                        .getChildren(catNext) != null) {
+                if ((categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
                     container.setChildrenAllowed(catNext, true);
                     t.setCollapsed(catNext, false);
                 }
@@ -442,13 +440,13 @@ public class DbAccTransactions extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
-            String month = SystemSettings.ymdf.format(result.getDate("dt"));
+            String month = Settings.ymdf.format(result.getDate("dt"));
             item.getItemProperty(month).setValue(result.getDouble("amount"));
             try {
-                t.setColumnFooter(myUI.getMessage(SptMessages.Total), SystemSettings.dFormat.format(
-                        SystemSettings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
+                t.setColumnFooter(myUI.getMessage(SptMessages.Total), Settings.dFormat.format(
+                        Settings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
-                t.setColumnFooter(month, SystemSettings.dFormat.format(SystemSettings.dFormat.parse(t.getColumnFooter(month)).doubleValue()
+                t.setColumnFooter(month, Settings.dFormat.format(Settings.dFormat.parse(t.getColumnFooter(month)).doubleValue()
                         + result.getDouble("amount")));
             } catch (Exception e) {
                 logger.error(e);
@@ -474,7 +472,7 @@ public class DbAccTransactions extends BaseDb {
             throws SQLException {
 
 
-        Set<Integer> selectedCategoryIds = SystemSettings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
+        Set<Integer> selectedCategoryIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
         Set<Integer> selectedSchoolIds = new HashSet<>();
         selectedSchoolIds.addAll((Set<Integer>) schoolsTable.getValue());
         String sql = "SELECT cat.id, cat.parent_id, CONCAT(ifnull(concat(cat.parent_code,'.',cat.code), cat.code), ' - ', cat.name) AS name, "
@@ -482,10 +480,10 @@ public class DbAccTransactions extends BaseDb {
                 + "FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
-                + SystemSettings.convertCollectionToStr(selectedCategoryIds)
+                + Settings.convertCollectionToStr(selectedCategoryIds)
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
                 + "AND tr.school_id IN ("
-                + SystemSettings.convertCollectionToStr(selectedSchoolIds)
+                + Settings.convertCollectionToStr(selectedSchoolIds)
                 + ") GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
@@ -504,7 +502,7 @@ public class DbAccTransactions extends BaseDb {
                 Object nextSchool = schools_iter.next();
                 if (selectedSchools.contains((Integer) nextSchool)) {
                     container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
-                            + SystemSettings.ymdf.format(current.getTime()), Double.class, 0.0);
+                            + Settings.ymdf.format(current.getTime()), Double.class, 0.0);
                 }
             }
             current.add(Calendar.MONTH, 1);
@@ -526,7 +524,7 @@ public class DbAccTransactions extends BaseDb {
             while (schools_iter.hasNext()) {
                 Object nextSchool = schools_iter.next();
                 t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
-                        + SystemSettings.ymdf.format(current.getTime()), "0.00");
+                        + Settings.ymdf.format(current.getTime()), "0.00");
                 t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - " + myUI.getMessage(SptMessages.Total), "0.00");
             }
             current.add(Calendar.MONTH, 1);
@@ -552,20 +550,20 @@ public class DbAccTransactions extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
-            Object month = SystemSettings.ymdf.format(result.getDate("dt"));
+            Object month = Settings.ymdf.format(result.getDate("dt"));
             Object school = schoolsTable.getContainerProperty(result.getInt("tr.school_id"), myUI.getMessage(SptMessages.Title)).getValue();
             item.getItemProperty(school + " - " + month).setValue(result.getDouble("amount"));
             try {
                 t.setColumnFooter(myUI.getMessage(SptMessages.Total),
-                        SystemSettings.dFormat.format(SystemSettings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
+                        Settings.dFormat.format(Settings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(school + " - " + myUI.getMessage(SptMessages.Total),
-                        SystemSettings.dFormat.format(SystemSettings.dFormat.parse(t.getColumnFooter(school
+                        Settings.dFormat.format(Settings.dFormat.parse(t.getColumnFooter(school
                                 + " - " + myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(school + " - " + month,
-                        SystemSettings.dFormat.format(
-                                SystemSettings.dFormat.parse(t.getColumnFooter(school + " - " + month)).doubleValue()
+                        Settings.dFormat.format(
+                                Settings.dFormat.parse(t.getColumnFooter(school + " - " + month)).doubleValue()
                                         + result.getDouble("amount")));
             } catch (Exception e) {
                 logger.error(e);
@@ -620,10 +618,10 @@ public class DbAccTransactions extends BaseDb {
             acc.setTotal_outcome(result.getDouble("expTtl"));
             acc.setPrevious_balance(result.getDouble("prev_balance"));
             if (result.getDate("max_inc") != null) {
-                acc.setLast_income_date(SystemSettings.df.format(result.getDate("max_inc")));
+                acc.setLast_income_date(Settings.df.format(result.getDate("max_inc")));
             }
             if (result.getDate("max_exp") != null) {
-                acc.setLast_outcome_date(SystemSettings.df.format(result.getDate("max_exp")));
+                acc.setLast_outcome_date(Settings.df.format(result.getDate("max_exp")));
             }
         }
         return acc;
@@ -663,7 +661,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.LastIncomeDate), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExpensesTotal), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastExpenseDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(c.getTime()) + ")", Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime()) + ")", Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Transactions), Double.class, 0.0);
         double ttlInc = 0;
         double ttlExp = 0;
@@ -680,15 +678,15 @@ public class DbAccTransactions extends BaseDb {
             ttlExp += result.getDouble("expTtl");
             if (result.getDate("max_inc") != null) {
                 item.getItemProperty(myUI.getMessage(SptMessages.LastIncomeDate)).setValue(
-                        SystemSettings.df.format(result.getDate("max_inc")));
+                        Settings.df.format(result.getDate("max_inc")));
             }
             if (result.getDate("max_exp") != null) {
                 item.getItemProperty(myUI.getMessage(SptMessages.LastExpenseDate)).setValue(
-                        SystemSettings.df.format(result.getDate("max_exp")));
+                        Settings.df.format(result.getDate("max_exp")));
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Transactions)).setValue(
                     result.getDouble("incTtl") + result.getDouble("prev_balance") - result.getDouble("expTtl"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " (" + SystemSettings.df.format(c.getTime()) + ")").setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime()) + ")").setValue(
                     result.getDouble("prev_balance"));
             ttlPrev += result.getDouble("prev_balance");
         }
@@ -697,13 +695,13 @@ public class DbAccTransactions extends BaseDb {
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.School),
                 myUI.getMessage(SptMessages.Total));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.IncomesTotal),
-                SystemSettings.dFormat.format(ttlInc));
+                Settings.dFormat.format(ttlInc));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.ExpensesTotal),
-                SystemSettings.dFormat.format(ttlExp));
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Balance)+ " (" + SystemSettings.df.format(c.getTime()) + ")",
-                SystemSettings.dFormat.format(ttlPrev));
+                Settings.dFormat.format(ttlExp));
+        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime()) + ")",
+                Settings.dFormat.format(ttlPrev));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Transactions),
-                SystemSettings.dFormat.format(ttlInc - ttlExp));
+                Settings.dFormat.format(ttlInc - ttlExp));
     }
 
     public double exec_salary_balance(int school_id, int acc_category_id, Date till) throws SQLException {
@@ -777,7 +775,7 @@ public class DbAccTransactions extends BaseDb {
         double balance = exec_salary_balance(school_id, acc_category_id, from), totalPayouts = 0.0, totalAccruals = 0.0;
         while (result.next()) {
             Item item = container.addItem(++i);
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(result.getDate("t.creation_date")));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.rate"));
@@ -791,24 +789,24 @@ public class DbAccTransactions extends BaseDb {
                 totalAccruals += result.getDouble("t.amount");
             }
             if (balance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((SystemSettings.dFormat.format(balance * -1))
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(balance * -1))
                         + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(SystemSettings.dFormat.format(balance)
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(balance)
                         + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
                     item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), SystemSettings.dFormat.format(totalAccruals));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), SystemSettings.dFormat.format(totalPayouts));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), Settings.dFormat.format(totalAccruals));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), Settings.dFormat.format(totalPayouts));
         t.setContainerDataSource(container);
     }
 
     public void exec_account_remains(MyVaadinUI myUI, FilterTreeTable categoriesTable, int currency_id, int school_id,
                                      FormattedTreeTable t) throws SQLException {
 
-        Set<Integer> selectedCategoryIds = SystemSettings.getChild_ids(
+        Set<Integer> selectedCategoryIds = Settings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
         String sql = " SELECT cat.id, CONCAT(IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code), ' - ', cat.name) AS name, "
@@ -820,7 +818,7 @@ public class DbAccTransactions extends BaseDb {
                 + "LEFT JOIN view_accurals AS acr ON acr.acc_category_id = cat.id AND acr.school_id = ? "
                 + "LEFT JOIN view_total_transactions AS tr ON tr.acc_category_id = cat.id AND tr.school_id = ? "
                 + "LEFT JOIN acc_transfers AS aacr ON aacr.invoice_id = acr.invoice_id AND aacr.acc_category_id = cat.id "
-                + "WHERE cat.id IN (" + SystemSettings.convertCollectionToStr(selectedCategoryIds) + ")";
+                + "WHERE cat.id IN (" + Settings.convertCollectionToStr(selectedCategoryIds) + ")";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, school_id);
@@ -907,10 +905,10 @@ public class DbAccTransactions extends BaseDb {
                 }
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Remain), SystemSettings.dFormat.format(total_remains));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Salary), SystemSettings.dFormat.format(total_salaries));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Remain), Settings.dFormat.format(total_remains));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Salary), Settings.dFormat.format(total_salaries));
         if (total_salaries != 0.0) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.Ratio), SystemSettings.dFormat.format(total_remains / total_salaries));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Ratio), Settings.dFormat.format(total_remains / total_salaries));
         }
     }
 
@@ -934,7 +932,7 @@ public class DbAccTransactions extends BaseDb {
                 + "left join acc_currency as acu on acu.id = t.acc_currency_id  "
                 + "left join employee as e on e.id = t.employee_id "
                 + "where t.school_id = ? and date(t.date_time) >= ? and date(t.date_time) <=? "
-                + "and ac.acc_type_id = ? and t.acc_category_id in (" + SystemSettings.convertCollectionToStr(selectedIds) + ") "
+                + "and ac.acc_type_id = ? and t.acc_category_id in (" + Settings.convertCollectionToStr(selectedIds) + ") "
                 + "order by t.date_time asc;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
@@ -952,7 +950,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format(
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(
                     result.getDate("date(t.date_time)")));
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("category"));
@@ -1052,12 +1050,12 @@ public class DbAccTransactions extends BaseDb {
                     result.getDouble("income") - result.getDouble("outcome"));
             totalTransactions += (result.getDouble("income") - result.getDouble("outcome"));
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan), SystemSettings.dFormat.format(totalInst));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payments), SystemSettings.dFormat.format(totalPayments));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), SystemSettings.dFormat.format(totalDebt));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Incomes), SystemSettings.dFormat.format(totalIncomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Outcomes), SystemSettings.dFormat.format(totalOutcomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Difference), SystemSettings.dFormat.format(totalTransactions));
+        t.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan), Settings.dFormat.format(totalInst));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Payments), Settings.dFormat.format(totalPayments));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Incomes), Settings.dFormat.format(totalIncomes));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Outcomes), Settings.dFormat.format(totalOutcomes));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Difference), Settings.dFormat.format(totalTransactions));
     }
 
     public double getBalances(int school_id, Date date, boolean isDateIncluded) throws SQLException {

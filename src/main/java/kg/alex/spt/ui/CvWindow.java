@@ -8,7 +8,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeeExtraInfo;
@@ -16,6 +16,8 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import java.io.File;
 import java.util.Calendar;
@@ -24,6 +26,7 @@ import java.util.Date;
 public class CvWindow extends Window {
     static final Logger logger = LogManager.getLogger(CvWindow.class);
     private MyVaadinUI myUI;
+    public Subject currentUser = SecurityUtils.getSubject();
 
     public CvWindow(MyVaadinUI myUI, Employee employee, EmployeeExtraInfo employeeExtraInfo, String year) {
         this.myUI = myUI;
@@ -47,62 +50,110 @@ public class CvWindow extends Window {
         gl.setColumnExpandRatio(3, 1.5f);
         mainLay.addComponent(gl);
 
-        GridLayout rightGl = new GridLayout(2, 20);
+        int rowNum = 0;
+        GridLayout rightGl = new GridLayout(2, 17);
         rightGl.setColumnExpandRatio(0, 2);
         rightGl.setColumnExpandRatio(1, 1);
         rightGl.setWidth("100%");
         gl.addComponent(rightGl, 0, 0, 0, 4);
 
         rightGl.addComponent(createLabel(employee.getSurname() + " " + employee.getName(),
-                new String[]{ValoTheme.LABEL_HUGE, ValoTheme.LABEL_BOLD}), 0, 0, 1, 0);
+                new String[]{ValoTheme.LABEL_HUGE, ValoTheme.LABEL_BOLD}), 0, rowNum, 1, rowNum);
 
         java.util.Calendar now = Calendar.getInstance();
         now.setTime(new Date());
         java.util.Calendar bd = Calendar.getInstance();
         bd.setTime(employee.getBirth_date());
         Label l = createLabel((now.get(Calendar.YEAR) - bd.get(Calendar.YEAR))
-                        + " " + SystemSettings.generateYearPostfix(now.get(Calendar.YEAR) - bd.get(Calendar.YEAR)),
+                        + " " + Settings.generateYearPostfix(now.get(Calendar.YEAR) - bd.get(Calendar.YEAR)),
                 new String[]{ValoTheme.LABEL_SUCCESS});
-        rightGl.addComponent(l, 1, 1);
+        rowNum++;
+        rightGl.addComponent(l, 1, rowNum);
         rightGl.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
+
+        rowNum++;
+        rightGl.addComponent(createLabel("<br>", null), 0, rowNum, 1, rowNum);
 
         Embedded photoEmb = new Embedded();
         if (employee.getPhoto() != null) {
-            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR
+            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR
                     + employee.getPhoto())));
         } else {
-            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
+            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
         }
         photoEmb.setImmediate(true);
         photoEmb.setHeight("200px");
-        rightGl.addComponent(photoEmb, 0, 2, 1, 2);
+        rowNum++;
+        rightGl.addComponent(photoEmb, 0, rowNum, 1, rowNum);
+        rightGl.setComponentAlignment(photoEmb, Alignment.MIDDLE_CENTER);
 
+        rowNum++;
+        rightGl.addComponent(createLabel("<br>", null), 0, rowNum, 1, rowNum);
+
+        rowNum++;
+        rightGl.addComponent(createLabel("<b>" + myUI.getMessage(SptMessages.ModificationDate) + ": </b>"
+                + Settings.df.format(new Date()), null), 0, rowNum, 1, rowNum);
+
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setWidth("100%");
+        rowNum++;
+        rightGl.addComponent(progressBar, 0, rowNum, 1, rowNum);
+        try {
+            DbEmployee dbCon = new DbEmployee();
+            dbCon.connect();
+            progressBar.setValue(dbCon.execSQL_completeness(employee.getId()));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            ex.printStackTrace();
+        }
+        progressBar.setDescription(progressBar.getValue() * 100 + "%");
+
+        rowNum++;
+        rightGl.addComponent(createLabel("<hr>", null), 0, rowNum, 1, rowNum);
+
+        rowNum++;
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.WorkingStatus) + ": </b>" + employeeExtraInfo.getWorkingStatus(), null),
-                0, 3, 1, 3);
+                0, rowNum, 1, rowNum);
+        rowNum++;
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.MainPosition) + ": </b>" + employeeExtraInfo.getMainPosition(), null),
-                0, 4, 1, 4);
+                0, rowNum, 1, rowNum);
+        rowNum++;
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.ExtraPositions) + ": </b>" + employeeExtraInfo.getExtraPositions(), null),
-                0, 5, 1, 5);
+                0, rowNum, 1, rowNum);
+        rowNum++;
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.MainBranch) + ": </b>" + employeeExtraInfo.getMainBranch(), null),
-                0, 6, 1, 6);
+                0, rowNum, 1, rowNum);
+        rowNum++;
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.ExtraBranches) + ": </b>" + employeeExtraInfo.getExtraBranches(), null),
-                0, 7, 1, 7);
+                0, rowNum, 1, rowNum);
+        rowNum++;
         rightGl.addComponent(createLabel("<b>" + myUI.getMessage(SptMessages.TotalHours) + year + ": </b>"
                         + employeeExtraInfo.getHours() + ", <b>" + myUI.getMessage(SptMessages.ExtraHours) + ": </b>"
                         + employeeExtraInfo.getExtraHours(), null),
-                0, 8, 1, 8);
-        rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.CanBeAdvisor) + ": </b>" + employeeExtraInfo.getCanBeAdvisor(), null),
-                0, 9, 1, 9);
+                0, rowNum, 1, rowNum);
 
+        if (currentUser.isPermitted(Settings.cnCV_Window + ":" + Settings.contract_info)) {
+            rowNum++;
+            rightGl.addComponent(createLabel("<b>" +
+                            myUI.getMessage(SptMessages.CanBeAdvisor) + ": </b>" + employeeExtraInfo.getCanBeAdvisor(), null),
+                    0, rowNum, 1, rowNum);
+        }
+        if (currentUser.isPermitted(Settings.cnCV_Window + ":" + Settings.contract_info)) {
+            rowNum++;
+            rightGl.addComponent(createLabel("<b>" +
+                            myUI.getMessage(SptMessages.ContractType) + ": </b>" + employeeExtraInfo.getSalaryCategory(), null),
+                    0, rowNum, 1, rowNum);
+        }
+        rowNum++;
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.Languages) + ": </b>" + employeeExtraInfo.getLanguages(), null),
-                0, 10, 1, 10);
+                0, rowNum, 1, rowNum);
 
         l = createLabel(myUI.getMessage(SptMessages.MainInfo),
                 new String[]{ValoTheme.LABEL_BOLD, ValoTheme.LABEL_LARGE});
@@ -128,7 +179,7 @@ public class CvWindow extends Window {
         addInfoItem(container, myUI.getMessage(SptMessages.MiddleName), employee.getMiddle_name());
         addInfoItem(container, myUI.getMessage(SptMessages.Gender), employeeExtraInfo.getGender());
         addInfoItem(container, myUI.getMessage(SptMessages.DateAndPlaceOfBirth),
-                SystemSettings.df.format(employee.getBirth_date()) + (employeeExtraInfo.getBirth_place() == null ?
+                Settings.df.format(employee.getBirth_date()) + (employeeExtraInfo.getBirth_place() == null ?
                         "" : ", " + employeeExtraInfo.getBirth_place()));
         addInfoItem(container, myUI.getMessage(SptMessages.Nationality), employeeExtraInfo.getNationality());
         addInfoItem(container, myUI.getMessage(SptMessages.Citizenship), employeeExtraInfo.getCitizenship());
@@ -184,6 +235,7 @@ public class CvWindow extends Window {
         }
         educationTable.setPageLength(educationTable.size());
         gl.addComponent(educationTable, 1, 3, 3, 3);
+        gl.setRowExpandRatio(3, 1);
 
         l = createLabel(myUI.getMessage(SptMessages.WorkPlaces),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});

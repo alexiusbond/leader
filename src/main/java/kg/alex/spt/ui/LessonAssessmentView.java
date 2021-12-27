@@ -23,7 +23,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbEmployeeLessons;
@@ -66,7 +66,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
             employeesTable.setContainerDataSource(
-                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
+                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
             dbe.close();
         } catch (Exception e) {
             logger.error(e);
@@ -98,7 +98,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             classNumberSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.classTable, true));
+                    dbDef.exec_for_select(myUI, Settings.classTable, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -142,7 +142,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                     Iterator iter = lessonsTable.getItemIds().iterator();
                     while (iter.hasNext()) {
                         Object next = iter.next();
-                        CheckBox cb = (CheckBox) lessonsTable.getContainerProperty(next, SystemSettings.button).getValue();
+                        CheckBox cb = (CheckBox) lessonsTable.getContainerProperty(next, Settings.button).getValue();
                         if (cb.getValue()) {
                             EmployeeLessons el = new EmployeeLessons();
                             el.setBranch_id((Integer) cb.getData());

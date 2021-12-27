@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudent;
@@ -78,7 +78,7 @@ public class StatusesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -130,8 +130,8 @@ public class StatusesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            statusMS.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
-            classTable.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.classTable, true));
+            statusMS.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbEducationStatus, true));
+            classTable.setContainerDataSource(dbd.exec_for_select(myUI, Settings.classTable, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -193,7 +193,7 @@ public class StatusesReport implements Button.ClickListener,
         leftGrid.addComponent(selectAllClassesBtn, 0, 2, 1, 2);
         leftGrid.addComponent(deselectAllClassesBtn, 2, 2, 3, 2);
         leftGrid.addComponent(classTable, 0, 3, 3, 3);
-        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
+        if (currentUser.hasRole(Settings.rnAdmin)) {
             leftGrid.addComponent(selectAllSchoolsBtn, 0, 4, 1, 4);
             leftGrid.addComponent(deselectAllSchoolsBtn, 2, 4, 3, 4);
             leftGrid.addComponent(schoolsTable, 0, 5, 3, 5);

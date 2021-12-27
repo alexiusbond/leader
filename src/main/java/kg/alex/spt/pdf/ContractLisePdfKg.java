@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbRelative;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
@@ -103,9 +103,9 @@ public class ContractLisePdfKg {
                     Tdate.addCell(new Phrase(student.getScl_city() + " ш.", ordBoldFont));
                     Tdate.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     if (aDate.before(cal.getTime())) {
-                        Tdate.addCell(new Phrase(SystemSettings.df.format(cal.getTime()), ordBoldFont));
+                        Tdate.addCell(new Phrase(Settings.df.format(cal.getTime()), ordBoldFont));
                     } else {
-                        Tdate.addCell(new Phrase(SystemSettings.df.format(aDate), ordBoldFont));
+                        Tdate.addCell(new Phrase(Settings.df.format(aDate), ordBoldFont));
                     }
                     document.add(Tdate);
                     document.add(new Paragraph(10, " "));
@@ -840,7 +840,7 @@ public class ContractLisePdfKg {
 
                         }
                         if ((Integer) relativeCont.getContainerProperty(obj,
-                                SystemSettings.is_main).getValue() == 1) {
+                                Settings.is_main).getValue() == 1) {
                             text18.add(new Phrase("Тел номери: ", ordFont));
                             text18.add(new Phrase(relativeCont.getContainerProperty(obj,
                                     myUI.getMessage(SptMessages.Phone)).getValue().toString(), ordFont));
@@ -891,7 +891,7 @@ public class ContractLisePdfKg {
                     text15.add(new Phrase(df.format(new Date()), ordBoldFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Төлөмдүн көлөмү: ", ordFont));
-                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
+                    text15.add(new Phrase((Settings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
                     text15.add(new Phrase(" АКШ доллары.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     if (student.getCtr_debt() >= 0) {
@@ -899,7 +899,7 @@ public class ContractLisePdfKg {
                     } else {
                         text15.add(new Phrase("Мурунку жылдагы ашыкча төлөө: ", ordFont));
                     }
-                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
+                    text15.add(new Phrase((Settings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
                     text15.add(new Phrase(" АКШ доллары.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Жеңилдик: ", ordFont));
@@ -914,11 +914,11 @@ public class ContractLisePdfKg {
                     }
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Алдын ала төлөм: ", ordFont));
-                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                    text15.add(new Phrase(Settings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
                     text15.add(new Phrase(" АКШ доллары.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Калган төлөм: ", ordFont));
-                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                    text15.add(new Phrase(Settings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
                     text15.add(new Phrase(" АКШ доллары.", ordFont));
                     document.add(text15);
                     document.add(new Paragraph(10, " "));
@@ -955,7 +955,7 @@ public class ContractLisePdfKg {
                     }
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("ЖАЛПЫ:", ordBoldFont));
-                    TContract.addCell(new Phrase(SystemSettings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
+                    TContract.addCell(new Phrase(Settings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("", ordFont));
 

@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -85,11 +85,11 @@ public class ClassCallsPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.CallsReport) + ": "
-                            + year + " (" + SystemSettings.df.format(fromDate) + " - " + SystemSettings.df.format(tillDate) + ")", fontBold);
+                            + year + " (" + Settings.df.format(fromDate) + " - " + Settings.df.format(tillDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);

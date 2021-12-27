@@ -8,7 +8,7 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 
 import java.sql.PreparedStatement;
@@ -30,12 +30,12 @@ public class DbSalaryCategories extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
-            item.getItemProperty(SystemSettings.acc_category_id).setValue(
+            item.getItemProperty(Settings.acc_category_id).setValue(
                     result.getInt("acc_category_id"));
         }
         return container;

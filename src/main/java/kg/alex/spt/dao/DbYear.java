@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Year;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -31,7 +31,7 @@ public class DbYear extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.PeriodKg), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.StartDate), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.EndDate), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("y.id"));
@@ -42,10 +42,10 @@ public class DbYear extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.PeriodKg)).setValue(
                     result.getString("y.period_kg"));
             item.getItemProperty(myUi.getMessage(SptMessages.StartDate)).setValue(
-                    SystemSettings.df.format(result.getDate("y.start_date")));
+                    Settings.df.format(result.getDate("y.start_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.EndDate)).setValue(
-                    SystemSettings.df.format(result.getDate("y.end_date")));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("y.id"));
+                    Settings.df.format(result.getDate("y.end_date")));
+            item.getItemProperty(Settings.id).setValue(result.getInt("y.id"));
         }
         return container;
     }

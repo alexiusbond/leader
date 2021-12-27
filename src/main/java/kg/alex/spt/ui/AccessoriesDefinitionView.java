@@ -26,7 +26,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccessories;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.domain.Accessories;
@@ -172,9 +172,9 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+                    dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             categorySelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbAccessoriesCategory, true));
+                    dbDef.exec_for_select(myUI, Settings.dbAccessoriesCategory, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -232,7 +232,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
                         try {
                             status = dbAcc.exec_update(
                                     getAccessories((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            SystemSettings.id).getValue()));
+                                            Settings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -287,13 +287,13 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnAccessoriesDefinitionView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(Settings.cnAccessoriesDefinitionView + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnAccessoriesDefinitionView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(Settings.cnAccessoriesDefinitionView + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnAccessoriesDefinitionView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(Settings.cnAccessoriesDefinitionView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -308,9 +308,9 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
         statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).getValue());
+                Settings.status_id).getValue());
         categorySelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.category_id).getValue());
+                Settings.category_id).getValue());
     }
 
     private void clearFields() {
@@ -323,9 +323,9 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).setValue(statusSelect.getValue());
+                Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.category_id).setValue(categorySelect.getValue());
+                Settings.category_id).setValue(categorySelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
@@ -347,11 +347,11 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
                 categorySelect.getContainerProperty(categorySelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(SystemSettings.status_id).setValue(
+        item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
-        item.getItemProperty(SystemSettings.category_id).setValue(
+        item.getItemProperty(Settings.category_id).setValue(
                 categorySelect.getValue());
-        item.getItemProperty(SystemSettings.id).setValue(id);
+        item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -370,7 +370,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), SystemSettings.dbAccessories);
+                    Settings.id).getValue(), Settings.dbAccessories);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

@@ -6,7 +6,7 @@
 package kg.alex.spt.utils;
 
 import com.vaadin.data.Property;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import org.tepi.filtertable.FilterTable;
 
 /**
@@ -27,7 +27,7 @@ public class FormattedFilterTable extends FilterTable {
 
             if (property.getValue() != null) // Format a decimal value for a specific locale
             {
-                return SystemSettings.dFormat.format((Double) property.getValue());
+                return Settings.dFormat.format((Double) property.getValue());
             }
         }
         return super.formatPropertyValue(rowId, colId, property);

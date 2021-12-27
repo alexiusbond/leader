@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbSchool;
@@ -151,7 +151,7 @@ public class MonthReport implements Button.ClickListener,
         outcomeCategoriesTable.setMultiSelect(true);
         outcomeCategoriesTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         outcomeCategoriesTable.addValueChangeListener(this);
-        if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
+        if (!currentUser.hasRole(Settings.rnAdmin)) {
             try {
                 DbAccCategory dbac = new DbAccCategory();
                 dbac.connect();
@@ -194,7 +194,7 @@ public class MonthReport implements Button.ClickListener,
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         fromDateDF.setWidth("100%");
         fromDateDF.setResolution(Resolution.MONTH);
-        fromDateDF.setDateFormat(SystemSettings.yearMonthPattern);
+        fromDateDF.setDateFormat(Settings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         fromDateDF.addValueChangeListener(this);
 
@@ -204,7 +204,7 @@ public class MonthReport implements Button.ClickListener,
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tillDateDF.setWidth("100%");
         tillDateDF.setResolution(Resolution.MONTH);
-        tillDateDF.setDateFormat(SystemSettings.yearMonthPattern);
+        tillDateDF.setDateFormat(Settings.yearMonthPattern);
         tillDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         tillDateDF.addValueChangeListener(this);
 
@@ -215,7 +215,7 @@ public class MonthReport implements Button.ClickListener,
 
         leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
         leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
-        if (currentUser.hasRole(SystemSettings.rnAdmin)) {
+        if (currentUser.hasRole(Settings.rnAdmin)) {
             leftGrid.addComponent(selectAllSchoolsBtn, 0, 1, 1, 1);
             leftGrid.addComponent(deselectAllSchoolsBtn, 2, 1, 3, 1);
             leftGrid.addComponent(schoolsTable, 0, 2, 3, 2);
@@ -269,7 +269,7 @@ public class MonthReport implements Button.ClickListener,
         final Button source = event.getButton();
         if (source == generateBtn) {
             if (fromDateDF.isValid() && tillDateDF.isValid()) {
-                if (!currentUser.hasRole(SystemSettings.rnAdmin) || !((Set<?>) schoolsTable.getValue()).isEmpty()) {
+                if (!currentUser.hasRole(Settings.rnAdmin) || !((Set<?>) schoolsTable.getValue()).isEmpty()) {
                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()
                             || !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                         rightLayout.removeAllComponents();
@@ -279,7 +279,7 @@ public class MonthReport implements Button.ClickListener,
                             if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                                 rightLayout.addComponent(incomesDataTable);
                                 rightLayout.setExpandRatio(incomesDataTable, 1);
-                                if (currentUser.hasRole(SystemSettings.rnAdmin)) {
+                                if (currentUser.hasRole(Settings.rnAdmin)) {
                                     dbTr.execSQL_by_months(myUI, 1,
                                             schoolsTable, incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                                 } else {
@@ -295,7 +295,7 @@ public class MonthReport implements Button.ClickListener,
                             if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                                 rightLayout.addComponent(outcomesDataTable);
                                 rightLayout.setExpandRatio(outcomesDataTable, 1);
-                                if (currentUser.hasRole(SystemSettings.rnAdmin)) {
+                                if (currentUser.hasRole(Settings.rnAdmin)) {
                                     dbTr.execSQL_by_months(myUI, 2, schoolsTable,
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                                 } else {
@@ -321,7 +321,7 @@ public class MonthReport implements Button.ClickListener,
                                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
-                                                        + " - " + SystemSettings.ymdf.format(current.getTime()),
+                                                        + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
@@ -332,32 +332,32 @@ public class MonthReport implements Button.ClickListener,
                                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
-                                                        + " - " + SystemSettings.ymdf.format(current.getTime()),
+                                                        + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + myUI.getMessage(SptMessages.Total),
                                                 Table.Align.RIGHT);
                                         SchoolAccounting scAcc = dbTr.exec_get_ttls((Integer) nextSchool, current.getTime(),
-                                                tillDate.getTime(), SystemSettings.convertCollectionToStr(catIds));
+                                                tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
-                                                + SystemSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
-                                                + SystemSettings.df.format(prev_date.getTime()) + "): " + SystemSettings.dFormat.format(scAcc.getPrevious_balance())
+                                                + Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
+                                                + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat.format(scAcc.getPrevious_balance())
                                                 + "; " + myUI.getMessage(SptMessages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
-                                                + SystemSettings.ymdf.format(current.getTime())));
+                                                + Settings.ymdf.format(current.getTime())));
                                     }
                                 }
-                                if (!currentUser.hasRole(SystemSettings.rnAdmin)) {
+                                if (!currentUser.hasRole(Settings.rnAdmin)) {
                                     SchoolAccounting scAcc = dbTr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
-                                            tillDate.getTime(), SystemSettings.convertCollectionToStr(catIds));
+                                            tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
-                                            SystemSettings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
-                                                    + SystemSettings.df.format(prev_date.getTime()) + ") - " + SystemSettings.dFormat.format(scAcc.getPrevious_balance())
-                                                    + "; " + myUI.getMessage(SptMessages.Total) + " - " + incomesDataTable.getColumnFooter(SystemSettings.ymdf.format(current.getTime())));
-                                    incomesDataTable.setColumnAlignment(SystemSettings.ymdf.format(current.getTime()), Table.Align.RIGHT);
-                                    outcomesDataTable.setColumnAlignment(SystemSettings.ymdf.format(current.getTime()), Table.Align.RIGHT);
+                                            Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
+                                                    + Settings.df.format(prev_date.getTime()) + ") - " + Settings.dFormat.format(scAcc.getPrevious_balance())
+                                                    + "; " + myUI.getMessage(SptMessages.Total) + " - " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())));
+                                    incomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
+                                    outcomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
                                 }
                                 current.add(Calendar.MONTH, 1);
                             }
@@ -505,8 +505,8 @@ public class MonthReport implements Button.ClickListener,
                 try {
                     DbAccCategory dbac = new DbAccCategory();
                     dbac.connect();
-                    dbac.execSQL_for_select_as_tree(myUI, 2, outcomeCategoriesTable, SystemSettings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
-                    dbac.execSQL_for_select_as_tree(myUI, 1, incomeCategoriesTable, SystemSettings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
+                    dbac.execSQL_for_select_as_tree(myUI, 2, outcomeCategoriesTable, Settings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
+                    dbac.execSQL_for_select_as_tree(myUI, 1, incomeCategoriesTable, Settings.convertCollectionToStr((Set<?>) schoolsTable.getValue()), false);
                     dbac.close();
                 } catch (Exception e) {
                     logger.error(e);

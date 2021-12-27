@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeLanguage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
@@ -61,15 +61,15 @@ public class DbEmployeeLanguage extends BaseDb {
         while (result.next()) {
             String id = result.getString("el.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(Settings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeLanguage, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Language)).setValue(
                     edv.createCombobox(result.getInt("el.hr_language_id"),
-                            myUI.getMessage(SptMessages.Language), SystemSettings.dbLanguageTable, true));
+                            myUI.getMessage(SptMessages.Language), Settings.dbLanguageTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Level)).setValue(
                     edv.createCombobox(result.getInt("el.hr_language_level_id"),
-                            myUI.getMessage(SptMessages.Level), SystemSettings.dbLanguageLevelTable, true));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                            myUI.getMessage(SptMessages.Level), Settings.dbLanguageLevelTable, true));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

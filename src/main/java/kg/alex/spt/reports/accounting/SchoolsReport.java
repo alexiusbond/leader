@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.i18n.SptMessages;
@@ -62,7 +62,7 @@ public class SchoolsReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(SystemSettings.datePattern);
+        fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -71,7 +71,7 @@ public class SchoolsReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(SystemSettings.datePattern);
+        tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
@@ -160,7 +160,7 @@ public class SchoolsReport implements Button.ClickListener,
                 try {
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
-                    dbat.exec_schools_accounting(myUI, SystemSettings.convertCollectionToStr((Set<?>) schoolTable.getValue()),
+                    dbat.exec_schools_accounting(myUI, Settings.convertCollectionToStr((Set<?>) schoolTable.getValue()),
                             fromDateDF.getValue(), tillDateDF.getValue(), this);
 
                     Calendar c = Calendar.getInstance();
@@ -170,7 +170,7 @@ public class SchoolsReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.IncomesTotal), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.ExpensesTotal), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance)
-                            + " (" + SystemSettings.df.format(c.getTime()) + ")", Table.Align.RIGHT);
+                            + " (" + Settings.df.format(c.getTime()) + ")", Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -186,7 +186,7 @@ public class SchoolsReport implements Button.ClickListener,
                 if (dataTable.getContainerDataSource().size() != 0) {
                     excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SchoolDiscounts));
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SchoolDiscounts)
-                            + "(" + SystemSettings.df.format(fromDateDF.getValue()) + " - " + SystemSettings.df.format(tillDateDF.getValue()) + ")");
+                            + "(" + Settings.df.format(fromDateDF.getValue()) + " - " + Settings.df.format(tillDateDF.getValue()) + ")");
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
                 }

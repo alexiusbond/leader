@@ -5,7 +5,7 @@
  */
 package kg.alex.spt.dao;
 
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeGraduationSchool;
 
 import java.sql.*;
@@ -25,8 +25,8 @@ public class DbEmployeeGraduationSchool extends BaseDb {
         } else {
             stat.setNull(2, Types.INTEGER);
         }
-        stat.setString(3, SystemSettings.mysql_only_year.format(egs.getStart()));
-        stat.setString(4, SystemSettings.mysql_only_year.format(egs.getEnd()));
+        stat.setString(3, Settings.mysql_only_year.format(egs.getStart()));
+        stat.setString(4, Settings.mysql_only_year.format(egs.getEnd()));
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -44,8 +44,8 @@ public class DbEmployeeGraduationSchool extends BaseDb {
         } else {
             stat.setNull(1, Types.INTEGER);
         }
-        stat.setString(2, SystemSettings.mysql_only_year.format(egs.getStart()));
-        stat.setString(3, SystemSettings.mysql_only_year.format(egs.getEnd()));
+        stat.setString(2, Settings.mysql_only_year.format(egs.getStart()));
+        stat.setString(3, Settings.mysql_only_year.format(egs.getEnd()));
         stat.setInt(4, egs.getEmployee_id());
         return stat.executeUpdate();
     }

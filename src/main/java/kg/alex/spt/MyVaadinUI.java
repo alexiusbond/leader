@@ -258,7 +258,7 @@ public class MyVaadinUI extends UI {
         try {
             DbEmployeeMessage dbCon = new DbEmployeeMessage();
             dbCon.connect();
-            if (SecurityUtils.getSubject().isPermitted(SystemSettings.cnMessagesView + ":" + SystemSettings.actReadMessages)) {
+            if (SecurityUtils.getSubject().isPermitted(Settings.cnMessagesView + ":" + Settings.actReadMessages)) {
                 getUser().setUnreadMessages(dbCon.isUnread(getUser().getId(), getUser().getSchool_id()));
             } else {
                 getUser().setUnreadMessages(dbCon.isUnread(getUser().getId(), 0));

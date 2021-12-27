@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -44,10 +44,10 @@ public class DbDefinition extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.id, Integer.class, null);
         if (withActivityStatus) {
             container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-            container.addContainerProperty(SystemSettings.activity_status_id, Integer.class, null);
+            container.addContainerProperty(Settings.activity_status_id, Integer.class, null);
         }
 
         while (result.next()) {
@@ -59,11 +59,11 @@ public class DbDefinition extends BaseDb {
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("t.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("t.id"));
             if (withActivityStatus) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                         result.getString("st.name"));
-                item.getItemProperty(SystemSettings.activity_status_id).setValue(result.getInt("st.id"));
+                item.getItemProperty(Settings.activity_status_id).setValue(result.getInt("st.id"));
             }
         }
         return container;
@@ -130,14 +130,14 @@ public class DbDefinition extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(SystemSettings.education_status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.education_status_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("o.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("o.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
                     result.getString("es.name"));
-            item.getItemProperty(SystemSettings.education_status_id).setValue(
+            item.getItemProperty(Settings.education_status_id).setValue(
                     result.getInt("o.education_status_id"));
         }
         return container;
@@ -160,7 +160,7 @@ public class DbDefinition extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(Settings.position_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
@@ -168,7 +168,7 @@ public class DbDefinition extends BaseDb {
                     result.getString("t.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(
                     result.getString("t.default_permissions"));
-            item.getItemProperty(SystemSettings.position_id).setValue(
+            item.getItemProperty(Settings.position_id).setValue(
                     result.getInt("p.id"));
         }
         return container;
@@ -318,20 +318,20 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(SystemSettings.count, Integer.class, 0);
+        container.addContainerProperty(Settings.count, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(SystemSettings.id).setValue(
+            item.getItemProperty(Settings.id).setValue(
                     result.getInt("id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
         }
         if (withTotal) {
             Item item = container.addItem(6);
-            item.getItemProperty(SystemSettings.id).setValue(6);
+            item.getItemProperty(Settings.id).setValue(6);
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue("total");
         }
 
@@ -370,13 +370,13 @@ public class DbDefinition extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(SystemSettings.correction_type_id, Double.class, 1.0);
+        container.addContainerProperty(Settings.correction_type_id, Double.class, 1.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
             if (result.getString("t.type").equals("-")) {
-                item.getItemProperty(SystemSettings.correction_type_id).setValue(-1.0);
+                item.getItemProperty(Settings.correction_type_id).setValue(-1.0);
             }
         }
         return container;

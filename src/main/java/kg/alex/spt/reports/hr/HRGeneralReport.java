@@ -11,15 +11,12 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.ButtonRenderer;
-import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbEmployeeExtraInfo;
@@ -36,8 +33,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import java.text.ParseException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -356,26 +351,26 @@ public class HRGeneralReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
-            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWorking_status, false));
-            genderMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbGender, false));
-            nationalityMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbNationality, false));
-            citizenshipMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbCountry, false));
-            martialStatusMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbMartialStatus, false));
-            contractTypeMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbSalaryCategory, false));
-            healthStatusMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbHealthStatus, false));
-            examMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbExamTable, false));
-            mainBranchMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable, false));
-            extraBranchMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbBranchTable, false));
-            universityMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbUniversityTable, false));
-            workPlaceMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbWork_placeTable, false));
-            certificateMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbCertificateTable, false));
-            languageMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbLanguageTable, false));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
+            workingStatusesMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbWorking_status, false));
+            genderMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbGender, false));
+            nationalityMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbNationality, false));
+            citizenshipMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbCountry, false));
+            martialStatusMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbMartialStatus, false));
+            contractTypeMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbSalaryCategory, false));
+            healthStatusMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbHealthStatus, false));
+            examMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbExamTable, false));
+            mainBranchMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbBranchTable, false));
+            extraBranchMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbBranchTable, false));
+            universityMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbUniversityTable, false));
+            workPlaceMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbWork_placeTable, false));
+            certificateMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbCertificateTable, false));
+            languageMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbLanguageTable, false));
             canBeAdvisorMCB.setContainerDataSource(dbd.execSQL_yes_no(myUI));
             positionsMCB.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
+                    currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
             extraPositionsMCB.setContainerDataSource(dbd.exec_positions_for_select(myUI,
-                    currentUser.hasRole(SystemSettings.rnAdmin), currentUser.hasRole(SystemSettings.rnHr)));
+                    currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
             dbd.close();
             DbSchool dbCon = new DbSchool();
             dbCon.connect();
@@ -444,7 +439,7 @@ public class HRGeneralReport implements Button.ClickListener,
                     dbEmployee.connect();
                     IndexedContainer container = dbEmployee.execSQL(myUI, (Integer) yearSelect.getValue(), params);
                     GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(container);
-                    gpc.addGeneratedProperty(SystemSettings.button,
+                    gpc.addGeneratedProperty(Settings.button,
                             new PropertyValueGenerator<Component>() {
                                 @Override
                                 public Component getValue(Item item, Object itemId, Object propertyId) {
@@ -463,7 +458,7 @@ public class HRGeneralReport implements Button.ClickListener,
                                 }
                             });
                     dataGrid.setContainerDataSource(gpc);
-                    dataGrid.getColumn(SystemSettings.button).setRenderer(new ComponentRenderer());
+                    dataGrid.getColumn(Settings.button).setRenderer(new ComponentRenderer());
                     dbEmployee.close();
                 } catch (Exception e) {
                     logger.error(e);
@@ -528,7 +523,7 @@ public class HRGeneralReport implements Button.ClickListener,
                 employee.setPhoto(item.getItemProperty(myUI.getMessage(SptMessages.Photo)).getValue().toString());
             }
             try {
-                employee.setBirth_date(SystemSettings.df.parse(item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).getValue().toString()));
+                employee.setBirth_date(Settings.df.parse(item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).getValue().toString()));
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -566,7 +561,7 @@ public class HRGeneralReport implements Button.ClickListener,
 
     private void insertParameter(Map<String, String> params, String key, ComboBoxMultiselectMax cb) {
         if (cb.getContainerDataSource().size() != ((Set<?>) cb.getValue()).size()) {
-            params.put(key, SystemSettings.convertCollectionToStr((Set<?>) cb.getValue()));
+            params.put(key, Settings.convertCollectionToStr((Set<?>) cb.getValue()));
         }
     }
 

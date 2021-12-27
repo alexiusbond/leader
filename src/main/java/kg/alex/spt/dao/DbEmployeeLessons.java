@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.TreeSet;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeLessons;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
@@ -78,29 +78,29 @@ public class DbEmployeeLessons extends BaseDb {
         while (result.next()) {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(Settings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Lesson), SystemSettings.dbBranchTable, true));
+                            myUI.getMessage(SptMessages.Lesson), Settings.dbBranchTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     edv.createCombobox(result.getInt("ex.class_number_id"),
-                            myUI.getMessage(SptMessages.ClassName), SystemSettings.classTable, true));
+                            myUI.getMessage(SptMessages.ClassName), Settings.classTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Lesson), SystemSettings.dbBranchTable, true));
+                            myUI.getMessage(SptMessages.Lesson), Settings.dbBranchTable, true));
             item.getItemProperty(myUI.getMessage(SptMessages.AcademicYear)).setValue(
                     edv.createCombobox(result.getInt("ex.year_id"),
-                            myUI.getMessage(SptMessages.AcademicYear), SystemSettings.dbYear, true));
+                            myUI.getMessage(SptMessages.AcademicYear), Settings.dbYear, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                     edv.createTextfieldWithProperty(result.getInt("ex.hours"), myUI.getMessage(SptMessages.Hours),
                             new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
-                            new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
+                            new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                     edv.createTextfieldWithProperty(result.getInt("ex.extra_hours"), myUI.getMessage(SptMessages.ExtraHours),
                             new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
-                            new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                            new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }
@@ -133,7 +133,7 @@ public class DbEmployeeLessons extends BaseDb {
         stat.setInt(4, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(SystemSettings.button, CheckBox.class, null);
+        container.addContainerProperty(Settings.button, CheckBox.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Lesson), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Hours), TextField.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), TextField.class, null);
@@ -144,7 +144,7 @@ public class DbEmployeeLessons extends BaseDb {
             ch.setValue(result.getInt("ebr.id") != 0);
             ch.addValueChangeListener(vll);
             ch.setData(result.getInt("br.id"));
-            item.getItemProperty(SystemSettings.button).setValue(ch);
+            item.getItemProperty(Settings.button).setValue(ch);
             item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(result.getString("br.name"));
             Integer hours = null;
             if (result.getInt("ebr.id") != 0) {
@@ -152,7 +152,7 @@ public class DbEmployeeLessons extends BaseDb {
             }
             TextField tf = createTextfieldWithProperty(myUI, hours, myUI.getMessage(SptMessages.Hours),
                     new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
-                    new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter());
+                    new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter());
             tf.setData(result.getInt("ebr.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(tf);
             Integer extra_hours = null;
@@ -162,7 +162,7 @@ public class DbEmployeeLessons extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                     createTextfieldWithProperty(myUI, extra_hours, myUI.getMessage(SptMessages.ExtraHours),
                             new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
-                            new ObjectProperty<Integer>(0), SystemSettings.getStringToIntegerConverter()));
+                            new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
         }
         return container;
     }

@@ -12,7 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentCorrection;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.StudentDefinitionView;
@@ -46,11 +46,11 @@ public class DbStudentCorrection extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             Button b = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                    SystemSettings.dbStudentCorrection, FontAwesome.MINUS_SQUARE);
-            if (!currentUser.isPermitted(SystemSettings.correctionsTable + ":" + SystemSettings.actDelete)) {
+                    Settings.dbStudentCorrection, FontAwesome.MINUS_SQUARE);
+            if (!currentUser.isPermitted(Settings.correctionsTable + ":" + Settings.actDelete)) {
                 b.setEnabled(false);
             }
-            item.getItemProperty(SystemSettings.button).setValue(b);
+            item.getItemProperty(Settings.button).setValue(b);
             ComboBoxMax cb = dw.createComboboxCorr(result.getInt("t.correction_type_id"),
                     myUI.getMessage(SptMessages.Title), id);
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb);
@@ -62,13 +62,13 @@ public class DbStudentCorrection extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
-            if (!currentUser.isPermitted(SystemSettings.correctionsTable + ":" + SystemSettings.actModify)) {
+            if (!currentUser.isPermitted(Settings.correctionsTable + ":" + Settings.actModify)) {
                 tf.setEnabled(false);
                 hl.setEnabled(false);
                 cb.setEnabled(false);
                 discTf.setEnabled(false);
             }
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

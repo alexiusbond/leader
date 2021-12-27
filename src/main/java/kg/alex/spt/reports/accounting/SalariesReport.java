@@ -18,7 +18,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
@@ -108,7 +108,7 @@ public class SalariesReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency, true));
+            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

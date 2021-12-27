@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Accessories;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -37,9 +37,9 @@ public class DbAccessories extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Category), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.category_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("ac.id"));
@@ -49,11 +49,11 @@ public class DbAccessories extends BaseDb {
                     result.getString("a.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(
                     result.getString("c.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("ac.activity_status_id"));
-            item.getItemProperty(SystemSettings.category_id).setValue(
+            item.getItemProperty(Settings.category_id).setValue(
                     result.getInt("ac.accessories_category_id"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("ac.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("ac.id"));
         }
         return container;
     }

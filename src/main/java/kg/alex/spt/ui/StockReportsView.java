@@ -8,7 +8,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.stock.ProductMovementsReport;
 import kg.alex.spt.reports.stock.StockGeneralReport;
@@ -55,10 +55,10 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
 
-        if (currentUser.isPermitted(SystemSettings.cnStockReportsView + ":" + SystemSettings.prmProductMovementsReport)) {
+        if (currentUser.isPermitted(Settings.cnStockReportsView + ":" + Settings.prmProductMovementsReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ProductMovementsReport));
         }
-        if (currentUser.isPermitted(SystemSettings.cnStockReportsView + ":" + SystemSettings.prmStockGeneralReport)) {
+        if (currentUser.isPermitted(Settings.cnStockReportsView + ":" + Settings.prmStockGeneralReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.StockGeneralReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);

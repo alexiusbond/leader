@@ -20,7 +20,7 @@ import java.sql.Types;
 import java.util.*;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.domain.Transfer;
 import kg.alex.spt.i18n.SptMessages;
@@ -56,8 +56,8 @@ public class DbTransfers extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbTransfers));
+            item.getItemProperty(Settings.button).setValue(
+                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbTransfers));
             ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.Category), null,
                     true, acc_invoice_type_id == 1);
             try {
@@ -73,28 +73,28 @@ public class DbTransfers extends BaseDb {
             cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(cb);
-            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            cb = v.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(SptMessages.Currency), SystemSettings.dbAcc_currency, true, false);
+            item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            cb = v.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(SptMessages.Currency), Settings.dbAcc_currency, true, false);
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Currency)).setValue(cb);
-            item.getItemProperty(SystemSettings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
+            item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = v.createTextfieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, null),
-                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(), true);
+                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = v.createTextfieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(),
-                    currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeCurrencyRate));
+                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(),
+                    currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextfield(
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue),
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
                 total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
             } else {

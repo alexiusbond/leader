@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -86,7 +86,7 @@ public class SummaryReportPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Yearly)
@@ -121,7 +121,7 @@ public class SummaryReportPdf {
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Net), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Paid), tableFontBold));
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Left), tableFontBold));
-                        pdfTable.addCell(new Phrase(SystemSettings.percentage, tableFontBold));
+                        pdfTable.addCell(new Phrase(Settings.percentage, tableFontBold));
 
                         Iterator iter = dataTable.getContainerDataSource().getItemIds().iterator();
                         int j = 0;
@@ -137,22 +137,22 @@ public class SummaryReportPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Total_Active)).getValue().toString(), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Contract)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Discount)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Correction)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Net)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Left)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
-                                    SystemSettings.percentage).getValue()), tableFont));
+                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                                    Settings.percentage).getValue()), tableFont));
                             j++;
                         }
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
@@ -174,7 +174,7 @@ public class SummaryReportPdf {
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
                                 myUI.getMessage(SptMessages.Left)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                SystemSettings.percentage), tableFontBold));
+                                Settings.percentage), tableFontBold));
 
                         document.add(pdfTable);
                     }

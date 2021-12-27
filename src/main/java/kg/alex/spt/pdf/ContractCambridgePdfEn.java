@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -102,9 +102,9 @@ public class ContractCambridgePdfEn {
                     Tdate.addCell(new Phrase(" ", ordBoldFont));
                     Tdate.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     if (aDate.before(cal.getTime())) {
-                        Tdate.addCell(new Phrase(SystemSettings.dateEn.format(cal.getTime()), ordBoldFont));
+                        Tdate.addCell(new Phrase(Settings.dateEn.format(cal.getTime()), ordBoldFont));
                     } else {
-                        Tdate.addCell(new Phrase(SystemSettings.dateEn.format(aDate), ordBoldFont));
+                        Tdate.addCell(new Phrase(Settings.dateEn.format(aDate), ordBoldFont));
                     }
                     document.add(Tdate);
                     document.add(new Paragraph(10, " "));
@@ -119,11 +119,11 @@ public class ContractCambridgePdfEn {
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                     paragraph.add(new Phrase(student.getScl_name_kg(), ordBoldFont));
                     paragraph.add(new Phrase(", here in after referred to as the “School”, represented by Director ", ordFont));
-                    paragraph.add(new Phrase(SystemSettings.transliterate(student.getScl_dir_f_name()), ordBoldFont));
+                    paragraph.add(new Phrase(Settings.transliterate(student.getScl_dir_f_name()), ordBoldFont));
                     paragraph.add(new Phrase(",  acting on the basis of the Charter, on the one hand, and ", ordFont));
-                    paragraph.add(new Phrase(SystemSettings.transliterate(student.getRel_fullname()) + ", ", ordBoldFont));
+                    paragraph.add(new Phrase(Settings.transliterate(student.getRel_fullname()) + ", ", ordBoldFont));
                     paragraph.add(new Phrase("being a parent of the “Student” ", ordFont));
-                    paragraph.add(new Phrase(SystemSettings.transliterate(student.getStud_sur_name() + " " + student.getStud_name()), ordBoldFont));
+                    paragraph.add(new Phrase(Settings.transliterate(student.getStud_sur_name() + " " + student.getStud_name()), ordBoldFont));
                     paragraph.add(new Phrase(", hereinafter referred to as the “Parent” on the other hand, in the interests of the student in accordance with paragraph 1 of article 14 of the Law of the Kyrgyz Republic “On education”, have concluded the present Contract on the following basis:", ordFont));
                     document.add(paragraph);
                     document.add(new Paragraph(10, " "));
@@ -613,9 +613,9 @@ public class ContractCambridgePdfEn {
                     Tinfo.addCell(text10);
 
                     Paragraph text11 = new Paragraph();
-                    text11.add(new Phrase("Parent: " + SystemSettings.transliterate(student.getRel_fullname()), ordFont));
+                    text11.add(new Phrase("Parent: " + Settings.transliterate(student.getRel_fullname()), ordFont));
                     text11.add(Chunk.NEWLINE);
-                    text11.add(new Phrase("Address: " + SystemSettings.transliterate(student.getRel_address()), ordFont));
+                    text11.add(new Phrase("Address: " + Settings.transliterate(student.getRel_address()), ordFont));
                     text11.add(Chunk.NEWLINE);
                     text11.add(new Phrase("Passport No: " + student.getRel_passport(), ordFont));
                     text11.add(Chunk.NEWLINE);
@@ -642,7 +642,7 @@ public class ContractCambridgePdfEn {
                     text15.add(new Phrase(df.format(new Date()), ordBoldFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("TOTAL FEE: ", ordFont));
-                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
+                    text15.add(new Phrase((Settings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
                     text15.add(new Phrase(" USD.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     if (student.getCtr_debt() >= 0) {
@@ -650,7 +650,7 @@ public class ContractCambridgePdfEn {
                     } else {
                         text15.add(new Phrase("Overpayment from previous year: ", ordFont));
                     }
-                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
+                    text15.add(new Phrase((Settings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
                     text15.add(new Phrase(" USD.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Discount: ", ordFont));
@@ -665,11 +665,11 @@ public class ContractCambridgePdfEn {
                     }
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Prepayment: ", ordFont));
-                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                    text15.add(new Phrase(Settings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
                     text15.add(new Phrase(" USD.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Remainder: ", ordFont));
-                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                    text15.add(new Phrase(Settings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
                     text15.add(new Phrase(" USD.", ordFont));
                     document.add(text15);
                     document.add(new Paragraph(10, " "));
@@ -706,7 +706,7 @@ public class ContractCambridgePdfEn {
                     }
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("Total:", ordBoldFont));
-                    TContract.addCell(new Phrase(SystemSettings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
+                    TContract.addCell(new Phrase(Settings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("", ordFont));
 
@@ -803,7 +803,7 @@ public class ContractCambridgePdfEn {
                 p.add(new Phrase("(Аккредитованные программы Cambridge Assessment \n и Advanced Placement)", fontGray));
                 t.addCell(p);
 
-                Image logo = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + "cambridge_logo.png");
+                Image logo = Image.getInstance(Settings.PATH_TO_UPLOADS + "cambridge_logo.png");
                 logo.setAlignment(Image.MIDDLE);
                 logo.scaleToFit(50, 50);
                 Chunk chunk = new Chunk(logo, 0, -20);

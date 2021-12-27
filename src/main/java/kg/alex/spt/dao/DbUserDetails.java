@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.UserDetails;
 import org.apache.shiro.SecurityUtils;
@@ -51,7 +51,7 @@ public class DbUserDetails extends BaseDb {
             user.setSchool_name(result.getString("sch.name_ru"));
             user.setSchool_code(result.getString("sch.code"));
             user.setSchool_logo(result.getString("sch.photo"));
-            if (currentUser.hasRole(SystemSettings.rnSapatSecretary)) {
+            if (currentUser.hasRole(Settings.rnSapatSecretary)) {
                 user.setCurrent_year(new Definition(result.getInt("y2.id"), result.getString("y2.name")));
             } else {
                 user.setCurrent_year(new Definition(result.getInt("y.id"), result.getString("y.name")));

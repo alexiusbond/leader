@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 
 public class DbLog extends BaseDb {
@@ -60,7 +60,7 @@ public class DbLog extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("dl.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(
-                    SystemSettings.df.format(result.getDate("dl.datetime")));
+                    Settings.df.format(result.getDate("dl.datetime")));
             item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUi.getMessage(SptMessages.TableName)).setValue(

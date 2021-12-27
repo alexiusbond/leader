@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Discount;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -41,13 +41,13 @@ public class DbDiscount extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Value), Double.class, 0.0);
-        container.addContainerProperty(SystemSettings.discount_type_id, Integer.class, 0);
+        container.addContainerProperty(Settings.discount_type_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.DiscountType), String.class, null);
-        container.addContainerProperty(SystemSettings.year_id, Integer.class, 0);
+        container.addContainerProperty(Settings.year_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.id"));
@@ -55,19 +55,19 @@ public class DbDiscount extends BaseDb {
                     result.getString("d.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Value)).setValue(
                     result.getDouble("d.amount"));
-            item.getItemProperty(SystemSettings.discount_type_id).setValue(
+            item.getItemProperty(Settings.discount_type_id).setValue(
                     result.getInt("d.discount_type_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.DiscountType)).setValue(
                     result.getString("dt.name"));
-            item.getItemProperty(SystemSettings.year_id).setValue(
+            item.getItemProperty(Settings.year_id).setValue(
                     result.getInt("d.year_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     result.getString("y.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("d.activity_status_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("d.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("d.id"));
         }
         return container;
     }
@@ -145,7 +145,7 @@ public class DbDiscount extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(SystemSettings.discount_type_id, Integer.class, 0);
+        container.addContainerProperty(Settings.discount_type_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             if (result.getInt("t.discount_type_id") == 3) {
@@ -163,7 +163,7 @@ public class DbDiscount extends BaseDb {
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("t.amount"));
-            item.getItemProperty(SystemSettings.discount_type_id).setValue(
+            item.getItemProperty(Settings.discount_type_id).setValue(
                     result.getInt("t.discount_type_id"));
         }
         return container;

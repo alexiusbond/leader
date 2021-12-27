@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 
 public class DbRelative extends BaseDb {
@@ -36,7 +36,7 @@ public class DbRelative extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Address), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Passport), String.class, null);
-        container.addContainerProperty(SystemSettings.is_main, Integer.class, 0);
+        container.addContainerProperty(Settings.is_main, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("sr.relatives_id"));
@@ -52,7 +52,7 @@ public class DbRelative extends BaseDb {
                     result.getString("sr.passport"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
                     result.getString("sr.phone"));
-            item.getItemProperty(SystemSettings.is_main).setValue(
+            item.getItemProperty(Settings.is_main).setValue(
                     result.getInt("sr.is_main"));
         }
         return container;

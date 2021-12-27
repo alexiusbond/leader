@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbTransfers;
 import kg.alex.spt.dao.DbDefinition;
@@ -76,12 +76,12 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         this.acc_category_type_id = acc_category_type_id;
         this.acc_invoice_type_id = acc_invoice_type_id;
         if (acc_invoice_type_id != 1) {
-            df = SystemSettings.ymdf;
+            df = Settings.ymdf;
         } else {
-            df = SystemSettings.dtmf;
+            df = Settings.dtmf;
         }
-        if (viewName.equals(SystemSettings.cnShortTermDebtsView) || viewName.equals(SystemSettings.cnReturnableAssetsView)) {
-            NATURAL_COL_ORDER = new String[]{SystemSettings.button, myUI.getMessage(SptMessages.InvoiceNumber),
+        if (viewName.equals(Settings.cnShortTermDebtsView) || viewName.equals(Settings.cnReturnableAssetsView)) {
+            NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(SptMessages.InvoiceNumber),
                     myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
                     myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Note) + " 2"};
         } else {
@@ -217,10 +217,10 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         if (acc_invoice_type_id != 1) {
             dateDF.setResolution(Resolution.MONTH);
-            dateDF.setDateFormat(SystemSettings.yearMonthPattern);
+            dateDF.setDateFormat(Settings.yearMonthPattern);
         } else {
             dateDF.setResolution(Resolution.MINUTE);
-            dateDF.setDateFormat(SystemSettings.dateTimeMinPattern);
+            dateDF.setDateFormat(Settings.dateTimeMinPattern);
         }
         dateDF.setValue(new Date());
         settingsLay.addComponent(dateDF, 0, 2, 1, 2);
@@ -235,7 +235,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         note2TF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         note2TF.setWidth("100%");
         note2TF.setRows(3);
-        if (viewName.equals(SystemSettings.cnShortTermDebtsView) || viewName.equals(SystemSettings.cnReturnableAssetsView)) {
+        if (viewName.equals(Settings.cnShortTermDebtsView) || viewName.equals(Settings.cnReturnableAssetsView)) {
             settingsLay.addComponent(note2TF, 0, 4, 1, 4);
         }
         settingsLay.setColumnExpandRatio(0, 1);
@@ -275,9 +275,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == modifyBtn && invoicesTable.getValue() != null) {
-            if (acc_invoice_type_id == 1 || currentUser.isPermitted(viewName + ":" + SystemSettings.prmConfirmationControl) ||
-                    (invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue() != null &&
-                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue()).getValue())) {
+            if (acc_invoice_type_id == 1 || currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl) ||
+                    (invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
+                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue())) {
                 isNew = false;
                 fillFields();
                 prepareModificationMode();
@@ -290,9 +290,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             clearFields();
             prepareModificationMode();
         } else if (source == deleteBtn && invoicesTable.getValue() != null) {
-            if (acc_invoice_type_id == 1 || currentUser.isPermitted(viewName + ":" + SystemSettings.prmConfirmationControl) ||
-                    (invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue() != null &&
-                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue()).getValue())) {
+            if (acc_invoice_type_id == 1 || currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl) ||
+                    (invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
+                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue())) {
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
                         myUI.getMessage(SptMessages.ConfirmDeletion),
                         myUI.getMessage(SptMessages.Yes),
@@ -442,8 +442,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         } else if (source == addBtn) {
             addTransfersItem();
         } else if (source == confirmBtn) {
-            if (currentUser.isPermitted(viewName + ":" + SystemSettings.prmConfirmationControl)) {
-                CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue();
+            if (currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl)) {
+                CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
                 ckb.setValue(true);
                 confirmBtn.setEnabled(false);
             } else {
@@ -455,7 +455,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                             @Override
                             public void onClose(ConfirmDialog dialog) {
                                 if (dialog.isConfirmed()) {
-                                    CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue();
+                                    CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
                                     ckb.setValue(true);
                                     try {
                                         DbInvoice dbInvoice = new DbInvoice();
@@ -513,7 +513,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 excelReport.sendConverted();
             }
         } else if (source.getId()
-                != null && source.getId().equals(SystemSettings.dbTransfers)) {
+                != null && source.getId().equals(Settings.dbTransfers)) {
             delTransferIds.add(source.getData().toString());
             transfersTable.removeItem(event.getButton().getData().toString());
             repaintTransfersFooter();
@@ -576,7 +576,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         } else if (event.getProperty() instanceof ComboBoxMax && ((ComboBoxMax) event.getProperty()).getId() != null) {
             ComboBoxMax catCb = (ComboBoxMax) event.getProperty();
             ((ComboBoxMax) transfersTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
-                    (Integer) catCb.getContainerProperty(catCb.getValue(), SystemSettings.acc_currency_id).getValue());
+                    (Integer) catCb.getContainerProperty(catCb.getValue(), Settings.acc_currency_id).getValue());
             repaintTransfersFooter();
         } else if (event.getProperty().getType() != null) {
             repaintTransfersFooter();
@@ -585,7 +585,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     private void prepareModificationMode() {
         if (acc_invoice_type_id != 1 && invoicesTable.getValue() != null
-                && invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue() != null) {
+                && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
             confirmBtn.setEnabled(false);
         }
         modifyBtn.setEnabled(false);
@@ -604,16 +604,16 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(viewName + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(viewName + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(viewName + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(viewName + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(viewName + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(viewName + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(viewName + ":" + SystemSettings.actCopy)) {
+        if (currentUser.isPermitted(viewName + ":" + Settings.actCopy)) {
             copyBtn.setEnabled(true);
         }
         excelBtn.setEnabled(true);
@@ -627,8 +627,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         rightLay.setEnabled(false);
 
         if (acc_invoice_type_id != 1 && invoicesTable.getValue() != null
-                && invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue() != null) {
-            if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue()).getValue()) {
+                && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
+            if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
                 confirmBtn.setEnabled(true);
             } else {
                 confirmBtn.setEnabled(false);
@@ -638,8 +638,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     private void fillFields() {
         if (acc_invoice_type_id != 1 && invoicesTable.getValue() != null &&
-                invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue() != null) {
-            if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), SystemSettings.button).getValue()).getValue()) {
+                invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
+            if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
                 confirmBtn.setEnabled(true);
             } else {
                 confirmBtn.setEnabled(false);
@@ -686,7 +686,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 df.format(dateDF.getValue()));
         try {
             invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
-                    SystemSettings.dFormat.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -702,7 +702,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(date);
         try {
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    SystemSettings.dFormat.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -714,16 +714,16 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             dbCon.connect();
             item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
             dbCon.close();
-            if (viewName.equals(SystemSettings.cnShortTermDebtsView) || viewName.equals(SystemSettings.cnReturnableAssetsView)) {
+            if (viewName.equals(Settings.cnShortTermDebtsView) || viewName.equals(Settings.cnReturnableAssetsView)) {
                 CheckBox cb = new CheckBox();
                 cb.setData(id);
                 cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
-                if (!currentUser.isPermitted(viewName + ":" + SystemSettings.prmConfirmationControl)) {
+                if (!currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl)) {
                     cb.setEnabled(false);
                 } else {
                     cb.addValueChangeListener(this);
                 }
-                item.getItemProperty(SystemSettings.button).setValue(cb);
+                item.getItemProperty(Settings.button).setValue(cb);
             }
         } catch (Exception e) {
             logger.error(e);
@@ -761,10 +761,10 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
-            int st = dbDef.exec_delete(invoicesTable.getValue().toString(), SystemSettings.dbTransfers, SystemSettings.invoice_id);
+            int st = dbDef.exec_delete(invoicesTable.getValue().toString(), Settings.dbTransfers, Settings.invoice_id);
             if (st != 0) {
                 transfersTable.removeAllItems();
-                st = dbDef.exec_delete((Integer) invoicesTable.getValue(), SystemSettings.dbAccInvoice);
+                st = dbDef.exec_delete((Integer) invoicesTable.getValue(), Settings.dbAccInvoice);
                 if (st != 0) {
                     invoicesTable.getContainerDataSource().removeItem(invoicesTable.getValue());
                     if (invoicesTable.getContainerDataSource().size() != 0) {
@@ -914,15 +914,15 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     public IndexedContainer prepareTransfersContainer() {
         if (transfersCont == null) {
             transfersCont = new IndexedContainer();
-            transfersCont.addContainerProperty(SystemSettings.button, Button.class, null);
+            transfersCont.addContainerProperty(Settings.button, Button.class, null);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBoxMax.class, null);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
-            transfersCont.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
+            transfersCont.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBoxMax.class, null);
-            transfersCont.addContainerProperty(SystemSettings.acc_currency_id, Integer.class, 0);
+            transfersCont.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Rate), TextField.class, 0.0);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Amount), TextField.class, 0.0);
-            transfersCont.addContainerProperty(SystemSettings.crud_status, String.class, null);
+            transfersCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             transfersCont.removeAllItems();
         }
@@ -930,21 +930,21 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     private void addTransfersItem() {
-        NATURAL_COL_ORDER_TRANSFERS = new String[]{SystemSettings.button,
+        NATURAL_COL_ORDER_TRANSFERS = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Category),
                 myUI.getMessage(SptMessages.Note),
                 myUI.getMessage(SptMessages.Currency),
                 myUI.getMessage(SptMessages.Rate),
                 myUI.getMessage(SptMessages.Amount)};
-        String id = SystemSettings.FreshItem + (--r_table_counter);
+        String id = Settings.FreshItem + (--r_table_counter);
         if (transfersTable.getContainerDataSource().size() == 0) {
             transfersTable.setContainerDataSource(prepareTransfersContainer());
         }
         Item item;
         item = ((IndexedContainer) transfersTable.getContainerDataSource()).addItemAt(
                 transfersTable.getContainerDataSource().size(), id);
-        item.getItemProperty(SystemSettings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbTransfers));
+        item.getItemProperty(Settings.button).setValue(
+                createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbTransfers));
         ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.Category), null,
                 true, acc_invoice_type_id == 1);
         try {
@@ -961,24 +961,24 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         cb.setId(id);
         cb.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(cb);
-        cb = createCombobox(2, myUI.getMessage(SptMessages.Currency), SystemSettings.dbAcc_currency, true, false);
+        cb = createCombobox(2, myUI.getMessage(SptMessages.Currency), Settings.dbAcc_currency, true, false);
         cb.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
         TextField tf = createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, null),
-                new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(), true);
+                new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
         tf = createTextfieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                new ObjectProperty<Double>(0.0), SystemSettings.getStringToDoubleConverter(),
-                currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeCurrencyRate));
+                new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(),
+                currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfield(
                 noteTF.getValue(), id, new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue),
                         null, 250, acc_category_type_id == 1), acc_category_type_id != 1));
-        item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         transfersTable.setVisibleColumns(NATURAL_COL_ORDER_TRANSFERS);
         transfersTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Category), 1);
         transfersTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
@@ -987,7 +987,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     private void setTransfersTable() {
         try {
-            NATURAL_COL_ORDER_TRANSFERS = new String[]{SystemSettings.button,
+            NATURAL_COL_ORDER_TRANSFERS = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.Category),
                     myUI.getMessage(SptMessages.Note),
                     myUI.getMessage(SptMessages.Currency),
@@ -1033,7 +1033,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 }
             }
         }
-        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), SystemSettings.dFormat.format(total) + " $");
+        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(total) + " $");
     }
 
     private void insertTransfers(int invoice_id) {
@@ -1044,7 +1044,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             dbd.connect();
             if (delTransferIds.size() > 0) {
                 for (int i = 0; i < delTransferIds.size(); i++) {
-                    dbd.exec_delete(delTransferIds.get(i), SystemSettings.dbTransfers);
+                    dbd.exec_delete(delTransferIds.get(i), Settings.dbTransfers);
                 }
             }
             if (transfersTable.getContainerDataSource().size() > 0) {
@@ -1063,10 +1063,10 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                             myUI.getMessage(SptMessages.Category)).getValue()).getValue());
                     acr.setCurrency_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
-                    if (transfersTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Update))) {
+                    if (transfersTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Update))) {
                         acr.setId(Integer.parseInt(next.toString()));
                         dbCon.exec_update(acr);
-                    } else if (transfersTable.getContainerProperty(next, SystemSettings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Insert))) {
+                    } else if (transfersTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Insert))) {
                         dbCon.exec_insert(acr);
                     }
                 }
@@ -1081,7 +1081,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     public void setTransfersFooter(double amount) {
-        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), SystemSettings.dFormat.format(amount) + " $");
+        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(amount) + " $");
     }
 
     public Component getNewObj() {

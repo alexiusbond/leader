@@ -9,13 +9,12 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.OrderMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.util.Calendar;
 
 public class OrderPdf {
 
@@ -60,7 +59,7 @@ public class OrderPdf {
                     ColumnText ct = new ColumnText(pageContentByte);
                     ct.setSimpleColumn(50, 680, 550, 50);
                     ct.addElement(new Phrase("№ " + orderMessage.getOrder_number() +
-                            "  " + SystemSettings.dateKg.format(orderMessage.getDate()), dateFont));
+                            "  " + Settings.dateKg.format(orderMessage.getDate()), dateFont));
 
                     Paragraph spr = new Paragraph(orderMessage.getTitle(), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
@@ -75,10 +74,10 @@ public class OrderPdf {
                     ct.addElement(new Paragraph(45, " "));
 
                     Image img;
-                    if (orderMessage.getDate().after(SystemSettings.df.parse("25-08-2021"))) {
-                        img = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + "signature.png");
+                    if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
+                        img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.png");
                     } else {
-                        img = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + "signature.jpg");
+                        img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.jpg");
                     }
                     img.setAlignment(Image.RIGHT);
                     img.scaleAbsolute(250, 110);
@@ -90,7 +89,7 @@ public class OrderPdf {
                     Tdate.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
                     Tdate.addCell(new Phrase("президент", fontBold));
                     Tdate.addCell(img);
-                    if (orderMessage.getDate().after(SystemSettings.df.parse("25-08-2021"))) {
+                    if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
                         Tdate.addCell(new Phrase("Кудайбердиев Н.Ш.", fontBold));
                     } else {
                         Tdate.addCell(new Phrase("Орхан Инанды", fontBold));
@@ -128,7 +127,7 @@ public class OrderPdf {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int length;
-        InputStream is = new FileInputStream(new File(SystemSettings.PATH_TO_UPLOADS + "default.css"));
+        InputStream is = new FileInputStream(new File(Settings.PATH_TO_UPLOADS + "default.css"));
         while ((length = is.read(buffer)) != -1) {
             baos.write(buffer, 0, length);
         }

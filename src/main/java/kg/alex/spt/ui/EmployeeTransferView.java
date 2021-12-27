@@ -38,7 +38,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbEmployeeOrder;
@@ -223,9 +223,9 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
 
         Embedded photoEmb = new Embedded();
         if (item.getItemProperty(myUI.getMessage(SptMessages.Photo)).getValue() == null) {
-            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
+            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR + "no_photo.jpg")));
         } else {
-            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS_HR + item.getItemProperty(myUI.getMessage(SptMessages.Photo)).getValue())));
+            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS_HR + item.getItemProperty(myUI.getMessage(SptMessages.Photo)).getValue())));
         }
         photoEmb.setImmediate(true);
         photoEmb.setWidth("120px");
@@ -478,13 +478,13 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     .getContainerDataSource()).getItemIds().iterator();
             while (iter.hasNext()) {
                 Object next = iter.next();
-                if (t.getContainerProperty(next, SystemSettings.crud_status).getValue() != null) {
+                if (t.getContainerProperty(next, Settings.crud_status).getValue() != null) {
                     EmployeeOrder eo = new EmployeeOrder();
                     eo.setEmployee_id((Integer) next);
                     eo.setOrder_id(5);
                     eo.setFrom_to_school_id(Integer.parseInt(t.getId()));
-                    eo.setSchool_id((Integer) t.getContainerProperty(next, SystemSettings.school_id).getValue());
-                    eo.setPosition_id((Integer) t.getContainerProperty(next, SystemSettings.position_id).getValue());
+                    eo.setSchool_id((Integer) t.getContainerProperty(next, Settings.school_id).getValue());
+                    eo.setPosition_id((Integer) t.getContainerProperty(next, Settings.position_id).getValue());
                     eo.setFrom_date(((DateField) t.getContainerProperty(
                             next, myUI.getMessage(SptMessages.FromDate)).getValue()).getValue());
                     if (((TextField) t.getContainerProperty(next,
@@ -509,7 +509,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     AccCategory ac = dbAc.exec_sql(eo.getEmployee_id(), eo.getFrom_to_school_id(), eo.getSchool_id());
                     dbAc.exec_insert(ac);
                     dbAc.exec_update_activity_status((Integer) t.getContainerProperty(eo.getEmployee_id(),
-                            SystemSettings.acc_category_id).getValue(), 1, SystemSettings.transferred);
+                            Settings.acc_category_id).getValue(), 1, Settings.transferred);
                     dbAc.close();
                 }
             }
@@ -548,7 +548,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         Object sourceItemId = t.getData("itemId");
         Table targetTable = (Table) ((AbstractSelect.AbstractSelectTargetDetails) event.getTargetDetails()).getTarget();
         Table sourceTable = (Table) t.getSourceComponent();
-        if (targetTable != sourceTable && sourceTable.getContainerProperty(sourceItemId, SystemSettings.crud_status).getValue() == null) {
+        if (targetTable != sourceTable && sourceTable.getContainerProperty(sourceItemId, Settings.crud_status).getValue() == null) {
             Object[] propertyIds = sourceTable.getContainerPropertyIds().toArray();
             int size = propertyIds.length;
             Object[][] properties = new Object[size][2];
@@ -567,8 +567,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
             for (int i = 0; i < size; i++) {
                 Object propertyId = properties[i][0];
                 Object value = properties[i][1];
-                if (propertyId.equals(SystemSettings.crud_status)) {
-                    item.getItemProperty(propertyId).setValue(SystemSettings.FreshItem);
+                if (propertyId.equals(Settings.crud_status)) {
+                    item.getItemProperty(propertyId).setValue(Settings.FreshItem);
                 } else {
                     item.getItemProperty(propertyId).setValue(value);
                 }

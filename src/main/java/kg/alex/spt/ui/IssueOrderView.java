@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbLeavingReasons;
@@ -59,11 +59,11 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
     public IssueOrderView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        STUDENTS_NATURAL_COL_ORDER = new String[]{SystemSettings.button,
+        STUDENTS_NATURAL_COL_ORDER = new String[]{Settings.button,
             myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.FirstName),
             myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
             myUI.getMessage(SptMessages.EducationStatus)};
-        HISTORY_NATURAL_COL_ORDER = new String[]{SystemSettings.button,
+        HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button,
             myUI.getMessage(SptMessages.OrderType), myUI.getMessage(SptMessages.FromClass),
             myUI.getMessage(SptMessages.ToClass), myUI.getMessage(SptMessages.FromEducationStatus),
             myUI.getMessage(SptMessages.ToEducationStatus), myUI.getMessage(SptMessages.Year),
@@ -131,7 +131,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         dateDF.setWidth("100%");
         dateDF.setValue(new Date());
-        dateDF.setDateFormat(SystemSettings.datePattern);
+        dateDF.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(dateDF);
 
         orderSelect = new ComboBoxMax(myUI.getMessage(SptMessages.OrderType));
@@ -218,16 +218,16 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         so.setEmployee_id(myUI.getUser().getId());
                         so.setOrder_id((Integer) orderSelect.getValue());
                         so.setTo_education_status_id((Integer) orderSelect.getContainerProperty(
-                                orderSelect.getValue(), SystemSettings.education_status_id).getValue());
+                                orderSelect.getValue(), Settings.education_status_id).getValue());
                         so.setTo_class_id((Integer) classSelect.getValue());
                         so.setOrder_id((Integer) orderSelect.getValue());
                         while (iter.hasNext()) {
                             int contr_status = 0;
                             Object next = iter.next();
                             if ((Integer) studentsTable.getContainerProperty(
-                                    next, SystemSettings.education_status_id).getValue() != 4
+                                    next, Settings.education_status_id).getValue() != 4
                                     && (Integer) studentsTable.getContainerProperty(
-                                            next, SystemSettings.education_status_id).getValue() != 5) {
+                                            next, Settings.education_status_id).getValue() != 5) {
                                 so.setStudent_id((Integer) next);
                                 so.setYear_id(myUI.getUser().getCurrent_year().getId());
                                 if (so.getTo_education_status_id() == 3) {
@@ -237,9 +237,9 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                     }
                                 }
                                 so.setFrom_class_id((Integer) studentsTable.getContainerProperty(
-                                        next, SystemSettings.class_id).getValue());
+                                        next, Settings.class_id).getValue());
                                 so.setFrom_education_status_id((Integer) studentsTable.getContainerProperty(
-                                        next, SystemSettings.education_status_id).getValue());
+                                        next, Settings.education_status_id).getValue());
                                 so.setReasons(getMulticomboCaptions((Set<?>) reasonsMCB.getValue()));
                                 int st = 0;
                                 try {
@@ -252,24 +252,24 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                         st = dbso.exec_update_existed_to_class(so, o_id);
                                         dbso.exec_update_from_class(so,
                                                 (Integer) studentsTable.getContainerProperty(
-                                                        next, SystemSettings.class_id).getValue(), o_id);
+                                                        next, Settings.class_id).getValue(), o_id);
                                         dbso.exec_update_to_class(so,
                                                 (Integer) studentsTable.getContainerProperty(
-                                                        next, SystemSettings.class_id).getValue(), o_id);
+                                                        next, Settings.class_id).getValue(), o_id);
                                     }
                                     dbso.exec_update_from_class(so,
                                             (Integer) studentsTable.getContainerProperty(
-                                                    next, SystemSettings.class_id).getValue());
+                                                    next, Settings.class_id).getValue());
                                     dbso.exec_update_to_class(so,
                                             (Integer) studentsTable.getContainerProperty(
-                                                    next, SystemSettings.class_id).getValue());
+                                                    next, Settings.class_id).getValue());
                                 } else {
                                     dbso.exec_update_future_orders(so.getYear_id(), 0, so.getStudent_id());
                                 }
                                 if (st != 0) {
-                                    studentsTable.getContainerProperty(next, SystemSettings.class_id)
+                                    studentsTable.getContainerProperty(next, Settings.class_id)
                                             .setValue(so.getTo_class_id());
-                                    studentsTable.getContainerProperty(next, SystemSettings.education_status_id)
+                                    studentsTable.getContainerProperty(next, Settings.education_status_id)
                                             .setValue(so.getTo_education_status_id());
                                     Object cl_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
                                     Object edu_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
@@ -281,7 +281,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
                                                     myUI.getMessage(SptMessages.EducationStatus))
-                                                    .setValue(SystemSettings.activeStatus);
+                                                    .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
                                                     myUI.getMessage(SptMessages.EducationStatus))
@@ -294,7 +294,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
                                                     myUI.getMessage(SptMessages.EducationStatus))
-                                                    .setValue(SystemSettings.activeStatus);
+                                                    .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
                                                     myUI.getMessage(SptMessages.EducationStatus))
@@ -312,7 +312,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
                                                     myUI.getMessage(SptMessages.EducationStatus))
-                                                    .setValue(SystemSettings.activeStatus);
+                                                    .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
                                                     myUI.getMessage(SptMessages.EducationStatus))
@@ -388,32 +388,32 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
-            int st = dbDef.exec_delete(id, SystemSettings.dbStudentOrders);
+            int st = dbDef.exec_delete(id, Settings.dbStudentOrders);
             if (st != 0) {
                 DbStudentOrder dbso = new DbStudentOrder();
                 dbso.connect();
                 StudentOrder so = new StudentOrder();
                 so.setStudent_id((Integer) historyTable.getContainerProperty(id,
-                        SystemSettings.student_id).getValue());
+                        Settings.student_id).getValue());
                 so.setOrder_id((Integer) historyTable.getContainerProperty(id,
-                        SystemSettings.order_id).getValue());
+                        Settings.order_id).getValue());
                 so.setTo_class_id((Integer) historyTable.getContainerProperty(id,
-                        SystemSettings.from_class_id).getValue());
+                        Settings.from_class_id).getValue());
                 so.setYear_id(myUI.getUser().getCurrent_year().getId());
                 if (so.getOrder_id() == 3) {
                     dbso.exec_update_from_class(so,
                             (Integer) historyTable.getContainerProperty(id,
-                                    SystemSettings.to_class_id).getValue(), id);
+                                    Settings.to_class_id).getValue(), id);
                     dbso.exec_update_to_class(so,
                             (Integer) historyTable.getContainerProperty(id,
-                                    SystemSettings.to_class_id).getValue(), id);
+                                    Settings.to_class_id).getValue(), id);
 
                     dbso.exec_update_from_class(so,
                             (Integer) historyTable.getContainerProperty(id,
-                                    SystemSettings.to_class_id).getValue());
+                                    Settings.to_class_id).getValue());
                     dbso.exec_update_to_class(so,
                             (Integer) historyTable.getContainerProperty(id,
-                                    SystemSettings.to_class_id).getValue());
+                                    Settings.to_class_id).getValue());
                 }
 
                 dbso.exec_update_future_orders(myUI.getUser().getCurrent_year().getId(),
@@ -423,20 +423,20 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 dbs.connect();
                 dbs.exec_update(selected_student_id,
                         (Integer) historyTable.getContainerProperty(
-                                id, SystemSettings.from_education_status_id).getValue(),
+                                id, Settings.from_education_status_id).getValue(),
                         (Integer) historyTable.getContainerProperty(
-                                id, SystemSettings.from_class_id).getValue(), myUI.getUser().getId());
+                                id, Settings.from_class_id).getValue(), myUI.getUser().getId());
                 dbs.close();
                 DbStudentContract dbsc = new DbStudentContract();
                 dbsc.connect();
                 dbsc.exec_update_status_by_id(selected_student_id, 2, myUI.getUser().getId());
                 dbsc.close();
-                studentsTable.getContainerProperty(selected_student_id, SystemSettings.class_id)
+                studentsTable.getContainerProperty(selected_student_id, Settings.class_id)
                         .setValue((Integer) historyTable.getContainerProperty(
-                                id, SystemSettings.from_class_id).getValue());
-                studentsTable.getContainerProperty(selected_student_id, SystemSettings.education_status_id)
+                                id, Settings.from_class_id).getValue());
+                studentsTable.getContainerProperty(selected_student_id, Settings.education_status_id)
                         .setValue((Integer) historyTable.getContainerProperty(
-                                id, SystemSettings.from_education_status_id).getValue());
+                                id, Settings.from_education_status_id).getValue());
                 Object cl_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
                 Object edu_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
                 if (cl_filt != null && !cl_filt.equals("")) {
@@ -474,7 +474,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
 
                 historyTable.getContainerDataSource().removeItem(id);
                 if (historyTable.getContainerDataSource().size() != 0) {
-                    historyTable.getContainerProperty(((IndexedContainer) historyTable.getContainerDataSource()).firstItemId(), SystemSettings.button)
+                    historyTable.getContainerProperty(((IndexedContainer) historyTable.getContainerDataSource()).firstItemId(), Settings.button)
                             .setValue(createButton(myUI.getMessage(SptMessages.DeleteButton),
                                     ((IndexedContainer) historyTable.getContainerDataSource())
                                             .firstItemId().toString(), FontAwesome.MINUS));

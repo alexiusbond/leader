@@ -24,7 +24,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.util.Date;
 import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentInstallmentPlan;
@@ -102,15 +102,15 @@ public class ClassInstPlanReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
+                    dbd.exec_for_select(myUI, Settings.dbEducationStatus, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(SystemSettings.convertToSet(
+        educationStatusMCB.setValue(Settings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
@@ -156,7 +156,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(SystemSettings.datePattern);
+        fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
@@ -164,7 +164,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(SystemSettings.datePattern);
+        tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
@@ -286,8 +286,8 @@ public class ClassInstPlanReport implements Button.ClickListener,
             installmentCont = dbip.execSQL_InstPlanByClass(myUI,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
-                    SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
-                    SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
+                    Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                    Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
             dataTable.setContainerDataSource(installmentCont);
             dbip.close();
         } catch (Exception e) {
@@ -296,7 +296,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
         }
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.dFormat.format(total));
+                myUI.getMessage(SptMessages.Total) + ": " + Settings.dFormat.format(total));
         dataTable.setVisibleColumns(NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);

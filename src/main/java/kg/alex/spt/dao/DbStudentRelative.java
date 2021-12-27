@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentRelative;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.StudentDefinitionView;
@@ -41,9 +41,9 @@ public class DbStudentRelative extends BaseDb {
         while (result.next()) {
             String id = result.getString("sr.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
+            item.getItemProperty(Settings.button).setValue(
                     dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id,
-                            SystemSettings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
+                            Settings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
             if (result.getInt("sr.is_main") == 1) {
                 item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
                         dw.createTextfield(result.getString("sr.fullname"),
@@ -84,8 +84,8 @@ public class DbStudentRelative extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.RelativeType)).setValue(
                     dw.createCombobox(result.getInt("sr.relatives_id"),
                             myUi.getMessage(SptMessages.RelativeType),
-                            id, SystemSettings.dbRelatives, false, false, false, false));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+                            id, Settings.dbRelatives, false, false, false, false));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
         }
         return container;
     }

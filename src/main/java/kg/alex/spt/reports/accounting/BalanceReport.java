@@ -15,7 +15,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbInvoice;
 import kg.alex.spt.dao.DbTransfers;
@@ -163,7 +163,7 @@ public class BalanceReport implements Button.ClickListener,
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         fromDateDF.setResolution(Resolution.MONTH);
-        fromDateDF.setDateFormat(SystemSettings.yearMonthPattern);
+        fromDateDF.setDateFormat(Settings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         fromDateDF.addValueChangeListener(this);
 
@@ -173,7 +173,7 @@ public class BalanceReport implements Button.ClickListener,
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tillDateDF.setResolution(Resolution.MONTH);
-        tillDateDF.setDateFormat(SystemSettings.yearMonthPattern);
+        tillDateDF.setDateFormat(Settings.yearMonthPattern);
         tillDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         tillDateDF.addValueChangeListener(this);
 
@@ -257,7 +257,7 @@ public class BalanceReport implements Button.ClickListener,
                         end_date.setTime(current.getTime());
                         end_date.set(Calendar.DAY_OF_MONTH, end_date.getActualMaximum(Calendar.DAY_OF_MONTH));
                         VerticalLayout rightLayout = buildRightLayout();
-                        tabSheet.addTab(rightLayout, SystemSettings.ymdf.format(current.getTime()));
+                        tabSheet.addTab(rightLayout, Settings.ymdf.format(current.getTime()));
                         Set<Integer> catIds = new HashSet<>();
                         if (!((Set<?>) assertsCategoriesTable.getValue()).isEmpty()) {
                             catIds.addAll((Set<Integer>) assertsCategoriesTable.getValue());
@@ -267,7 +267,7 @@ public class BalanceReport implements Button.ClickListener,
                                 DbTransfers dbCon = new DbTransfers();
                                 dbCon.connect();
                                 dbCon.exec_report_by_date(myUI, 3, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
-                                        assertsDataTable, SystemSettings.convertCollectionToStr(catIds));
+                                        assertsDataTable, Settings.convertCollectionToStr(catIds));
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (assertsDataTable.getContainerDataSource().size() != 0) {
@@ -296,7 +296,7 @@ public class BalanceReport implements Button.ClickListener,
                                 DbTransfers dbsc = new DbTransfers();
                                 dbsc.connect();
                                 dbsc.exec_report_by_date(myUI, 4, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
-                                        debtsDataTable, SystemSettings.convertCollectionToStr(catIds));
+                                        debtsDataTable, Settings.convertCollectionToStr(catIds));
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (debtsDataTable.getContainerDataSource().size() != 0) {
@@ -321,12 +321,12 @@ public class BalanceReport implements Button.ClickListener,
                             DbTransfers dbtr = new DbTransfers();
                             dbtr.connect();
                             schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
-                                    end_date.getTime(), SystemSettings.convertCollectionToStr(catIds));
+                                    end_date.getTime(), Settings.convertCollectionToStr(catIds));
                             assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " +
-                                    SystemSettings.dFormat.format(schoolAcc.getTotal_income()) + "$</b>");
+                                    Settings.dFormat.format(schoolAcc.getTotal_income()) + "$</b>");
                             debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": "
-                                    + SystemSettings.dFormat.format(schoolAcc.getTotal_outcome()) + "$</b>");
-                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + SystemSettings.dFormat.format(
+                                    + Settings.dFormat.format(schoolAcc.getTotal_outcome()) + "$</b>");
+                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + Settings.dFormat.format(
                                     (schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$</b>");
                             assertsDataTable.setData(schoolAcc.getTotal_income());
                             debtsDataTable.setData(schoolAcc.getTotal_outcome());

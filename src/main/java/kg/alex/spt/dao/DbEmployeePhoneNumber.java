@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeePhoneNumber;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
@@ -62,17 +62,17 @@ public class DbEmployeePhoneNumber extends BaseDb {
         while (result.next()) {
             String id = result.getString("epn.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
+            item.getItemProperty(Settings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(
                     edv.createCombobox(result.getInt("epn.hr_phone_type_id"),
-                            myUI.getMessage(SptMessages.Type), SystemSettings.dbPhoneType, true));
+                            myUI.getMessage(SptMessages.Type), Settings.dbPhoneType, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
                     edv.createTextfield(result.getString("epn.number"),
                             myUI.getMessage(SptMessages.Number),
                             new RegexpValidator("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s0-9]*$", true,
                                     myUI.getMessage(SptMessages.NotifWrongValue)), true));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

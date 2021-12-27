@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Stock;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -33,9 +33,9 @@ public class DbStock extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.school_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.school_id, Integer.class, 0);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
@@ -43,11 +43,11 @@ public class DbStock extends BaseDb {
                     result.getString("t.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.school_id).setValue(
+            item.getItemProperty(Settings.school_id).setValue(
                     result.getInt("t.school_id"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("t.activity_status_id"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("t.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("t.id"));
         }
         return container;
     }

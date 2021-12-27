@@ -12,7 +12,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.*;
@@ -81,7 +81,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(SystemSettings.datePattern);
+        fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -90,7 +90,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(SystemSettings.datePattern);
+        tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
         tillDateDF.addValueChangeListener(this);
@@ -145,7 +145,7 @@ public class ProductMovementsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        stockSelect.setValue(SystemSettings.convertToSet(stockSelect.getContainerDataSource().getItemIds()));
+        stockSelect.setValue(Settings.convertToSet(stockSelect.getContainerDataSource().getItemIds()));
 
         leftGrid.addComponent(schoolSelect, 0, 0, 3, 0);
         leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
@@ -208,8 +208,8 @@ public class ProductMovementsReport implements Button.ClickListener,
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.ProductMovementsReport) + " "
                             + productsTable.getContainerProperty(productsTable.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
-                            + SystemSettings.df.format(fromDateDF.getValue())
-                            + " " + tillDateDF.getCaption().toLowerCase() + " " + SystemSettings.df.format(tillDateDF.getValue()) + "]");
+                            + Settings.df.format(fromDateDF.getValue())
+                            + " " + tillDateDF.getCaption().toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
@@ -258,7 +258,7 @@ public class ProductMovementsReport implements Button.ClickListener,
                 DbDefinition dbCon = new DbDefinition();
                 dbCon.connect();
                 stockSelect.setContainerDataSource(dbCon.exec_for_select(myUI,
-                        SystemSettings.dbStock, (Integer) schoolSelect.getValue(), true));
+                        Settings.dbStock, (Integer) schoolSelect.getValue(), true));
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);

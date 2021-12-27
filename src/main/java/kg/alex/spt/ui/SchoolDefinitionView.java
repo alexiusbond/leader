@@ -19,7 +19,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSalaryCategories;
@@ -240,7 +240,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+                    dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -251,7 +251,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         photoEmb = new Embedded();
         photoEmb.setHeight("100%");
         photoEmb.setWidth("95%");
-        photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS + "no_photo.jpg")));
+        photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
         photoEmb.setImmediate(true);
         settingsLay.addComponent(photoEmb);
         settingsLay.setComponentAlignment(photoEmb, Alignment.MIDDLE_CENTER);
@@ -265,7 +265,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source.getId() != null && source.getId().equals(SystemSettings.cancel_upload_button)) {
+        if (source.getId() != null && source.getId().equals(Settings.cancel_upload_button)) {
             if (photoUpl != null) {
                 photoUpl.interruptUpload();
             }
@@ -329,7 +329,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
                             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                                     codeTF.getValue() + " - " + nameRuTF.getValue());
-                            item.getItemProperty(SystemSettings.year_id).setValue(
+                            item.getItemProperty(Settings.year_id).setValue(
                                     myUI.getUser().getCurrent_year().getId());
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
@@ -338,7 +338,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                     } else {
                         int status = 0;
                         School school = getSchool((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                SystemSettings.id).getValue());
+                                Settings.id).getValue());
                         try {
                             status = dbScl.exec_update(school);
                         } catch (Exception e) {
@@ -347,9 +347,9 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                         }
                         if (status != 0) {
                             if (!school.getCode().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                    SystemSettings.id).getValue(), myUI.getMessage(SptMessages.Code)).getValue())
+                                    Settings.id).getValue(), myUI.getMessage(SptMessages.Code)).getValue())
                                     || !school.getName_kg().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                    SystemSettings.id).getValue(), myUI.getMessage(SptMessages.TitleRu)).getValue())) {
+                                    Settings.id).getValue(), myUI.getMessage(SptMessages.TitleRu)).getValue())) {
                                 DbSalaryCategories dbsc = new DbSalaryCategories();
                                 dbsc.connect();
                                 IndexedContainer salCont = dbsc.execSQL(myUI);
@@ -430,13 +430,13 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnSchoolDefinitionView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(Settings.cnSchoolDefinitionView + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnSchoolDefinitionView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(Settings.cnSchoolDefinitionView + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnSchoolDefinitionView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(Settings.cnSchoolDefinitionView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -464,7 +464,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         nameRuTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.TitleRu)).getValue().toString());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).getValue());
+                Settings.status_id).getValue());
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.TitleKg)).getValue() != null) {
             nameKgTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
@@ -512,7 +512,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Logo)).getValue() != null) {
-            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS
+            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS
                     + dataTable.getContainerProperty(dataTable.getValue(),
                     myUI.getMessage(SptMessages.Logo)).getValue().toString())));
             photoName = dataTable.getContainerProperty(dataTable.getValue(),
@@ -536,7 +536,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         bankAccountTF.setValue("");
         phoneTF.setValue("");
         statusSelect.setValue(null);
-        photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS + "no_photo.jpg")));
+        photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
         photoName = null;
     }
 
@@ -568,7 +568,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Logo)).setValue(photoName);
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).setValue(statusSelect.getValue());
+                Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
@@ -593,11 +593,11 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(SystemSettings.status_id).setValue(statusSelect.getValue());
+        item.getItemProperty(Settings.status_id).setValue(statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());
-        item.getItemProperty(SystemSettings.year_id).setValue(myUI.getUser().getCurrent_year().getId());
-        item.getItemProperty(SystemSettings.id).setValue(id);
+        item.getItemProperty(Settings.year_id).setValue(myUI.getUser().getCurrent_year().getId());
+        item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -629,12 +629,12 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             dbDef.connect();
             dbDef.getConnection().setAutoCommit(false);
             dbDef.exec_delete(dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue().toString(), SystemSettings.dbAcc_category, SystemSettings.school_id);
+                    Settings.id).getValue().toString(), Settings.dbAcc_category, Settings.school_id);
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), SystemSettings.dbSchool);
+                    Settings.id).getValue(), Settings.dbSchool);
             if (st != 0) {
                 myUI.getSchoolCont().removeItem(dataTable.getContainerProperty(
-                        dataTable.getValue(), SystemSettings.id).getValue());
+                        dataTable.getValue(), Settings.id).getValue());
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {
                     dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
@@ -702,7 +702,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             FileOutputStream fos; // Output stream to write to
             photoName = codeTF.getValue() + ".jpg";
             try {
-                myFile = new File(SystemSettings.PATH_TO_UPLOADS + photoName);
+                myFile = new File(Settings.PATH_TO_UPLOADS + photoName);
 
                 // Open the file for writing.
                 fos = new FileOutputStream(myFile);
@@ -735,7 +735,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
         cancelButton = new Button();
         cancelButton.addClickListener(this);
-        cancelButton.setId(SystemSettings.cancel_upload_button);
+        cancelButton.setId(Settings.cancel_upload_button);
         cancelButton.setVisible(false);
         cancelButton.setIcon(FontAwesome.CLOSE);
         cancelButton.setStyleName(ValoTheme.BUTTON_TINY);

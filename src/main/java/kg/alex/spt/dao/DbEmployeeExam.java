@@ -8,8 +8,6 @@ package kg.alex.spt.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.data.validator.DoubleRangeValidator;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,13 +20,18 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.EmployeeExam;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
+import kg.alex.spt.utils.ComboBoxMax;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DbEmployeeExam extends BaseDb {
+
+    static final Logger logger = LogManager.getLogger(DbEmployeeExam.class);
 
     public DbEmployeeExam() throws Exception {
         super();
@@ -76,15 +79,25 @@ public class DbEmployeeExam extends BaseDb {
         while (result.next()) {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
-                    id, SystemSettings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(edv.createCombobox(result.getInt("ex.hr_exam_id"),
-                    myUI.getMessage(SptMessages.Exam), SystemSettings.dbExamTable, true));
+            item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
+                    id, Settings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
+            ComboBoxMax cb = edv.createCombobox(0, myUI.getMessage(SptMessages.Exam), null, true);
+            try {
+                DbExam dbe = new DbExam();
+                dbe.connect();
+                cb.setContainerDataSource(dbe.exec_for_select(myUI, result.getInt("ex.hr_exam_id")));
+                dbe.close();
+            } catch (Exception ex) {
+                logger.error(ex);
+                logger.catching(ex);
+            }
+            cb.setValue(result.getInt("ex.hr_exam_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(cb);
             item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(
                     edv.createTextfield(result.getString("ex.score"), myUI.getMessage(SptMessages.Score),
                             new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 10, false), true));
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(edv.createDateField(result.getDate("ex.date_of_issue"),
-                    myUI.getMessage(SptMessages.IssueDate), null, true, SystemSettings.datePattern, Resolution.DAY));
+                    myUI.getMessage(SptMessages.IssueDate), null, true, Settings.datePattern, Resolution.DAY));
 
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
@@ -94,7 +107,7 @@ public class DbEmployeeExam extends BaseDb {
             a.setUnique_name(result.getString("a.unique_name"));
             a.setExtension(result.getString("a.extension"));
             a.setName(result.getString("a.name"));
-            Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, SystemSettings.download_button, FontAwesome.DOWNLOAD);
+            Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);
             hl.addComponent(b);
@@ -104,7 +117,7 @@ public class DbEmployeeExam extends BaseDb {
             upload.setData(b);
             hl.addComponent(upload);
             item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }
@@ -125,7 +138,7 @@ public class DbEmployeeExam extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(result.getString("e.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(result.getString("ex.score"));
-            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(SystemSettings.df.format(result.getDate("ex.date_of_issue")));
+            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(Settings.df.format(result.getDate("ex.date_of_issue")));
         }
         return container;
     }

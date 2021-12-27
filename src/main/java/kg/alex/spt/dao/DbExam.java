@@ -8,7 +8,7 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Exam;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -56,8 +56,8 @@ public class DbExam extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.ValidityMonths), Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
@@ -67,9 +67,9 @@ public class DbExam extends BaseDb {
                     result.getInt("e.validity"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("e.activity_status_id"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("e.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("e.id"));
         }
         return container;
     }
@@ -102,4 +102,19 @@ public class DbExam extends BaseDb {
         return status;
     }
 
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int id) throws SQLException {
+        String sql = "select t.id, t.name from hr_exam as t where t.activity_status_id = 2 or t.id = ? order by t.name";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("t.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+                    result.getString("t.name"));
+        }
+        return container;
+    }
 }

@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StockInvoice;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -46,10 +46,10 @@ public class DbStockInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.FromEmployee), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ToEmployee), String.class, null);
-        container.addContainerProperty(SystemSettings.stock_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.from_employee_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.to_employee_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.stock_id, Integer.class, 0);
+        container.addContainerProperty(Settings.from_employee_id, Integer.class, 0);
+        container.addContainerProperty(Settings.to_employee_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
 
         while (result.next()) {
@@ -59,11 +59,11 @@ public class DbStockInvoice extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.FromEmployee)).setValue(result.getString("from_employee"));
             item.getItemProperty(myUi.getMessage(SptMessages.ToEmployee)).setValue(result.getString("to_employee"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.dtmf.format(result.getTimestamp("t.creation_date")));
-            item.getItemProperty(SystemSettings.stock_id).setValue(result.getInt("stock.id"));
-            item.getItemProperty(SystemSettings.from_employee_id).setValue(result.getInt("from_e.id"));
-            item.getItemProperty(SystemSettings.to_employee_id).setValue(result.getInt("to_e.id"));
-            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("t.creation_date")));
+            item.getItemProperty(Settings.stock_id).setValue(result.getInt("stock.id"));
+            item.getItemProperty(Settings.from_employee_id).setValue(result.getInt("from_e.id"));
+            item.getItemProperty(Settings.to_employee_id).setValue(result.getInt("to_e.id"));
+            item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
         }
         return container;

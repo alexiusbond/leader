@@ -25,7 +25,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbLog;
 import kg.alex.spt.dao.DbStudentContract;
@@ -67,21 +67,21 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         this.setColumnExpandRatio(1, 3);
         this.setColumnExpandRatio(2, 5);
 
-        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmGeneralInfo)) {
+        if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmGeneralInfo)) {
             this.addComponent(buildEmpInfo(), 0, 0);
         }
-        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmStudentsInfo)) {
+        if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmStudentsInfo)) {
             this.addComponent(buildStudEduCount(), 0, 1);
         }
-        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmAccountingInfo)) {
+        if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingInfo)) {
             accLayout.addComponent(buildWeekPlan());
             accLayout.addComponent(buildMonthPlan());
             accLayout.addComponent(buildTotalContract());
             this.addComponent(accLayout, 1, 0, 1, 1);
             this.addComponent(createChart(), 2, 0, 2, 1);
         }
-        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmLogsInfo)
-                || currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmAccountingLogsSelect)) {
+        if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmLogsInfo)
+                || currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingLogsSelect)) {
             this.addComponent(buildLogLayout(), 0, 2, 2, 2);
         }
     }
@@ -105,11 +105,11 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
         if (total != 0.0) {
             final DataSeries series = new DataSeries();
-            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), SystemSettings.round(tc.getTtl_payments() * 100 / total, 2));
+            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(tc.getTtl_payments() * 100 / total, 2));
             payments.setSliced(true);
             series.add(payments);
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), SystemSettings.round(tc.getTtl_left() * 100 / total, 2)));
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), SystemSettings.round(tc.getTtl_disc() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(tc.getTtl_left() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(tc.getTtl_disc() * 100 / total, 2)));
             conf.setSeries(series);
         }
 
@@ -422,17 +422,17 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         }
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
-        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_contract()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_contract()) + "$"));
         layout.addComponent(ttlDiscLab);
-        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_disc()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_disc()) + "$"));
         layout.addComponent(ttlCorrectionLab);
-        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_correction()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_correction()) + "$"));
         layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_debt()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_debt()) + "$"));
         layout.addComponent(ttlPaymentLab);
-        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_payments()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_payments()) + "$"));
         layout.addComponent(ttlLeftLab);
-        layout.addComponent(new Label(SystemSettings.dFormat.format(tc.getTtl_left()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_left()) + "$"));
         return layout;
     }
 
@@ -465,7 +465,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logsTypeSelect.setWidth("100%");
         logsTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         logsTypeSelect.addItem(myUI.getMessage(SptMessages.SystemLogs));
-        if (currentUser.isPermitted(SystemSettings.cnHomePageView + ":" + SystemSettings.prmAccountingLogsSelect)) {
+        if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingLogsSelect)) {
             logsTypeSelect.addItem(myUI.getMessage(SptMessages.AccountingLogs));
         }
         logsTypeSelect.setValue(myUI.getMessage(SptMessages.SystemLogs));

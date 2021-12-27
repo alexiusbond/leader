@@ -14,7 +14,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
@@ -62,7 +62,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 myUI.getMessage(SptMessages.Employee), myUI.getMessage(SptMessages.OrderNumber),
                 myUI.getMessage(SptMessages.Student), myUI.getMessage(SptMessages.Discount), myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Message), myUI.getMessage(SptMessages.Status),
-                SystemSettings.button};
+                Settings.button};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -99,7 +99,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Message), 1);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Date), 80);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Title), 240);
-        dataTable.setColumnWidth(SystemSettings.button, 60);
+        dataTable.setColumnWidth(Settings.button, 60);
         dataTable.setCellStyleGenerator(new CustomTable.CellStyleGenerator() {
             @Override
             public String getStyle(CustomTable source, Object itemId, Object propertyId) {
@@ -107,7 +107,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 if (propertyId == null) {
                     // Styling for row
                     if ((Integer) source.getContainerProperty(itemId,
-                            SystemSettings.status_id).getValue() == 2) {
+                            Settings.status_id).getValue() == 2) {
                         return "highlight-red";
                     } else {
                         return null;
@@ -199,7 +199,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        dateDF.setDateFormat(SystemSettings.datePattern);
+        dateDF.setDateFormat(Settings.datePattern);
         dateDF.setValue(new Date());
         settingsLay.addComponent(dateDF, 0, 3);
 
@@ -219,7 +219,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         discountTF.setRequired(true);
         discountTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         discountTF.setNullRepresentation("");
-        discountTF.setConverter(SystemSettings.getStringToIntegerConverter());
+        discountTF.setConverter(Settings.getStringToIntegerConverter());
         discountTF.setWidth("100%");
         discountTF.addValidator(new IntegerRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100));
@@ -319,8 +319,8 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     }
                     dbCon.close();
                     tableForExport.setColumnCollapsingAllowed(true);
-                    tableForExport.setColumnCollapsed(SystemSettings.button, true);
-                    tableForExport.setColumnCollapsed(SystemSettings.status_id, true);
+                    tableForExport.setColumnCollapsed(Settings.button, true);
+                    tableForExport.setColumnCollapsed(Settings.status_id, true);
                     excelReport = new EnhancedFormatExcelExport(tableForExport, "sheet1");
                     excelReport.excludeCollapsedColumns();
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SendOrders));
@@ -331,10 +331,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (source.getId() != null && source.getId().equals(SystemSettings.actDelete)) {
+        } else if (source.getId() != null && source.getId().equals(Settings.actDelete)) {
             EmployeeMessage employeeMessage = (EmployeeMessage) source.getData();
             if ((Integer) dataTable.getContainerProperty(employeeMessage.getId(),
-                    SystemSettings.status_id).getValue() == 2) {
+                    Settings.status_id).getValue() == 2) {
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
                         myUI.getMessage(SptMessages.ConfirmDeletion),
                         myUI.getMessage(SptMessages.Yes),
@@ -432,7 +432,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, employeeMessage.getId());
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                SystemSettings.df.format(dateDF.getValue()));
+                Settings.df.format(dateDF.getValue()));
         item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
                 employeeMessage.getEmployee());
         item.getItemProperty(myUI.getMessage(SptMessages.Message)).setValue(messageTA.getValue());
@@ -447,14 +447,14 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     myUI.getMessage(SptMessages.FullName)).getValue().toString();
         }
         item.getItemProperty(myUI.getMessage(SptMessages.Student)).setValue(student);
-        item.getItemProperty(SystemSettings.status_id).setValue(2);
+        item.getItemProperty(Settings.status_id).setValue(2);
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton),
-                SystemSettings.actDelete, FontAwesome.BAN, employeeMessage));
+                Settings.actDelete, FontAwesome.BAN, employeeMessage));
         hl.addComponent(createButton(myUI.getMessage(SptMessages.ViewDocument),
-                SystemSettings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
-        item.getItemProperty(SystemSettings.button).setValue(hl);
+                Settings.actPdf, FontAwesome.FILE_PDF_O, orderMessage));
+        item.getItemProperty(Settings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 myUI.getMessage(SptMessages.UnRead));
     }
@@ -493,12 +493,12 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete(employeeMessage.getId(),
-                    SystemSettings.dbEmployeeMessageTable);
+                    Settings.dbEmployeeMessageTable);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(employeeMessage.getId());
                 try {
                     dbDef.exec_delete(employeeMessage.getOrder_message_id(),
-                            SystemSettings.orderMessagesTable);
+                            Settings.orderMessagesTable);
                 } catch (Exception e) {
                 }
             }

@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Position;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -36,17 +36,17 @@ public class DbPosition extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.activity_status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.hr_position_category_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(Settings.activity_status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.hr_position_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.position_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Category), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("p.id"));
 
-            item.getItemProperty(SystemSettings.activity_status_id).setValue(
+            item.getItemProperty(Settings.activity_status_id).setValue(
                     result.getInt("st.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("p.name"));
@@ -56,11 +56,11 @@ public class DbPosition extends BaseDb {
                     result.getString("pc.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(
                     result.getString("p.default_permissions"));
-            item.getItemProperty(SystemSettings.hr_position_category_id).setValue(
+            item.getItemProperty(Settings.hr_position_category_id).setValue(
                     result.getInt("pc.id"));
-            item.getItemProperty(SystemSettings.position_id).setValue(
+            item.getItemProperty(Settings.position_id).setValue(
                     result.getInt("pos.id"));
-            item.getItemProperty(SystemSettings.id).setValue(
+            item.getItemProperty(Settings.id).setValue(
                     result.getInt("p.id"));
 
         }
@@ -116,12 +116,12 @@ public class DbPosition extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, 0);
-        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
+        container.addContainerProperty(Settings.position_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                     result.getString("name"));
-            item.getItemProperty(SystemSettings.position_id).setValue(
+            item.getItemProperty(Settings.position_id).setValue(
                     result.getInt("hr_position_id"));
         }
         return container;

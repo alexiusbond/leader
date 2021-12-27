@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.StudentContract;
 import kg.alex.spt.i18n.SptMessages;
@@ -473,25 +473,25 @@ public class DbStudentContract extends BaseDb {
                     t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                             ymr.totalStudents + "/" + ymr.totalActive);
                     t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            SystemSettings.dFormat.format(ymr.contracts));
+                            Settings.dFormat.format(ymr.contracts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            SystemSettings.dFormat.format(ymr.discounts));
+                            Settings.dFormat.format(ymr.discounts));
                     if (ymr.contracts != 0) {
                         t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                                SystemSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                                Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
                     }
                     t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                            SystemSettings.dFormat.format(ymr.corrections));
+                            Settings.dFormat.format(ymr.corrections));
                     t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            SystemSettings.dFormat.format(ymr.debts));
+                            Settings.dFormat.format(ymr.debts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            SystemSettings.dFormat.format(ymr.nets));
+                            Settings.dFormat.format(ymr.nets));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            SystemSettings.dFormat.format(ymr.paids));
+                            Settings.dFormat.format(ymr.paids));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            SystemSettings.dFormat.format(ymr.lefts));
+                            Settings.dFormat.format(ymr.lefts));
                     if (ymr.nets != 0.0) {
-                        t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(ymr.paids * 100 / ymr.nets));
+                        t.setColumnFooter(Settings.percentage, Settings.dFormat.format(ymr.paids * 100 / ymr.nets));
                     }
                     ymr.totalStudents = 0;
                     ymr.totalActive = 0;
@@ -543,7 +543,7 @@ public class DbStudentContract extends BaseDb {
                                 - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(SystemSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
+                    item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
                 }
             }
@@ -552,25 +552,25 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    SystemSettings.dFormat.format(ymr.contracts));
+                    Settings.dFormat.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    SystemSettings.dFormat.format(ymr.discounts));
+                    Settings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        SystemSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                        Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    SystemSettings.dFormat.format(ymr.debts));
+                    Settings.dFormat.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                    SystemSettings.dFormat.format(ymr.corrections));
+                    Settings.dFormat.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    SystemSettings.dFormat.format(ymr.nets));
+                    Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    SystemSettings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    SystemSettings.dFormat.format(ymr.lefts));
+                    Settings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paids * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -629,13 +629,13 @@ public class DbStudentContract extends BaseDb {
             if (school_id != result.getInt("s_temp.id")) {
                 if (t != null) {
                     t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                            SystemSettings.dFormat.format(ymr.inst_plans));
+                            Settings.dFormat.format(ymr.inst_plans));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            SystemSettings.dFormat.format(ymr.paids));
+                            Settings.dFormat.format(ymr.paids));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            SystemSettings.dFormat.format(ymr.lefts));
+                            Settings.dFormat.format(ymr.lefts));
                     if (ymr.inst_plans != 0.0) {
-                        t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
+                        t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                                 ymr.paids * 100 / ymr.inst_plans));
                     }
                     ymr.inst_plans = 0.0;
@@ -662,7 +662,7 @@ public class DbStudentContract extends BaseDb {
                                 - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
-                    item.getItemProperty(SystemSettings.percentage).setValue(
+                    item.getItemProperty(Settings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100.0
                                     / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
                 }
@@ -670,13 +670,13 @@ public class DbStudentContract extends BaseDb {
         }
         if (t != null) {
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    SystemSettings.dFormat.format(ymr.inst_plans));
+                    Settings.dFormat.format(ymr.inst_plans));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    SystemSettings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    SystemSettings.dFormat.format(ymr.lefts));
+                    Settings.dFormat.format(ymr.lefts));
             if (ymr.inst_plans != 0.0) {
-                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paids * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;
@@ -766,7 +766,7 @@ public class DbStudentContract extends BaseDb {
                                 - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(SystemSettings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
+                    item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
                 }
             }
@@ -775,25 +775,25 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    SystemSettings.dFormat.format(ymr.contracts));
+                    Settings.dFormat.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                    SystemSettings.dFormat.format(ymr.corrections));
+                    Settings.dFormat.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    SystemSettings.dFormat.format(ymr.discounts));
+                    Settings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        SystemSettings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                        Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    SystemSettings.dFormat.format(ymr.debts));
+                    Settings.dFormat.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    SystemSettings.dFormat.format(ymr.nets));
+                    Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    SystemSettings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    SystemSettings.dFormat.format(ymr.lefts));
+                    Settings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paids * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -882,7 +882,7 @@ public class DbStudentContract extends BaseDb {
                                 - result.getDouble("payments"));
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(SystemSettings.percentage).setValue(
+                    item.getItemProperty(Settings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                                     / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
                 }
@@ -892,25 +892,25 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    SystemSettings.dFormat.format(ymr.contracts));
+                    Settings.dFormat.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                    SystemSettings.dFormat.format(ymr.corrections));
+                    Settings.dFormat.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    SystemSettings.dFormat.format(ymr.discounts));
+                    Settings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        SystemSettings.dFormat.format(ymr.discounts * 100 / ymr.contracts));
+                        Settings.dFormat.format(ymr.discounts * 100 / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    SystemSettings.dFormat.format(ymr.debts));
+                    Settings.dFormat.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    SystemSettings.dFormat.format(ymr.nets));
+                    Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    SystemSettings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    SystemSettings.dFormat.format(ymr.lefts));
+                    Settings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paids * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -989,7 +989,7 @@ public class DbStudentContract extends BaseDb {
                                 - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
                 ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
-                    item.getItemProperty(SystemSettings.percentage).setValue(
+                    item.getItemProperty(Settings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                                     / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
                 }
@@ -997,15 +997,15 @@ public class DbStudentContract extends BaseDb {
         }
         if (t != null) {
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    SystemSettings.dFormat.format(ymr.nets));
+                    Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    SystemSettings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paids));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    SystemSettings.dFormat.format(ymr.lefts));
+                    Settings.dFormat.format(ymr.lefts));
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    SystemSettings.dFormat.format(ymr.inst_plans));
+                    Settings.dFormat.format(ymr.inst_plans));
             if (ymr.inst_plans != 0.0) {
-                t.setColumnFooter(SystemSettings.percentage, SystemSettings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paids * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;

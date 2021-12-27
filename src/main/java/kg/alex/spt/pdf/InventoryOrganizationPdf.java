@@ -14,7 +14,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
@@ -157,13 +157,13 @@ public class InventoryOrganizationPdf {
                                 tf.getPropertyDataSource().getValue() + "", tableFont));
                         tf = (TextField) inventoriesCont.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.Price)).getValue();
-                        table.addCell(new Phrase(SystemSettings.dFormat.format(
+                        table.addCell(new Phrase(Settings.dFormat.format(
                                 tf.getPropertyDataSource().getValue()), tableFont));
-                        table.addCell(new Phrase(SystemSettings.dFormat.format(inventoriesCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat.format(inventoriesCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         DateField df = (DateField) inventoriesCont.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.PurchaseYear)).getValue();
-                        table.addCell(new Phrase(SystemSettings.ydf.format(df.getValue()), tableFont));
+                        table.addCell(new Phrase(Settings.ydf.format(df.getValue()), tableFont));
                         tf = (TextField) inventoriesCont.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.LifeTime)).getValue();
                         table.addCell(new Phrase(

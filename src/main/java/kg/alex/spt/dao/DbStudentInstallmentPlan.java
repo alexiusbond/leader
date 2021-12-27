@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInstallmentPlan;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassInstPlanReport;
@@ -44,15 +44,15 @@ public class DbStudentInstallmentPlan extends BaseDb {
         while (result.next()) {
             String id = result.getString("ip.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
+            item.getItemProperty(Settings.button).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                            SystemSettings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
+                            Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             java.util.Date date = result.getDate("ip.date_of_payment");
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(date, myUI.getMessage(SptMessages.Date), id, false, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     dw.createTextfieldDouble(result.getDouble("ip.amount"), myUI.getMessage(SptMessages.Amount), id));
-            item.getItemProperty(SystemSettings.status_id)
+            item.getItemProperty(Settings.status_id)
                     .setValue(result.getInt("ip.is_visible"));
         }
         return container;
@@ -110,7 +110,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("ip.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    SystemSettings.df.format((result.getDate("ip.date_of_payment"))));
+                    Settings.df.format((result.getDate("ip.date_of_payment"))));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("ip.amount"));
             ip.total_inst += result.getDouble("ip.amount");
@@ -162,7 +162,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(result.getString("class_name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("ip.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(result.getString("phone"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(SystemSettings.df.format((result.getDate("ip.date_of_payment"))));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format((result.getDate("ip.date_of_payment"))));
             cip.total += result.getDouble("ip.amount");
         }
         return container;
@@ -182,7 +182,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("week_plan"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("week_plan"));
         }
         return s;
     }
@@ -202,7 +202,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("month_plan"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("month_plan"));
         }
         return s;
     }

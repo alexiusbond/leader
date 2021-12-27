@@ -26,7 +26,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbDiscount;
 import kg.alex.spt.dao.DbStudentDiscount;
@@ -175,7 +175,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             discTypeSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbDiscountType, true));
+                    dbDef.exec_for_select(myUI, Settings.dbDiscountType, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -198,7 +198,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setRequired(true);
         valueTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         valueTF.setNullRepresentation("");
-        valueTF.setConverter(SystemSettings.getStringToDoubleConverter());
+        valueTF.setConverter(Settings.getStringToDoubleConverter());
         valueTF.setWidth("100%");
         valueTF.addValidator(new DoubleRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
@@ -216,7 +216,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+                    dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -290,7 +290,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                         try {
                             status = dbDis.exec_update(
                                     getDiscount((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                            SystemSettings.id).getValue()));
+                                            Settings.id).getValue()));
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
@@ -406,16 +406,16 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnDiscountDefinitionView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(Settings.cnDiscountDefinitionView + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnDiscountDefinitionView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(Settings.cnDiscountDefinitionView + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnDiscountDefinitionView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(Settings.cnDiscountDefinitionView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnDiscountDefinitionView + ":" + SystemSettings.actCopy)) {
+        if (currentUser.isPermitted(Settings.cnDiscountDefinitionView + ":" + Settings.actCopy)) {
             copyButton.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -434,9 +434,9 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 (Double) dataTable.getContainerProperty(dataTable.getValue(),
                         myUI.getMessage(SptMessages.Value)).getValue());
         discTypeSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.discount_type_id).getValue().toString()));
+                Settings.discount_type_id).getValue().toString()));
         statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).getValue().toString()));
+                Settings.status_id).getValue().toString()));
 
     }
 
@@ -460,14 +460,14 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 .getContainerProperty(discTypeSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.discount_type_id).setValue(
+                Settings.discount_type_id).setValue(
                         (Integer) discTypeSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).setValue(
+                Settings.status_id).setValue(
                         (Integer) statusSelect.getValue());
     }
 
@@ -481,18 +481,18 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         item.getItemProperty(myUI.getMessage(SptMessages.DiscountType)).setValue(
                 discTypeSelect.getContainerProperty(discTypeSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(SystemSettings.discount_type_id).setValue(
+        item.getItemProperty(Settings.discount_type_id).setValue(
                 (Integer) discTypeSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(SystemSettings.status_id).setValue(
+        item.getItemProperty(Settings.status_id).setValue(
                 (Integer) statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());
-        item.getItemProperty(SystemSettings.year_id).setValue(
+        item.getItemProperty(Settings.year_id).setValue(
                 myUI.getUser().getCurrent_year().getId());
-        item.getItemProperty(SystemSettings.id).setValue(id);
+        item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -512,7 +512,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), SystemSettings.dbDiscount);
+                    Settings.id).getValue(), Settings.dbDiscount);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

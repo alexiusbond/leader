@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Invoice;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -47,31 +47,31 @@ public class DbInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note) + " 2", String.class, null);
-        container.addContainerProperty(SystemSettings.button, CheckBox.class, null);
+        container.addContainerProperty(Settings.button, CheckBox.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("inv.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
             if (invoice_type_id != 1) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.ymdf.format(result.getTimestamp("inv.creation_date")));
+                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.ymdf.format(result.getTimestamp("inv.creation_date")));
             } else {
-                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+                item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("inv.creation_date")));
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note) + " 2").setValue(result.getString("inv.note2"));
-            if (viewName.equals(SystemSettings.cnShortTermDebtsView) || viewName.equals(SystemSettings.cnReturnableAssetsView)) {
+            if (viewName.equals(Settings.cnShortTermDebtsView) || viewName.equals(Settings.cnReturnableAssetsView)) {
                 CheckBox cb = new CheckBox();
                 cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
                 cb.setData(result.getInt("inv.id"));
                 if (result.getInt("inv.is_confirmed") == 1) {
                     cb.setValue(true);
                 }
-                if (!currentUser.isPermitted(viewName + ":" + SystemSettings.prmConfirmationControl)) {
+                if (!currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl)) {
                     cb.setEnabled(false);
                 }
                 cb.addValueChangeListener(listener);
-                item.getItemProperty(SystemSettings.button).setValue(cb);
+                item.getItemProperty(Settings.button).setValue(cb);
             }
         }
         return container;
@@ -116,7 +116,7 @@ public class DbInvoice extends BaseDb {
             Item item = container.addItem(result.getInt("inv.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(SystemSettings.dtmf.format(result.getTimestamp("inv.creation_date")));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("inv.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
 
         }

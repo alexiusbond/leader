@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbDiscount;
 import kg.alex.spt.dao.DbStudentDiscount;
@@ -167,15 +167,15 @@ public class ClassDiscountsReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
+                    dbd.exec_for_select(myUI, Settings.dbEducationStatus, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(SystemSettings.convertToSet(
+        educationStatusMCB.setValue(Settings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.addValueChangeListener(this);
@@ -222,7 +222,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                     dbsc.connect();
                     dataTable.setContainerDataSource(null);
                     dbsc.execSQL_Discounts_by_classes(myUI, (Integer) yearSelect.getValue(),
-                            SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
                     Iterator class_iter = ((Set<?>) classTable.getValue()).iterator();
                     while (class_iter.hasNext()) {
@@ -240,7 +240,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                             dataTable.setColumnFooter(classTable.getContainerProperty(
                                     next, myUI.getMessage(SptMessages.Title)).getValue()
                                             + " " + myUI.getMessage(SptMessages.Average) + "%",
-                                    SystemSettings.dFormat.format(Double.parseDouble(
+                                    Settings.dFormat.format(Double.parseDouble(
                                             dataTable.getColumnFooter(classTable.getContainerProperty(
                                                     next, myUI.getMessage(SptMessages.Title)).getValue()
                                                     + " " + myUI.getMessage(SptMessages.Average) + "%"))

@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSalaryCategories;
@@ -177,7 +177,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+                    dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -187,7 +187,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         photoEmb = new Embedded();
         photoEmb.setHeight("100%");
         photoEmb.setWidth("95%");
-        photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS + "no_photo.jpg")));
+        photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
         photoEmb.setImmediate(true);
         buildUpload();
 
@@ -214,7 +214,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source.getId() != null && source.getId().equals(SystemSettings.cancel_upload_button)) {
+        if (source.getId() != null && source.getId().equals(Settings.cancel_upload_button)) {
             if (photoUpl != null) {
                 photoUpl.interruptUpload();
             }
@@ -299,13 +299,13 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnSchoolModificationView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(Settings.cnSchoolModificationView + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnSchoolModificationView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(Settings.cnSchoolModificationView + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnSchoolModificationView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(Settings.cnSchoolModificationView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -350,7 +350,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         phoneTF.setValue(school.getPhone());
         statusSelect.setValue(school.getStatus_id());
         if (school.getPhoto() != null && !school.getPhoto().equals("")) {
-            photoEmb.setSource(new FileResource(new File(SystemSettings.PATH_TO_UPLOADS
+            photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS
                     + school.getPhoto())));
             photoName = school.getPhoto();
         } else {
@@ -408,7 +408,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             FileOutputStream fos; // Output stream to write to
             photoName = codeTF.getValue() + ".jpg";
             try {
-                myFile = new File(SystemSettings.PATH_TO_UPLOADS + photoName);
+                myFile = new File(Settings.PATH_TO_UPLOADS + photoName);
 
                 // Open the file for writing.
                 fos = new FileOutputStream(myFile);
@@ -441,7 +441,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
 
         cancelButton = new Button();
         cancelButton.addClickListener(this);
-        cancelButton.setId(SystemSettings.cancel_upload_button);
+        cancelButton.setId(Settings.cancel_upload_button);
         cancelButton.setVisible(false);
         cancelButton.setIcon(FontAwesome.CLOSE);
         cancelButton.setStyleName(ValoTheme.BUTTON_TINY);

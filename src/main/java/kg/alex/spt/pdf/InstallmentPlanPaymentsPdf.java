@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -88,7 +88,7 @@ public class InstallmentPlanPaymentsPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.InstpLanPaymentsReport)
@@ -124,14 +124,14 @@ public class InstallmentPlanPaymentsPdf {
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Correction)
                             + ": " + st.getCtr_Correction(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Left)
-                            + ": " + SystemSettings.dFormat.format(st.getCtr_ttl_left_sum()) + "$", ordFont));
+                            + ": " + Settings.dFormat.format(st.getCtr_ttl_left_sum()) + "$", ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName)
                             + ": " + st.getStud_class_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt)
                             + ": " + st.getCtr_debt() + "$", ordFont));
                     if (st.getCtr_instplan_debt() > 0) {
                         Thead.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt)
-                                + ": " + SystemSettings.dFormat.format(st.getCtr_instplan_debt()) + "$", ordFont));
+                                + ": " + Settings.dFormat.format(st.getCtr_instplan_debt()) + "$", ordFont));
                     } else {
                         Thead.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt)
                                 + ": 0.00$", ordFont));
@@ -165,7 +165,7 @@ public class InstallmentPlanPaymentsPdf {
                             Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                             Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tpayments.addCell(new Phrase(SystemSettings.dFormat.format(paymentsCont.getContainerProperty(next,
+                            Tpayments.addCell(new Phrase(Settings.dFormat.format(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
                             Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
@@ -178,7 +178,7 @@ public class InstallmentPlanPaymentsPdf {
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
                         Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
-                                + ": " + SystemSettings.dFormat.format(ttl_pay) + "$", ordFontBold));
+                                + ": " + Settings.dFormat.format(ttl_pay) + "$", ordFontBold));
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
 
@@ -207,7 +207,7 @@ public class InstallmentPlanPaymentsPdf {
                             Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                             Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tplan.addCell(new Phrase(SystemSettings.dFormat.format(planCont.getContainerProperty(next,
+                            Tplan.addCell(new Phrase(Settings.dFormat.format(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
                             Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             i++;
@@ -215,7 +215,7 @@ public class InstallmentPlanPaymentsPdf {
                         Tplan.addCell(new Phrase(" ", ordFontBold));
                         Tplan.addCell(new Phrase(" ", ordFontBold));
                         Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
-                                + ": " + SystemSettings.dFormat.format(ttl_inst) + "$", ordFontBold));
+                                + ": " + Settings.dFormat.format(ttl_inst) + "$", ordFontBold));
 
                         document.add(Tplan);
                     }
@@ -250,7 +250,7 @@ public class InstallmentPlanPaymentsPdf {
                             Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                             Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tplan.addCell(new Phrase(SystemSettings.dFormat.format(planCont.getContainerProperty(next,
+                            Tplan.addCell(new Phrase(Settings.dFormat.format(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
                             Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             i++;
@@ -260,7 +260,7 @@ public class InstallmentPlanPaymentsPdf {
                         Tplan.addCell(new Phrase(" ", ordFontBold));
                         Tplan.addCell(new Phrase(" ", ordFontBold));
                         Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
-                                + ": " + SystemSettings.dFormat.format(ttl_plan) + "$", ordFontBold));
+                                + ": " + Settings.dFormat.format(ttl_plan) + "$", ordFontBold));
 
                         Tbody.addCell(Tplan);
 
@@ -289,7 +289,7 @@ public class InstallmentPlanPaymentsPdf {
                             Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                             Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tpayments.addCell(new Phrase(SystemSettings.dFormat.format(paymentsCont.getContainerProperty(next,
+                            Tpayments.addCell(new Phrase(Settings.dFormat.format(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
                             Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
@@ -299,7 +299,7 @@ public class InstallmentPlanPaymentsPdf {
                             y++;
 
                             if ((Integer) paymentsCont.getContainerProperty(next,
-                                    SystemSettings.payment_category_id).getValue() != 3) {
+                                    Settings.payment_category_id).getValue() != 3) {
                                 ttl_pay += (Double) paymentsCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Amount)).getValue();
                             } else {
@@ -311,7 +311,7 @@ public class InstallmentPlanPaymentsPdf {
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
                         Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
-                                + ": " + SystemSettings.dFormat.format(ttl_pay) + "$", ordFontBold));
+                                + ": " + Settings.dFormat.format(ttl_pay) + "$", ordFontBold));
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
                         Tpayments.addCell(new Phrase(" ", ordFontBold));
 

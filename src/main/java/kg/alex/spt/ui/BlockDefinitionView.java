@@ -10,7 +10,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbBlock;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbInventoryInvoice;
@@ -152,7 +152,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             statusSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, SystemSettings.dbActivity_status, true));
+                    dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -210,7 +210,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
                             DbInventoryInvoice dbii = new DbInventoryInvoice();
                             dbii.connect();
                             isUsed = dbii.isUsed((Integer) dataTable.getContainerProperty(
-                                    dataTable.getValue(), SystemSettings.id).getValue(), 0);
+                                    dataTable.getValue(), Settings.id).getValue(), 0);
                             dbii.close();
                         } catch (Exception e) {
                             logger.error(e);
@@ -224,7 +224,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
                             try {
                                 status = dbCon.exec_update(
                                         getBlock((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                                                SystemSettings.id).getValue()));
+                                                Settings.id).getValue()));
                             } catch (Exception e) {
                                 logger.error(e);
                                 logger.catching(e);
@@ -279,13 +279,13 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(SystemSettings.cnBlockDefinitionView + ":" + SystemSettings.actModify)) {
+        if (currentUser.isPermitted(Settings.cnBlockDefinitionView + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnBlockDefinitionView + ":" + SystemSettings.actAdd)) {
+        if (currentUser.isPermitted(Settings.cnBlockDefinitionView + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(SystemSettings.cnBlockDefinitionView + ":" + SystemSettings.actDelete)) {
+        if (currentUser.isPermitted(Settings.cnBlockDefinitionView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -299,7 +299,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
         statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).getValue());
+                Settings.status_id).getValue());
     }
 
     private void clearFields() {
@@ -311,7 +311,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                SystemSettings.status_id).setValue(statusSelect.getValue());
+                Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
@@ -326,9 +326,9 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(SystemSettings.status_id).setValue(
+        item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
-        item.getItemProperty(SystemSettings.id).setValue(id);
+        item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
 
@@ -347,7 +347,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             int st = dbDef.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                    SystemSettings.id).getValue(), SystemSettings.dbBlock);
+                    Settings.id).getValue(), Settings.dbBlock);
             if (st != 0) {
                 dataTable.getContainerDataSource().removeItem(dataTable.getValue());
                 if (dataTable.getContainerDataSource().size() != 0) {

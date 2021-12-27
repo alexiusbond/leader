@@ -12,7 +12,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Table;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -76,7 +76,7 @@ public class CallsPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassList), fontBold);
@@ -122,7 +122,7 @@ public class CallsPdf {
                         t.addCell(new Phrase(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Phone)).getValue().toString(), tableFont));
                         t.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        t.addCell(new Phrase(SystemSettings.dFormat.format(dataTable.getContainerProperty(next,
+                        t.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.InstPlanDebt)).getValue()), tableFont));
                         t.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         t.addCell(new Phrase(dataTable.getContainerProperty(next,

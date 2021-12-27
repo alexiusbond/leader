@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,7 +87,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
         container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
-        container.addContainerProperty(SystemSettings.button, Button.class, null);
+        container.addContainerProperty(Settings.button, Button.class, null);
         try {
             File folder = new File("/home/logo/backups");
             File[] listOfFiles = folder.listFiles();
@@ -99,7 +99,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
                             listOfFiles[i].getName());
                     item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                             new Date(listOfFiles[i].lastModified()));
-                    item.getItemProperty(SystemSettings.button).setValue(createButton(id));
+                    item.getItemProperty(Settings.button).setValue(createButton(id));
                 }
             }
             dataTable.clear();

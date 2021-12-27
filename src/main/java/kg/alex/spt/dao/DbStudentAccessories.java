@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentAccessories;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.StudentDefinitionView;
@@ -91,12 +91,12 @@ public class DbStudentAccessories extends BaseDb {
         while (result.next()) {
             String id = result.getString("sa.year_id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
+            item.getItemProperty(Settings.button).setValue(
                     dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id,
-                            SystemSettings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
+                            Settings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     dw.createCombobox(result.getInt("sa.year_id"),
-                            myUi.getMessage(SptMessages.Year), id, SystemSettings.dbYear,
+                            myUi.getMessage(SptMessages.Year), id, Settings.dbYear,
                             false, false, false, false));
             item.getItemProperty(myUi.getMessage(SptMessages.Materials)).setValue(
                     dw.createComboboxMultiAcs(result.getString("accessories"),

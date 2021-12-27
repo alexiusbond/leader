@@ -29,7 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * @author alex
  */
-public class SystemSettings implements Serializable {
+public class Settings implements Serializable {
 
     public static final String PATH_TO_UPLOADS = "/home/logo/";
     public static final String PATH_TO_UPLOADS_HR = "/home/logo/hr/";
@@ -213,6 +213,7 @@ public class SystemSettings implements Serializable {
     public static final String cnSchoolDefinitionView = "SchoolDefinitionView";
     public static final String cnEmployeeDefinitionView = "EmployeeDefinitionView";
     public static final String cnEmployeeTransferView = "EmployeeTransferView";
+    public static final String cnCV_Window = "CV_Window";
     public static final String cnLessonAssessmentView = "LessonAssessmentView";
     public static final String cnSchoolModificationView = "SchoolModificationView";
     public static final String cnStudentDefinitionView = "StudentDefinitionView";
@@ -231,6 +232,8 @@ public class SystemSettings implements Serializable {
     public static final String cnInventoryReportsView = "InventoryReportsView";
     public static final String cnHRReportsView = "HRReportsView";
     public static final String actAdd = "добавление";
+    public static final String contract_info = "информация о контракте";
+    public static final String can_be_advisor_info = "информация о кураторстве";
     public static final String actReadMessages = "просмотр всех сообщений школы";
     public static final String actModify = "изменение";
     public static final String prmChangeOldTransactions = "изменение старых записей";
@@ -294,6 +297,7 @@ public class SystemSettings implements Serializable {
     public static final String old_category = "old_category";
     public static final String download_button = "download_button";
     public static final String cancel_upload_button = "cancel_upload_button";
+    public static final String KGS = "KGS";
     public static final SimpleDateFormat dateRu = new SimpleDateFormat(
             "«dd» MMMMM yyyy год", new DateFormatSymbols() {
         @Override

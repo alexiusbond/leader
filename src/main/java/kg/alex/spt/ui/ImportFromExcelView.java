@@ -14,7 +14,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.io.File;
 import java.util.List;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbStudentRelative;
@@ -107,7 +107,7 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
         if (source == templateBtn) {
             try {
                 myUI.getPage().open(new FileResource(
-                        new File(SystemSettings.PATH_TO_UPLOADS + "students_template.xlsx")),
+                        new File(Settings.PATH_TO_UPLOADS + "students_template.xlsx")),
                         "_blank", false);
             } catch (Exception e) {
                 logger.error(e);
@@ -210,8 +210,8 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            IndexedContainer genderCont = dbd.execSQL(myUI, SystemSettings.dbGender, false, true);
-            IndexedContainer relativeCont = dbd.execSQL(myUI, SystemSettings.dbRelatives, false, true);
+            IndexedContainer genderCont = dbd.execSQL(myUI, Settings.dbGender, false, true);
+            IndexedContainer relativeCont = dbd.execSQL(myUI, Settings.dbRelatives, false, true);
             dbd.close();
             DbClassName dbcl = new DbClassName();
             dbcl.connect();
@@ -225,16 +225,16 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
             for (int i = 0; i < list.size(); i++) {
                 StudentExcel stExcel = (StudentExcel) list.get(i);
                 Student student = new Student();
-                Property prop = genderCont.getContainerProperty(stExcel.getGender(), SystemSettings.id);
+                Property prop = genderCont.getContainerProperty(stExcel.getGender(), Settings.id);
                 if (prop != null) {
                     student.setGender_id((Integer) prop.getValue());
                 }
-                prop = classCont.getContainerProperty(stExcel.getClass_name(), SystemSettings.id);
+                prop = classCont.getContainerProperty(stExcel.getClass_name(), Settings.id);
                 if (prop != null) {
                     student.setClass_name_id((Integer) prop.getValue());
                 }
                 try {
-                    student.setBirth_date(SystemSettings.df.parse(stExcel.getBirth_date()));
+                    student.setBirth_date(Settings.df.parse(stExcel.getBirth_date()));
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
@@ -249,7 +249,7 @@ public class ImportFromExcelView extends GridLayout implements Button.ClickListe
                 student.setEmployee_id(myUI.getUser().getId());
                 student.setSchool_id(myUI.getUser().getSchool_id());
                 StudentRelative relative = new StudentRelative();
-                prop = relativeCont.getContainerProperty(stExcel.getRelative_type(), SystemSettings.id);
+                prop = relativeCont.getContainerProperty(stExcel.getRelative_type(), Settings.id);
                 if (prop != null) {
                     relative.setRelatives_id((Integer) prop.getValue());
                 }

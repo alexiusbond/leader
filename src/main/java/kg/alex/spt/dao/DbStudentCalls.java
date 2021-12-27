@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.CallsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
@@ -51,17 +51,17 @@ public class DbStudentCalls extends BaseDb {
         while (result.next()) {
             String id = result.getString("sc.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
+            item.getItemProperty(Settings.button).setValue(
                     dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                            SystemSettings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
+                            Settings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    SystemSettings.df.format(result.getDate("sc.modification_date")));
+                    Settings.df.format(result.getDate("sc.modification_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                     dw.createTextfieldNote(result.getString("sc.note"),
                             myUI.getMessage(SptMessages.Note), id));
-            item.getItemProperty(SystemSettings.crud_status)
+            item.getItemProperty(Settings.crud_status)
                     .setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
@@ -132,7 +132,7 @@ public class DbStudentCalls extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    SystemSettings.df.format((result.getDate("date"))));
+                    Settings.df.format((result.getDate("date"))));
             cr.total++;
         }
         return container;

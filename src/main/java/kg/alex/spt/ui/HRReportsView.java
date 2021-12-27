@@ -9,7 +9,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.hr.HRLessonHoursReport;
 import org.apache.shiro.SecurityUtils;
@@ -54,10 +54,10 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
         repTypeSelect.setWidth("100%");
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
-        if (currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmHrGeneralReport)) {
+        if (currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmHrGeneralReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.HRGeneralReport));
         }
-        if (currentUser.isPermitted(SystemSettings.cnHRReportsView + ":" + SystemSettings.prmLessonHoursReport)) {
+        if (currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmLessonHoursReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.HRLessonHoursReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);

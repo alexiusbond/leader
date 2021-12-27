@@ -149,7 +149,7 @@ public class SptMessages_ru extends SptMessages {
             {AccessoriesDefinition, "Определение принадлежностей"},
             {FullName, "ФИО"},
             {Hobbies, "Хобби"},
-            {Fobbies, "Фобии"},
+            {Phobias, "Фобии"},
             {WorkingStatus, "Статус"},
             {WorkingStatuses, "Статусы"},
             {Position, "Должность"},

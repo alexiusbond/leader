@@ -10,7 +10,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
@@ -85,7 +85,7 @@ public class StockGeneralReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(SystemSettings.datePattern);
+        fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -94,7 +94,7 @@ public class StockGeneralReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(SystemSettings.datePattern);
+        tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
@@ -162,14 +162,14 @@ public class StockGeneralReport implements Button.ClickListener,
             dbAc.connect();
             DbProductCategories dbPC = new DbProductCategories();
             dbPC.connect();
-            operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, SystemSettings.dbOperation, true));
+            operationOG.setContainerDataSource(dbCon.exec_for_select(myUI, Settings.dbOperation, true));
             Item item = operationOG.getContainerDataSource().addItem(0);
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(myUI.getMessage(SptMessages.General));
             if (operationOG.getContainerDataSource() != null) {
                 operationOG.setValue(((IndexedContainer) operationOG.getContainerDataSource()).firstItemId());
             }
             dbAc.execSQL_for_select_as_tree(myUI, productsTable,
-                    SystemSettings.convertCollectionToStr(dbPC.execSQL_for_select(myUI).getItemIds()));
+                    Settings.convertCollectionToStr(dbPC.execSQL_for_select(myUI).getItemIds()));
             dbAc.close();
             dbCon.close();
             dbPC.close();
@@ -177,7 +177,7 @@ public class StockGeneralReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        stocksMSB.setValue(SystemSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
+        stocksMSB.setValue(Settings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
 
         leftGrid.addComponent(operationOG, 0, 0, 3, 0);
         leftGrid.addComponent(schoolSelect, 0, 1, 3, 1);
@@ -218,17 +218,17 @@ public class StockGeneralReport implements Button.ClickListener,
                     dbCon.connect();
                     if ((Integer) operationOG.getValue() == 0) {
                         dbCon.exec_stock_balance(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(),
-                                SystemSettings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
+                                Settings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
 
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance) + " " +
-                                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + SystemSettings.df.format(tillDateDF.getValue()), Table.Align.RIGHT);
+                                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()), Table.Align.RIGHT);
                     } else {
                         dbCon.exec_stock_operations(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(), (Integer) operationOG.getValue(),
-                                SystemSettings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
+                                Settings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AveragePrice), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvarageRate), Table.Align.RIGHT);
@@ -252,8 +252,8 @@ public class StockGeneralReport implements Button.ClickListener,
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.StockGeneralReport) + " ("
                             + operationOG.getContainerProperty(operationOG.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue() + ") - [" + myUI.getMessage(SptMessages.From).toLowerCase() + " "
-                            + SystemSettings.df.format(fromDateDF.getValue())
-                            + " " + myUI.getMessage(SptMessages.To).toLowerCase() + " " + SystemSettings.df.format(tillDateDF.getValue()) + "]");
+                            + Settings.df.format(fromDateDF.getValue())
+                            + " " + myUI.getMessage(SptMessages.To).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
@@ -303,9 +303,9 @@ public class StockGeneralReport implements Button.ClickListener,
             try {
                 DbDefinition dbCon = new DbDefinition();
                 dbCon.connect();
-                stocksMSB.setContainerDataSource(dbCon.exec_for_select(myUI, SystemSettings.dbStock,
+                stocksMSB.setContainerDataSource(dbCon.exec_for_select(myUI, Settings.dbStock,
                         (Integer) schoolSelect.getValue(), true));
-                stocksMSB.setValue(SystemSettings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
+                stocksMSB.setValue(Settings.convertToSet(stocksMSB.getContainerDataSource().getItemIds()));
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);

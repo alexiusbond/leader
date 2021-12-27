@@ -146,6 +146,8 @@ public class DbEmployeeExtraInfo extends BaseDb {
             if (result.getString("fam.fullname") != null) {
                 eei.setFamilyInfo(result.getString("fam.fullname") + " (" + result.getString("h2.name")
                         + (result.getString("fam.health_notes") == null ? "" : " - " + result.getString("fam.health_notes")) + ")");
+            } else {
+                eei.setFamilyInfo("");
             }
             eei.setChildren(result.getInt("children"));
             eei.setPhones(result.getString("phones"));

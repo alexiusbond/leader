@@ -7,7 +7,7 @@ package kg.alex.spt.utils;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.Table;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 
 /**
  * @author alex
@@ -25,7 +25,7 @@ public class FormattedTable extends Table {
 
             if (property.getValue() != null) // Format a decimal value for a specific locale
             {
-                return SystemSettings.dFormat.format((Double) property.getValue());
+                return Settings.dFormat.format((Double) property.getValue());
             }
         }
         return super.formatPropertyValue(rowId, colId, property);

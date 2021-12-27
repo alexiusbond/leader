@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentOrder;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.OutOfList;
@@ -58,17 +58,17 @@ public class DbStudentOrder extends BaseDb {
         stat.setInt(2, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(SystemSettings.button, Button.class, null);
+        container.addContainerProperty(Settings.button, Button.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.OrderType), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FromClass), String.class, null);
-        container.addContainerProperty(SystemSettings.from_class_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.to_class_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.student_id, Integer.class, 0);
+        container.addContainerProperty(Settings.from_class_id, Integer.class, 0);
+        container.addContainerProperty(Settings.to_class_id, Integer.class, 0);
+        container.addContainerProperty(Settings.student_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ToClass), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FromEducationStatus),
                 String.class, null);
-        container.addContainerProperty(SystemSettings.order_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.from_education_status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.order_id, Integer.class, 0);
+        container.addContainerProperty(Settings.from_education_status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ToEducationStatus),
                 String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Reasons), String.class, null);
@@ -77,7 +77,7 @@ public class DbStudentOrder extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("so.id"));
             if (!is_delete_added) {
-                item.getItemProperty(SystemSettings.button).setValue(iv.createButton(
+                item.getItemProperty(Settings.button).setValue(iv.createButton(
                         myUi.getMessage(SptMessages.DeleteButton),
                         result.getString("so.id"), FontAwesome.MINUS));
                 is_delete_added = true;
@@ -86,19 +86,19 @@ public class DbStudentOrder extends BaseDb {
                     result.getString("o.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.FromClass)).setValue(
                     result.getString("from_class"));
-            item.getItemProperty(SystemSettings.from_class_id).setValue(
+            item.getItemProperty(Settings.from_class_id).setValue(
                     result.getInt("from_class_name.id"));
-            item.getItemProperty(SystemSettings.to_class_id).setValue(
+            item.getItemProperty(Settings.to_class_id).setValue(
                     result.getInt("to_class_name.id"));
-            item.getItemProperty(SystemSettings.order_id).setValue(
+            item.getItemProperty(Settings.order_id).setValue(
                     result.getInt("o.id"));
-            item.getItemProperty(SystemSettings.student_id).setValue(
+            item.getItemProperty(Settings.student_id).setValue(
                     result.getInt("so.student_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.ToClass)).setValue(
                     result.getString("to_class"));
             item.getItemProperty(myUi.getMessage(SptMessages.FromEducationStatus)).setValue(
                     result.getString("from_edu.name"));
-            item.getItemProperty(SystemSettings.from_education_status_id).setValue(
+            item.getItemProperty(Settings.from_education_status_id).setValue(
                     result.getInt("from_edu.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.ToEducationStatus)).setValue(
                     result.getString("to_edu.name"));

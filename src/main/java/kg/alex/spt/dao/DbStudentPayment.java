@@ -9,6 +9,7 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.DateRangeValidator;
+import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -21,7 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassPaymentsReport;
@@ -70,20 +71,20 @@ public class DbStudentPayment extends BaseDb {
         IndexedContainer container = dw.preparePaymentsContainer();
         while (result.next()) {
             boolean isDisabled = false;
-            if (!currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeOldTransactions)) {
+            if (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
                 isDisabled = result.getBoolean("isDisabled");
             }
             String id = result.getString("sp.id");
             Item item = container.addItem(id);
             Button btn = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                    SystemSettings.dbStudentPayments, FontAwesome.MINUS_SQUARE);
+                    Settings.dbStudentPayments, FontAwesome.MINUS_SQUARE);
             btn.setEnabled(!isDisabled);
-            if (!currentUser.isPermitted(SystemSettings.paymentsTab + ":" + SystemSettings.actDelete)) {
+            if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actDelete)) {
                 btn.setEnabled(false);
             }
-            item.getItemProperty(SystemSettings.button).setValue(btn);
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
-            if (!currentUser.isPermitted(SystemSettings.paymentsTab + ":" + SystemSettings.actModify)) {
+            item.getItemProperty(Settings.button).setValue(btn);
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actModify)) {
                 isDisabled = true;
             }
             ComboBoxMax cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
@@ -93,11 +94,18 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(cb);
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentType)).setValue(
                     dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(SptMessages.PaymentType), id,
-                            SystemSettings.dbPaymentType, false, false, false, isDisabled));
+                            Settings.dbPaymentType, false, false, false, isDisabled));
             TextField tf = dw.createTextfieldDouble(result.getDouble("sp.amount"), myUI.getMessage(SptMessages.Amount), id);
             tf.setId(myUI.getMessage(SptMessages.Payments));
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
+            tf = dw.createTextfieldDouble(null, Settings.KGS, id);
+            tf.setId(Settings.KGS);
+            tf.setRequired(false);
+            tf.removeAllValidators();
+            tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.0, null));
+            tf.setEnabled(!isDisabled);
+            item.getItemProperty(Settings.KGS).setValue(tf);
             tf = dw.createTextfieldDouble(result.getDouble("sp.dollar_rate"), myUI.getMessage(SptMessages.Rate), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
@@ -108,7 +116,7 @@ public class DbStudentPayment extends BaseDb {
                     myUI.getMessage(SptMessages.Date), id, false, false);
             df.setId(myUI.getMessage(SptMessages.Payments));
             df.setEnabled(!isDisabled);
-            if (currentUser.isPermitted(SystemSettings.cnTransactionsView + ":" + SystemSettings.prmChangeOldTransactions)) {
+            if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
                 df.setRangeStart(myUI.getUser().getTransactions_start_date());
             } else if (!isDisabled) {
                 Calendar calendar = Calendar.getInstance();
@@ -123,12 +131,12 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             Button b = dw.createButton(myUI.getMessage(SptMessages.Print), id,
                     myUI.getMessage(SptMessages.Invoice), FontAwesome.PRINT);
-            b.setEnabled(currentUser.isPermitted(SystemSettings.paymentsTab
-                    + ":" + SystemSettings.actPrint));
+            b.setEnabled(currentUser.isPermitted(Settings.paymentsTab
+                    + ":" + Settings.actPrint));
             item.getItemProperty(myUI.getMessage(SptMessages.Print)).setValue(b);
-            item.getItemProperty(SystemSettings.old_amount).setValue(result.getDouble("sp.amount"));
-            item.getItemProperty(SystemSettings.old_date).setValue(result.getDate("sp.modification_date"));
-            item.getItemProperty(SystemSettings.old_category).setValue(result.getInt("sp.payment_category_id"));
+            item.getItemProperty(Settings.old_amount).setValue(result.getDouble("sp.amount"));
+            item.getItemProperty(Settings.old_date).setValue(result.getDate("sp.modification_date"));
+            item.getItemProperty(Settings.old_category).setValue(result.getInt("sp.payment_category_id"));
         }
         return container;
     }
@@ -254,18 +262,18 @@ public class DbStudentPayment extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.WhoPaid), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PaymentCategoryType), String.class, null);
-        container.addContainerProperty(SystemSettings.payment_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    SystemSettings.df.format((result.getDate("sp.modification_date"))));
+                    Settings.df.format((result.getDate("sp.modification_date"))));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("sp.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
-            item.getItemProperty(SystemSettings.payment_category_id).setValue(
+            item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("pc.id"));
             if (result.getInt("pc.id") != 3) {
                 ip.total_pay += result.getDouble("sp.amount");
@@ -315,7 +323,7 @@ public class DbStudentPayment extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.PaymentCategoryType), String.class, null);
-        container.addContainerProperty(SystemSettings.payment_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.WhoPaid), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
@@ -328,10 +336,10 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("sp.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    SystemSettings.df.format((result.getDate("sp.modification_date"))));
+                    Settings.df.format((result.getDate("sp.modification_date"))));
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
-            item.getItemProperty(SystemSettings.payment_category_id).setValue(
+            item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("sp.payment_category_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
@@ -372,7 +380,7 @@ public class DbStudentPayment extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("week_paid"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("week_paid"));
         }
         return s;
     }
@@ -391,7 +399,7 @@ public class DbStudentPayment extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + SystemSettings.dFormat.format(result.getDouble("month_paid"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("month_paid"));
         }
         return s;
     }

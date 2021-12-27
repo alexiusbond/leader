@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeQuestioning;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
@@ -61,12 +61,12 @@ public class DbEmployeeQuestion extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Question), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Answer), TextField.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
         while (result.next()) {
             String id = result.getString("q.id");
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.Question)).setValue(result.getString("q.name"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("eq.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("eq.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Answer)).setValue(
                     edv.createTextfield(result.getString("eq.answer"),
                             myUI.getMessage(SptMessages.Answer),

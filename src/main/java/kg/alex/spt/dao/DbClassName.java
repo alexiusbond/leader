@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.ClassName;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -35,31 +35,31 @@ public class DbClassName extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Number), String.class, 0);
-        container.addContainerProperty(SystemSettings.number_id, Integer.class, null);
+        container.addContainerProperty(Settings.number_id, Integer.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.school_id, Integer.class, 0);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.school_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.School), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("cn.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Number)).setValue(
                     result.getString("cnum.name"));
-            item.getItemProperty(SystemSettings.number_id).setValue(
+            item.getItemProperty(Settings.number_id).setValue(
                     result.getInt("cnum.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("cn.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("cn.activity_status_id"));
-            item.getItemProperty(SystemSettings.school_id).setValue(
+            item.getItemProperty(Settings.school_id).setValue(
                     result.getInt("cn.school_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
                     result.getString("sc.name_ru"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("cn.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("cn.id"));
         }
         return container;
     }
@@ -126,10 +126,10 @@ public class DbClassName extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getString("cl_name"));
-            item.getItemProperty(SystemSettings.id).setValue(
+            item.getItemProperty(Settings.id).setValue(
                     result.getInt("cn.id"));
         }
         return container;

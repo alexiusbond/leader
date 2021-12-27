@@ -5,12 +5,10 @@
  */
 package kg.alex.spt.dao;
 
-import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
@@ -24,7 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeesCount;
 import kg.alex.spt.i18n.SptMessages;
@@ -40,8 +38,7 @@ public class DbEmployee extends BaseDb {
         super();
     }
 
-    public EmployeesCount execSQL(int scl_id)
-            throws SQLException {
+    public EmployeesCount execSQL(int scl_id) throws SQLException {
         String sql = "SELECT COUNT(IF(p.id > 2, p.id, NULL)) AS others_count, "
                 + "IFNULL(GROUP_CONCAT(CASE WHEN p.id > 2 THEN CONCAT(e.surname, ' ', e.name) "
                 + "ELSE NULL END ORDER BY p.id ASC SEPARATOR ', '), '') AS others, "
@@ -67,6 +64,32 @@ public class DbEmployee extends BaseDb {
             e.setOthers_count(result.getInt("others_count"));
         }
         return e;
+    }
+
+    public float execSQL_completeness(int employee_id) throws SQLException {
+        String sql = "SELECT ROUND(IF(e.hr_martial_status_id = 2, (IF(extra.id IS NOT NULL, 1, 0) + IF(sp.id IS NOT NULL, 1, 0) " +
+                "+ IF(cont.id IS NOT NULL, 1, 0) + IF(sch.id IS NOT NULL, 1, 0) + IF(cmpl.phones IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.branches IS NOT NULL, 1, 0) + IF(cmpl.education IS NOT NULL, 1, 0) + IF(cmpl.work_places IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.exams IS NOT NULL, 1, 0) + IF(cmpl.seminars IS NOT NULL, 1, 0) + IF(cmpl.certificates IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.languages IS NOT NULL, 1, 0) + IF(cmpl.spouse_education IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.spouse_work_places IS NOT NULL, 1, 0) + IF(cmpl.children IS NOT NULL, 1, 0)) / 15, " +
+                "(IF(extra.id IS NOT NULL, 1, 0) + IF(cont.id IS NOT NULL, 1, 0) + IF(sch.id IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.phones IS NOT NULL, 1, 0) + IF(cmpl.branches IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.education IS NOT NULL, 1, 0) + IF(cmpl.work_places IS NOT NULL, 1, 0) + IF(cmpl.exams IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.seminars IS NOT NULL, 1, 0) + IF(cmpl.certificates IS NOT NULL, 1, 0) + IF(cmpl.languages IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.children IS NOT NULL, 1, 0)) / 12), 2) AS points FROM employee AS e " +
+                "LEFT JOIN hr_employee_completeness AS cmpl ON cmpl.employee_id = e.id " +
+                "LEFT JOIN hr_employee_contacts AS cont ON cont.employee_id = e.id " +
+                "LEFT JOIN hr_employee_grad_school AS sch ON sch.employee_id = e.id " +
+                "LEFT JOIN hr_employee_spouse AS sp ON sp.employee_id = e.id " +
+                "LEFT JOIN hr_employee_extra_info AS extra ON extra.employee_id = e.id where e.id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getFloat("points");
+        }
+        return 0.0f;
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id, String working_statuses,
@@ -119,7 +142,6 @@ public class DbEmployee extends BaseDb {
         stat.setInt(2, school_id);
         stat.setInt(3, school_id);
         stat.setInt(4, school_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
@@ -135,29 +157,29 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Hours), Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ExtraHours), Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.WorkingStatus), String.class, null);
-        container.addContainerProperty(SystemSettings.gender_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.nationality_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.citizenship_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.martial_status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.working_status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.extra_position_ids, String.class, null);
-        container.addContainerProperty(SystemSettings.salary_category_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.is_modifiable, Boolean.class, true);
-        container.addContainerProperty(SystemSettings.visible_hr_orders, String.class, null);
+        container.addContainerProperty(Settings.gender_id, Integer.class, 0);
+        container.addContainerProperty(Settings.nationality_id, Integer.class, 0);
+        container.addContainerProperty(Settings.citizenship_id, Integer.class, 0);
+        container.addContainerProperty(Settings.martial_status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.working_status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.position_id, Integer.class, 0);
+        container.addContainerProperty(Settings.extra_position_ids, String.class, null);
+        container.addContainerProperty(Settings.salary_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.is_modifiable, Boolean.class, true);
+        container.addContainerProperty(Settings.visible_hr_orders, String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.CanBeAdvisor), Boolean.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
 
         Iterator iter = workingStatCont.getItemIds().iterator();
         while (iter.hasNext()) {
             Object next = iter.next();
-            workingStatCont.getContainerProperty(next, SystemSettings.count).setValue(0);
+            workingStatCont.getContainerProperty(next, Settings.count).setValue(0);
         }
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("e.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("e.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
                     result.getString("e.login"));
             item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
@@ -178,7 +200,7 @@ public class DbEmployee extends BaseDb {
                     result.getString("ws.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraPosition)).setValue(
                     result.getString("extra_positions"));
-            item.getItemProperty(SystemSettings.extra_position_ids).setValue(
+            item.getItemProperty(Settings.extra_position_ids).setValue(
                     result.getString("extra_position_ids"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraBranches)).setValue(
                     result.getString("extra_branches"));
@@ -186,28 +208,28 @@ public class DbEmployee extends BaseDb {
                     result.getInt("ebh.hours"));
             item.getItemProperty(myUi.getMessage(SptMessages.ExtraHours)).setValue(
                     result.getInt("ebh.extra"));
-            item.getItemProperty(SystemSettings.gender_id).setValue(
+            item.getItemProperty(Settings.gender_id).setValue(
                     result.getInt("g.id"));
-            item.getItemProperty(SystemSettings.nationality_id).setValue(
+            item.getItemProperty(Settings.nationality_id).setValue(
                     result.getInt("n.id"));
-            item.getItemProperty(SystemSettings.citizenship_id).setValue(
+            item.getItemProperty(Settings.citizenship_id).setValue(
                     result.getInt("cntr.id"));
-            item.getItemProperty(SystemSettings.martial_status_id).setValue(
+            item.getItemProperty(Settings.martial_status_id).setValue(
                     result.getInt("m.id"));
-            item.getItemProperty(SystemSettings.working_status_id).setValue(
+            item.getItemProperty(Settings.working_status_id).setValue(
                     result.getInt("ws.id"));
             if (result.getInt("eo3.id") != 0) {
-                item.getItemProperty(SystemSettings.is_modifiable).setValue(false);
+                item.getItemProperty(Settings.is_modifiable).setValue(false);
             }
             item.getItemProperty(myUi.getMessage(SptMessages.CanBeAdvisor)).setValue(
                     result.getBoolean("e.can_advisor"));
-            item.getItemProperty(SystemSettings.visible_hr_orders).setValue(result.getString("ord.visible_hr_orders"));
+            item.getItemProperty(Settings.visible_hr_orders).setValue(result.getString("ord.visible_hr_orders"));
             item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(result.getString("permissions"));
-            item.getItemProperty(SystemSettings.position_id).setValue(result.getInt("p.id"));
-            item.getItemProperty(SystemSettings.salary_category_id).setValue(result.getInt("cat.parent_id"));
-            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("cat.id"));
-            workingStatCont.getContainerProperty(result.getInt("ws.id"), SystemSettings.count).setValue(
-                    (Integer) workingStatCont.getContainerProperty(result.getInt("ws.id"), SystemSettings.count).getValue() + 1);
+            item.getItemProperty(Settings.position_id).setValue(result.getInt("p.id"));
+            item.getItemProperty(Settings.salary_category_id).setValue(result.getInt("cat.parent_id"));
+            item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("cat.id"));
+            workingStatCont.getContainerProperty(result.getInt("ws.id"), Settings.count).setValue(
+                    (Integer) workingStatCont.getContainerProperty(result.getInt("ws.id"), Settings.count).getValue() + 1);
         }
         return container;
     }
@@ -387,10 +409,10 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.SpouseInfo), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Children), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Photo), String.class, null);
-        container.addContainerProperty(SystemSettings.crud_status, String.class, null);
-        container.addContainerProperty(SystemSettings.school_id, Integer.class, school_id);
-        container.addContainerProperty(SystemSettings.position_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.crud_status, String.class, null);
+        container.addContainerProperty(Settings.school_id, Integer.class, school_id);
+        container.addContainerProperty(Settings.position_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("e.id"));
@@ -434,7 +456,7 @@ public class DbEmployee extends BaseDb {
             try {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUi, SystemSettings.hr_positionTable, true));
+                cb.setContainerDataSource(dbp.exec_for_select(myUi, Settings.hr_positionTable, true));
                 dbp.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -450,7 +472,7 @@ public class DbEmployee extends BaseDb {
             df.setStyleName(ValoTheme.DATEFIELD_TINY);
             df.setRequired(true);
             df.setRequiredError(myUi.getMessage(SptMessages.RequiredField));
-            df.setDateFormat(SystemSettings.datePattern);
+            df.setDateFormat(Settings.datePattern);
             df.setDescription(myUi.getMessage(SptMessages.FromDate));
             df.setValue(result.getDate("eo.from_date"));
             df.setRangeEnd(new Date());
@@ -467,8 +489,8 @@ public class DbEmployee extends BaseDb {
             }
             tf.setEnabled(false);
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(tf);
-            item.getItemProperty(SystemSettings.position_id).setValue(result.getInt("p.id"));
-            item.getItemProperty(SystemSettings.acc_category_id).setValue(result.getInt("cat.id"));
+            item.getItemProperty(Settings.position_id).setValue(result.getInt("p.id"));
+            item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("cat.id"));
         }
         return container;
     }
@@ -736,7 +758,7 @@ public class DbEmployee extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(" ", Integer.class, 0);
-        container.addContainerProperty(SystemSettings.button, String.class, "CV");
+        container.addContainerProperty(Settings.button, String.class, "CV");
         container.addContainerProperty(myUI.getMessage(SptMessages.School), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
@@ -779,7 +801,7 @@ public class DbEmployee extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("e.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("e.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(result.getString("e.middle_name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(SystemSettings.df.format(
+            item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(Settings.df.format(
                     result.getDate("e.date_of_birth")));
             item.getItemProperty(myUI.getMessage(SptMessages.ContractType)).setValue(result.getString("sal.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(result.getString("p.name"));

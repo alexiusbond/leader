@@ -21,7 +21,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.util.Date;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
@@ -104,7 +104,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setDateFormat(SystemSettings.datePattern);
+        fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
@@ -113,7 +113,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setDateFormat(SystemSettings.datePattern);
+        tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
@@ -129,7 +129,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbAcc_currency, true));
+            currencySelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbAcc_currency, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

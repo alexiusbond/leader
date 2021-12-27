@@ -4,7 +4,7 @@ import com.vaadin.ui.CustomTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbEmployeeMessage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -30,7 +30,7 @@ public class MessagesView extends VerticalLayout {
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
                 myUI.getMessage(SptMessages.OrderNumber), myUI.getMessage(SptMessages.Student),
                 myUI.getMessage(SptMessages.Message), myUI.getMessage(SptMessages.Status),
-                SystemSettings.button};
+                Settings.button};
         buildBody();
     }
 
@@ -47,7 +47,7 @@ public class MessagesView extends VerticalLayout {
         try {
             DbEmployeeMessage dbCon = new DbEmployeeMessage();
             dbCon.connect();
-            if (currentUser.isPermitted(SystemSettings.cnMessagesView + ":" + SystemSettings.actReadMessages)) {
+            if (currentUser.isPermitted(Settings.cnMessagesView + ":" + Settings.actReadMessages)) {
                 dbCon.execSQL(myUI, myUI.getUser().getId(), myUI.getUser().getSchool_id(), dataTable);
             } else {
                 dbCon.execSQL(myUI, myUI.getUser().getId(), 0, dataTable);
@@ -60,7 +60,7 @@ public class MessagesView extends VerticalLayout {
         dataTable.setVisibleColumns(NATURAL_COL_ORDER);
         dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Message), 1);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Date), 80);
-        dataTable.setColumnWidth(SystemSettings.button, 60);
+        dataTable.setColumnWidth(Settings.button, 60);
         dataTable.setCellStyleGenerator(new CustomTable.CellStyleGenerator() {
             @Override
             public String getStyle(CustomTable source, Object itemId, Object propertyId) {
@@ -68,7 +68,7 @@ public class MessagesView extends VerticalLayout {
                 if (propertyId == null) {
                     // Styling for row
                     if ((Integer) source.getContainerProperty(itemId,
-                            SystemSettings.status_id).getValue() == 2) {
+                            Settings.status_id).getValue() == 2) {
                         return "highlight-red";
                     } else {
                         return null;

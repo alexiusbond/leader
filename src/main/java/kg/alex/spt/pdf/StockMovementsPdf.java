@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StockInvoice;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
@@ -146,17 +146,17 @@ public class StockMovementsPdf {
                         table.addCell(new Phrase(tf.getValue(), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Quantity)).getValue();
-                        table.addCell(new Phrase(SystemSettings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
+                        table.addCell(new Phrase(Settings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
                         if (title.equals(myUI.getMessage(SptMessages.StockIncome))) {
                             tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Price)).getValue();
-                            table.addCell(new Phrase(SystemSettings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
+                            table.addCell(new Phrase(Settings.dFormat.format((Double) tf.getPropertyDataSource().getValue()), tableFont));
                         } else {
-                            table.addCell(new Phrase(SystemSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
+                            table.addCell(new Phrase(Settings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Price)).getValue()), tableFont));
                         }
-                        table.addCell(new Phrase(SystemSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Rate)).getValue()), tableFont));
-                        table.addCell(new Phrase(SystemSettings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat.format((Double) stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         y++;

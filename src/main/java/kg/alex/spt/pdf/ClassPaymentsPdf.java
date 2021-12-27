@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -82,11 +82,11 @@ public class ClassPaymentsPdf {
                     Tdate.setWidths(Tdate_colsWidth);
                     Tdate.getDefaultCell().setBorder(0);
                     Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + SystemSettings.df.format(aDate), tableFont));
+                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(Tdate);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassPayments) + ": "
-                            + year + " (" + SystemSettings.df.format(fDate) + " - " + SystemSettings.df.format(tDate) + ")", fontBold);
+                            + year + " (" + Settings.df.format(fDate) + " - " + Settings.df.format(tDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -129,7 +129,7 @@ public class ClassPaymentsPdf {
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        infoTable.addCell(new Phrase(SystemSettings.dFormat.format((Double) planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(Settings.dFormat.format((Double) planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;
@@ -142,7 +142,7 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
-                            + SystemSettings.dFormat.format(total), ordFontBold));
+                            + Settings.dFormat.format(total), ordFontBold));
 
                     document.add(infoTable);
 

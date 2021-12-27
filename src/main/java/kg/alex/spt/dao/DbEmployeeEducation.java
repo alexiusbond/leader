@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeEducation;
@@ -47,8 +47,8 @@ public class DbEmployeeEducation extends BaseDb {
         stat.setInt(2, ed.getUniversity_id());
         stat.setInt(3, ed.getOwn_id());
         stat.setString(4, ed.getDepartment());
-        stat.setString(5, SystemSettings.mysql_only_year.format(ed.getStart()));
-        stat.setString(6, SystemSettings.mysql_only_year.format(ed.getEnd()));
+        stat.setString(5, Settings.mysql_only_year.format(ed.getStart()));
+        stat.setString(6, Settings.mysql_only_year.format(ed.getEnd()));
         stat.setInt(7, ed.getCountry_id());
         stat.setInt(8, ed.getEducation_level_id());
         if (ed.getAttachment_id() != 0) {
@@ -70,8 +70,8 @@ public class DbEmployeeEducation extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ed.getUniversity_id());
         stat.setString(2, ed.getDepartment());
-        stat.setString(3, SystemSettings.mysql_only_year.format(ed.getStart()));
-        stat.setString(4, SystemSettings.mysql_only_year.format(ed.getEnd()));
+        stat.setString(3, Settings.mysql_only_year.format(ed.getStart()));
+        stat.setString(4, Settings.mysql_only_year.format(ed.getEnd()));
         stat.setInt(5, ed.getCountry_id());
         stat.setInt(6, ed.getEducation_level_id());
         if (ed.getAttachment_id() != 0) {
@@ -98,8 +98,8 @@ public class DbEmployeeEducation extends BaseDb {
         while (result.next()) {
             String id = result.getString("ed.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(Settings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Department)).setValue(
                     edv.createTextfield(result.getString("ed.department"),
                             myUI.getMessage(SptMessages.Department),
@@ -107,19 +107,19 @@ public class DbEmployeeEducation extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
                     edv.createDateField(result.getDate("ed.start_date"),
                             myUI.getMessage(SptMessages.Start), null, true,
-                            SystemSettings.yearPattern, Resolution.YEAR));
+                            Settings.yearPattern, Resolution.YEAR));
             item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
                     edv.createDateField(result.getDate("ed.end_date"),
                             myUI.getMessage(SptMessages.End), null, true,
-                            SystemSettings.yearPattern, Resolution.YEAR));
+                            Settings.yearPattern, Resolution.YEAR));
             item.getItemProperty(myUI.getMessage(SptMessages.Country)).setValue(
                     edv.createCombobox(result.getInt("ed.country_id"),
-                            myUI.getMessage(SptMessages.Country), SystemSettings.dbCountry, true));
+                            myUI.getMessage(SptMessages.Country), Settings.dbCountry, true));
             item.getItemProperty(myUI.getMessage(SptMessages.EduLevel)).setValue(
                     edv.createCombobox(result.getInt("ed.education_level_id"),
-                            myUI.getMessage(SptMessages.EduLevel), SystemSettings.dbEduLevel, true));
+                            myUI.getMessage(SptMessages.EduLevel), Settings.dbEduLevel, true));
             final ComboBox cb = edv.createCombobox(result.getInt("ed.hr_university_id"),
-                    myUI.getMessage(SptMessages.University), SystemSettings.dbUniversityTable, true);
+                    myUI.getMessage(SptMessages.University), Settings.dbUniversityTable, true);
             cb.setNewItemsAllowed(true);
             cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
                 @Override
@@ -127,7 +127,7 @@ public class DbEmployeeEducation extends BaseDb {
                     try {
                         DbDefinition dbd = new DbDefinition();
                         dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), SystemSettings.dbUniversityTable, false);
+                        int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbUniversityTable, false);
                         dbd.close();
                         if (id != 0) {
                             Iterator iter = container.getItemIds().iterator();
@@ -156,7 +156,7 @@ public class DbEmployeeEducation extends BaseDb {
                 a.setUnique_name(result.getString("a.unique_name"));
                 a.setExtension(result.getString("a.extension"));
                 a.setName(result.getString("a.name"));
-                Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, SystemSettings.download_button, FontAwesome.DOWNLOAD);
+                Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
                 b.setStyleName(ValoTheme.BUTTON_SMALL);
                 b.setData(a);
                 hl.addComponent(b);
@@ -167,7 +167,7 @@ public class DbEmployeeEducation extends BaseDb {
                 hl.addComponent(upload);
                 item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
             }
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

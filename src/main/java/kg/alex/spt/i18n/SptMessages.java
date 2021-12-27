@@ -162,7 +162,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Sent = generateId();
     public static final String FullName = generateId();
     public static final String Hobbies = generateId();
-    public static final String Fobbies = generateId();
+    public static final String Phobias = generateId();
     public static final String WorkingStatus = generateId();
     public static final String WorkingStatuses = generateId();
     public static final String Position = generateId();

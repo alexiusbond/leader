@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
@@ -69,7 +69,7 @@ public class DbAttachment extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Details), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Type), String.class, null);
-        container.addContainerProperty(SystemSettings.button, Button.class, null);
+        container.addContainerProperty(Settings.button, Button.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
@@ -82,10 +82,10 @@ public class DbAttachment extends BaseDb {
             a.setUnique_name(result.getString("unique_name"));
             a.setName(result.getString("name"));
             com.vaadin.ui.Button b = edv.createButton(myUi.getMessage(SptMessages.DownLoad), a.getId() + "",
-                    SystemSettings.download_button, FontAwesome.DOWNLOAD);
+                    Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);
-            item.getItemProperty(SystemSettings.button).setValue(b);
+            item.getItemProperty(Settings.button).setValue(b);
 
         }
         return container;

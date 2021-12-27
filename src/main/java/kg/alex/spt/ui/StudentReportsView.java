@@ -9,7 +9,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.CallsReport;
 import kg.alex.spt.reports.students.ClassDiscountsReport;
@@ -65,40 +65,40 @@ public class StudentReportsView extends HorizontalSplitPanel implements Property
         repTypeSelect.setWidth("100%");
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmPlanPayments)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmPlanPayments)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.PlanPayments));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmClassPayments)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmClassPayments)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassPayments));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmClassInstPlan)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmClassInstPlan)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassInstallementPlan));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmDebtReport)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmDebtReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.DebtReport));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmSchoolDiscounts)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmSchoolDiscounts)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.SchoolDiscounts));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmClassDiscounts)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmClassDiscounts)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassDiscounts));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmDiscountsReport)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmDiscountsReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.DiscountsReport));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmClassList)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmClassList)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassList));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmStatusesReport)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmStatusesReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.StatusesReport));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmYearMonthReport)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmYearMonthReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.YearMonthReport));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmCallsReport)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmCallsReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.CallsReport));
         }
-        if (currentUser.isPermitted(SystemSettings.cnReportsView + ":" + SystemSettings.prmOutOfReport)) {
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmOutOfReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.OutOfReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);

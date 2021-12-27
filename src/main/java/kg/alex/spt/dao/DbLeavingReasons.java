@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.LeavingReason;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -33,19 +33,19 @@ public class DbLeavingReasons extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("lr.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("lr.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("lr.activity_status_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.id).setValue(
+            item.getItemProperty(Settings.id).setValue(
                     result.getInt("lr.id"));
         }
         return container;

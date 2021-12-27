@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Contract;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -43,13 +43,13 @@ public class DbContract extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Value), Double.class, 0.0);
-        container.addContainerProperty(SystemSettings.year_id, Integer.class, 0);
+        container.addContainerProperty(Settings.year_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
-        container.addContainerProperty(SystemSettings.status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
-        container.addContainerProperty(SystemSettings.school_id, Integer.class, 0);
+        container.addContainerProperty(Settings.school_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.School), String.class, null);
-        container.addContainerProperty(SystemSettings.id, Integer.class, null);
+        container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
@@ -57,19 +57,19 @@ public class DbContract extends BaseDb {
                     result.getString("c.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Value)).setValue(
                     result.getDouble("c.amount"));
-            item.getItemProperty(SystemSettings.year_id).setValue(
+            item.getItemProperty(Settings.year_id).setValue(
                     result.getInt("c.year_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
                     result.getString("y.name"));
-            item.getItemProperty(SystemSettings.status_id).setValue(
+            item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("c.activity_status_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
-            item.getItemProperty(SystemSettings.school_id).setValue(
+            item.getItemProperty(Settings.school_id).setValue(
                     result.getInt("c.school_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
                     result.getString("sc.name_ru"));
-            item.getItemProperty(SystemSettings.id).setValue(result.getInt("c.id"));
+            item.getItemProperty(Settings.id).setValue(result.getInt("c.id"));
         }
         return container;
     }

@@ -24,7 +24,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.util.Set;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentContract;
@@ -116,15 +116,15 @@ public class ClassListReport implements Button.ClickListener,
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
-            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
             educationStatusMCB.setContainerDataSource(
-                    dbd.exec_for_select(myUI, SystemSettings.dbEducationStatus, true));
+                    dbd.exec_for_select(myUI, Settings.dbEducationStatus, true));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(SystemSettings.convertToSet(
+        educationStatusMCB.setValue(Settings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
@@ -223,9 +223,9 @@ public class ClassListReport implements Button.ClickListener,
                     DbStudentContract dbsc = new DbStudentContract();
                     dbsc.connect();
                     dataCont = dbsc.execSQL_ClassList(myUI,
-                            SystemSettings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
                             (Integer) yearSelect.getValue(),
-                            SystemSettings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
                     dataTable.setContainerDataSource(dataCont);
                     dataTable.setVisibleColumns(NATURAL_COL_ORDER);
@@ -241,19 +241,19 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
                             myUI.getMessage(SptMessages.Active) + activeStudents);
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            SystemSettings.dFormat.format(contracts));
+                            Settings.dFormat.format(contracts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            SystemSettings.dFormat.format(discounts));
+                            Settings.dFormat.format(discounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                            SystemSettings.dFormat.format(corrections));
+                            Settings.dFormat.format(corrections));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            SystemSettings.dFormat.format(debts));
+                            Settings.dFormat.format(debts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            SystemSettings.dFormat.format(nets));
+                            Settings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            SystemSettings.dFormat.format(paids));
+                            Settings.dFormat.format(paids));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            SystemSettings.dFormat.format(lefts));
+                            Settings.dFormat.format(lefts));
                     if (dataCont.size() != 0) {
                         dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
                                 + discountedStudents + " (" + discountedStudents * 100 / dataCont.size() + "%)");

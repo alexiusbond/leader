@@ -22,7 +22,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import java.util.Iterator;
 import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.dao.DbStudentOrder;
@@ -113,7 +113,7 @@ public class OutOfList implements Button.ClickListener,
             DbLeavingReasons dblr = new DbLeavingReasons();
             dbd.connect();
             dblr.connect();
-            yearSelectMCB.setContainerDataSource(dbd.exec_for_select(myUI, SystemSettings.dbYear, true));
+            yearSelectMCB.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
             reasonsMCB.setContainerDataSource(
                     dblr.exec_for_select(myUI, true));
             dblr.close();
@@ -208,8 +208,8 @@ public class OutOfList implements Button.ClickListener,
                     DbStudentOrder dbor = new DbStudentOrder();
                     dbor.connect();
                     dataCont = dbor.execSQL_outOf(myUI,
-                            SystemSettings.convertCollectionToStr((Set<?>) yearSelectMCB.getValue()),
-                            SystemSettings.convertCollectionToStr((Set<?>) fromClassTable.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) yearSelectMCB.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) fromClassTable.getValue()),
                             getMulticomboCaptions((Set<?>) reasonsMCB.getValue()),
                             myUI.getUser().getSchool_id(), this);
                     dataTable.setContainerDataSource(dataCont);
@@ -221,11 +221,11 @@ public class OutOfList implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
                             myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            SystemSettings.dFormat.format(nets));
+                            Settings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            SystemSettings.dFormat.format(paids));
+                            Settings.dFormat.format(paids));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            SystemSettings.dFormat.format(nets - paids));
+                            Settings.dFormat.format(nets - paids));
                     if (dataCont.size() != 0) {
                         excelBtn.setEnabled(true);
                     }

@@ -8,7 +8,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
@@ -96,9 +96,9 @@ public class ContractCambridgeOshPdfRu {
                     Tdate.addCell(new Phrase("г. " + student.getScl_city(), ordBoldFont));
                     Tdate.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     if (aDate.before(cal.getTime())) {
-                        Tdate.addCell(new Phrase(SystemSettings.dateRu.format(cal.getTime()), ordBoldFont));
+                        Tdate.addCell(new Phrase(Settings.dateRu.format(cal.getTime()), ordBoldFont));
                     } else {
-                        Tdate.addCell(new Phrase(SystemSettings.dateRu.format(aDate), ordBoldFont));
+                        Tdate.addCell(new Phrase(Settings.dateRu.format(aDate), ordBoldFont));
                     }
                     document.add(Tdate);
                     document.add(new Paragraph(10, " "));
@@ -666,7 +666,7 @@ public class ContractCambridgeOshPdfRu {
                     text15.add(new Phrase(df.format(new Date()), ordBoldFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("ИТОГО взноса: ", ordFont));
-                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
+                    text15.add(new Phrase((Settings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
                     text15.add(new Phrase(" долларов США.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     if (student.getCtr_debt() >= 0) {
@@ -674,7 +674,7 @@ public class ContractCambridgeOshPdfRu {
                     } else {
                         text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
                     }
-                    text15.add(new Phrase((SystemSettings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
+                    text15.add(new Phrase((Settings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
                     text15.add(new Phrase(" долларов США.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Скидка: ", ordFont));
@@ -689,11 +689,11 @@ public class ContractCambridgeOshPdfRu {
                     }
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Предоплата: ", ordFont));
-                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                    text15.add(new Phrase(Settings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
                     text15.add(new Phrase(" долларов США.", ordFont));
                     text15.add(Chunk.NEWLINE);
                     text15.add(new Phrase("Остаток: ", ordFont));
-                    text15.add(new Phrase(SystemSettings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                    text15.add(new Phrase(Settings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
                     text15.add(new Phrase(" долларов США.", ordFont));
                     document.add(text15);
                     document.add(new Paragraph(10, " "));
@@ -730,7 +730,7 @@ public class ContractCambridgeOshPdfRu {
                     }
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("Итого:", ordBoldFont));
-                    TContract.addCell(new Phrase(SystemSettings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
+                    TContract.addCell(new Phrase(Settings.dFormat.format(student.getCtr_k_oplate()) + "", ordBoldFont));
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("", ordFont));
 
@@ -827,7 +827,7 @@ public class ContractCambridgeOshPdfRu {
                 p.add(new Phrase("(Аккредитованные программы Cambridge Assessment \n и Advanced Placement)", fontGray));
                 t.addCell(p);
 
-                Image logo = Image.getInstance(SystemSettings.PATH_TO_UPLOADS + "cambridge_logo.png");
+                Image logo = Image.getInstance(Settings.PATH_TO_UPLOADS + "cambridge_logo.png");
                 logo.setAlignment(Image.MIDDLE);
                 logo.scaleToFit(50, 50);
                 Chunk chunk = new Chunk(logo, 0, -20);

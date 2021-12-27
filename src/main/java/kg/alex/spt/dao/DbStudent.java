@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EducationStatus;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.domain.Student;
@@ -63,19 +63,19 @@ public class DbStudent extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.DateOfBirth), Date.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Photo), String.class, null);
-        container.addContainerProperty(SystemSettings.gender_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.education_status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.gender_id, Integer.class, 0);
+        container.addContainerProperty(Settings.education_status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(SystemSettings.class_name_id, Integer.class, 0);
+        container.addContainerProperty(Settings.class_name_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.EnteringYear), String.class, null);
         int total = 0;
-        sdv.eduStatCont.getContainerProperty(1, SystemSettings.count).setValue(0);
-        sdv.eduStatCont.getContainerProperty(2, SystemSettings.count).setValue(0);
-        sdv.eduStatCont.getContainerProperty(3, SystemSettings.count).setValue(0);
-        sdv.eduStatCont.getContainerProperty(4, SystemSettings.count).setValue(0);
-        sdv.eduStatCont.getContainerProperty(5, SystemSettings.count).setValue(0);
-        sdv.eduStatCont.getContainerProperty(6, SystemSettings.count).setValue(0);
+        sdv.eduStatCont.getContainerProperty(1, Settings.count).setValue(0);
+        sdv.eduStatCont.getContainerProperty(2, Settings.count).setValue(0);
+        sdv.eduStatCont.getContainerProperty(3, Settings.count).setValue(0);
+        sdv.eduStatCont.getContainerProperty(4, Settings.count).setValue(0);
+        sdv.eduStatCont.getContainerProperty(5, Settings.count).setValue(0);
+        sdv.eduStatCont.getContainerProperty(6, Settings.count).setValue(0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
@@ -90,16 +90,16 @@ public class DbStudent extends BaseDb {
                     result.getDate("s.date_of_birth"));
             item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(
                     result.getString("s.photo"));
-            item.getItemProperty(SystemSettings.gender_id).setValue(
+            item.getItemProperty(Settings.gender_id).setValue(
                     result.getInt("s.gender_id"));
-            item.getItemProperty(SystemSettings.education_status_id).setValue(
+            item.getItemProperty(Settings.education_status_id).setValue(
                     result.getInt("s.education_status_id"));
-            sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), SystemSettings.count)
-                    .setValue(((Integer) sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), SystemSettings.count)
+            sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), Settings.count)
+                    .setValue(((Integer) sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), Settings.count)
                             .getValue()) + 1);
             item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
                     result.getString("es.name"));
-            item.getItemProperty(SystemSettings.class_name_id).setValue(
+            item.getItemProperty(Settings.class_name_id).setValue(
                     result.getInt("s.class_name_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("cl_name"));
@@ -107,7 +107,7 @@ public class DbStudent extends BaseDb {
                     result.getString("y.name"));
             total++;
         }
-        sdv.eduStatCont.getContainerProperty(6, SystemSettings.count).setValue(total);
+        sdv.eduStatCont.getContainerProperty(6, Settings.count).setValue(total);
         return container;
     }
 
@@ -197,7 +197,7 @@ public class DbStudent extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Gender)).setValue(
                     result.getString("g.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.DateOfBirth)).setValue(
-                    SystemSettings.df.format(result.getDate("s.date_of_birth")));
+                    Settings.df.format(result.getDate("s.date_of_birth")));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("cl_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Relative)).setValue(
@@ -238,20 +238,20 @@ public class DbStudent extends BaseDb {
         stat.setInt(2, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(SystemSettings.button, Button.class, null);
+        container.addContainerProperty(Settings.button, Button.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(SystemSettings.class_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.education_status_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.entering_year_id, Integer.class, 0);
-        container.addContainerProperty(SystemSettings.id, Integer.class, 0);
+        container.addContainerProperty(Settings.class_id, Integer.class, 0);
+        container.addContainerProperty(Settings.education_status_id, Integer.class, 0);
+        container.addContainerProperty(Settings.entering_year_id, Integer.class, 0);
+        container.addContainerProperty(Settings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
-            item.getItemProperty(SystemSettings.button).setValue(
+            item.getItemProperty(Settings.button).setValue(
                     iv.createButton(myUi.getMessage(SptMessages.Details),
                             result.getString("s.id"), FontAwesome.INFO));
             item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
@@ -264,11 +264,11 @@ public class DbStudent extends BaseDb {
                     result.getString("es.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("cl_name"));
-            item.getItemProperty(SystemSettings.class_id).setValue(
+            item.getItemProperty(Settings.class_id).setValue(
                     result.getInt("s.class_name_id"));
-            item.getItemProperty(SystemSettings.education_status_id).setValue(
+            item.getItemProperty(Settings.education_status_id).setValue(
                     result.getInt("s.education_status_id"));
-            item.getItemProperty(SystemSettings.entering_year_id).setValue(
+            item.getItemProperty(Settings.entering_year_id).setValue(
                     result.getInt("s.entering_year_id"));
         }
         return container;
@@ -479,7 +479,7 @@ public class DbStudent extends BaseDb {
                     result.getString("is_main"));
             if (result.getDate("plan_debt_date") != null) {
                 item.getItemProperty(myUi.getMessage(SptMessages.PlanDebtDate)).setValue(
-                        SystemSettings.df.format(result.getDate("plan_debt_date")));
+                        Settings.df.format(result.getDate("plan_debt_date")));
             }
             item.getItemProperty(myUi.getMessage(SptMessages.InstPlanDebt)).setValue(
                     result.getDouble("plan_debt"));
@@ -492,7 +492,7 @@ public class DbStudent extends BaseDb {
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(
                     cv.createTextField(result.getInt("st.id")));
-            item.getItemProperty(SystemSettings.button).setValue(cv.createButton(result.getInt("st.id")));
+            item.getItemProperty(Settings.button).setValue(cv.createButton(result.getInt("st.id")));
         }
         return container;
     }
@@ -544,9 +544,9 @@ public class DbStudent extends BaseDb {
 
         String sql = "SELECT sch.id, sch.name_ru, COUNT(IF(st.entering_year_id<="
                 + year_id + " AND cna.class_number_id IN ("
-                + SystemSettings.convertCollectionToStr(((Set<?>) sr.classTable.getValue())) + ") "
+                + Settings.convertCollectionToStr(((Set<?>) sr.classTable.getValue())) + ") "
                 + "AND edu.id IN ("
-                + SystemSettings.convertCollectionToStr(((Set<?>) sr.statusMS.getValue())) + "),1,NULL)) AS quantity";
+                + Settings.convertCollectionToStr(((Set<?>) sr.statusMS.getValue())) + "),1,NULL)) AS quantity";
         Iterator class_iter = ((Set<?>) sr.classTable.getValue()).iterator();
         Iterator status_iter;
         while (class_iter.hasNext()) {
@@ -573,7 +573,7 @@ public class DbStudent extends BaseDb {
                 + "LEFT JOIN education_status AS edu ON edu.id = CASE "
                 + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
                 + "ELSE stud_o.to_education_status_id END "
-                + "WHERE sch.id IN (" + SystemSettings.convertCollectionToStr(((Set<?>) sr.schoolsTable.getValue())) + ") "
+                + "WHERE sch.id IN (" + Settings.convertCollectionToStr(((Set<?>) sr.schoolsTable.getValue())) + ") "
                 + "GROUP BY sch.id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);

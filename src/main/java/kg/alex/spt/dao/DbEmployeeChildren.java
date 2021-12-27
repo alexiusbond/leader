@@ -14,7 +14,7 @@ import java.sql.*;
 
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.SystemSettings;
+import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeChildren;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
@@ -86,8 +86,8 @@ public class DbEmployeeChildren extends BaseDb {
         while (result.next()) {
             String id = result.getString("ech.id");
             Item item = container.addItem(id);
-            item.getItemProperty(SystemSettings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, SystemSettings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(Settings.button).setValue(
+                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
                     edv.createTextfield(result.getString("ech.fullname"),
                             myUI.getMessage(SptMessages.FullName),
@@ -95,18 +95,18 @@ public class DbEmployeeChildren extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
                     edv.createDateField(result.getDate("ech.date_of_birth"),
                             myUI.getMessage(SptMessages.DateOfBirth), null,
-                            true, SystemSettings.datePattern, Resolution.DAY));
+                            true, Settings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(SptMessages.Institution)).setValue(
                     edv.createTextfield(result.getString("ech.institution"),
                             myUI.getMessage(SptMessages.Institution),
                             new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false));
             item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
                     edv.createCombobox(result.getInt("ech.hr_education_status_id"),
-                            myUI.getMessage(SptMessages.EducationStatus), SystemSettings.dbHrEducationStatus, false));
+                            myUI.getMessage(SptMessages.EducationStatus), Settings.dbHrEducationStatus, false));
             item.getItemProperty(myUI.getMessage(SptMessages.HealthStatus)).setValue(
                     edv.createCombobox(result.getInt("ech.hr_health_status_id"),
-                            myUI.getMessage(SptMessages.HealthStatus), SystemSettings.dbHealthStatus, true));
-            item.getItemProperty(SystemSettings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                            myUI.getMessage(SptMessages.HealthStatus), Settings.dbHealthStatus, true));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }
@@ -131,7 +131,7 @@ public class DbEmployeeChildren extends BaseDb {
             String id = result.getString("ech.id");
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(result.getString("ech.fullname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(SystemSettings.df.format(result.getDate("ech.date_of_birth")));
+            item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(Settings.df.format(result.getDate("ech.date_of_birth")));
             item.getItemProperty(myUI.getMessage(SptMessages.Institution)).setValue(result.getString("ech.institution"));
             item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(result.getString("es.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.HealthStatus)).setValue(result.getString("h.name"));
