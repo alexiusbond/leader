@@ -87,7 +87,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -135,7 +135,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 50, false));
         settingsLay.addComponent(nameTF);
@@ -144,7 +144,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         descriptionTF.setRequired(true);
         descriptionTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         descriptionTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        descriptionTF.setWidth("100%");
+        descriptionTF.setWidth(Settings.PERCENTS100);
         descriptionTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 150, false));
         settingsLay.addComponent(descriptionTF);
@@ -154,7 +154,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         blockSelect.setRequired(true);
         blockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         blockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        blockSelect.setWidth("100%");
+        blockSelect.setWidth(Settings.PERCENTS100);
         blockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         blockSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -163,7 +163,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         floorSelect.setRequired(true);
         floorSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         floorSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        floorSelect.setWidth("100%");
+        floorSelect.setWidth(Settings.PERCENTS100);
         floorSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         floorSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -172,7 +172,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 

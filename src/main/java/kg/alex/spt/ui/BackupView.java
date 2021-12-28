@@ -31,7 +31,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
         this.myUI = myUI;
 
         takeBakup = new Button(myUI.getMessage(SptMessages.TakeBackupButton));
-        takeBakup.setWidth("100%");
+        takeBakup.setWidth(Settings.PERCENTS100);
         takeBakup.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         takeBakup.setIcon(FontAwesome.DATABASE);
         takeBakup.addClickListener(this);

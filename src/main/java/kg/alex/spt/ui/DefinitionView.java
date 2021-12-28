@@ -105,7 +105,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -164,7 +164,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequired(true);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameTF);
 
         if (withActivityStatus) {
@@ -173,7 +173,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             statusSelect.setRequired(true);
             statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
             statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-            statusSelect.setWidth("100%");
+            statusSelect.setWidth(Settings.PERCENTS100);
             statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
             statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 

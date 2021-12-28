@@ -110,11 +110,11 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
         codeLay = new GridLayout(2, 1);
         codeLay.setMargin(false);
         codeLay.setSpacing(false);
-        codeLay.setWidth("100%");
+        codeLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -161,7 +161,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         parentSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Parent));
         parentSelect.setNullSelectionAllowed(true);
         parentSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        parentSelect.setWidth("100%");
+        parentSelect.setWidth(Settings.PERCENTS100);
         parentSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         parentSelect.setFilteringMode(FilteringMode.CONTAINS);
         setParentCombo();
@@ -172,7 +172,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 350, false));
         settingsLay.addComponent(nameTF);
@@ -187,7 +187,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         codeTF.setRequired(true);
         codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        codeTF.setWidth("100%");
+        codeTF.setWidth(Settings.PERCENTS100);
         codeTF.addValidator(new RegexpValidator("[0-9]{1,20}", true,
                 myUI.getMessage(SptMessages.NotifWrongValue)));
         codeLay.addComponent(codeTF, 1, 0);
@@ -195,7 +195,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         settingsLay.addComponent(codeLay);
 
         noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
-        noteTF.setWidth("100%");
+        noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setImmediate(true);
         noteTF.setRows(3);
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -208,7 +208,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 

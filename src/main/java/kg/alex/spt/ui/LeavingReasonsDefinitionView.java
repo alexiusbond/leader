@@ -90,7 +90,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -138,7 +138,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 250, false));
         settingsLay.addComponent(nameTF);
@@ -148,7 +148,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {

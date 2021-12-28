@@ -123,13 +123,13 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        dateDF.setWidth("100%");
+        dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setValue(new Date());
         dateDF.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(dateDF);
@@ -139,14 +139,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         orderSelect.setRequired(true);
         orderSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         orderSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        orderSelect.setWidth("100%");
+        orderSelect.setWidth(Settings.PERCENTS100);
         orderSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         orderSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(orderSelect);
 
         classSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ClassName));
         classSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        classSelect.setWidth("100%");
+        classSelect.setWidth(Settings.PERCENTS100);
         classSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         classSelect.setFilteringMode(FilteringMode.CONTAINS);
         classSelect.setRequired(true);
@@ -165,7 +165,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
 
         reasonsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        reasonsMCB.setWidth("100%");
+        reasonsMCB.setWidth(Settings.PERCENTS100);
         reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
         reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));

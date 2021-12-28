@@ -175,7 +175,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         setStudDataTable(optionGroup.getValue().toString());
 
         HorizontalLayout studSearchLayFooter = new HorizontalLayout();
-        studSearchLayFooter.setWidth("100%");
+        studSearchLayFooter.setWidth(Settings.PERCENTS100);
         eduStatTtlLab = new Label();
         eduStatTtlLab.setSizeUndefined();
         eduStatTtlLab.setImmediate(true);
@@ -401,7 +401,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
         buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
-        buttonsLay.setWidth("100%");
+        buttonsLay.setWidth(Settings.PERCENTS100);
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
@@ -501,7 +501,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         loginTF.setRequired(true);
         loginTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         loginTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        loginTF.setWidth("100%");
+        loginTF.setWidth(Settings.PERCENTS100);
         loginTF.addValueChangeListener(this);
         loginTF.addValidator(new RegexpValidator("[0-9]{1,25}", true,
                 myUI.getMessage(SptMessages.NotifWrongValue)));
@@ -511,7 +511,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         fieldsLay1.addComponent(nameTF);
@@ -520,14 +520,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         surnameTF.setRequired(true);
         surnameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         surnameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        surnameTF.setWidth("100%");
+        surnameTF.setWidth(Settings.PERCENTS100);
         surnameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         fieldsLay1.addComponent(surnameTF);
 
         middlenameTF = new TextField(myUI.getMessage(SptMessages.MiddleName));
         middlenameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        middlenameTF.setWidth("100%");
+        middlenameTF.setWidth(Settings.PERCENTS100);
         fieldsLay1.addComponent(middlenameTF);
     }
 
@@ -540,7 +540,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         genderCB.setRequired(true);
         genderCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         genderCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        genderCB.setWidth("100%");
+        genderCB.setWidth(Settings.PERCENTS100);
         genderCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         genderCB.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -558,7 +558,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
         birthDate = new DateField(myUI.getMessage(SptMessages.DateOfBirth));
         birthDate.setRangeEnd(new Date());
-        birthDate.setWidth("100%");
+        birthDate.setWidth(Settings.PERCENTS100);
         birthDate.setStyleName(ValoTheme.DATEFIELD_TINY);
         birthDate.setRequired(true);
         birthDate.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -571,7 +571,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         classCB.setRequired(true);
         classCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         classCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        classCB.setWidth("100%");
+        classCB.setWidth(Settings.PERCENTS100);
         classCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         classCB.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -593,7 +593,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         statusCB.setRequired(true);
         statusCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         statusCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        statusCB.setWidth("100%");
+        statusCB.setWidth(Settings.PERCENTS100);
         statusCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusCB.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -1887,7 +1887,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
         final HorizontalLayout l = new HorizontalLayout();
         l.setSpacing(true);
-        l.setWidth("100%");
+        l.setWidth(Settings.PERCENTS100);
         l.setMargin(true);
         statusWindow.setContent(l);
 
@@ -2121,7 +2121,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tf.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 100, false));
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         if (value != null) {
             tf.setValue(value);
         }
@@ -2138,7 +2138,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tf.setRequired(true);
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(new DoubleRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
         tf.setConverter(Settings.getStringToDoubleConverter());
@@ -2163,7 +2163,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.getPropertyDataSource().setValue(value);
         tf.setNullRepresentation("0.0");
         tf.setNullSettingAllowed(false);
@@ -2178,7 +2178,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         if (value != null) {
             tf.setValue(value);
         }
@@ -2193,7 +2193,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         df.setRequired(true);
         df.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         df.setStyleName(ValoTheme.DATEFIELD_TINY);
-        df.setWidth("100%");
+        df.setWidth(Settings.PERCENTS100);
         if (setDefDate) {
             df.setValue(new Date());
         } else {
@@ -2227,7 +2227,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         ComboBoxMax cb = new ComboBoxMax();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -2264,7 +2264,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         ComboBoxMax cb = new ComboBoxMax();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -2309,7 +2309,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         ComboBoxMax cb = new ComboBoxMax();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -2335,7 +2335,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         ComboBoxMax cb = new ComboBoxMax();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -2361,7 +2361,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                          String itemId, int cat_id) {
         ComboBoxMultiselectMax comboMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Materials));
         comboMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-        comboMCB.setWidth("100%");
+        comboMCB.setWidth(Settings.PERCENTS100);
         comboMCB.setRequired(true);
         comboMCB.setImmediate(true);
         comboMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -3374,7 +3374,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         correctionsTable.setNullSelectionAllowed(false);
 
         contractCB = new ComboBoxMax(myUI.getMessage(SptMessages.Contract));
-        contractCB.setWidth("100%");
+        contractCB.setWidth(Settings.PERCENTS100);
         contractCB.setNullSelectionAllowed(false);
         contractCB.setRequired(true);
         contractCB.addValueChangeListener(this);
@@ -3406,12 +3406,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         initialPaymentTF.addValueChangeListener(this);
 
         currDate = new DateField(myUI.getMessage(SptMessages.StartDate));
-        currDate.setWidth("100%");
+        currDate.setWidth(Settings.PERCENTS100);
         currDate.setStyleName(ValoTheme.DATEFIELD_TINY);
         currDate.setDateFormat(Settings.datePattern);
 
         divideTF = new TextField(myUI.getMessage(SptMessages.DivideInto));
-        divideTF.setWidth("100%");
+        divideTF.setWidth(Settings.PERCENTS100);
         divideTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         divideTF.setConverter(new StringToIntegerConverter());
         divideTF.addValidator(new IntegerRangeValidator(myUI.getMessage(SptMessages.OnlyInt), 1, 15));

@@ -180,7 +180,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         yearHl.addComponent(yearSelect);
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
         hl.setMargin(new MarginInfo(false, false, false, true));
         hl.setStyleName("loginLayout");
         hl.addComponent(infoLabel);

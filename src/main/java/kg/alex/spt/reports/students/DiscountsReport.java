@@ -89,7 +89,7 @@ public class DiscountsReport implements Button.ClickListener,
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
+        yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -97,7 +97,7 @@ public class DiscountsReport implements Button.ClickListener,
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        educationStatusMCB.setWidth("100%");
+        educationStatusMCB.setWidth(Settings.PERCENTS100);
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -123,13 +123,13 @@ public class DiscountsReport implements Button.ClickListener,
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
         selectAllDiscountsBtn = new Button(myUI.getMessage(SptMessages.AllDiscounts));
-        selectAllDiscountsBtn.setWidth("100%");
+        selectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
         selectAllDiscountsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllDiscountsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllDiscountsBtn.addClickListener(this);
 
         deselectAllDiscountsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllDiscountsBtn.setWidth("100%");
+        deselectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
         deselectAllDiscountsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllDiscountsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllDiscountsBtn.addClickListener(this);
@@ -148,13 +148,13 @@ public class DiscountsReport implements Button.ClickListener,
         discountsTable.addValueChangeListener(this);
 
         selectAllClassesBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
-        selectAllClassesBtn.setWidth("100%");
+        selectAllClassesBtn.setWidth(Settings.PERCENTS100);
         selectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllClassesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllClassesBtn.addClickListener(this);
 
         deselectAllClassesBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllClassesBtn.setWidth("100%");
+        deselectAllClassesBtn.setWidth(Settings.PERCENTS100);
         deselectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllClassesBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllClassesBtn.addClickListener(this);
@@ -183,14 +183,14 @@ public class DiscountsReport implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);

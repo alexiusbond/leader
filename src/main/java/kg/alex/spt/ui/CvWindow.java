@@ -35,14 +35,14 @@ public class CvWindow extends Window {
         this.setModal(true);
 
         VerticalLayout mainLay = new VerticalLayout();
-        mainLay.setWidth("100%");
+        mainLay.setWidth(Settings.PERCENTS100);
         mainLay.setSpacing(true);
         mainLay.setMargin(true);
         this.setContent(mainLay);
 
         GridLayout gl = new GridLayout(4, 16);
         gl.setMargin(new MarginInfo(true, true));
-        gl.setWidth("100%");
+        gl.setWidth(Settings.PERCENTS100);
         gl.setSpacing(true);
         gl.setColumnExpandRatio(0, 1.5f);
         gl.setColumnExpandRatio(1, 1.1f);
@@ -54,7 +54,7 @@ public class CvWindow extends Window {
         GridLayout rightGl = new GridLayout(2, 17);
         rightGl.setColumnExpandRatio(0, 2);
         rightGl.setColumnExpandRatio(1, 1);
-        rightGl.setWidth("100%");
+        rightGl.setWidth(Settings.PERCENTS100);
         gl.addComponent(rightGl, 0, 0, 0, 4);
 
         rightGl.addComponent(createLabel(employee.getSurname() + " " + employee.getName(),
@@ -95,7 +95,7 @@ public class CvWindow extends Window {
                 + Settings.df.format(new Date()), null), 0, rowNum, 1, rowNum);
 
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setWidth("100%");
+        progressBar.setWidth(Settings.PERCENTS100);
         rowNum++;
         rightGl.addComponent(progressBar, 0, rowNum, 1, rowNum);
         try {
@@ -162,7 +162,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         Table infoTable = new Table();
-        infoTable.setWidth("100%");
+        infoTable.setWidth(Settings.PERCENTS100);
         infoTable.setSortEnabled(false);
         infoTable.setStyleName(ValoTheme.TABLE_NO_STRIPES);
         infoTable.addStyleName(ValoTheme.TABLE_NO_HEADER);
@@ -191,7 +191,7 @@ public class CvWindow extends Window {
         gl.setRowExpandRatio(1, 1);
 
         VerticalLayout contactsVl = new VerticalLayout();
-        contactsVl.setWidth("100%");
+        contactsVl.setWidth(Settings.PERCENTS100);
         contactsVl.setSpacing(true);
 
         contactsVl.addComponent(createLabel("<i class=\"fa fa-university\"></i><b> "
@@ -219,7 +219,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable educationTable = new FormattedTable();
-        educationTable.setWidth("100%");
+        educationTable.setWidth(Settings.PERCENTS100);
         educationTable.setColumnReorderingAllowed(false);
         educationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         educationTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -244,7 +244,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable workPlacesTable = new FormattedTable();
-        workPlacesTable.setWidth("100%");
+        workPlacesTable.setWidth(Settings.PERCENTS100);
         workPlacesTable.setColumnReorderingAllowed(false);
         workPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         workPlacesTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -268,7 +268,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable examsTable = new FormattedTable();
-        examsTable.setWidth("100%");
+        examsTable.setWidth(Settings.PERCENTS100);
         examsTable.setColumnReorderingAllowed(false);
         examsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         examsTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -292,7 +292,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable seminarsTable = new FormattedTable();
-        seminarsTable.setWidth("100%");
+        seminarsTable.setWidth(Settings.PERCENTS100);
         seminarsTable.setColumnReorderingAllowed(false);
         seminarsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         seminarsTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -316,7 +316,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable certificatesTable = new FormattedTable();
-        certificatesTable.setWidth("100%");
+        certificatesTable.setWidth(Settings.PERCENTS100);
         certificatesTable.setColumnReorderingAllowed(false);
         certificatesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         certificatesTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -340,7 +340,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable spouseEducationTable = new FormattedTable();
-        spouseEducationTable.setWidth("100%");
+        spouseEducationTable.setWidth(Settings.PERCENTS100);
         spouseEducationTable.setColumnReorderingAllowed(false);
         spouseEducationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         spouseEducationTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -364,7 +364,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable spouseWorkPlacesTable = new FormattedTable();
-        spouseWorkPlacesTable.setWidth("100%");
+        spouseWorkPlacesTable.setWidth(Settings.PERCENTS100);
         spouseWorkPlacesTable.setColumnReorderingAllowed(false);
         spouseWorkPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         spouseWorkPlacesTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -388,7 +388,7 @@ public class CvWindow extends Window {
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
         FormattedTable childrenTable = new FormattedTable();
-        childrenTable.setWidth("100%");
+        childrenTable.setWidth(Settings.PERCENTS100);
         childrenTable.setColumnReorderingAllowed(false);
         childrenTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         childrenTable.setStyleName(ValoTheme.TABLE_COMPACT);

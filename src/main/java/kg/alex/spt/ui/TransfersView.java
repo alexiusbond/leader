@@ -125,7 +125,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         settingsLay = new GridLayout(2, 5);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -197,7 +197,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
         invoiceNumberTF = new TextField(myUI.getMessage(SptMessages.InvoiceNumber));
         invoiceNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        invoiceNumberTF.setWidth("100%");
+        invoiceNumberTF.setWidth(Settings.PERCENTS100);
         invoiceNumberTF.addValueChangeListener(this);
         settingsLay.addComponent(invoiceNumberTF);
 
@@ -211,7 +211,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         settingsLay.setComponentAlignment(searchBtn, Alignment.BOTTOM_RIGHT);
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
-        dateDF.setWidth("100%");
+        dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -227,13 +227,13 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
         noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        noteTF.setWidth("100%");
+        noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setRows(3);
         settingsLay.addComponent(noteTF, 0, 3, 1, 3);
 
         note2TF = new TextArea(myUI.getMessage(SptMessages.Note) + " 2");
         note2TF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        note2TF.setWidth("100%");
+        note2TF.setWidth(Settings.PERCENTS100);
         note2TF.setRows(3);
         if (viewName.equals(Settings.cnShortTermDebtsView) || viewName.equals(Settings.cnReturnableAssetsView)) {
             settingsLay.addComponent(note2TF, 0, 4, 1, 4);
@@ -844,7 +844,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         }
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
@@ -888,7 +888,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setNullRepresentation("");
         tf.setConverter(conv);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         tf.getPropertyDataSource().setValue(value);
         tf.setEnabled(isEnabled);
@@ -899,7 +899,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         if (isRequired) {
             tf.setRequired(true);

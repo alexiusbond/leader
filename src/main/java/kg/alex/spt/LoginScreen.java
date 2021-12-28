@@ -24,7 +24,7 @@ public class LoginScreen extends VerticalLayout {
         footerLbl.setSizeUndefined();
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
         hl.setSpacing(true);
         hl.addStyleName("loginLayout");
 

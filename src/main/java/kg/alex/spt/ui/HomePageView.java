@@ -135,7 +135,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
     private GridLayout buildEmpInfo() {
         GridLayout layout = new GridLayout(2, 5);
-        layout.setWidth("100%");
+        layout.setWidth(Settings.PERCENTS100);
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
@@ -213,7 +213,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
     private GridLayout buildWeekPlan() {
         GridLayout layout = new GridLayout(2, 3);
-        layout.setWidth("100%");
+        layout.setWidth(Settings.PERCENTS100);
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
@@ -260,7 +260,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
     private GridLayout buildMonthPlan() {
         GridLayout layout = new GridLayout(2, 3);
-        layout.setWidth("100%");
+        layout.setWidth(Settings.PERCENTS100);
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
@@ -307,7 +307,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
     private GridLayout buildStudEduCount() {
         GridLayout layout = new GridLayout(2, 7);
-        layout.setWidth("100%");
+        layout.setWidth(Settings.PERCENTS100);
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
@@ -375,7 +375,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
     private GridLayout buildTotalContract() {
         GridLayout layout = new GridLayout(2, 7);
-        layout.setWidth("100%");
+        layout.setWidth(Settings.PERCENTS100);
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
@@ -439,7 +439,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
     private VerticalLayout buildLogLayout() {
 
         VerticalLayout layout = new VerticalLayout();
-        layout.setWidth("100%");
+        layout.setWidth(Settings.PERCENTS100);
         layout.setHeight("100%");
         layout.setSpacing(true);
 
@@ -457,12 +457,12 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logTable.setSelectable(false);
 
         HorizontalLayout logButtonsLayout = new HorizontalLayout();
-        logButtonsLayout.setWidth("100%");
+        logButtonsLayout.setWidth(Settings.PERCENTS100);
         logButtonsLayout.setSpacing(true);
 
         logsTypeSelect = new ComboBoxMax();
         logsTypeSelect.setNullSelectionAllowed(false);
-        logsTypeSelect.setWidth("100%");
+        logsTypeSelect.setWidth(Settings.PERCENTS100);
         logsTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         logsTypeSelect.addItem(myUI.getMessage(SptMessages.SystemLogs));
         if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingLogsSelect)) {
@@ -472,13 +472,13 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logsTypeSelect.addValueChangeListener(this);
 
         weekLog = new Button(myUI.getMessage(SptMessages.WeekLogs));
-        weekLog.setWidth("100%");
+        weekLog.setWidth(Settings.PERCENTS100);
         weekLog.addClickListener(this);
         monthLog = new Button(myUI.getMessage(SptMessages.MonthLogs));
-        monthLog.setWidth("100%");
+        monthLog.setWidth(Settings.PERCENTS100);
         monthLog.addClickListener(this);
         allLog = new Button(myUI.getMessage(SptMessages.AllLogs));
-        allLog.setWidth("100%");
+        allLog.setWidth(Settings.PERCENTS100);
         allLog.addClickListener(this);
 
         setLogTable(6);

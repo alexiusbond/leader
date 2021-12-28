@@ -96,7 +96,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -144,7 +144,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 15, false));
         settingsLay.addComponent(nameTF);
@@ -154,7 +154,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         classNumberSelect.setRequired(true);
         classNumberSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         classNumberSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        classNumberSelect.setWidth("100%");
+        classNumberSelect.setWidth(Settings.PERCENTS100);
         classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         classNumberSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(classNumberSelect);
@@ -164,7 +164,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 

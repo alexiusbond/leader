@@ -86,21 +86,21 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         pdfBtn = new Button();
         pdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
-        pdfBtn.setWidth("100%");
+        pdfBtn.setWidth(Settings.PERCENTS100);
         pdfBtn.setEnabled(false);
         pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         pdfBtn.addClickListener(this);
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -109,7 +109,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -122,7 +122,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         currencySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        currencySelect.setWidth("100%");
+        currencySelect.setWidth(Settings.PERCENTS100);
         currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);

@@ -97,11 +97,11 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
-        buttonsLay.setWidth("100%");
+        buttonsLay.setWidth(Settings.PERCENTS100);
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
@@ -150,7 +150,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         copyButton = new PopupButton(myUI.getMessage(SptMessages.Copy));
-        copyButton.setWidth("100%");
+        copyButton.setWidth(Settings.PERCENTS100);
         copyButton.setDescription(myUI.getMessage(SptMessages.Copy));
         copyButton.setIcon(FontAwesome.COPY);
         copyButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
@@ -166,7 +166,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         discTypeSelect.setRequired(true);
         discTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         discTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        discTypeSelect.setWidth("100%");
+        discTypeSelect.setWidth(Settings.PERCENTS100);
         discTypeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         discTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         discTypeSelect.addValueChangeListener(this);
@@ -187,7 +187,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 250, false));
         settingsLay.addComponent(nameTF);
@@ -199,7 +199,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         valueTF.setNullRepresentation("");
         valueTF.setConverter(Settings.getStringToDoubleConverter());
-        valueTF.setWidth("100%");
+        valueTF.setWidth(Settings.PERCENTS100);
         valueTF.addValidator(new DoubleRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
         settingsLay.addComponent(valueTF);
@@ -209,7 +209,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {

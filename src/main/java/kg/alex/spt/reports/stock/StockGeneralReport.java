@@ -67,21 +67,21 @@ public class StockGeneralReport implements Button.ClickListener,
         productsTable.addValueChangeListener(this);
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -90,7 +90,7 @@ public class StockGeneralReport implements Button.ClickListener,
         fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -102,7 +102,7 @@ public class StockGeneralReport implements Button.ClickListener,
         operationOG.setStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         operationOG.addStyleName(ValoTheme.OPTIONGROUP_SMALL);
         operationOG.setNullSelectionAllowed(false);
-        operationOG.setWidth("100%");
+        operationOG.setWidth(Settings.PERCENTS100);
         operationOG.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         operationOG.addValueChangeListener(this);
 
@@ -110,7 +110,7 @@ public class StockGeneralReport implements Button.ClickListener,
         stocksMSB.setRequired(true);
         stocksMSB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         stocksMSB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        stocksMSB.setWidth("100%");
+        stocksMSB.setWidth(Settings.PERCENTS100);
         stocksMSB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         stocksMSB.setFilteringMode(FilteringMode.CONTAINS);
         stocksMSB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -128,7 +128,7 @@ public class StockGeneralReport implements Button.ClickListener,
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         schoolSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        schoolSelect.setWidth("100%");
+        schoolSelect.setWidth(Settings.PERCENTS100);
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
@@ -144,13 +144,13 @@ public class StockGeneralReport implements Button.ClickListener,
         schoolSelect.setValue(myUI.getUser().getSchool_id());
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllCategories));
-        selectAllBtn.setWidth("100%");
+        selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
         deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllBtn.setWidth("100%");
+        deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);

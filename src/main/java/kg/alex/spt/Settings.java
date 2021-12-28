@@ -81,8 +81,16 @@ public class Settings implements Serializable {
     public static final String visible_hr_orders = "visible_hr_orders";
     public static final String is_modifiable = "is_modifiable";
     public static final String columnPhones = "phones";
+    public static final String columnExams = "exams";
+    public static final String columnSeminars = "seminars";
+    public static final String columnCertificates = "certificates";
+    public static final String columnChildren = "children";
+    public static final String columnLanguages = "languages";
+    public static final String PERCENTS100 = "100%";
     public static final String columnBranches = "branches";
     public static final String columnEducation = "education";
+    public static final String columnSpouseEducation = "spouse_education";
+    public static final String columnSpouseWork_places = "spouse_work_places";
     public static final String columnWork_places = "work_places";
     public static final String order_id = "order_id";
     public static final String order_number = "order_number";

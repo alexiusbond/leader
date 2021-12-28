@@ -149,7 +149,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         schoolSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        schoolSelect.setWidth("100%");
+        schoolSelect.setWidth(Settings.PERCENTS100);
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
@@ -168,7 +168,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         employeeMCB.setRequired(true);
         employeeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         employeeMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        employeeMCB.setWidth("100%");
+        employeeMCB.setWidth(Settings.PERCENTS100);
         employeeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         employeeMCB.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(employeeMCB, 0, 1, 2, 1);
@@ -178,7 +178,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentSelect.setRequired(true);
         studentSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         studentSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        studentSelect.setWidth("100%");
+        studentSelect.setWidth(Settings.PERCENTS100);
         studentSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         studentSelect.setFilteringMode(FilteringMode.CONTAINS);
         studentSelect.addValueChangeListener(this);
@@ -187,7 +187,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentTF = new TextField(myUI.getMessage(SptMessages.FullName));
         studentTF.setEnabled(false);
         studentTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        studentTF.setWidth("100%");
+        studentTF.setWidth(Settings.PERCENTS100);
         studentTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true));
         studentTF.addValueChangeListener(this);
@@ -195,7 +195,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
         dateDF.setResolution(Resolution.MINUTE);
-        dateDF.setWidth("100%");
+        dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -207,7 +207,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         orderNumberTF.setRequired(true);
         orderNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         orderNumberTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        orderNumberTF.setWidth("100%");
+        orderNumberTF.setWidth(Settings.PERCENTS100);
         orderNumberTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 25, false));
         orderNumberTF.setValue("01-31/2  ");
@@ -220,7 +220,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         discountTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         discountTF.setNullRepresentation("");
         discountTF.setConverter(Settings.getStringToIntegerConverter());
-        discountTF.setWidth("100%");
+        discountTF.setWidth(Settings.PERCENTS100);
         discountTF.addValidator(new IntegerRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100));
         discountTF.addValueChangeListener(this);
@@ -231,7 +231,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         headlineTA.setRequired(true);
         headlineTA.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         headlineTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        headlineTA.setWidth("100%");
+        headlineTA.setWidth(Settings.PERCENTS100);
         headlineTA.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 300, false));
         settingsLay.addComponent(headlineTA, 0, 4, 2, 4);
@@ -249,11 +249,11 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         messageTA.setRequired(true);
         messageTA.setStyleName(ValoTheme.TEXTAREA_SMALL);
         messageTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        messageTA.setWidth("100%");
+        messageTA.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(messageTA, 0, 6, 1, 6);
 
         sendBtn = new Button();
-        sendBtn.setWidth("100%");
+        sendBtn.setWidth(Settings.PERCENTS100);
         sendBtn.setCaption(myUI.getMessage(SptMessages.Send));
         sendBtn.setStyleName(ValoTheme.BUTTON_LARGE);
         sendBtn.setIcon(FontAwesome.SHARE_SQUARE_O);

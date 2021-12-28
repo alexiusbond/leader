@@ -91,7 +91,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
+        yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
@@ -142,24 +142,24 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         studentsTable.addValueChangeListener(this);
 
         instPlanCkb = new CheckBox(myUI.getMessage(SptMessages.InstallmentPlan));
-        instPlanCkb.setWidth("100%");
+        instPlanCkb.setWidth(Settings.PERCENTS100);
         instPlanCkb.setValue(true);
         instPlanCkb.addValueChangeListener(this);
 
         paymentsCkb = new CheckBox(myUI.getMessage(SptMessages.Payments));
-        paymentsCkb.setWidth("100%");
+        paymentsCkb.setWidth(Settings.PERCENTS100);
         paymentsCkb.setValue(false);
         paymentsCkb.addValueChangeListener(this);
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         makePdfBtn = new Button();
         makePdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
-        makePdfBtn.setWidth("100%");
+        makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
@@ -167,7 +167,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);

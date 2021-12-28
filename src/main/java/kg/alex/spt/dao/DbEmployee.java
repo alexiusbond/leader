@@ -448,7 +448,7 @@ public class DbEmployee extends BaseDb {
             ComboBoxMax cb = new ComboBoxMax();
             cb.setDescription(myUi.getMessage(SptMessages.MainPosition));
             cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-            cb.setWidth("100%");
+            cb.setWidth(Settings.PERCENTS100);
             cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.Title));
             cb.setFilteringMode(FilteringMode.CONTAINS);
             cb.setRequired(true);
@@ -468,7 +468,7 @@ public class DbEmployee extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.MainPosition)).setValue(cb);
 
             DateField df = new DateField();
-            df.setWidth("100%");
+            df.setWidth(Settings.PERCENTS100);
             df.setStyleName(ValoTheme.DATEFIELD_TINY);
             df.setRequired(true);
             df.setRequiredError(myUi.getMessage(SptMessages.RequiredField));
@@ -482,7 +482,7 @@ public class DbEmployee extends BaseDb {
             TextField tf = new TextField();
             tf.setDescription(myUi.getMessage(SptMessages.Note));
             tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-            tf.setWidth("100%");
+            tf.setWidth(Settings.PERCENTS100);
             tf.addValidator(new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 300, true));
             if (result.getString("eo.note") != null) {
                 tf.setValue(result.getString("eo.note"));

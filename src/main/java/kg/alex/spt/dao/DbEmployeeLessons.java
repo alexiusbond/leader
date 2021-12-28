@@ -180,7 +180,7 @@ public class DbEmployeeLessons extends BaseDb {
         }
         tf.setNullRepresentation("");
         tf.setConverter(conv);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         tf.getPropertyDataSource().setValue(value);
         return tf;

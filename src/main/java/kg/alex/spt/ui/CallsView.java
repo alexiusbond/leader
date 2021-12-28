@@ -176,26 +176,26 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         }
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
-        selectAllBtn.setWidth("100%");
+        selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
         deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllBtn.setWidth("100%");
+        deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
@@ -203,7 +203,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
         makePdfBtn = new Button();
         makePdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
-        makePdfBtn.setWidth("100%");
+        makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
@@ -259,7 +259,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.setStyleName(ValoTheme.BUTTON_SMALL);
         btn.setIcon(FontAwesome.SAVE);
-        btn.setWidth("100%");
+        btn.setWidth(Settings.PERCENTS100);
         btn.setData(itemId);
         btn.addClickListener(this);
         return btn;
@@ -268,7 +268,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
     public TextField createTextField(int itemId) {
         TextField tf = new TextField();
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.setData(itemId);
         tf.setImmediate(true);
         return tf;

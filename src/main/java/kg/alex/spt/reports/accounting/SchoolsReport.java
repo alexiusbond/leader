@@ -58,7 +58,7 @@ public class SchoolsReport implements Button.ClickListener,
         leftGrid.setSpacing(true);
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -67,7 +67,7 @@ public class SchoolsReport implements Button.ClickListener,
         fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -76,13 +76,13 @@ public class SchoolsReport implements Button.ClickListener,
         tillDateDF.addValueChangeListener(this);
 
         selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
-        selectAllSchoolsBtn.setWidth("100%");
+        selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
         deselectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllSchoolsBtn.setWidth("100%");
+        deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllSchoolsBtn.addClickListener(this);
@@ -112,14 +112,14 @@ public class SchoolsReport implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);

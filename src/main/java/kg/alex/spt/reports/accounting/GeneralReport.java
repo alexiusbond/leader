@@ -97,7 +97,7 @@ public class GeneralReport implements Button.ClickListener,
     private void buildLeftPanel() {
 
         leftGrid = new GridLayout(4, 4);
-        leftGrid.setWidth("100%");
+        leftGrid.setWidth(Settings.PERCENTS100);
         leftGrid.setSpacing(true);
 
         yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
@@ -105,7 +105,7 @@ public class GeneralReport implements Button.ClickListener,
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
+        yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -113,7 +113,7 @@ public class GeneralReport implements Button.ClickListener,
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        educationStatusMCB.setWidth("100%");
+        educationStatusMCB.setWidth(Settings.PERCENTS100);
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -165,14 +165,14 @@ public class GeneralReport implements Button.ClickListener,
         schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         PDFBtn = new Button();
         PDFBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
-        PDFBtn.setWidth("100%");
+        PDFBtn.setWidth(Settings.PERCENTS100);
         PDFBtn.setEnabled(false);
         PDFBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         PDFBtn.setIcon(FontAwesome.FILE_PDF_O);
@@ -198,7 +198,7 @@ public class GeneralReport implements Button.ClickListener,
         // building grid layout and all tables and charts
         rightLay = new VerticalLayout();
         rightLay.setMargin(true);
-        rightLay.setWidth("100%");
+        rightLay.setWidth(Settings.PERCENTS100);
         rightLay.setSpacing(true);
 
         buildSchoolAccounting();
@@ -279,70 +279,70 @@ public class GeneralReport implements Button.ClickListener,
     private void buildTotalContract() {
         //labels
         totalsGrid = new GridLayout(4, 9);
-        totalsGrid.setWidth("100%");
+        totalsGrid.setWidth(Settings.PERCENTS100);
 
         Label caption = new Label();
-        caption.setWidth("100%");
+        caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
         caption.setValue(myUI.getMessage(SptMessages.Total));
 
         Label discountsCaption = new Label();
-        discountsCaption.setWidth("100%");
+        discountsCaption.setWidth(Settings.PERCENTS100);
         discountsCaption.setContentMode(ContentMode.HTML);
         discountsCaption.setStyleName("tableCpt");
         discountsCaption.setValue(myUI.getMessage(SptMessages.Discounts));
 
         Label paymentsCaption = new Label();
-        paymentsCaption.setWidth("100%");
+        paymentsCaption.setWidth(Settings.PERCENTS100);
         paymentsCaption.setContentMode(ContentMode.HTML);
         paymentsCaption.setStyleName("tableCpt");
         paymentsCaption.setValue(myUI.getMessage(SptMessages.Payments));
 
         Label ttlStudentsLab = new Label();
-        ttlStudentsLab.setWidth("100%");
+        ttlStudentsLab.setWidth(Settings.PERCENTS100);
         ttlStudentsLab.setContentMode(ContentMode.HTML);
         ttlStudentsLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlStudentsLab.setValue("<b>" + myUI.getMessage(SptMessages.Students) + ":" + "</b>");
 
         Label ttlContractLab = new Label();
-        ttlContractLab.setWidth("100%");
+        ttlContractLab.setWidth(Settings.PERCENTS100);
         ttlContractLab.setContentMode(ContentMode.HTML);
         ttlContractLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlContractLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalContract) + "</b>");
 
         Label ttlDebtLab = new Label();
-        ttlDebtLab.setWidth("100%");
+        ttlDebtLab.setWidth(Settings.PERCENTS100);
         ttlDebtLab.setContentMode(ContentMode.HTML);
         ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlDebtLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDebt) + "</b>");
 
         Label ttlDiscLab = new Label();
-        ttlDiscLab.setWidth("100%");
+        ttlDiscLab.setWidth(Settings.PERCENTS100);
         ttlDiscLab.setContentMode(ContentMode.HTML);
         ttlDiscLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlDiscLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDiscount) + "</b>");
 
         Label ttlCorrectionLab = new Label();
-        ttlCorrectionLab.setWidth("100%");
+        ttlCorrectionLab.setWidth(Settings.PERCENTS100);
         ttlCorrectionLab.setContentMode(ContentMode.HTML);
         ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlCorrectionLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalCorrection) + "</b>");
 
         Label ttlNetLab = new Label();
-        ttlNetLab.setWidth("100%");
+        ttlNetLab.setWidth(Settings.PERCENTS100);
         ttlNetLab.setContentMode(ContentMode.HTML);
         ttlNetLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlNetLab.setValue("<b>" + myUI.getMessage(SptMessages.Net) + ":" + "</b>");
 
         Label ttlPaymentLab = new Label();
-        ttlPaymentLab.setWidth("100%");
+        ttlPaymentLab.setWidth(Settings.PERCENTS100);
         ttlPaymentLab.setContentMode(ContentMode.HTML);
         ttlPaymentLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlPaymentLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalPayment) + "</b>");
 
         Label ttlLeftLab = new Label();
-        ttlLeftLab.setWidth("100%");
+        ttlLeftLab.setWidth(Settings.PERCENTS100);
         ttlLeftLab.setContentMode(ContentMode.HTML);
         ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlLeftLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalLeft) + "</b>");
@@ -405,13 +405,13 @@ public class GeneralReport implements Button.ClickListener,
     private void buildSchoolAccounting() {
 
         Label caption = new Label();
-        caption.setWidth("100%");
+        caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
         caption.setValue(myUI.getMessage(SptMessages.AccountingInformationCaption));
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
 
         incTotalLbl = new Label();
         incTotalLbl.setContentMode(ContentMode.HTML);
@@ -462,7 +462,7 @@ public class GeneralReport implements Button.ClickListener,
             myUI.getMessage(SptMessages.Outcomes), myUI.getMessage(SptMessages.Difference)};
 
         Label caption = new Label();
-        caption.setWidth("100%");
+        caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
         caption.setValue(myUI.getMessage(SptMessages.IncomeOutcomeMonthlyCaption));
@@ -485,12 +485,12 @@ public class GeneralReport implements Button.ClickListener,
             myUI.getMessage(SptMessages.Debt)};
 
         Label caption = new Label();
-        caption.setWidth("100%");
+        caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
         caption.setValue(myUI.getMessage(SptMessages.PaymentsMonthlyCaption));
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
 
         paymentsTable = new FormattedTable();
         paymentsTable.setFooterVisible(true);

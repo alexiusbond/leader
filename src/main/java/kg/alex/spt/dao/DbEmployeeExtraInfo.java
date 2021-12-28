@@ -104,8 +104,8 @@ public class DbEmployeeExtraInfo extends BaseDb {
         String sql = "SELECT n.name, g.name, m.name, c.name, sal.name, ei.health_notes, ei.hobbies, " +
                 "ei.fobbies, h.name, cont.email, cont.address, cont.birth_place, fam.fullname, fam.health_notes, h2.name, " +
                 "(select count(id) from hr_employee_children as ch where ch.employee_id = e.id) as children, " +
-                "GROUP_CONCAT(l.name ORDER BY l.name ASC SEPARATOR ', ') as langs, " +
-                "GROUP_CONCAT(ph.number ORDER BY ph.id ASC SEPARATOR ', ') as phones " +
+                "GROUP_CONCAT(DISTINCT l.name ORDER BY l.name ASC SEPARATOR ', ') as langs, " +
+                "GROUP_CONCAT(DISTINCT ph.number ORDER BY ph.id ASC SEPARATOR ', ') as phones " +
                 "FROM employee AS e " +
                 "LEFT JOIN hr_employee_extra_info AS ei ON e.id = ei.employee_id " +
                 "LEFT JOIN hr_health_status AS h ON h.id = ei.hr_health_status_id " +

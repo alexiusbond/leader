@@ -65,21 +65,21 @@ public class HRGeneralReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
         hl.setSpacing(true);
         hl.addComponent(generateBtn);
         hl.addComponent(excelBtn);
@@ -93,14 +93,14 @@ public class HRGeneralReport implements Button.ClickListener,
         p.setStyleName(ValoTheme.PANEL_BORDERLESS);
 
         leftLay = new VerticalLayout();
-        leftLay.setWidth("100%");
+        leftLay.setWidth(Settings.PERCENTS100);
         leftLay.setSpacing(true);
 
         schoolsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Schools));
         schoolsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         schoolsMCB.addValueChangeListener(this);
         schoolsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        schoolsMCB.setWidth("100%");
+        schoolsMCB.setWidth(Settings.PERCENTS100);
         schoolsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         schoolsMCB.setFilteringMode(FilteringMode.CONTAINS);
         schoolsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -111,20 +111,20 @@ public class HRGeneralReport implements Button.ClickListener,
         nameTF = new TextField(myUI.getMessage(SptMessages.FirstName));
         nameTF.setInputPrompt(myUI.getMessage(SptMessages.Any));
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         leftLay.addComponent(nameTF);
 
         surnameTF = new TextField(myUI.getMessage(SptMessages.LastName));
         surnameTF.setInputPrompt(myUI.getMessage(SptMessages.Any));
         surnameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        surnameTF.setWidth("100%");
+        surnameTF.setWidth(Settings.PERCENTS100);
         leftLay.addComponent(surnameTF);
 
         positionsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Positions));
         positionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         positionsMCB.addValueChangeListener(this);
         positionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        positionsMCB.setWidth("100%");
+        positionsMCB.setWidth(Settings.PERCENTS100);
         positionsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         positionsMCB.setFilteringMode(FilteringMode.CONTAINS);
         positionsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -136,7 +136,7 @@ public class HRGeneralReport implements Button.ClickListener,
         extraPositionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         extraPositionsMCB.addValueChangeListener(this);
         extraPositionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        extraPositionsMCB.setWidth("100%");
+        extraPositionsMCB.setWidth(Settings.PERCENTS100);
         extraPositionsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         extraPositionsMCB.setFilteringMode(FilteringMode.CONTAINS);
         extraPositionsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -149,7 +149,7 @@ public class HRGeneralReport implements Button.ClickListener,
         workingStatusesMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         workingStatusesMCB.addValueChangeListener(this);
         workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        workingStatusesMCB.setWidth("100%");
+        workingStatusesMCB.setWidth(Settings.PERCENTS100);
         workingStatusesMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         workingStatusesMCB.setFilteringMode(FilteringMode.CONTAINS);
         workingStatusesMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -161,7 +161,7 @@ public class HRGeneralReport implements Button.ClickListener,
         contractTypeMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         contractTypeMCB.addValueChangeListener(this);
         contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        contractTypeMCB.setWidth("100%");
+        contractTypeMCB.setWidth(Settings.PERCENTS100);
         contractTypeMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         contractTypeMCB.setFilteringMode(FilteringMode.CONTAINS);
         contractTypeMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -173,7 +173,7 @@ public class HRGeneralReport implements Button.ClickListener,
         genderMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         genderMCB.addValueChangeListener(this);
         genderMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        genderMCB.setWidth("100%");
+        genderMCB.setWidth(Settings.PERCENTS100);
         genderMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         genderMCB.setFilteringMode(FilteringMode.CONTAINS);
         genderMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -185,7 +185,7 @@ public class HRGeneralReport implements Button.ClickListener,
         nationalityMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         nationalityMCB.addValueChangeListener(this);
         nationalityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        nationalityMCB.setWidth("100%");
+        nationalityMCB.setWidth(Settings.PERCENTS100);
         nationalityMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         nationalityMCB.setFilteringMode(FilteringMode.CONTAINS);
         nationalityMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -197,7 +197,7 @@ public class HRGeneralReport implements Button.ClickListener,
         citizenshipMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         citizenshipMCB.addValueChangeListener(this);
         citizenshipMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        citizenshipMCB.setWidth("100%");
+        citizenshipMCB.setWidth(Settings.PERCENTS100);
         citizenshipMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         citizenshipMCB.setFilteringMode(FilteringMode.CONTAINS);
         citizenshipMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -209,7 +209,7 @@ public class HRGeneralReport implements Button.ClickListener,
         martialStatusMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         martialStatusMCB.addValueChangeListener(this);
         martialStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        martialStatusMCB.setWidth("100%");
+        martialStatusMCB.setWidth(Settings.PERCENTS100);
         martialStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         martialStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         martialStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -221,7 +221,7 @@ public class HRGeneralReport implements Button.ClickListener,
         healthStatusMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         healthStatusMCB.addValueChangeListener(this);
         healthStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        healthStatusMCB.setWidth("100%");
+        healthStatusMCB.setWidth(Settings.PERCENTS100);
         healthStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         healthStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         healthStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -233,7 +233,7 @@ public class HRGeneralReport implements Button.ClickListener,
         gradSchoolMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         gradSchoolMCB.addValueChangeListener(this);
         gradSchoolMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        gradSchoolMCB.setWidth("100%");
+        gradSchoolMCB.setWidth(Settings.PERCENTS100);
         gradSchoolMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         gradSchoolMCB.setFilteringMode(FilteringMode.CONTAINS);
         gradSchoolMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -245,7 +245,7 @@ public class HRGeneralReport implements Button.ClickListener,
         universityMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         universityMCB.addValueChangeListener(this);
         universityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        universityMCB.setWidth("100%");
+        universityMCB.setWidth(Settings.PERCENTS100);
         universityMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         universityMCB.setFilteringMode(FilteringMode.CONTAINS);
         universityMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -257,7 +257,7 @@ public class HRGeneralReport implements Button.ClickListener,
         workPlaceMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         workPlaceMCB.addValueChangeListener(this);
         workPlaceMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        workPlaceMCB.setWidth("100%");
+        workPlaceMCB.setWidth(Settings.PERCENTS100);
         workPlaceMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         workPlaceMCB.setFilteringMode(FilteringMode.CONTAINS);
         workPlaceMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -269,7 +269,7 @@ public class HRGeneralReport implements Button.ClickListener,
         languageMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         languageMCB.addValueChangeListener(this);
         languageMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        languageMCB.setWidth("100%");
+        languageMCB.setWidth(Settings.PERCENTS100);
         languageMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         languageMCB.setFilteringMode(FilteringMode.CONTAINS);
         languageMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -281,7 +281,7 @@ public class HRGeneralReport implements Button.ClickListener,
         examMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         examMCB.addValueChangeListener(this);
         examMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        examMCB.setWidth("100%");
+        examMCB.setWidth(Settings.PERCENTS100);
         examMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         examMCB.setFilteringMode(FilteringMode.CONTAINS);
         examMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -293,7 +293,7 @@ public class HRGeneralReport implements Button.ClickListener,
         certificateMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         certificateMCB.addValueChangeListener(this);
         certificateMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        certificateMCB.setWidth("100%");
+        certificateMCB.setWidth(Settings.PERCENTS100);
         certificateMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         certificateMCB.setFilteringMode(FilteringMode.CONTAINS);
         certificateMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -305,7 +305,7 @@ public class HRGeneralReport implements Button.ClickListener,
         mainBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         mainBranchMCB.addValueChangeListener(this);
         mainBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        mainBranchMCB.setWidth("100%");
+        mainBranchMCB.setWidth(Settings.PERCENTS100);
         mainBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         mainBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
         mainBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -317,7 +317,7 @@ public class HRGeneralReport implements Button.ClickListener,
         extraBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         extraBranchMCB.addValueChangeListener(this);
         extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        extraBranchMCB.setWidth("100%");
+        extraBranchMCB.setWidth(Settings.PERCENTS100);
         extraBranchMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         extraBranchMCB.setFilteringMode(FilteringMode.CONTAINS);
         extraBranchMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -331,7 +331,7 @@ public class HRGeneralReport implements Button.ClickListener,
         yearSelect.addValueChangeListener(this);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
+        yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         leftLay.addComponent(yearSelect);
@@ -340,7 +340,7 @@ public class HRGeneralReport implements Button.ClickListener,
         canBeAdvisorMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         canBeAdvisorMCB.addValueChangeListener(this);
         canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        canBeAdvisorMCB.setWidth("100%");
+        canBeAdvisorMCB.setWidth(Settings.PERCENTS100);
         canBeAdvisorMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         canBeAdvisorMCB.setFilteringMode(FilteringMode.CONTAINS);
         canBeAdvisorMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));

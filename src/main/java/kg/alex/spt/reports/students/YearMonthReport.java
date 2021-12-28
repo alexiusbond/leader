@@ -107,14 +107,14 @@ public class YearMonthReport implements Button.ClickListener,
     private void buildLeftPanel() {
         leftGrid = new GridLayout(4, 6);
         leftGrid.setSpacing(true);
-        leftGrid.setWidth("100%");
+        leftGrid.setWidth(Settings.PERCENTS100);
 
         yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
+        yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -122,7 +122,7 @@ public class YearMonthReport implements Button.ClickListener,
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        educationStatusMCB.setWidth("100%");
+        educationStatusMCB.setWidth(Settings.PERCENTS100);
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -151,13 +151,13 @@ public class YearMonthReport implements Button.ClickListener,
         yearSelect.addValueChangeListener(this);
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
-        selectAllBtn.setWidth("100%");
+        selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
         deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllBtn.setWidth("100%");
+        deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);
@@ -187,7 +187,7 @@ public class YearMonthReport implements Button.ClickListener,
         }
 
         type = new OptionGroup();
-        type.setWidth("100%");
+        type.setWidth(Settings.PERCENTS100);
         type.addItem(myUI.getMessage(SptMessages.Monthly));
         type.addItem(myUI.getMessage(SptMessages.Yearly));
         if (currentUser.hasRole(Settings.rnAdmin)) {
@@ -198,14 +198,14 @@ public class YearMonthReport implements Button.ClickListener,
         type.addValueChangeListener(this);
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         makePdfBtn = new Button();
         makePdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
-        makePdfBtn.setWidth("100%");
+        makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         makePdfBtn.addClickListener(this);
@@ -213,7 +213,7 @@ public class YearMonthReport implements Button.ClickListener,
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
@@ -240,7 +240,7 @@ public class YearMonthReport implements Button.ClickListener,
         rightLay = new VerticalLayout();
         rightLay.setMargin(true);
         rightLay.setSpacing(true);
-        rightLay.setWidth("100%");
+        rightLay.setWidth(Settings.PERCENTS100);
         rightLay.setImmediate(true);
         splitPanel.setSecondComponent(rightLay);
     }
@@ -276,7 +276,7 @@ public class YearMonthReport implements Button.ClickListener,
         FormattedTable dataTable = new FormattedTable();
         dataTable.setCaption(caption);
         dataTable.setFooterVisible(true);
-        dataTable.setWidth("100%");
+        dataTable.setWidth(Settings.PERCENTS100);
         dataTable.setPageLength(container.size());
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);

@@ -82,7 +82,7 @@ public class OutOfList implements Button.ClickListener,
         yearSelectMCB.setRequired(true);
         yearSelectMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelectMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelectMCB.setWidth("100%");
+        yearSelectMCB.setWidth(Settings.PERCENTS100);
         yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelectMCB.setFilteringMode(FilteringMode.CONTAINS);
         yearSelectMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -96,7 +96,7 @@ public class OutOfList implements Button.ClickListener,
 
         reasonsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        reasonsMCB.setWidth("100%");
+        reasonsMCB.setWidth(Settings.PERCENTS100);
         reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
         reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -125,13 +125,13 @@ public class OutOfList implements Button.ClickListener,
         yearSelectMCB.addValueChangeListener(this);
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
-        selectAllBtn.setWidth("100%");
+        selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
         deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllBtn.setWidth("100%");
+        deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);
@@ -160,14 +160,14 @@ public class OutOfList implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);

@@ -79,7 +79,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.setRowExpandRatio(2, 1);
 
         Label caption = new Label();
-        caption.setWidth("100%");
+        caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setValue(myUI.getMessage(SptMessages.TransferInstruction));
         caption.setStyleName("tableCpt");
@@ -87,7 +87,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
 
         search1TF = new TextField();
         search1TF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        search1TF.setWidth("100%");
+        search1TF.setWidth(Settings.PERCENTS100);
         search1TF.setInputPrompt(myUI.getMessage(SptMessages.Search) + " ("
                 + myUI.getMessage(SptMessages.Id) + " / " + myUI.getMessage(SptMessages.FirstName) + " / "
                 + myUI.getMessage(SptMessages.LastName) + " / " + myUI.getMessage(SptMessages.Position) + ")");
@@ -96,7 +96,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
 
         search2TF = new TextField();
         search2TF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        search2TF.setWidth("100%");
+        search2TF.setWidth(Settings.PERCENTS100);
         search1TF.setInputPrompt(myUI.getMessage(SptMessages.Search) + " ("
                 + myUI.getMessage(SptMessages.Id) + " / " + myUI.getMessage(SptMessages.FirstName) + " / "
                 + myUI.getMessage(SptMessages.LastName) + " / " + myUI.getMessage(SptMessages.Position) + ")");
@@ -141,7 +141,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         settingsLay.setSizeFull();
 
         saveBtn = new Button(myUI.getMessage(SptMessages.SaveButton));
-        saveBtn.setWidth("100%");
+        saveBtn.setWidth(Settings.PERCENTS100);
         saveBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
         saveBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
@@ -150,7 +150,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         settingsLay.setComponentAlignment(saveBtn, Alignment.BOTTOM_CENTER);
 
         cancelBtn = new Button(myUI.getMessage(SptMessages.CancelButton));
-        cancelBtn.setWidth("100%");
+        cancelBtn.setWidth(Settings.PERCENTS100);
         cancelBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
         cancelBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         cancelBtn.setIcon(FontAwesome.FLOPPY_O);
@@ -164,7 +164,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         school1Select = new ComboBoxMax();
         school1Select.setNullSelectionAllowed(false);
         school1Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        school1Select.setWidth("100%");
+        school1Select.setWidth(Settings.PERCENTS100);
         school1Select.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         school1Select.setFilteringMode(FilteringMode.CONTAINS);
         school1Select.addValueChangeListener(this);
@@ -183,7 +183,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         school2Select = new ComboBoxMax();
         school2Select.setNullSelectionAllowed(false);
         school2Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        school2Select.setWidth("100%");
+        school2Select.setWidth(Settings.PERCENTS100);
         school2Select.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         school2Select.setFilteringMode(FilteringMode.CONTAINS);
         school2Select.addValueChangeListener(this);
@@ -232,14 +232,14 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(photoEmb, 0, 0, 0, 5);
 
         Label idLb = new Label();
-        idLb.setWidth("100%");
+        idLb.setWidth(Settings.PERCENTS100);
         idLb.setContentMode(ContentMode.HTML);
         idLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         idLb.setValue("<b>" + myUI.getMessage(SptMessages.Id) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.Id)).getValue().toString());
         gl.addComponent(idLb, 1, 0);
 
         Label fullnameLb = new Label();
-        fullnameLb.setWidth("100%");
+        fullnameLb.setWidth(Settings.PERCENTS100);
         fullnameLb.setContentMode(ContentMode.HTML);
         fullnameLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         fullnameLb.setValue("<b>" + myUI.getMessage(SptMessages.FullName) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).getValue()
@@ -247,14 +247,14 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(fullnameLb, 2, 0);
 
         Label mainPositionLb = new Label();
-        mainPositionLb.setWidth("100%");
+        mainPositionLb.setWidth(Settings.PERCENTS100);
         mainPositionLb.setContentMode(ContentMode.HTML);
         mainPositionLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         mainPositionLb.setValue("<b>" + myUI.getMessage(SptMessages.MainPositionShort) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.Position)).getValue());
         gl.addComponent(mainPositionLb, 1, 1);
 
         Label mainBranchLb = new Label();
-        mainBranchLb.setWidth("100%");
+        mainBranchLb.setWidth(Settings.PERCENTS100);
         mainBranchLb.setContentMode(ContentMode.HTML);
         mainBranchLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
@@ -265,7 +265,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(mainBranchLb, 2, 1);
 
         Label extraPositionsLb = new Label();
-        extraPositionsLb.setWidth("100%");
+        extraPositionsLb.setWidth(Settings.PERCENTS100);
         extraPositionsLb.setContentMode(ContentMode.HTML);
         extraPositionsLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
@@ -276,7 +276,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(extraPositionsLb, 1, 2, 2, 2);
 
         Label extraBranchesLb = new Label();
-        extraBranchesLb.setWidth("100%");
+        extraBranchesLb.setWidth(Settings.PERCENTS100);
         extraBranchesLb.setContentMode(ContentMode.HTML);
         extraBranchesLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
@@ -287,7 +287,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(extraBranchesLb, 1, 3, 2, 3);
 
         Label lessonsLb = new Label();
-        lessonsLb.setWidth("100%");
+        lessonsLb.setWidth(Settings.PERCENTS100);
         lessonsLb.setContentMode(ContentMode.HTML);
         lessonsLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
@@ -298,7 +298,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(lessonsLb, 1, 4, 2, 4);
 
         Label spouseLb = new Label();
-        spouseLb.setWidth("100%");
+        spouseLb.setWidth(Settings.PERCENTS100);
         spouseLb.setContentMode(ContentMode.HTML);
         spouseLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
@@ -309,7 +309,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(spouseLb, 1, 5, 2, 5);
 
         Label childrenLb = new Label();
-        childrenLb.setWidth("100%");
+        childrenLb.setWidth(Settings.PERCENTS100);
         childrenLb.setContentMode(ContentMode.HTML);
         childrenLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
@@ -320,7 +320,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         gl.addComponent(childrenLb, 1, 6, 2, 6);
 
         Label captionOrders = new Label();
-        captionOrders.setWidth("100%");
+        captionOrders.setWidth(Settings.PERCENTS100);
         captionOrders.setContentMode(ContentMode.HTML);
         captionOrders.setValue(myUI.getMessage(SptMessages.OrdersHistory));
         captionOrders.setStyleName("tableCpt");

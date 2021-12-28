@@ -124,7 +124,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         settingsLay = new GridLayout(2, 4);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -185,7 +185,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
         invoiceNumberTF = new TextField(myUI.getMessage(SptMessages.InvoiceNumber));
         invoiceNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        invoiceNumberTF.setWidth("100%");
+        invoiceNumberTF.setWidth(Settings.PERCENTS100);
         invoiceNumberTF.addValueChangeListener(this);
         settingsLay.addComponent(invoiceNumberTF);
 
@@ -200,7 +200,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
         dateDF.setResolution(Resolution.MINUTE);
-        dateDF.setWidth("100%");
+        dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -210,7 +210,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
         noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        noteTF.setWidth("100%");
+        noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setRows(3);
         settingsLay.addComponent(noteTF, 0, 3, 1, 3);
         settingsLay.setColumnExpandRatio(0, 1);
@@ -662,7 +662,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         }
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
@@ -706,7 +706,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setNullRepresentation("");
         tf.setConverter(conv);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         tf.getPropertyDataSource().setValue(value);
         tf.setEnabled(isEnabled);
@@ -717,7 +717,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         if (isRequired) {
             tf.setRequired(true);

@@ -105,7 +105,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         settingsLay = new GridLayout(2, 8);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -158,7 +158,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
 
         invoiceNumberTF = new TextField(myUI.getMessage(SptMessages.InvoiceNumber));
         invoiceNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        invoiceNumberTF.setWidth("100%");
+        invoiceNumberTF.setWidth(Settings.PERCENTS100);
         invoiceNumberTF.addValueChangeListener(this);
         settingsLay.addComponent(invoiceNumberTF);
 
@@ -174,7 +174,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         codeTF = new TextField(myUI.getMessage(SptMessages.SearchByCode));
         codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         codeTF.setIcon(FontAwesome.SEARCH);
-        codeTF.setWidth("100%");
+        codeTF.setWidth(Settings.PERCENTS100);
         codeTF.addValueChangeListener(this);
         settingsLay.addComponent(codeTF, 0, 2, 1, 2);
 
@@ -188,7 +188,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         blockSelect.setRequired(true);
         blockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         blockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        blockSelect.setWidth("100%");
+        blockSelect.setWidth(Settings.PERCENTS100);
         blockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         blockSelect.setFilteringMode(FilteringMode.CONTAINS);
         blockSelect.addValueChangeListener(this);
@@ -199,7 +199,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         floorSelect.setRequired(true);
         floorSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         floorSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        floorSelect.setWidth("100%");
+        floorSelect.setWidth(Settings.PERCENTS100);
         floorSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         floorSelect.setFilteringMode(FilteringMode.CONTAINS);
         floorSelect.addValueChangeListener(this);
@@ -222,7 +222,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         roomSelect.setRequired(true);
         roomSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         roomSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        roomSelect.setWidth("100%");
+        roomSelect.setWidth(Settings.PERCENTS100);
         roomSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         roomSelect.setFilteringMode(FilteringMode.CONTAINS);
         roomSelect.addValueChangeListener(this);
@@ -230,7 +230,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
 
         noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        noteTF.setWidth("100%");
+        noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setRows(3);
         settingsLay.addComponent(noteTF, 0, 7, 1, 7);
         settingsLay.setColumnExpandRatio(0, 1);
@@ -855,7 +855,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             cb.setDescription(myUI.getMessage(SptMessages.CanNotModify));
         }
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
@@ -909,7 +909,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setNullRepresentation("");
         tf.setConverter(conv);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         tf.getPropertyDataSource().setValue(value);
         tf.setEnabled(isEnabled);
@@ -921,7 +921,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         DateField df = new DateField(caption);
         df.setDescription(description);
         df.setResolution(resolution);
-        df.setWidth("100%");
+        df.setWidth(Settings.PERCENTS100);
         df.setStyleName(ValoTheme.DATEFIELD_SMALL);
         df.setRequired(true);
         df.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -934,7 +934,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         if (isRequired) {
             tf.setRequired(true);

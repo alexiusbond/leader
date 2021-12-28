@@ -95,7 +95,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -143,7 +143,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 150, false));
         settingsLay.addComponent(nameTF);
@@ -153,7 +153,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 

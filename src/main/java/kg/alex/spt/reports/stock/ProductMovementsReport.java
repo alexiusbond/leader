@@ -63,21 +63,21 @@ public class ProductMovementsReport implements Button.ClickListener,
         productsTable.addValueChangeListener(this);
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -86,7 +86,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -100,7 +100,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         stockSelect.setRequired(true);
         stockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         stockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        stockSelect.setWidth("100%");
+        stockSelect.setWidth(Settings.PERCENTS100);
         stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         stockSelect.setFilteringMode(FilteringMode.CONTAINS);
         stockSelect.addValueChangeListener(this);
@@ -110,7 +110,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         categorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        categorySelect.setWidth("100%");
+        categorySelect.setWidth(Settings.PERCENTS100);
         categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         categorySelect.addValueChangeListener(this);
@@ -121,7 +121,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         schoolSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        schoolSelect.setWidth("100%");
+        schoolSelect.setWidth(Settings.PERCENTS100);
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);

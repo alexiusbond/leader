@@ -210,7 +210,7 @@ public class DbEmployeeWork extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(result.getString("extra_positions"));
             item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(result.getString("ws.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Period)).setValue("с " + Settings.df.format(result.getDate("ew.start_date"))
-                    + " по " + Settings.df.format(result.getDate("ew.end_date")));
+                    + (result.getDate("ew.end_date") == null ? "" : " по " + Settings.df.format(result.getDate("ew.end_date"))));
         }
         return container;
     }

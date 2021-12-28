@@ -75,13 +75,13 @@ public class MonthReport implements Button.ClickListener,
         leftGrid.setSpacing(true);
 
         selectAllIncomesBtn = new Button(myUI.getMessage(SptMessages.AllIncomes));
-        selectAllIncomesBtn.setWidth("100%");
+        selectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         selectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllIncomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllIncomesBtn.addClickListener(this);
 
         deselectAllIncomesBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllIncomesBtn.setWidth("100%");
+        deselectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllIncomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllIncomesBtn.addClickListener(this);
@@ -101,13 +101,13 @@ public class MonthReport implements Button.ClickListener,
         incomeCategoriesTable.addValueChangeListener(this);
 
         selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
-        selectAllSchoolsBtn.setWidth("100%");
+        selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
         deselectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllSchoolsBtn.setWidth("100%");
+        deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllSchoolsBtn.addClickListener(this);
@@ -127,13 +127,13 @@ public class MonthReport implements Button.ClickListener,
         schoolsTable.addValueChangeListener(this);
 
         selectAllOutcomesBtn = new Button(myUI.getMessage(SptMessages.AllOutcomes));
-        selectAllOutcomesBtn.setWidth("100%");
+        selectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         selectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllOutcomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllOutcomesBtn.addClickListener(this);
 
         deselectAllOutcomesBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllOutcomesBtn.setWidth("100%");
+        deselectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllOutcomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllOutcomesBtn.addClickListener(this);
@@ -175,14 +175,14 @@ public class MonthReport implements Button.ClickListener,
         schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
@@ -192,7 +192,7 @@ public class MonthReport implements Button.ClickListener,
         fromDateDF.setRequired(true);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setResolution(Resolution.MONTH);
         fromDateDF.setDateFormat(Settings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
@@ -202,7 +202,7 @@ public class MonthReport implements Button.ClickListener,
         tillDateDF.setRequired(true);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setResolution(Resolution.MONTH);
         tillDateDF.setDateFormat(Settings.yearMonthPattern);
         tillDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));

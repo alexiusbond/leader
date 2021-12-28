@@ -59,7 +59,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private Table documentsDataTable;
     private int emplID;
     private OptionGroup optionGroup;
-    private CheckBox canBeAdvisorCkb, noPhonesCkb, noBranchesCkb;
+    private CheckBox canBeAdvisorCkb, noPhonesCkb, noBranchesCkb, noEducationCkb, noWorkPlacesCkb, noExamsCkb,
+            noSeminarsCkb, noCertificatesCkb, noLanguagesCkb, noSpouseEducationCkb, noSpouseWorkPlacesCkb, noChildrenCkb;
     private TextField nameTF, loginTF, passwordTF, surnameTF, middlenameTF,
             birth_placeTF, emailTF, spouseFullnameTF, spousePhoneTF,
             spouseHealthNotesTF, hobbiesTF, fobbiesTF;
@@ -76,8 +77,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private String[] NATURAL_COL_ORDER, NATURAL_COL_ORDER_PHONES, NATURAL_COL_ORDER_CHILDREN,
             NATURAL_COL_ORDER_EDU, NATURAL_COL_ORDER_WORK,
             NATURAL_COL_ORDER_QUESTIONING, NATURAL_COL_ORDER_EXAMS, NATURAL_COL_ORDER_SEMINARS,
-            NATURAL_COL_ORDER_LANGUAGES, NATURAL_COL_ORDER_CERTIFICATES, NATURAL_COL_ORDER_BRANCHES, NATURAL_COL_ORDER_LESSONS,
-            NATURAL_COL_ORDER_PERMISSIONS, NATURAL_COL_ORDER_ORDERS;
+            NATURAL_COL_ORDER_LANGUAGES, NATURAL_COL_ORDER_CERTIFICATES, NATURAL_COL_ORDER_BRANCHES,
+            NATURAL_COL_ORDER_LESSONS, NATURAL_COL_ORDER_PERMISSIONS, NATURAL_COL_ORDER_ORDERS;
     private VerticalLayout infoLay, documentsLay;
     private GridLayout empSearchLay, contactInfoLay, familyInfoLay, extraInfoLay,
             achievementsInfoLay, profInfoLay, ordersInfoLay;
@@ -165,7 +166,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         setEmployeesDataTable(optionGroup.getValue().toString());
 
         HorizontalLayout searchLayFooter = new HorizontalLayout();
-        searchLayFooter.setWidth("100%");
+        searchLayFooter.setWidth(Settings.PERCENTS100);
         workingStatTtlLb = new Label();
         workingStatTtlLb.setSizeUndefined();
         workingStatTtlLb.setImmediate(true);
@@ -304,7 +305,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void buildContactsLayout() {
 
         fieldsLayContacts = new FormLayout();
-        fieldsLayContacts.setWidth("100%");
+        fieldsLayContacts.setWidth(Settings.PERCENTS100);
         fieldsLayContacts.setSpacing(false);
         fieldsLayContacts.setMargin(false);
 
@@ -321,14 +322,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         addressTA.setRequired(true);
         addressTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
         addressTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        addressTA.setWidth("100%");
+        addressTA.setWidth(Settings.PERCENTS100);
         addressTA.setRows(7);
         addressTA.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 400, false));
         fieldsLayContacts.addComponent(addressTA);
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
 
         Label captionPhones = new Label();
         captionPhones.setSizeFull();
@@ -374,24 +375,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void buildFamilyLayout() {
 
-        familyInfoLay = new GridLayout(2, 8);
-        familyInfoLay.setWidth("100%");
+        familyInfoLay = new GridLayout(3, 8);
+        familyInfoLay.setWidth(Settings.PERCENTS100);
         familyInfoLay.setSpacing(true);
         familyInfoLay.setMargin(true);
         familyInfoLay.setColumnExpandRatio(0, 1);
 
         captionSpouseInfo = new Label();
-        captionSpouseInfo.setWidth("100%");
+        captionSpouseInfo.setWidth(Settings.PERCENTS100);
         captionSpouseInfo.setContentMode(ContentMode.HTML);
         captionSpouseInfo.setValue(myUI.getMessage(SptMessages.SpouseInfo));
         captionSpouseInfo.setStyleName("tableCpt");
-        familyInfoLay.addComponent(captionSpouseInfo, 0, 0, 1, 0);
+        familyInfoLay.addComponent(captionSpouseInfo, 0, 0, 2, 0);
 
         fieldsLayFamily = new FormLayout();
-        fieldsLayFamily.setWidth("100%");
+        fieldsLayFamily.setWidth(Settings.PERCENTS100);
         fieldsLayFamily.setSpacing(false);
         fieldsLayFamily.setMargin(false);
-        familyInfoLay.addComponent(fieldsLayFamily, 0, 1, 1, 1);
+        familyInfoLay.addComponent(fieldsLayFamily, 0, 1, 2, 1);
 
         spouseFullnameTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true);
@@ -424,6 +425,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionSpouseEducation.setStyleName("tableCpt");
         familyInfoLay.addComponent(captionSpouseEducation, 0, 2);
 
+        noSpouseEducationCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noSpouseEducationCkb.addValueChangeListener(this);
+        familyInfoLay.addComponent(noSpouseEducationCkb, 2, 2);
+        familyInfoLay.setComponentAlignment(noSpouseEducationCkb, Alignment.BOTTOM_RIGHT);
+
         plusSpouseEducationButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusSpouseEducationButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusSpouseEducationButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -434,8 +440,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         spouseEducationTable = new FormattedTable();
         spouseEducationTable.setSizeFull();
         spouseEducationTable.setStyleName(ValoTheme.TABLE_SMALL);
-        spouseEducationTable.setPageLength(8);
-        familyInfoLay.addComponent(spouseEducationTable, 0, 3, 1, 3);
+        familyInfoLay.addComponent(spouseEducationTable, 0, 3, 2, 3);
 
         Label captionSpouseWorkPlaces = new Label();
         captionSpouseWorkPlaces.setSizeFull();
@@ -443,6 +448,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionSpouseWorkPlaces.setValue(myUI.getMessage(SptMessages.SpouseWorkPlaces));
         captionSpouseWorkPlaces.setStyleName("tableCpt");
         familyInfoLay.addComponent(captionSpouseWorkPlaces, 0, 4);
+
+        noSpouseWorkPlacesCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noSpouseWorkPlacesCkb.addValueChangeListener(this);
+        familyInfoLay.addComponent(noSpouseWorkPlacesCkb, 2, 4);
+        familyInfoLay.setComponentAlignment(noSpouseWorkPlacesCkb, Alignment.BOTTOM_RIGHT);
 
         plusSpouseWorkPlacesButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusSpouseWorkPlacesButton.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -454,8 +464,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         spouseWorkPlacesTable = new FormattedTable();
         spouseWorkPlacesTable.setSizeFull();
         spouseWorkPlacesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        spouseWorkPlacesTable.setPageLength(8);
-        familyInfoLay.addComponent(spouseWorkPlacesTable, 0, 5, 1, 5);
+        familyInfoLay.addComponent(spouseWorkPlacesTable, 0, 5, 2, 5);
 
 
         Label captionChildren = new Label();
@@ -464,6 +473,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionChildren.setValue(myUI.getMessage(SptMessages.Children));
         captionChildren.setStyleName("tableCpt");
         familyInfoLay.addComponent(captionChildren, 0, 6);
+
+        noChildrenCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noChildrenCkb.addValueChangeListener(this);
+        familyInfoLay.addComponent(noChildrenCkb, 2, 6);
+        familyInfoLay.setComponentAlignment(noChildrenCkb, Alignment.BOTTOM_RIGHT);
 
         plusChildButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusChildButton.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -475,15 +489,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         childrenTable = new FormattedTable();
         childrenTable.setSizeFull();
         childrenTable.setStyleName(ValoTheme.TABLE_SMALL);
-        childrenTable.setPageLength(8);
-        familyInfoLay.addComponent(childrenTable, 0, 7, 1, 7);
+        familyInfoLay.addComponent(childrenTable, 0, 7, 2, 7);
     }
 
-
     private void buildDocumentsLayout() {
-
         Label captionDocuments = new Label();
-        captionDocuments.setWidth("100%");
+        captionDocuments.setWidth(Settings.PERCENTS100);
         captionDocuments.setContentMode(ContentMode.HTML);
         captionDocuments.setValue(myUI.getMessage(SptMessages.ListOfDocuments));
         captionDocuments.setStyleName("tableCpt");
@@ -514,7 +525,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         healthNotesTA = new TextArea(myUI.getMessage(SptMessages.HealthNotes));
         healthNotesTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        healthNotesTA.setWidth("100%");
+        healthNotesTA.setWidth(Settings.PERCENTS100);
         healthNotesTA.setRows(5);
         healthNotesTA.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 350, true));
@@ -532,14 +543,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         shortNotesTA = new TextArea(myUI.getMessage(SptMessages.ShortNote));
         shortNotesTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        shortNotesTA.setWidth("100%");
+        shortNotesTA.setWidth(Settings.PERCENTS100);
         shortNotesTA.setRows(3);
         shortNotesTA.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true));
         fieldsLayExtra.addComponent(shortNotesTA);
 
         Label captionQuestioning = new Label();
-        captionQuestioning.setWidth("100%");
+        captionQuestioning.setWidth(Settings.PERCENTS100);
         captionQuestioning.setContentMode(ContentMode.HTML);
         captionQuestioning.setValue(myUI.getMessage(SptMessages.Questioning));
         captionQuestioning.setStyleName("tableCpt");
@@ -549,7 +560,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         questioningTable.setStyleName(ValoTheme.TABLE_SMALL);
 
         Label captionExtraInfo = new Label();
-        captionExtraInfo.setWidth("100%");
+        captionExtraInfo.setWidth(Settings.PERCENTS100);
         captionExtraInfo.setContentMode(ContentMode.HTML);
         captionExtraInfo.setValue(myUI.getMessage(SptMessages.ExtraInfo));
         captionExtraInfo.setStyleName("tableCpt");
@@ -569,8 +580,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void buildAchievementsLayout() {
 
-        achievementsInfoLay = new GridLayout(2, 8);
-        achievementsInfoLay.setWidth("100%");
+        achievementsInfoLay = new GridLayout(3, 8);
+        achievementsInfoLay.setWidth(Settings.PERCENTS100);
         achievementsInfoLay.setSpacing(true);
         achievementsInfoLay.setMargin(true);
         achievementsInfoLay.setColumnExpandRatio(0, 1);
@@ -582,6 +593,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionExams.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionExams, 0, 0);
 
+        noExamsCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noExamsCkb.addValueChangeListener(this);
+        achievementsInfoLay.addComponent(noExamsCkb, 2, 0);
+        achievementsInfoLay.setComponentAlignment(noExamsCkb, Alignment.BOTTOM_RIGHT);
+
         plusExamButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusExamButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusExamButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -592,8 +608,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         examsTable = new FormattedTable();
         examsTable.setSizeFull();
         examsTable.setStyleName(ValoTheme.TABLE_SMALL);
-        examsTable.setPageLength(8);
-        achievementsInfoLay.addComponent(examsTable, 0, 1, 1, 1);
+        achievementsInfoLay.addComponent(examsTable, 0, 1, 2, 1);
 
         Label captionSeminars = new Label();
         captionSeminars.setSizeFull();
@@ -601,6 +616,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionSeminars.setValue(myUI.getMessage(SptMessages.Seminars));
         captionSeminars.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionSeminars, 0, 2);
+
+        noSeminarsCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noSeminarsCkb.addValueChangeListener(this);
+        achievementsInfoLay.addComponent(noSeminarsCkb, 2, 2);
+        achievementsInfoLay.setComponentAlignment(noSeminarsCkb, Alignment.BOTTOM_RIGHT);
 
         plusSeminarButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusSeminarButton.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -612,8 +632,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         seminarsTable = new FormattedTable();
         seminarsTable.setSizeFull();
         seminarsTable.setStyleName(ValoTheme.TABLE_SMALL);
-        seminarsTable.setPageLength(8);
-        achievementsInfoLay.addComponent(seminarsTable, 0, 3, 1, 3);
+        achievementsInfoLay.addComponent(seminarsTable, 0, 3, 2, 3);
 
         Label captionCertificates = new Label();
         captionCertificates.setSizeFull();
@@ -621,6 +640,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionCertificates.setValue(myUI.getMessage(SptMessages.Certificates));
         captionCertificates.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionCertificates, 0, 4);
+
+        noCertificatesCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noCertificatesCkb.addValueChangeListener(this);
+        achievementsInfoLay.addComponent(noCertificatesCkb, 2, 4);
+        achievementsInfoLay.setComponentAlignment(noCertificatesCkb, Alignment.BOTTOM_RIGHT);
 
         plusCertificateButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusCertificateButton.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -632,8 +656,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         certificatesTable = new FormattedTable();
         certificatesTable.setSizeFull();
         certificatesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        certificatesTable.setPageLength(8);
-        achievementsInfoLay.addComponent(certificatesTable, 0, 5, 1, 5);
+        achievementsInfoLay.addComponent(certificatesTable, 0, 5, 2, 5);
 
         Label captionLanguages = new Label();
         captionLanguages.setSizeFull();
@@ -641,6 +664,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionLanguages.setValue(myUI.getMessage(SptMessages.Languages));
         captionLanguages.setStyleName("tableCpt");
         achievementsInfoLay.addComponent(captionLanguages, 0, 6);
+
+        noLanguagesCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noLanguagesCkb.addValueChangeListener(this);
+        achievementsInfoLay.addComponent(noLanguagesCkb, 2, 6);
+        achievementsInfoLay.setComponentAlignment(noLanguagesCkb, Alignment.BOTTOM_RIGHT);
 
         plusLanguageButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusLanguageButton.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -652,8 +680,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         languagesTable = new FormattedTable();
         languagesTable.setSizeFull();
         languagesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        languagesTable.setPageLength(8);
-        achievementsInfoLay.addComponent(languagesTable, 0, 7, 1, 7);
+        achievementsInfoLay.addComponent(languagesTable, 0, 7, 2, 7);
     }
 
     private void buildProfLayout() {
@@ -661,11 +688,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         profInfoLay = new GridLayout(3, 8);
         profInfoLay.setSpacing(true);
         profInfoLay.setMargin(true);
-        profInfoLay.setWidth("100%");
+        profInfoLay.setWidth(Settings.PERCENTS100);
         profInfoLay.setColumnExpandRatio(0, 1);
 
         Label captionGradSchool = new Label();
-        captionGradSchool.setWidth("100%");
+        captionGradSchool.setWidth(Settings.PERCENTS100);
         captionGradSchool.setContentMode(ContentMode.HTML);
         captionGradSchool.setValue(myUI.getMessage(SptMessages.GraduationSchool));
         captionGradSchool.setStyleName("tableCpt");
@@ -687,16 +714,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         gradSchoolCB.setValue(0);
         profInfoLay.addComponent(gradSchoolCB, 0, 1);
 
-        gradSchoolStartDF = createDateField(null, null,
-                myUI.getMessage(SptMessages.Start),
+        gradSchoolStartDF = createDateField(null, null, myUI.getMessage(SptMessages.Start),
                 true, Settings.yearPattern, Resolution.YEAR);
-        gradSchoolStartDF.setSizeUndefined();
+        gradSchoolStartDF.setWidth(Settings.PERCENTS100);
         gradSchoolStartDF.setResolution(Resolution.YEAR);
         profInfoLay.addComponent(gradSchoolStartDF, 1, 1);
 
-        gradSchoolEndDF = createDateField(null, null,
-                myUI.getMessage(SptMessages.End),
+        gradSchoolEndDF = createDateField(null, null, myUI.getMessage(SptMessages.End),
                 true, Settings.yearPattern, Resolution.YEAR);
+        gradSchoolEndDF.setWidth(Settings.PERCENTS100);
         gradSchoolEndDF.setResolution(Resolution.YEAR);
         profInfoLay.addComponent(gradSchoolEndDF, 2, 1);
 
@@ -705,19 +731,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionBranches.setContentMode(ContentMode.HTML);
         captionBranches.setValue(myUI.getMessage(SptMessages.Branches));
         captionBranches.setStyleName("tableCpt");
-        profInfoLay.addComponent(captionBranches, 0, 2, 1, 2);
+        profInfoLay.addComponent(captionBranches, 0, 2);
+
+        noBranchesCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noBranchesCkb.addValueChangeListener(this);
+        profInfoLay.addComponent(noBranchesCkb, 2, 2);
+        profInfoLay.setComponentAlignment(noBranchesCkb, Alignment.BOTTOM_RIGHT);
 
         plusBranchButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusBranchButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusBranchButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusBranchButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusBranchButton.addClickListener(this);
-        profInfoLay.addComponent(plusBranchButton, 2, 2);
+        profInfoLay.addComponent(plusBranchButton, 1, 2);
 
         branchesTable = new FormattedTable();
         branchesTable.setSizeFull();
         branchesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        branchesTable.setPageLength(8);
         profInfoLay.addComponent(branchesTable, 0, 3, 2, 3);
 
         Label captionEducation = new Label();
@@ -725,19 +755,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionEducation.setContentMode(ContentMode.HTML);
         captionEducation.setValue(myUI.getMessage(SptMessages.Education));
         captionEducation.setStyleName("tableCpt");
-        profInfoLay.addComponent(captionEducation, 0, 4, 1, 4);
+        profInfoLay.addComponent(captionEducation, 0, 4);
+
+        noEducationCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noEducationCkb.addValueChangeListener(this);
+        profInfoLay.addComponent(noEducationCkb, 2, 4);
+        profInfoLay.setComponentAlignment(noEducationCkb, Alignment.BOTTOM_RIGHT);
 
         plusEducationButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusEducationButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusEducationButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusEducationButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusEducationButton.addClickListener(this);
-        profInfoLay.addComponent(plusEducationButton, 2, 4);
+        profInfoLay.addComponent(plusEducationButton, 1, 4);
 
         educationTable = new FormattedTable();
         educationTable.setSizeFull();
         educationTable.setStyleName(ValoTheme.TABLE_SMALL);
-        educationTable.setPageLength(8);
         profInfoLay.addComponent(educationTable, 0, 5, 2, 5);
 
         Label captionWorkPlaces = new Label();
@@ -745,26 +779,30 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionWorkPlaces.setContentMode(ContentMode.HTML);
         captionWorkPlaces.setValue(myUI.getMessage(SptMessages.WorkPlaces));
         captionWorkPlaces.setStyleName("tableCpt");
-        profInfoLay.addComponent(captionWorkPlaces, 0, 6, 1, 6);
+        profInfoLay.addComponent(captionWorkPlaces, 0, 6);
+
+        noWorkPlacesCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noWorkPlacesCkb.addValueChangeListener(this);
+        profInfoLay.addComponent(noWorkPlacesCkb, 2, 6);
+        profInfoLay.setComponentAlignment(noWorkPlacesCkb, Alignment.BOTTOM_RIGHT);
 
         plusWorkPlaceButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusWorkPlaceButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusWorkPlaceButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusWorkPlaceButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusWorkPlaceButton.addClickListener(this);
-        profInfoLay.addComponent(plusWorkPlaceButton, 2, 6);
+        profInfoLay.addComponent(plusWorkPlaceButton, 1, 6);
 
         workPlacesTable = new FormattedTable();
         workPlacesTable.setSizeFull();
         workPlacesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        workPlacesTable.setPageLength(8);
         profInfoLay.addComponent(workPlacesTable, 0, 7, 2, 7);
     }
 
     private void buildOrdersLayout() {
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
 
         Label captionOrders = new Label();
         captionOrders.setSizeFull();
@@ -800,10 +838,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void buildSchoolInfoLayout() {
 
         canBeAdvisorCkb = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
-        canBeAdvisorCkb.setWidth("100%");
+        canBeAdvisorCkb.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
 
         Label captionLessons = new Label();
         captionLessons.setSizeFull();
@@ -839,7 +877,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private void buildPermissionsLayout() {
 
         Label captionPermissions = new Label();
-        captionPermissions.setWidth("100%");
+        captionPermissions.setWidth(Settings.PERCENTS100);
         captionPermissions.setHeight("27px");
         captionPermissions.setContentMode(ContentMode.HTML);
         captionPermissions.setValue(myUI.getMessage(SptMessages.Permissions));
@@ -860,7 +898,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 Object next = iter.next();
                 ComboBoxMultiselectMax permMCB = new ComboBoxMultiselectMax();
                 permMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-                permMCB.setWidth("100%");
+                permMCB.setWidth(Settings.PERCENTS100);
                 permMCB.setShowSelectAllButton(new ComboBoxMultiselectMax.ShowButton() {
                     @Override
                     public boolean isShow(String filter, int page) {
@@ -941,7 +979,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
             dbCon.connect();
             Boolean isFilled = dbCon.execSQL(emplID, Settings.columnPhones);
-            System.out.println(isFilled);
             if (isFilled != null) {
                 noPhonesCkb.setEnabled(!isFilled);
                 noPhonesCkb.setValue(!isFilled);
@@ -956,6 +993,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setChildrenTable() {
+        childrenTable.setEnabled(true);
+        plusChildButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_CHILDREN = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.FullName),
@@ -968,8 +1007,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             childrenTable.setContainerDataSource(dbech.execSQL(myUI, emplID, this));
             dbech.close();
             childrenTable.setVisibleColumns(NATURAL_COL_ORDER_CHILDREN);
+            childrenTable.setPageLength(childrenTable.size() > 0 ? childrenTable.size() : 1);
             childrenTable.setColumnExpandRatio(myUI.getMessage(SptMessages.FullName), 1);
             childrenTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Institution), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, Settings.columnChildren);
+            if (isFilled != null) {
+                noChildrenCkb.setEnabled(!isFilled);
+                noChildrenCkb.setValue(!isFilled);
+                childrenTable.setEnabled(isFilled);
+                plusChildButton.setEnabled(isFilled);
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -977,8 +1032,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setEducationTable(Table t, IndexedContainer c, int own_id) {
+        t.setEnabled(true);
         try {
             if (own_id == 1) {
+                plusEducationButton.setEnabled(true);
                 NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
                         myUI.getMessage(SptMessages.University),
                         myUI.getMessage(SptMessages.Country),
@@ -988,6 +1045,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         myUI.getMessage(SptMessages.End),
                         myUI.getMessage(SptMessages.Document)};
             } else {
+                plusSpouseEducationButton.setEnabled(true);
                 NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
                         myUI.getMessage(SptMessages.University),
                         myUI.getMessage(SptMessages.Country),
@@ -995,15 +1053,37 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         myUI.getMessage(SptMessages.EduLevel),
                         myUI.getMessage(SptMessages.Start),
                         myUI.getMessage(SptMessages.End)};
-
             }
             DbEmployeeEducation dbed = new DbEmployeeEducation();
             dbed.connect();
             t.setContainerDataSource(dbed.execSQL(myUI, emplID, own_id, c, this));
             dbed.close();
             t.setVisibleColumns(NATURAL_COL_ORDER_EDU);
+            t.setPageLength(t.size());
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.University), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.Department), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, own_id == 1 ?
+                    Settings.columnEducation : Settings.columnSpouseEducation);
+            if (isFilled != null) {
+                t.setEnabled(isFilled);
+                if (own_id == 1) {
+                    noEducationCkb.setEnabled(!isFilled);
+                    noEducationCkb.setValue(!isFilled);
+                    plusEducationButton.setEnabled(isFilled);
+                } else {
+                    noSpouseEducationCkb.setEnabled(!isFilled);
+                    noSpouseEducationCkb.setValue(!isFilled);
+                    plusSpouseEducationButton.setEnabled(isFilled);
+                }
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1011,6 +1091,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setWorkTable(Table t, IndexedContainer c, int own_id) {
+        t.setEnabled(true);
+        if (own_id == 1) {
+            plusSpouseWorkPlacesButton.setEnabled(true);
+        } else {
+            plusSpouseWorkPlacesButton.setEnabled(true);
+        }
         try {
             NATURAL_COL_ORDER_WORK = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.WorkPlace),
@@ -1025,9 +1111,32 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             t.setContainerDataSource(dbew.execSQL(myUI, emplID, own_id, c, this));
             dbew.close();
             t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
+            t.setPageLength(t.size() > 0 ? t.size() : 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.WorkPlace), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.MainPosition), 1);
             t.setColumnExpandRatio(myUI.getMessage(SptMessages.ExtraPositions), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, own_id == 1 ?
+                    Settings.columnWork_places : Settings.columnSpouseWork_places);
+            if (isFilled != null) {
+                t.setEnabled(isFilled);
+                if (own_id == 1) {
+                    noWorkPlacesCkb.setEnabled(!isFilled);
+                    noWorkPlacesCkb.setValue(!isFilled);
+                    plusWorkPlaceButton.setEnabled(isFilled);
+                } else {
+                    noSpouseWorkPlacesCkb.setEnabled(!isFilled);
+                    noSpouseWorkPlacesCkb.setValue(!isFilled);
+                    plusSpouseWorkPlacesButton.setEnabled(isFilled);
+                }
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1053,6 +1162,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setLanguagesTable() {
+        languagesTable.setEnabled(true);
+        plusLanguageButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_LANGUAGES = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.Language),
@@ -1063,8 +1174,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     dbel.execSQL(myUI, emplID, this));
             dbel.close();
             languagesTable.setVisibleColumns(NATURAL_COL_ORDER_LANGUAGES);
+            languagesTable.setPageLength(languagesTable.size() > 0 ? languagesTable.size() : 1);
             languagesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Language), 1);
             languagesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Level), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, Settings.columnLanguages);
+            if (isFilled != null) {
+                noLanguagesCkb.setEnabled(!isFilled);
+                noLanguagesCkb.setValue(!isFilled);
+                languagesTable.setEnabled(isFilled);
+                plusLanguageButton.setEnabled(isFilled);
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1072,6 +1199,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setCertificatesTable() {
+        certificatesTable.setEnabled(true);
+        plusCertificateButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_CERTIFICATES = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.Certificate),
@@ -1085,8 +1214,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     dbec.execSQL(myUI, emplID, this));
             dbec.close();
             certificatesTable.setVisibleColumns(NATURAL_COL_ORDER_CERTIFICATES);
+            certificatesTable.setPageLength(certificatesTable.size() > 0 ? certificatesTable.size() : 1);
             certificatesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Title), 1);
             certificatesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.GivenBy), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, Settings.columnCertificates);
+            if (isFilled != null) {
+                noCertificatesCkb.setEnabled(!isFilled);
+                noCertificatesCkb.setValue(!isFilled);
+                certificatesTable.setEnabled(isFilled);
+                plusCertificateButton.setEnabled(isFilled);
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1094,6 +1239,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setSeminarsTable() {
+        seminarsTable.setEnabled(true);
+        plusSeminarButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_SEMINARS = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.Title),
@@ -1106,6 +1253,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     dbes.execSQL(myUI, emplID, this));
             dbes.close();
             seminarsTable.setVisibleColumns(NATURAL_COL_ORDER_SEMINARS);
+            seminarsTable.setPageLength(seminarsTable.size() > 0 ? seminarsTable.size() : 1);
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Title), 1);
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Subject), 1);
             seminarsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
@@ -1113,9 +1261,26 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.error(ex);
             logger.catching(ex);
         }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, Settings.columnSeminars);
+            if (isFilled != null) {
+                noSeminarsCkb.setEnabled(!isFilled);
+                noSeminarsCkb.setValue(!isFilled);
+                seminarsTable.setEnabled(isFilled);
+                plusSeminarButton.setEnabled(isFilled);
+            }
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
     }
 
     private void setExamsTable() {
+        examsTable.setEnabled(true);
+        plusExamButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_EXAMS = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.Exam),
@@ -1127,7 +1292,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             examsTable.setContainerDataSource(dbex.execSQL(myUI, emplID, this));
             dbex.close();
             examsTable.setVisibleColumns(NATURAL_COL_ORDER_EXAMS);
+            examsTable.setPageLength(examsTable.size() > 0 ? examsTable.size() : 1);
             examsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Exam), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, Settings.columnExams);
+            if (isFilled != null) {
+                noExamsCkb.setEnabled(!isFilled);
+                noExamsCkb.setValue(!isFilled);
+                examsTable.setEnabled(isFilled);
+                plusExamButton.setEnabled(isFilled);
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1135,6 +1316,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setBranchesTable() {
+        branchesTable.setEnabled(true);
+        plusBranchButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_BRANCHES = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.Branch),
@@ -1145,7 +1328,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     dbeb.execSQL(myUI, emplID, this));
             dbeb.close();
             branchesTable.setVisibleColumns(NATURAL_COL_ORDER_BRANCHES);
+            branchesTable.setPageLength(branchesTable.size() > 0 ? branchesTable.size() : 1);
             branchesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Branch), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, Settings.columnBranches);
+            if (isFilled != null) {
+                noBranchesCkb.setEnabled(!isFilled);
+                noBranchesCkb.setValue(!isFilled);
+                branchesTable.setEnabled(isFilled);
+                plusBranchButton.setEnabled(isFilled);
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1448,7 +1647,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         leftLay = new VerticalLayout();
         leftLay.setSpacing(true);
         leftLay.setMargin(true);
-        leftLay.setWidth("100%");
+        leftLay.setWidth(Settings.PERCENTS100);
 
         buildPhotoLayout();
         buildFormLayout();
@@ -1565,7 +1764,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         HorizontalLayout passwordLay = new HorizontalLayout();
         passwordLay.setCaption(myUI.getMessage(SptMessages.Password));
         passwordLay.setSpacing(true);
-        passwordLay.setWidth("100%");
+        passwordLay.setWidth(Settings.PERCENTS100);
 
         passwordTF = createTextfield(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), null, 20, true), false);
@@ -1624,7 +1823,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         mainPositionCB.setRequired(true);
         mainPositionCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         mainPositionCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        mainPositionCB.setWidth("100%");
+        mainPositionCB.setWidth(Settings.PERCENTS100);
         mainPositionCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         mainPositionCB.setFilteringMode(FilteringMode.CONTAINS);
         formLay.addComponent(mainPositionCB);
@@ -1645,7 +1844,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         contractCategoryCB.setRequired(true);
         contractCategoryCB.setStyleName(ValoTheme.COMBOBOX_TINY);
         contractCategoryCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        contractCategoryCB.setWidth("100%");
+        contractCategoryCB.setWidth(Settings.PERCENTS100);
         contractCategoryCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         contractCategoryCB.setFilteringMode(FilteringMode.CONTAINS);
         if (currentUser.hasRole(Settings.rnAdmin) || currentUser.hasRole(Settings.rnHr)) {
@@ -1902,7 +2101,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         final HorizontalLayout l = new HorizontalLayout();
         l.setSpacing(true);
-        l.setWidth("100%");
+        l.setWidth(Settings.PERCENTS100);
         l.setMargin(true);
         statusWindow.setContent(l);
 
@@ -2099,8 +2298,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void clearSpouseFields() {
         childrenTable.removeAllItems();
+        noChildrenCkb.setEnabled(true);
         spouseEducationTable.removeAllItems();
+        noSpouseEducationCkb.setEnabled(true);
         spouseWorkPlacesTable.removeAllItems();
+        noSpouseWorkPlacesCkb.setEnabled(true);
         spouseHealthCB.setValue(null);
         spouseFullnameTF.setValue("");
         spousePhoneTF.setValue("");
@@ -2123,14 +2325,21 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void clearAchievementsFields() {
         languagesTable.removeAllItems();
+        noLanguagesCkb.setEnabled(true);
         seminarsTable.removeAllItems();
+        noSeminarsCkb.setEnabled(true);
         certificatesTable.removeAllItems();
+        noCertificatesCkb.setEnabled(true);
         examsTable.removeAllItems();
+        noExamsCkb.setEnabled(true);
     }
 
     private void clearProfFields() {
+        noBranchesCkb.setEnabled(true);
         educationTable.removeAllItems();
+        noEducationCkb.setEnabled(true);
         workPlacesTable.removeAllItems();
+        noWorkPlacesCkb.setEnabled(true);
         branchesTable.removeAllItems();
     }
 
@@ -2333,9 +2542,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()
-                            && (!validateTable(childrenTable, true, false)
-                            || !validateTable(spouseEducationTable, true, false)
-                            || !validateTable(spouseWorkPlacesTable, true, false)
+                            && (!validateTable(childrenTable, noChildrenCkb.getValue(), false)
+                            || !validateTable(spouseEducationTable, noSpouseEducationCkb.getValue(), false)
+                            || !validateTable(spouseWorkPlacesTable, noSpouseWorkPlacesCkb.getValue(), false)
                             || !validate(familyInfoLay, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
@@ -2344,8 +2553,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent()
-                            && (!validateTable(languagesTable, true, false) || !validateTable(examsTable, true, true)
-                            || !validateTable(certificatesTable, true, true) || !validateTable(seminarsTable, true, false))) {
+                            && (!validateTable(languagesTable, noLanguagesCkb.getValue(), false)
+                            || !validateTable(examsTable, noExamsCkb.getValue(), true)
+                            || !validateTable(certificatesTable, noCertificatesCkb.getValue(), true)
+                            || !validateTable(seminarsTable, noSeminarsCkb.getValue(), false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent()
@@ -2353,9 +2564,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         Notification.show(myUI.getMessage(SptMessages.NotifOnlyOneMain),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent()
-                            && (!validateTable(educationTable, true, true)
-                            || !validateTable(workPlacesTable, true, false)
-                            || !validateTable(branchesTable, true, false)
+                            && (!validateTable(educationTable, noEducationCkb.getValue(), true)
+                            || !validateTable(workPlacesTable, noWorkPlacesCkb.getValue(), false)
+                            || !validateTable(branchesTable, noBranchesCkb.getValue(), false)
                             || !validate(profInfoLay, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
@@ -2629,11 +2840,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (source == plusSpouseEducationButton) {
             addEducationItem(spouseEducationTable, spouseEducationCont, 2);
         } else if (source == plusSpouseWorkPlacesButton) {
-            addWorkItem(spouseWorkPlacesTable, spouseWorkCont);
+            addWorkItem(spouseWorkPlacesTable, spouseWorkCont, 2);
         } else if (source == plusEducationButton) {
             addEducationItem(educationTable, educationCont, 1);
         } else if (source == plusWorkPlaceButton) {
-            addWorkItem(workPlacesTable, workPlacesCont);
+            addWorkItem(workPlacesTable, workPlacesCont, 1);
         } else if (source == plusLanguageButton) {
             addLanguageItem();
         } else if (source == plusCertificateButton) {
@@ -2648,9 +2859,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             addLessonItem();
         } else if (source == plusOrdersButton) {
             Object last_id = ((IndexedContainer) ordersTable.getContainerDataSource()).lastItemId();
-            if (!((IndexedContainer) ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
+            if (!(ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
                     Settings.crud_status).getValue().equals(myUI.getMessage(SptMessages.Insert))
-                    && (Integer) ((ComboBox) ((IndexedContainer) ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
+                    && (Integer) ((ComboBox) (ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
                     myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != 5) {
                 addOrderItem();
             } else {
@@ -2666,15 +2877,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeChildren)) {
             delChildIds.add(source.getData().toString());
             childrenTable.removeItem(event.getButton().getData().toString());
+            if (childrenTable.size() == 0) {
+                noChildrenCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeEducation)) {
             EmployeeEducation employeeEducation = new EmployeeEducation();
             employeeEducation.setIdStr(source.getData().toString());
-            delEducationIds.add(employeeEducation);
+            //delEducationIds.add(employeeEducation);
             delSpouseEducationIds.add(employeeEducation);
             spouseEducationTable.removeItem(event.getButton().getData().toString());
+            if (spouseEducationTable.size() == 0) {
+                noSpouseEducationCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeWork)) {
             delSpouseWorkIds.add(source.getData().toString());
             spouseWorkPlacesTable.removeItem(event.getButton().getData().toString());
+            if (spouseWorkPlacesTable.size() == 0) {
+                noSpouseWorkPlacesCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeExams)) {
             EmployeeExam employeeExam = new EmployeeExam();
             employeeExam.setIdStr(source.getData().toString());
@@ -2685,12 +2905,21 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
             delExamsIds.add(employeeExam);
             examsTable.removeItem(event.getButton().getData().toString());
+            if (examsTable.size() == 0) {
+                noExamsCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeLanguage)) {
             delLanguagesIds.add(source.getData().toString());
             languagesTable.removeItem(event.getButton().getData().toString());
+            if (languagesTable.size() == 0) {
+                noLanguagesCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeSeminar)) {
             delSeminarsIds.add(source.getData().toString());
             seminarsTable.removeItem(event.getButton().getData().toString());
+            if (seminarsTable.size() == 0) {
+                noSeminarsCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(achievementsInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeCertificate)) {
             EmployeeCertificate employeeCertificate = new EmployeeCertificate();
             employeeCertificate.setIdStr(source.getData().toString());
@@ -2701,9 +2930,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
             delCertificatesIds.add(employeeCertificate);
             certificatesTable.removeItem(event.getButton().getData().toString());
+            if (certificatesTable.size() == 0) {
+                noCertificatesCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeWork)) {
             delWorkPlacesIds.add(source.getData().toString());
             workPlacesTable.removeItem(event.getButton().getData().toString());
+            if (workPlacesTable.size() == 0) {
+                noWorkPlacesCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeEducation)) {
             EmployeeEducation employeeEducation = new EmployeeEducation();
             employeeEducation.setIdStr(source.getData().toString());
@@ -2714,9 +2949,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
             delEducationIds.add(employeeEducation);
             educationTable.removeItem(event.getButton().getData().toString());
+            if (educationTable.size() == 0) {
+                noEducationCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeBranch)) {
             delBranchesIds.add(source.getData().toString());
             branchesTable.removeItem(event.getButton().getData().toString());
+            if (branchesTable.size() == 0) {
+                noBranchesCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeBranchHours)) {
             delLessonIds.add(source.getData().toString());
             lessonsTable.removeItem(event.getButton().getData().toString());
@@ -2818,6 +3059,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbech.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            dbCon.exec_update(employee_id, Settings.columnChildren, !noChildrenCkb.getValue());
+            dbCon.close();
             if (delChildIds.size() > 0) {
                 for (int i = 0; i < delChildIds.size(); i++) {
                     dbd.exec_delete(delChildIds.get(i), Settings.dbEmployeeChildren);
@@ -2868,6 +3113,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbed.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            if (own_id == 1) {
+                dbCon.exec_update(employee_id, Settings.columnEducation, !noEducationCkb.getValue());
+            } else {
+                dbCon.exec_update(employee_id, Settings.columnSpouseEducation, !noSpouseEducationCkb.getValue());
+            }
+            dbCon.close();
             if (list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     try {
@@ -2935,6 +3188,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbew.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbc = new DbEmployeeCompleteness();
+            dbc.connect();
+            if (own_id == 1) {
+                dbc.exec_update(employee_id, Settings.columnWork_places, !noWorkPlacesCkb.getValue());
+            } else {
+                dbc.exec_update(employee_id, Settings.columnSpouseWork_places, !noSpouseWorkPlacesCkb.getValue());
+            }
+            dbc.close();
             if (list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     dbd.exec_delete(list.get(i), Settings.dbEmployeeWork);
@@ -3040,6 +3301,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbel.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            dbCon.exec_update(employee_id, Settings.columnLanguages, !noLanguagesCkb.getValue());
+            dbCon.close();
             if (delLanguagesIds.size() > 0) {
                 for (int i = 0; i < delLanguagesIds.size(); i++) {
                     dbd.exec_delete(delLanguagesIds.get(i), Settings.dbEmployeeLanguage);
@@ -3081,6 +3346,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbec.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            dbCon.exec_update(employee_id, Settings.columnCertificates, !noCertificatesCkb.getValue());
+            dbCon.close();
             if (delCertificatesIds.size() > 0) {
                 for (int i = 0; i < delCertificatesIds.size(); i++) {
                     try {
@@ -3140,6 +3409,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbes.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            dbCon.exec_update(employee_id, Settings.columnSeminars, !noSeminarsCkb.getValue());
+            dbCon.close();
             if (delSeminarsIds.size() > 0) {
                 for (int i = 0; i < delSeminarsIds.size(); i++) {
                     dbd.exec_delete(delSeminarsIds.get(i), Settings.dbEmployeeSeminar);
@@ -3185,6 +3458,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbex.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            dbCon.exec_update(employee_id, Settings.columnExams, !noExamsCkb.getValue());
+            dbCon.close();
             if (delExamsIds.size() > 0) {
                 for (int i = 0; i < delExamsIds.size(); i++) {
                     try {
@@ -3242,6 +3519,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbeb.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            dbCon.exec_update(employee_id, Settings.columnBranches, !noBranchesCkb.getValue());
+            dbCon.close();
             if (delBranchesIds.size() > 0) {
                 for (int i = 0; i < delBranchesIds.size(); i++) {
                     dbd.exec_delete(delBranchesIds.get(i), Settings.dbEmployeeBranch);
@@ -3530,6 +3811,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void addChildItem() {
+        noChildrenCkb.setEnabled(false);
         NATURAL_COL_ORDER_CHILDREN = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.FullName),
                 myUI.getMessage(SptMessages.DateOfBirth),
@@ -3560,11 +3842,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         null, true, Settings.datePattern, Resolution.DAY));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         childrenTable.setVisibleColumns(NATURAL_COL_ORDER_CHILDREN);
-
+        childrenTable.setPageLength(childrenTable.size());
     }
 
     private void addEducationItem(final Table t, IndexedContainer c, int own_id) {
         if (own_id == 1) {
+            noEducationCkb.setEnabled(false);
             NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.University),
                     myUI.getMessage(SptMessages.Country),
@@ -3574,6 +3857,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     myUI.getMessage(SptMessages.End),
                     myUI.getMessage(SptMessages.Document)};
         } else {
+            noSpouseEducationCkb.setEnabled(false);
             NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.University),
                     myUI.getMessage(SptMessages.Country),
@@ -3649,12 +3933,17 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         t.setVisibleColumns(NATURAL_COL_ORDER_EDU);
+        t.setPageLength(t.size() > 0 ? t.size() : 1);
         t.setColumnExpandRatio(myUI.getMessage(SptMessages.University), 1);
         t.setColumnExpandRatio(myUI.getMessage(SptMessages.Department), 1);
     }
 
-    private void addWorkItem(final Table t, IndexedContainer c) {
-
+    private void addWorkItem(final Table t, IndexedContainer c, int own_id) {
+        if (own_id == 1) {
+            noWorkPlacesCkb.setEnabled(false);
+        } else {
+            noSpouseWorkPlacesCkb.setEnabled(false);
+        }
         NATURAL_COL_ORDER_WORK = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.WorkPlace),
                 myUI.getMessage(SptMessages.Sapat),
@@ -3734,13 +4023,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         false, Settings.datePattern, Resolution.DAY));
         item.getItemProperty(myUI.getMessage(SptMessages.Sapat)).setValue(
                 createCheckBox(false, myUI.getMessage(SptMessages.Sapat)));
-
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
+        t.setPageLength(t.size());
     }
 
     private void addLanguageItem() {
-
+        noLanguagesCkb.setEnabled(false);
         NATURAL_COL_ORDER_LANGUAGES = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Language),
                 myUI.getMessage(SptMessages.Level)};
@@ -3759,10 +4048,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 createCombobox(0, myUI.getMessage(SptMessages.Level), Settings.dbLanguageLevelTable, true));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         languagesTable.setVisibleColumns(NATURAL_COL_ORDER_LANGUAGES);
+        languagesTable.setPageLength(languagesTable.size());
     }
 
     private void addCertificateItem() {
-
+        noCertificatesCkb.setEnabled(false);
         NATURAL_COL_ORDER_CERTIFICATES = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Certificate),
                 myUI.getMessage(SptMessages.GivenBy),
@@ -3832,11 +4122,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         certificatesTable.setVisibleColumns(NATURAL_COL_ORDER_CERTIFICATES);
-
+        certificatesTable.setPageLength(certificatesTable.size());
     }
 
     private void addSeminarItem() {
-
+        noSeminarsCkb.setEnabled(false);
         NATURAL_COL_ORDER_SEMINARS = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Subject),
@@ -3865,11 +4155,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         null, true, Settings.datePattern, Resolution.DAY));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         seminarsTable.setVisibleColumns(NATURAL_COL_ORDER_SEMINARS);
-
+        seminarsTable.setPageLength(seminarsTable.size());
     }
 
     private void addExamItem() {
-
+        noExamsCkb.setEnabled(false);
         NATURAL_COL_ORDER_EXAMS = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Exam),
                 myUI.getMessage(SptMessages.Score),
@@ -3917,11 +4207,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         examsTable.setVisibleColumns(NATURAL_COL_ORDER_EXAMS);
-
+        examsTable.setPageLength(examsTable.size());
     }
 
     private void addBranchItem() {
-
+        noBranchesCkb.setEnabled(false);
         NATURAL_COL_ORDER_BRANCHES = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Branch),
                 myUI.getMessage(SptMessages.Main)};
@@ -3940,7 +4230,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 createCheckBox(false, myUI.getMessage(SptMessages.Main)));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         branchesTable.setVisibleColumns(NATURAL_COL_ORDER_BRANCHES);
-
+        branchesTable.setPageLength(branchesTable.size());
     }
 
     private void addLessonItem() {
@@ -4036,7 +4326,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         if (isRequired) {
             tf.setRequired(true);
@@ -4056,7 +4346,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setNullRepresentation("");
         tf.setConverter(conv);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         tf.getPropertyDataSource().setValue(value);
         return tf;
@@ -4066,7 +4356,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                      boolean isRequired, String date_format, Resolution resolution) {
         DateField df = new DateField();
         df.setCaption(caption);
-        df.setWidth("100%");
+        df.setWidth(Settings.PERCENTS100);
         df.setStyleName(ValoTheme.DATEFIELD_TINY);
         if (isRequired) {
             df.setRequired(true);
@@ -4092,7 +4382,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         ComboBoxMultiselectMax cb = new ComboBoxMultiselectMax();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
@@ -4108,7 +4398,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         ComboBoxMax cb = new ComboBoxMax();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
@@ -4701,6 +4991,36 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (property == noPhonesCkb) {
             phonesTable.setEnabled(!noPhonesCkb.getValue());
             plusPhonesButton.setEnabled(!noPhonesCkb.getValue());
+        } else if (property == noExamsCkb) {
+            examsTable.setEnabled(!noExamsCkb.getValue());
+            plusExamButton.setEnabled(!noExamsCkb.getValue());
+        } else if (property == noLanguagesCkb) {
+            languagesTable.setEnabled(!noLanguagesCkb.getValue());
+            plusLanguageButton.setEnabled(!noLanguagesCkb.getValue());
+        } else if (property == noChildrenCkb) {
+            childrenTable.setEnabled(!noChildrenCkb.getValue());
+            plusChildButton.setEnabled(!noChildrenCkb.getValue());
+        } else if (property == noCertificatesCkb) {
+            certificatesTable.setEnabled(!noCertificatesCkb.getValue());
+            plusCertificateButton.setEnabled(!noCertificatesCkb.getValue());
+        } else if (property == noSeminarsCkb) {
+            seminarsTable.setEnabled(!noSeminarsCkb.getValue());
+            plusSeminarButton.setEnabled(!noSeminarsCkb.getValue());
+        } else if (property == noBranchesCkb) {
+            branchesTable.setEnabled(!noBranchesCkb.getValue());
+            plusBranchButton.setEnabled(!noBranchesCkb.getValue());
+        } else if (property == noEducationCkb) {
+            educationTable.setEnabled(!noEducationCkb.getValue());
+            plusEducationButton.setEnabled(!noEducationCkb.getValue());
+        } else if (property == noSpouseEducationCkb) {
+            spouseEducationTable.setEnabled(!noSpouseEducationCkb.getValue());
+            plusSpouseEducationButton.setEnabled(!noSpouseEducationCkb.getValue());
+        } else if (property == noWorkPlacesCkb) {
+            workPlacesTable.setEnabled(!noWorkPlacesCkb.getValue());
+            plusWorkPlaceButton.setEnabled(!noWorkPlacesCkb.getValue());
+        } else if (property == noSpouseWorkPlacesCkb) {
+            spouseWorkPlacesTable.setEnabled(!noSpouseWorkPlacesCkb.getValue());
+            plusSpouseWorkPlacesButton.setEnabled(!noSpouseWorkPlacesCkb.getValue());
         } else if (property == optionGroup) {
             setEmployeesDataTable(property.getValue().toString());
             repaint();

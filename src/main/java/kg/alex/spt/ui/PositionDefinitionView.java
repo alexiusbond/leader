@@ -102,7 +102,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -150,7 +150,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         settingsLay.addComponent(nameTF);
@@ -160,7 +160,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         categorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        categorySelect.setWidth("100%");
+        categorySelect.setWidth(Settings.PERCENTS100);
         categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(categorySelect);
@@ -170,7 +170,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -464,7 +464,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                 Object next = iter.next();
                 ComboBoxMultiselectMax permMCB = new ComboBoxMultiselectMax();
                 permMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
-                permMCB.setWidth("100%");
+                permMCB.setWidth(Settings.PERCENTS100);
                 permMCB.setShowSelectAllButton(new ComboBoxMultiselectMax.ShowButton() {
                     @Override
                     public boolean isShow(String filter, int page) {

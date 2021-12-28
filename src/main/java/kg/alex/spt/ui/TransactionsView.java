@@ -88,19 +88,19 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     private void buildLabels() {
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth("100%");
+        hl.setWidth(Settings.PERCENTS100);
         hl.setSpacing(true);
 
         fromDateDF = new DateField();
         fromDateDF.setDescription(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
 
         tillDateDF = new DateField();
         tillDateDF.setDescription(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
@@ -120,18 +120,18 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         incomeTtlLab = new Label();
         incomeTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         incomeTtlLab.setImmediate(true);
-        incomeTtlLab.setWidth("100%");
+        incomeTtlLab.setWidth(Settings.PERCENTS100);
 
         expenseTtlLab = new Label();
         expenseTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         expenseTtlLab.setImmediate(true);
-        expenseTtlLab.setWidth("100%");
+        expenseTtlLab.setWidth(Settings.PERCENTS100);
 
         ttlLab = new Label();
         ttlLab.setContentMode(ContentMode.HTML);
         ttlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         ttlLab.setImmediate(true);
-        ttlLab.setWidth("100%");
+        ttlLab.setWidth(Settings.PERCENTS100);
 
         prev_balanceLab = new Label();
         prev_balanceLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -142,11 +142,11 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         plusButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
         plusButton.addStyleName(ValoTheme.BUTTON_SMALL);
         plusButton.setIcon(FontAwesome.PLUS_SQUARE);
-        plusButton.setWidth("100%");
+        plusButton.setWidth(Settings.PERCENTS100);
         plusButton.addClickListener(this);
 
         currencyHl = new HorizontalLayout();
-        currencyHl.setWidth("100%");
+        currencyHl.setWidth(Settings.PERCENTS100);
         currencyHl.setSpacing(true);
         currencyHl.setEnabled(currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) && myUI.isMannualRate());
 
@@ -159,7 +159,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         currencyTF = new TextField();
         ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
         currencyTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        currencyTF.setWidth("100%");
+        currencyTF.setWidth(Settings.PERCENTS100);
         currencyTF.setNullRepresentation("0.1");
         currencyTF.setNullSettingAllowed(false);
         currencyTF.setConverter(Settings.getStringToDoubleConverter());
@@ -172,12 +172,12 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         currencyHl.setExpandRatio(currencyTF, 1);
 
         HorizontalLayout currencySettingsHl = new HorizontalLayout();
-        currencySettingsHl.setWidth("100%");
+        currencySettingsHl.setWidth(Settings.PERCENTS100);
         currencySettingsHl.setSpacing(true);
         currencySettingsHl.setEnabled(currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
 
         currencySettingsOG = new OptionGroup();
-        currencySettingsOG.setWidth("100%");
+        currencySettingsOG.setWidth(Settings.PERCENTS100);
         currencySettingsOG.setStyleName(ValoTheme.OPTIONGROUP_SMALL);
         currencySettingsOG.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         currencySettingsOG.addItem(myUI.getMessage(SptMessages.NBKR));
@@ -564,7 +564,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         df.setRequired(true);
         df.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         df.setStyleName(ValoTheme.DATEFIELD_TINY);
-        df.setWidth("100%");
+        df.setWidth(Settings.PERCENTS100);
         df.setDateFormat(Settings.dateTimeMinPattern);
         df.setResolution(Resolution.MINUTE);
         if (value != null) {
@@ -595,7 +595,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             cb.setEnabled(false);
         }
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         if (isRequired) {
             cb.setRequired(true);
             cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -630,7 +630,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         }
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setRequired(true);
         cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -663,7 +663,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         tf.setRequired(true);
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.setData(itemId);
         tf.setNullRepresentation("0.0");
         tf.setNullSettingAllowed(false);
@@ -692,7 +692,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         }
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         if (value != null) {
             tf.setValue(value);
         }

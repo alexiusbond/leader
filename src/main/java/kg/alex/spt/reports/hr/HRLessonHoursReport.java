@@ -85,18 +85,18 @@ public class HRLessonHoursReport implements Button.ClickListener,
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
+        yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
-        selectAllSchoolsBtn.setWidth("100%");
+        selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
         deselectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllSchoolsBtn.setWidth("100%");
+        deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllSchoolsBtn.addClickListener(this);
@@ -135,13 +135,13 @@ public class HRLessonHoursReport implements Button.ClickListener,
         schoolsGrid.setRowExpandRatio(1, 1);
 
         selectAllBranchesBtn = new Button(myUI.getMessage(SptMessages.AllBranches));
-        selectAllBranchesBtn.setWidth("100%");
+        selectAllBranchesBtn.setWidth(Settings.PERCENTS100);
         selectAllBranchesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBranchesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBranchesBtn.addClickListener(this);
 
         deselectAllBranchesBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllBranchesBtn.setWidth("100%");
+        deselectAllBranchesBtn.setWidth(Settings.PERCENTS100);
         deselectAllBranchesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBranchesBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBranchesBtn.addClickListener(this);
@@ -170,13 +170,13 @@ public class HRLessonHoursReport implements Button.ClickListener,
         branchesGrid.setRowExpandRatio(1, 1);
 
         selectAllPositionsBtn = new Button(myUI.getMessage(SptMessages.AllPositions));
-        selectAllPositionsBtn.setWidth("100%");
+        selectAllPositionsBtn.setWidth(Settings.PERCENTS100);
         selectAllPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllPositionsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllPositionsBtn.addClickListener(this);
 
         deselectAllPositionsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllPositionsBtn.setWidth("100%");
+        deselectAllPositionsBtn.setWidth(Settings.PERCENTS100);
         deselectAllPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllPositionsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllPositionsBtn.addClickListener(this);
@@ -205,13 +205,13 @@ public class HRLessonHoursReport implements Button.ClickListener,
         positionsGrid.setRowExpandRatio(1, 1);
 
         selectAllExtraPositionsBtn = new Button(myUI.getMessage(SptMessages.AllExtraPositions));
-        selectAllExtraPositionsBtn.setWidth("100%");
+        selectAllExtraPositionsBtn.setWidth(Settings.PERCENTS100);
         selectAllExtraPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllExtraPositionsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllExtraPositionsBtn.addClickListener(this);
 
         deselectAllExtraPositionsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllExtraPositionsBtn.setWidth("100%");
+        deselectAllExtraPositionsBtn.setWidth(Settings.PERCENTS100);
         deselectAllExtraPositionsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllExtraPositionsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllExtraPositionsBtn.addClickListener(this);
@@ -243,7 +243,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         workingStatusesMCB.setRequired(true);
         workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         workingStatusesMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        workingStatusesMCB.setWidth("100%");
+        workingStatusesMCB.setWidth(Settings.PERCENTS100);
         workingStatusesMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         workingStatusesMCB.setFilteringMode(FilteringMode.CONTAINS);
         workingStatusesMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -280,14 +280,14 @@ public class HRLessonHoursReport implements Button.ClickListener,
         yearSelect.addValueChangeListener(this);
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
@@ -313,7 +313,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
     }
 
     private void buildRightLayout() {
-        vl.setWidth("100%");
+        vl.setWidth(Settings.PERCENTS100);
         vl.setSpacing(true);
         vl.setMargin(true);
         splitPanel.setSecondComponent(vl);
@@ -351,7 +351,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
                         Integer next = iter.next();
                         try {
                             Label schholNameLbl = new Label();
-                            schholNameLbl.setWidth("100%");
+                            schholNameLbl.setWidth(Settings.PERCENTS100);
                             schholNameLbl.setContentMode(ContentMode.HTML);
                             schholNameLbl.setValue(schoolTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Title)).getValue().toString());
@@ -362,7 +362,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
                             dbel.connect();
                             FormattedTable dataTable = new FormattedTable();
                             dataTable.setFooterVisible(false);
-                            dataTable.setWidth("100%");
+                            dataTable.setWidth(Settings.PERCENTS100);
                             dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
                             dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
                             dataTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
@@ -479,7 +479,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
                     }
                     if (((Set<?>) schoolTable.getValue()).size() > 1) {
                         Label schholNameLbl = new Label();
-                        schholNameLbl.setWidth("100%");
+                        schholNameLbl.setWidth(Settings.PERCENTS100);
                         schholNameLbl.setContentMode(ContentMode.HTML);
                         schholNameLbl.setValue(myUI.getMessage(SptMessages.AllSchools));
                         schholNameLbl.setStyleName("tableCpt");
@@ -487,7 +487,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
 
                         FormattedTable dataTable = new FormattedTable();
                         dataTable.setFooterVisible(false);
-                        dataTable.setWidth("100%");
+                        dataTable.setWidth(Settings.PERCENTS100);
                         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
                         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
                         dataTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);

@@ -97,7 +97,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -145,7 +145,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         settingsLay.addComponent(nameTF);
@@ -155,7 +155,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -164,7 +164,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         categorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        categorySelect.setWidth("100%");
+        categorySelect.setWidth(Settings.PERCENTS100);
         categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
 

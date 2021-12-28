@@ -165,66 +165,66 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         codeTF.setRequired(true);
         codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        codeTF.setWidth("100%");
+        codeTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(codeTF);
 
         innTF = new TextField(myUI.getMessage(SptMessages.INN));
         innTF.setRequired(false);
         innTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        innTF.setWidth("100%");
+        innTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(innTF);
 
         nameRuTF = new TextField(myUI.getMessage(SptMessages.TitleRu));
         nameRuTF.setRequired(true);
         nameRuTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameRuTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameRuTF.setWidth("100%");
+        nameRuTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameRuTF);
 
         nameKgTF = new TextField(myUI.getMessage(SptMessages.TitleKg));
         nameKgTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameKgTF.setWidth("100%");
+        nameKgTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameKgTF);
 
         nameEnTF = new TextField(myUI.getMessage(SptMessages.TitleEn));
         nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameEnTF.setWidth("100%");
+        nameEnTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameEnTF);
 
         directorFullNameTF = new TextField(myUI.getMessage(SptMessages.DirectorFullName) + " (Ru/Kg)");
         directorFullNameTF.setRequired(false);
         directorFullNameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        directorFullNameTF.setWidth("100%");
+        directorFullNameTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(directorFullNameTF);
 
         cityTF = new TextField(myUI.getMessage(SptMessages.City) + " (Ru/Kg)");
         cityTF.setRequired(false);
         cityTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        cityTF.setWidth("100%");
+        cityTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(cityTF);
 
         addressTF = new TextField(myUI.getMessage(SptMessages.Address) + " (Ru/Kg)");
         addressTF.setRequired(false);
         addressTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        addressTF.setWidth("100%");
+        addressTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(addressTF);
 
         phoneTF = new TextField(myUI.getMessage(SptMessages.Phone));
         phoneTF.setRequired(false);
         phoneTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        phoneTF.setWidth("100%");
+        phoneTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(phoneTF);
 
         bankTF = new TextField(myUI.getMessage(SptMessages.Bank) + " (Ru/Kg)");
         bankTF.setRequired(false);
         bankTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        bankTF.setWidth("100%");
+        bankTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(bankTF);
 
         bankAccountTF = new TextField(myUI.getMessage(SptMessages.BankAccount));
         bankAccountTF.setRequired(false);
         bankAccountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        bankAccountTF.setWidth("100%");
+        bankAccountTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(bankAccountTF);
 
         statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
@@ -232,7 +232,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -729,7 +729,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
         final HorizontalLayout l = new HorizontalLayout();
         l.setSpacing(true);
-        l.setWidth("100%");
+        l.setWidth(Settings.PERCENTS100);
         l.setMargin(true);
         statusWindow.setContent(l);
 
@@ -755,7 +755,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         photoUpl.setImmediate(true);
         photoUpl.setStyleName(ValoTheme.BUTTON_SMALL);
         photoUpl.setButtonCaption(myUI.getMessage(SptMessages.Upload));
-        photoUpl.setWidth("100%");
+        photoUpl.setWidth(Settings.PERCENTS100);
 
         photoUpl.addStartedListener(new Upload.StartedListener() {
             @Override

@@ -76,13 +76,13 @@ public class DateReport implements Button.ClickListener,
         leftGrid.setSpacing(true);
 
         selectAllIncomesBtn = new Button(myUI.getMessage(SptMessages.AllIncomes));
-        selectAllIncomesBtn.setWidth("100%");
+        selectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         selectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllIncomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllIncomesBtn.addClickListener(this);
 
         deselectAllIncomesBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllIncomesBtn.setWidth("100%");
+        deselectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllIncomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllIncomesBtn.addClickListener(this);
@@ -102,13 +102,13 @@ public class DateReport implements Button.ClickListener,
         incomeCategoriesTable.addValueChangeListener(this);
 
         selectAllOutcomesBtn = new Button(myUI.getMessage(SptMessages.AllOutcomes));
-        selectAllOutcomesBtn.setWidth("100%");
+        selectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         selectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllOutcomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllOutcomesBtn.addClickListener(this);
 
         deselectAllOutcomesBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllOutcomesBtn.setWidth("100%");
+        deselectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllOutcomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllOutcomesBtn.addClickListener(this);
@@ -138,21 +138,21 @@ public class DateReport implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -161,7 +161,7 @@ public class DateReport implements Button.ClickListener,
         fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -208,13 +208,13 @@ public class DateReport implements Button.ClickListener,
 
         infoLay = new HorizontalLayout();
         infoLay.setSpacing(true);
-        infoLay.setWidth("100%");
+        infoLay.setWidth(Settings.PERCENTS100);
 
         incomeTtlLab = new Label();
         incomeTtlLab.setContentMode(ContentMode.HTML);
         incomeTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         incomeTtlLab.setImmediate(true);
-        incomeTtlLab.setWidth("100%");
+        incomeTtlLab.setWidth(Settings.PERCENTS100);
         infoLay.addComponent(incomeTtlLab);
         infoLay.setExpandRatio(incomeTtlLab, 25);
 
@@ -222,7 +222,7 @@ public class DateReport implements Button.ClickListener,
         expenseTtlLab.setContentMode(ContentMode.HTML);
         expenseTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         expenseTtlLab.setImmediate(true);
-        expenseTtlLab.setWidth("100%");
+        expenseTtlLab.setWidth(Settings.PERCENTS100);
         infoLay.addComponent(expenseTtlLab);
         infoLay.setExpandRatio(expenseTtlLab, 25);
 
@@ -238,7 +238,7 @@ public class DateReport implements Button.ClickListener,
         ttlLab.setContentMode(ContentMode.HTML);
         ttlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         ttlLab.setImmediate(true);
-        ttlLab.setWidth("100%");
+        ttlLab.setWidth(Settings.PERCENTS100);
         infoLay.addComponent(ttlLab);
         infoLay.setExpandRatio(ttlLab, 20);
 

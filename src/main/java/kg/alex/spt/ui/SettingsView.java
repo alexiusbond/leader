@@ -57,7 +57,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
 
         this.setRows(16);
         this.setColumns(4);
-        this.setWidth("100%");
+        this.setWidth(Settings.PERCENTS100);
         this.setSpacing(true);
         this.setMargin(true);
 
@@ -135,7 +135,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         initPayCb.setData(1);
         initPayCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         initPayCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        initPayCb.setWidth("100%");
+        initPayCb.setWidth(Settings.PERCENTS100);
         initPayCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         initPayCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -145,7 +145,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         currCb.setData(2);
         currCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         currCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        currCb.setWidth("100%");
+        currCb.setWidth(Settings.PERCENTS100);
         currCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         currCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -155,7 +155,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         prevCb.setData(4);
         prevCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         prevCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        prevCb.setWidth("100%");
+        prevCb.setWidth(Settings.PERCENTS100);
         prevCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         prevCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -165,7 +165,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         futrCb.setData(5);
         futrCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         futrCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        futrCb.setWidth("100%");
+        futrCb.setWidth(Settings.PERCENTS100);
         futrCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         futrCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -175,7 +175,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         outcomesCb.setData(3);
         outcomesCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         outcomesCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        outcomesCb.setWidth("100%");
+        outcomesCb.setWidth(Settings.PERCENTS100);
         outcomesCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         outcomesCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -185,7 +185,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         earlyPayCb.setData(6);
         earlyPayCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         earlyPayCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        earlyPayCb.setWidth("100%");
+        earlyPayCb.setWidth(Settings.PERCENTS100);
         earlyPayCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         earlyPayCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -195,7 +195,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         salaryCb.setData(34);
         salaryCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         salaryCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        salaryCb.setWidth("100%");
+        salaryCb.setWidth(Settings.PERCENTS100);
         salaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         salaryCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -205,7 +205,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         localSalaryCb.setData(37);
         localSalaryCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         localSalaryCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        localSalaryCb.setWidth("100%");
+        localSalaryCb.setWidth(Settings.PERCENTS100);
         localSalaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         localSalaryCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -246,7 +246,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         foodCb.setData(501);
         foodCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         foodCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        foodCb.setWidth("100%");
+        foodCb.setWidth(Settings.PERCENTS100);
         foodCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         foodCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -256,7 +256,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         stationeryCb.setData(502);
         stationeryCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         stationeryCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        stationeryCb.setWidth("100%");
+        stationeryCb.setWidth(Settings.PERCENTS100);
         stationeryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         stationeryCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -266,7 +266,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         buildingMaterialsCb.setData(503);
         buildingMaterialsCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         buildingMaterialsCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        buildingMaterialsCb.setWidth("100%");
+        buildingMaterialsCb.setWidth(Settings.PERCENTS100);
         buildingMaterialsCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         buildingMaterialsCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -276,7 +276,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         washingMaterialsCb.setData(504);
         washingMaterialsCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         washingMaterialsCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        washingMaterialsCb.setWidth("100%");
+        washingMaterialsCb.setWidth(Settings.PERCENTS100);
         washingMaterialsCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         washingMaterialsCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -286,7 +286,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         otherProductsCb.setData(505);
         otherProductsCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         otherProductsCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        otherProductsCb.setWidth("100%");
+        otherProductsCb.setWidth(Settings.PERCENTS100);
         otherProductsCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         otherProductsCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -392,7 +392,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         adminCb.setData(5);
         adminCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         adminCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        adminCb.setWidth("100%");
+        adminCb.setWidth(Settings.PERCENTS100);
         adminCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         adminCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -402,7 +402,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         hrCb.setData(25);
         hrCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         hrCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        hrCb.setWidth("100%");
+        hrCb.setWidth(Settings.PERCENTS100);
         hrCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         hrCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -412,7 +412,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supplyManagerCb.setData(17);
         supplyManagerCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         supplyManagerCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        supplyManagerCb.setWidth("100%");
+        supplyManagerCb.setWidth(Settings.PERCENTS100);
         supplyManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         supplyManagerCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -422,7 +422,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         warehouseManagerCb.setData(100);
         warehouseManagerCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         warehouseManagerCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        warehouseManagerCb.setWidth("100%");
+        warehouseManagerCb.setWidth(Settings.PERCENTS100);
         warehouseManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         warehouseManagerCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -432,7 +432,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         sapat_secretaryCb.setData(115);
         sapat_secretaryCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         sapat_secretaryCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        sapat_secretaryCb.setWidth("100%");
+        sapat_secretaryCb.setWidth(Settings.PERCENTS100);
         sapat_secretaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         sapat_secretaryCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -442,7 +442,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         directorCb.setData(1);
         directorCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         directorCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        directorCb.setWidth("100%");
+        directorCb.setWidth(Settings.PERCENTS100);
         directorCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         directorCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -452,7 +452,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         accountentCb.setData(2);
         accountentCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         accountentCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        accountentCb.setWidth("100%");
+        accountentCb.setWidth(Settings.PERCENTS100);
         accountentCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         accountentCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -462,7 +462,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supervisorCb.setData(21);
         supervisorCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         supervisorCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        supervisorCb.setWidth("100%");
+        supervisorCb.setWidth(Settings.PERCENTS100);
         supervisorCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         supervisorCb.setFilteringMode(FilteringMode.CONTAINS);
 
@@ -482,7 +482,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         sebatExamCb.setData(5);
         sebatExamCb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         sebatExamCb.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        sebatExamCb.setWidth("100%");
+        sebatExamCb.setWidth(Settings.PERCENTS100);
         sebatExamCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         sebatExamCb.setFilteringMode(FilteringMode.CONTAINS);
 

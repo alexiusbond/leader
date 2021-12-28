@@ -116,7 +116,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         settingsLay = new GridLayout(2, 8);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -169,7 +169,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
 
         invoiceNumberTF = new TextField(myUI.getMessage(SptMessages.InvoiceNumber));
         invoiceNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        invoiceNumberTF.setWidth("100%");
+        invoiceNumberTF.setWidth(Settings.PERCENTS100);
         invoiceNumberTF.addValueChangeListener(this);
         settingsLay.addComponent(invoiceNumberTF);
 
@@ -184,7 +184,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
 
         dateDF = new DateField(myUI.getMessage(SptMessages.Date));
         dateDF.setResolution(Resolution.MINUTE);
-        dateDF.setWidth("100%");
+        dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -198,7 +198,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         stockSelect.setRequired(true);
         stockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         stockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        stockSelect.setWidth("100%");
+        stockSelect.setWidth(Settings.PERCENTS100);
         stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         stockSelect.setFilteringMode(FilteringMode.CONTAINS);
         stockSelect.addValueChangeListener(this);
@@ -209,7 +209,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         productCategorySelect.setRequired(true);
         productCategorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         productCategorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        productCategorySelect.setWidth("100%");
+        productCategorySelect.setWidth(Settings.PERCENTS100);
         productCategorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         productCategorySelect.setFilteringMode(FilteringMode.CONTAINS);
         productCategorySelect.addValueChangeListener(this);
@@ -220,7 +220,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         fromEmployeeSelect.setRequired(true);
         fromEmployeeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         fromEmployeeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        fromEmployeeSelect.setWidth("100%");
+        fromEmployeeSelect.setWidth(Settings.PERCENTS100);
         fromEmployeeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         fromEmployeeSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(fromEmployeeSelect, 0, 5, 1, 5);
@@ -230,7 +230,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         toEmployeeSelect.setRequired(true);
         toEmployeeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         toEmployeeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        toEmployeeSelect.setWidth("100%");
+        toEmployeeSelect.setWidth(Settings.PERCENTS100);
         toEmployeeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         toEmployeeSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(toEmployeeSelect, 0, 6, 1, 6);
@@ -255,7 +255,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
 
         noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        noteTF.setWidth("100%");
+        noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setRows(3);
         settingsLay.addComponent(noteTF, 0, 7, 1, 7);
         settingsLay.setColumnExpandRatio(0, 1);
@@ -996,7 +996,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             cb.setDescription(myUI.getMessage(SptMessages.CanNotModify));
         }
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
-        cb.setWidth("100%");
+        cb.setWidth(Settings.PERCENTS100);
         cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
@@ -1050,7 +1050,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setNullRepresentation("");
         tf.setConverter(conv);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         tf.getPropertyDataSource().setValue(value);
         tf.setEnabled(isEnabled);
@@ -1061,7 +1061,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth("100%");
+        tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(validator);
         if (isRequired) {
             tf.setRequired(true);

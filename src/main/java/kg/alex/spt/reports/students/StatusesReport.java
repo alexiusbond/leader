@@ -72,7 +72,7 @@ public class StatusesReport implements Button.ClickListener,
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        yearSelect.setWidth("100%");
+        yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
@@ -89,7 +89,7 @@ public class StatusesReport implements Button.ClickListener,
 
         statusMS = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Status));
         statusMS.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusMS.setWidth("100%");
+        statusMS.setWidth(Settings.PERCENTS100);
         statusMS.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusMS.setFilteringMode(FilteringMode.CONTAINS);
         statusMS.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
@@ -103,13 +103,13 @@ public class StatusesReport implements Button.ClickListener,
         statusMS.addValueChangeListener(this);
 
         selectAllClassesBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
-        selectAllClassesBtn.setWidth("100%");
+        selectAllClassesBtn.setWidth(Settings.PERCENTS100);
         selectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllClassesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllClassesBtn.addClickListener(this);
 
         deselectAllClassesBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllClassesBtn.setWidth("100%");
+        deselectAllClassesBtn.setWidth(Settings.PERCENTS100);
         deselectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllClassesBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllClassesBtn.addClickListener(this);
@@ -139,13 +139,13 @@ public class StatusesReport implements Button.ClickListener,
         }
 
         selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
-        selectAllSchoolsBtn.setWidth("100%");
+        selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
         deselectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllSchoolsBtn.setWidth("100%");
+        deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllSchoolsBtn.addClickListener(this);
@@ -175,14 +175,14 @@ public class StatusesReport implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);

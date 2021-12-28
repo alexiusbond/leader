@@ -44,14 +44,14 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         rightGrid = new GridLayout(2, 2);
         rightGrid.setMargin(true);
         rightGrid.setSpacing(true);
-        rightGrid.setWidth("100%");
+        rightGrid.setWidth(Settings.PERCENTS100);
 
         repTypeSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ReportType));
         repTypeSelect.setNullSelectionAllowed(false);
         repTypeSelect.setRequired(true);
         repTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         repTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        repTypeSelect.setWidth("100%");
+        repTypeSelect.setWidth(Settings.PERCENTS100);
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMonthReport)) {

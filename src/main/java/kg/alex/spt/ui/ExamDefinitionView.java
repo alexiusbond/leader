@@ -86,7 +86,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -134,7 +134,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 150, false));
         settingsLay.addComponent(nameTF);
@@ -146,7 +146,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         validityTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         validityTF.setNullRepresentation("");
         validityTF.setConverter(Settings.getStringToIntegerConverter());
-        validityTF.setWidth("100%");
+        validityTF.setWidth(Settings.PERCENTS100);
         validityTF.addValidator(new IntegerRangeValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, null));
         settingsLay.addComponent(validityTF);
@@ -156,7 +156,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setWidth("100%");
+        statusSelect.setWidth(Settings.PERCENTS100);
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 

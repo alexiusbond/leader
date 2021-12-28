@@ -83,13 +83,13 @@ public class BalanceReport implements Button.ClickListener,
         leftGrid.setSpacing(true);
 
         selectAllAssertsBtn = new Button(myUI.getMessage(SptMessages.AllAsserts));
-        selectAllAssertsBtn.setWidth("100%");
+        selectAllAssertsBtn.setWidth(Settings.PERCENTS100);
         selectAllAssertsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllAssertsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllAssertsBtn.addClickListener(this);
 
         deselectAllAssertsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllAssertsBtn.setWidth("100%");
+        deselectAllAssertsBtn.setWidth(Settings.PERCENTS100);
         deselectAllAssertsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllAssertsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllAssertsBtn.addClickListener(this);
@@ -109,13 +109,13 @@ public class BalanceReport implements Button.ClickListener,
         assertsCategoriesTable.addValueChangeListener(this);
 
         selectAllDebtsBtn = new Button(myUI.getMessage(SptMessages.AllDebts));
-        selectAllDebtsBtn.setWidth("100%");
+        selectAllDebtsBtn.setWidth(Settings.PERCENTS100);
         selectAllDebtsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllDebtsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllDebtsBtn.addClickListener(this);
 
         deselectAllDebtsBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllDebtsBtn.setWidth("100%");
+        deselectAllDebtsBtn.setWidth(Settings.PERCENTS100);
         deselectAllDebtsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllDebtsBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllDebtsBtn.addClickListener(this);
@@ -145,20 +145,20 @@ public class BalanceReport implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setWidth("100%");
+        fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
         fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -168,7 +168,7 @@ public class BalanceReport implements Button.ClickListener,
         fromDateDF.addValueChangeListener(this);
 
         tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setWidth("100%");
+        tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
         tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -217,27 +217,27 @@ public class BalanceReport implements Button.ClickListener,
 
         infoLay = new HorizontalLayout();
         infoLay.setSpacing(true);
-        infoLay.setWidth("100%");
+        infoLay.setWidth(Settings.PERCENTS100);
 
         assertsTtlLab = new Label();
         assertsTtlLab.setContentMode(ContentMode.HTML);
         assertsTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         assertsTtlLab.setImmediate(true);
-        assertsTtlLab.setWidth("100%");
+        assertsTtlLab.setWidth(Settings.PERCENTS100);
         infoLay.addComponent(assertsTtlLab);
 
         debtsTtlLab = new Label();
         debtsTtlLab.setContentMode(ContentMode.HTML);
         debtsTtlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         debtsTtlLab.setImmediate(true);
-        debtsTtlLab.setWidth("100%");
+        debtsTtlLab.setWidth(Settings.PERCENTS100);
         infoLay.addComponent(debtsTtlLab);
 
         ttlLab = new Label();
         ttlLab.setContentMode(ContentMode.HTML);
         ttlLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         ttlLab.setImmediate(true);
-        ttlLab.setWidth("100%");
+        ttlLab.setWidth(Settings.PERCENTS100);
         infoLay.addComponent(ttlLab);
         return vl;
     }

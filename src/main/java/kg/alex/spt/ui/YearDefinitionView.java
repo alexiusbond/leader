@@ -100,7 +100,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         settingsLay = new VerticalLayout();
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
-        settingsLay.setWidth("100%");
+        settingsLay.setWidth(Settings.PERCENTS100);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -148,7 +148,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        nameTF.setWidth("100%");
+        nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotifWrongValue), 9, 9, false));
         InputMask im = new InputMask("2099-2099");
@@ -160,21 +160,21 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         period.setRequired(true);
         period.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         period.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        period.setWidth("100%");
+        period.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(period);
 
         periodKg = new TextField(myUI.getMessage(SptMessages.PeriodKg));
         periodKg.setRequired(true);
         periodKg.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         periodKg.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        periodKg.setWidth("100%");
+        periodKg.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(periodKg);
 
         start_date = new DateField(myUI.getMessage(SptMessages.StartDate));
         start_date.setStyleName(ValoTheme.DATEFIELD_SMALL);
         start_date.setRequired(true);
         start_date.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        start_date.setWidth("100%");
+        start_date.setWidth(Settings.PERCENTS100);
         start_date.setValue(new Date());
         start_date.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(start_date);
@@ -183,7 +183,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         end_date.setStyleName(ValoTheme.DATEFIELD_SMALL);
         end_date.setRequired(true);
         end_date.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        end_date.setWidth("100%");
+        end_date.setWidth(Settings.PERCENTS100);
         end_date.setValue(new Date());
         end_date.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(end_date);

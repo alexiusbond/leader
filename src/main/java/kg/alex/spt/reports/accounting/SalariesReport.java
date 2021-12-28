@@ -83,14 +83,14 @@ public class SalariesReport implements Button.ClickListener,
         }
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
-        generateBtn.setWidth("100%");
+        generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
-        excelBtn.setWidth("100%");
+        excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
@@ -101,7 +101,7 @@ public class SalariesReport implements Button.ClickListener,
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         currencySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        currencySelect.setWidth("100%");
+        currencySelect.setWidth(Settings.PERCENTS100);
         currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
@@ -117,13 +117,13 @@ public class SalariesReport implements Button.ClickListener,
         currencySelect.setValue(2);
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllCategories));
-        selectAllBtn.setWidth("100%");
+        selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
         deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
-        deselectAllBtn.setWidth("100%");
+        deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);
