@@ -59,7 +59,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private Table documentsDataTable;
     private int emplID;
     private OptionGroup optionGroup;
-    private CheckBox canBeAdvisor;
+    private CheckBox canBeAdvisorCkb, noPhonesCkb, noBranchesCkb;
     private TextField nameTF, loginTF, passwordTF, surnameTF, middlenameTF,
             birth_placeTF, emailTF, spouseFullnameTF, spousePhoneTF,
             spouseHealthNotesTF, hobbiesTF, fobbiesTF;
@@ -272,7 +272,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             setGradSchoolFields();
                         } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay && emplID != 0) {
                             setLessonsTable();
-                            canBeAdvisor.setValue((Boolean) employeesDataTable.getContainerProperty(
+                            canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
                                     emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
                         } else if (event.getTabSheet().getSelectedTab() == permissionsLay && emplID != 0) {
                             if (employeesDataTable.getContainerDataSource().
@@ -342,6 +342,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionContactsInfo.setValue(myUI.getMessage(SptMessages.ContactInfo));
         captionContactsInfo.setStyleName("tableCpt");
 
+        noPhonesCkb = new CheckBox(myUI.getMessage(SptMessages.DontHave));
+        noPhonesCkb.addValueChangeListener(this);
+
         plusPhonesButton = new Button(myUI.getMessage(SptMessages.AddRecord));
         plusPhonesButton.setStyleName(ValoTheme.BUTTON_SMALL);
         plusPhonesButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -351,6 +354,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         hl.addComponent(captionPhones);
         hl.setSpacing(true);
         hl.addComponent(plusPhonesButton);
+        hl.addComponent(noPhonesCkb);
+        hl.setComponentAlignment(noPhonesCkb, Alignment.BOTTOM_RIGHT);
         hl.setExpandRatio(captionPhones, 1);
 
         phonesTable = new FormattedTable();
@@ -794,8 +799,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void buildSchoolInfoLayout() {
 
-        canBeAdvisor = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
-        canBeAdvisor.setWidth("100%");
+        canBeAdvisorCkb = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
+        canBeAdvisorCkb.setWidth("100%");
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth("100%");
@@ -825,7 +830,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         schoolInfoLay.setSizeFull();
         schoolInfoLay.setSpacing(true);
         schoolInfoLay.setMargin(true);
-        schoolInfoLay.addComponent(canBeAdvisor);
+        schoolInfoLay.addComponent(canBeAdvisorCkb);
         schoolInfoLay.addComponent(hl);
         schoolInfoLay.addComponent(lessonsTable);
         schoolInfoLay.setExpandRatio(lessonsTable, 1);
@@ -916,17 +921,34 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void setPhonesTable() {
+        phonesTable.setEnabled(true);
+        plusPhonesButton.setEnabled(true);
         try {
             NATURAL_COL_ORDER_PHONES = new String[]{Settings.button,
                     myUI.getMessage(SptMessages.Type),
                     myUI.getMessage(SptMessages.Number)};
             DbEmployeePhoneNumber dbepn = new DbEmployeePhoneNumber();
             dbepn.connect();
-            phonesTable.setContainerDataSource(
-                    dbepn.execSQL(myUI, emplID, this));
+            phonesTable.setContainerDataSource(dbepn.execSQL(myUI, emplID, this));
             dbepn.close();
             phonesTable.setVisibleColumns(NATURAL_COL_ORDER_PHONES);
             phonesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Number), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        try {
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            Boolean isFilled = dbCon.execSQL(emplID, Settings.columnPhones);
+            System.out.println(isFilled);
+            if (isFilled != null) {
+                noPhonesCkb.setEnabled(!isFilled);
+                noPhonesCkb.setValue(!isFilled);
+                phonesTable.setEnabled(isFilled);
+                plusPhonesButton.setEnabled(isFilled);
+            }
+            dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1102,7 +1124,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     myUI.getMessage(SptMessages.Document)};
             DbEmployeeExam dbex = new DbEmployeeExam();
             dbex.connect();
-            examsTable.setContainerDataSource(                    dbex.execSQL(myUI, emplID, this));
+            examsTable.setContainerDataSource(dbex.execSQL(myUI, emplID, this));
             dbex.close();
             examsTable.setVisibleColumns(NATURAL_COL_ORDER_EXAMS);
             examsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Exam), 1);
@@ -2069,6 +2091,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void clearContactFields() {
         phonesTable.removeAllItems();
+        noPhonesCkb.setEnabled(true);
         addressTA.setValue("");
         emailTF.setValue("");
         birth_placeTF.setValue("");
@@ -2182,7 +2205,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             setGradSchoolFields();
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
             setLessonsTable();
-            canBeAdvisor.setValue((Boolean) employeesDataTable.getContainerProperty(
+            canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
                     emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
         } else if (tabs.getSelectedTab() == tabs.getTab(permissionsLay).getComponent()) {
             if (employeesDataTable != null && employeesDataTable.getContainerDataSource().
@@ -2306,7 +2329,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             try {
                 if (validate(leftLay, false)) {
                     if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()
-                            && (!validateTable(phonesTable, false, false) || !validate(contactInfoLay, false))) {
+                            && (!validateTable(phonesTable, noPhonesCkb.getValue(), false) || !validate(contactInfoLay, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()
@@ -2481,10 +2504,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     updateInfoLayout();
                                     fileName = null;
                                 } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
-                                    dbe.exec_update(emplID, canBeAdvisor.getValue());
+                                    dbe.exec_update(emplID, canBeAdvisorCkb.getValue());
                                     employeesDataTable.getContainerProperty(emplID,
                                             myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(
-                                            canBeAdvisor.getValue());
+                                            canBeAdvisorCkb.getValue());
                                     insertLessons(emplID);
                                     updateInfoLayout();
                                     setLessonsTable();
@@ -2637,6 +2660,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()) {
             delPhoneIds.add(source.getData().toString());
             phonesTable.removeItem(event.getButton().getData().toString());
+            if (phonesTable.size() == 0) {
+                noPhonesCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeChildren)) {
             delChildIds.add(source.getData().toString());
             childrenTable.removeItem(event.getButton().getData().toString());
@@ -2748,6 +2774,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbepn.connect();
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
+            DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+            dbCon.connect();
+            dbCon.exec_update(employee_id, Settings.columnPhones, !noPhonesCkb.getValue());
+            dbCon.close();
             if (delPhoneIds.size() > 0) {
                 for (int i = 0; i < delPhoneIds.size(); i++) {
                     dbd.exec_delete(delPhoneIds.get(i), Settings.dbEmployeePhoneNumber);
@@ -3475,6 +3505,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void addPhonesItem() {
+        noPhonesCkb.setEnabled(false);
         NATURAL_COL_ORDER_PHONES = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Type),
                 myUI.getMessage(SptMessages.Number)};
@@ -4634,7 +4665,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 clearSpouseFields();
                 clearExtraInfoFields();
                 clearGradSchoolFields();
-                canBeAdvisor.setValue(false);
+                canBeAdvisorCkb.setValue(false);
                 questioningTable.removeAllItems();
                 clearAchievementsFields();
                 clearProfFields();
@@ -4667,6 +4698,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             } else {
                 photoUpl.setEnabled(false);
             }
+        } else if (property == noPhonesCkb) {
+            phonesTable.setEnabled(!noPhonesCkb.getValue());
+            plusPhonesButton.setEnabled(!noPhonesCkb.getValue());
         } else if (property == optionGroup) {
             setEmployeesDataTable(property.getValue().toString());
             repaint();

@@ -495,32 +495,42 @@ public class DbEmployee extends BaseDb {
         return container;
     }
 
-    public int exec_insert(Employee e) throws SQLException {
+    public int exec_insert(Employee employee) throws SQLException {
         String sql = "INSERT ignore INTO employee (login, password, name, "
                 + "surname, middle_name, date_of_birth, photo, gender_id, "
                 + "hr_martial_status_id,nationality_id,employee_id,modification_date,hr_country_id) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW(),?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, e.getLogin());
-        stat.setString(2, e.getPassword());
-        stat.setString(3, e.getName());
-        stat.setString(4, e.getSurname());
-        if (e.getMiddle_name() != null) {
-            stat.setString(5, e.getMiddle_name());
+        stat.setString(1, employee.getLogin());
+        stat.setString(2, employee.getPassword());
+        stat.setString(3, employee.getName());
+        stat.setString(4, employee.getSurname());
+        if (employee.getMiddle_name() != null) {
+            stat.setString(5, employee.getMiddle_name());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
-        stat.setDate(6, new java.sql.Date(e.getBirth_date().getTime()));
-        stat.setString(7, e.getPhoto());
-        stat.setInt(8, e.getGender_id());
-        stat.setInt(9, e.getMartial_status_id());
-        stat.setInt(10, e.getNationality_id());
-        stat.setInt(11, e.getModified_by_id());
-        stat.setInt(12, e.getCitizenship_id());
+        stat.setDate(6, new java.sql.Date(employee.getBirth_date().getTime()));
+        stat.setString(7, employee.getPhoto());
+        stat.setInt(8, employee.getGender_id());
+        stat.setInt(9, employee.getMartial_status_id());
+        stat.setInt(10, employee.getNationality_id());
+        stat.setInt(11, employee.getModified_by_id());
+        stat.setInt(12, employee.getCitizenship_id());
 
         int st = stat.executeUpdate();
         if (st != 0) {
-            return getLastInsertedId();
+            int employee_id = getLastInsertedId();
+            try {
+                DbEmployeeCompleteness dbCon = new DbEmployeeCompleteness();
+                dbCon.connect();
+                dbCon.exec_insert(employee_id);
+                dbCon.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            return employee_id;
         } else {
             return 0;
         }

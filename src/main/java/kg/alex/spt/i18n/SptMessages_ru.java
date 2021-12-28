@@ -558,6 +558,7 @@ public class SptMessages_ru extends SptMessages {
             {CorrectionType, "Тип корректировки"},
             {Correction, "Корректировка"},
             {Any, "Любое"},
+            {DontHave, "Не имею"},
             {DateAndPlaceOfBirth, "Дата и место рождения"},
     };
 
