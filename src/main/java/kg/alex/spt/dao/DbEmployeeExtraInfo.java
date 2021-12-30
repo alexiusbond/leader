@@ -105,7 +105,8 @@ public class DbEmployeeExtraInfo extends BaseDb {
                 "ei.fobbies, h.name, cont.email, cont.address, cont.birth_place, fam.fullname, fam.health_notes, h2.name, " +
                 "(select count(id) from hr_employee_children as ch where ch.employee_id = e.id) as children, " +
                 "GROUP_CONCAT(DISTINCT l.name ORDER BY l.name ASC SEPARATOR ', ') as langs, " +
-                "GROUP_CONCAT(DISTINCT ph.number ORDER BY ph.id ASC SEPARATOR ', ') as phones " +
+                "GROUP_CONCAT(DISTINCT ph.number ORDER BY ph.id ASC SEPARATOR ', ') as phones, " +
+                "(select cmpl.modification_date from hr_employee_completeness as cmpl where cmpl.employee_id = e.id) as modified " +
                 "FROM employee AS e " +
                 "LEFT JOIN hr_employee_extra_info AS ei ON e.id = ei.employee_id " +
                 "LEFT JOIN hr_health_status AS h ON h.id = ei.hr_health_status_id " +
@@ -137,6 +138,7 @@ public class DbEmployeeExtraInfo extends BaseDb {
             eei.setLanguages(result.getString("langs"));
             eei.setPhobias(result.getString("ei.fobbies"));
             eei.setHobbies(result.getString("ei.hobbies"));
+            eei.setModificationDate(result.getDate("modified"));
             if (result.getString("h.name") != null) {
                 eei.setHealth_notes(result.getString("h.name") + (result.getString("ei.health_notes") == null ?
                         "" : ", " + result.getString("ei.health_notes")));

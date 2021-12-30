@@ -2787,6 +2787,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     dbCon.connect();
                                     dbCon.exec_delete_not_referenced(Settings.dbAttachmentsTable);
                                     dbCon.close();
+                                    if (myUI.getUser().getId() == emplID) {
+                                        DbEmployeeCompleteness dbc = new DbEmployeeCompleteness();
+                                        dbc.connect();
+                                        dbc.exec_update_modification_date(emplID);
+                                        dbc.close();
+                                    }
                                 } catch (Exception ex) {
                                     logger.error(ex);
                                     logger.catching(ex);
@@ -2797,7 +2803,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
                                         Notification.Type.WARNING_MESSAGE);
                             }
-
                         }
                         dbe.close();
                     }

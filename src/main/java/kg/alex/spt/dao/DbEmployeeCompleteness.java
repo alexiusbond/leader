@@ -33,7 +33,13 @@ public class DbEmployeeCompleteness extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setBoolean(1, isFilled);
         stat.setInt(2, employee_id);
-        System.out.println(stat);
+        return stat.executeUpdate();
+    }
+
+    public int exec_update_modification_date(int employee_id) throws SQLException {
+        String sql = "update hr_employee_completeness set modification_date = NOW() WHERE employee_id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
         return stat.executeUpdate();
     }
 

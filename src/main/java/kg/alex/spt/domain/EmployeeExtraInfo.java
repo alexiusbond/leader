@@ -6,6 +6,7 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class EmployeeExtraInfo implements Serializable {
 
@@ -36,6 +37,15 @@ public class EmployeeExtraInfo implements Serializable {
     private String birth_place;
     private String familyInfo;
     private int children;
+    private Date modificationDate;
+
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
 
     public int getChildren() {
         return children;

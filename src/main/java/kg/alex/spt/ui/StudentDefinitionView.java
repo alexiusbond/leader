@@ -1516,6 +1516,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(SptMessages.Amount)).getValue()).setEnabled(false);
             ((TextField) paymentsTable.getContainerProperty(next,
                     myUI.getMessage(SptMessages.Rate)).getValue()).setEnabled(false);
+            ((TextField) paymentsTable.getContainerProperty(next, Settings.KGS).getValue()).setEnabled(false);
             ((DateField) paymentsTable.getContainerProperty(next,
                     myUI.getMessage(SptMessages.Date)).getValue()).setEnabled(false);
             ((TextField) paymentsTable.getContainerProperty(next,

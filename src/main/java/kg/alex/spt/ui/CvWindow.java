@@ -92,7 +92,8 @@ public class CvWindow extends Window {
 
         rowNum++;
         rightGl.addComponent(createLabel("<b>" + myUI.getMessage(SptMessages.ModificationDate) + ": </b>"
-                + Settings.df.format(new Date()), null), 0, rowNum, 1, rowNum);
+                + (employeeExtraInfo.getModificationDate() == null ? "" :
+                Settings.df.format(employeeExtraInfo.getModificationDate())), null), 0, rowNum, 1, rowNum);
 
         ProgressBar progressBar = new ProgressBar();
         progressBar.setWidth(Settings.PERCENTS100);
