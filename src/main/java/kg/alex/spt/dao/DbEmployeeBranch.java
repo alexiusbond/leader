@@ -60,7 +60,6 @@ public class DbEmployeeBranch extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id,
                                     EmployeeDefinitionView edv) throws SQLException {
-        
 
         String sql = "SELECT ex.id, ex.hr_branch_id, ex.hr_importance_id FROM hr_employee_branch as ex "
                 + "where ex.employee_id = ?;";

@@ -16340,6 +16340,13 @@ div.v-layout.v-horizontal.v-widget {
 	background-position: center;
 }
 
+.mytheme .v-upload-large .v-button {
+	background: #fff;
+	border-color: #197355;
+	color: #197355;
+	height: 32px;
+}
+
 .mytheme .v-grid .v-grid-tablewrapper .v-grid-header .v-grid-row .v-grid-cell, .mytheme .v-grid .v-grid-tablewrapper .v-grid-header .v-grid-row .frozen, .mytheme .v-grid .v-grid-tablewrapper .v-grid-header .v-grid-row .v-grid-cell-focused {
 	white-space: nowrap;
 	font-size: 12px;

@@ -310,6 +310,13 @@
     background-position: center;
   }
 
+  .v-upload-large .v-button {
+    background: #fff;
+    border-color: $v-focus-color;
+    color: $v-focus-color;
+    height: 32px;
+  }
+
   .v-grid {
     .v-grid-scroller, .v-grid-scroller-horizontal {
     }

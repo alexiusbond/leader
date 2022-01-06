@@ -16,11 +16,13 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.TreeSet;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeLessons;
@@ -67,7 +69,7 @@ public class DbEmployeeLessons extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id, int school_id,
-            EmployeeDefinitionView edv) throws SQLException {
+                                    EmployeeDefinitionView edv) throws SQLException {
         String sql = "SELECT ex.id, ex.hr_branch_id, ex.year_id, ex.hours, ex.extra_hours, ex.class_number_id FROM hr_employee_branch_hours as ex "
                 + "where ex.employee_id = ? and school_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -105,6 +107,37 @@ public class DbEmployeeLessons extends BaseDb {
         return container;
     }
 
+
+    public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, int school_id) throws SQLException {
+        String sql = "SELECT bh.id, CONCAT('[', e.login, '] ', e.surname, ' ', e.name) AS empl, " +
+                "CONCAT(b.code, ' - ', b.name) AS branch, cn.name, bh.hours, bh.extra_hours " +
+                "FROM hr_employee_branch_hours AS bh " +
+                "LEFT JOIN employee AS e ON e.id = bh.employee_id " +
+                "LEFT JOIN hr_branch AS b ON b.id = bh.hr_branch_id " +
+                "LEFT JOIN class_number AS cn ON cn.id = bh.class_number_id " +
+                "WHERE bh.school_id = ? AND bh.year_id = ? order by e.surname, e.name;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, school_id);
+        stat.setInt(2, year_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Lecturer), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Lesson), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Hours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), Integer.class, 0);
+        while (result.next()) {
+            int id = result.getInt("bh.id");
+            Item item = container.addItem(id);
+            item.getItemProperty(myUI.getMessage(SptMessages.Lecturer)).setValue(result.getString("empl"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(result.getString("branch"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(result.getInt("cn.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(result.getInt("bh.hours"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(result.getInt("bh.extra_hours"));
+        }
+        return container;
+    }
+
     public String execSQLTotalHours(MyVaadinUI myUI, int employee_id, int school_id) throws SQLException {
         String sql = "select sum(hours) as hours, sum(extra_hours) as extra, employee_id as e_id, year_id as y_id, school_id as sch_id "
                 + "from hr_employee_branch_hours where employee_id = ? and school_id = ? and year_id = ?;";
@@ -120,8 +153,7 @@ public class DbEmployeeLessons extends BaseDb {
     }
 
     public IndexedContainer execSQLHours(MyVaadinUI myUI, int employee_id, int school_id, int cl_num_id,
-            Property.ValueChangeListener vll) throws SQLException {
-        
+                                         Property.ValueChangeListener vll) throws SQLException {
 
         String sql = "SELECT br.id, br.name, ebr.hours, ebr.extra_hours, ebr.id FROM hr_branch AS br "
                 + "LEFT JOIN hr_employee_branch_hours AS ebr ON ebr.hr_branch_id = br.id AND ebr.year_id = ? AND ebr.employee_id = ? "
@@ -168,7 +200,7 @@ public class DbEmployeeLessons extends BaseDb {
     }
 
     private TextField createTextfieldWithProperty(MyVaadinUI myUI, Integer value, String description,
-            Validator validator, Property p, Converter conv) {
+                                                  Validator validator, Property p, Converter conv) {
         TextField tf = new TextField(p);
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -187,7 +219,7 @@ public class DbEmployeeLessons extends BaseDb {
     }
 
     public IndexedContainer execSQLHours(MyVaadinUI myUI, int year_id, int school_id,
-            String branchIds, String positionIds, String extraPositionIds, String workingStatusIds) throws SQLException {
+                                         String branchIds, String positionIds, String extraPositionIds, String workingStatusIds) throws SQLException {
 
         String sql = "SELECT br.name, br.id, empl_t.br_id, empl_t.emp_id, empl_t.fullname, empl_t.work_status, empl_t.main_branch, empl_t.main_branch_id, empl_t.extra_branch, "
                 + "empl_t.extra_branch_ids, empl_t.position, empl_t.extra_positions, empl_t.hours, empl_t.extra_hours FROM hr_branch AS br "
@@ -285,16 +317,16 @@ public class DbEmployeeLessons extends BaseDb {
 
                 container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                         ((Integer) container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue())
-                        + result.getInt("empl_t.hours"));
+                                + result.getInt("empl_t.hours"));
                 container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                         ((Integer) container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue())
-                        + result.getInt("empl_t.extra_hours"));
+                                + result.getInt("empl_t.extra_hours"));
                 container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                         ((Integer) container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue())
-                        + result.getInt("empl_t.hours"));
+                                + result.getInt("empl_t.hours"));
                 container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                         ((Integer) container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue())
-                        + result.getInt("empl_t.extra_hours"));
+                                + result.getInt("empl_t.extra_hours"));
                 if (result.getInt("br.id") == result.getInt("empl_t.main_branch_id")) {
                     container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
                             myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + result.getString("br.name") + ": " + (++totalAsMainBranch));
@@ -324,6 +356,14 @@ public class DbEmployeeLessons extends BaseDb {
         stat.setInt(3, year_id);
         stat.setInt(4, school_id);
         stat.setInt(5, class_number_id);
+        return stat.executeUpdate();
+    }
+
+    public int exec_delete(int school_id, int year_id) throws SQLException {
+        String sql = "DELETE FROM hr_employee_branch_hours WHERE year_id=? and school_id=?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, year_id);
+        stat.setInt(2, school_id);
         return stat.executeUpdate();
     }
 }

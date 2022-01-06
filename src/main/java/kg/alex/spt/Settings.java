@@ -227,6 +227,7 @@ public class Settings implements Serializable {
     public static final String cnEmployeeTransferView = "EmployeeTransferView";
     public static final String cnCV_Window = "CV_Window";
     public static final String cnLessonAssessmentView = "LessonAssessmentView";
+    public static final String cnImportBranchesFromExcelView = "ImportBranchesFromExcelView";
     public static final String cnSchoolModificationView = "SchoolModificationView";
     public static final String cnStudentDefinitionView = "StudentDefinitionView";
     public static final String cnReportsView = "ReportsView";
@@ -256,6 +257,7 @@ public class Settings implements Serializable {
     public static final String prmLogsInfo = "логи системы";
     public static final String prmAccountingLogsSelect = "логи по бухгалтерии";
     public static final String actDelete = "удаление";
+    public static final String actImport = "импорт";
     public static final String actPdf = "pdf";
     public static final String prmContractInfo = "информация о контракте";
     public static final String prmContractInfoLeftDebt = "информация о задолженностях";
