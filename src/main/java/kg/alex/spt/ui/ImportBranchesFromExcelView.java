@@ -12,12 +12,16 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
+import kg.alex.spt.dao.DbBranch;
 import kg.alex.spt.dao.DbDefinition;
+import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbEmployeeLessons;
 import kg.alex.spt.domain.EmployeeBranchesExcel;
+import kg.alex.spt.domain.EmployeeLessons;
 import kg.alex.spt.excel.ExcelUploader;
 import kg.alex.spt.excel.ExcelUploaderSucceededListener;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.BranchCodesPdf;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.FormattedTable;
@@ -28,6 +32,8 @@ import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements Button.ClickListener,
@@ -202,9 +208,132 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
+                            setTableData();
                         }
                     });
         } else if (source == saveBtn) {
+            List itemsToDel = new ArrayList();
+            int counter = 0;
+            try {
+                DbEmployee dbEmp = new DbEmployee();
+                dbEmp.connect();
+                DbEmployeeLessons dbEl = new DbEmployeeLessons();
+                dbEl.connect();
+                DbDefinition dbDef = new DbDefinition();
+                dbDef.connect();
+                Iterator iter = importTable.getItemIds().iterator();
+                while (iter.hasNext()) {
+                    Object item_id = iter.next();
+                    EmployeeLessons el = new EmployeeLessons();
+                    el.setSchool_id(myUI.getUser().getSchool_id());
+                    el.setYear_id((Integer) yearSelect.getValue());
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Hours)).getValue() != null) {
+                        el.setHours((Integer) importTable.getContainerProperty(item_id,
+                                myUI.getMessage(SptMessages.Hours)).getValue());
+                    } else {
+                        continue;
+                    }
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.ExtraHours)).getValue() != null) {
+                        el.setExtra_hours((Integer) importTable.getContainerProperty(item_id,
+                                myUI.getMessage(SptMessages.ExtraHours)).getValue());
+                    } else {
+                        el.setExtra_hours(0);
+                    }
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.LecturerID)).getValue() != null) {
+                        int id = 0;
+                        try {
+                            id = dbEmp.execSQL_id(myUI.getUser().getSchool_id(), importTable.getContainerProperty(item_id,
+                                    myUI.getMessage(SptMessages.LecturerID)).getValue().toString());
+                        } catch (Exception e) {
+                            logger.error(e);
+                            logger.catching(e);
+                        }
+                        if (id != 0) {
+                            el.setEmployee_id(id);
+                            System.out.println("el.setEmployee_id(id) " + id);
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.CourseCode)).getValue() != null) {
+                        int id = 0;
+                        try {
+                            id = dbDef.search_id(Settings.dbBranchTable, Settings.dbColumnCode, importTable.getContainerProperty(item_id,
+                                    myUI.getMessage(SptMessages.CourseCode)).getValue().toString());
+                        } catch (Exception e) {
+                            logger.error(e);
+                            logger.catching(e);
+                        }
+                        if (id != 0) {
+                            el.setBranch_id(id);
+                            System.out.println("el.setBranch_id(id) " + id);
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                    if (importTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.ClassName)).getValue() != null) {
+                        int id = 0;
+                        try {
+                            id = dbDef.search_id(Settings.classTable, Settings.dbColumnName, importTable.getContainerProperty(item_id,
+                                    myUI.getMessage(SptMessages.ClassName)).getValue().toString());
+                        } catch (Exception e) {
+                            logger.error(e);
+                            logger.catching(e);
+                        }
+                        if (id != 0) {
+                            el.setClass_number_id(id);
+                            System.out.println("el.setClass_number_id(id) " + id);
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                    try {
+                        if (dbEl.exec_insert(el) != 0) {
+                            counter++;
+                            itemsToDel.add(item_id);
+                        }
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                }
+                dbEl.close();
+                dbEmp.close();
+                dbDef.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            for (Object id : itemsToDel) {
+                importTable.removeItem(id);
+            }
+            if (importTable.size() != 0) {
+                Notification.show(counter + " " + myUI.getMessage(SptMessages.InsertedAmount)
+                                + " " + myUI.getMessage(SptMessages.NotInserted),
+                        Notification.Type.WARNING_MESSAGE);
+            } else {
+                Notification.show(counter + " " + myUI.getMessage(SptMessages.InsertedAmount),
+                        Notification.Type.HUMANIZED_MESSAGE);
+            }
+            if (counter > 0) {
+                setTableData();
+            }
+        } else if (source == branchesPDF_Btn) {
+            try {
+                DbBranch dbCon = new DbBranch();
+                dbCon.connect();
+                new BranchCodesPdf(myUI, dbCon.execSQL(myUI));
+                dbCon.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         } else if (source == templateBtn) {
             try {
                 myUI.getPage().open(new FileResource(
@@ -244,9 +373,9 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.LecturerID), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.CourseCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), Integer.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Hours), Integer.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), Integer.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), Integer.class, null);
         for (int i = 0; i < list.size(); i++) {
             Item item = container.addItem(i);
             if (item != null) {

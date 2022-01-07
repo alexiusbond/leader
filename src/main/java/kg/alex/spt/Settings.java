@@ -113,6 +113,7 @@ public class Settings implements Serializable {
     public static final String dbExamTable = "hr_exam";
     public static final String positionCategoryTable = "hr_position_category";
     public static final String dbBranchTable = "hr_branch";
+    public static final String dbColumnCode = "code";
     public static final String dbInventoryCategoryTable = "dm_inventory_category";
     public static final String dbInventoryBrandTable = "dm_brand";
     public static final String dbInventoryTitleTable = "dm_title";
@@ -138,6 +139,7 @@ public class Settings implements Serializable {
     public static final String dbPaymentType = "payment_type";
     public static final String dbWorking_status = "working_status";
     public static final String dbClass_name = "class_name";
+    public static final String dbColumnName = "name";
     public static final String dbBlock = "dm_block";
     public static final String dbRoom = "dm_room";
     public static final String db_dp_invoice = "dp_invoice";

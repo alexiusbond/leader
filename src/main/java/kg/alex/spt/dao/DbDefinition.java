@@ -381,4 +381,16 @@ public class DbDefinition extends BaseDb {
         }
         return container;
     }
+
+    public int search_id(String table, String column, String value) throws SQLException {
+        String sql = "select id from " + table + " where " + column + " = " + "?";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setString(1, value);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getInt("id");
+        }
+        return 0;
+    }
 }

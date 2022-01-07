@@ -142,6 +142,7 @@ public class DbEmployee extends BaseDb {
         stat.setInt(2, school_id);
         stat.setInt(3, school_id);
         stat.setInt(4, school_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
@@ -836,5 +837,24 @@ public class DbEmployee extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Languages)).setValue(result.getString("langs"));
         }
         return container;
+    }
+
+    public int execSQL_id(int school_id, String login) throws SQLException {
+
+        String sql = "SELECT e.id FROM employee AS e " +
+                "LEFT JOIN hr_employee_order AS eo ON eo.employee_id = e.id AND eo.to_date IS NULL " +
+                "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id " +
+                "LEFT JOIN position AS pos ON p.id = pos.hr_position_id " +
+                "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id " +
+                "LEFT JOIN working_status AS ws ON ord.working_status_id = ws.id " +
+                "WHERE eo.school_id = ? AND e.login = ? AND ord.working_status_id IS NOT NULL AND ws.id = 2";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, school_id);
+        stat.setString(2, login);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getInt("e.id");
+        }
+        return 0;
     }
 }

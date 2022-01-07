@@ -36,7 +36,8 @@ public class DbEmployeeLessons extends BaseDb {
     }
 
     public int exec_insert(EmployeeLessons el) throws SQLException {
-        String sql = "INSERT IGNORE INTO hr_employee_branch_hours (employee_id,hr_branch_id,year_id,hours,extra_hours,school_id,class_number_id) "
+        String sql = "INSERT IGNORE INTO hr_employee_branch_hours "
+                + "(employee_id,hr_branch_id,year_id,hours,extra_hours,school_id,class_number_id) "
                 + "VALUES(?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, el.getEmployee_id());
@@ -46,7 +47,7 @@ public class DbEmployeeLessons extends BaseDb {
         stat.setInt(5, el.getExtra_hours());
         stat.setInt(6, el.getSchool_id());
         stat.setInt(7, el.getClass_number_id());
-
+        System.out.println(stat);
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
