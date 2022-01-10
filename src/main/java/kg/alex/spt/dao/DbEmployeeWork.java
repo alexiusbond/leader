@@ -85,7 +85,7 @@ public class DbEmployeeWork extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id, IndexedContainer c,
+    public IndexedContainer execSQL(final MyVaadinUI myUI, int employee_id, int own_id,
                                     EmployeeDefinitionView edv) throws SQLException {
 
         String sql = "SELECT ew.id, ew.hr_work_place_id, ew.position_id, " +
@@ -97,7 +97,7 @@ public class DbEmployeeWork extends BaseDb {
         stat.setInt(1, employee_id);
         stat.setInt(2, own_id);
         ResultSet result = stat.executeQuery();
-        final IndexedContainer container = edv.prepareWorkContainer(c);
+        final IndexedContainer container = edv.prepareWorkContainer(own_id);
         while (result.next()) {
             String id = result.getString("ew.id");
             Item item = container.addItem(id);

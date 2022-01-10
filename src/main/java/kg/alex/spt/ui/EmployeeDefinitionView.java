@@ -253,7 +253,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 && emplID != 0) {
                             setChildrenTable();
                             setEducationTable(spouseEducationTable, spouseEducationCont, 2);
-                            setWorkTable(spouseWorkPlacesTable, spouseWorkCont, 2);
+                            setWorkTable(spouseWorkPlacesTable, 2);
                             setSpouseFields();
                         } else if (event.getTabSheet().getSelectedTab() == extraInfoLay
                                 && emplID != 0) {
@@ -268,13 +268,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         } else if (event.getTabSheet().getSelectedTab() == profInfoLay
                                 && emplID != 0) {
                             setEducationTable(educationTable, educationCont, 1);
-                            setWorkTable(workPlacesTable, workPlacesCont, 1);
+                            setWorkTable(workPlacesTable, 1);
                             setBranchesTable();
                             setGradSchoolFields();
                         } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay && emplID != 0) {
-                            setLessonsTable();
                             canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
                                     emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
+                            if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
+                                setLessonsTable();
+                            }
                         } else if (event.getTabSheet().getSelectedTab() == permissionsLay && emplID != 0) {
                             if (employeesDataTable.getContainerDataSource().
                                     getContainerProperty(emplID, myUI.getMessage(
@@ -839,39 +841,41 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         canBeAdvisorCkb = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
         canBeAdvisorCkb.setWidth(Settings.PERCENTS100);
-
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setWidth(Settings.PERCENTS100);
+        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
+            hl.setWidth(Settings.PERCENTS100);
 
-        Label captionLessons = new Label();
-        captionLessons.setSizeFull();
-        captionLessons.setContentMode(ContentMode.HTML);
-        captionLessons.setValue(myUI.getMessage(SptMessages.Lessons));
-        captionLessons.setStyleName("tableCpt");
+            Label captionLessons = new Label();
+            captionLessons.setSizeFull();
+            captionLessons.setContentMode(ContentMode.HTML);
+            captionLessons.setValue(myUI.getMessage(SptMessages.Lessons));
+            captionLessons.setStyleName("tableCpt");
 
-        plusLessonsButton = new Button(myUI.getMessage(SptMessages.AddRecord));
-        plusLessonsButton.setStyleName(ValoTheme.BUTTON_SMALL);
-        plusLessonsButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        plusLessonsButton.setIcon(FontAwesome.PLUS_SQUARE);
-        plusLessonsButton.addClickListener(this);
+            plusLessonsButton = new Button(myUI.getMessage(SptMessages.AddRecord));
+            plusLessonsButton.setStyleName(ValoTheme.BUTTON_SMALL);
+            plusLessonsButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+            plusLessonsButton.setIcon(FontAwesome.PLUS_SQUARE);
+            plusLessonsButton.addClickListener(this);
 
-        hl.addComponent(captionLessons);
-        hl.setSpacing(true);
-        hl.addComponent(plusLessonsButton);
-        hl.setExpandRatio(captionLessons, 1);
+            hl.addComponent(captionLessons);
+            hl.setSpacing(true);
+            hl.addComponent(plusLessonsButton);
+            hl.setExpandRatio(captionLessons, 1);
 
-        lessonsTable = new FormattedTable();
-        lessonsTable.setSizeFull();
-        lessonsTable.setStyleName(ValoTheme.TABLE_SMALL);
-
+            lessonsTable = new FormattedTable();
+            lessonsTable.setSizeFull();
+            lessonsTable.setStyleName(ValoTheme.TABLE_SMALL);
+        }
         schoolInfoLay = new VerticalLayout();
         schoolInfoLay.setSizeFull();
         schoolInfoLay.setSpacing(true);
         schoolInfoLay.setMargin(true);
         schoolInfoLay.addComponent(canBeAdvisorCkb);
-        schoolInfoLay.addComponent(hl);
-        schoolInfoLay.addComponent(lessonsTable);
-        schoolInfoLay.setExpandRatio(lessonsTable, 1);
+        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
+            schoolInfoLay.addComponent(hl);
+            schoolInfoLay.addComponent(lessonsTable);
+            schoolInfoLay.setExpandRatio(lessonsTable, 1);
+        }
     }
 
     private void buildPermissionsLayout() {
@@ -1056,7 +1060,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
             DbEmployeeEducation dbed = new DbEmployeeEducation();
             dbed.connect();
-            t.setContainerDataSource(dbed.execSQL(myUI, emplID, own_id, c, this));
+            t.setContainerDataSource(dbed.execSQL(myUI, emplID, own_id, this));
             dbed.close();
             t.setVisibleColumns(NATURAL_COL_ORDER_EDU);
             t.setPageLength(t.size());
@@ -1090,7 +1094,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
     }
 
-    private void setWorkTable(Table t, IndexedContainer c, int own_id) {
+    private void setWorkTable(Table t, int own_id) {
         t.setEnabled(true);
         if (own_id == 1) {
             plusSpouseWorkPlacesButton.setEnabled(true);
@@ -1108,7 +1112,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     myUI.getMessage(SptMessages.End)};
             DbEmployeeWork dbew = new DbEmployeeWork();
             dbew.connect();
-            t.setContainerDataSource(dbew.execSQL(myUI, emplID, own_id, c, this));
+            t.setContainerDataSource(dbew.execSQL(myUI, emplID, own_id, this));
             dbew.close();
             t.setVisibleColumns(NATURAL_COL_ORDER_WORK);
             t.setPageLength(t.size() > 0 ? t.size() : 1);
@@ -2397,7 +2401,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()) {
             setChildrenTable();
             setEducationTable(spouseEducationTable, spouseEducationCont, 2);
-            setWorkTable(spouseWorkPlacesTable, spouseWorkCont, 2);
+            setWorkTable(spouseWorkPlacesTable, 2);
             setSpouseFields();
         } else if (tabs.getSelectedTab() == tabs.getTab(extraInfoLay).getComponent()) {
             setQuestioningTable();
@@ -2409,7 +2413,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             setExamsTable();
         } else if (tabs.getSelectedTab() == tabs.getTab(profInfoLay).getComponent()) {
             setEducationTable(educationTable, educationCont, 1);
-            setWorkTable(workPlacesTable, workPlacesCont, 1);
+            setWorkTable(workPlacesTable, 1);
             setBranchesTable();
             setGradSchoolFields();
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
@@ -2571,7 +2575,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()
-                            && !validateTable(lessonsTable, true, false)) {
+                            && currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":"
+                            + Settings.prmOrganizeLessons) && !validateTable(lessonsTable, true, false)) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(ordersInfoLay).getComponent()
@@ -2686,7 +2691,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     insertEmplSpouse(getEmployeeSpouse(emplID));
                                     setChildrenTable();
                                     setEducationTable(spouseEducationTable, spouseEducationCont, 2);
-                                    setWorkTable(spouseWorkPlacesTable, spouseWorkCont, 2);
+                                    setWorkTable(spouseWorkPlacesTable, 2);
                                     setSpouseFields();
                                 } else if (tabs.getSelectedTab() == tabs.getTab(extraInfoLay).getComponent()) {
                                     insertQuestioning(emplID);
@@ -2709,7 +2714,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     insertBranches(emplID);
                                     insertEmplGradSchool(getEmployeeGradSchool(emplID));
                                     setEducationTable(educationTable, educationCont, 1);
-                                    setWorkTable(workPlacesTable, workPlacesCont, 1);
+                                    setWorkTable(workPlacesTable, 1);
                                     setBranchesTable();
                                     setGradSchoolFields();
                                     updateInfoLayout();
@@ -2717,11 +2722,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
                                     dbe.exec_update(emplID, canBeAdvisorCkb.getValue());
                                     employeesDataTable.getContainerProperty(emplID,
-                                            myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(
-                                            canBeAdvisorCkb.getValue());
-                                    insertLessons(emplID);
-                                    updateInfoLayout();
-                                    setLessonsTable();
+                                            myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(canBeAdvisorCkb.getValue());
+                                    if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
+                                        insertLessons(emplID);
+                                        updateInfoLayout();
+                                        setLessonsTable();
+                                    }
                                 } else if (tabs.getSelectedTab() == tabs.getTab(permissionsLay).getComponent()) {
                                     dbe.exec_delete_perm(oldLogin);
                                     List<String> extra_position_ids = null;
@@ -2843,13 +2849,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (source == plusChildButton) {
             addChildItem();
         } else if (source == plusSpouseEducationButton) {
-            addEducationItem(spouseEducationTable, spouseEducationCont, 2);
+            addEducationItem(spouseEducationTable, 2);
         } else if (source == plusSpouseWorkPlacesButton) {
-            addWorkItem(spouseWorkPlacesTable, spouseWorkCont, 2);
+            addWorkItem(spouseWorkPlacesTable, 2);
         } else if (source == plusEducationButton) {
-            addEducationItem(educationTable, educationCont, 1);
+            addEducationItem(educationTable, 1);
         } else if (source == plusWorkPlaceButton) {
-            addWorkItem(workPlacesTable, workPlacesCont, 1);
+            addWorkItem(workPlacesTable, 1);
         } else if (source == plusLanguageButton) {
             addLanguageItem();
         } else if (source == plusCertificateButton) {
@@ -2975,7 +2981,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
                 ordersTable.removeItem(event.getButton().getData().toString().replace("_", ""));
             } else {
-                if (((ComboBox) ordersTable.getItem(event.getButton().getId()).getItemProperty(
+                if (((ComboBox) ordersTable.getItem(event.getButton().getData().toString()).getItemProperty(
                         myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != null) {
                     eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(event.getButton().getId()).getItemProperty(
                             myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
@@ -3850,7 +3856,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         childrenTable.setPageLength(childrenTable.size());
     }
 
-    private void addEducationItem(final Table t, IndexedContainer c, int own_id) {
+    private void addEducationItem(final Table t, int own_id) {
         if (own_id == 1) {
             noEducationCkb.setEnabled(false);
             NATURAL_COL_ORDER_EDU = new String[]{Settings.button,
@@ -3870,11 +3876,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     myUI.getMessage(SptMessages.EduLevel),
                     myUI.getMessage(SptMessages.Start),
                     myUI.getMessage(SptMessages.End)};
-
         }
         String id = Settings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
-            t.setContainerDataSource(prepareEducationContainer(c));
+            t.setContainerDataSource(prepareEducationContainer(own_id));
         }
         Item item;
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
@@ -3892,10 +3897,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbUniversityTable, false);
                     dbd.close();
                     if (id != 0) {
-                        Iterator iter = c.getItemIds().iterator();
+                        Iterator iter = t.getItemIds().iterator();
                         while (iter.hasNext()) {
                             Object next = iter.next();
-                            Item item = ((IndexedContainer) ((ComboBox) c.getContainerProperty(next,
+                            Item item = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
                             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb.setValue(id);
@@ -3943,7 +3948,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         t.setColumnExpandRatio(myUI.getMessage(SptMessages.Department), 1);
     }
 
-    private void addWorkItem(final Table t, IndexedContainer c, int own_id) {
+    private void addWorkItem(final Table t, int own_id) {
         if (own_id == 1) {
             noWorkPlacesCkb.setEnabled(false);
         } else {
@@ -3959,7 +3964,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 myUI.getMessage(SptMessages.End)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (t.getContainerDataSource().size() == 0) {
-            t.setContainerDataSource(prepareWorkContainer(c));
+            t.setContainerDataSource(prepareWorkContainer(own_id));
         }
         Item item;
         item = ((IndexedContainer) t.getContainerDataSource()).addItemAt(
@@ -4004,10 +4009,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbWork_placeTable, false);
                     dbd.close();
                     if (id != 0) {
-                        Iterator iter = c.getItemIds().iterator();
+                        Iterator iter = t.getContainerDataSource().getItemIds().iterator();
                         while (iter.hasNext()) {
                             Object next = iter.next();
-                            Item item = ((IndexedContainer) ((ComboBox) c.getContainerProperty(next,
+                            Item item = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id);
                             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
                             cb2.setValue(id);
@@ -4476,7 +4481,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         return childrenCont;
     }
 
-    public IndexedContainer prepareEducationContainer(IndexedContainer c) {
+    public IndexedContainer prepareEducationContainer(int own_id) {
+        IndexedContainer c = own_id == 1 ? educationCont : spouseEducationCont;
         if (c == null) {
             c = new IndexedContainer();
             c.addContainerProperty(Settings.button, Button.class, null);
@@ -4494,7 +4500,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         return c;
     }
 
-    public IndexedContainer prepareWorkContainer(IndexedContainer c) {
+    public IndexedContainer prepareWorkContainer(int own_id) {
+        IndexedContainer c = own_id == 1 ? workPlacesCont : spouseWorkCont;
         if (c == null) {
             c = new IndexedContainer();
             c.addContainerProperty(Settings.button, Button.class, null);

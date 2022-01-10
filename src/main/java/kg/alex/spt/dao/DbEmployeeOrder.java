@@ -156,7 +156,7 @@ public class DbEmployeeOrder extends BaseDb {
 
     public IndexedContainer execOrderTypesSel(MyVaadinUI myUI, String except_ids) throws SQLException {
         String sql = "SELECT o.id, o.name, o.working_status_id, o.visible_hr_orders, ws.name from hr_orders as o "
-                + "left join working_status as ws on ws.id=o.working_status_id ";
+                + "left join working_status as ws on ws.id = o.working_status_id where o.id != 3";
         if (except_ids != null) {
             sql += "where o.id IN (" + except_ids + ")";
         }
@@ -196,7 +196,7 @@ public class DbEmployeeOrder extends BaseDb {
                 + "LEFT JOIN hr_orders AS o ON o.id = eo.hr_orders_id "
                 + "LEFT JOIN school AS sch ON sch.id = eo.from_to_school_id LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id "
                 + "LEFT JOIN class_name AS cln ON cln.id = eo.class_name_id LEFT JOIN class_number AS cn ON cn.id = cln.class_number_id "
-                + "WHERE eo.employee_id = ? and eo.school_id = ? order by eo.id;";
+                + "WHERE eo.employee_id = ? and eo.school_id = ? and o.id != 3 order by eo.id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);

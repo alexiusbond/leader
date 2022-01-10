@@ -47,7 +47,6 @@ public class DbEmployeeLessons extends BaseDb {
         stat.setInt(5, el.getExtra_hours());
         stat.setInt(6, el.getSchool_id());
         stat.setInt(7, el.getClass_number_id());
-        System.out.println(stat);
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();

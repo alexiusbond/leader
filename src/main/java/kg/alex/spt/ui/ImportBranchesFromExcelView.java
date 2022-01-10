@@ -250,7 +250,6 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                         }
                         if (id != 0) {
                             el.setEmployee_id(id);
-                            System.out.println("el.setEmployee_id(id) " + id);
                         } else {
                             continue;
                         }
@@ -268,7 +267,6 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                         }
                         if (id != 0) {
                             el.setBranch_id(id);
-                            System.out.println("el.setBranch_id(id) " + id);
                         } else {
                             continue;
                         }
@@ -286,7 +284,6 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                         }
                         if (id != 0) {
                             el.setClass_number_id(id);
-                            System.out.println("el.setClass_number_id(id) " + id);
                         } else {
                             continue;
                         }

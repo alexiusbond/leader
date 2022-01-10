@@ -265,6 +265,8 @@ public class Settings implements Serializable {
     public static final String prmContractInfoLeftDebt = "информация о задолженностях";
     public static final String prmMenu = "показ в меню";
     public static final String prmContractVisible = "видимость контракта";
+    public static final String prmOrganizeLessons = "организация уроков";
+    public static final String prmOrganizeAdvisors = "назначение кураторства";
     public static final String actCopy = "копирование";
     public static final String prmPlanPayments = "план оплат и оплаты";
     public static final String prmClassPayments = "оплаты по классам";
