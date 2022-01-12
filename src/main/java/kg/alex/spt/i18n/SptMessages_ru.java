@@ -63,6 +63,7 @@ public class SptMessages_ru extends SptMessages {
             {ClassNumber, "Номер класса"},
             {LanguageDefinition, "Определение языков"},
             {ExamDefinition, "Определение экзаменов"},
+            {CertificateDefinition, "Определение сертификатов"},
             {Exams, "Экзамены"},
             {Exam, "Экзамен"},
             {Score, "Баллы"},
@@ -93,7 +94,7 @@ public class SptMessages_ru extends SptMessages {
             {DeleteAllButton, "Удалить все записи"},
             {Details, "Детали"},
             {SaveButton, "Сохранить"},
-            {Mannual, "Мануально"},
+            {Manual, "Мануально"},
             {NBKR, "НБКР"},
             {DivideButton, "Разделить"},
             {CancelButton, "Отменить"},
@@ -206,6 +207,7 @@ public class SptMessages_ru extends SptMessages {
             {MiddleName, "Отчество"},
             {CanBeAdvisor, "Может быть куратором"},
             {CanBeAdvisors, "Могут быть кураторами"},
+            {Supervision, "Назначение кураторства"},
             {DateOfBirth, "Дата рождения"},
             {Institution, "Учебное заведение"},
             {BirthPlace, "Место рождения"},
@@ -514,6 +516,7 @@ public class SptMessages_ru extends SptMessages {
             {Incomes, "Доходы"},
             {Outcomes, "Расходы"},
             {ValueDeleted, "Запись удалена успешно!"},
+            {ValueReplaced, "Запись заменена успешно!"},
             {AttentionLab, "Пожалуйста, будьте внимательны"},
             {IncomesTotal, "Всего доходов"},
             {ExpensesTotal, "Всего расходов"},
@@ -568,6 +571,8 @@ public class SptMessages_ru extends SptMessages {
             {DontHave, "Не имею"},
             {DateAndPlaceOfBirth, "Дата и место рождения"},
             {Lecturer, "Преподаватель"},
+            {Replace, "Заменить"},
+            {ElementForReplacement, "Элемент для замены"},
     };
 
     @Override

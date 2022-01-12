@@ -156,9 +156,9 @@ public class DbEmployeeOrder extends BaseDb {
 
     public IndexedContainer execOrderTypesSel(MyVaadinUI myUI, String except_ids) throws SQLException {
         String sql = "SELECT o.id, o.name, o.working_status_id, o.visible_hr_orders, ws.name from hr_orders as o "
-                + "left join working_status as ws on ws.id = o.working_status_id where o.id != 3";
+                + "left join working_status as ws on ws.id = o.working_status_id where o.id != 3 ";
         if (except_ids != null) {
-            sql += "where o.id IN (" + except_ids + ")";
+            sql += "and o.id IN (" + except_ids + ")";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -180,6 +180,65 @@ public class DbEmployeeOrder extends BaseDb {
                     result.getString("o.visible_hr_orders"));
             item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(
                     result.getString("ws.name"));
+        }
+        return container;
+    }
+
+    public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id, int school_id, EmployeeDefinitionView edv) throws SQLException {
+
+        String sql = "SELECT eo.id, o.id, o.name, eo.from_date, eo.to_date, eo.note, eo.effected_by_id, eo.can_not_delete, "
+                + "CONCAT(cn.name, ' - ', cln.name) AS details, cln.id AS details_id "
+                + "FROM hr_employee_order AS eo "
+                + "LEFT JOIN hr_orders AS o ON o.id = eo.hr_orders_id "
+                + "LEFT JOIN class_name AS cln ON cln.id = eo.class_name_id LEFT JOIN class_number AS cn ON cn.id = cln.class_number_id "
+                + "WHERE eo.employee_id = ? and eo.school_id = ? and o.id = 3 order by eo.id;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, employee_id);
+        stat.setInt(2, school_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = edv.prepareSupervisionContainer();
+        while (result.next()) {
+            String id = result.getString("eo.id");
+            Item item = container.addItem(id);
+
+            item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
+                    id, Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
+            ComboBox cb = null;
+            try {
+                cb = edv.createCombobox(0, myUI.getMessage(SptMessages.ClassName), null, true);
+                DbClassName dbcn = new DbClassName();
+                dbcn.connect();
+                cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+                dbcn.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            if (cb != null) {
+                cb.setValue(result.getInt("details_id"));
+                item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(cb);
+            }
+            DateField df = edv.createDateField(result.getDate("eo.from_date"),
+                    myUI.getMessage(SptMessages.FromDate), null, true, Settings.datePattern, Resolution.DAY);
+            df.setRangeEnd(new Date());
+            if (result.getInt("o.id") == 8) {
+                df.setEnabled(false);
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
+            df = edv.createDateField(result.getDate("eo.to_date"),
+                    myUI.getMessage(SptMessages.TillDate), null, false, Settings.datePattern, Resolution.DAY);
+            if (result.getInt("o.id") != 3 && result.getInt("o.id") != 2) {
+                df.setEnabled(false);
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
+            TextField tf = edv.createTextfield(result.getString("eo.Note"),
+                    myUI.getMessage(SptMessages.Note),
+                    new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false);
+            if (result.getInt("o.id") == 8) {
+                tf.setEnabled(false);
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
         return container;
     }

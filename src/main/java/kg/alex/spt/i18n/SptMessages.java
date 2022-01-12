@@ -67,6 +67,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ClassNumber = generateId();
     public static final String LanguageDefinition = generateId();
     public static final String ExamDefinition = generateId();
+    public static final String CertificateDefinition = generateId();
     public static final String Exams = generateId();
     public static final String Exam = generateId();
     public static final String Score = generateId();
@@ -78,6 +79,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String BranchDefinition = generateId();
     public static final String Branches = generateId();
     public static final String Lessons = generateId();
+    public static final String Supervision = generateId();
     public static final String Lesson = generateId();
     public static final String LessonAssessment = generateId();
     public static final String Branch = generateId();
@@ -86,6 +88,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String RoomDefinition = generateId();
     public static final String PositionDefinition = generateId();
     public static final String Status = generateId();
+    public static final String ElementForReplacement = generateId();
+    public static final String ValueReplaced = generateId();
     public static final String OrderType = generateId();
     public static final String CanNotDelete = generateId();
     public static final String InventoryNotFound = generateId();
@@ -98,7 +102,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String DeleteAllButton = generateId();
     public static final String Details = generateId();
     public static final String SaveButton = generateId();
-    public static final String Mannual = generateId();
+    public static final String Manual = generateId();
     public static final String NBKR = generateId();
     public static final String DivideButton = generateId();
     public static final String CancelButton = generateId();
@@ -561,6 +565,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String DateAndPlaceOfBirth = generateId();
     public static final String DontHave = generateId();
     public static final String Lecturer = generateId();
+    public static final String Replace = generateId();
 
     private static String generateId() {
         return new Integer(ids++).toString();

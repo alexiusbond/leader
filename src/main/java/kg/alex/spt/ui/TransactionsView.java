@@ -181,10 +181,10 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         currencySettingsOG.setStyleName(ValoTheme.OPTIONGROUP_SMALL);
         currencySettingsOG.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
         currencySettingsOG.addItem(myUI.getMessage(SptMessages.NBKR));
-        currencySettingsOG.addItem(myUI.getMessage(SptMessages.Mannual));
+        currencySettingsOG.addItem(myUI.getMessage(SptMessages.Manual));
         currencySettingsOG.addValueChangeListener(this);
         if (myUI.isMannualRate()) {
-            currencySettingsOG.select(myUI.getMessage(SptMessages.Mannual));
+            currencySettingsOG.select(myUI.getMessage(SptMessages.Manual));
         } else {
             currencySettingsOG.select(myUI.getMessage(SptMessages.NBKR));
         }
@@ -264,7 +264,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                     dbCon.connect();
                     cr.setEmployee_id(myUI.getUser().getId());
                     cr.setSchool_id(myUI.getUser().getSchool_id());
-                    if (currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Mannual))) {
+                    if (currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual))) {
                         cr.setValue((Double) currencyTF.getPropertyDataSource().getValue());
                         cr.setMannual(1);
                     } else {
@@ -351,7 +351,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (property == currencySettingsOG) {
-            if (currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Mannual))) {
+            if (currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual))) {
                 currencyHl.setEnabled(true);
             } else {
                 currencyHl.setEnabled(false);

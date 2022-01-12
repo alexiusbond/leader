@@ -78,7 +78,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             NATURAL_COL_ORDER_EDU, NATURAL_COL_ORDER_WORK,
             NATURAL_COL_ORDER_QUESTIONING, NATURAL_COL_ORDER_EXAMS, NATURAL_COL_ORDER_SEMINARS,
             NATURAL_COL_ORDER_LANGUAGES, NATURAL_COL_ORDER_CERTIFICATES, NATURAL_COL_ORDER_BRANCHES,
-            NATURAL_COL_ORDER_LESSONS, NATURAL_COL_ORDER_PERMISSIONS, NATURAL_COL_ORDER_ORDERS;
+            NATURAL_COL_ORDER_LESSONS, NATURAL_COL_ORDER_SUPERVISION, NATURAL_COL_ORDER_PERMISSIONS, NATURAL_COL_ORDER_ORDERS;
     private VerticalLayout infoLay, documentsLay;
     private GridLayout empSearchLay, contactInfoLay, familyInfoLay, extraInfoLay,
             achievementsInfoLay, profInfoLay, ordersInfoLay;
@@ -95,14 +95,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private Subject currentUser = SecurityUtils.getSubject();
     private FormattedTable phonesTable, childrenTable, spouseEducationTable, spouseWorkPlacesTable, questioningTable,
             examsTable, seminarsTable, certificatesTable, languagesTable, educationTable, workPlacesTable, branchesTable, lessonsTable,
-            permissionTable, ordersTable;
+            supervisionTable, permissionTable, ordersTable;
     private Button plusPhonesButton, plusChildButton, plusSpouseEducationButton, plusSpouseWorkPlacesButton,
             plusExamButton, plusSeminarButton, plusCertificateButton, plusLanguageButton,
-            plusEducationButton, plusWorkPlaceButton, plusBranchButton, plusLessonsButton, plusOrdersButton;
+            plusEducationButton, plusWorkPlaceButton, plusBranchButton, plusLessonsButton, plusSupervisionButton, plusOrdersButton;
     private int r_table_counter = 1000;
     private IndexedContainer phonesCont, childrenCont, spouseEducationCont, spouseWorkCont,
             educationCont, workPlacesCont, examsCont, languagesCont, seminarsCont,
-            certificatesCont, branchesCont, lessonsCont, permissionCont, ordersCont;
+            certificatesCont, branchesCont, lessonsCont, supervisionCont, permissionCont, ordersCont;
     private ArrayList<String> delPhoneIds = new ArrayList<>();
     private ArrayList<String> delChildIds = new ArrayList<>();
     private ArrayList<EmployeeEducation> delSpouseEducationIds = new ArrayList<>();
@@ -115,13 +115,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private ArrayList<String> delWorkPlacesIds = new ArrayList<>();
     private ArrayList<String> delBranchesIds = new ArrayList<>();
     private ArrayList<String> delLessonIds = new ArrayList<>();
+    private ArrayList<String> delSupervisionIds = new ArrayList<>();
     private ArrayList<EmployeeOrder> delOrderIds = new ArrayList<>();
     private SimpleFileDownloader downloader = null;
+    private boolean isMyProfile;
 
-    public EmployeeDefinitionView(final MyVaadinUI myUI) {
+    public EmployeeDefinitionView(final MyVaadinUI myUI, boolean isMyProfile) {
         this.myUI = myUI;
+        this.isMyProfile = isMyProfile;
 
-        if (!currentUser.hasRole(Settings.rnAdmin) && !currentUser.hasRole(Settings.rnHr)) {
+        if (isMyProfile) {
             emplID = myUI.getUser().getId();
         }
         buildButtonsLayout();
@@ -220,16 +223,33 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         tabs.addStyleName(ValoTheme.TABSHEET_FRAMED);
         tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
         tabs.addTab(empSearchLay).setCaption(myUI.getMessage(SptMessages.Search));
-        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabSearch)) {
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabSearch) || isMyProfile) {
             tabs.getTab(empSearchLay).setVisible(false);
         }
         tabs.addTab(contactInfoLay).setCaption(myUI.getMessage(SptMessages.ContactInfo));
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContacts) && !isMyProfile) {
+            tabs.getTab(contactInfoLay).setVisible(false);
+        }
         tabs.addTab(profInfoLay).setCaption(myUI.getMessage(SptMessages.ProfInfo));
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabProfInfo) && !isMyProfile) {
+            tabs.getTab(profInfoLay).setVisible(false);
+        }
         tabs.addTab(achievementsInfoLay).setCaption(myUI.getMessage(SptMessages.Achievements));
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabAchievements) && !isMyProfile) {
+            tabs.getTab(achievementsInfoLay).setVisible(false);
+        }
         tabs.addTab(familyInfoLay).setCaption(myUI.getMessage(SptMessages.FamilyInfo));
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabFamilyInfo) && !isMyProfile) {
+            tabs.getTab(familyInfoLay).setVisible(false);
+        }
         tabs.addTab(extraInfoLay).setCaption(myUI.getMessage(SptMessages.ExtraInfo));
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabExtraInfo) && !isMyProfile) {
+            tabs.getTab(extraInfoLay).setVisible(false);
+        }
         tabs.addTab(schoolInfoLay).setCaption(myUI.getMessage(SptMessages.EduActivitiesInfo));
-        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabEduActivities)) {
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabEduActivities) ||
+                (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision) &&
+                        !currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons))) {
             tabs.getTab(schoolInfoLay).setVisible(false);
         }
         tabs.addTab(permissionsLay).setCaption(myUI.getMessage(SptMessages.Permissions));
@@ -241,57 +261,62 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             tabs.getTab(ordersInfoLay).setVisible(false);
         }
         tabs.addTab(documentsLay).setCaption(myUI.getMessage(SptMessages.Documents));
+
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabDocuments)) {
+            tabs.getTab(documentsLay).setVisible(false);
+        }
         tabs.addSelectedTabChangeListener(
-                new TabSheet.SelectedTabChangeListener() {
-                    public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
-                        prepareNormalMode();
-                        if (event.getTabSheet().getSelectedTab() == contactInfoLay
-                                && emplID != 0) {
-                            setPhonesTable();
-                            setContactFields();
-                        } else if (event.getTabSheet().getSelectedTab() == familyInfoLay
-                                && emplID != 0) {
-                            setChildrenTable();
-                            setEducationTable(spouseEducationTable, spouseEducationCont, 2);
-                            setWorkTable(spouseWorkPlacesTable, 2);
-                            setSpouseFields();
-                        } else if (event.getTabSheet().getSelectedTab() == extraInfoLay
-                                && emplID != 0) {
-                            setQuestioningTable();
-                            setExtraInfoFields();
-                        } else if (event.getTabSheet().getSelectedTab() == achievementsInfoLay
-                                && emplID != 0) {
-                            setLanguagesTable();
-                            setCertificatesTable();
-                            setSeminarsTable();
-                            setExamsTable();
-                        } else if (event.getTabSheet().getSelectedTab() == profInfoLay
-                                && emplID != 0) {
-                            setEducationTable(educationTable, educationCont, 1);
-                            setWorkTable(workPlacesTable, 1);
-                            setBranchesTable();
-                            setGradSchoolFields();
-                        } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay && emplID != 0) {
+                (TabSheet.SelectedTabChangeListener) event -> {
+                    prepareNormalMode();
+                    if (event.getTabSheet().getSelectedTab() == contactInfoLay
+                            && emplID != 0) {
+                        setPhonesTable();
+                        setContactFields();
+                    } else if (event.getTabSheet().getSelectedTab() == familyInfoLay
+                            && emplID != 0) {
+                        setChildrenTable();
+                        setEducationTable(spouseEducationTable, spouseEducationCont, 2);
+                        setWorkTable(spouseWorkPlacesTable, 2);
+                        setSpouseFields();
+                    } else if (event.getTabSheet().getSelectedTab() == extraInfoLay
+                            && emplID != 0) {
+                        setQuestioningTable();
+                        setExtraInfoFields();
+                    } else if (event.getTabSheet().getSelectedTab() == achievementsInfoLay
+                            && emplID != 0) {
+                        setLanguagesTable();
+                        setCertificatesTable();
+                        setSeminarsTable();
+                        setExamsTable();
+                    } else if (event.getTabSheet().getSelectedTab() == profInfoLay
+                            && emplID != 0) {
+                        setEducationTable(educationTable, educationCont, 1);
+                        setWorkTable(workPlacesTable, 1);
+                        setBranchesTable();
+                        setGradSchoolFields();
+                    } else if (event.getTabSheet().getSelectedTab() == schoolInfoLay && emplID != 0) {
+                        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
                             canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
                                     emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
-                            if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
-                                setLessonsTable();
-                            }
-                        } else if (event.getTabSheet().getSelectedTab() == permissionsLay && emplID != 0) {
-                            if (employeesDataTable.getContainerDataSource().
-                                    getContainerProperty(emplID, myUI.getMessage(
-                                            SptMessages.Permissions)).getValue() != null) {
-                                setPermTable_options(employeesDataTable.getContainerDataSource().
-                                        getContainerProperty(emplID, myUI.getMessage(
-                                                SptMessages.Permissions)).getValue().toString());
-                            } else {
-                                clearPermissionsTable();
-                            }
-                        } else if (event.getTabSheet().getSelectedTab() == ordersInfoLay && emplID != 0) {
-                            setOrdersTable();
-                        } else if (event.getTabSheet().getSelectedTab() == documentsLay && emplID != 0) {
-                            setDocumentsTable();
+                            setSupervisionTable();
                         }
+                        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
+                            setLessonsTable();
+                        }
+                    } else if (event.getTabSheet().getSelectedTab() == permissionsLay && emplID != 0) {
+                        if (employeesDataTable.getContainerDataSource().
+                                getContainerProperty(emplID, myUI.getMessage(
+                                        SptMessages.Permissions)).getValue() != null) {
+                            setPermTable_options(employeesDataTable.getContainerDataSource().
+                                    getContainerProperty(emplID, myUI.getMessage(
+                                            SptMessages.Permissions)).getValue().toString());
+                        } else {
+                            clearPermissionsTable();
+                        }
+                    } else if (event.getTabSheet().getSelectedTab() == ordersInfoLay && emplID != 0) {
+                        setOrdersTable();
+                    } else if (event.getTabSheet().getSelectedTab() == documentsLay && emplID != 0) {
+                        setDocumentsTable();
                     }
                 });
         VerticalLayout vl = new VerticalLayout();
@@ -839,11 +864,43 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private void buildSchoolInfoLayout() {
 
-        canBeAdvisorCkb = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
-        canBeAdvisorCkb.setWidth(Settings.PERCENTS100);
-        HorizontalLayout hl = new HorizontalLayout();
+        HorizontalLayout hlSupervision = null;
+        HorizontalLayout hlLessons = null;
+
+        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
+            hlSupervision = new HorizontalLayout();
+            hlSupervision.setWidth(Settings.PERCENTS100);
+
+            Label captionSupervision = new Label();
+            captionSupervision.setSizeFull();
+            captionSupervision.setContentMode(ContentMode.HTML);
+            captionSupervision.setValue(myUI.getMessage(SptMessages.Supervision));
+            captionSupervision.setStyleName("tableCpt");
+
+            canBeAdvisorCkb = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
+            canBeAdvisorCkb.addValueChangeListener(this);
+
+            plusSupervisionButton = new Button(myUI.getMessage(SptMessages.AddRecord));
+            plusSupervisionButton.setStyleName(ValoTheme.BUTTON_SMALL);
+            plusSupervisionButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+            plusSupervisionButton.setIcon(FontAwesome.PLUS_SQUARE);
+            plusSupervisionButton.addClickListener(this);
+
+            hlSupervision.setSpacing(true);
+            hlSupervision.addComponent(captionSupervision);
+            hlSupervision.addComponent(plusSupervisionButton);
+            hlSupervision.addComponent(canBeAdvisorCkb);
+            hlSupervision.setComponentAlignment(canBeAdvisorCkb, Alignment.BOTTOM_RIGHT);
+            hlSupervision.setExpandRatio(captionSupervision, 1);
+
+            supervisionTable = new FormattedTable();
+            supervisionTable.setSizeFull();
+            supervisionTable.setStyleName(ValoTheme.TABLE_SMALL);
+        }
+
         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
-            hl.setWidth(Settings.PERCENTS100);
+            hlLessons = new HorizontalLayout();
+            hlLessons.setWidth(Settings.PERCENTS100);
 
             Label captionLessons = new Label();
             captionLessons.setSizeFull();
@@ -857,22 +914,26 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             plusLessonsButton.setIcon(FontAwesome.PLUS_SQUARE);
             plusLessonsButton.addClickListener(this);
 
-            hl.addComponent(captionLessons);
-            hl.setSpacing(true);
-            hl.addComponent(plusLessonsButton);
-            hl.setExpandRatio(captionLessons, 1);
+            hlLessons.setSpacing(true);
+            hlLessons.addComponent(captionLessons);
+            hlLessons.addComponent(plusLessonsButton);
+            hlLessons.setExpandRatio(captionLessons, 1);
 
             lessonsTable = new FormattedTable();
             lessonsTable.setSizeFull();
             lessonsTable.setStyleName(ValoTheme.TABLE_SMALL);
         }
         schoolInfoLay = new VerticalLayout();
-        schoolInfoLay.setSizeFull();
+        schoolInfoLay.setWidth(Settings.PERCENTS100);
         schoolInfoLay.setSpacing(true);
         schoolInfoLay.setMargin(true);
-        schoolInfoLay.addComponent(canBeAdvisorCkb);
+        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
+            schoolInfoLay.addComponent(hlSupervision);
+            schoolInfoLay.addComponent(supervisionTable);
+            schoolInfoLay.setExpandRatio(supervisionTable, 1);
+        }
         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
-            schoolInfoLay.addComponent(hl);
+            schoolInfoLay.addComponent(hlLessons);
             schoolInfoLay.addComponent(lessonsTable);
             schoolInfoLay.setExpandRatio(lessonsTable, 1);
         }
@@ -1369,7 +1430,35 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     dbel.execSQL(myUI, emplID, myUI.getUser().getSchool_id(), this));
             dbel.close();
             lessonsTable.setVisibleColumns(NATURAL_COL_ORDER_LESSONS);
+            lessonsTable.setPageLength(lessonsCont.size() > 0 ? lessonsTable.size() : 1);
             lessonsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Lessons), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+    }
+
+    private void setSupervisionTable() {
+        try {
+            NATURAL_COL_ORDER_SUPERVISION = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.ClassName),
+                    myUI.getMessage(SptMessages.FromDate),
+                    myUI.getMessage(SptMessages.TillDate),
+                    myUI.getMessage(SptMessages.Note)};
+            DbEmployeeOrder dbeo = new DbEmployeeOrder();
+            dbeo.connect();
+            supervisionTable.setContainerDataSource(dbeo.execSQL(myUI, emplID, myUI.getUser().getSchool_id(), this));
+            dbeo.close();
+            supervisionTable.setVisibleColumns(NATURAL_COL_ORDER_SUPERVISION);
+            supervisionTable.setPageLength(supervisionTable.size() > 0 ? supervisionTable.size() : 1);
+            supervisionTable.setColumnExpandRatio(myUI.getMessage(SptMessages.ClassName), 1);
+            supervisionTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
+            if (supervisionTable.size() > 0) {
+                canBeAdvisorCkb.setEnabled(false);
+            } else {
+                supervisionTable.setEnabled(false);
+                plusSupervisionButton.setEnabled(false);
+            }
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -1632,13 +1721,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         try {
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
-            int id = 0;
-            if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmMenu)) {
-                id = emplID;
-            }
             employeesDataTable.setContainerDataSource(
                     dbe.execSQL(myUI, myUI.getUser().getSchool_id(), edu_st_ids, workingStatCont, currentUser.hasRole(Settings.rnAdmin),
-                            currentUser.hasRole(Settings.rnHr), id));
+                            currentUser.hasRole(Settings.rnHr), (isMyProfile ? emplID : 0)));
             dbe.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -1912,6 +1997,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
+        if (isMyProfile) {
+            createBtn.setVisible(false);
+            deleteBtn.setVisible(false);
+        }
 
         saveBtn = new Button();
         saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
@@ -2338,6 +2427,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         noExamsCkb.setEnabled(true);
     }
 
+    private void clearSchoolFields() {
+        lessonsTable.removeAllItems();
+        supervisionTable.removeAllItems();
+        canBeAdvisorCkb.setEnabled(true);
+    }
+
     private void clearProfFields() {
         noBranchesCkb.setEnabled(true);
         educationTable.removeAllItems();
@@ -2417,9 +2512,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             setBranchesTable();
             setGradSchoolFields();
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
-            setLessonsTable();
-            canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
-                    emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
+            if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
+                canBeAdvisorCkb.setValue((Boolean) employeesDataTable.getContainerProperty(
+                        emplID, myUI.getMessage(SptMessages.CanBeAdvisor)).getValue());
+                setSupervisionTable();
+            }
+            if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
+                setLessonsTable();
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(permissionsLay).getComponent()) {
             if (employeesDataTable != null && employeesDataTable.getContainerDataSource().
                     getContainerProperty(emplID, myUI.getMessage(
@@ -2449,7 +2549,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             questioningTable.removeAllItems();
             clearAchievementsFields();
             clearProfFields();
-            lessonsTable.removeAllItems();
+            clearSchoolFields();
             ordersTable.removeAllItems();
             prepareModificationMode();
             passwordTF.setRequired(true);
@@ -2517,7 +2617,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             questioningTable.removeAllItems();
             clearAchievementsFields();
             clearProfFields();
-            lessonsTable.removeAllItems();
+            clearSchoolFields();
             ordersTable.removeAllItems();
             if (emplID != 0) {
                 fillFields();
@@ -2536,6 +2636,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             delWorkPlacesIds.clear();
             delBranchesIds.clear();
             delLessonIds.clear();
+            delSupervisionIds.clear();
             delOrderIds.clear();
             fileName = null;
         } else if (source == saveBtn) {
@@ -2720,9 +2821,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     updateInfoLayout();
                                     fileName = null;
                                 } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()) {
-                                    dbe.exec_update(emplID, canBeAdvisorCkb.getValue());
-                                    employeesDataTable.getContainerProperty(emplID,
-                                            myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(canBeAdvisorCkb.getValue());
+                                    if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
+                                        dbe.exec_update(emplID, canBeAdvisorCkb.getValue());
+                                        employeesDataTable.getContainerProperty(emplID,
+                                                myUI.getMessage(SptMessages.CanBeAdvisor)).setValue(canBeAdvisorCkb.getValue());
+                                        insertSupervision(emplID);
+                                        setSupervisionTable();
+                                    }
                                     if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
                                         insertLessons(emplID);
                                         updateInfoLayout();
@@ -2793,7 +2898,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     dbCon.connect();
                                     dbCon.exec_delete_not_referenced(Settings.dbAttachmentsTable);
                                     dbCon.close();
-                                    if (myUI.getUser().getId() == emplID) {
+                                    if (isMyProfile || myUI.getUser().getId() == emplID) {
                                         DbEmployeeCompleteness dbc = new DbEmployeeCompleteness();
                                         dbc.connect();
                                         dbc.exec_update_modification_date(emplID);
@@ -2868,6 +2973,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             addBranchItem();
         } else if (source == plusLessonsButton) {
             addLessonItem();
+        } else if (source == plusSupervisionButton) {
+            addSupervisionItem();
         } else if (source == plusOrdersButton) {
             Object last_id = ((IndexedContainer) ordersTable.getContainerDataSource()).lastItemId();
             if (!(ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
@@ -2972,6 +3079,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeBranchHours)) {
             delLessonIds.add(source.getData().toString());
             lessonsTable.removeItem(event.getButton().getData().toString());
+        } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeOrder)) {
+            delSupervisionIds.add(source.getData().toString());
+            supervisionTable.removeItem(event.getButton().getData().toString());
+            if (supervisionTable.size() == 0) {
+                canBeAdvisorCkb.setEnabled(true);
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(ordersInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeOrder)) {
             EmployeeOrder eo = new EmployeeOrder();
             eo.setIdStr(source.getData().toString());
@@ -3639,6 +3752,62 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
     }
 
+    private void insertSupervision(int employee_id) {
+        try {
+            DbEmployeeOrder dbeo = new DbEmployeeOrder();
+            dbeo.connect();
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            if (delSupervisionIds.size() > 0) {
+                for (int i = 0; i < delSupervisionIds.size(); i++) {
+                    dbd.exec_delete(delSupervisionIds.get(i), Settings.dbEmployeeOrder);
+                }
+            }
+            if (supervisionTable.getContainerDataSource().size() > 0) {
+                Iterator iter = supervisionTable.getItemIds().iterator();
+                while (iter.hasNext()) {
+                    Object next = iter.next();
+                    EmployeeOrder eo = new EmployeeOrder();
+                    eo.setEmployee_id(employee_id);
+                    eo.setOrder_id(3);
+                    eo.setSchool_id(myUI.getUser().getSchool_id());
+                    eo.setPosition_id((Integer) employeesDataTable.getContainerProperty(employee_id, Settings.position_id).getValue());
+                    eo.setClass_name_id((Integer) ((ComboBox) supervisionTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.ClassName)).getValue()).getValue());
+                    eo.setFrom_date(((DateField) supervisionTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.FromDate)).getValue()).getValue());
+                    if (((DateField) supervisionTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.TillDate)).getValue()).getValue() != null) {
+                        eo.setTo_date(((DateField) supervisionTable.getItem(next).getItemProperty(
+                                myUI.getMessage(SptMessages.TillDate)).getValue()).getValue());
+                    }
+                    if (((TextField) supervisionTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Note)).getValue()).getValue() != null
+                            && !((TextField) supervisionTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Note)).getValue()).getValue().equals("")) {
+                        eo.setNote(((TextField) supervisionTable.getItem(next).getItemProperty(
+                                myUI.getMessage(SptMessages.Note)).getValue()).getValue());
+                    }
+                    eo.setM_employee_id(myUI.getUser().getId());
+                    if (supervisionTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                            .equals(myUI.getMessage(SptMessages.Update))) {
+                        eo.setId(Integer.parseInt(next.toString()));
+                        dbeo.exec_update(eo);
+                    } else if (supervisionTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                            .equals(myUI.getMessage(SptMessages.Insert))) {
+                        dbeo.exec_insert(eo);
+                    }
+                }
+            }
+            delSupervisionIds.clear();
+            dbeo.close();
+            dbd.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+    }
+
     private void insertOrders(int employee_id) {
         try {
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
@@ -4244,7 +4413,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void addLessonItem() {
-
         NATURAL_COL_ORDER_LESSONS = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.Lesson),
                 myUI.getMessage(SptMessages.ClassName),
@@ -4276,7 +4444,48 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         lessonsTable.setVisibleColumns(NATURAL_COL_ORDER_LESSONS);
+        lessonsTable.setPageLength(lessonsTable.size());
+    }
 
+    private void addSupervisionItem() {
+        canBeAdvisorCkb.setEnabled(false);
+        NATURAL_COL_ORDER_SUPERVISION = new String[]{Settings.button,
+                myUI.getMessage(SptMessages.ClassName),
+                myUI.getMessage(SptMessages.FromDate),
+                myUI.getMessage(SptMessages.TillDate),
+                myUI.getMessage(SptMessages.Note)};
+        String id = Settings.FreshItem + (--r_table_counter);
+        if (supervisionTable.getContainerDataSource().size() == 0) {
+            supervisionTable.setContainerDataSource(prepareSupervisionContainer());
+        }
+        Item item = ((IndexedContainer) supervisionTable.getContainerDataSource()).addItemAt(
+                supervisionTable.getContainerDataSource().size(), id);
+        item.getItemProperty(Settings.button).setValue(createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
+        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ClassName), null, true);
+        item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(cb);
+        try {
+            DbClassName dbcn = new DbClassName();
+            dbcn.connect();
+            cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            dbcn.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        DateField df = createDateField(new Date(), myUI.getMessage(SptMessages.FromDate), null, true,
+                Settings.datePattern, Resolution.DAY);
+        df.setRangeEnd(new Date());
+        item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
+        df = createDateField(null, myUI.getMessage(SptMessages.TillDate), null,
+                false, Settings.datePattern, Resolution.DAY);
+        item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
+        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
+                createTextfield(null, myUI.getMessage(SptMessages.Note),
+                        new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        supervisionTable.setVisibleColumns(NATURAL_COL_ORDER_SUPERVISION);
+        supervisionTable.setPageLength(supervisionTable.size());
     }
 
     private void addOrderItem() {
@@ -4622,6 +4831,25 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             lessonsCont.removeAllItems();
         }
         return lessonsCont;
+    }
+
+    public IndexedContainer prepareSupervisionContainer() {
+        if (supervisionCont == null) {
+            supervisionCont = new IndexedContainer();
+            supervisionCont.addContainerProperty(Settings.button, Button.class, null);
+            supervisionCont.addContainerProperty(
+                    myUI.getMessage(SptMessages.ClassName), ComboBox.class, null);
+            supervisionCont.addContainerProperty(
+                    myUI.getMessage(SptMessages.FromDate), DateField.class, null);
+            supervisionCont.addContainerProperty(
+                    myUI.getMessage(SptMessages.TillDate), DateField.class, null);
+            supervisionCont.addContainerProperty(
+                    myUI.getMessage(SptMessages.Note), TextField.class, null);
+            supervisionCont.addContainerProperty(Settings.crud_status, String.class, null);
+        } else {
+            supervisionCont.removeAllItems();
+        }
+        return supervisionCont;
     }
 
     public IndexedContainer prepareOrdersContainer() {
@@ -4971,7 +5199,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 questioningTable.removeAllItems();
                 clearAchievementsFields();
                 clearProfFields();
-                lessonsTable.removeAllItems();
+                clearSchoolFields();
                 ordersTable.removeAllItems();
                 workingStatCont.getContainerProperty((Integer) employeesDataTable
                                 .getContainerProperty(emplID,
@@ -5000,6 +5228,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             } else {
                 photoUpl.setEnabled(false);
             }
+        } else if (property == canBeAdvisorCkb) {
+            supervisionTable.setEnabled(canBeAdvisorCkb.getValue());
+            plusSupervisionButton.setEnabled(canBeAdvisorCkb.getValue());
         } else if (property == noPhonesCkb) {
             phonesTable.setEnabled(!noPhonesCkb.getValue());
             plusPhonesButton.setEnabled(!noPhonesCkb.getValue());
@@ -5052,7 +5283,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             if (employeesDataTable.getItem(employeesDataTable.getValue()) != null) {
                 emplID = (Integer) employeesDataTable.getValue();
                 fillFields();
-                if (emplID == myUI.getUser().getId()) {
+                if (isMyProfile) {
                     modifyBtn.setEnabled(true);
                     cvBtn.setEnabled(true);
                 } else if (!(Boolean) employeesDataTable.getContainerProperty(

@@ -202,14 +202,12 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         menubar.setAutoOpen(true);
 
         MenuBar.MenuItem mi;
-
         if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(SptMessages.HomePage), menuCommand);
         }
+        menubar.addItem(myUI.getMessage(SptMessages.MyInfo), menuCommand);
         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(SptMessages.EmployeeDefinition), menuCommand);
-        } else {
-            menubar.addItem(myUI.getMessage(SptMessages.MyInfo), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(SptMessages.StudentDefinition), menuCommand);
@@ -220,10 +218,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(SptMessages.Reports), menuCommand);
-        }
-
-        if (currentUser.isPermitted(Settings.cnSendOrderView + ":" + Settings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.SendOrders), menuCommand);
         }
 
         mi = menubar.addItem(myUI.getMessage(SptMessages.Salaries), null);
@@ -375,6 +369,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             mi.addItem(myUI.getMessage(SptMessages.BranchDefinition), menuCommand);
             mi.addItem(myUI.getMessage(SptMessages.LanguageDefinition), menuCommand);
             mi.addItem(myUI.getMessage(SptMessages.ExamDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(SptMessages.CertificateDefinition), menuCommand);
             mi.addItem(myUI.getMessage(SptMessages.UniversityDefinition), menuCommand);
             mi.addItem(myUI.getMessage(SptMessages.WorkPlacesDefinition), menuCommand);
             mi.addItem(myUI.getMessage(SptMessages.QuestionDefinition), menuCommand);
@@ -399,6 +394,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
+
+        if (currentUser.isPermitted(Settings.cnSendOrderView + ":" + Settings.prmMenu)) {
+            menubar.addItem(myUI.getMessage(SptMessages.SendOrders), menuCommand);
+        }
         return menubar;
 
     }
@@ -412,23 +411,28 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 String eventPressed = selectedItem.getText();
                 if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNumberDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.classTable, false, Settings.cnDefinitionView));
+                            myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.YearDefinition))) {
                     verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.LanguageDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbLanguageTable, false, Settings.cnHRDefinitionView));
+                            myUI, Settings.dbLanguageTable, null, null, false, Settings.cnHRDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExamDefinition))) {
                     verticalPanel.setSecondComponent(new ExamDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.UniversityDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbUniversityTable, false, Settings.cnHRDefinitionView));
+                            myUI, Settings.dbUniversityTable, Settings.dbEmployeeEducation, Settings.dbColumnUniversityId,
+                            false, Settings.cnHRDefinitionView));
+                }else if (eventPressed.equals(myUI.getMessage(SptMessages.CertificateDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbCertificateTable, Settings.dbEmployeeCertificate, Settings.dbColumnCertificateId,
+                            false, Settings.cnHRDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.WorkPlacesDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbWork_placeTable, false, Settings.cnHRDefinitionView));
+                            myUI, Settings.dbWork_placeTable, Settings.dbEmployeeWork, Settings.dbColumnEmployeeWorkId, false, Settings.cnHRDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.QuestionDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbQuestion, true, Settings.cnHRDefinitionView));
+                            myUI, Settings.dbQuestion, null, null, true, Settings.cnHRDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeTransfer))) {
                     verticalPanel.setSecondComponent(new EmployeeTransferView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.LessonAssessment))) {
@@ -437,7 +441,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new BranchDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryCategoryDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbInventoryCategoryTable, false, Settings.cnInventoryDefinitionView));
+                            myUI, Settings.dbInventoryCategoryTable, null, null, false, Settings.cnInventoryDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNameDefinition))) {
                     verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.BlockDefinition))) {
@@ -456,9 +460,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new ContractDefintionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolDefinition))) {
                     verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeDefinition))
-                        || eventPressed.equals(myUI.getMessage(SptMessages.MyInfo))) {
-                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeDefinition))) {
+                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.MyInfo))) {
+                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolModification))) {
                     verticalPanel.setSecondComponent(new SchoolModificationView(
                             myUI, myUI.getUser().getSchool_id()));
@@ -633,14 +638,14 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ClassNumberDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DefinitionView(
-                        myUI, Settings.classTable, false, Settings.cnDefinitionView));
+                        myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.YearDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.BranchDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DefinitionView(
-                        myUI, Settings.dbBranchTable, true, Settings.cnHRDefinitionView));
+                        myUI, Settings.dbBranchTable, null, null, true, Settings.cnHRDefinitionView));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ClassNameDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
@@ -668,11 +673,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.SchoolDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.EmployeeDefinition)).toUpperCase())
-                    || header.getValue().equals((myUI.getMessage(
-                    SptMessages.MyInfo)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI));
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.EmployeeDefinition)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.MyInfo)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.SchoolModification)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SchoolModificationView(

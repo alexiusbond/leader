@@ -175,6 +175,8 @@ public class Settings implements Serializable {
     public static final String dbEmployeePhoneNumber = "hr_employee_phone_number";
     public static final String dbEmployeeChildren = "hr_employee_children";
     public static final String dbEmployeeEducation = "hr_employee_education";
+    public static final String dbColumnUniversityId = "hr_university_id";
+    public static final String dbColumnCertificateId = "certificate_id";
     public static final String dbEmployeeLanguage = "hr_employee_language";
     public static final String dbEmployeeExams = "hr_employee_exam";
     public static final String dbEmployeeBranch = "hr_employee_branch";
@@ -183,6 +185,7 @@ public class Settings implements Serializable {
     public static final String dbEmployeeSeminar = "hr_employee_seminar";
     public static final String dbEmployeeCertificate = "hr_employee_certificate";
     public static final String dbEmployeeWork = "hr_employee_work";
+    public static final String dbColumnEmployeeWorkId = "hr_work_place_id";
     public static final String dbEmployeeQuestion = "hr_employee_question";
     public static final String dbPhoneType = "hr_phone_type";
     public static final String dbHrEducationStatus = "hr_education_status";
@@ -266,7 +269,7 @@ public class Settings implements Serializable {
     public static final String prmMenu = "показ в меню";
     public static final String prmContractVisible = "видимость контракта";
     public static final String prmOrganizeLessons = "организация уроков";
-    public static final String prmOrganizeAdvisors = "назначение кураторства";
+    public static final String prmOrganizeSupervision = "назначение кураторства";
     public static final String actCopy = "копирование";
     public static final String prmPlanPayments = "план оплат и оплаты";
     public static final String prmClassPayments = "оплаты по классам";
@@ -293,6 +296,12 @@ public class Settings implements Serializable {
     public static final String prmTabEduActivities = "вкладка образовательной деятельности";
     public static final String prmTabOrders = "вкладка приказов";
     public static final String prmTabSearch = "вкладка поиска";
+    public static final String prmTabContacts = "вкладка контактной информации";
+    public static final String prmTabProfInfo = "вкладка профессиональной информации";
+    public static final String prmTabAchievements = "вкладка достижений";
+    public static final String prmTabFamilyInfo = "вкладка информации о семье";
+    public static final String prmTabExtraInfo = "вкладка доп. информации";
+    public static final String prmTabDocuments = "вкладка документов";
     public static final String prmChangeYear = "ChangeYear";
     public static final String prmChangeSchool = "ChangeSchool";
     public static final String prmProductMovementsReport = "отчет по передвижениям товара";

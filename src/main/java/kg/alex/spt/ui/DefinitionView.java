@@ -1,5 +1,6 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.ui.*;
 import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
@@ -10,20 +11,11 @@ import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
+
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Iterator;
+
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
@@ -34,18 +26,20 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.hene.popupbutton.PopupButton;
 
 public class DefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(DefinitionView.class);
     private MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, replaceSaveBtn;
+    private PopupButton replaceBtn;
     private Table dataTable;
     private TextField nameTF;
-    private ComboBoxMax statusSelect;
+    private ComboBoxMax statusSelect, replaceItemSelect;
     private boolean withActivityStatus;
-    private String dbTableName;
+    private String dbTableName, dbTableReplaceIn, dbReplaceColumn;
     private boolean isNew;
 
     private String[] NATURAL_COL_ORDER;
@@ -53,14 +47,17 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
     private Subject currentUser = SecurityUtils.getSubject();
     private String permissionView;
 
-    public DefinitionView(MyVaadinUI myUI, String dbTName, boolean withActivityStatus, String permissionView) {
-        this.dbTableName = dbTName;
+    public DefinitionView(MyVaadinUI myUI, String dbTable, String dbTableReplaceIn, String dbReplaceColumn,
+                          boolean withActivityStatus, String permissionView) {
+        this.dbTableName = dbTable;
+        this.dbTableReplaceIn = dbTableReplaceIn;
+        this.dbReplaceColumn = dbReplaceColumn;
         this.myUI = myUI;
         this.permissionView = permissionView;
         this.withActivityStatus = withActivityStatus;
         if (this.withActivityStatus) {
             NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
-                myUI.getMessage(SptMessages.Status)};
+                    myUI.getMessage(SptMessages.Status)};
         } else {
             NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title)};
         }
@@ -148,11 +145,55 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
 
+        VerticalLayout replaceLay = new VerticalLayout();
+        replaceLay.setMargin(true);
+        replaceLay.setSpacing(true);
+
+        replaceItemSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ElementForReplacement));
+        replaceItemSelect.setNullSelectionAllowed(false);
+        replaceItemSelect.setRequired(true);
+        replaceItemSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        replaceItemSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        replaceItemSelect.setWidth(Settings.PERCENTS100);
+        replaceItemSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        replaceItemSelect.setFilteringMode(FilteringMode.CONTAINS);
+
+        try {
+            DbDefinition dbDef = new DbDefinition();
+            dbDef.connect();
+            replaceItemSelect.setContainerDataSource(dbDef.exec_for_select(myUI, dbTableName, true));
+            dbDef.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        replaceLay.addComponent(replaceItemSelect);
+
+        replaceSaveBtn = new Button();
+        replaceSaveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        replaceSaveBtn.setStyleName(ValoTheme.BUTTON_PRIMARY);
+        replaceSaveBtn.setIcon(FontAwesome.FLOPPY_O);
+        replaceSaveBtn.addClickListener(this);
+        replaceLay.addComponent(replaceSaveBtn);
+        replaceLay.setComponentAlignment(replaceSaveBtn, Alignment.MIDDLE_RIGHT);
+
+        replaceBtn = new PopupButton();
+        replaceBtn.setEnabled(false);
+        replaceBtn.setDescription(myUI.getMessage(SptMessages.Replace));
+        replaceBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        replaceBtn.setIcon(FontAwesome.EXCHANGE);
+        replaceBtn.addClickListener(this);
+        replaceBtn.setContent(replaceLay);
+        buttonsLay.addComponent(replaceBtn);
+
+        if (dbTableReplaceIn == null) {
+            replaceBtn.setVisible(false);
+        }
         settingsLay.addComponent(buttonsLay);
 
         nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         if (dbTableName.equals(Settings.classTable)) {
-            nameTF.setPropertyDataSource(new ObjectProperty<Integer>(0));
+            nameTF.setPropertyDataSource(new ObjectProperty<>(0));
             nameTF.setConverter(Settings.getStringToIntegerConverter());
             nameTF.addValidator(new IntegerRangeValidator(
                     myUI.getMessage(SptMessages.NotifWrongValue), 0, null));
@@ -211,14 +252,45 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
+                        }
+                    });
+        } else if (source == replaceBtn) {
+        } else if (source == replaceSaveBtn) {
+            if (dataTable.getValue() != null && replaceItemSelect.getValue() != null
+                    && (int) dataTable.getContainerProperty(dataTable.getValue(),
+                    Settings.id).getValue() != (int) replaceItemSelect.getValue()) {
+                try {
+                    DbDefinition dbCon = new DbDefinition();
+                    dbCon.connect();
+                    dbCon.exec_update(dbTableReplaceIn, dbReplaceColumn, (Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                            Settings.id).getValue(), (Integer) replaceItemSelect.getValue());
+                    int st = dbCon.exec_delete((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                            Settings.id).getValue(), dbTableName);
+                    if (st != 0) {
+                        replaceItemSelect.getContainerDataSource().removeItem(dataTable.getContainerProperty(
+                                dataTable.getValue(), Settings.id).getValue());
+                        dataTable.getContainerDataSource().removeItem(dataTable.getValue());
+                        if (dataTable.getContainerDataSource().size() != 0) {
+                            dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
+                        } else {
+                            clearFields();
+                            dataTable.setValue(null);
+                        }
                     }
+                    dbCon.close();
+                    Notification.show(myUI.getMessage(SptMessages.ValueReplaced),
+                            Notification.Type.HUMANIZED_MESSAGE);
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
-            });
+            } else {
+                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+            }
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
@@ -286,6 +358,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         modifyBtn.setEnabled(false);
         createBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
+        replaceBtn.setEnabled(false);
         saveBtn.setEnabled(true);
         cancelBtn.setEnabled(true);
         dataTable.setEnabled(false);
@@ -305,6 +378,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         if (currentUser.isPermitted(permissionView + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
+        replaceBtn.setEnabled(true);
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         dataTable.setEnabled(true);
@@ -388,6 +462,8 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                 }
             }
             dbDef.close();
+            Notification.show(myUI.getMessage(SptMessages.ValueDeleted),
+                    Notification.Type.HUMANIZED_MESSAGE);
         } catch (SQLIntegrityConstraintViolationException e) {
             Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);

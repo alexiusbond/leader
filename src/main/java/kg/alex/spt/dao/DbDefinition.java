@@ -251,6 +251,15 @@ public class DbDefinition extends BaseDb {
         return status;
     }
 
+    public int exec_update(String dbTableName, String dbColumn, int old_id, int new_id) throws SQLException {
+        String sql = "UPDATE " + dbTableName + " SET " + dbColumn + " = ? WHERE " + dbColumn + " = ? ";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, new_id);
+        stat.setInt(2, old_id);
+        int status = stat.executeUpdate();
+        return status;
+    }
+
     public int exec_update_emp_id(int id, int emp_id, String dbTableName) throws SQLException {
         String sql = "UPDATE " + dbTableName + " SET employee_id=? "
                 + "WHERE id=?";
