@@ -2428,9 +2428,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void clearSchoolFields() {
-        lessonsTable.removeAllItems();
-        supervisionTable.removeAllItems();
-        canBeAdvisorCkb.setEnabled(true);
+        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeLessons)) {
+            lessonsTable.removeAllItems();
+        }
+        if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
+            supervisionTable.removeAllItems();
+            canBeAdvisorCkb.setEnabled(true);
+        }
     }
 
     private void clearProfFields() {
@@ -2677,7 +2681,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent()
                             && currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":"
-                            + Settings.prmOrganizeLessons) && !validateTable(lessonsTable, true, false)) {
+                            + Settings.prmOrganizeLessons) && !validateTable(lessonsTable, !canBeAdvisorCkb.getValue(), false)) {
                         Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(ordersInfoLay).getComponent()

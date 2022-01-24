@@ -224,7 +224,7 @@ public class MyVaadinUI extends UI {
                 logger.catching(e);
             }
         }
-        return nbkr_currency_rate;
+        return Double.valueOf(Settings.dFormat.format(nbkr_currency_rate));
     }
 
     public double getDb_currency_rate() {
