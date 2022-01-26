@@ -1207,10 +1207,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     && (Double) tfRate.getPropertyDataSource().getValue() != 0.0 && (Double) tfKGS.getPropertyDataSource().getValue() != 0.0) {
                 tfAmount.getPropertyDataSource().setValue((Double) tfKGS.getPropertyDataSource().getValue() /
                         (Double) tfRate.getPropertyDataSource().getValue());
-                System.out.println((Double) tfKGS.getPropertyDataSource().getValue());
-                System.out.println((Double) tfRate.getPropertyDataSource().getValue());
-                System.out.println((Double) tfKGS.getPropertyDataSource().getValue() /
-                        (Double) tfRate.getPropertyDataSource().getValue());
                 tfKGS.getPropertyDataSource().setValue(0.0);
             }
         } else if (property == contLangOG && contLangOG.getValue() != null) {

@@ -724,7 +724,7 @@ public class DbEmployee extends BaseDb {
             sql += "AND p2.id IN (" + params.get(myUI.getMessage(SptMessages.ExtraPositions)) + ") ";
         }
         if (params.get(myUI.getMessage(SptMessages.Education)) != null) {
-            sql += "AND edu.id IN (" + params.get(myUI.getMessage(SptMessages.Education)) + ") ";
+            sql += "AND uni.id IN (" + params.get(myUI.getMessage(SptMessages.Education)) + ") ";
         }
         if (params.get(myUI.getMessage(SptMessages.WorkPlaces)) != null) {
             sql += "AND wp.id IN (" + params.get(myUI.getMessage(SptMessages.WorkPlaces)) + ") ";

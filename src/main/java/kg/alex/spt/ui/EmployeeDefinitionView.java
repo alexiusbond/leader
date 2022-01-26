@@ -878,7 +878,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             captionSupervision.setStyleName("tableCpt");
 
             canBeAdvisorCkb = new CheckBox(myUI.getMessage(SptMessages.CanBeAdvisor));
-            canBeAdvisorCkb.addValueChangeListener(this);
 
             plusSupervisionButton = new Button(myUI.getMessage(SptMessages.AddRecord));
             plusSupervisionButton.setStyleName(ValoTheme.BUTTON_SMALL);
@@ -1453,12 +1452,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             supervisionTable.setPageLength(supervisionTable.size() > 0 ? supervisionTable.size() : 1);
             supervisionTable.setColumnExpandRatio(myUI.getMessage(SptMessages.ClassName), 1);
             supervisionTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
-            if (supervisionTable.size() > 0) {
-                canBeAdvisorCkb.setEnabled(false);
-            } else {
-                supervisionTable.setEnabled(false);
-                plusSupervisionButton.setEnabled(false);
-            }
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -2433,7 +2426,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmOrganizeSupervision)) {
             supervisionTable.removeAllItems();
-            canBeAdvisorCkb.setEnabled(true);
         }
     }
 
@@ -3086,9 +3078,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (tabs.getSelectedTab() == tabs.getTab(schoolInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeOrder)) {
             delSupervisionIds.add(source.getData().toString());
             supervisionTable.removeItem(event.getButton().getData().toString());
-            if (supervisionTable.size() == 0) {
-                canBeAdvisorCkb.setEnabled(true);
-            }
         } else if (tabs.getSelectedTab() == tabs.getTab(ordersInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeOrder)) {
             EmployeeOrder eo = new EmployeeOrder();
             eo.setIdStr(source.getData().toString());
@@ -4452,7 +4441,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void addSupervisionItem() {
-        canBeAdvisorCkb.setEnabled(false);
         NATURAL_COL_ORDER_SUPERVISION = new String[]{Settings.button,
                 myUI.getMessage(SptMessages.ClassName),
                 myUI.getMessage(SptMessages.FromDate),
@@ -5232,9 +5220,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             } else {
                 photoUpl.setEnabled(false);
             }
-        } else if (property == canBeAdvisorCkb) {
-            supervisionTable.setEnabled(canBeAdvisorCkb.getValue());
-            plusSupervisionButton.setEnabled(canBeAdvisorCkb.getValue());
         } else if (property == noPhonesCkb) {
             phonesTable.setEnabled(!noPhonesCkb.getValue());
             plusPhonesButton.setEnabled(!noPhonesCkb.getValue());
