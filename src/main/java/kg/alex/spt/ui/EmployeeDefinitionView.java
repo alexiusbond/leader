@@ -2585,6 +2585,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     logger.error(ex);
                     ex.printStackTrace();
                 }
+                try {
+                    DbEmployeeWork dbCon = new DbEmployeeWork();
+                    dbCon.connect();
+                    employeeExtraInfo.setWorkExperience(dbCon.execSQL_work_experience(emplID, 1, false));
+                    employeeExtraInfo.setWorkExperienceSapat(dbCon.execSQL_work_experience(emplID, 1, true));
+                    dbCon.close();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    ex.printStackTrace();
+                }
 
                 employeeExtraInfo.setMainPosition(item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
                 if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).getValue() != null) {
@@ -2602,7 +2612,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue());
                 employeeExtraInfo.setCanBeAdvisor((Boolean) item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).getValue() ?
                         myUI.getMessage(SptMessages.Yes) : myUI.getMessage(SptMessages.No));
-                myUI.addWindow(new CvWindow(myUI, employee, employeeExtraInfo, myUI.getUser().getCurrent_year().getName()));
+                myUI.addWindow(new EmployeeCvWindow(myUI, employee, employeeExtraInfo, myUI.getUser().getCurrent_year().getName()));
             }
         } else if (source == cancelBtn) {
             clearEmployeeFields(false);

@@ -17,15 +17,12 @@ import com.vaadin.ui.themes.ValoTheme;
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbEmployee;
-import kg.alex.spt.dao.DbEmployeeExtraInfo;
-import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeeExtraInfo;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.ui.CvWindow;
+import kg.alex.spt.ui.EmployeeCvWindow;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import org.apache.logging.log4j.LogManager;
@@ -539,6 +536,16 @@ public class HRGeneralReport implements Button.ClickListener,
                 logger.error(ex);
                 ex.printStackTrace();
             }
+            try {
+                DbEmployeeWork dbCon = new DbEmployeeWork();
+                dbCon.connect();
+                employeeExtraInfo.setWorkExperience(dbCon.execSQL_work_experience(emp_id, 1, false));
+                employeeExtraInfo.setWorkExperienceSapat(dbCon.execSQL_work_experience(emp_id, 1, true));
+                dbCon.close();
+            } catch (Exception ex) {
+                logger.error(ex);
+                ex.printStackTrace();
+            }
 
             employeeExtraInfo.setMainPosition(item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
             if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue() != null) {
@@ -555,7 +562,7 @@ public class HRGeneralReport implements Button.ClickListener,
             employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue());
             employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue());
             employeeExtraInfo.setCanBeAdvisor(item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).getValue().toString());
-            myUI.addWindow(new CvWindow(myUI, employee, employeeExtraInfo, yearSelect.getItemCaption(yearSelect.getValue())));
+            myUI.addWindow(new EmployeeCvWindow(myUI, employee, employeeExtraInfo, yearSelect.getItemCaption(yearSelect.getValue())));
         }
     }
 

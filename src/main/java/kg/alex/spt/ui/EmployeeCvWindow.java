@@ -23,12 +23,12 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CvWindow extends Window {
-    static final Logger logger = LogManager.getLogger(CvWindow.class);
+public class EmployeeCvWindow extends Window {
+    static final Logger logger = LogManager.getLogger(EmployeeCvWindow.class);
     private MyVaadinUI myUI;
     public Subject currentUser = SecurityUtils.getSubject();
 
-    public CvWindow(MyVaadinUI myUI, Employee employee, EmployeeExtraInfo employeeExtraInfo, String year) {
+    public EmployeeCvWindow(MyVaadinUI myUI, Employee employee, EmployeeExtraInfo employeeExtraInfo, String year) {
         this.myUI = myUI;
         this.setWidth("90%");
         this.setHeight("90%");
@@ -51,7 +51,7 @@ public class CvWindow extends Window {
         mainLay.addComponent(gl);
 
         int rowNum = 0;
-        GridLayout rightGl = new GridLayout(2, 17);
+        GridLayout rightGl = new GridLayout(2, 19);
         rightGl.setColumnExpandRatio(0, 2);
         rightGl.setColumnExpandRatio(1, 1);
         rightGl.setWidth(Settings.PERCENTS100);
@@ -124,6 +124,14 @@ public class CvWindow extends Window {
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.ExtraPositions) + ": </b>" + employeeExtraInfo.getExtraPositions(), null),
+                0, rowNum, 1, rowNum);
+        rowNum++;
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.TotalWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperience(), null),
+                0, rowNum, 1, rowNum);
+        rowNum++;
+        rightGl.addComponent(createLabel("<b>" +
+                        myUI.getMessage(SptMessages.SapatWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperienceSapat(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +

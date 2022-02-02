@@ -103,6 +103,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         rightLay.addComponent(addBtn, 2, 0);
 
         transfersTable = new FormattedTable();
+        transfersTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         transfersTable.setStyleName(ValoTheme.TABLE_COMPACT);
         transfersTable.setSizeFull();
         transfersTable.setFooterVisible(true);

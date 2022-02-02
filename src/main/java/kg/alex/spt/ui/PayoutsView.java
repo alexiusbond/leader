@@ -102,6 +102,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         rightLay.addComponent(addBtn, 2, 0);
 
         payoutsTable = new FormattedTable();
+        payoutsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         payoutsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         payoutsTable.setSizeFull();
         payoutsTable.setFooterVisible(true);

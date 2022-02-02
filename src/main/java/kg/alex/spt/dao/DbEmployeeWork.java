@@ -214,4 +214,29 @@ public class DbEmployeeWork extends BaseDb {
         }
         return container;
     }
+
+    public String execSQL_work_experience(int employee_id, int own_id, boolean isSapat) throws SQLException {
+
+        String sql = "SELECT ROUND((SUM(TIMESTAMPDIFF(DAY, start_date, ifnull(ew.end_date, NOW()))) / 30) / 12) as years, " +
+                "ROUND(MOD(SUM(TIMESTAMPDIFF(DAY, ew.start_date, ifnull(ew.end_date, NOW()))) / 30, 12)) as months " +
+                "FROM hr_employee_work AS ew WHERE ew.hr_own_id = ? AND ew.employee_id = ?";
+        if (isSapat) {
+            sql += " AND ew.is_sapat = ?";
+        }
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, own_id);
+        stat.setInt(2, employee_id);
+        if (isSapat) {
+            stat.setInt(3, 1);
+        }
+        System.out.println(stat);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return (result.getInt("years") > 0 ? result.getInt("years") + " "
+                    + Settings.generateYearPostfix(result.getInt("years")) + " " : "")
+                    + (result.getInt("months") > 0 && result.getInt("months") < 12 ? result.getInt("months") + " "
+                    + Settings.generateMonthPostfix(result.getInt("months")) : "");
+        }
+        return "";
+    }
 }

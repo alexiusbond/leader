@@ -459,13 +459,24 @@ public class Settings implements Serializable {
 
     public static String generateYearPostfix(int age) {
         int lastChar = Integer.parseInt(("" + age).substring(("" + age).length() - 1));
-        String old = "";
-        if (age == 11) old = "лет";
-        else if (("" + age).endsWith("1")) old = "год";
-        else if (age > 11 && age < 15) old = "лет";
-        else if (lastChar > 1 && lastChar < 5) old = "года";
-        else old = "лет";
-        return old;
+        String str = "";
+        if (age == 11) str = "лет";
+        else if (("" + age).endsWith("1")) str = "год";
+        else if (age > 11 && age < 15) str = "лет";
+        else if (lastChar > 1 && lastChar < 5) str = "года";
+        else str = "лет";
+        return str;
+    }
+
+    public static String generateMonthPostfix(int age) {
+        int lastChar = Integer.parseInt(("" + age).substring(("" + age).length() - 1));
+        String str = "";
+        if (age == 11) str = "месяцев";
+        else if (("" + age).endsWith("1")) str = "месяц";
+        else if (age > 11 && age < 15) str = "месяцев";
+        else if (lastChar > 1 && lastChar < 5) str = "месяца";
+        else str = "месяцев";
+        return str;
     }
 
     public static String transliterate(String message) {

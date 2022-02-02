@@ -81,7 +81,7 @@ public class GeneralReport implements Button.ClickListener,
     private Subject currentUser = SecurityUtils.getSubject();
     private String[] NATURAL_COL_ORDER_TRANSACTIONS;
     private String[] NATURAL_COL_ORDER_PAYMENTS;
-    private Label outcLastDateLbl, outcTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
+    private Label outcomeLastDateLbl, outcomeTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
     private SchoolAccounting schoolAcc;
     private ContractTotal contractTtl;
     private Calendar prevDayCal;
@@ -425,17 +425,17 @@ public class GeneralReport implements Button.ClickListener,
         incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
         hl.addComponent(incLastDateLbl);
 
-        outcTotalLbl = new Label();
-        outcTotalLbl.setContentMode(ContentMode.HTML);
-        outcTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
-        hl.addComponent(outcTotalLbl);
+        outcomeTotalLbl = new Label();
+        outcomeTotalLbl.setContentMode(ContentMode.HTML);
+        outcomeTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
+        hl.addComponent(outcomeTotalLbl);
 
-        outcLastDateLbl = new Label();
-        outcLastDateLbl.setContentMode(ContentMode.HTML);
-        outcLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
-        hl.addComponent(outcLastDateLbl);
+        outcomeLastDateLbl = new Label();
+        outcomeLastDateLbl.setContentMode(ContentMode.HTML);
+        outcomeLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
+        outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
+        hl.addComponent(outcomeLastDateLbl);
 
         prevBalanceLbl = new Label();
         prevBalanceLbl.setContentMode(ContentMode.HTML);
@@ -537,9 +537,9 @@ public class GeneralReport implements Button.ClickListener,
                     + ": </b>" + Settings.dFormat.format(schoolAcc.getTotal_income()) + "$");
             incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate)
                     + ": </b>" + schoolAcc.getLast_income_date());
-            outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal)
+            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal)
                     + ": </b>" + Settings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
-            outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate)
+            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate)
                     + ": </b>" + schoolAcc.getLast_outcome_date());
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance)
                     + " (" + Settings.df.format(prevDayCal.getTime())
@@ -549,8 +549,8 @@ public class GeneralReport implements Button.ClickListener,
         } else {
             incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
             incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
-            outcTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
-            outcLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
+            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
+            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
             totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": </b>");
         }

@@ -20,6 +20,8 @@ public class EmployeeExtraInfo implements Serializable {
     private String extraBranches;
     private String mainPosition;
     private String extraPositions;
+    private String workExperience;
+    private String workExperienceSapat;
     private int hours;
     private int extraHours;
     private String workingStatus;
@@ -38,6 +40,22 @@ public class EmployeeExtraInfo implements Serializable {
     private String familyInfo;
     private int children;
     private Date modificationDate;
+
+    public String getWorkExperienceSapat() {
+        return workExperienceSapat;
+    }
+
+    public void setWorkExperienceSapat(String workExperienceSapat) {
+        this.workExperienceSapat = workExperienceSapat;
+    }
+
+    public String getWorkExperience() {
+        return workExperience;
+    }
+
+    public void setWorkExperience(String workExperience) {
+        this.workExperience = workExperience;
+    }
 
     public Date getModificationDate() {
         return modificationDate;
@@ -100,7 +118,7 @@ public class EmployeeExtraInfo implements Serializable {
     }
 
     public String getBirth_place() {
-            return birth_place;
+        return birth_place;
     }
 
     public void setBirth_place(String birth_place) {

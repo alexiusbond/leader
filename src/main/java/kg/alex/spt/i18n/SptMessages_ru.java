@@ -168,6 +168,8 @@ public class SptMessages_ru extends SptMessages {
             {MainBranchShort, "Осн. область преподавания"},
             {ExtraPosition, "Доп. должность"},
             {ExtraPositions, "Доп должности"},
+            {TotalWorkExperience, "Общий стаж работы"},
+            {SapatWorkExperience, "Стаж работы в Сапат"},
             {ExtraBranches, "Доп. области преподавания"},
             {GenerateButton, "Сгенерировать"},
             {SelectOptions, "Выбрать параметры"},

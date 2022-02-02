@@ -50,8 +50,7 @@ public class YearMonthReport implements Button.ClickListener,
     static final Logger logger = LogManager.getLogger(YearMonthReport.class);
     private MyVaadinUI myUI;
     private Subject currentUser = SecurityUtils.getSubject();
-    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
-            excelBtn;
+    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private FilterTable schoolTable;
@@ -415,12 +414,12 @@ public class YearMonthReport implements Button.ClickListener,
                             } else {
                                 excelReport.getTotalsRow().getCell(1).setCellFormula(null);
                                 excelReport.getTotalsRow().getCell(4).setCellFormula(null);
-                                excelReport.getTotalsRow().getCell(9).setCellFormula(null);
+                                excelReport.getTotalsRow().getCell(10).setCellFormula(null);
                                 excelReport.getTotalsRow().getCell(1).setCellValue(
                                         t.getColumnFooter(myUI.getMessage(SptMessages.Total_Active)));
                                 excelReport.getTotalsRow().getCell(4).setCellValue(
                                         t.getColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage)));
-                                excelReport.getTotalsRow().getCell(9).setCellValue(t.getColumnFooter(Settings.percentage));
+                                excelReport.getTotalsRow().getCell(10).setCellValue(t.getColumnFooter(Settings.percentage));
                             }
                         }
                     }
