@@ -1,28 +1,23 @@
 package kg.alex.spt.tableexport;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellUtil;
-import org.apache.poi.ss.util.RegionUtil;
-
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.Table.ColumnGenerator;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellUtil;
+import org.apache.poi.ss.util.RegionUtil;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * The Class ExcelExport. Implementation of TableExport to export Vaadin Tables to Excel .xls files.

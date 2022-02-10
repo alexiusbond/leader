@@ -9,6 +9,16 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.Settings;
+import kg.alex.spt.domain.EducationStatus;
+import kg.alex.spt.domain.Student;
+import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.reports.students.StatusesReport;
+import kg.alex.spt.ui.CallsView;
+import kg.alex.spt.ui.IssueOrderView;
+import kg.alex.spt.ui.StudentDefinitionView;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,17 +26,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
-
-import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
-import kg.alex.spt.domain.EducationStatus;
-import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.domain.Student;
-import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.students.StatusesReport;
-import kg.alex.spt.ui.CallsView;
-import kg.alex.spt.ui.IssueOrderView;
-import kg.alex.spt.ui.StudentDefinitionView;
 
 public class DbStudent extends BaseDb {
 

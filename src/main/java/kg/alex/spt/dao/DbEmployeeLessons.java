@@ -11,23 +11,22 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.themes.ValoTheme;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.Settings;
+import kg.alex.spt.domain.EmployeeLessons;
+import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.TreeSet;
-
-import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
-import kg.alex.spt.domain.EmployeeLessons;
-import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.ui.EmployeeDefinitionView;
 
 public class DbEmployeeLessons extends BaseDb {
 

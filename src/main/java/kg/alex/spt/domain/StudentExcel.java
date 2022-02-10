@@ -5,8 +5,9 @@
  */
 package kg.alex.spt.domain;
 
-import java.io.Serializable;
 import kg.alex.spt.excel.ExcelColumn;
+
+import java.io.Serializable;
 
 public class StudentExcel implements Serializable {
 

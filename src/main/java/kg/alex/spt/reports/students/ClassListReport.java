@@ -6,39 +6,32 @@
 package kg.alex.spt.reports.students;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import kg.alex.spt.dao.DbClassName;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomTable;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.util.Set;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
+import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.ClassListPdf;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
-import kg.alex.spt.pdf.ClassListPdf;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
+
+import java.util.Set;
 
 public class ClassListReport implements Button.ClickListener,
         Property.ValueChangeListener {

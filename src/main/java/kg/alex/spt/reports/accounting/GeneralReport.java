@@ -7,21 +7,7 @@ package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.addon.charts.Chart;
-import com.vaadin.addon.charts.model.AxisTitle;
-import com.vaadin.addon.charts.model.ChartType;
-import com.vaadin.addon.charts.model.Configuration;
-import com.vaadin.addon.charts.model.DataLabels;
-import com.vaadin.addon.charts.model.DataSeries;
-import com.vaadin.addon.charts.model.DataSeriesItem;
-import com.vaadin.addon.charts.model.HorizontalAlign;
-import com.vaadin.addon.charts.model.LayoutDirection;
-import com.vaadin.addon.charts.model.Legend;
-import com.vaadin.addon.charts.model.ListSeries;
-import com.vaadin.addon.charts.model.PlotOptionsLine;
-import com.vaadin.addon.charts.model.PlotOptionsPie;
-import com.vaadin.addon.charts.model.Series;
-import com.vaadin.addon.charts.model.VerticalAlign;
-import com.vaadin.addon.charts.model.YAxis;
+import com.vaadin.addon.charts.model.*;
 import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.addon.charts.util.SVGGenerator;
 import com.vaadin.data.Property;
@@ -29,18 +15,9 @@ import com.vaadin.data.util.ListSet;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomTable;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.util.*;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccTransactions;
@@ -50,9 +27,9 @@ import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.AccountingGeneralReportPdf;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
-import kg.alex.spt.pdf.AccountingGeneralReportPdf;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -61,6 +38,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
+
+import java.util.Calendar;
+import java.util.*;
 
 public class GeneralReport implements Button.ClickListener,
         Property.ValueChangeListener {

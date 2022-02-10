@@ -2,14 +2,8 @@ package kg.alex.spt.ui;
 
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Form;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.dao.DbUserDetails;

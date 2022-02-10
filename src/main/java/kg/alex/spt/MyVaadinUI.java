@@ -10,16 +10,6 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
-
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import javax.servlet.annotation.WebServlet;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.dao.DbCurrencyRate;
 import kg.alex.spt.dao.DbEmployeeMessage;
@@ -38,6 +28,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.servlet.annotation.WebServlet;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 @Theme("mytheme")
 @SuppressWarnings("serial")
 @PreserveOnRefresh
@@ -50,7 +49,7 @@ public class MyVaadinUI extends UI {
     public VaadinRequest r;
     private IndexedContainer schoolCont;
     private double nbkr_currency_rate;
-    private boolean isMannualRate;
+    private boolean isManualRate;
     private Button messagesBtn;
 
     @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
@@ -234,10 +233,10 @@ public class MyVaadinUI extends UI {
             dbCon.connect();
             db_currency_rate = dbCon.execSQL_last_rate(getUser().getSchool_id());
             if (db_currency_rate == 0.0) {
-                isMannualRate = false;
+                isManualRate = false;
                 db_currency_rate = this.getCurrencyRateFromBank();
             } else {
-                isMannualRate = true;
+                isManualRate = true;
             }
             dbCon.close();
         } catch (Exception e) {
@@ -247,11 +246,8 @@ public class MyVaadinUI extends UI {
         return db_currency_rate;
     }
 
-    /**
-     * @return the isMannualRate
-     */
-    public boolean isMannualRate() {
-        return isMannualRate;
+    public boolean isManualRate() {
+        return isManualRate;
     }
 
     public void repaintMessagesButton() {

@@ -6,10 +6,9 @@
 package kg.alex.spt.utils;
 
 import com.vaadin.data.Container;
-import org.tepi.filtertable.FilterGenerator;
-
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Field;
+import org.tepi.filtertable.FilterGenerator;
 import org.tepi.filtertable.FilterTable;
 
 /**

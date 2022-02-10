@@ -6,30 +6,25 @@
 package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CustomTable;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Set;
 
 public class SchoolsReport implements Button.ClickListener,
         Property.ValueChangeListener {

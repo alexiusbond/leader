@@ -1,8 +1,6 @@
 package kg.alex.spt.reports.stock;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import kg.alex.spt.dao.*;
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
@@ -11,7 +9,9 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTreeTable;

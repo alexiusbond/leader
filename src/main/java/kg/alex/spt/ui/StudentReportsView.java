@@ -1,6 +1,5 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.utils.ComboBoxMax;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
@@ -11,18 +10,8 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.students.CallsReport;
-import kg.alex.spt.reports.students.ClassDiscountsReport;
-import kg.alex.spt.reports.students.ClassInstPlanReport;
-import kg.alex.spt.reports.students.ClassListReport;
-import kg.alex.spt.reports.students.ClassPaymentsReport;
-import kg.alex.spt.reports.students.DebtReport;
-import kg.alex.spt.reports.students.DiscountsReport;
-import kg.alex.spt.reports.students.InstallmentPlanPaymentsReport;
-import kg.alex.spt.reports.students.OutOfList;
-import kg.alex.spt.reports.students.SchoolDiscountsReport;
-import kg.alex.spt.reports.students.StatusesReport;
-import kg.alex.spt.reports.students.YearMonthReport;
+import kg.alex.spt.reports.students.*;
+import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 

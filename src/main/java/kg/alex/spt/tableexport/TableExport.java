@@ -1,5 +1,9 @@
 package kg.alex.spt.tableexport;
 
+import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
@@ -7,10 +11,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import com.vaadin.data.util.HierarchicalContainer;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.UI;
 
 public abstract class TableExport implements Serializable {
 

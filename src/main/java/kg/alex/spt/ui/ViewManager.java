@@ -1,11 +1,11 @@
 package kg.alex.spt.ui;
 
+import com.vaadin.ui.Layout;
+import kg.alex.spt.MyVaadinUI;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Stack;
-
-import com.vaadin.ui.Layout;
-import kg.alex.spt.MyVaadinUI;
 
 public class ViewManager implements Serializable {
 

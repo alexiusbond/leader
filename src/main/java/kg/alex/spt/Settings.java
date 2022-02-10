@@ -12,19 +12,14 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
+import java.util.*;
 
 /**
  * @author alex

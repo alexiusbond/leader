@@ -8,12 +8,6 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.ContractTotal;
@@ -23,6 +17,11 @@ import kg.alex.spt.reports.students.ClassListReport;
 import kg.alex.spt.reports.students.DebtReport;
 import kg.alex.spt.reports.students.DiscountsReport;
 import kg.alex.spt.reports.students.YearMonthReport;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * @author alex

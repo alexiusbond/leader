@@ -5,25 +5,18 @@
  */
 package kg.alex.spt.ui;
 
-import com.vaadin.data.validator.DateRangeValidator;
-import com.vaadin.ui.*;
-import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccTransactions;
@@ -34,14 +27,20 @@ import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.CurrencyRate;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.pdf.TransactionInvoicePDF;
+import kg.alex.spt.utils.ComboBoxMax;
+import kg.alex.spt.utils.FormattedTable;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class TransactionsView extends GridLayout implements Button.ClickListener,
         Property.ValueChangeListener {
@@ -148,7 +147,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         currencyHl = new HorizontalLayout();
         currencyHl.setWidth(Settings.PERCENTS100);
         currencyHl.setSpacing(true);
-        currencyHl.setEnabled(currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) && myUI.isMannualRate());
+        currencyHl.setEnabled(currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) && myUI.isManualRate());
 
         currencyLab = new Label();
         currencyLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -183,7 +182,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         currencySettingsOG.addItem(myUI.getMessage(SptMessages.NBKR));
         currencySettingsOG.addItem(myUI.getMessage(SptMessages.Manual));
         currencySettingsOG.addValueChangeListener(this);
-        if (myUI.isMannualRate()) {
+        if (myUI.isManualRate()) {
             currencySettingsOG.select(myUI.getMessage(SptMessages.Manual));
         } else {
             currencySettingsOG.select(myUI.getMessage(SptMessages.NBKR));

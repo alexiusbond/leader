@@ -12,7 +12,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.domain.Branch;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.List;
 
 public class BranchCodesPdf {
 

@@ -9,18 +9,17 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
-
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeSeminar;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DbEmployeeSeminar extends BaseDb {
 

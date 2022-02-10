@@ -6,31 +6,30 @@
 package kg.alex.spt.ui;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.ui.*;
-import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.pdf.CallsPdf;
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.util.Set;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbClassName;
+import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.dao.DbStudentCalls;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.CallsPdf;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
+
+import java.util.Set;
 
 public class CallsView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {

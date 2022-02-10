@@ -5,23 +5,13 @@
  */
 package kg.alex.spt.pdf;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.TextField;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StockInvoice;
@@ -30,6 +20,12 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
 
 public class StockMovementsPdf {
 

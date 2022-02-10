@@ -6,7 +6,6 @@
 package kg.alex.spt.reports.stock;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
@@ -15,7 +14,10 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.*;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
+import kg.alex.spt.utils.ComboBoxMax;
+import kg.alex.spt.utils.FormattedTable;
+import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTreeTable;

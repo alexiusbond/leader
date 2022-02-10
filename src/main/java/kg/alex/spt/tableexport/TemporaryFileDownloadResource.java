@@ -1,12 +1,12 @@
 package kg.alex.spt.tableexport;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.UI;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * The Class TemporaryFileDownloadResource.

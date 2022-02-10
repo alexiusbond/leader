@@ -9,17 +9,16 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.TreeTable;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.AccCategory;
 import kg.alex.spt.i18n.SptMessages;
 import org.tepi.filtertable.FilterTreeTable;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 public class DbAccCategory extends BaseDb {
 

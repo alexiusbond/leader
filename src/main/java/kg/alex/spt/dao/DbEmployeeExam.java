@@ -8,11 +8,6 @@ package kg.alex.spt.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
@@ -28,6 +23,10 @@ import kg.alex.spt.ui.EmployeeDefinitionView;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DbEmployeeExam extends BaseDb {
 

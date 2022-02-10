@@ -7,17 +7,16 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMultiselectMax;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * @author alex

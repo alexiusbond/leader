@@ -5,10 +5,11 @@
  */
 package kg.alex.spt.dao;
 
+import kg.alex.spt.domain.CurrencyRate;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import kg.alex.spt.domain.CurrencyRate;
 
 public class DbCurrencyRate extends BaseDb {
 

@@ -5,12 +5,7 @@
  */
 package kg.alex.spt.pdf;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -18,19 +13,18 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Table;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.Iterator;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.Iterator;
 
 public class YearReportPdf {
 

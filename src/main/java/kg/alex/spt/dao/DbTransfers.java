@@ -12,13 +12,6 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.TextField;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.*;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.SchoolAccounting;
@@ -31,6 +24,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Date;
 
 public class DbTransfers extends BaseDb {
 

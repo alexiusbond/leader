@@ -1,7 +1,5 @@
 package kg.alex.spt.ui;
 
-import com.vaadin.ui.*;
-import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -10,14 +8,8 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
@@ -27,12 +19,19 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.AccCategory;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.ComboBoxMax;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Iterator;
 
 public class SchoolDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {

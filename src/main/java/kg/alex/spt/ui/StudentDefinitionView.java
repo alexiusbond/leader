@@ -1,43 +1,29 @@
 package kg.alex.spt.ui;
 
-import com.vaadin.data.validator.*;
-import com.vaadin.server.Resource;
-import com.vaadin.server.StreamResource;
-import com.vaadin.ui.*;
-import kg.alex.spt.dao.*;
-import kg.alex.spt.domain.*;
-import kg.alex.spt.pdf.*;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.*;
 import com.vaadin.server.FileResource;
+import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
+import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.*;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.io.*;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
+import kg.alex.spt.dao.*;
+import kg.alex.spt.domain.*;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.utils.MyFilterDecorator;
-import kg.alex.spt.utils.MyFilterGenerator;
+import kg.alex.spt.pdf.*;
+import kg.alex.spt.utils.*;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -50,6 +36,11 @@ import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
+
+import java.io.*;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Calendar;
+import java.util.*;
 
 public class StudentDefinitionView extends VerticalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {

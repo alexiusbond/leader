@@ -1,31 +1,12 @@
 package kg.alex.spt.pdf;
 
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.ImgTemplate;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfTemplate;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Date;
-import java.util.Iterator;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.SchoolAccounting;
@@ -33,16 +14,18 @@ import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
-import org.apache.batik.bridge.BridgeContext;
-import org.apache.batik.bridge.DocumentLoader;
-import org.apache.batik.bridge.GVTBuilder;
-import org.apache.batik.bridge.UserAgent;
-import org.apache.batik.bridge.UserAgentAdapter;
+import org.apache.batik.bridge.*;
 import org.apache.batik.dom.svg.SVGDocumentFactory;
 import org.apache.batik.gvt.GraphicsNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.svg.SVGDocument;
+
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.io.*;
+import java.util.Date;
+import java.util.Iterator;
 
 public class AccountingGeneralReportPdf {
 

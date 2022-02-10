@@ -1,6 +1,5 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -17,26 +16,8 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import java.io.File;
-import java.util.Date;
-import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
@@ -46,9 +27,14 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.AccCategory;
 import kg.alex.spt.domain.EmployeeOrder;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.Date;
+import java.util.Iterator;
 
 public class EmployeeTransferView extends VerticalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener, DropHandler {

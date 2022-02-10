@@ -7,11 +7,10 @@ package kg.alex.spt.utils;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
-
-import java.util.Iterator;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.i18n.SptMessages;
+
+import java.util.Iterator;
 
 /**
  * @author alex

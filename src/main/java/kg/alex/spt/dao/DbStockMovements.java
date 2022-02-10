@@ -13,6 +13,17 @@ import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.Settings;
+import kg.alex.spt.domain.StockMovement;
+import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.ui.StockIncomeView;
+import kg.alex.spt.ui.StockOutcomeView;
+import kg.alex.spt.utils.ComboBoxMax;
+import kg.alex.spt.utils.FormattedTreeTable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.tepi.filtertable.FilterTreeTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,18 +33,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
-
-import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
-import kg.alex.spt.domain.StockMovement;
-import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.ui.StockIncomeView;
-import kg.alex.spt.ui.StockOutcomeView;
-import kg.alex.spt.utils.FormattedTreeTable;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.tepi.filtertable.FilterTreeTable;
 
 public class DbStockMovements extends BaseDb {
 

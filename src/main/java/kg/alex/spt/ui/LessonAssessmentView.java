@@ -1,27 +1,13 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
@@ -29,6 +15,7 @@ import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbEmployeeLessons;
 import kg.alex.spt.domain.EmployeeLessons;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.MyFilterDecorator;
 import kg.alex.spt.utils.ResetingFilterGenerator;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +24,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.dialogs.ConfirmDialog;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Iterator;
 
 public class LessonAssessmentView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {

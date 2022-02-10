@@ -9,14 +9,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 public class BackupView extends HorizontalSplitPanel implements Button.ClickListener {
 

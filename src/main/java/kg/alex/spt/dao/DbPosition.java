@@ -7,14 +7,15 @@ package kg.alex.spt.dao;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Position;
 import kg.alex.spt.i18n.SptMessages;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 public class DbPosition extends BaseDb {
 

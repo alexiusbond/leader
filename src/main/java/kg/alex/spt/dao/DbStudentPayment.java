@@ -14,13 +14,6 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentPayment;
@@ -31,6 +24,12 @@ import kg.alex.spt.ui.StudentDefinitionView;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class DbStudentPayment extends BaseDb {
 

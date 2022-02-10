@@ -9,14 +9,15 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.RegexpValidator;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeePhoneNumber;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DbEmployeePhoneNumber extends BaseDb {
 

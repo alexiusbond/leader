@@ -8,7 +8,10 @@ package kg.alex.spt.dao;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.EmployeeGraduationSchool;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 public class DbEmployeeGraduationSchool extends BaseDb {
 

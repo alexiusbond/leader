@@ -7,25 +7,8 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import kg.alex.spt.AuthenticatedScreen;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
@@ -38,6 +21,13 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.inputmask.InputMask;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class YearDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {

@@ -9,10 +9,6 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
-
-import java.sql.*;
-import java.util.Iterator;
-
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -26,6 +22,9 @@ import kg.alex.spt.ui.EmployeeDefinitionView;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.*;
+import java.util.Iterator;
 
 public class DbEmployeeCertificate extends BaseDb {
     static final Logger logger = LogManager.getLogger(DbEmployeeCertificate.class);

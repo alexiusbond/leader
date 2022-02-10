@@ -9,18 +9,17 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentOrder;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.OutOfList;
 import kg.alex.spt.ui.IssueOrderView;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * @author alex

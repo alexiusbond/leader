@@ -8,12 +8,6 @@ package kg.alex.spt.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentInstallmentPlan;
@@ -21,6 +15,11 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassInstPlanReport;
 import kg.alex.spt.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 
 public class DbStudentInstallmentPlan extends BaseDb {
 

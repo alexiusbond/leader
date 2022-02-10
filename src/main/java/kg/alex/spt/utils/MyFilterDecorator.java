@@ -1,17 +1,16 @@
 package kg.alex.spt.utils;
 
-import java.io.Serializable;
-import java.text.DateFormat;
-import java.util.Locale;
-
-import org.tepi.filtertable.FilterDecorator;
-import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
-
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
+import org.tepi.filtertable.FilterDecorator;
+import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.util.Locale;
 
 public class MyFilterDecorator implements FilterDecorator, Serializable {
 

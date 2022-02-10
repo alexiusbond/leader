@@ -5,12 +5,12 @@
  */
 package kg.alex.spt.dao;
 
+import kg.alex.spt.domain.EmployeeExtraInfo;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
-import kg.alex.spt.domain.EmployeeExtraInfo;
 
 public class DbEmployeeExtraInfo extends BaseDb {
 

@@ -1,8 +1,5 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import com.vaadin.ui.*;
-import kg.alex.spt.utils.*;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -16,24 +13,19 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
-import kg.alex.spt.dao.DbTransfers;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbInvoice;
-import kg.alex.spt.domain.Transfer;
+import kg.alex.spt.dao.DbTransfers;
 import kg.alex.spt.domain.Invoice;
+import kg.alex.spt.domain.Transfer;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
+import kg.alex.spt.utils.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -42,6 +34,13 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.hene.popupbutton.PopupButton;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 
 public class TransfersView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {

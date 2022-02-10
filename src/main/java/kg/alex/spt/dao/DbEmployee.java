@@ -12,15 +12,6 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Employee;
@@ -29,6 +20,14 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 
 public class DbEmployee extends BaseDb {
 

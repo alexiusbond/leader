@@ -8,12 +8,6 @@ package kg.alex.spt.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-
-import java.sql.*;
-import java.text.ParseException;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -32,6 +26,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.text.ParseException;
+import java.util.Iterator;
+import java.util.Set;
 
 public class DbStudentDiscount extends BaseDb {
 

@@ -1,17 +1,18 @@
 package kg.alex.spt.pdf;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
+import kg.alex.spt.MyVaadinUI;
+import kg.alex.spt.Settings;
+import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.i18n.SptMessages;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,13 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-
-import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
-import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ContractCambridgePdfRu {
 

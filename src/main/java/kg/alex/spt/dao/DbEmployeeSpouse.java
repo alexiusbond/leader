@@ -5,11 +5,12 @@
  */
 package kg.alex.spt.dao;
 
+import kg.alex.spt.domain.EmployeeSpouse;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import kg.alex.spt.domain.EmployeeSpouse;
 
 public class DbEmployeeSpouse extends BaseDb {
 

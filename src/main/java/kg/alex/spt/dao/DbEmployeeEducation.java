@@ -11,13 +11,6 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Iterator;
-
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
@@ -28,6 +21,12 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Iterator;
 
 public class DbEmployeeEducation extends BaseDb {
 

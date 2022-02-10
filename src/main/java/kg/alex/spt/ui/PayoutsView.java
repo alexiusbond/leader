@@ -1,7 +1,5 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -15,27 +13,8 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.AbstractComponentContainer;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CustomTable;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
@@ -45,10 +24,8 @@ import kg.alex.spt.dao.DbInvoice;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.Invoice;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ExistsValidator;
-import kg.alex.spt.utils.FormattedFilterTable;
-import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.utils.MyFilterDecorator;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
+import kg.alex.spt.utils.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -57,6 +34,12 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.hene.popupbutton.PopupButton;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 
 public class PayoutsView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {

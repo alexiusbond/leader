@@ -5,15 +5,15 @@
  */
 package kg.alex.spt.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.UserDetails;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * @author alex

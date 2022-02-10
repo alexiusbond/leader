@@ -1,7 +1,5 @@
 package kg.alex.spt.ui;
 
-import kg.alex.spt.reports.hr.HRGeneralReport;
-import kg.alex.spt.utils.ComboBoxMax;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -11,7 +9,9 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.reports.hr.HRGeneralReport;
 import kg.alex.spt.reports.hr.HRLessonHoursReport;
+import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 

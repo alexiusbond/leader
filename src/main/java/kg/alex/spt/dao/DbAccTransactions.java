@@ -6,9 +6,6 @@
 package kg.alex.spt.dao;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-
-import java.sql.Connection;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
@@ -18,18 +15,6 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.AccTransaction;
@@ -46,6 +31,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.tepi.filtertable.FilterTreeTable;
+
+import java.sql.*;
+import java.util.Date;
+import java.util.*;
 
 public class DbAccTransactions extends BaseDb {
 
