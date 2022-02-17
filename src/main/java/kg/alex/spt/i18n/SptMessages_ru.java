@@ -575,6 +575,11 @@ public class SptMessages_ru extends SptMessages {
             {Lecturer, "Преподаватель"},
             {Replace, "Заменить"},
             {ElementForReplacement, "Элемент для замены"},
+            {AggregatedReport, "Аггрегированный отчет"},
+            {DetailedReport, "Подробный отчет"},
+            {TransactionNumber, "Номер транзакции"},
+            {TransactionsQuantity, "Количество трансакций"},
+            {StudentId, "Номер ученика"},
     };
 
     @Override

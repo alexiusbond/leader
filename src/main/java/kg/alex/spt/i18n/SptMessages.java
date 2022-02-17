@@ -568,6 +568,11 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String DontHave = generateId();
     public static final String Lecturer = generateId();
     public static final String Replace = generateId();
+    public static final String AggregatedReport = generateId();
+    public static final String DetailedReport = generateId();
+    public static final String TransactionsQuantity = generateId();
+    public static final String TransactionNumber = generateId();
+    public static final String StudentId = generateId();
 
     private static String generateId() {
         return new Integer(ids++).toString();

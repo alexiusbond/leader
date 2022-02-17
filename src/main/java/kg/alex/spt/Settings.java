@@ -250,6 +250,7 @@ public class Settings implements Serializable {
     public static final String actReadMessages = "просмотр всех сообщений школы";
     public static final String actModify = "изменение";
     public static final String prmChangeOldTransactions = "изменение старых записей";
+    public static final String prmPaymentsByDates = "оплаты по датам";
     public static final String prmChangeCurrencyRate = "изменение общего курса доллара";
     public static final String prmGeneralInfo = "общая информация";
     public static final String prmStudentsInfo = "информация об учениках";

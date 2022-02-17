@@ -13,6 +13,7 @@ import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
@@ -59,10 +60,9 @@ public class DbStudentPayment extends BaseDb {
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
-                + "sp.who_paid, sp.note, sp.modification_date, "
-                + "if(sp.modification_date <= DATE_SUB(NOW(), INTERVAL 24 HOUR),true, false) as isDisabled "
-                + "FROM student_payments as sp "
-                + "where sp.student_id=? and sp.year_id=?";
+                + "sp.who_paid, sp.note, sp.modification_date, bank_transaction_id, "
+                + "if(sp.modification_date <= DATE_SUB(NOW(), INTERVAL 24 HOUR) or bank_transaction_id is not null,true, false) as isDisabled "
+                + "FROM student_payments as sp where sp.student_id=? and sp.year_id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -72,6 +72,9 @@ public class DbStudentPayment extends BaseDb {
             boolean isDisabled = false;
             if (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
                 isDisabled = result.getBoolean("isDisabled");
+            }
+            if (result.getInt("bank_transaction_id") != 0) {
+                isDisabled = true;
             }
             String id = result.getString("sp.id");
             Item item = container.addItem(id);
@@ -411,5 +414,81 @@ public class DbStudentPayment extends BaseDb {
         stat.setString(2, id);
         int status = stat.executeUpdate();
         return status;
+    }
+
+    public IndexedContainer execSQL_Payments(MyVaadinUI myUI, int currency_id, Date from, Date till, Table t) throws SQLException {
+
+        String sql = "SELECT sp.id, sp.bank_transaction_id, sp.modification_date, sp.dollar_rate, " +
+                "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount) as amount, c.name, st.login, " +
+                "CONCAT(st.surname, ' ', st.name, ' ', IFNULL(st.middle_name, '')) AS fullname " +
+                "FROM student_payments AS sp " +
+                "LEFT JOIN student AS st ON st.id = sp.student_id " +
+                "LEFT JOIN acc_currency AS c ON c.id = sp.acc_currency_id " +
+                "WHERE sp.bank_transaction_id IS NOT NULL AND sp.acc_currency_id = ? AND DATE(sp.modification_date) BETWEEN date(?) AND date(?)";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, currency_id);
+        stat.setDate(2, new java.sql.Date(from.getTime()));
+        stat.setDate(3, new java.sql.Date(till.getTime()));
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.StudentId), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.TransactionNumber), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Status), String.class, "Успешно");
+        t.setContainerDataSource(container);
+        double total = 0.0;
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("sp.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format((result.getTimestamp("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("sp.dollar_rate"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.TransactionNumber)).setValue(result.getString("sp.bank_transaction_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.StudentId)).setValue(result.getString("st.login"));
+            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(result.getString("fullname"));
+            total += result.getDouble("amount");
+        }
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(total));
+        t.setColumnFooter(myUI.getMessage(SptMessages.TransactionNumber), container.size() + "");
+        return container;
+    }
+
+    public IndexedContainer execSQL_Payments_group_by_date(MyVaadinUI myUI, int currency_id, Date from, Date till, Table t) throws SQLException {
+
+        String sql = "SELECT sp.modification_date, " +
+                "sum(if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount)) as amount, " +
+                "count(sp.id) as quantity, c.name FROM student_payments AS sp " +
+                "left join acc_currency as c on c.id = sp.acc_currency_id " +
+                "WHERE sp.bank_transaction_id IS NOT NULL AND sp.acc_currency_id = ? AND DATE(sp.modification_date) BETWEEN date(?) AND date(?) " +
+                "group by DATE(sp.modification_date)";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, currency_id);
+        stat.setDate(2, new java.sql.Date(from.getTime()));
+        stat.setDate(3, new java.sql.Date(till.getTime()));
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.TransactionsQuantity), Integer.class, 0);
+        t.setContainerDataSource(container);
+        double totalAmount = 0.0;
+        int totalQuantity = 0;
+        while (result.next()) {
+            Item item = container.addItem(Settings.df.format((result.getDate("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format((result.getDate("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.TransactionsQuantity)).setValue(result.getInt("quantity"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getString("c.name"));
+            totalAmount += result.getDouble("amount");
+            totalQuantity += result.getDouble("quantity");
+        }
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(totalAmount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.TransactionsQuantity), totalQuantity + "");
+        return container;
     }
 }
