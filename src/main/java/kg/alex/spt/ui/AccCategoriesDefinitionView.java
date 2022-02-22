@@ -51,8 +51,8 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         this.movement_type_id = movement_type_id;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
-            myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Parent),
-            myUI.getMessage(SptMessages.Status), myUI.getMessage(SptMessages.Note)};
+                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Parent),
+                myUI.getMessage(SptMessages.Status), myUI.getMessage(SptMessages.Note)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -230,13 +230,13 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
                     new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                        @Override
+                        public void onClose(ConfirmDialog dialog) {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
@@ -398,6 +398,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         }
         ac.setStatus_id((Integer) statusSelect.getValue());
         ac.setType_id(movement_type_id);
+        ac.setModified_employee_id(myUI.getUser().getId());
         ac.setId(id);
         return ac;
     }

@@ -493,6 +493,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     DbAccCategory dbAc = new DbAccCategory();
                     dbAc.connect();
                     AccCategory ac = dbAc.exec_sql(eo.getEmployee_id(), eo.getFrom_to_school_id(), eo.getSchool_id());
+                    ac.setModified_employee_id(myUI.getUser().getId());
                     dbAc.exec_insert(ac);
                     dbAc.exec_update_activity_status((Integer) t.getContainerProperty(eo.getEmployee_id(),
                             Settings.acc_category_id).getValue(), 1, Settings.transferred);

@@ -317,6 +317,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 ac.setStatus_id(2);
                                 ac.setType_id(2);
                                 ac.setSchool_id(id);
+                                ac.setModified_employee_id(myUI.getUser().getId());
                                 dba.exec_insert(ac);
                             }
                             dba.close();

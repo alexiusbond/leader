@@ -2748,6 +2748,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 ac.setParent_code(contractCategoryCB.getContainerProperty(contractCategoryCB.getValue(),
                                         myUI.getMessage(SptMessages.Code)).getValue().toString());
                                 ac.setParent_id((Integer) contractCategoryCB.getValue());
+                                ac.setModified_employee_id(myUI.getUser().getId());
                                 int acc_id = dba.exec_insert(ac);
                                 dba.close();
                                 addDatacontainerItem(id, acc_id);
@@ -2782,6 +2783,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             ac.setParent_code(contractCategoryCB.getContainerProperty(contractCategoryCB.getValue(),
                                     myUI.getMessage(SptMessages.Code)).getValue().toString());
                             ac.setParent_id((Integer) contractCategoryCB.getValue());
+                            ac.setModified_employee_id(myUI.getUser().getId());
                             dba.exec_update(ac);
                             dba.close();
                             if (status != 0) {
@@ -3913,6 +3915,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             DbAccCategory dbAc = new DbAccCategory();
                             dbAc.connect();
                             AccCategory ac = dbAc.exec_sql(employee_id, eo.getFrom_to_school_id(), eo.getSchool_id());
+                            ac.setModified_employee_id(myUI.getUser().getId());
                             dbAc.exec_insert(ac);
                             dbAc.exec_update_activity_status((Integer) employeesDataTable.getContainerProperty(employee_id,
                                     Settings.acc_category_id).getValue(), 1, Settings.transferred);

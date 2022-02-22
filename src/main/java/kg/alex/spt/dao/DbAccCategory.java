@@ -205,7 +205,8 @@ public class DbAccCategory extends BaseDb {
 
     public int exec_insert(AccCategory ac) throws SQLException {
         String sql = "INSERT IGNORE INTO acc_category (name, code, parent_id, acc_type_id, "
-                + "activity_status_id, note, parent_code,school_id,employee_id) values(?,?,?,?,?,?,?,?,?);";
+                + "activity_status_id, note, parent_code,school_id,employee_id,modified_employee_id) "
+                + "values(?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ac.getName());
         stat.setString(2, ac.getCode());
@@ -236,6 +237,7 @@ public class DbAccCategory extends BaseDb {
         } else {
             stat.setNull(9, Types.INTEGER);
         }
+        stat.setInt(10, ac.getModified_employee_id());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -246,8 +248,7 @@ public class DbAccCategory extends BaseDb {
 
     public int exec_update(AccCategory ac) throws SQLException {
         String sql = "update acc_category set name=?, code=?, parent_id=?, "
-                + "activity_status_id=?, note=?, parent_code=? "
-                + "where id=?";
+                + "activity_status_id=?, note=?, parent_code=?, modified_employee_id=? where id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ac.getName());
         stat.setString(2, ac.getCode());
@@ -263,7 +264,8 @@ public class DbAccCategory extends BaseDb {
         } else {
             stat.setNull(6, Types.VARCHAR);
         }
-        stat.setInt(7, ac.getId());
+        stat.setInt(7, ac.getModified_employee_id());
+        stat.setInt(8, ac.getId());
         int status = stat.executeUpdate();
         return status;
     }

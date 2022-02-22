@@ -19,6 +19,15 @@ public class AccCategory implements Serializable {
     private int status_id;
     private int school_id;
     private int employee_id;
+    private int modified_employee_id;
+
+    public int getModified_employee_id() {
+        return modified_employee_id;
+    }
+
+    public void setModified_employee_id(int modified_employee_id) {
+        this.modified_employee_id = modified_employee_id;
+    }
 
     public String getNote() {
         return note;
