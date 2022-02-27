@@ -219,7 +219,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             menubar.addItem(myUI.getMessage(SptMessages.StudentDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.Transactions), menuCommand);
+            menubar.addItem(myUI.getMessage(SptMessages.CashBox), menuCommand);
         }
 
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmMenu) ||
@@ -504,8 +504,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new CallsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.HomePage))) {
                     verticalPanel.setSecondComponent(new HomePageView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Transactions))) {
-                    verticalPanel.setSecondComponent(new TransactionsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.CashBox))) {
+                    verticalPanel.setSecondComponent(new CashBoxView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Accruals))) {
                     verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
                             Settings.cnAccrualsView, 2, 1));
@@ -721,8 +721,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 verticalPanel.setSecondComponent(new HomePageView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Welcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HomePageView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Transactions)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new TransactionsView(myUI));
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.CashBox)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new CashBoxView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Accruals)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
                         Settings.cnAccrualsView, 2, 1));
@@ -752,7 +752,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StockOutcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Outcomes)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Expenses)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 2));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Settings)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SettingsView(myUI));

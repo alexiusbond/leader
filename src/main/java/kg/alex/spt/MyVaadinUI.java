@@ -54,15 +54,14 @@ public class MyVaadinUI extends UI {
 
     @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
     @VaadinServletConfiguration(productionMode = true,
-            ui = MyVaadinUI.class,
-            widgetset = "kg.alex.spt.AppWidgetSet")
+            ui = MyVaadinUI.class, widgetset = "kg.alex.spt.AppWidgetSet")
     public static class Servlet extends VaadinServlet {
     }
 
     @Override
     protected void init(VaadinRequest request) {
         r = request;
-//        i18nBundle = ResourceBundle.getBundle(SptMessages.class.getName(), this.getLocale());
+//      i18nBundle = ResourceBundle.getBundle(SptMessages.class.getName(), this.getLocale());
         i18nBundle = ResourceBundle.getBundle(SptMessages.class.getName(), new Locale("ru"));
 
         getPage().setTitle(i18nBundle.getString(SptMessages.AppTitle));
@@ -81,9 +80,6 @@ public class MyVaadinUI extends UI {
         }
         getUI().getSession().close();
 
-        // Invalidate underlying session instead if login info is stored there
-        // VaadinService.getCurrentRequest().getWrappedSession().invalidate();
-        // Redirect to avoid keeping the removed UI open in the browser
         getUI().getPage().setLocation("");
 
     }
@@ -92,15 +88,8 @@ public class MyVaadinUI extends UI {
         UsernamePasswordToken token;
 
         token = new UsernamePasswordToken(username, password);
-        // ”Remember Me” built-in, just do this:
         token.setRememberMe(true);
-
-        // With most of Shiro, you'll always want to make sure you're working
-        // with the currently executing user,
-        // referred to as the subject
         Subject currentUser = SecurityUtils.getSubject();
-
-        // Authenticate
         currentUser.login(token);
 
     }
@@ -207,13 +196,12 @@ public class MyVaadinUI extends UI {
                 DocumentBuilder db = dbf.newDocumentBuilder();
                 Document doc = db.parse(url.openStream());
                 NodeList nl = doc.getElementsByTagName("Currency");
-                // looping through all item nodes <artist>
                 for (int temp = 0; temp < nl.getLength(); temp++) {
                     Node nNode = nl.item(temp);
                     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                         Element eElement = (Element) nNode;
                         if (eElement.getAttribute("ISOCode").equals("USD")) {
-                            nbkr_currency_rate = (Double) format.parse(eElement.getElementsByTagName("Value")
+                            nbkr_currency_rate = format.parse(eElement.getElementsByTagName("Value")
                                     .item(0).getTextContent()).doubleValue();
                         }
                     }

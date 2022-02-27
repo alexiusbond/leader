@@ -436,24 +436,23 @@ public class HRGeneralReport implements Button.ClickListener,
                     dbEmployee.connect();
                     IndexedContainer container = dbEmployee.execSQL(myUI, (Integer) yearSelect.getValue(), params);
                     GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(container);
-                    gpc.addGeneratedProperty(Settings.button,
-                            new PropertyValueGenerator<Component>() {
-                                @Override
-                                public Component getValue(Item item, Object itemId, Object propertyId) {
-                                    Button button = new Button("CV");
-                                    button.setStyleName(ValoTheme.BUTTON_LINK);
-                                    button.addStyleName(ValoTheme.BUTTON_TINY);
-                                    button.addStyleName("cv");
-                                    button.setId(itemId + "");
-                                    button.addClickListener(HRGeneralReport.this);
-                                    return button;
-                                }
+                    gpc.addGeneratedProperty(Settings.button, new PropertyValueGenerator<Component>() {
+                        @Override
+                        public Component getValue(Item item, Object itemId, Object propertyId) {
+                            Button button = new Button("CV");
+                            button.setStyleName(ValoTheme.BUTTON_LINK);
+                            button.addStyleName(ValoTheme.BUTTON_TINY);
+                            button.addStyleName("cv");
+                            button.setId(itemId + "");
+                            button.addClickListener(HRGeneralReport.this);
+                            return button;
+                        }
 
-                                @Override
-                                public Class<Component> getType() {
-                                    return Component.class;
-                                }
-                            });
+                        @Override
+                        public Class<Component> getType() {
+                            return Component.class;
+                        }
+                    });
                     dataGrid.setContainerDataSource(gpc);
                     dataGrid.getColumn(Settings.button).setRenderer(new ComponentRenderer());
                     dbEmployee.close();

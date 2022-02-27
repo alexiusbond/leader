@@ -229,7 +229,6 @@ public class DbEmployeeWork extends BaseDb {
         if (isSapat) {
             stat.setInt(3, 1);
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             return (result.getInt("years") > 0 ? result.getInt("years") + " "

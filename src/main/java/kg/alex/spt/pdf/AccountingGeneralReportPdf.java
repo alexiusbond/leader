@@ -126,7 +126,7 @@ public class AccountingGeneralReportPdf {
                     accInfoTable.addCell(new Phrase(myUI.getMessage(SptMessages.LastExpenseDate) + ":", normal_font));
                     accInfoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Balance) + " (" + prevDay + "):", normal_font));
                     accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                    accInfoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Transactions) + ":", normal_font));
+                    accInfoTable.addCell(new Phrase(myUI.getMessage(SptMessages.CashBox) + ":", normal_font));
 
                     accInfoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                     accInfoTable.addCell(new Phrase(Settings.dFormat.format(sclAccInfo.getTotal_income()) + "$", normal_font));
@@ -158,7 +158,7 @@ public class AccountingGeneralReportPdf {
                     accTransTable.addCell(new Phrase(myUI.getMessage(SptMessages.InstallmentPlan), normal_bold_font));
                     accTransTable.addCell(new Phrase(myUI.getMessage(SptMessages.Payments), normal_bold_font));
                     accTransTable.addCell(new Phrase(myUI.getMessage(SptMessages.Incomes), normal_bold_font));
-                    accTransTable.addCell(new Phrase(myUI.getMessage(SptMessages.Outcomes), normal_bold_font));
+                    accTransTable.addCell(new Phrase(myUI.getMessage(SptMessages.Expenses), normal_bold_font));
                     accTransTable.addCell(new Phrase(myUI.getMessage(SptMessages.Difference), normal_bold_font));
 
                     Iterator iter = accTransactionsTable.getItemIds().iterator();
@@ -180,7 +180,7 @@ public class AccountingGeneralReportPdf {
                         accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Incomes)).getValue()), normal_font));
                         accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Outcomes)).getValue()), normal_font));
+                                myUI.getMessage(SptMessages.Expenses)).getValue()), normal_font));
                         accTransTable.addCell(new Phrase(Settings.dFormat.format((Double) accTransactionsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Difference)).getValue()), normal_font));
                         i++;
@@ -192,7 +192,7 @@ public class AccountingGeneralReportPdf {
                     accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan)), normal_bold_font));
                     accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Payments)), normal_bold_font));
                     accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Incomes)), normal_bold_font));
-                    accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Outcomes)), normal_bold_font));
+                    accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Expenses)), normal_bold_font));
                     accTransTable.addCell(new Phrase(accTransactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Difference)), normal_bold_font));
 
                     document.add(accTransTable);

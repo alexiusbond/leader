@@ -75,6 +75,7 @@ public class Settings implements Serializable {
     public static final String class_id = "class_id";
     public static final String visible_hr_orders = "visible_hr_orders";
     public static final String is_modifiable = "is_modifiable";
+    public static final String is_disabled = "is_disabled";
     public static final String columnPhones = "phones";
     public static final String columnExams = "exams";
     public static final String columnSeminars = "seminars";
@@ -351,20 +352,6 @@ public class Settings implements Serializable {
             @Override
             protected java.text.NumberFormat getFormat(Locale locale) {
                 return getNumberFormat();
-            }
-        };
-        return plainConverter;
-    }
-
-    public static StringToFloatConverter getStringToFloatConverter() {
-        StringToFloatConverter plainConverter = new StringToFloatConverter() {
-            @Override
-            protected java.text.NumberFormat getFormat(Locale locale) {
-                NumberFormat format = NumberFormat.getNumberInstance();
-                format.setGroupingUsed(true);
-                format.setMaximumFractionDigits(4);
-                format.setMinimumFractionDigits(4);
-                return format;
             }
         };
         return plainConverter;

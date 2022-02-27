@@ -439,7 +439,7 @@ public class GeneralReport implements Button.ClickListener,
         NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(SptMessages.Month),
             myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
             myUI.getMessage(SptMessages.Incomes),
-            myUI.getMessage(SptMessages.Outcomes), myUI.getMessage(SptMessages.Difference)};
+            myUI.getMessage(SptMessages.Expenses), myUI.getMessage(SptMessages.Difference)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
@@ -524,7 +524,7 @@ public class GeneralReport implements Button.ClickListener,
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance)
                     + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + "$");
-            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Transactions)
+            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.CashBox)
                     + ": </b>" + Settings.dFormat.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
         } else {
             incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
@@ -532,7 +532,7 @@ public class GeneralReport implements Button.ClickListener,
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
             outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
-            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": </b>");
+            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": </b>");
         }
     }
 
@@ -596,7 +596,7 @@ public class GeneralReport implements Button.ClickListener,
             transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
             transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Payments), Table.Align.RIGHT);
             transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Incomes), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Outcomes), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Expenses), Table.Align.RIGHT);
             transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Difference), Table.Align.RIGHT);
             transactionsTable.setPageLength(transactionsTable.size());
             if (transactionsTable.getContainerDataSource().size() != 0) {

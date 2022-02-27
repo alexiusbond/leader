@@ -267,8 +267,11 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         }
         invoicesTable.setPageLength(5);
         invoicesTable.setVisibleColumns(NATURAL_COL_ORDER);
+        invoicesTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 200);
+        if (viewName.equals(Settings.cnShortTermDebtsView) || viewName.equals(Settings.cnReturnableAssetsView)) {
+            invoicesTable.setColumnWidth(myUI.getMessage(SptMessages.Note) + " 2", 200);
+        }
         invoicesTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), CustomTable.Align.RIGHT);
-
     }
 
     @Override

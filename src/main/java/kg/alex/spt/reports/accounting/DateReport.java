@@ -191,7 +191,7 @@ public class DateReport implements Button.ClickListener,
         incomesDataTable.addStyleName("noWrapHeader");
 
         outcomesDataTable = new FormattedTable();
-        outcomesDataTable.setCaption(myUI.getMessage(SptMessages.Outcomes));
+        outcomesDataTable.setCaption(myUI.getMessage(SptMessages.Expenses));
         outcomesDataTable.setSizeFull();
         outcomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         outcomesDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -313,7 +313,7 @@ public class DateReport implements Button.ClickListener,
                                 schoolAcc.getTotal_income()) + "$</b>");
                         expenseTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat.format(
                                 schoolAcc.getTotal_outcome()) + "$</b>");
-                        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Transactions) + ": " + Settings.dFormat.format(
+                        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat.format(
                                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$</b>");
                         Calendar c = Calendar.getInstance();
                         c.setTime(fromDateDF.getValue());
@@ -386,7 +386,7 @@ public class DateReport implements Button.ClickListener,
                                                             schoolAcc.getTotal_outcome()) + "$\t "
                                                     + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime())
                                                     + "): " + Settings.dFormat.format(schoolAcc.getPrevious_balance()) + "$\t "
-                                                    + myUI.getMessage(SptMessages.Transactions) + ": " + Settings.dFormat.format(
+                                                    + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat.format(
                                                     (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$\t ");
                                 }
                             }

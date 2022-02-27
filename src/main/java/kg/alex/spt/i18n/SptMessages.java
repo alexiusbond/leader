@@ -505,13 +505,13 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ExamsSettings = generateId();
     public static final String ConsiderFrom = generateId();
     public static final String Currency = generateId();
-    public static final String Transactions = generateId();
+    public static final String CashBox = generateId();
     public static final String Accruals = generateId();
     public static final String Payouts = generateId();
     public static final String Accrual = generateId();
     public static final String Payout = generateId();
     public static final String Incomes = generateId();
-    public static final String Outcomes = generateId();
+    public static final String Expenses = generateId();
     public static final String ValueDeleted = generateId();
     public static final String AttentionLab = generateId();
     public static final String IncomesTotal = generateId();
