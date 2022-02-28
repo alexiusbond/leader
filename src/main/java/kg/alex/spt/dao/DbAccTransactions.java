@@ -225,7 +225,6 @@ public class DbAccTransactions extends BaseDb {
 
     public void execSQL(MyVaadinUI myUI, int incOrOut, int school_id,
                         Grid grid, CashBoxView cbv, Date from, Date till) throws SQLException {
-        IndexedContainer employeesContainer = null, currenciesContainer = null;
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, "
@@ -244,13 +243,16 @@ public class DbAccTransactions extends BaseDb {
         stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = cbv.prepareExpensesContainer();
-        final String tableName = (incOrOut == 1 ? myUI.getMessage(SptMessages.Incomes) : myUI.getMessage(SptMessages.Expenses));
 
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getInt("t.acc_currency_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(result.getInt("t.from_to_employee_id"));
             boolean isDisabled = result.getBoolean("isDisabled");
             if (!isDisabled) {
                 isDisabled = !(currentUser.isPermitted(Settings.cnTransactionsView + ":"
@@ -268,9 +270,10 @@ public class DbAccTransactions extends BaseDb {
             @Override
             public Component getValue(Item item, Object itemId, Object propertyId) {
                 HorizontalLayout hl = new HorizontalLayout();
-                hl.setWidth("65px");
+                hl.setWidth("85px");
                 hl.addComponent(cbv.createButton(myUI.getMessage(SptMessages.DeleteButton), itemId,
-                        tableName, (Boolean) item.getItemProperty(Settings.is_disabled).getValue(), FontAwesome.MINUS_SQUARE));
+                        myUI.getMessage(SptMessages.DeleteButton),
+                        (Boolean) item.getItemProperty(Settings.is_disabled).getValue(), FontAwesome.MINUS_SQUARE));
                 hl.addComponent(cbv.createButton(myUI.getMessage(SptMessages.Print), itemId,
                         myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
                 return hl;

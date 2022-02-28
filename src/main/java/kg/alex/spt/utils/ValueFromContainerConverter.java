@@ -23,7 +23,8 @@ public class ValueFromContainerConverter implements Converter<String, Integer> {
 
     @Override
     public String convertToPresentation(Integer value, Class<? extends String> targetType, Locale locale) throws ConversionException {
-        if (container.getContainerProperty(value, myUi.getMessage(SptMessages.Title)).getValue() != null) {
+        if (container.getContainerProperty(value, myUi.getMessage(SptMessages.Title)) != null &&
+                container.getContainerProperty(value, myUi.getMessage(SptMessages.Title)).getValue() != null) {
             return container.getContainerProperty(value, myUi.getMessage(SptMessages.Title)).getValue().toString();
         }
         return null;

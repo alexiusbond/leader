@@ -16172,7 +16172,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-table-row.v-table-row-highlight-green, .mytheme .v-table-row-odd.v-table-row-highlight-green {
-	background-color: #c8e6c9;
+	background-color: #eafbf5;
 }
 
 .mytheme .v-table-row.v-table-row-highlight-darkgreen, .mytheme .v-table-row-odd.v-table-row-highlight-darkgreen {
@@ -16188,7 +16188,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-table-row.v-table-row-highlight-red, .mytheme .v-table-row-odd.v-table-row-highlight-red {
-	background-color: #ffb9b3;
+	background-color: #ffe6e6;
 }
 
 .mytheme .filters-wrap {
@@ -16363,7 +16363,7 @@ div.v-layout.v-horizontal.v-widget {
 	padding-left: 6px;
 	padding-right: 6px;
 	height: 40px;
-	line-height: 23px;
+	line-height: 24px;
 }
 
 .mytheme .v-grid .v-grid-tablewrapper .v-grid-footer .v-grid-row .v-grid-cell, .mytheme .v-grid .v-grid-tablewrapper .v-grid-footer .v-grid-row .frozen, .mytheme .v-grid .v-grid-tablewrapper .v-grid-footer .v-grid-row .v-grid-cell-focused {
@@ -16373,6 +16373,18 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: bold;
 	height: 28px;
 	line-height: 13px;
+}
+
+.mytheme .v-grid-row.green > td {
+	background-color: #eafbf5;
+}
+
+.mytheme .v-grid-row.red > td {
+	background-color: #ffe6e6;
+}
+
+.mytheme .v-grid-row.ord > td {
+	background-color: #f6f7f9;
 }
 
 .mytheme .align-right {
