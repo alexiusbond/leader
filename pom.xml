@@ -259,6 +259,11 @@
             <artifactId>componentrenderer</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <dependency>
+        <groupId>com.vaadin</groupId>
+        <artifactId>grid-renderers-collection-addon</artifactId>
+        <version>1.2.4</version>
+    </dependency>
     </dependencies>
 
     <build>

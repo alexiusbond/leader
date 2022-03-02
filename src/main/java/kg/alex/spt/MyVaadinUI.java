@@ -185,7 +185,7 @@ public class MyVaadinUI extends UI {
     }
 
     public double getCurrencyRateFromBank() {
-        if (nbkr_currency_rate == 0.00) {
+        //if (nbkr_currency_rate == 0.00) {
             DecimalFormatSymbols symbols = new DecimalFormatSymbols();
             symbols.setDecimalSeparator(',');
             DecimalFormat format = new DecimalFormat("##.##");
@@ -210,7 +210,7 @@ public class MyVaadinUI extends UI {
                 logger.error(e);
                 logger.catching(e);
             }
-        }
+        //}
         return Double.valueOf(Settings.dFormat.format(nbkr_currency_rate));
     }
 

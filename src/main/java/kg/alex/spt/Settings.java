@@ -10,7 +10,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
-import com.vaadin.data.util.converter.StringToFloatConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -252,7 +251,7 @@ public class Settings implements Serializable {
     public static final String actModify = "изменение";
     public static final String prmChangeOldTransactions = "изменение старых записей";
     public static final String prmPaymentsByDates = "оплаты по датам";
-    public static final String prmChangeCurrencyRate = "изменение общего курса доллара";
+    public static final String prmChangeCurrencyRate = "изменение курса доллара";
     public static final String prmGeneralInfo = "общая информация";
     public static final String prmStudentsInfo = "информация об учениках";
     public static final String prmAccountingInfo = "информация по бухгалтерии";
@@ -305,6 +304,7 @@ public class Settings implements Serializable {
     public static final String prmStockGeneralReport = "общий отчет по складам";
     public static final String prmConfirmationControl = "контроль подтверждений";
     public static final String button = "  ";
+    public static final String hashTags = "#";
     public static final String FreshItem = "fresh";
     public static final String cnBackupView = "BackupView";
     public static final String cnCallsView = "CallsView";

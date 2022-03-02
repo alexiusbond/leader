@@ -97,7 +97,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         upperLay.setSizeFull();
         upperLay.setSpacing(false);
-        System.out.println(currentUser.hasRole("bank"));
         if (!currentUser.hasRole("bank")) {
             upperLay.addComponent(buildInfoLay(), 0, 0, 2, 0);
         }

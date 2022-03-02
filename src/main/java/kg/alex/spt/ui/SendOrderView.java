@@ -85,7 +85,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbOrderMessage dbCon = new DbOrderMessage();
             dbCon.connect();
-            if (currentUser.hasRole("admin")) {
+            if (currentUser.hasRole(Settings.rnAdmin)) {
                 dbCon.execSQL(myUI, 0, dataTable, this);
             } else {
                 dbCon.execSQL(myUI, myUI.getUser().getId(), dataTable, this);
@@ -311,7 +311,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 if (dataTable.getContainerDataSource().size() != 0) {
                     DbOrderMessage dbCon = new DbOrderMessage();
                     dbCon.connect();
-                    if (currentUser.hasRole("admin")) {
+                    if (currentUser.hasRole(Settings.rnAdmin)) {
                         tableForExport.setContainerDataSource(dbCon.execSQL(myUI, 0, null, this));
                     } else {
                         tableForExport.setContainerDataSource(

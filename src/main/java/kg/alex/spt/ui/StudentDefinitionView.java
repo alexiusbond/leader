@@ -679,7 +679,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (studDataTable.getValue() != null) {
                 if ((tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                         || tabs.getSelectedTab() == tabs.getTab(payTablelay).getComponent())
-                        && debt > 0.0 && contract_amount == 0.0 && !currentUser.hasRole("admin")) {
+                        && debt > 0.0 && contract_amount == 0.0 && !currentUser.hasRole(Settings.rnAdmin)) {
                     Notification.show(myUI.getMessage(SptMessages.OperationNotAllowedDueToDebt),
                             Notification.Type.WARNING_MESSAGE);
                 } else {

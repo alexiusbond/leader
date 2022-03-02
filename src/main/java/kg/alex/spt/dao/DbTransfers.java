@@ -80,13 +80,13 @@ public class DbTransfers extends BaseDb {
             TextField tf = v.createTextfieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = v.createTextfieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(),
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);

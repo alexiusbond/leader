@@ -147,7 +147,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         currencyHl = new HorizontalLayout();
         currencyHl.setWidth(Settings.PERCENTS100);
         currencyHl.setSpacing(true);
-        currencyHl.setEnabled(currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) && myUI.isManualRate());
+        currencyHl.setEnabled(currentUser.hasRole(Settings.rnAdmin) && myUI.isManualRate());
 
         currencyLab = new Label();
         currencyLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -173,7 +173,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         HorizontalLayout currencySettingsHl = new HorizontalLayout();
         currencySettingsHl.setWidth(Settings.PERCENTS100);
         currencySettingsHl.setSpacing(true);
-        currencySettingsHl.setEnabled(currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
+        currencySettingsHl.setEnabled(currentUser.hasRole(Settings.rnAdmin));
 
         currencySettingsOG = new OptionGroup();
         currencySettingsOG.setWidth(Settings.PERCENTS100);

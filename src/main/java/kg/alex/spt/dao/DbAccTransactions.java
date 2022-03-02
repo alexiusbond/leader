@@ -11,15 +11,12 @@ import com.vaadin.data.util.*;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
-import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.accounting.SchoolsReport;
-import kg.alex.spt.reports.hr.HRGeneralReport;
 import kg.alex.spt.ui.CashBoxView;
 import kg.alex.spt.ui.PayoutsView;
 import kg.alex.spt.ui.TransactionsView;
@@ -29,7 +26,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.apache.xpath.operations.Bool;
 import org.tepi.filtertable.FilterTable;
 import org.tepi.filtertable.FilterTreeTable;
 
@@ -86,13 +82,13 @@ public class DbAccTransactions extends BaseDb {
             TextField tf = pav.createTextfieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = pav.createTextfieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(),
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
@@ -242,31 +238,36 @@ public class DbAccTransactions extends BaseDb {
         stat.setDate(3, new java.sql.Date(from.getTime()));
         stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
-        IndexedContainer container = cbv.prepareExpensesContainer();
+        GeneratedPropertyContainer container;
+        if (incOrOut == 1) {
+            container = cbv.prepareIncomesContainer();
+        } else {
+            container = cbv.prepareExpensesContainer();
+        }
 
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
             item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getInt("t.acc_currency_id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(result.getInt("t.from_to_employee_id"));
+            if (incOrOut == 2) {
+                item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(result.getInt("t.from_to_employee_id"));
+            }
             boolean isDisabled = result.getBoolean("isDisabled");
             if (!isDisabled) {
                 isDisabled = !(currentUser.isPermitted(Settings.cnTransactionsView + ":"
                         + Settings.prmChangeOldTransactions) || result.getBoolean("isNotOld"));
             }
-
             item.getItemProperty(Settings.is_disabled).setValue(isDisabled);
             item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
             item.getItemProperty(Settings.order_number).setValue(result.getInt("t.order_number"));
-
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(result.getTimestamp("t.date_time"));
         }
-        GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(container);
-        gpc.addGeneratedProperty(Settings.button, new PropertyValueGenerator<Component>() {
+        container.addGeneratedProperty(Settings.button, new PropertyValueGenerator<Component>() {
             @Override
             public Component getValue(Item item, Object itemId, Object propertyId) {
                 HorizontalLayout hl = new HorizontalLayout();
@@ -284,8 +285,7 @@ public class DbAccTransactions extends BaseDb {
                 return Component.class;
             }
         });
-        grid.setContainerDataSource(gpc);
-        grid.getColumn(Settings.button).setRenderer(new ComponentRenderer());
+        grid.setContainerDataSource(container);
     }
 
     public int exec_insert(AccTransaction t, Connection conn) throws SQLException {
