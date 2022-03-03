@@ -248,7 +248,7 @@ public class DbAccTransactions extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(result.getTimestamp("t.date_time"));
             item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getInt("t.acc_category_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
@@ -265,7 +265,6 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(Settings.is_disabled).setValue(isDisabled);
             item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
             item.getItemProperty(Settings.order_number).setValue(result.getInt("t.order_number"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(result.getTimestamp("t.date_time"));
         }
         container.addGeneratedProperty(Settings.button, new PropertyValueGenerator<Component>() {
             @Override

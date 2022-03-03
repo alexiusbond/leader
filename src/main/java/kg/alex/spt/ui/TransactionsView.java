@@ -162,7 +162,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         currencyTF.setNullRepresentation("0.1");
         currencyTF.setNullSettingAllowed(false);
         currencyTF.setConverter(Settings.getStringToDoubleConverter());
-        currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+        currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue),
+                0.1, null));
         currencyTF.setPropertyDataSource(property);
         currencyTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
 

@@ -16180,7 +16180,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-table-row.v-table-row-highlight-yellow, .mytheme .v-table-row-odd.v-table-row-highlight-yellow {
-	background-color: #FFFEB0;
+	background-color: #fffecc;
 }
 
 .mytheme .v-table-row.v-table-row-highlight-blue, .mytheme .v-table-row-odd.v-table-row-highlight-blue {
@@ -16376,11 +16376,15 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .v-grid-row.green > td {
-	background-color: #eafbf5;
+	background-color: #d4f7eb;
 }
 
 .mytheme .v-grid-row.red > td {
 	background-color: #ffe6e6;
+}
+
+.mytheme .v-grid-row.yellow > td {
+	background-color: #fffecc;
 }
 
 .mytheme .v-grid-row.ord > td {

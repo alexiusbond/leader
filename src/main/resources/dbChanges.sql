@@ -1,2 +1,0 @@
-UPDATE `spt`.`user_permission` SET `permissions` = 'TransactionsView:показ в меню,изменение курса доллара,изменение старых записей' WHERE (`role_name` = 'admin') and (`permissions` = 'TransactionsView:показ в меню,изменение общего курса доллара,изменение старых записей');
-UPDATE `spt`.`permissions` SET `permissions` = 'показ в меню,изменение курса доллара' WHERE (`java_class_name` = 'TransactionsView');

@@ -152,7 +152,7 @@
     background-color: #81c784;
   }
   .v-table-row.v-table-row-highlight-yellow, .v-table-row-odd.v-table-row-highlight-yellow {
-    background-color: #FFFEB0;
+    background-color: #fffecc;
   }
 
   .v-table-row.v-table-row-highlight-blue, .v-table-row-odd.v-table-row-highlight-blue {
@@ -394,11 +394,15 @@
   }
 
   .v-grid-row.green > td {
-    background-color: #eafbf5;
+    background-color: #d4f7eb;
   }
 
   .v-grid-row.red > td {
     background-color: #ffe6e6;
+  }
+
+  .v-grid-row.yellow > td {
+    background-color: #fffecc;
   }
 
   .v-grid-row.ord > td {
