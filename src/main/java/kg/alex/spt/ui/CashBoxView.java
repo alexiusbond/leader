@@ -341,15 +341,18 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 new NumberRenderer(Settings.getNumberFormat()));
         if (grid == expensesGrid) {
             grid.getColumn(myUI.getMessage(SptMessages.Category)).setRenderer(
-                    new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) expensesCategoryCb.getContainerDataSource(), myUI));
+                    new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) expensesCategoryCb.getContainerDataSource(),
+                            myUI.getMessage(SptMessages.Category), myUI));
             grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setRenderer(
-                    new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) toEmployeesCb.getContainerDataSource(), myUI));
+                    new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) toEmployeesCb.getContainerDataSource(),
+                            myUI.getMessage(SptMessages.ToEmployee), myUI));
         } else {
             grid.getColumn(myUI.getMessage(SptMessages.Category)).setRenderer(
-                    new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) incomesCategoryCb.getContainerDataSource(), myUI));
+                    new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) incomesCategoryCb.getContainerDataSource(),
+                            myUI.getMessage(SptMessages.Category), myUI));
         }
         grid.getColumn(myUI.getMessage(SptMessages.Currency)).setRenderer(
-                new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) currenciesCb.getContainerDataSource(), myUI));
+                new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) currenciesCb.getContainerDataSource(), null, myUI));
         RowIndexRenderer rir = new RowIndexRenderer();
         rir.setOffset(1);
         grid.getColumn(Settings.hashTags).setRenderer(rir);

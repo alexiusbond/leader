@@ -358,6 +358,17 @@ public class DbEmployee extends BaseDb {
         return container;
     }
 
+    public String execSQL_by_id(int id) throws SQLException {
+        String sql = "SELECT e.id, CONCAT(e.surname, ' ', e.name, ' ', IFNULL(e.middle_name, '')) AS fullname FROM employee AS e WHERE e.id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, id);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getString("fullname");
+        }
+        return null;
+    }
+
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id) throws SQLException {
 
         String sql = "SELECT e.id, e.login, e.name, e.surname, e.photo, p.id, p.name, eo.from_date, eo.note, ebh.lessons, ebh.hours, ebh.extra, "
@@ -676,7 +687,7 @@ public class DbEmployee extends BaseDb {
                 "school_id AS sch_id FROM hr_employee_branch_hours GROUP BY employee_id , year_id , school_id) AS ebh " +
                 "ON ebh.e_id = e.id AND ebh.y_id = ? AND ebh.sch_id = eo.school_id " +
                 "LEFT JOIN school AS sch ON sch.id = eo.school_id " +
-                "LEFT JOIN acc_category AS cat ON e.id = cat.employee_id " +
+                "LEFT JOIN acc_category AS cat ON e.id = cat.employee_id and cat.school_id = eo.school_id " +
                 "LEFT JOIN acc_category AS cat2 ON cat.parent_id = cat2.id " +
                 "LEFT JOIN hr_salary_category AS sal ON cat2.parent_id = sal.acc_category_id " +
                 "LEFT JOIN hr_employee_grad_school AS gr_sh ON gr_sh.employee_id = e.id " +
