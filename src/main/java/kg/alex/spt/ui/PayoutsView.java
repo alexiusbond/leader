@@ -69,8 +69,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.InvoiceNumber),
-            myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
-            myUI.getMessage(SptMessages.Note)};
+                myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
+                myUI.getMessage(SptMessages.Note)};
 
         rightLay = new GridLayout(3, 2);
         rightLay.setSpacing(true);
@@ -190,6 +190,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         dateDF.setDateFormat(Settings.dateTimeMinPattern);
         dateDF.setValue(new Date());
+        dateDF.setRangeEnd(new Date());
         settingsLay.addComponent(dateDF, 0, 2, 1, 2);
 
         noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
@@ -246,13 +247,13 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
                     new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                        @Override
+                        public void onClose(ConfirmDialog dialog) {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay) && validateTable(payoutsTable, false)) {
@@ -324,14 +325,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             myUI.getMessage(SptMessages.ConfirmCopy),
                             myUI.getMessage(SptMessages.Yes),
                             myUI.getMessage(SptMessages.No),
-                            new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                exec_copy();
-                            }
-                        }
-                    });
+                            (ConfirmDialog.Listener) dialog -> {
+                                if (dialog.isConfirmed()) {
+                                    exec_copy();
+                                }
+                            });
 
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
@@ -733,11 +731,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
     private void addPayoutsItem() {
         NATURAL_COL_ORDER_PAYOUTS = new String[]{Settings.button,
-            myUI.getMessage(SptMessages.Category),
-            myUI.getMessage(SptMessages.Note),
-            myUI.getMessage(SptMessages.Currency),
-            myUI.getMessage(SptMessages.Rate),
-            myUI.getMessage(SptMessages.Amount)};
+                myUI.getMessage(SptMessages.Category),
+                myUI.getMessage(SptMessages.Note),
+                myUI.getMessage(SptMessages.Currency),
+                myUI.getMessage(SptMessages.Rate),
+                myUI.getMessage(SptMessages.Amount)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (payoutsTable.getContainerDataSource().size() == 0) {
             payoutsTable.setContainerDataSource(preparePayoutsContainer());
@@ -788,11 +786,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     private void setPayoutsTable() {
         try {
             NATURAL_COL_ORDER_PAYOUTS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Category),
-                myUI.getMessage(SptMessages.Note),
-                myUI.getMessage(SptMessages.Currency),
-                myUI.getMessage(SptMessages.Rate),
-                myUI.getMessage(SptMessages.Amount)};
+                    myUI.getMessage(SptMessages.Category),
+                    myUI.getMessage(SptMessages.Note),
+                    myUI.getMessage(SptMessages.Currency),
+                    myUI.getMessage(SptMessages.Rate),
+                    myUI.getMessage(SptMessages.Amount)};
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             payoutsTable.setContainerDataSource(dbCon.execSQL(myUI, invID, myUI.getUser().getSchool_id(), this));
@@ -816,9 +814,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 if (((TextField) payoutsTable.getItem(next).getItemProperty(
                         myUI.getMessage(SptMessages.Amount)).getValue()).isValid()
                         && ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Rate)).getValue()).isValid()
+                        myUI.getMessage(SptMessages.Rate)).getValue()).isValid()
                         && ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
+                        myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
                     if ((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 2) {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
@@ -827,7 +825,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue()
                                 / (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
                     }
                 }
             }
@@ -883,48 +881,66 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
     private void exec_copy() {
         try {
+            double rate = myUI.getDb_currency_rate();
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
+            DbAccTransactions dbAt = new DbAccTransactions();
+            dbAt.connect();
             Invoice inv = getInvoice(0);
             Calendar current = Calendar.getInstance();
             current.setTime(inv.getCreation_date());
             current.add(Calendar.MONTH, 1);
             inv.setCreation_date(current.getTime());
-            int id = dbCon.exec_insert(inv);
-            if (id != 0) {
-                DbAccTransactions dbTr = new DbAccTransactions();
-                dbTr.connect();
-                if (payoutsTable.getContainerDataSource().size() > 0) {
-                    Iterator iter = payoutsTable.getItemIds().iterator();
-                    while (iter.hasNext()) {
-                        Object next = iter.next();
-                        ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
-                        AccTransaction tr = new AccTransaction();
-                        tr.setAcc_invoice_id(id);
-                        tr.setDate(inv.getCreation_date());
-                        tr.setEmployee_id(myUI.getUser().getId());
-                        tr.setSchool_id(myUI.getUser().getSchool_id());
-                        tr.setCurrency_rate(myUI.getDb_currency_rate());
-                        tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
-                        tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
-                        tr.setCategory_id((Integer) cb.getValue());
-                        tr.setCurrency_id((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
-                        tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
-                        dbTr.exec_insert(tr, dbTr.getConnection());
-                    }
-                }
-                dbTr.close();
-                addDatacontainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
-                invoicesTable.setValue(id);
-                Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+            if (rate == 0.0) {
+                Notification.show(myUI.getMessage(SptMessages.CantGetFromNbkr), Notification.Type.ERROR_MESSAGE);
             } else {
-                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                if (current.before(Calendar.getInstance())) {
+                    AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), 0, totalAmount, 2);
+                    if (tr != null) {
+                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
+                                + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
+                    } else {
+                        int id = dbCon.exec_insert(inv);
+                        if (id != 0) {
+                            DbAccTransactions dbTr = new DbAccTransactions();
+                            dbTr.connect();
+                            if (payoutsTable.getContainerDataSource().size() > 0) {
+                                Iterator iter = payoutsTable.getItemIds().iterator();
+                                while (iter.hasNext()) {
+                                    Object next = iter.next();
+                                    ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
+                                    tr = new AccTransaction();
+                                    tr.setAcc_invoice_id(id);
+                                    tr.setDate(inv.getCreation_date());
+                                    tr.setEmployee_id(myUI.getUser().getId());
+                                    tr.setSchool_id(myUI.getUser().getSchool_id());
+                                    tr.setCurrency_rate(rate);
+                                    tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                            myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+                                    tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
+                                            myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
+                                    tr.setCategory_id((Integer) cb.getValue());
+                                    tr.setCurrency_id((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
+                                            myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                                    tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                                    dbTr.exec_insert(tr, dbTr.getConnection());
+                                }
+                            }
+                            dbTr.close();
+                            addDatacontainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
+                            invoicesTable.setValue(id);
+                            Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                        } else {
+                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                        }
+                        dbCon.close();
+                        prepareNormalMode();
+                    }
+                    dbAt.close();
+                } else {
+                    Notification.show(myUI.getMessage(SptMessages.FutureInvoiceNotification), Notification.Type.WARNING_MESSAGE);
+                }
             }
-            dbCon.close();
-            prepareNormalMode();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

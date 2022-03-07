@@ -96,6 +96,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String CanNotDeleteRead = generateId();
     public static final String CanNotGetCurrency = generateId();
     public static final String LowBalance = generateId();
+    public static final String CantGetFromNbkr = generateId();
     public static final String ModifyButton = generateId();
     public static final String CvButton = generateId();
     public static final String DeleteButton = generateId();
@@ -558,6 +559,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ReturnableAssets = generateId();
     public static final String ExistsNotification = generateId();
     public static final String ExistsInvoiceNotification = generateId();
+    public static final String FutureInvoiceNotification = generateId();
     public static final String ToThe = generateId();
     public static final String Country = generateId();
     public static final String EduLevel = generateId();

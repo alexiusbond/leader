@@ -357,7 +357,6 @@ public class DbAccCategory extends BaseDb {
     }
 
     public String exec_for_select_by_id(int id) throws SQLException {
-        System.out.println("exec_for_select_by_id");
         String sql = "select ac.id, concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as name "
                 + "from acc_category as ac where ac.id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
