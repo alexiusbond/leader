@@ -890,56 +890,56 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             Calendar current = Calendar.getInstance();
             current.setTime(inv.getCreation_date());
             current.add(Calendar.MONTH, 1);
-            inv.setCreation_date(current.getTime());
+            if (current.after(Calendar.getInstance())) {
+                inv.setCreation_date(new Date());
+            } else {
+                inv.setCreation_date(current.getTime());
+            }
             if (rate == 0.0) {
                 Notification.show(myUI.getMessage(SptMessages.CantGetFromNbkr), Notification.Type.ERROR_MESSAGE);
             } else {
-                if (current.before(Calendar.getInstance())) {
-                    AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), 0, totalAmount, 2);
-                    if (tr != null) {
-                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
-                                + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
-                    } else {
-                        int id = dbCon.exec_insert(inv);
-                        if (id != 0) {
-                            DbAccTransactions dbTr = new DbAccTransactions();
-                            dbTr.connect();
-                            if (payoutsTable.getContainerDataSource().size() > 0) {
-                                Iterator iter = payoutsTable.getItemIds().iterator();
-                                while (iter.hasNext()) {
-                                    Object next = iter.next();
-                                    ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
-                                    tr = new AccTransaction();
-                                    tr.setAcc_invoice_id(id);
-                                    tr.setDate(inv.getCreation_date());
-                                    tr.setEmployee_id(myUI.getUser().getId());
-                                    tr.setSchool_id(myUI.getUser().getSchool_id());
-                                    tr.setCurrency_rate(rate);
-                                    tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                            myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
-                                    tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
-                                            myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
-                                    tr.setCategory_id((Integer) cb.getValue());
-                                    tr.setCurrency_id((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
-                                            myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
-                                    tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
-                                    dbTr.exec_insert(tr, dbTr.getConnection());
-                                }
-                            }
-                            dbTr.close();
-                            addDatacontainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
-                            invoicesTable.setValue(id);
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
-                        } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
-                        }
-                        dbCon.close();
-                        prepareNormalMode();
-                    }
-                    dbAt.close();
+                AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), 0, totalAmount, 2);
+                if (tr != null) {
+                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
+                            + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.FutureInvoiceNotification), Notification.Type.WARNING_MESSAGE);
+                    int id = dbCon.exec_insert(inv);
+                    if (id != 0) {
+                        DbAccTransactions dbTr = new DbAccTransactions();
+                        dbTr.connect();
+                        if (payoutsTable.getContainerDataSource().size() > 0) {
+                            Iterator iter = payoutsTable.getItemIds().iterator();
+                            while (iter.hasNext()) {
+                                Object next = iter.next();
+                                ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
+                                tr = new AccTransaction();
+                                tr.setAcc_invoice_id(id);
+                                tr.setDate(inv.getCreation_date());
+                                tr.setEmployee_id(myUI.getUser().getId());
+                                tr.setSchool_id(myUI.getUser().getSchool_id());
+                                tr.setCurrency_rate(rate);
+                                tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
+                                        myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+                                tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
+                                        myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
+                                tr.setCategory_id((Integer) cb.getValue());
+                                tr.setCurrency_id((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
+                                        myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                                tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
+                                dbTr.exec_insert(tr, dbTr.getConnection());
+                            }
+                        }
+                        dbTr.close();
+                        addDatacontainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
+                        invoicesTable.setValue(id);
+                        Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                    } else {
+                        Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                    }
+                    dbCon.close();
+                    prepareNormalMode();
                 }
+                dbAt.close();
             }
         } catch (Exception e) {
             logger.error(e);

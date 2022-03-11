@@ -71,7 +71,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     private Accordion accordion;
     private Subject currentUser = SecurityUtils.getSubject();
     private HorizontalLayout currencyHl;
-    private ComboBox expensesCategoryCb, incomesCategoryCb, toEmployeesCb, currenciesCb;
+    private ComboBox expensesCategoryCb, incomesCategoryCb, toEmployeesCb;
     private Date today;
 
     public CashBoxView(MyVaadinUI myUI) {
@@ -175,7 +175,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencyLab.setValue(myUI.getMessage(SptMessages.RateUSD));
 
         currencyTF = new TextField();
-        ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
+        ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         currencyTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         currencyTF.setWidth(Settings.PERCENTS100);
         currencyTF.setNullRepresentation("0.1");
@@ -245,7 +245,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
             if (!(Boolean) event.getItem().getItemProperty(Settings.is_disabled).getValue()) {
                 grid.setEditorEnabled(true);
-                grid.editItem(event.getItemId());
+                if (!grid.isEditorActive()) {
+                    grid.editItem(event.getItemId());
+                }
             } else {
                 grid.setEditorEnabled(false);
             }
@@ -255,44 +257,48 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(Settings.is_disabled).setHidden(true);
         grid.getColumn(Settings.order_number).setHidden(true);
         if (grid == expensesGrid) {
-            expensesCategoryCb = createCombobox(null, true, null);
-            try {
-                DbAccTransactions dbac = new DbAccTransactions();
-                dbac.connect();
-                expensesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0));
-                dbac.close();
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
+            if (expensesCategoryCb == null) {
+                expensesCategoryCb = createCombobox(null, true, null);
+                try {
+                    DbAccTransactions dbac = new DbAccTransactions();
+                    dbac.connect();
+                    expensesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0));
+                    dbac.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
             }
             grid.getColumn(myUI.getMessage(SptMessages.Category)).setEditorField(expensesCategoryCb);
-
-            toEmployeesCb = createCombobox(null, false, null);
-            try {
-                DbEmployee dbCon = new DbEmployee();
-                dbCon.connect();
-                toEmployeesCb.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0));
-                dbCon.close();
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
+            if (toEmployeesCb == null) {
+                toEmployeesCb = createCombobox(null, false, null);
+                try {
+                    DbEmployee dbCon = new DbEmployee();
+                    dbCon.connect();
+                    toEmployeesCb.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0));
+                    dbCon.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
             }
             grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setEditorField(toEmployeesCb);
         } else {
-            incomesCategoryCb = createCombobox(null, true, null);
-            try {
-                DbAccTransactions dbac = new DbAccTransactions();
-                dbac.connect();
-                incomesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 1, myUI.getUser().getSchool_id(), 0));
-                dbac.close();
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
+            if (incomesCategoryCb == null) {
+                incomesCategoryCb = createCombobox(null, true, null);
+                try {
+                    DbAccTransactions dbac = new DbAccTransactions();
+                    dbac.connect();
+                    incomesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 1, myUI.getUser().getSchool_id(), 0));
+                    dbac.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
             }
             grid.getColumn(myUI.getMessage(SptMessages.Category)).setEditorField(incomesCategoryCb);
         }
-        currenciesCb = createCombobox(Settings.dbAcc_currency, true, this);
-        grid.getColumn(myUI.getMessage(SptMessages.Currency)).setEditorField(currenciesCb);
+        grid.getColumn(myUI.getMessage(SptMessages.Currency)).setEditorField(createCombobox(Settings.dbAcc_currency, true, this));
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setEditorField(createDateField(this));
         grid.getColumn(myUI.getMessage(SptMessages.Amount)).setEditorField(createTextField(
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.01, null),
@@ -352,7 +358,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                             myUI.getMessage(SptMessages.Category), myUI));
         }
         grid.getColumn(myUI.getMessage(SptMessages.Currency)).setRenderer(
-                new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) currenciesCb.getContainerDataSource(), null, myUI));
+                new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) ((ComboBox) grid.getEditorFieldGroup().getField(
+                        myUI.getMessage(SptMessages.Currency))).getContainerDataSource(), null, myUI));
         RowIndexRenderer rir = new RowIndexRenderer();
         rir.setOffset(1);
         grid.getColumn(Settings.hashTags).setRenderer(rir);
@@ -475,23 +482,35 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             currencyHl.setEnabled(currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual)));
         } else {
             Grid grid = (Grid) accordion.getSelectedTab();
+            TextField rateTf = null;
+
             if (grid != null && grid.isEditorActive() && grid.getEditedItemId() != null) {
+                TextField amountTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Amount));
                 String itemId = grid.getEditedItemId().toString();
                 ComboBox categoryCb, currencyCb = (ComboBox) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Currency));
-                TextField amountTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Amount)),
-                        rateTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Rate));
+                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
+                    rateTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Rate));
+                }
                 DateField dateDf = (DateField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Date));
                 Item item = grid.getContainerDataSource().getItem(itemId);
 
                 if (accordion.getSelectedTab() == expensesGrid) {
                     categoryCb = expensesCategoryCb;
-                    if (amountTf.getPropertyDataSource().getValue() != null && rateTf.getPropertyDataSource().getValue() != null
-                            && dateDf.getValue() != null && categoryCb.getValue() != null) {
+                    if (amountTf.getPropertyDataSource().getValue() != null && (
+                            !currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
+                                    rateTf.getPropertyDataSource().getValue() != null) && dateDf.getValue() != null && categoryCb.getValue() != null) {
                         try {
                             double amount = Settings.dFormat.parse(amountTf.getValue()).doubleValue();
+                            double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
+                                    Settings.dFormat.parse(rateTf.getValue()).doubleValue() :
+                                    (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue();
                             boolean isKGS = (Integer) currencyCb.getValue() == 1;
                             if (isKGS) {
-                                amount = Settings.round(amount / Settings.dFormat.parse(rateTf.getValue()).doubleValue(), 2);
+                                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
+                                    amount = Settings.round(amount / rate, 2);
+                                } else {
+                                    amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
+                                }
                             }
                             if (amount > 0.0) {
                                 double old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
@@ -506,7 +525,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                     amountTf.removeAllValidators();
                                     double limit = tr.getLimit();
                                     if (isKGS) {
-                                        limit = limit * Settings.dFormat.parse(rateTf.getValue()).doubleValue();
+                                        limit = limit * rate;
                                     }
                                     amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
                                             + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1, Settings.round(limit, 2)));
@@ -530,13 +549,22 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     }
                 } else if (accordion.getSelectedTab() == incomesGrid && !itemId.contains(Settings.FreshItem)) {
                     categoryCb = incomesCategoryCb;
-                    if (amountTf.getPropertyDataSource().getValue() != null && rateTf.getPropertyDataSource().getValue() != null
+                    if (amountTf.getPropertyDataSource().getValue() != null &&
+                            (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
+                                    rateTf.getPropertyDataSource().getValue() != null)
                             && dateDf.getValue() != null && categoryCb.getValue() != null) {
                         try {
                             double amount = Settings.dFormat.parse(amountTf.getValue()).doubleValue();
+                            double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
+                                    Settings.dFormat.parse(rateTf.getValue()).doubleValue() :
+                                    (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue();
                             boolean isKGS = (Integer) currencyCb.getValue() == 1;
                             if (isKGS) {
-                                amount = Settings.round(amount / Settings.dFormat.parse(rateTf.getValue()).doubleValue(), 2);
+                                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
+                                    amount = Settings.round(amount / rate, 2);
+                                } else {
+                                    amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
+                                }
                             }
                             if (amount > 0.0) {
                                 double old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
@@ -553,7 +581,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                         amountTf.removeAllValidators();
                                         double limit = tr.getLimit();
                                         if (isKGS) {
-                                            limit = limit * Settings.dFormat.parse(rateTf.getValue()).doubleValue();
+                                            limit = limit * rate;
                                         }
                                         amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
                                                 + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
@@ -585,7 +613,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 }
             }
         }
-
     }
 
     private void setGridData(int in_out) {

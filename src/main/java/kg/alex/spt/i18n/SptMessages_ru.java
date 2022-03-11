@@ -565,7 +565,6 @@ public class SptMessages_ru extends SptMessages {
             {ReturnableAssets, "Балансовые возвращаемые активы"},
             {ExistsNotification, "Запись данной категории уже сущестует!"},
             {ExistsInvoiceNotification, "Накладная с выбранной датой уже существует!"},
-            {FutureInvoiceNotification, "Накладная с датой в будущем не может быть скопирована!"},
             {YouCanNotModifyOrDeleteConfirmed, "Вы не можете удалить или изменить подтвержденную накладную!"},
             {Country, "Страна"},
             {EduLevel, "Степень"},
