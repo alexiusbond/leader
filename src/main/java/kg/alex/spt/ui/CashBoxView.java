@@ -248,6 +248,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 if (!grid.isEditorActive()) {
                     grid.editItem(event.getItemId());
                 }
+                TextField amountTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.Amount)).getEditorField();
+                amountTf.removeAllValidators();
+                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
             } else {
                 grid.setEditorEnabled(false);
             }
@@ -481,6 +484,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         if (property == currencySettingsOG) {
             currencyHl.setEnabled(currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual)));
         } else {
+
             Grid grid = (Grid) accordion.getSelectedTab();
             TextField rateTf = null;
 
