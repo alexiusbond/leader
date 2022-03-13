@@ -3628,7 +3628,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbc.connect();
             if (isNewContract) {
                 dbc.exec_delete((Integer) studDataTable.getValue(), myUI.getUser().getCurrent_year().getId());
-                dbc.exec_insert_st_contract(getStudentContract((Integer) studDataTable.getValue(),
+                dbc.exec_insert_st_contract(myUI, getStudentContract((Integer) studDataTable.getValue(),
                         myUI.getUser().getCurrent_year().getId()));
             } else {
                 dbc.exec_update_st_contract(getStudentContract((Integer) studDataTable.getValue(),

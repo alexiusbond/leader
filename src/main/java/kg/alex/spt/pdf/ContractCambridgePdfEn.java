@@ -71,7 +71,8 @@ public class ContractCambridgePdfEn {
                     PdfContentByte punder = writer.getDirectContentUnder();
 
                     Paragraph spr = new Paragraph();
-                    spr.add(new Phrase("Student Contract", font_header));
+                    spr.add(new Phrase("Student Contract № "
+                            + String.format("%07d", student.getContract_number()), font_header));
                     spr.add(Chunk.NEWLINE);
                     spr.add(new Phrase("by parental contributions", font_header));
                     spr.add(Chunk.NEWLINE);

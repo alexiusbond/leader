@@ -32,10 +32,10 @@ public class DbStudentContract extends BaseDb {
         super();
     }
 
-    public int exec_insert_st_contract(StudentContract c) throws SQLException {
-        String sql = "INSERT INTO student_contract (student_id,year_id,"
-                + "contract_id,debt,employee_id,modification_date,activity_status_id,contr_with_disc) "
-                + "VALUES(?,?,?,?,?,NOW(),?,?);";
+    public int exec_insert_st_contract(MyVaadinUI myUi, StudentContract c) throws SQLException {
+        String sql = "INSERT INTO student_contract (student_id, year_id, contract_id, debt, employee_id, " +
+                "modification_date, activity_status_id, contr_with_disc, contract_number) "
+                + "VALUES(?,?,?,?,?,NOW(),?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, c.getStudent_id());
         stat.setInt(2, c.getYear_id());
@@ -44,6 +44,8 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(5, c.getEmployee_id());
         stat.setInt(6, c.getStatus_id());
         stat.setDouble(7, c.getContr_with_disc());
+        stat.setInt(8, exec_next_contract_number(myUi.getUser().getSchool_id(),
+                myUi.getUser().getCurrent_year().getId()));
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -1187,5 +1189,18 @@ public class DbStudentContract extends BaseDb {
             contr = result.getBoolean("isLastContract");
         }
         return contr;
+    }
+
+    public int exec_next_contract_number(int school_id, int year_id) throws SQLException {
+        String sql = "SELECT (ifnull(max(tr.contract_number), 0) + 1) as num FROM student_contract tr "
+                + "LEFT JOIN student st ON st.id = tr.student_id where st.school_id = ? and tr.year_id = ?;";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, school_id);
+        stat.setInt(2, year_id);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getInt("num");
+        }
+        return 0;
     }
 }

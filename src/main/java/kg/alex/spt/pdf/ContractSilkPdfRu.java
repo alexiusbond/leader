@@ -79,10 +79,11 @@ public class ContractSilkPdfRu {
                     PdfContentByte punder = writer.getDirectContentUnder();
 
                     Paragraph spr = new Paragraph();
-                    spr.add(new Phrase("ДОГОВОР", font_header));
+                    spr.add(new Phrase("ДОГОВОР № "
+                            + String.format("%07d", student.getContract_number()), font_header));
                     spr.add(Chunk.NEWLINE);
-                    spr.add(new Phrase("об оказании платных образовательных услуг",
-                            font_header));
+
+                    spr.add(new Phrase("Об оказании платных образовательных услуг", font_header));
                     spr.add(Chunk.NEWLINE);
 
                     Calendar cal = Calendar.getInstance();

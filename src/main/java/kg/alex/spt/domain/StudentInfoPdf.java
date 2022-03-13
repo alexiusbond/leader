@@ -51,6 +51,15 @@ public class StudentInfoPdf implements Serializable {
     private String ctr_discountPerc;
     private String ctr_Correction;
     private boolean isStudentFeminitive;
+    private int contract_number;
+
+    public int getContract_number() {
+        return contract_number;
+    }
+
+    public void setContract_number(int contract_number) {
+        this.contract_number = contract_number;
+    }
 
     public String getCtr_Correction() {
         return ctr_Correction;
