@@ -23,7 +23,6 @@ import kg.alex.spt.domain.InventoryOrganization;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InventoryOrganizationPdf;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -46,7 +45,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, printBtn, addBtn;
     private PopupButton searchBtn;
-    private ComboBoxMax blockSelect, floorSelect, roomSelect;
+    private ComboBox blockSelect, floorSelect, roomSelect;
     private FormattedTable inventoriesTable;
     private TextField invoiceNumberTF;
     private TextArea noteTF;
@@ -178,7 +177,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         dateDF.addValueChangeListener(this);
         settingsLay.addComponent(dateDF, 0, 2, 1, 2);
 
-        blockSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Block));
+        blockSelect = new ComboBox(myUI.getMessage(SptMessages.Block));
         blockSelect.setNullSelectionAllowed(false);
         blockSelect.setRequired(true);
         blockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -189,7 +188,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         blockSelect.addValueChangeListener(this);
         settingsLay.addComponent(blockSelect, 0, 3, 1, 3);
 
-        floorSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Floor));
+        floorSelect = new ComboBox(myUI.getMessage(SptMessages.Floor));
         floorSelect.setNullSelectionAllowed(false);
         floorSelect.setRequired(true);
         floorSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -212,7 +211,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             logger.catching(e);
         }
 
-        roomSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Room));
+        roomSelect = new ComboBox(myUI.getMessage(SptMessages.Room));
         roomSelect.setNullSelectionAllowed(false);
         roomSelect.setRequired(true);
         roomSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -758,8 +757,8 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         return true;
     }
 
-    public ComboBoxMax createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isEnabled) {
-        ComboBoxMax cb = new ComboBoxMax();
+    public ComboBox createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isEnabled) {
+        ComboBox cb = new ComboBox();
         if (isEnabled) {
             cb.setDescription(description);
         } else {
@@ -863,9 +862,9 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             inventoriesCont.addContainerProperty(Settings.button, Button.class, null);
             inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Remain), Integer.class, null);
             inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBoxMax.class, null);
-            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Brand), ComboBoxMax.class, null);
-            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Title), ComboBoxMax.class, null);
+            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBox.class, null);
+            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Brand), ComboBox.class, null);
+            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Title), ComboBox.class, null);
             inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Quantity), TextField.class, null);
             inventoriesCont.addContainerProperty(Settings.quantity_id, Integer.class, 0);
             inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Price), TextField.class, null);
@@ -909,7 +908,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                         roomSelect.getContainerProperty(roomSelect.getValue(),
                                 myUI.getMessage(SptMessages.Room)).getValue() + "-" +
                         inventoriesTable.size());
-        final ComboBoxMax cb =
+        final ComboBox cb =
                 createCombobox(0, myUI.getMessage(SptMessages.Brand),
                         Settings.dbInventoryBrandTable, true, true);
         cb.setNewItemsAllowed(true);
@@ -938,7 +937,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             }
         });
         item.getItemProperty(myUI.getMessage(SptMessages.Brand)).setValue(cb);
-        final ComboBoxMax cb2 =
+        final ComboBox cb2 =
                 createCombobox(0, myUI.getMessage(SptMessages.Title),
                         Settings.dbInventoryTitleTable, true, true);
         cb2.setNewItemsAllowed(true);
@@ -1095,11 +1094,11 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                             myUI.getMessage(SptMessages.LifeTime)).getValue()).getPropertyDataSource().getValue());
                     imv.setPurchase_date(((DateField) inventoriesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.PurchaseYear)).getValue()).getValue());
-                    imv.setInventory_category_id((Integer) ((ComboBoxMax) inventoriesTable.getItem(next).getItemProperty(
+                    imv.setInventory_category_id((Integer) ((ComboBox) inventoriesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Category)).getValue()).getValue());
-                    imv.setTitle_id((Integer) ((ComboBoxMax) inventoriesTable.getItem(next).getItemProperty(
+                    imv.setTitle_id((Integer) ((ComboBox) inventoriesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Title)).getValue()).getValue());
-                    imv.setBrand_id((Integer) ((ComboBoxMax) inventoriesTable.getItem(next).getItemProperty(
+                    imv.setBrand_id((Integer) ((ComboBox) inventoriesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Brand)).getValue()).getValue());
                     imv.setCode(inventoriesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Code)).getValue().toString());

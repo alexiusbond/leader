@@ -19,7 +19,6 @@ import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeCertificate;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -101,7 +100,7 @@ public class DbEmployeeCertificate extends BaseDb {
                     edv.createDateField(result.getDate("ec.date_of_issue"),
                             myUI.getMessage(SptMessages.IssueDate), null,
                             true, Settings.datePattern, Resolution.DAY));
-            final ComboBoxMax cb2 = edv.createCombobox(result.getInt("ec.certificate_id"),
+            final ComboBox cb2 = edv.createCombobox(result.getInt("ec.certificate_id"),
                     myUI.getMessage(SptMessages.Certificate), Settings.dbCertificateTable, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {

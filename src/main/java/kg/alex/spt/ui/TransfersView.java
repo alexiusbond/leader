@@ -25,7 +25,10 @@ import kg.alex.spt.domain.Invoice;
 import kg.alex.spt.domain.Transfer;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.*;
+import kg.alex.spt.utils.ExistsValidator;
+import kg.alex.spt.utils.FormattedFilterTable;
+import kg.alex.spt.utils.FormattedTable;
+import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -402,9 +405,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                                                                     myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
                                                             acr.setNote(((TextField) transfersTable.getItem(next).getItemProperty(
                                                                     myUI.getMessage(SptMessages.Note)).getValue()).getValue());
-                                                            acr.setAcc_category_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                                                            acr.setAcc_category_id((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                                                                     myUI.getMessage(SptMessages.Category)).getValue()).getValue());
-                                                            acr.setCurrency_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                                                            acr.setCurrency_id((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                                                                     myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                                                             dbAcr.exec_insert(acr);
                                                         }
@@ -503,8 +506,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                         Cell cell = row.getCell(k);
 
                         Object component = transfersTable.getContainerProperty(((IndexedContainer) transfersTable.getContainerDataSource()).getIdByIndex(i), propName).getValue();
-                        if (component instanceof ComboBoxMax) {
-                            ComboBoxMax cb = (ComboBoxMax) component;
+                        if (component instanceof ComboBox) {
+                            ComboBox cb = (ComboBox) component;
                             cell.setCellValue(cb.getItemCaption(cb.getValue()));
                         } else if (component instanceof TextField) {
                             TextField tf = (TextField) component;
@@ -577,9 +580,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (event.getProperty() instanceof ComboBoxMax && ((ComboBoxMax) event.getProperty()).getId() != null) {
-            ComboBoxMax catCb = (ComboBoxMax) event.getProperty();
-            ((ComboBoxMax) transfersTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
+        } else if (event.getProperty() instanceof ComboBox && ((ComboBox) event.getProperty()).getId() != null) {
+            ComboBox catCb = (ComboBox) event.getProperty();
+            ((ComboBox) transfersTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
                     (Integer) catCb.getContainerProperty(catCb.getValue(), Settings.acc_currency_id).getValue());
             repaintTransfersFooter();
         } else if (event.getProperty().getType() != null) {
@@ -841,8 +844,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         return true;
     }
 
-    public ComboBoxMax createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isExistsValiator) {
-        ComboBoxMax cb = new ComboBoxMax();
+    public ComboBox createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isExistsValiator) {
+        ComboBox cb = new ComboBox();
         if (isExistsValiator) {
             cb.addValidator(new ExistsValidator(myUI, transfersCont, cb, description));
         }
@@ -919,10 +922,10 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         if (transfersCont == null) {
             transfersCont = new IndexedContainer();
             transfersCont.addContainerProperty(Settings.button, Button.class, null);
-            transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBoxMax.class, null);
+            transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBox.class, null);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
             transfersCont.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
-            transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBoxMax.class, null);
+            transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBox.class, null);
             transfersCont.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Rate), TextField.class, 0.0);
             transfersCont.addContainerProperty(myUI.getMessage(SptMessages.Amount), TextField.class, 0.0);
@@ -949,7 +952,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 transfersTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbTransfers));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.Category), null,
+        ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.Category), null,
                 true, acc_invoice_type_id == 1);
         try {
             DbAccCategory dbCon = new DbAccCategory();
@@ -1022,9 +1025,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                         myUI.getMessage(SptMessages.Amount)).getValue()).isValid()
                         && ((TextField) transfersTable.getItem(next).getItemProperty(
                         myUI.getMessage(SptMessages.Rate)).getValue()).isValid()
-                        && ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                        && ((ComboBox) transfersTable.getItem(next).getItemProperty(
                         myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
-                    if ((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                    if ((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 2) {
                         total += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue();
@@ -1063,9 +1066,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                             myUI.getMessage(SptMessages.Note)).getValue()).getValue());
                     acr.setAmount((Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
-                    acr.setAcc_category_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                    acr.setAcc_category_id((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Category)).getValue()).getValue());
-                    acr.setCurrency_id((Integer) ((ComboBoxMax) transfersTable.getItem(next).getItemProperty(
+                    acr.setCurrency_id((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     if (transfersTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Update))) {
                         acr.setId(Integer.parseInt(next.toString()));

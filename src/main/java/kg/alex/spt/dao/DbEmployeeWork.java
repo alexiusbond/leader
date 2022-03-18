@@ -17,10 +17,9 @@ import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeWork;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.sql.*;
 import java.util.Iterator;
@@ -103,10 +102,10 @@ public class DbEmployeeWork extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeWork, FontAwesome.MINUS_SQUARE));
-            ComboBoxMax cb = edv.createCombobox(0, myUI.getMessage(SptMessages.MainPosition),
+            ComboBox cb = edv.createCombobox(0, myUI.getMessage(SptMessages.MainPosition),
                     null, true);
             item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(cb);
-            ComboBoxMultiselectMax cb3 = edv.createComboboxMulti(
+            ComboBoxMultiselect cb3 = edv.createComboboxMulti(
                     myUI.getMessage(SptMessages.ExtraPositions), false);
             try {
                 DbDefinition dbDef = new DbDefinition();
@@ -137,7 +136,7 @@ public class DbEmployeeWork extends BaseDb {
             }
             cb.setValue(result.getInt("ew.working_status_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(cb);
-            final ComboBoxMax cb2 = edv.createCombobox(result.getInt("ew.hr_work_place_id"),
+            final ComboBox cb2 = edv.createCombobox(result.getInt("ew.hr_work_place_id"),
                     myUI.getMessage(SptMessages.WorkPlace), Settings.dbWork_placeTable, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {

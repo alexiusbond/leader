@@ -13,8 +13,6 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.StudentOrder;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,8 +30,8 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
     static final Logger logger = LogManager.getLogger(IssueOrderView.class);
     private MyVaadinUI myUI;
     private Button saveBtn;
-    private ComboBoxMax classSelect, orderSelect;
-    private ComboBoxMultiselectMax reasonsMCB;
+    private ComboBox classSelect, orderSelect;
+    private ComboBoxMultiselect reasonsMCB;
     private FilterTable studentsTable;
     private Table historyTable;
     private DateField dateDF;
@@ -121,7 +119,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         dateDF.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(dateDF);
 
-        orderSelect = new ComboBoxMax(myUI.getMessage(SptMessages.OrderType));
+        orderSelect = new ComboBox(myUI.getMessage(SptMessages.OrderType));
         orderSelect.setNullSelectionAllowed(false);
         orderSelect.setRequired(true);
         orderSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -131,7 +129,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         orderSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(orderSelect);
 
-        classSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ClassName));
+        classSelect = new ComboBox(myUI.getMessage(SptMessages.ClassName));
         classSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         classSelect.setWidth(Settings.PERCENTS100);
         classSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -150,7 +148,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         }
         settingsLay.addComponent(classSelect);
 
-        reasonsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Reasons));
+        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         reasonsMCB.setWidth(Settings.PERCENTS100);
         reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));

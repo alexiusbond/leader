@@ -21,7 +21,6 @@ import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.EducationStatus;
 import kg.alex.spt.domain.EmployeesCount;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -36,7 +35,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
     private Button weekLog, monthLog, allLog;
     private Table logTable;
     private Label logTablecaption;
-    private ComboBoxMax logsTypeSelect;
+    private ComboBox logsTypeSelect;
     private VerticalLayout accLayout = new VerticalLayout();
     private ContractTotal tc;
 
@@ -446,7 +445,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logButtonsLayout.setWidth(Settings.PERCENTS100);
         logButtonsLayout.setSpacing(true);
 
-        logsTypeSelect = new ComboBoxMax();
+        logsTypeSelect = new ComboBox();
         logsTypeSelect.setNullSelectionAllowed(false);
         logsTypeSelect.setWidth(Settings.PERCENTS100);
         logsTypeSelect.setFilteringMode(FilteringMode.CONTAINS);

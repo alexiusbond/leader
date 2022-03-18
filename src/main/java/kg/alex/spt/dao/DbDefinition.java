@@ -11,7 +11,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -305,7 +305,7 @@ public class DbDefinition extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.ClassCaption), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Value), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Functions), ComboBoxMultiselectMax.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Functions), ComboBoxMultiselect.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getString("p.java_class_name"));
@@ -361,7 +361,8 @@ public class DbDefinition extends BaseDb {
     }
 
     public int execSQL_login() throws SQLException {
-        String sql = "SELECT l.login FROM logins AS l LEFT JOIN employee AS e ON l.login = e.login WHERE e.login IS NULL LIMIT 1;";
+        String sql = "SELECT l.login FROM logins AS l LEFT JOIN employee AS e ON l.login = e.login " +
+                "WHERE e.login IS NULL LIMIT 1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         while (result.next()) {

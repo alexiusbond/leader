@@ -19,7 +19,6 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.Contract;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.DefinitionsFilterGenerator;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -39,7 +38,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
     static final Logger logger = LogManager.getLogger(ContractDefintionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax statusSelect, yearSelect;
+    private ComboBox statusSelect, yearSelect;
     private FormattedFilterTable dataTable;
     private PopupButton copyButton;
     private TextField nameTF, valueTF;
@@ -134,7 +133,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.addValueChangeListener(this);
@@ -174,7 +173,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
         settingsLay.addComponent(valueTF);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

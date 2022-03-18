@@ -3,6 +3,7 @@ package kg.alex.spt.ui;
 import com.vaadin.data.Property;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
@@ -11,14 +12,13 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.hr.HRGeneralReport;
 import kg.alex.spt.reports.hr.HRLessonHoursReport;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
 public class HRReportsView extends HorizontalSplitPanel implements Property.ValueChangeListener {
 
     private MyVaadinUI myUI;
-    private ComboBoxMax repTypeSelect;
+    private ComboBox repTypeSelect;
 
     private GridLayout leftGrid, rightGrid;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -46,7 +46,7 @@ public class HRReportsView extends HorizontalSplitPanel implements Property.Valu
         rightGrid.setSpacing(true);
         rightGrid.setWidth(Settings.PERCENTS100);
 
-        repTypeSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ReportType));
+        repTypeSelect = new ComboBox(myUI.getMessage(SptMessages.ReportType));
         repTypeSelect.setNullSelectionAllowed(false);
         repTypeSelect.setRequired(true);
         repTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));

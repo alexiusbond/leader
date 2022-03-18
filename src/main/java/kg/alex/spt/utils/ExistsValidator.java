@@ -7,6 +7,7 @@ package kg.alex.spt.utils;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
+import com.vaadin.ui.ComboBox;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.i18n.SptMessages;
 
@@ -19,10 +20,10 @@ public class ExistsValidator implements Validator {
 
     private Container container;
     private MyVaadinUI myUi;
-    private ComboBoxMax comboBox;
+    private ComboBox comboBox;
     private String propertyName;
 
-    public ExistsValidator(MyVaadinUI myUi, Container container, ComboBoxMax comboBox, String propertyName) {
+    public ExistsValidator(MyVaadinUI myUi, Container container, ComboBox comboBox, String propertyName) {
         this.myUi = myUi;
         this.container = container;
         this.comboBox = comboBox;
@@ -40,10 +41,10 @@ public class ExistsValidator implements Validator {
         Iterator iter = container.getItemIds().iterator();
         while (iter.hasNext()) {
             Object next = iter.next();
-            if (((ComboBoxMax) container.getItem(next).getItemProperty(
+            if (((ComboBox) container.getItem(next).getItemProperty(
                     propertyName).getValue()).getValue() != null &&
                     comboBox != container.getItem(next).getItemProperty(propertyName).getValue()
-                    && value.equals(((ComboBoxMax) container.getItem(next).getItemProperty(
+                    && value.equals(((ComboBox) container.getItem(next).getItemProperty(
                     propertyName).getValue()).getValue() + "")) {
                 return false;
             }

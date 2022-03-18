@@ -11,6 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
@@ -19,7 +20,6 @@ import kg.alex.spt.domain.StockMovement;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.StockIncomeView;
 import kg.alex.spt.ui.StockOutcomeView;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTreeTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,7 +66,7 @@ public class DbStockMovements extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
                     v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbStockMovement, is_modifyable));
-            ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true, is_modifyable);
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true, is_modifyable);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -176,7 +176,7 @@ public class DbStockMovements extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
                     v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbStockMovement));
-            ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true);
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();

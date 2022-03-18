@@ -20,7 +20,6 @@ import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.InventoryOrganization;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.InventoryOrganizationView;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -101,7 +100,7 @@ public class DbInventoryOrganization extends BaseDb {
                     v.createCombobox(result.getInt("t.inventory_category_id"),
                             myUi.getMessage(SptMessages.Category),
                             Settings.dbInventoryCategoryTable, true, true));
-            final ComboBoxMax cb = v.createCombobox(result.getInt("t.brand_id"), myUi.getMessage(SptMessages.Brand),
+            final ComboBox cb = v.createCombobox(result.getInt("t.brand_id"), myUi.getMessage(SptMessages.Brand),
                     Settings.dbInventoryBrandTable, true, true);
             cb.setNewItemsAllowed(true);
             cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
@@ -129,7 +128,7 @@ public class DbInventoryOrganization extends BaseDb {
                 }
             });
             item.getItemProperty(myUi.getMessage(SptMessages.Brand)).setValue(cb);
-            final ComboBoxMax cb2 = v.createCombobox(result.getInt("t.title_id"), myUi.getMessage(SptMessages.Title),
+            final ComboBox cb2 = v.createCombobox(result.getInt("t.title_id"), myUi.getMessage(SptMessages.Title),
                     Settings.dbInventoryTitleTable, true, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {

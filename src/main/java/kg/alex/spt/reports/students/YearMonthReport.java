@@ -23,8 +23,6 @@ import kg.alex.spt.pdf.MonthsReportPdf;
 import kg.alex.spt.pdf.SummaryReportPdf;
 import kg.alex.spt.pdf.YearReportPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -46,8 +44,8 @@ public class YearMonthReport implements Button.ClickListener,
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private FilterTable schoolTable;
-    private ComboBoxMax yearSelect;
-    private ComboBoxMultiselectMax educationStatusMCB;
+    private ComboBox yearSelect;
+    private ComboBoxMultiselect educationStatusMCB;
     private EnhancedFormatExcelExport excelReport;
 
     private String[] NATURAL_COL_ORDER_YEAR;
@@ -100,7 +98,7 @@ public class YearMonthReport implements Button.ClickListener,
         leftGrid.setSpacing(true);
         leftGrid.setWidth(Settings.PERCENTS100);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -109,7 +107,7 @@ public class YearMonthReport implements Button.ClickListener,
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));

@@ -418,6 +418,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String YearMonthReport = generateId();
     public static final String MonthReport = generateId();
     public static final String AccountingBalanceReport = generateId();
+    public static final String AccountingBankReport = generateId();
     public static final String ProductMovementsReport = generateId();
     public static final String StockGeneralReport = generateId();
     public static final String SchoolAccountingReport = generateId();

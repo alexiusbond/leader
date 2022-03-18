@@ -27,7 +27,6 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.AccCategory;
 import kg.alex.spt.domain.EmployeeOrder;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +41,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
     static final Logger logger = LogManager.getLogger(EmployeeTransferView.class);
     private MyVaadinUI myUI;
     private Button saveBtn, cancelBtn;
-    private ComboBoxMax school1Select, school2Select;
+    private ComboBox school1Select, school2Select;
     private Table data1Table, data2Table;
     private TextField search1TF, search2TF;
     private GridLayout settingsLay;
@@ -147,7 +146,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         Label l1 = new Label(myUI.getMessage(SptMessages.School) + " 1:");
         l1.setSizeUndefined();
 
-        school1Select = new ComboBoxMax();
+        school1Select = new ComboBox();
         school1Select.setNullSelectionAllowed(false);
         school1Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
         school1Select.setWidth(Settings.PERCENTS100);
@@ -166,7 +165,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         Label l2 = new Label(myUI.getMessage(SptMessages.School) + " 2:");
         l2.setSizeUndefined();
 
-        school2Select = new ComboBoxMax();
+        school2Select = new ComboBox();
         school2Select.setNullSelectionAllowed(false);
         school2Select.setStyleName(ValoTheme.COMBOBOX_SMALL);
         school2Select.setWidth(Settings.PERCENTS100);
@@ -486,7 +485,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     eo.setSchool_id(Integer.parseInt(t.getId()));
                     eo.setOrder_id(8);
                     st = dbeo.exec_insert(eo);
-                    eo.setPosition_id((Integer) ((ComboBoxMax) t.getContainerProperty(
+                    eo.setPosition_id((Integer) ((ComboBox) t.getContainerProperty(
                             next, myUI.getMessage(SptMessages.MainPosition)).getValue()).getValue());
                     eo.setOrder_id(1);
                     st = dbeo.exec_insert(eo);
@@ -562,7 +561,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                 if (value instanceof DateField) {
                     ((DateField) value).setEnabled(true);
                     ((DateField) value).setValue(new Date());
-                } else if (value instanceof ComboBoxMax) {
+                } else if (value instanceof ComboBox) {
                     ((AbstractField) value).setEnabled(true);
                     ((AbstractField) value).setValue(null);
                 } else if (value instanceof TextField) {

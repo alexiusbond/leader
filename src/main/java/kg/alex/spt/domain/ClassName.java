@@ -8,18 +8,23 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 
 /**
- *
  * @author alex
  */
 public class ClassName implements Serializable {
 
     private int id;
     private String name;
+    private String code;
     private int class_number_id;
     private int status_id;
     private int school_id;
 
-    public ClassName() {
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public int getId() {

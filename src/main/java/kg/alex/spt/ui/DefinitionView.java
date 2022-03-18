@@ -16,7 +16,6 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -36,7 +35,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
     private PopupButton replaceBtn;
     private Table dataTable;
     private TextField nameTF;
-    private ComboBoxMax statusSelect, replaceItemSelect;
+    private ComboBox statusSelect, replaceItemSelect;
     private boolean withActivityStatus;
     private String dbTableName, dbTableReplaceIn, dbReplaceColumn;
     private boolean isNew;
@@ -148,7 +147,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         replaceLay.setMargin(true);
         replaceLay.setSpacing(true);
 
-        replaceItemSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ElementForReplacement));
+        replaceItemSelect = new ComboBox(myUI.getMessage(SptMessages.ElementForReplacement));
         replaceItemSelect.setNullSelectionAllowed(false);
         replaceItemSelect.setRequired(true);
         replaceItemSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -208,7 +207,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         settingsLay.addComponent(nameTF);
 
         if (withActivityStatus) {
-            statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+            statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
             statusSelect.setNullSelectionAllowed(false);
             statusSelect.setRequired(true);
             statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));

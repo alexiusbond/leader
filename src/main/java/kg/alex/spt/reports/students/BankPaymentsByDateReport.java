@@ -9,30 +9,33 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
+import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.ExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import java.util.Date;
 
-public class PaymentsByDateReport extends HorizontalSplitPanel implements Button.ClickListener,
+public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(PaymentsByDateReport.class);
+    static final Logger logger = LogManager.getLogger(BankPaymentsByDateReport.class);
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn;
     private OptionGroup typeOG;
-    private ComboBoxMax currencySelect;
+    private ComboBox schoolSelect, currencySelect;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;
     private ExcelExport excelReport;
+    private Subject currentUser = SecurityUtils.getSubject();
 
-    public PaymentsByDateReport(final MyVaadinUI ui) {
+    public BankPaymentsByDateReport(final MyVaadinUI ui) {
         this.myUI = ui;
         this.setSplitPosition(23, Unit.PERCENTAGE);
         this.setStyleName(ValoTheme.SPLITPANEL_LARGE);
@@ -44,7 +47,7 @@ public class PaymentsByDateReport extends HorizontalSplitPanel implements Button
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 4);
+        leftGrid = new GridLayout(4, 5);
         leftGrid.setWidth("100%");
         leftGrid.setSpacing(true);
         leftGrid.setMargin(new MarginInfo(false, false, false, true));
@@ -90,7 +93,30 @@ public class PaymentsByDateReport extends HorizontalSplitPanel implements Button
         typeOG.addItem(myUI.getMessage(SptMessages.DetailedReport));
         typeOG.setValue(myUI.getMessage(SptMessages.AggregatedReport));
 
-        currencySelect = new ComboBoxMax(myUI.getMessage(SptMessages.Currency));
+        schoolSelect = new ComboBox(myUI.getMessage(SptMessages.School));
+        schoolSelect.setNullSelectionAllowed(false);
+        schoolSelect.setRequired(true);
+        schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        schoolSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        schoolSelect.setWidth("100%");
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
+        schoolSelect.addValueChangeListener(this);
+        try {
+            DbSchool dbs = new DbSchool();
+            dbs.connect();
+            schoolSelect.setContainerDataSource(dbs.execSchoolSel(myUI, 1));
+            dbs.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        if (!currentUser.hasRole(Settings.rnBank)) {
+            schoolSelect.setValue(myUI.getUser().getSchool_id());
+        }
+        schoolSelect.setVisible(currentUser.hasRole(Settings.rnBank));
+
+        currencySelect = new ComboBox(myUI.getMessage(SptMessages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -113,9 +139,11 @@ public class PaymentsByDateReport extends HorizontalSplitPanel implements Button
         leftGrid.addComponent(typeOG, 0, 0, 3, 0);
         leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
         leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
-        leftGrid.addComponent(currencySelect, 0, 2, 3, 2);
-        leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
-        leftGrid.addComponent(excelBtn, 3, 3);
+        leftGrid.addComponent(schoolSelect, 0, 2, 3, 2);
+        leftGrid.addComponent(currencySelect, 0, 3, 3, 3);
+        leftGrid.addComponent(generateBtn, 0, 4, 2, 4);
+        leftGrid.addComponent(excelBtn, 3, 4);
+
         this.setFirstComponent(leftGrid);
     }
 
@@ -142,12 +170,14 @@ public class PaymentsByDateReport extends HorizontalSplitPanel implements Button
                     DbStudentPayment dbCon = new DbStudentPayment();
                     dbCon.connect();
                     if (typeOG.getValue().equals(myUI.getMessage(SptMessages.DetailedReport))) {
-                        dbCon.execSQL_Payments(myUI, (Integer) currencySelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
+                        dbCon.execSQL_Payments(myUI, (Integer) currencySelect.getValue(), (Integer) schoolSelect.getValue(),
+                                fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
 
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
                     } else {
-                        dbCon.execSQL_Payments_group_by_date(myUI, (Integer) currencySelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
+                        dbCon.execSQL_Payments_group_by_date(myUI, (Integer) currencySelect.getValue(), (Integer) schoolSelect.getValue(),
+                                fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.TransactionsQuantity), Table.Align.RIGHT);
                     }
@@ -196,7 +226,7 @@ public class PaymentsByDateReport extends HorizontalSplitPanel implements Button
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
-            if (property == tillDateDF || property == fromDateDF || property == typeOG || property == currencySelect) {
+            if (property == tillDateDF || property == fromDateDF || property == typeOG || property == currencySelect || property == schoolSelect) {
                 excelBtn.setEnabled(false);
                 dataTable.setContainerDataSource(null);
             }

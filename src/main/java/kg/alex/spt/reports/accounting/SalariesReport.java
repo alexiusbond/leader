@@ -18,7 +18,6 @@ import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTreeTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +31,7 @@ public class SalariesReport implements Button.ClickListener,
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private HorizontalSplitPanel splitPanel;
-    private ComboBoxMax currencySelect;
+    private ComboBox currencySelect;
     private GridLayout leftGrid;
     public FormattedTreeTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
@@ -91,7 +90,7 @@ public class SalariesReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        currencySelect = new ComboBoxMax(myUI.getMessage(SptMessages.Currency));
+        currencySelect = new ComboBox(myUI.getMessage(SptMessages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

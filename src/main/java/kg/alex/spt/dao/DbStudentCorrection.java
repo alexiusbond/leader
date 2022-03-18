@@ -9,6 +9,7 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
@@ -16,7 +17,6 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentCorrection;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.StudentDefinitionView;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -51,7 +51,7 @@ public class DbStudentCorrection extends BaseDb {
                 b.setEnabled(false);
             }
             item.getItemProperty(Settings.button).setValue(b);
-            ComboBoxMax cb = dw.createComboboxCorr(result.getInt("t.correction_type_id"),
+            ComboBox cb = dw.createComboboxCorr(result.getInt("t.correction_type_id"),
                     myUI.getMessage(SptMessages.Title), id);
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb);
             TextField discTf = dw.createTextfieldDouble(result.getDouble("t.amount"),

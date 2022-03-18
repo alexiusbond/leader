@@ -22,8 +22,6 @@ import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.ClassListPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -41,8 +39,8 @@ public class ClassListReport implements Button.ClickListener,
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
-    private ComboBoxMax yearSelect;
-    private ComboBoxMultiselectMax educationStatusMCB;
+    private ComboBox yearSelect;
+    private ComboBoxMultiselect educationStatusMCB;
     private FormattedTable dataTable;
     private FilterTable classTable;
     private IndexedContainer dataCont;
@@ -82,7 +80,7 @@ public class ClassListReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -91,7 +89,7 @@ public class ClassListReport implements Button.ClickListener,
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));

@@ -23,12 +23,11 @@ import kg.alex.spt.domain.EmployeeExtraInfo;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.ui.EmployeeCvWindow;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,10 +41,10 @@ public class HRGeneralReport implements Button.ClickListener,
     private Button generateBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
     private VerticalLayout leftLay;
-    private ComboBoxMultiselectMax schoolsMCB, positionsMCB, extraPositionsMCB, workingStatusesMCB, genderMCB, nationalityMCB,
+    private ComboBoxMultiselect schoolsMCB, positionsMCB, extraPositionsMCB, workingStatusesMCB, genderMCB, nationalityMCB,
             citizenshipMCB, martialStatusMCB, canBeAdvisorMCB, contractTypeMCB, gradSchoolMCB, healthStatusMCB, examMCB,
             mainBranchMCB, extraBranchMCB, universityMCB, workPlaceMCB, certificateMCB, languageMCB;
-    private ComboBoxMax yearSelect;
+    private ComboBox yearSelect;
     private EnhancedFormatExcelExport excelReport;
     private Grid.FooterRow footer;
     private TextField nameTF, surnameTF;
@@ -93,7 +92,7 @@ public class HRGeneralReport implements Button.ClickListener,
         leftLay.setWidth(Settings.PERCENTS100);
         leftLay.setSpacing(true);
 
-        schoolsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Schools));
+        schoolsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Schools));
         schoolsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         schoolsMCB.addValueChangeListener(this);
         schoolsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -117,7 +116,7 @@ public class HRGeneralReport implements Button.ClickListener,
         surnameTF.setWidth(Settings.PERCENTS100);
         leftLay.addComponent(surnameTF);
 
-        positionsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Positions));
+        positionsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Positions));
         positionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         positionsMCB.addValueChangeListener(this);
         positionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -129,7 +128,7 @@ public class HRGeneralReport implements Button.ClickListener,
         positionsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(positionsMCB);
 
-        extraPositionsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ExtraPositions));
+        extraPositionsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.ExtraPositions));
         extraPositionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         extraPositionsMCB.addValueChangeListener(this);
         extraPositionsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -142,7 +141,7 @@ public class HRGeneralReport implements Button.ClickListener,
         extraPositionsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(extraPositionsMCB);
 
-        workingStatusesMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.WorkingStatuses));
+        workingStatusesMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.WorkingStatuses));
         workingStatusesMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         workingStatusesMCB.addValueChangeListener(this);
         workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -154,7 +153,7 @@ public class HRGeneralReport implements Button.ClickListener,
         workingStatusesMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(workingStatusesMCB);
 
-        contractTypeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ContractTypes));
+        contractTypeMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.ContractTypes));
         contractTypeMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         contractTypeMCB.addValueChangeListener(this);
         contractTypeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -166,7 +165,7 @@ public class HRGeneralReport implements Button.ClickListener,
         contractTypeMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(contractTypeMCB);
 
-        genderMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Genders));
+        genderMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Genders));
         genderMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         genderMCB.addValueChangeListener(this);
         genderMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -178,7 +177,7 @@ public class HRGeneralReport implements Button.ClickListener,
         genderMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(genderMCB);
 
-        nationalityMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Nationalities));
+        nationalityMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Nationalities));
         nationalityMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         nationalityMCB.addValueChangeListener(this);
         nationalityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -190,7 +189,7 @@ public class HRGeneralReport implements Button.ClickListener,
         nationalityMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(nationalityMCB);
 
-        citizenshipMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Citizenships));
+        citizenshipMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Citizenships));
         citizenshipMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         citizenshipMCB.addValueChangeListener(this);
         citizenshipMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -202,7 +201,7 @@ public class HRGeneralReport implements Button.ClickListener,
         citizenshipMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(citizenshipMCB);
 
-        martialStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.MartialStatuses));
+        martialStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.MartialStatuses));
         martialStatusMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         martialStatusMCB.addValueChangeListener(this);
         martialStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -214,7 +213,7 @@ public class HRGeneralReport implements Button.ClickListener,
         martialStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(martialStatusMCB);
 
-        healthStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.HealthStatuses));
+        healthStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.HealthStatuses));
         healthStatusMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         healthStatusMCB.addValueChangeListener(this);
         healthStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -226,7 +225,7 @@ public class HRGeneralReport implements Button.ClickListener,
         healthStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(healthStatusMCB);
 
-        gradSchoolMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.GraduationSchools));
+        gradSchoolMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.GraduationSchools));
         gradSchoolMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         gradSchoolMCB.addValueChangeListener(this);
         gradSchoolMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -238,7 +237,7 @@ public class HRGeneralReport implements Button.ClickListener,
         gradSchoolMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(gradSchoolMCB);
 
-        universityMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Education));
+        universityMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Education));
         universityMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         universityMCB.addValueChangeListener(this);
         universityMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -250,7 +249,7 @@ public class HRGeneralReport implements Button.ClickListener,
         universityMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(universityMCB);
 
-        workPlaceMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.WorkPlaces));
+        workPlaceMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.WorkPlaces));
         workPlaceMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         workPlaceMCB.addValueChangeListener(this);
         workPlaceMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -262,7 +261,7 @@ public class HRGeneralReport implements Button.ClickListener,
         workPlaceMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(workPlaceMCB);
 
-        languageMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Languages));
+        languageMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Languages));
         languageMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         languageMCB.addValueChangeListener(this);
         languageMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -274,7 +273,7 @@ public class HRGeneralReport implements Button.ClickListener,
         languageMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(languageMCB);
 
-        examMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Exams));
+        examMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Exams));
         examMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         examMCB.addValueChangeListener(this);
         examMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -286,7 +285,7 @@ public class HRGeneralReport implements Button.ClickListener,
         examMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(examMCB);
 
-        certificateMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Certificates));
+        certificateMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Certificates));
         certificateMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         certificateMCB.addValueChangeListener(this);
         certificateMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -298,7 +297,7 @@ public class HRGeneralReport implements Button.ClickListener,
         certificateMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(certificateMCB);
 
-        mainBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.MainBranches));
+        mainBranchMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.MainBranches));
         mainBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         mainBranchMCB.addValueChangeListener(this);
         mainBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -310,7 +309,7 @@ public class HRGeneralReport implements Button.ClickListener,
         mainBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(mainBranchMCB);
 
-        extraBranchMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ExtraBranches));
+        extraBranchMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.ExtraBranches));
         extraBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         extraBranchMCB.addValueChangeListener(this);
         extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -322,7 +321,7 @@ public class HRGeneralReport implements Button.ClickListener,
         extraBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(extraBranchMCB);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.LessonsYear));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.addValueChangeListener(this);
@@ -333,7 +332,7 @@ public class HRGeneralReport implements Button.ClickListener,
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
         leftLay.addComponent(yearSelect);
 
-        canBeAdvisorMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.CanBeAdvisors));
+        canBeAdvisorMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.CanBeAdvisors));
         canBeAdvisorMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         canBeAdvisorMCB.addValueChangeListener(this);
         canBeAdvisorMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -565,7 +564,7 @@ public class HRGeneralReport implements Button.ClickListener,
         }
     }
 
-    private void insertParameter(Map<String, String> params, String key, ComboBoxMultiselectMax cb) {
+    private void insertParameter(Map<String, String> params, String key, ComboBoxMultiselect cb) {
         if (cb.getContainerDataSource().size() != ((Set<?>) cb.getValue()).size()) {
             params.put(key, Settings.convertCollectionToStr((Set<?>) cb.getValue()));
         }

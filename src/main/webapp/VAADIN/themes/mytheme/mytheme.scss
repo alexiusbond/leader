@@ -412,4 +412,9 @@
   .align-right {
     text-align: right;
   }
+
+  .v-filterselect-suggestpopup div[class*="page"] {
+    opacity: 0.6;
+  }
+
 }

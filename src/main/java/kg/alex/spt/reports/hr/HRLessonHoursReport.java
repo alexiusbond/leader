@@ -22,8 +22,6 @@ import kg.alex.spt.dao.DbEmployeeLessons;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -49,8 +47,8 @@ public class HRLessonHoursReport implements Button.ClickListener,
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
     private FilterTable schoolTable, branchTable, positionTable, extraPositionTable;
-    private ComboBoxMultiselectMax workingStatusesMCB;
-    private ComboBoxMax yearSelect;
+    private ComboBoxMultiselect workingStatusesMCB;
+    private ComboBox yearSelect;
     private EnhancedFormatExcelExport excelReport;
     private String[] NATURAL_COL_ORDER;
 
@@ -71,7 +69,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.LessonsYear));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -230,7 +228,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         extraPositionsGrid.addComponent(extraPositionTable, 0, 1, 1, 1);
         extraPositionsGrid.setRowExpandRatio(1, 1);
 
-        workingStatusesMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.WorkingStatus));
+        workingStatusesMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.WorkingStatus));
         workingStatusesMCB.setRequired(true);
         workingStatusesMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         workingStatusesMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));

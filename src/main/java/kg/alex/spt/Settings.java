@@ -192,6 +192,7 @@ public class Settings implements Serializable {
     public static final String dbYear = "year";
     public static final String dbStudentOrders = "student_orders";
     public static final String rnAdmin = "admin";
+    public static final String rnBank = "bank";
     public static final String rnHr = "hr";
     public static final String rnSapatSecretary = "sapat_secretary";
     public static final String cnAccessoriesDefinitionView = "AccessoriesDefinitionView";
@@ -279,6 +280,7 @@ public class Settings implements Serializable {
     public static final String prmYearMonthReport = "годовой и месячный отчет";
     public static final String prmMonthReport = "отчет по месяцам";
     public static final String prmAccountingBalanceReport = "балансовый отчет";
+    public static final String prmAccountingBankReport = "отчет по оплатам через банк";
     public static final String prmByDateReport = "отчет по датам";
     public static final String prmSchoolAccountingReport = "school_accounting_report";
     public static final String prmGeneralReport = "общий отчет по бухгалтерии";

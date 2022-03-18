@@ -11,6 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.themes.ValoTheme;
@@ -20,7 +21,6 @@ import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.EmployeeExam;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +80,7 @@ public class DbEmployeeExam extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
                     id, Settings.dbEmployeeExams, FontAwesome.MINUS_SQUARE));
-            ComboBoxMax cb = edv.createCombobox(0, myUI.getMessage(SptMessages.Exam), null, true);
+            ComboBox cb = edv.createCombobox(0, myUI.getMessage(SptMessages.Exam), null, true);
             try {
                 DbExam dbe = new DbExam();
                 dbe.connect();

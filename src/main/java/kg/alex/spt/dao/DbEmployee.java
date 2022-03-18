@@ -9,6 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
@@ -17,7 +18,6 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeesCount;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -408,7 +408,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.MainPosition), ComboBoxMax.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.MainPosition), ComboBox.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FromDate), DateField.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), TextField.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Position), String.class, null);
@@ -455,7 +455,7 @@ public class DbEmployee extends BaseDb {
                     result.getString("children"));
             item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(
                     result.getString("e.photo"));
-            ComboBoxMax cb = new ComboBoxMax();
+            ComboBox cb = new ComboBox();
             cb.setDescription(myUi.getMessage(SptMessages.MainPosition));
             cb.setStyleName(ValoTheme.COMBOBOX_TINY);
             cb.setWidth(Settings.PERCENTS100);

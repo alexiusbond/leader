@@ -18,8 +18,6 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -42,8 +40,8 @@ public class StatusesReport implements Button.ClickListener,
             selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
-    private ComboBoxMax yearSelect;
-    public ComboBoxMultiselectMax statusMS;
+    private ComboBox yearSelect;
+    public ComboBoxMultiselect statusMS;
     public FormattedTable dataTable;
     public FilterTable classTable, schoolsTable;
     private EnhancedFormatExcelExport excelReport;
@@ -63,7 +61,7 @@ public class StatusesReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -83,7 +81,7 @@ public class StatusesReport implements Button.ClickListener,
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
 
-        statusMS = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Status));
+        statusMS = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Status));
         statusMS.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusMS.setWidth(Settings.PERCENTS100);
         statusMS.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));

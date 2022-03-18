@@ -15,7 +15,6 @@ import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbEmployeeLessons;
 import kg.alex.spt.domain.EmployeeLessons;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.MyFilterDecorator;
 import kg.alex.spt.utils.ResetingFilterGenerator;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +33,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
     static final Logger logger = LogManager.getLogger(LessonAssessmentView.class);
     private MyVaadinUI myUI;
     private Button saveBtn;
-    private ComboBoxMax classNumberSelect;
+    private ComboBox classNumberSelect;
     private Table lessonsTable;
     private FilterTable employeesTable;
 
@@ -76,7 +75,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         vl.setSpacing(true);
         vl.setSizeFull();
 
-        classNumberSelect = new ComboBoxMax(myUI.getMessage(SptMessages.ClassNumber));
+        classNumberSelect = new ComboBox(myUI.getMessage(SptMessages.ClassNumber));
         classNumberSelect.setNullSelectionAllowed(false);
         classNumberSelect.setRequired(true);
         classNumberSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

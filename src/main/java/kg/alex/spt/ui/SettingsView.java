@@ -15,7 +15,6 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,12 +27,12 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
     private Button saveBtn;
     private Label initPayLab, currLab, prevLab, futrLab, outcomesLab, earlyPayLab, salaryLab, localSalaryLab;
     private Label foodLab, stationeryLab, buildingMaterialsLab, washingMaterialsLab, otherProductsLab;
-    private ComboBoxMax initPayCb, currCb, prevCb, futrCb, outcomesCb, earlyPayCb, salaryCb, localSalaryCb;
-    private ComboBoxMax foodCb, stationeryCb, buildingMaterialsCb, washingMaterialsCb, otherProductsCb;
+    private ComboBox initPayCb, currCb, prevCb, futrCb, outcomesCb, earlyPayCb, salaryCb, localSalaryCb;
+    private ComboBox foodCb, stationeryCb, buildingMaterialsCb, washingMaterialsCb, otherProductsCb;
     private Label adminLab, directorLab, accountentLab, supervisorLab, hrLab, supplyManagerLab, warehouseManagerLab, sapat_secretaryLab;
-    private ComboBoxMax adminCb, directorCb, accountentCb, supervisorCb, hrCb, supplyManagerCb, warehouseManagerCb, sapat_secretaryCb;
+    private ComboBox adminCb, directorCb, accountentCb, supervisorCb, hrCb, supplyManagerCb, warehouseManagerCb, sapat_secretaryCb;
     private Label sebatExamLab;
-    private ComboBoxMax sebatExamCb;
+    private ComboBox sebatExamCb;
     private IndexedContainer paymentsContainer = new IndexedContainer();
     private IndexedContainer salaryContainer = new IndexedContainer();
     private IndexedContainer productsContainer = new IndexedContainer();
@@ -116,7 +115,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         localSalaryLab.setValue(salaryContainer.getContainerProperty(37,
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
 
-        initPayCb = new ComboBoxMax();
+        initPayCb = new ComboBox();
         initPayCb.setNullSelectionAllowed(false);
         initPayCb.setRequired(true);
         initPayCb.setData(1);
@@ -126,7 +125,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         initPayCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         initPayCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        currCb = new ComboBoxMax();
+        currCb = new ComboBox();
         currCb.setNullSelectionAllowed(false);
         currCb.setRequired(true);
         currCb.setData(2);
@@ -136,7 +135,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         currCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         currCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        prevCb = new ComboBoxMax();
+        prevCb = new ComboBox();
         prevCb.setNullSelectionAllowed(false);
         prevCb.setRequired(true);
         prevCb.setData(4);
@@ -146,7 +145,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         prevCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         prevCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        futrCb = new ComboBoxMax();
+        futrCb = new ComboBox();
         futrCb.setNullSelectionAllowed(false);
         futrCb.setRequired(true);
         futrCb.setData(5);
@@ -156,7 +155,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         futrCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         futrCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        outcomesCb = new ComboBoxMax();
+        outcomesCb = new ComboBox();
         outcomesCb.setNullSelectionAllowed(false);
         outcomesCb.setRequired(true);
         outcomesCb.setData(3);
@@ -166,7 +165,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         outcomesCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         outcomesCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        earlyPayCb = new ComboBoxMax();
+        earlyPayCb = new ComboBox();
         earlyPayCb.setNullSelectionAllowed(false);
         earlyPayCb.setRequired(true);
         earlyPayCb.setData(6);
@@ -176,7 +175,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         earlyPayCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         earlyPayCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        salaryCb = new ComboBoxMax();
+        salaryCb = new ComboBox();
         salaryCb.setNullSelectionAllowed(false);
         salaryCb.setRequired(true);
         salaryCb.setData(34);
@@ -186,7 +185,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         salaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         salaryCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        localSalaryCb = new ComboBoxMax();
+        localSalaryCb = new ComboBox();
         localSalaryCb.setNullSelectionAllowed(false);
         localSalaryCb.setRequired(true);
         localSalaryCb.setData(37);
@@ -227,7 +226,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         otherProductsLab.setValue(productsContainer.getContainerProperty(505,
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
 
-        foodCb = new ComboBoxMax();
+        foodCb = new ComboBox();
         foodCb.setNullSelectionAllowed(false);
         foodCb.setRequired(true);
         foodCb.setData(501);
@@ -237,7 +236,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         foodCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         foodCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        stationeryCb = new ComboBoxMax();
+        stationeryCb = new ComboBox();
         stationeryCb.setNullSelectionAllowed(false);
         stationeryCb.setRequired(true);
         stationeryCb.setData(502);
@@ -247,7 +246,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         stationeryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         stationeryCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        buildingMaterialsCb = new ComboBoxMax();
+        buildingMaterialsCb = new ComboBox();
         buildingMaterialsCb.setNullSelectionAllowed(false);
         buildingMaterialsCb.setRequired(true);
         buildingMaterialsCb.setData(503);
@@ -257,7 +256,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         buildingMaterialsCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         buildingMaterialsCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        washingMaterialsCb = new ComboBoxMax();
+        washingMaterialsCb = new ComboBox();
         washingMaterialsCb.setNullSelectionAllowed(false);
         washingMaterialsCb.setRequired(true);
         washingMaterialsCb.setData(504);
@@ -267,7 +266,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         washingMaterialsCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         washingMaterialsCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        otherProductsCb = new ComboBoxMax();
+        otherProductsCb = new ComboBox();
         otherProductsCb.setNullSelectionAllowed(false);
         otherProductsCb.setRequired(true);
         otherProductsCb.setData(505);
@@ -373,7 +372,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supervisorLab.setValue(positionsContainer.getContainerProperty(21,
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
 
-        adminCb = new ComboBoxMax();
+        adminCb = new ComboBox();
         adminCb.setNullSelectionAllowed(false);
         adminCb.setRequired(true);
         adminCb.setData(5);
@@ -383,7 +382,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         adminCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         adminCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        hrCb = new ComboBoxMax();
+        hrCb = new ComboBox();
         hrCb.setNullSelectionAllowed(false);
         hrCb.setRequired(true);
         hrCb.setData(25);
@@ -393,7 +392,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         hrCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         hrCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        supplyManagerCb = new ComboBoxMax();
+        supplyManagerCb = new ComboBox();
         supplyManagerCb.setNullSelectionAllowed(false);
         supplyManagerCb.setRequired(true);
         supplyManagerCb.setData(17);
@@ -403,7 +402,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         supplyManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         supplyManagerCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        warehouseManagerCb = new ComboBoxMax();
+        warehouseManagerCb = new ComboBox();
         warehouseManagerCb.setNullSelectionAllowed(false);
         warehouseManagerCb.setRequired(true);
         warehouseManagerCb.setData(100);
@@ -413,7 +412,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         warehouseManagerCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         warehouseManagerCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        sapat_secretaryCb = new ComboBoxMax();
+        sapat_secretaryCb = new ComboBox();
         sapat_secretaryCb.setNullSelectionAllowed(false);
         sapat_secretaryCb.setRequired(true);
         sapat_secretaryCb.setData(115);
@@ -423,7 +422,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         sapat_secretaryCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         sapat_secretaryCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        directorCb = new ComboBoxMax();
+        directorCb = new ComboBox();
         directorCb.setNullSelectionAllowed(false);
         directorCb.setRequired(true);
         directorCb.setData(1);
@@ -433,7 +432,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         directorCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         directorCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        accountentCb = new ComboBoxMax();
+        accountentCb = new ComboBox();
         accountentCb.setNullSelectionAllowed(false);
         accountentCb.setRequired(true);
         accountentCb.setData(2);
@@ -443,7 +442,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         accountentCb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         accountentCb.setFilteringMode(FilteringMode.CONTAINS);
 
-        supervisorCb = new ComboBoxMax();
+        supervisorCb = new ComboBox();
         supervisorCb.setNullSelectionAllowed(false);
         supervisorCb.setRequired(true);
         supervisorCb.setData(21);
@@ -463,7 +462,7 @@ public class SettingsView extends GridLayout implements Button.ClickListener {
         sebatExamLab.setSizeUndefined();
         sebatExamLab.setValue(myUI.getMessage(SptMessages.SebatExam));
 
-        sebatExamCb = new ComboBoxMax();
+        sebatExamCb = new ComboBox();
         sebatExamCb.setNullSelectionAllowed(false);
         sebatExamCb.setRequired(true);
         sebatExamCb.setData(5);

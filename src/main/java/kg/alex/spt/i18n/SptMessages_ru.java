@@ -434,6 +434,7 @@ public class SptMessages_ru extends SptMessages {
             {HRGeneralReport, "Общий отчет по кадрам"},
             {MonthReport, "Отчет по месяцам"},
             {AccountingBalanceReport, "Балансовый отчет"},
+            {AccountingBankReport, "Отчет по оплатам через Optima Bank"},
             {ProductMovementsReport, "Отчет по передвижениям товара"},
             {StockGeneralReport, "Общий отчет по складам"},
             {Yearly, "Годовой"},

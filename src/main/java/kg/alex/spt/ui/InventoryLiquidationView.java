@@ -21,7 +21,10 @@ import kg.alex.spt.domain.InventoryLiquidation;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InventoryLiquidationPdf;
-import kg.alex.spt.utils.*;
+import kg.alex.spt.utils.ExistsValidator;
+import kg.alex.spt.utils.FormattedFilterTable;
+import kg.alex.spt.utils.FormattedTable;
+import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -43,7 +46,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, printBtn, addBtn;
     private PopupButton searchBtn;
-    private ComboBoxMax blockSelect, floorSelect, roomSelect;
+    private ComboBox blockSelect, floorSelect, roomSelect;
     private FormattedTable inventoriesTable;
     private TextField invoiceNumberTF, codeTF;
     private TextArea noteTF;
@@ -183,7 +186,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         dateDF.addValueChangeListener(this);
         settingsLay.addComponent(dateDF, 0, 3, 1, 3);
 
-        blockSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Block));
+        blockSelect = new ComboBox(myUI.getMessage(SptMessages.Block));
         blockSelect.setNullSelectionAllowed(false);
         blockSelect.setRequired(true);
         blockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -194,7 +197,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         blockSelect.addValueChangeListener(this);
         settingsLay.addComponent(blockSelect, 0, 4, 1, 4);
 
-        floorSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Floor));
+        floorSelect = new ComboBox(myUI.getMessage(SptMessages.Floor));
         floorSelect.setNullSelectionAllowed(false);
         floorSelect.setRequired(true);
         floorSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -217,7 +220,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             logger.catching(e);
         }
 
-        roomSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Room));
+        roomSelect = new ComboBox(myUI.getMessage(SptMessages.Room));
         roomSelect.setNullSelectionAllowed(false);
         roomSelect.setRequired(true);
         roomSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -493,7 +496,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                         setValueByItemCaption(roomSelect, parsedValues[2]);
                         if (roomSelect.getValue() != null) {
                             addInventoriesItem();
-                            if (((ComboBoxMax) inventoriesTable.getContainerProperty(Settings.FreshItem + r_table_counter,
+                            if (((ComboBox) inventoriesTable.getContainerProperty(Settings.FreshItem + r_table_counter,
                                     myUI.getMessage(SptMessages.InventoryItem)).getValue()).getValue() != null) {
                                 blockSelect.setEnabled(false);
                                 floorSelect.setEnabled(false);
@@ -525,7 +528,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                     || ((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.InventoryItem)))) {
                 TextField quantityTF = (TextField) inventoriesTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Quantity)).getValue();
-                ComboBoxMax inventoryCB = (ComboBoxMax) inventoriesTable.getContainerProperty(changedItemId,
+                ComboBox inventoryCB = (ComboBox) inventoriesTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.InventoryItem)).getValue();
                 if (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.InventoryItem))) {
                     quantityTF.removeAllValidators();
@@ -550,7 +553,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         }
     }
 
-    private void setValueByItemCaption(ComboBoxMax cb, String value) {
+    private void setValueByItemCaption(ComboBox cb, String value) {
         if (value != null && !value.isEmpty()) {
             Iterator iter = cb.getItemIds().iterator();
             while (iter.hasNext()) {
@@ -843,9 +846,9 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         return true;
     }
 
-    public ComboBoxMax createCombobox(int value, String description, String dbtable,
+    public ComboBox createCombobox(int value, String description, String dbtable,
                                       boolean isRequired, boolean isEnabled, boolean isExistsValiator) {
-        ComboBoxMax cb = new ComboBoxMax();
+        ComboBox cb = new ComboBox();
         if (isExistsValiator) {
             cb.addValidator(new ExistsValidator(myUI, inventoriesCont, cb, description));
         }
@@ -951,7 +954,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             inventoriesCont = new IndexedContainer();
             inventoriesCont.addContainerProperty(Settings.button, Button.class, null);
             inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Remain), Integer.class, null);
-            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.InventoryItem), ComboBoxMax.class, null);
+            inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.InventoryItem), ComboBox.class, null);
             inventoriesCont.addContainerProperty(myUI.getMessage(SptMessages.Quantity), TextField.class, null);
             inventoriesCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
@@ -973,7 +976,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                 inventoriesTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbInventoryLiquidation, true));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.InventoryItem),
+        ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.InventoryItem),
                 null, true, true, true);
         try {
             int invoice_id = 0;
@@ -1063,7 +1066,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                             myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue());
                     imv.setRemain((Integer) inventoriesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Remain)).getValue());
-                    ComboBoxMax cb = (ComboBoxMax) inventoriesTable.getItem(next).getItemProperty(
+                    ComboBox cb = (ComboBox) inventoriesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.InventoryItem)).getValue();
                     imv.setInventory_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.id).getValue());
                     if (inventoriesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()

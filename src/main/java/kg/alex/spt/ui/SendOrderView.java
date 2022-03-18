@@ -21,14 +21,13 @@ import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.OrderPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -42,8 +41,8 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
     static final Logger logger = LogManager.getLogger(SendOrderView.class);
     private MyVaadinUI myUI;
     private Button sendBtn, excelBtn;
-    private ComboBoxMax schoolSelect, studentSelect;
-    private ComboBoxMultiselectMax employeeMCB;
+    private ComboBox schoolSelect, studentSelect;
+    private ComboBoxMultiselect employeeMCB;
     private FormattedFilterTable dataTable;
     private Table tableForExport;
     private TextField orderNumberTF, discountTF, studentTF;
@@ -144,7 +143,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         settingsLay.setSpacing(true);
         settingsLay.setSizeFull();
 
-        schoolSelect = new ComboBoxMax(myUI.getMessage(SptMessages.School));
+        schoolSelect = new ComboBox(myUI.getMessage(SptMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -164,7 +163,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         }
         settingsLay.addComponent(schoolSelect, 0, 0, 2, 0);
 
-        employeeMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.ToEmployees));
+        employeeMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.ToEmployees));
         employeeMCB.setRequired(true);
         employeeMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         employeeMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -173,7 +172,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         employeeMCB.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(employeeMCB, 0, 1, 2, 1);
 
-        studentSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Student));
+        studentSelect = new ComboBox(myUI.getMessage(SptMessages.Student));
         studentSelect.setNullSelectionAllowed(false);
         studentSelect.setRequired(true);
         studentSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

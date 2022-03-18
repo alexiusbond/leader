@@ -587,10 +587,10 @@ public class DbStudent extends BaseDb {
                 Object nextStatus = status_iter.next();
                 {
                     container.addContainerProperty(sr.classTable.getContainerProperty(
-                            nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
+                                    nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                     + myUI.getMessage(SptMessages.ClassName) + " "
                                     + sr.statusMS.getContainerProperty(
-                            nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
+                                    nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                             Integer.class, 0);
                 }
             }
@@ -624,18 +624,18 @@ public class DbStudent extends BaseDb {
                             nextStatus, myUI.getMessage(SptMessages.Title)).getValue());
                     if (counter != 0) {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
-                                nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
+                                        nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.ClassName) + " "
                                         + sr.statusMS.getContainerProperty(
-                                nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
+                                        nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                                 (Integer.parseInt(footerVal)
                                         + result.getInt("quantity" + nextClass + "_" + nextStatus)) + "");
                     } else {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
-                                nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
+                                        nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.ClassName) + " "
                                         + sr.statusMS.getContainerProperty(
-                                nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
+                                        nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                                 result.getInt("quantity" + nextClass + "_" + nextStatus) + "");
                     }
                 }
@@ -654,5 +654,19 @@ public class DbStudent extends BaseDb {
             }
             counter++;
         }
+    }
+
+    public int execSQL_login(int year_id, int school_id, int class_name_id) throws SQLException {
+        String sql = "SELECT count(st.id) + 1 as num FROM student AS st " +
+                "WHERE st.entering_year_id = ? and st.school_id = ? and st.class_name_id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, year_id);
+        stat.setInt(2, school_id);
+        stat.setInt(3, class_name_id);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getInt("num");
+        }
+        return 0;
     }
 }

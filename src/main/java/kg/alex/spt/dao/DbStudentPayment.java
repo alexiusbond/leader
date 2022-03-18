@@ -11,10 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StudentPayment;
@@ -22,7 +19,6 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassPaymentsReport;
 import kg.alex.spt.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -89,7 +85,7 @@ public class DbStudentPayment extends BaseDb {
             if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actModify)) {
                 isDisabled = true;
             }
-            ComboBoxMax cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
+            ComboBox cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
                     myUI.getMessage(SptMessages.PaymentCategoryType), id, true, false);
             cb.setId(myUI.getMessage(SptMessages.Payments));
             cb.setEnabled(!isDisabled);
@@ -416,7 +412,7 @@ public class DbStudentPayment extends BaseDb {
         return status;
     }
 
-    public IndexedContainer execSQL_Payments(MyVaadinUI myUI, int currency_id, Date from, Date till, Table t) throws SQLException {
+    public IndexedContainer execSQL_Payments(MyVaadinUI myUI, int currency_id, int school_id, Date from, Date till, Table t) throws SQLException {
 
         String sql = "SELECT sp.id, sp.bank_transaction_id, sp.modification_date, sp.dollar_rate, " +
                 "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount) as amount, c.name, st.login, " +
@@ -424,11 +420,13 @@ public class DbStudentPayment extends BaseDb {
                 "FROM student_payments AS sp " +
                 "LEFT JOIN student AS st ON st.id = sp.student_id " +
                 "LEFT JOIN acc_currency AS c ON c.id = sp.acc_currency_id " +
-                "WHERE sp.bank_transaction_id IS NOT NULL AND sp.acc_currency_id = ? AND DATE(sp.modification_date) BETWEEN date(?) AND date(?)";
+                "WHERE sp.bank_transaction_id IS NOT NULL AND sp.acc_currency_id = ? AND st.school_id = ? " +
+                "AND DATE(sp.modification_date) BETWEEN date(?) AND date(?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, currency_id);
-        stat.setDate(2, new java.sql.Date(from.getTime()));
-        stat.setDate(3, new java.sql.Date(till.getTime()));
+        stat.setInt(2, school_id);
+        stat.setDate(3, new java.sql.Date(from.getTime()));
+        stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.StudentId), String.class, null);
@@ -457,18 +455,21 @@ public class DbStudentPayment extends BaseDb {
         return container;
     }
 
-    public IndexedContainer execSQL_Payments_group_by_date(MyVaadinUI myUI, int currency_id, Date from, Date till, Table t) throws SQLException {
+    public IndexedContainer execSQL_Payments_group_by_date(MyVaadinUI myUI, int currency_id, int school_id, Date from, Date till, Table t) throws SQLException {
 
         String sql = "SELECT sp.modification_date, " +
                 "sum(if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount)) as amount, " +
                 "count(sp.id) as quantity, c.name FROM student_payments AS sp " +
+                "LEFT JOIN student AS st ON st.id = sp.student_id " +
                 "left join acc_currency as c on c.id = sp.acc_currency_id " +
-                "WHERE sp.bank_transaction_id IS NOT NULL AND sp.acc_currency_id = ? AND DATE(sp.modification_date) BETWEEN date(?) AND date(?) " +
+                "WHERE sp.bank_transaction_id IS NOT NULL AND sp.acc_currency_id = ? AND st.school_id = ? " +
+                "AND DATE(sp.modification_date) BETWEEN date(?) AND date(?) " +
                 "group by DATE(sp.modification_date)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, currency_id);
-        stat.setDate(2, new java.sql.Date(from.getTime()));
-        stat.setDate(3, new java.sql.Date(till.getTime()));
+        stat.setInt(2, school_id);
+        stat.setDate(3, new java.sql.Date(from.getTime()));
+        stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);

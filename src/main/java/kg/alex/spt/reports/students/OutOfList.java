@@ -20,7 +20,6 @@ import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.dao.DbStudentOrder;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +38,7 @@ public class OutOfList implements Button.ClickListener,
     private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
-    private ComboBoxMultiselectMax yearSelectMCB, reasonsMCB;
+    private ComboBoxMultiselect yearSelectMCB, reasonsMCB;
     private FormattedTable dataTable;
     private FilterTable fromClassTable;
     private IndexedContainer dataCont;
@@ -74,7 +73,7 @@ public class OutOfList implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelectMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Year));
+        yearSelectMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Year));
         yearSelectMCB.setRequired(true);
         yearSelectMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         yearSelectMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -90,7 +89,7 @@ public class OutOfList implements Button.ClickListener,
         });
         yearSelectMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
 
-        reasonsMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Reasons));
+        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         reasonsMCB.setWidth(Settings.PERCENTS100);
         reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));

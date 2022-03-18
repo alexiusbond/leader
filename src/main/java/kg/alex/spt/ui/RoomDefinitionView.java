@@ -16,7 +16,6 @@ import kg.alex.spt.dao.DbInventoryInvoice;
 import kg.alex.spt.dao.DbRoom;
 import kg.alex.spt.domain.Room;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -32,7 +31,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
     static final Logger logger = LogManager.getLogger(RoomDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax blockSelect, floorSelect, statusSelect;
+    private ComboBox blockSelect, floorSelect, statusSelect;
     private Table dataTable;
     private TextField nameTF, descriptionTF;
     private boolean isNew;
@@ -149,7 +148,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 150, false));
         settingsLay.addComponent(descriptionTF);
 
-        blockSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Block));
+        blockSelect = new ComboBox(myUI.getMessage(SptMessages.Block));
         blockSelect.setNullSelectionAllowed(false);
         blockSelect.setRequired(true);
         blockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -158,7 +157,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         blockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         blockSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        floorSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Floor));
+        floorSelect = new ComboBox(myUI.getMessage(SptMessages.Floor));
         floorSelect.setNullSelectionAllowed(false);
         floorSelect.setRequired(true);
         floorSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -167,7 +166,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         floorSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         floorSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));

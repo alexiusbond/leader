@@ -16,9 +16,8 @@ import kg.alex.spt.dao.DbStudent;
 import kg.alex.spt.dao.DbStudentOrder;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.reports.students.PaymentsByDateReport;
+import kg.alex.spt.reports.students.BankPaymentsByDateReport;
 import kg.alex.spt.ui.*;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -34,7 +33,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private VerticalSplitPanel verticalPanel;
     private GridLayout upperLay = new GridLayout(3, 3);
     private Button changePassBtn;
-    public ComboBoxMax yearSelect, schoolSelect;
+    public ComboBox yearSelect, schoolSelect;
     private Label header = new Label();
     private Label infoLabel, schoolLabel, yearLabel;
 
@@ -53,7 +52,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         setSizeFull();
         setSpacing(true);
-        if (!currentUser.hasRole("bank")) {
+        if (!currentUser.hasRole(Settings.rnBank)) {
             try {
                 myUI.workingDetails(currentUser);
             } catch (Exception ex) {
@@ -64,7 +63,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 verticalPanel.setSecondComponent(new HomePageView(myUI));
             }
         } else {
-            verticalPanel.setSecondComponent(new PaymentsByDateReport(myUI));
+            verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
         }
 
         header.setSizeUndefined();
@@ -83,7 +82,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         changePassBtn.setStyleName(ValoTheme.BUTTON_LINK);
         changePassBtn.setIcon(FontAwesome.KEY);
         changePassBtn.addClickListener(this);
-        if (!currentUser.hasRole("bank")) {
+        if (!currentUser.hasRole(Settings.rnBank)) {
             hl.addComponent(myUI.getMessagesBtn());
             myUI.repaintMessagesButton();
             hl.addComponent(changePassBtn);
@@ -97,7 +96,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         upperLay.setSizeFull();
         upperLay.setSpacing(false);
-        if (!currentUser.hasRole("bank")) {
+        if (!currentUser.hasRole(Settings.rnBank)) {
             upperLay.addComponent(buildInfoLay(), 0, 0, 2, 0);
         }
         upperLay.addComponent(hl, 0, 1);
@@ -141,7 +140,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         schoolLabel.setValue("<i class=\"fa fa-university fa-inverse\"></i><b> "
                 + myUI.getMessage(SptMessages.School) + ": </b>");
 
-        schoolSelect = new ComboBoxMax();
+        schoolSelect = new ComboBox();
         schoolSelect.setImmediate(true);
         if (currentUser.isPermitted(Settings.prmChangeSchool + ":" + Settings.actModify)) {
             schoolSelect.setEnabled(true);
@@ -167,7 +166,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         yearLabel.setValue("<i class=\"fa fa-calendar fa-inverse\"></i><b> "
                 + myUI.getMessage(SptMessages.Year) + ": </b>");
 
-        yearSelect = new ComboBoxMax();
+        yearSelect = new ComboBox();
         if (currentUser.isPermitted(Settings.prmChangeYear + ":" + Settings.actModify)) {
             yearSelect.setEnabled(true);
         } else {
@@ -208,7 +207,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(SptMessages.HomePage), menuCommand);
         }
-        if (!currentUser.hasRole("bank")) {
+        if (!currentUser.hasRole(Settings.rnBank)) {
             menubar.addItem(myUI.getMessage(SptMessages.MyInfo), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmMenu)) {
@@ -311,11 +310,17 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 mi.addItem(myUI.getMessage(SptMessages.ShortTermDebts), menuCommand);
             }
         }
-        if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMenu)) {
+        if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMenu)
+                || currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmAccountingBankReport)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
                 mi.addSeparator();
             }
+        }
+        if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.AccountingReports), menuCommand);
+        }
+        if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmAccountingBankReport)) {
+            mi.addItem(myUI.getMessage(SptMessages.AccountingBankReport), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
@@ -413,7 +418,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         @Override
         public void menuSelected(MenuItem selectedItem) {
             if (selectedItem != null) {
-                if (!currentUser.hasRole("bank")) {
+                if (!currentUser.hasRole(Settings.rnBank)) {
                     myUI.repaintMessagesButton();
                 }
                 String eventPressed = selectedItem.getText();
@@ -486,13 +491,15 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendOrders))) {
                     verticalPanel.setSecondComponent(new SendOrderView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Reports))) {
-                    if (currentUser.hasRole("bank")) {
-                        verticalPanel.setSecondComponent(new PaymentsByDateReport(myUI));
+                    if (currentUser.hasRole(Settings.rnBank)) {
+                        verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
                     } else {
                         verticalPanel.setSecondComponent(new StudentReportsView(myUI));
                     }
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingReports))) {
                     verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingBankReport))) {
+                    verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockReports))) {
                     verticalPanel.setSecondComponent(new StockReportsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.HRReports))) {
@@ -693,13 +700,15 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.StudentDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Reports)).toUpperCase())) {
-                if (currentUser.hasRole("bank")) {
-                    verticalPanel.setSecondComponent(new PaymentsByDateReport(myUI));
+                if (currentUser.hasRole(Settings.rnBank)) {
+                    verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
                 } else {
                     verticalPanel.setSecondComponent(new StudentReportsView(myUI));
                 }
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.AccountingReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.AccountingBankReport)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.StockReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockReportsView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.LessonAssessment)).toUpperCase())) {

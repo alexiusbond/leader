@@ -19,7 +19,6 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.CurrentAccountStatementPdf;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +34,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
     private MyVaadinUI myUI;
     private Button generateBtn, pdfBtn;
     private HorizontalSplitPanel splitPanel;
-    private ComboBoxMax currencySelect;
+    private ComboBox currencySelect;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     public FormattedTable dataTable;
@@ -108,7 +107,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
-        currencySelect = new ComboBoxMax(myUI.getMessage(SptMessages.Currency));
+        currencySelect = new ComboBox(myUI.getMessage(SptMessages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

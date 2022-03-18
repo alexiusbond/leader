@@ -8,10 +8,7 @@ package kg.alex.spt.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
@@ -21,7 +18,6 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassDiscountsReport;
 import kg.alex.spt.reports.students.SchoolDiscountsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -145,7 +141,7 @@ public class DbStudentDiscount extends BaseDb {
                 b.setEnabled(false);
             }
             item.getItemProperty(Settings.button).setValue(b);
-            ComboBoxMax cb = dw.createComboboxDisc(result.getInt("d.id"),
+            ComboBox cb = dw.createComboboxDisc(result.getInt("d.id"),
                     myUI.getMessage(SptMessages.Title), id);
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb);
             if (result.getString("d.discount_type_id").equals("1")

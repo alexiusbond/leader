@@ -28,7 +28,6 @@ import kg.alex.spt.domain.CurrencyRate;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.TransactionInvoicePDF;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -299,15 +298,15 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                 acc_type_id = 1;
                 orderName = myUI.getMessage(SptMessages.IncomeOrder);
             }
-            tr.setCategory(((ComboBoxMax) t.getContainerProperty(source.getData(),
-                    myUI.getMessage(SptMessages.Category)).getValue()).getItemCaption(((ComboBoxMax) t.getContainerProperty(source.getData(),
+            tr.setCategory(((ComboBox) t.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.Category)).getValue()).getItemCaption(((ComboBox) t.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.Category)).getValue()).getValue()));
             if (t.getContainerProperty(source.getData(),
-                    myUI.getMessage(SptMessages.ToEmployee)) != null && ((ComboBoxMax) t.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.ToEmployee)) != null && ((ComboBox) t.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.ToEmployee)).getValue()).getValue() != null) {
-                tr.setFrom_to_employee(((ComboBoxMax) t.getContainerProperty(source.getData(),
+                tr.setFrom_to_employee(((ComboBox) t.getContainerProperty(source.getData(),
                         myUI.getMessage(SptMessages.ToEmployee)).getValue()).getItemCaption(
-                        ((ComboBoxMax) t.getContainerProperty(source.getData(),
+                        ((ComboBox) t.getContainerProperty(source.getData(),
                                 myUI.getMessage(SptMessages.ToEmployee)).getValue()).getValue()));
             }
             if (tr.getOrder_number() == 0) {
@@ -356,7 +355,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             } else {
                 currencyHl.setEnabled(false);
             }
-        } else if (property instanceof DateField || property instanceof TextField || property instanceof ComboBoxMax) {
+        } else if (property instanceof DateField || property instanceof TextField || property instanceof ComboBox) {
             String itemId = ((AbstractField) property).getData().toString();
             if (((AbstractField) property).getId() != null && ((AbstractField) property).getId().equals(myUI.getMessage(SptMessages.Expenses))) {
                 if (((TextField) expensesTable.getContainerProperty(((AbstractField) property).getData().toString(),
@@ -365,13 +364,13 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                         myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue() != null
                         && ((DateField) expensesTable.getContainerProperty(((AbstractField) property).getData().toString(),
                         myUI.getMessage(SptMessages.Date)).getValue()).getValue() != null
-                        && ((ComboBoxMax) expensesTable.getContainerProperty(((AbstractField) property).getData().toString(),
+                        && ((ComboBox) expensesTable.getContainerProperty(((AbstractField) property).getData().toString(),
                         myUI.getMessage(SptMessages.Category)).getValue()).getValue() != null) {
                     TextField tf = null;
                     try {
                         tf = (TextField) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Amount)).getValue();
                         double amount = Settings.dFormat.parse(tf.getValue()).doubleValue();
-                        boolean isKGS = (Integer) ((ComboBoxMax) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1;
+                        boolean isKGS = (Integer) ((ComboBox) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1;
                         if (isKGS) {
                             amount = Settings.round(amount
                                     / Settings.dFormat.parse(((TextField) expensesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()).doubleValue(), 2);
@@ -422,13 +421,13 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                         myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue() != null
                         && ((DateField) incomesTable.getContainerProperty(((AbstractField) property).getData().toString(),
                         myUI.getMessage(SptMessages.Date)).getValue()).getValue() != null
-                        && ((ComboBoxMax) incomesTable.getContainerProperty(((AbstractField) property).getData().toString(),
+                        && ((ComboBox) incomesTable.getContainerProperty(((AbstractField) property).getData().toString(),
                         myUI.getMessage(SptMessages.Category)).getValue()).getValue() != null) {
                     TextField tf = null;
                     try {
                         tf = (TextField) incomesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Amount)).getValue();
                         double amount = Settings.dFormat.parse(tf.getValue()).doubleValue();
-                        boolean isKGS = (Integer) ((ComboBoxMax) incomesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1;
+                        boolean isKGS = (Integer) ((ComboBox) incomesTable.getContainerProperty(itemId, myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1;
                         if (isKGS) {
                             amount = Settings.round(amount
                                     / Settings.dFormat.parse(((TextField) incomesTable.getContainerProperty(
@@ -586,9 +585,9 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         return df;
     }
 
-    public ComboBoxMax createCombobox(int value, String description, String itemId,
+    public ComboBox createCombobox(int value, String description, String itemId,
                                       String dbTable, boolean isDisabled, boolean isRequired, boolean isValueChangeListener) {
-        ComboBoxMax cb = new ComboBoxMax();
+        ComboBox cb = new ComboBox();
 
         cb.setDescription(description);
         if (isDisabled) {
@@ -622,9 +621,9 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         return cb;
     }
 
-    public ComboBoxMax createComboboxCategory(int value, String description, String itemId,
+    public ComboBox createComboboxCategory(int value, String description, String itemId,
                                               int cat_type_id, boolean isDisabled, String tableName) {
-        ComboBoxMax cb = new ComboBoxMax();
+        ComboBox cb = new ComboBox();
         if (isDisabled) {
             cb.setEnabled(false);
         }
@@ -709,8 +708,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             incomesCont = new IndexedContainer();
             incomesCont.addContainerProperty(Settings.button, HorizontalLayout.class, null);
             incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Date), DateField.class, null);
-            incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBoxMax.class, null);
-            incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBoxMax.class, null);
+            incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBox.class, null);
+            incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBox.class, null);
             incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Rate), TextField.class, null);
             incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Amount), TextField.class, null);
             incomesCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
@@ -731,12 +730,12 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
             expensesCont = new IndexedContainer();
             expensesCont.addContainerProperty(Settings.button, HorizontalLayout.class, null);
             expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Date), DateField.class, null);
-            expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBoxMax.class, null);
-            expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBoxMax.class, null);
+            expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBox.class, null);
+            expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBox.class, null);
             expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Rate), TextField.class, null);
             expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Amount), TextField.class, null);
             expensesCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
-            expensesCont.addContainerProperty(myUI.getMessage(SptMessages.ToEmployee), ComboBoxMax.class, null);
+            expensesCont.addContainerProperty(myUI.getMessage(SptMessages.ToEmployee), ComboBox.class, null);
             expensesCont.addContainerProperty(Settings.from_employee_id, String.class, null);
             expensesCont.addContainerProperty(Settings.old_amount, Double.class, 0.0);
             expensesCont.addContainerProperty(Settings.old_rate, Double.class, 0.0);
@@ -848,7 +847,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         item.getItemProperty(Settings.old_currency).setValue(t.getCurrency_id());
         item.getItemProperty(Settings.old_date).setValue(t.getDate());
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfieldNote(t.getNote(), myUI.getMessage(SptMessages.Note), id, false));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, Settings.dbEmployee,
+        ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, Settings.dbEmployee,
                 false, false, true);
         try {
             DbEmployee dbCon = new DbEmployee();
@@ -893,7 +892,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                 createTextfieldDouble(null, myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Expenses)));
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfieldNote(null, myUI.getMessage(SptMessages.Note), id, false));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, Settings.dbEmployee,
+        ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, Settings.dbEmployee,
                 false, false, true);
         try {
             DbEmployee dbCon = new DbEmployee();
@@ -914,15 +913,15 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         try {
             if (incomesTable.getContainerProperty(id, Settings.button) != null) {
                 ((DateField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Date)).getValue()).validate();
-                ((ComboBoxMax) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).validate();
-                ((ComboBoxMax) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).validate();
+                ((ComboBox) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).validate();
+                ((ComboBox) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).validate();
                 ((TextField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Rate)).getValue()).validate();
                 ((TextField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Amount)).getValue()).validate();
                 ((TextField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Note)).getValue()).validate();
             } else if (expensesTable.getContainerProperty(id, Settings.button) != null) {
                 ((DateField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Date)).getValue()).validate();
-                ((ComboBoxMax) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).validate();
-                ((ComboBoxMax) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).validate();
+                ((ComboBox) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).validate();
+                ((ComboBox) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).validate();
                 ((TextField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Rate)).getValue()).validate();
                 ((TextField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Amount)).getValue()).validate();
                 ((TextField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Note)).getValue()).validate();
@@ -945,7 +944,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                 TextField tf = (TextField) incomesTable.getContainerProperty(source.getData().toString(),
                         myUI.getMessage(SptMessages.Amount)).getValue();
                 double amount = (Double) tf.getPropertyDataSource().getValue();
-                if ((Integer) ((ComboBoxMax) incomesTable.getContainerProperty(source.getData().toString(),
+                if ((Integer) ((ComboBox) incomesTable.getContainerProperty(source.getData().toString(),
                         myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 1) {
                     amount = Settings.round(amount / Settings.dFormat.parse(
                             ((TextField) incomesTable.getContainerProperty(source.getData().toString(),
@@ -999,8 +998,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         if (incomesTable.getContainerProperty(id, Settings.button) != null) {
             t.setId(id);
             t.setDate(((DateField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Date)).getValue()).getValue());
-            t.setCategory_id((Integer) ((ComboBoxMax) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).getValue());
-            t.setCurrency_id((Integer) ((ComboBoxMax) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+            t.setCategory_id((Integer) ((ComboBox) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).getValue());
+            t.setCurrency_id((Integer) ((ComboBox) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
             t.setCurrency_rate((Double) ((TextField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue());
             t.setAmount((Double) ((TextField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
             t.setNote(((TextField) incomesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Note)).getValue()).getValue());
@@ -1011,12 +1010,12 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         } else if (expensesTable.getContainerProperty(id, Settings.button) != null) {
             t.setId(id);
             t.setDate(((DateField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Date)).getValue()).getValue());
-            t.setCategory_id((Integer) ((ComboBoxMax) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).getValue());
-            t.setCurrency_id((Integer) ((ComboBoxMax) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+            t.setCategory_id((Integer) ((ComboBox) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Category)).getValue()).getValue());
+            t.setCurrency_id((Integer) ((ComboBox) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
             t.setCurrency_rate((Double) ((TextField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue());
             t.setAmount((Double) ((TextField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
-            if (((ComboBoxMax) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.ToEmployee)).getValue()).getValue() != null) {
-                t.setFrom_to_employee_id((Integer) ((ComboBoxMax) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.ToEmployee)).getValue()).getValue());
+            if (((ComboBox) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.ToEmployee)).getValue()).getValue() != null) {
+                t.setFrom_to_employee_id((Integer) ((ComboBox) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.ToEmployee)).getValue()).getValue());
             }
             t.setNote(((TextField) expensesTable.getContainerProperty(id, myUI.getMessage(SptMessages.Note)).getValue()).getValue());
             if (expensesTable.getContainerProperty(id, Settings.from_employee_id).getValue() != null) {
@@ -1046,7 +1045,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                     incomesTable.getContainerProperty(item_id, Settings.old_rate).setValue(
                             Settings.dFormat.parse(((TextField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
                     incomesTable.getContainerProperty(item_id, Settings.old_currency).setValue(
-                            ((ComboBoxMax) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                            ((ComboBox) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     incomesTable.getContainerProperty(item_id, Settings.old_date).setValue(
                             ((DateField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Date)).getValue()).getValue());
                     incomesTable.getContainerProperty(item_id, Settings.from_employee_id).setValue(myUI.getUser().getFullname());
@@ -1056,7 +1055,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                     expensesTable.getContainerProperty(item_id, Settings.old_rate).setValue(
                             Settings.dFormat.parse(((TextField) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
                     expensesTable.getContainerProperty(item_id, Settings.old_currency).setValue(
-                            (Integer) ((ComboBoxMax) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                            (Integer) ((ComboBox) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     expensesTable.getContainerProperty(item_id, Settings.from_employee_id).setValue(myUI.getUser().getFullname());
                 }
             } else {

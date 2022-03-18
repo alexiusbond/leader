@@ -16,7 +16,6 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.domain.LeavingReason;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +33,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
     static final Logger logger = LogManager.getLogger(LeavingReasonsDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax statusSelect;
+    private ComboBox statusSelect;
     private FormattedFilterTable dataTable;
     private TextField nameTF;
     private boolean isNew;
@@ -134,7 +133,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 250, false));
         settingsLay.addComponent(nameTF);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

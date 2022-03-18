@@ -16,12 +16,11 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbPosition;
 import kg.alex.spt.domain.Position;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -35,7 +34,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
     static final Logger logger = LogManager.getLogger(PositionDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax categorySelect, statusSelect;
+    private ComboBox categorySelect, statusSelect;
     private Table dataTable, permissionTable;
     private IndexedContainer permissionCont;
     private TextField nameTF;
@@ -146,7 +145,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         settingsLay.addComponent(nameTF);
 
-        categorySelect = new ComboBoxMax(myUI.getMessage(SptMessages.Category));
+        categorySelect = new ComboBox(myUI.getMessage(SptMessages.Category));
         categorySelect.setNullSelectionAllowed(false);
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -156,7 +155,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(categorySelect);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -453,10 +452,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             Iterator iter = permissionCont.getItemIds().iterator();
             while (iter.hasNext()) {
                 Object next = iter.next();
-                ComboBoxMultiselectMax permMCB = new ComboBoxMultiselectMax();
+                ComboBoxMultiselect permMCB = new ComboBoxMultiselect();
                 permMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
                 permMCB.setWidth(Settings.PERCENTS100);
-                permMCB.setShowSelectAllButton(new ComboBoxMultiselectMax.ShowButton() {
+                permMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
                     @Override
                     public boolean isShow(String filter, int page) {
                         return true;
@@ -491,10 +490,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         String permissions = "";
         while (iter.hasNext()) {
             Object next = iter.next();
-            if (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
+            if (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
                     .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                     .getValue())).getValue()) != null) {
-                permissions += next + ":" + (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselectMax) (permissionTable
+                permissions += next + ":" + (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
                         .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                         .getValue())).getValue())) + ";";
             }
@@ -512,7 +511,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
     private void clearPermissionTable() {
         if (permissionCont != null) {
             for (int i = 0; i < permissionCont.size(); i++) {
-                ((ComboBoxMultiselectMax) permissionCont.getContainerProperty(permissionCont.getIdByIndex(i),
+                ((ComboBoxMultiselect) permissionCont.getContainerProperty(permissionCont.getIdByIndex(i),
                         myUI.getMessage(SptMessages.Functions)).getValue()).setValue(null);
             }
         }
@@ -527,7 +526,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                     String[] byClassName = dividedStringAll[i].split(":");
                     Item itm = permissionCont.getItem(byClassName[0]);
                     if (itm != null) {
-                        ((ComboBoxMultiselectMax) itm.getItemProperty(
+                        ((ComboBoxMultiselect) itm.getItemProperty(
                                 myUI.getMessage(SptMessages.Functions)).getValue())
                                 .setValue(convertStrToSet(byClassName[1]));
                     }

@@ -22,7 +22,6 @@ import kg.alex.spt.domain.StudentPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InstallmentPlanPaymentsPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +45,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private StudentInfoPdf st;
     private FormattedTable installmentTable, paymentsTable;
     private FilterTable studentsTable, classTable;
-    private ComboBoxMax yearSelect;
+    private ComboBox yearSelect;
     private IndexedContainer installmentCont, paymentsCont;
     private CheckBox paymentsCkb, instPlanCkb;
     private Label debtLab, contractLab, discountLab, correctionLab, planDebt, netLab, paidLab,
@@ -71,7 +70,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

@@ -16,7 +16,6 @@ import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.domain.ClassName;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -32,9 +31,9 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
     static final Logger logger = LogManager.getLogger(ClassNameDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax classNumberSelect, statusSelect;
+    private ComboBox classNumberSelect, statusSelect;
     private Table dataTable;
-    private TextField nameTF;
+    private TextField nameTF, codeTF;
     private boolean isNew;
 
     private String[] NATURAL_COL_ORDER;
@@ -44,9 +43,9 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
     public ClassNameDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Number),
-            myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.School),
-            myUI.getMessage(SptMessages.Status)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Number), myUI.getMessage(SptMessages.Code),
+                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.School),
+                myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -131,6 +130,15 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
+        codeTF = new TextField(myUI.getMessage(SptMessages.Code));
+        codeTF.setRequired(true);
+        codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        codeTF.setWidth(Settings.PERCENTS100);
+        codeTF.addValidator(new StringLengthValidator(
+                myUI.getMessage(SptMessages.NotifWrongValue), 2, 2, false));
+        settingsLay.addComponent(codeTF);
+
         nameTF = new TextField(myUI.getMessage(SptMessages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -140,7 +148,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 15, false));
         settingsLay.addComponent(nameTF);
 
-        classNumberSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Number));
+        classNumberSelect = new ComboBox(myUI.getMessage(SptMessages.Number));
         classNumberSelect.setNullSelectionAllowed(false);
         classNumberSelect.setRequired(true);
         classNumberSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -150,7 +158,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         classNumberSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(classNumberSelect);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -182,12 +190,12 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
             isNew = false;
             fillFields();
             prepareModificationMode();
-            nameTF.focus();
+            codeTF.focus();
         } else if (source == createBtn) {
             isNew = true;
             clearFields();
             prepareModificationMode();
-            nameTF.focus();
+            codeTF.focus();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
             ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
@@ -195,13 +203,13 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
                     new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                        @Override
+                        public void onClose(ConfirmDialog dialog) {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
+                            }
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
@@ -271,6 +279,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         saveBtn.setEnabled(true);
         cancelBtn.setEnabled(true);
         dataTable.setEnabled(false);
+        codeTF.setEnabled(true);
         nameTF.setEnabled(true);
         classNumberSelect.setEnabled(true);
         statusSelect.setEnabled(true);
@@ -289,22 +298,24 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         saveBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         dataTable.setEnabled(true);
+        codeTF.setEnabled(false);
         nameTF.setEnabled(false);
         classNumberSelect.setEnabled(false);
         statusSelect.setEnabled(false);
     }
 
     private void fillFields() {
+        codeTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Code)).getValue().toString());
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
-        classNumberSelect.setValue(
-                (Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                        Settings.number_id).getValue());
-        statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.status_id).getValue());
+        classNumberSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                Settings.number_id).getValue());
+        statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.status_id).getValue());
     }
 
     private void clearFields() {
+        codeTF.setValue("");
         nameTF.setValue("");
         classNumberSelect.setValue(null);
         statusSelect.setValue(null);
@@ -312,32 +323,32 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
 
     private void updateDatacontainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
+        dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.number_id).setValue(classNumberSelect
-                        .getValue());
+                Settings.number_id).setValue(classNumberSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Number)).setValue(classNumberSelect
                 .getContainerProperty(classNumberSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.status_id).setValue(statusSelect
-                        .getValue());
+                Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.school_id).setValue(
-                        myUI.getUser().getSchool_id());
+                Settings.school_id).setValue(myUI.getUser().getSchool_id());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.School)).setValue(
-                myUI.getUser().getSchool_name());
+                myUI.getMessage(SptMessages.School)).setValue(myUI.getUser().getSchool_name());
     }
 
     private void addDatacontainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
+        item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(
+                codeTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
@@ -360,6 +371,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
 
     private ClassName getClassName(int i) {
         ClassName d = new ClassName();
+        d.setCode(codeTF.getValue());
         d.setName(nameTF.getValue());
         d.setClass_number_id((Integer) classNumberSelect.getValue());
         d.setStatus_id((Integer) statusSelect.getValue());

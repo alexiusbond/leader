@@ -15,7 +15,6 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +30,7 @@ public class ProductMovementsReport implements Button.ClickListener,
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
-    private ComboBoxMax schoolSelect, stockSelect, categorySelect;
+    private ComboBox schoolSelect, stockSelect, categorySelect;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;
@@ -97,7 +96,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         tillDateDF.addValueChangeListener(this);
         tillDateDF.addValueChangeListener(this);
 
-        stockSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Stocks));
+        stockSelect = new ComboBox(myUI.getMessage(SptMessages.Stocks));
         stockSelect.setNullSelectionAllowed(false);
         stockSelect.setRequired(true);
         stockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -107,7 +106,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         stockSelect.setFilteringMode(FilteringMode.CONTAINS);
         stockSelect.addValueChangeListener(this);
 
-        categorySelect = new ComboBoxMax(myUI.getMessage(SptMessages.ProductCategory));
+        categorySelect = new ComboBox(myUI.getMessage(SptMessages.ProductCategory));
         categorySelect.setNullSelectionAllowed(false);
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -118,7 +117,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         categorySelect.addValueChangeListener(this);
 
 
-        schoolSelect = new ComboBoxMax(myUI.getMessage(SptMessages.School));
+        schoolSelect = new ComboBox(myUI.getMessage(SptMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

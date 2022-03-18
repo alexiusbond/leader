@@ -11,6 +11,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
@@ -18,7 +19,6 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -141,13 +141,13 @@ public class InventoryOrganizationPdf {
                         table.addCell(new Phrase(y + "", tableFont));
                         table.addCell(new Phrase(inventoriesCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Code)).getValue().toString(), tableFont));
-                        ComboBoxMax cb = (ComboBoxMax) inventoriesCont.getContainerProperty(next,
+                        ComboBox cb = (ComboBox) inventoriesCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Category)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
-                        cb = (ComboBoxMax) inventoriesCont.getContainerProperty(next,
+                        cb = (ComboBox) inventoriesCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Brand)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
-                        cb = (ComboBoxMax) inventoriesCont.getContainerProperty(next,
+                        cb = (ComboBox) inventoriesCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Title)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);

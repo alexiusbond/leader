@@ -20,7 +20,6 @@ import kg.alex.spt.reports.accounting.SchoolsReport;
 import kg.alex.spt.ui.CashBoxView;
 import kg.alex.spt.ui.PayoutsView;
 import kg.alex.spt.ui.TransactionsView;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedTreeTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,7 +59,7 @@ public class DbAccTransactions extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
                     pav.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbAcc_transactions));
-            ComboBoxMax cb = pav.createCombobox(0, myUi.getMessage(SptMessages.Category), null, true, true);
+            ComboBox cb = pav.createCombobox(0, myUi.getMessage(SptMessages.Category), null, true, true);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -156,7 +155,7 @@ public class DbAccTransactions extends BaseDb {
 
                 item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
                         myUI.getMessage(SptMessages.Category), id, 2, isDisabled, tableName));
-                ComboBoxMax cb = dw.createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, null, false, false, false);
+                ComboBox cb = dw.createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, null, false, false, false);
                 if (employeesContainer == null) {
                     try {
                         DbEmployee dbCon = new DbEmployee();
@@ -184,7 +183,7 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(Settings.button).setValue(hl);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(result.getTimestamp("t.date_time"), myUI.getMessage(SptMessages.Date), id, isDisabled, tableName));
-            ComboBoxMax cb = dw.createCombobox(0, myUI.getMessage(SptMessages.Currency), id, null, isDisabled, true, false);
+            ComboBox cb = dw.createCombobox(0, myUI.getMessage(SptMessages.Currency), id, null, isDisabled, true, false);
             if (currenciesContainer == null) {
                 try {
                     DbDefinition dbd = new DbDefinition();

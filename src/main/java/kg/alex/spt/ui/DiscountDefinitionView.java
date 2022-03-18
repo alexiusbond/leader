@@ -19,7 +19,6 @@ import kg.alex.spt.dao.DbDiscount;
 import kg.alex.spt.dao.DbStudentDiscount;
 import kg.alex.spt.domain.Discount;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.DefinitionsFilterGenerator;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -39,7 +38,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
     static final Logger logger = LogManager.getLogger(DiscountDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax discTypeSelect, statusSelect, yearSelect;
+    private ComboBox discTypeSelect, statusSelect, yearSelect;
     private FormattedFilterTable dataTable;
     private TextField nameTF, valueTF;
     private PopupButton copyButton;
@@ -133,7 +132,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.addValueChangeListener(this);
@@ -152,7 +151,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         buttonsLay.addComponent(copyButton);
         buttonsLay.setExpandRatio(copyButton, 1);
 
-        discTypeSelect = new ComboBoxMax(myUI.getMessage(SptMessages.DiscountType));
+        discTypeSelect = new ComboBox(myUI.getMessage(SptMessages.DiscountType));
         discTypeSelect.setNullSelectionAllowed(false);
         discTypeSelect.setRequired(true);
         discTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -195,7 +194,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
         settingsLay.addComponent(valueTF);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

@@ -11,13 +11,13 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.StreamResource;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.StockInvoice;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -131,10 +131,10 @@ public class StockMovementsPdf {
                     while (iter1.hasNext()) {
                         Object next = iter1.next();
                         table.addCell(new Phrase(y + "", tableFont));
-                        ComboBoxMax cb = (ComboBoxMax) stockMovementsCont.getContainerProperty(next,
+                        ComboBox cb = (ComboBox) stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Product)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()).toString(), tableFont));
-                        cb = (ComboBoxMax) stockMovementsCont.getContainerProperty(next,
+                        cb = (ComboBox) stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Measurement)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()).toString(), tableFont));
                         TextField tf = (TextField) stockMovementsCont.getContainerProperty(next,

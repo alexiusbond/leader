@@ -9,13 +9,13 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.IntegerRangeValidator;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.InventoryLiquidation;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.InventoryLiquidationView;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,7 +51,7 @@ public class DbInventoryLiquidation extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
                     v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbInventoryLiquidation, true));
-            ComboBoxMax cb = v.createCombobox(0, myUi.getMessage(SptMessages.InventoryItem),
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(SptMessages.InventoryItem),
                     null, true, true, true);
             try {
                 DbInventoryOrganization dbCon = new DbInventoryOrganization();

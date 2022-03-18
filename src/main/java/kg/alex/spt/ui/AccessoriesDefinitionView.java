@@ -16,7 +16,6 @@ import kg.alex.spt.dao.DbAccessories;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.domain.Accessories;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -32,7 +31,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
     static final Logger logger = LogManager.getLogger(AccessoriesDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax statusSelect, categorySelect;
+    private ComboBox statusSelect, categorySelect;
     private Table dataTable;
     private TextField nameTF;
     private boolean isNew;
@@ -139,7 +138,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
                 myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
         settingsLay.addComponent(nameTF);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -148,7 +147,7 @@ public class AccessoriesDefinitionView extends HorizontalSplitPanel implements B
         statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        categorySelect = new ComboBoxMax(myUI.getMessage(SptMessages.Category));
+        categorySelect = new ComboBox(myUI.getMessage(SptMessages.Category));
         categorySelect.setNullSelectionAllowed(false);
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

@@ -25,7 +25,10 @@ import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.Invoice;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.*;
+import kg.alex.spt.utils.ExistsValidator;
+import kg.alex.spt.utils.FormattedFilterTable;
+import kg.alex.spt.utils.FormattedTable;
+import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -365,8 +368,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         Cell cell = row.getCell(k);
 
                         Object component = payoutsTable.getContainerProperty(((IndexedContainer) payoutsTable.getContainerDataSource()).getIdByIndex(i), propName).getValue();
-                        if (component instanceof ComboBoxMax) {
-                            ComboBoxMax cb = (ComboBoxMax) component;
+                        if (component instanceof ComboBox) {
+                            ComboBox cb = (ComboBox) component;
                             cell.setCellValue(cb.getItemCaption(cb.getValue()));
                         } else if (component instanceof TextField) {
                             TextField tf = (TextField) component;
@@ -414,9 +417,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString());
             }
             invoiceNumberTF.addValueChangeListener(this);
-        } else if (event.getProperty() instanceof ComboBoxMax && ((ComboBoxMax) event.getProperty()).getId() != null) {
-            ComboBoxMax catCb = (ComboBoxMax) event.getProperty();
-            ((ComboBoxMax) payoutsTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
+        } else if (event.getProperty() instanceof ComboBox && ((ComboBox) event.getProperty()).getId() != null) {
+            ComboBox catCb = (ComboBox) event.getProperty();
+            ((ComboBox) payoutsTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
                     (Integer) catCb.getContainerProperty(catCb.getValue(), Settings.acc_currency_id).getValue());
             repaintPayoutsFooter();
         } else if (event.getProperty().getType() != null) {
@@ -637,8 +640,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         return true;
     }
 
-    public ComboBoxMax createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isExistsValiator) {
-        ComboBoxMax cb = new ComboBoxMax();
+    public ComboBox createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isExistsValiator) {
+        ComboBox cb = new ComboBox();
         if (isExistsValiator) {
             cb.addValidator(new ExistsValidator(myUI, payoutsCont, cb, description));
         }
@@ -715,10 +718,10 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         if (payoutsCont == null) {
             payoutsCont = new IndexedContainer();
             payoutsCont.addContainerProperty(Settings.button, Button.class, null);
-            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBoxMax.class, null);
+            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBox.class, null);
             payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
             payoutsCont.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
-            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBoxMax.class, null);
+            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBox.class, null);
             payoutsCont.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
             payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Rate), TextField.class, 0.0);
             payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Amount), TextField.class, 0.0);
@@ -745,7 +748,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 payoutsTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbAcc_transactions));
-        ComboBoxMax cb = createCombobox(0, myUI.getMessage(SptMessages.Category), null, true, true);
+        ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.Category), null, true, true);
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
@@ -815,9 +818,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         myUI.getMessage(SptMessages.Amount)).getValue()).isValid()
                         && ((TextField) payoutsTable.getItem(next).getItemProperty(
                         myUI.getMessage(SptMessages.Rate)).getValue()).isValid()
-                        && ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
+                        && ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                         myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
-                    if ((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
+                    if ((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 2) {
                         totalAmount += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue();
@@ -846,7 +849,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 Iterator iter = payoutsTable.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
-                    ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
+                    ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
                     AccTransaction tr = new AccTransaction();
                     tr.setAcc_invoice_id(invoice_id);
                     tr.setDate(dateDF.getValue());
@@ -860,7 +863,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
                     tr.setCategory_id((Integer) cb.getValue());
-                    tr.setCurrency_id((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
+                    tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
                     if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Update))) {
@@ -911,7 +914,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             Iterator iter = payoutsTable.getItemIds().iterator();
                             while (iter.hasNext()) {
                                 Object next = iter.next();
-                                ComboBoxMax cb = (ComboBoxMax) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
+                                ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
                                 tr = new AccTransaction();
                                 tr.setAcc_invoice_id(id);
                                 tr.setDate(inv.getCreation_date());
@@ -923,7 +926,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
                                 tr.setCategory_id((Integer) cb.getValue());
-                                tr.setCurrency_id((Integer) ((ComboBoxMax) payoutsTable.getItem(next).getItemProperty(
+                                tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                                 tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
                                 dbTr.exec_insert(tr, dbTr.getConnection());

@@ -21,7 +21,6 @@ import kg.alex.spt.domain.EmployeeLessons;
 import kg.alex.spt.excel.ExcelUploader;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.BranchCodesPdf;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +40,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
     static final Logger logger = LogManager.getLogger(ImportBranchesFromExcelView.class);
     private MyVaadinUI myUI;
     private Button deleteBtn, saveBtn, templateBtn, branchesPDF_Btn;
-    private ComboBoxMax yearSelect;
+    private ComboBox yearSelect;
     private FormattedFilterTable dataTable;
     private FormattedTable importTable;
     private Subject currentUser = SecurityUtils.getSubject();
@@ -171,7 +170,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         fileUpl.addSucceededListener(excelUploader);
         buttonsLay.addComponent(fileUpl);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.LessonsYear));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.LessonsYear));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);

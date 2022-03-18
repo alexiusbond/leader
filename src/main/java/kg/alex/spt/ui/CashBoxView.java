@@ -38,7 +38,6 @@ import kg.alex.spt.domain.CurrencyRate;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.TransactionInvoicePDF;
-import kg.alex.spt.utils.ComboBoxMax;
 import kg.alex.spt.utils.ValueFromContainerConverter;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -670,8 +669,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         return df;
     }
 
-    public ComboBoxMax createCombobox(String dbTable, boolean isRequired, Property.ValueChangeListener valueChangeListener) {
-        ComboBoxMax cb = new ComboBoxMax();
+    public ComboBox createCombobox(String dbTable, boolean isRequired, Property.ValueChangeListener valueChangeListener) {
+        ComboBox cb = new ComboBox();
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth(Settings.PERCENTS100);
         if (isRequired) {

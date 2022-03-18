@@ -19,8 +19,6 @@ import kg.alex.spt.dao.DbDiscount;
 import kg.alex.spt.dao.DbStudentDiscount;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -40,8 +38,8 @@ public class ClassDiscountsReport implements Button.ClickListener,
             selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
     private HorizontalSplitPanel splitPanel;
     private GridLayout leftGrid;
-    private ComboBoxMax yearSelect;
-    private ComboBoxMultiselectMax educationStatusMCB;
+    private ComboBox yearSelect;
+    private ComboBoxMultiselect educationStatusMCB;
     public FormattedTable dataTable;
     public FilterTable classTable, discountsTable;
     private EnhancedFormatExcelExport excelReport;
@@ -134,7 +132,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        yearSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -143,7 +141,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));

@@ -19,7 +19,6 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.AccCategory;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.utils.ComboBoxMax;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +38,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     static final Logger logger = LogManager.getLogger(SchoolDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBoxMax statusSelect;
+    private ComboBox statusSelect;
     private Table dataTable;
     private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
             innTF, bankTF, bankAccountTF, phoneTF, cityTF;
@@ -226,7 +225,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         bankAccountTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(bankAccountTF);
 
-        statusSelect = new ComboBoxMax(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequired(true);

@@ -12,8 +12,6 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.ComboBoxMax;
-import kg.alex.spt.utils.ComboBoxMultiselectMax;
 import kg.alex.spt.utils.FormattedTreeTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -31,8 +29,8 @@ public class StockGeneralReport implements Button.ClickListener,
     private MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private HorizontalSplitPanel splitPanel;
-    private ComboBoxMax schoolSelect;
-    private ComboBoxMultiselectMax stocksMSB;
+    private ComboBox schoolSelect;
+    private ComboBoxMultiselect stocksMSB;
     private OptionGroup operationOG;
     private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
@@ -106,7 +104,7 @@ public class StockGeneralReport implements Button.ClickListener,
         operationOG.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         operationOG.addValueChangeListener(this);
 
-        stocksMSB = new ComboBoxMultiselectMax(myUI.getMessage(SptMessages.Stocks));
+        stocksMSB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Stocks));
         stocksMSB.setRequired(true);
         stocksMSB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         stocksMSB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -123,7 +121,7 @@ public class StockGeneralReport implements Button.ClickListener,
         stocksMSB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         stocksMSB.addValueChangeListener(this);
 
-        schoolSelect = new ComboBoxMax(myUI.getMessage(SptMessages.School));
+        schoolSelect = new ComboBox(myUI.getMessage(SptMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
