@@ -26,11 +26,12 @@ public class DbSchool extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
-        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id, y.name, "
+        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id, y.name, t.name, "
                 + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.adress, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join year as y on y.id = s.year_id "
                 + "left join activity_status as ac on ac.id = s.activity_status_id "
+                + "left join school_type as t on t.id = s.school_type_id "
                 + "order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -39,6 +40,7 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.TitleKg), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.TitleRu), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.TitleEn), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.SchoolType), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(Settings.year_id, Integer.class, 0);
@@ -66,6 +68,8 @@ public class DbSchool extends BaseDb {
                     result.getString("s.name_en"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.SchoolType)).setValue(
+                    result.getString("t.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("s.activity_status_id"));
             item.getItemProperty(Settings.year_id).setValue(

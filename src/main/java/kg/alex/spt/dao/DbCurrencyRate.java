@@ -18,7 +18,8 @@ public class DbCurrencyRate extends BaseDb {
     }
 
     public double execSQL_last_rate(int school_id) throws SQLException {
-        String sql = "SELECT value, is_mannual FROM currency_rates WHERE school_id = ? order by modification_date DESC limit 1;";
+        String sql = "SELECT value, is_mannual FROM currency_rates " +
+                "WHERE school_id = ? or school_id is null order by modification_date DESC limit 1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();

@@ -121,6 +121,8 @@ public class Settings implements Serializable {
     public static final String dbEmployeeMessageTable = "employee_message";
     public static final String dbQuestion = "hr_question";
     public static final String dbActivity_status = "activity_status";
+    public static final String dbSchoolType = "school_type";
+    public static final String dbEducationLanguages = "education_language";
     public static final String dbFloor = "dm_floor";
     public static final String dbAccessoriesCategory = "accessories_category";
     public static final String dbGender = "gender";
@@ -315,6 +317,7 @@ public class Settings implements Serializable {
     public static final String activeStatus = "active";
     public static final String entering_year_id = "entering_year_id";
     public static final String hr_position_category_id = "hr_position_category_id";
+    public static final String language_id = "language_id";
     public static final String dbColumnStudent_payments_id = "student_payments_id";
     public static final String old_amount = "old_amount";
     public static final String old_currency = "old_currency";

@@ -38,7 +38,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     static final Logger logger = LogManager.getLogger(SchoolDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBox statusSelect;
+    private ComboBox statusSelect, typeSelect;
     private Table dataTable;
     private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
             innTF, bankTF, bankAccountTF, phoneTF, cityTF;
@@ -60,8 +60,9 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
-                myUI.getMessage(SptMessages.TitleRu), myUI.getMessage(SptMessages.TitleKg), myUI.getMessage(SptMessages.TitleEn),
-                myUI.getMessage(SptMessages.Year), myUI.getMessage(SptMessages.Status),
+                myUI.getMessage(SptMessages.TitleRu), myUI.getMessage(SptMessages.TitleKg),
+                myUI.getMessage(SptMessages.TitleEn), myUI.getMessage(SptMessages.Year),
+                myUI.getMessage(SptMessages.SchoolType), myUI.getMessage(SptMessages.Status),
                 myUI.getMessage(SptMessages.DirectorFullName), myUI.getMessage(SptMessages.Bank),
                 myUI.getMessage(SptMessages.BankAccount), myUI.getMessage(SptMessages.Address),
                 myUI.getMessage(SptMessages.Phone)};
@@ -225,6 +226,28 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         bankAccountTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(bankAccountTF);
 
+        typeSelect = new ComboBox(myUI.getMessage(SptMessages.SchoolType));
+        typeSelect.setNullSelectionAllowed(false);
+        typeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        typeSelect.setRequired(true);
+        typeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        typeSelect.setWidth(Settings.PERCENTS100);
+        typeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        typeSelect.setFilteringMode(FilteringMode.CONTAINS);
+        settingsLay.addComponent(typeSelect);
+
+        photoEmb = new Embedded();
+        photoEmb.setHeight("100%");
+        photoEmb.setWidth("70%");
+        photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
+        photoEmb.setImmediate(true);
+        settingsLay.addComponent(photoEmb);
+        settingsLay.setComponentAlignment(photoEmb, Alignment.MIDDLE_CENTER);
+
+        buildUpload();
+        settingsLay.addComponent(new Label());
+        settingsLay.addComponent(photoUpl);
+
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -239,25 +262,15 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
             dbDef.connect();
             statusSelect.setContainerDataSource(
                     dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
+            typeSelect.setContainerDataSource(
+                    dbDef.exec_for_select(myUI, Settings.dbSchoolType, false));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         settingsLay.addComponent(statusSelect);
-
-        photoEmb = new Embedded();
-        photoEmb.setHeight("100%");
-        photoEmb.setWidth("95%");
-        photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
-        photoEmb.setImmediate(true);
-        settingsLay.addComponent(photoEmb);
-        settingsLay.setComponentAlignment(photoEmb, Alignment.MIDDLE_CENTER);
-
-        buildUpload();
-        settingsLay.addComponent(new Label());
-        settingsLay.addComponent(photoUpl);
-
+        settingsLay.setComponentAlignment(statusSelect, Alignment.TOP_CENTER);
     }
 
     @Override
@@ -415,6 +428,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.setEnabled(false);
         nameKgTF.setEnabled(true);
         statusSelect.setEnabled(true);
+        typeSelect.setEnabled(true);
         codeTF.setEnabled(true);
         nameRuTF.setEnabled(true);
         nameEnTF.setEnabled(true);
@@ -443,6 +457,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.setEnabled(true);
         nameKgTF.setEnabled(false);
         statusSelect.setEnabled(false);
+        typeSelect.setEnabled(false);
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(false);
         nameEnTF.setEnabled(false);
@@ -464,6 +479,8 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 myUI.getMessage(SptMessages.TitleRu)).getValue().toString());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue());
+        typeSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
+                Settings.school_type_id).getValue());
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.TitleKg)).getValue() != null) {
             nameKgTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
@@ -534,7 +551,8 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         bankTF.setValue("");
         bankAccountTF.setValue("");
         phoneTF.setValue("");
-        statusSelect.setValue(null);
+        statusSelect.setValue(2);
+        typeSelect.setValue(null);
         photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
         photoName = null;
     }
@@ -572,6 +590,12 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
+        dataTable.getContainerProperty(dataTable.getValue(),
+                Settings.school_type_id).setValue(typeSelect.getValue());
+        dataTable.getContainerProperty(dataTable.getValue(),
+                myUI.getMessage(SptMessages.SchoolType)).setValue(typeSelect.
+                getContainerProperty(typeSelect.getValue(),
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
     private void addDatacontainerItem(int id) {
@@ -593,6 +617,10 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(statusSelect.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.SchoolType)).setValue(
+                typeSelect.getContainerProperty(typeSelect.getValue(),
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+        item.getItemProperty(Settings.school_type_id).setValue(typeSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());
         item.getItemProperty(Settings.year_id).setValue(myUI.getUser().getCurrent_year().getId());
@@ -601,24 +629,25 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     }
 
     private School getSchool(int i) {
-        School d = new School();
-        d.setId(i);
-        d.setCode(codeTF.getValue());
-        d.setName_kg(nameKgTF.getValue());
-        d.setName_ru(nameRuTF.getValue());
-        d.setName_en(nameEnTF.getValue());
-        d.setDirector_f_name(directorFullNameTF.getValue());
-        d.setCity(cityTF.getValue());
-        d.setAddress(addressTF.getValue());
-        d.setInn(innTF.getValue());
-        d.setBank(bankTF.getValue());
-        d.setBank_account(bankAccountTF.getValue());
-        d.setPhone(phoneTF.getValue());
-        d.setStatus_id((Integer) statusSelect.getValue());
-        d.setSchool_type_id(1);
-        d.setYear_id(myUI.getUser().getCurrent_year().getId());
-        d.setPhoto(photoName);
-        return d;
+        School school = new School();
+        school.setId(i);
+        school.setCode(codeTF.getValue());
+        school.setName_kg(nameKgTF.getValue());
+        school.setName_ru(nameRuTF.getValue());
+        school.setName_en(nameEnTF.getValue());
+        school.setDirector_f_name(directorFullNameTF.getValue());
+        school.setCity(cityTF.getValue());
+        school.setAddress(addressTF.getValue());
+        school.setInn(innTF.getValue());
+        school.setBank(bankTF.getValue());
+        school.setBank_account(bankAccountTF.getValue());
+        school.setPhone(phoneTF.getValue());
+        school.setStatus_id((Integer) statusSelect.getValue());
+        school.setSchool_type_id((Integer) typeSelect.getValue());
+        school.setSchool_type_id(1);
+        school.setYear_id(myUI.getUser().getCurrent_year().getId());
+        school.setPhoto(photoName);
+        return school;
     }
 
     private void execDelete() {

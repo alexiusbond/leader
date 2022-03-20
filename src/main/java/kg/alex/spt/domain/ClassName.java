@@ -14,17 +14,17 @@ public class ClassName implements Serializable {
 
     private int id;
     private String name;
-    private String code;
+    private int education_language_id;
     private int class_number_id;
     private int status_id;
     private int school_id;
 
-    public String getCode() {
-        return code;
+    public int getEducation_language_id() {
+        return education_language_id;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setEducation_language_id(int education_language_id) {
+        this.education_language_id = education_language_id;
     }
 
     public int getId() {

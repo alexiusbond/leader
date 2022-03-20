@@ -30,7 +30,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     static final Logger logger = LogManager.getLogger(SchoolModificationView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBox statusSelect;
+    private ComboBox statusSelect, typeSelect;
     private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
             innTF, bankTF, bankAccountTF, phoneTF, cityTF;
 
@@ -50,7 +50,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         this.myUI = myUI;
         this.school_id = scl_id;
 
-        this.setRows(7);
+        this.setRows(8);
         this.setColumns(3);
         this.setWidth("60%");
         this.setSpacing(true);
@@ -162,6 +162,15 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         phoneTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         phoneTF.setWidth(Settings.PERCENTS100);
 
+        typeSelect = new ComboBox(myUI.getMessage(SptMessages.SchoolType));
+        typeSelect.setNullSelectionAllowed(false);
+        typeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        typeSelect.setRequired(true);
+        typeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        typeSelect.setWidth(Settings.PERCENTS100);
+        typeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        typeSelect.setFilteringMode(FilteringMode.CONTAINS);
+
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -174,6 +183,8 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
+            typeSelect.setContainerDataSource(
+                    dbDef.exec_for_select(myUI, Settings.dbSchoolType, false));
             statusSelect.setContainerDataSource(
                     dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             dbDef.close();
@@ -201,7 +212,8 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         this.addComponent(bankTF, 0, 5);
         this.addComponent(bankAccountTF, 1, 5);
         this.addComponent(innTF, 0, 6);
-        this.addComponent(statusSelect, 1, 6);
+        this.addComponent(typeSelect, 1, 6);
+        this.addComponent(statusSelect, 0, 7);
         this.addComponent(photoEmb, 2, 1, 2, 3);
         this.addComponent(photoUpl, 2, 4);
 
@@ -284,6 +296,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         nameKgTF.setEnabled(true);
         nameEnTF.setEnabled(true);
         statusSelect.setEnabled(false);
+        typeSelect.setEnabled(true);
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(true);
         directorFullNameTF.setEnabled(true);
@@ -311,6 +324,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         nameKgTF.setEnabled(false);
         nameEnTF.setEnabled(false);
         statusSelect.setEnabled(false);
+        typeSelect.setEnabled(false);
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(false);
         directorFullNameTF.setEnabled(false);
@@ -347,6 +361,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         bankAccountTF.setValue(school.getBank_account());
         phoneTF.setValue(school.getPhone());
         statusSelect.setValue(school.getStatus_id());
+        typeSelect.setValue(school.getSchool_type_id());
         if (school.getPhoto() != null && !school.getPhoto().equals("")) {
             photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS
                     + school.getPhoto())));
@@ -371,6 +386,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         s.setBank_account(bankAccountTF.getValue());
         s.setPhone(phoneTF.getValue());
         s.setStatus_id((Integer) statusSelect.getValue());
+        s.setSchool_type_id((Integer) typeSelect.getValue());
         s.setSchool_type_id(1);
         s.setYear_id(myUI.getUser().getCurrent_year().getId());
         s.setPhoto(photoName);
