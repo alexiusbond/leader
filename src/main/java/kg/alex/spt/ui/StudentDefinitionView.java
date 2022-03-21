@@ -820,10 +820,18 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
                                         if (isNew) {
+                                            int year_ord = Integer.parseInt(myUI.getUser().getCurrent_year().getName().substring(2, 4));
+                                            String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
+                                                    classCB.getValue(), Settings.class_order_number).getValue());
+                                            loginTF.setValue(myUI.getUser().getSchool_code() + year_ord + class_num.charAt(class_num.length() - 1) +
+                                                    String.format("%03d", dbst.execSQL_login(
+                                                            myUI.getUser().getCurrent_year().getId() - (Integer) classCB.getContainerProperty(
+                                                                    classCB.getValue(), Settings.class_order_number).getValue(),
+                                                            myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
+                                                                    classCB.getValue(), Settings.language_id).getValue(),
+                                                            (Integer) classCB.getContainerProperty(
+                                                                    classCB.getValue(), Settings.edu_order_number).getValue())));
                                             Student student = getStudent(0);
-                                            loginTF.setValue(dbst.execSQL_login(
-                                                    myUI.getUser().getCurrent_year().getId(), myUI.getUser().getSchool_id(),
-                                                    student.getClass_name_id()) + "");
                                             int id = dbst.exec_insert(student);
                                             if (id != 0) {
                                                 insertNewStOrder(id);
@@ -1074,11 +1082,17 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     try {
                         DbStudent dbd = new DbStudent();
                         dbd.connect();
-                        loginTF.setValue(myUI.getUser().getSchool_code() +
-                                myUI.getUser().getCurrent_year().getName().substring(2, 4) +
-                                classCB.getContainerProperty(classCB.getValue(), myUI.getMessage(SptMessages.Code)).getValue() +
-                                String.format("%02d", dbd.execSQL_login(myUI.getUser().getCurrent_year().getId(),
-                                        myUI.getUser().getSchool_id(), (Integer) classCB.getValue())));
+                        int year_ord = Integer.parseInt(myUI.getUser().getCurrent_year().getName().substring(2, 4));
+                        String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
+                                classCB.getValue(), Settings.class_order_number).getValue());
+                        loginTF.setValue(myUI.getUser().getSchool_code() + year_ord + class_num.charAt(class_num.length() - 1) +
+                                String.format("%03d", dbd.execSQL_login(
+                                        myUI.getUser().getCurrent_year().getId() - (Integer) classCB.getContainerProperty(
+                                                classCB.getValue(), Settings.class_order_number).getValue(),
+                                        myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
+                                                classCB.getValue(), Settings.language_id).getValue(),
+                                        (Integer) classCB.getContainerProperty(
+                                                classCB.getValue(), Settings.edu_order_number).getValue())));
                         dbd.close();
                     } catch (Exception ex) {
                         logger.error(ex);
@@ -2217,8 +2231,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     public ComboBox createCombobox(int value, String description, String itemId,
-                                      String dbtable, boolean setDefYear, boolean setDefPayType,
-                                      boolean setDefPayCatType, boolean isdisabled) {
+                                   String dbtable, boolean setDefYear, boolean setDefPayType,
+                                   boolean setDefPayCatType, boolean isdisabled) {
         ComboBox cb = new ComboBox();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
@@ -2255,7 +2269,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     public ComboBox createComboboxPayment(int value, String description, String itemId,
-                                             boolean isFromDb, boolean defType) {
+                                          boolean isFromDb, boolean defType) {
         ComboBox cb = new ComboBox();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);

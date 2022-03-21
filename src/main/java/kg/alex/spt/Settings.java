@@ -89,6 +89,8 @@ public class Settings implements Serializable {
     public static final String columnWork_places = "work_places";
     public static final String order_id = "order_id";
     public static final String order_number = "order_number";
+    public static final String edu_order_number = "edu_order_number";
+    public static final String class_order_number = "class_order_number";
     public static final String from_education_status_id = "from_education_status_id";
     public static final String from_class_id = "from_class_id";
     public static final String from_employee_id = "from_employee_id";

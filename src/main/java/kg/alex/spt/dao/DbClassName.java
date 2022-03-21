@@ -107,23 +107,29 @@ public class DbClassName extends BaseDb {
     }
 
     public IndexedContainer execClass_sel(MyVaadinUI myUi, int scl_id) throws SQLException {
-        String sql = "select cn.id, cn.education_language_id,  concat(cnu.name,' - ',cn.name) as cl_name "
-                + "from class_name as cn "
+        String sql = "select cn.id, cn.education_language_id, cnu.order_num, el.order_num, "
+                + "concat(cnu.name,' - ',cn.name) as cl_name from class_name as cn "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
-                + "where cn.school_id = ? "
-                + "order by cnu.name, cn.name;";
+                + "left join education_language as el on cn.education_language_id = el.id "
+                + "where cn.school_id = ? order by cnu.name, cn.name;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(Settings.language_id, Integer.class, 0);
+        container.addContainerProperty(Settings.class_order_number, Integer.class, 0);
+        container.addContainerProperty(Settings.edu_order_number, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("cn.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("cl_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Code)).setValue(
+            item.getItemProperty(Settings.language_id).setValue(
                     result.getInt("cn.education_language_id"));
+            item.getItemProperty(Settings.class_order_number).setValue(
+                    result.getInt("cnu.order_num"));
+            item.getItemProperty(Settings.edu_order_number).setValue(
+                    result.getInt("el.order_num"));
         }
         return container;
     }

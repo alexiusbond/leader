@@ -656,13 +656,15 @@ public class DbStudent extends BaseDb {
         }
     }
 
-    public int execSQL_login(int year_id, int school_id, int class_name_id) throws SQLException {
-        String sql = "SELECT count(st.id) + 1 as num FROM student AS st " +
-                "WHERE st.entering_year_id = ? and st.school_id = ? and st.class_name_id = ?";
+    public int execSQL_login(int year_id, int school_id, int edu_lang_id, int order_num) throws SQLException {
+        String sql = "SELECT count(st.id) + 1 + ? as num FROM student AS st " +
+                "left join class_name as cn on cn.id = st.class_name_id " +
+                "WHERE st.entering_year_id = ? and st.school_id = ? and cn.education_language_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, school_id);
-        stat.setInt(3, class_name_id);
+        stat.setInt(1, order_num);
+        stat.setInt(2, year_id);
+        stat.setInt(3, school_id);
+        stat.setInt(4, edu_lang_id);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             return result.getInt("num");
