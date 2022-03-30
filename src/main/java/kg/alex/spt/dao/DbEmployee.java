@@ -644,7 +644,7 @@ public class DbEmployee extends BaseDb {
 
         String sql = "SELECT e.id, e.login, e.photo, e.name, e.surname, e.middle_name, e.date_of_birth, e.can_advisor, g.name, n.name, " +
                 "m.name, ws.name, p.name, GROUP_CONCAT(DISTINCT p2.name ORDER BY eo2.id ASC SEPARATOR ', ') AS extra_positions, " +
-                "mbr.name  AS main_branch, " +
+                "GROUP_CONCAT(DISTINCT ph.number ORDER BY ph.id ASC SEPARATOR ', ') AS phones, mbr.name  AS main_branch, " +
                 "GROUP_CONCAT(DISTINCT ebr.name ORDER BY eeb.id ASC SEPARATOR ', ') AS extra_branches, " +
                 "GROUP_CONCAT(DISTINCT concat(ex.name, ' - ', ee.score) ORDER BY ex.id ASC SEPARATOR ', ') AS exams, " +
                 "GROUP_CONCAT(DISTINCT concat(uni.name, ' - ', el.name) ORDER BY edu.id ASC SEPARATOR ', ') AS education, " +
@@ -701,6 +701,7 @@ public class DbEmployee extends BaseDb {
                 "LEFT JOIN hr_employee_language AS elan ON elan.employee_id = e.id " +
                 "LEFT JOIN hr_language AS lang ON elan.hr_language_id = lang.id " +
                 "LEFT JOIN hr_language_level AS lev ON elan.hr_language_level_id = lev.id " +
+                "LEFT JOIN hr_employee_phone_number AS ph ON ph.employee_id = e.id " +
                 "WHERE 1 ";
         if (params.get(myUI.getMessage(SptMessages.Schools)) != null) {
             sql += "AND eo.school_id IN (" + params.get(myUI.getMessage(SptMessages.Schools)) + ") ";
@@ -775,6 +776,7 @@ public class DbEmployee extends BaseDb {
         sql += "GROUP BY e.id ORDER BY sch.id, e.surname, e.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(" ", Integer.class, 0);
@@ -794,6 +796,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Nationality), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Citizenship), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.MartialStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.ContactInfo), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.HealthStatus), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.GraduationSchools),
                 String.class, myUI.getMessage(SptMessages.OtherSchool));
@@ -825,6 +828,7 @@ public class DbEmployee extends BaseDb {
                     result.getDate("e.date_of_birth")));
             item.getItemProperty(myUI.getMessage(SptMessages.ContractType)).setValue(result.getString("sal.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).setValue(result.getString("p.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ContactInfo)).setValue(result.getString("phones"));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).setValue(result.getString("extra_positions"));
             item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(result.getString("main_branch"));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(result.getString("extra_branches"));
