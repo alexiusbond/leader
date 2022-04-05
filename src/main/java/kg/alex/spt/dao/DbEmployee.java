@@ -776,7 +776,6 @@ public class DbEmployee extends BaseDb {
         sql += "GROUP BY e.id ORDER BY sch.id, e.surname, e.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(" ", Integer.class, 0);
