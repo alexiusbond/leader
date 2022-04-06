@@ -23,8 +23,6 @@ import java.sql.*;
 
 public class DbInvoice extends BaseDb {
 
-    static final Logger logger = LogManager.getLogger(DbInvoice.class);
-
     public DbInvoice() throws Exception {
         super();
     }
@@ -60,19 +58,17 @@ public class DbInvoice extends BaseDb {
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
             item.getItemProperty(myUi.getMessage(SptMessages.Note) + " 2").setValue(result.getString("inv.note2"));
-            if (viewName.equals(Settings.cnShortTermDebtsView) || viewName.equals(Settings.cnReturnableAssetsView)) {
-                CheckBox cb = new CheckBox();
-                cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
-                cb.setData(result.getInt("inv.id"));
-                if (result.getInt("inv.is_confirmed") == 1) {
-                    cb.setValue(true);
-                }
-                if (!currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl)) {
-                    cb.setEnabled(false);
-                }
-                cb.addValueChangeListener(listener);
-                item.getItemProperty(Settings.button).setValue(cb);
+            CheckBox cb = new CheckBox();
+            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+            cb.setData(result.getInt("inv.id"));
+            if (result.getInt("inv.is_confirmed") == 1) {
+                cb.setValue(true);
             }
+            if (!currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl)) {
+                cb.setEnabled(false);
+            }
+            cb.addValueChangeListener(listener);
+            item.getItemProperty(Settings.button).setValue(cb);
         }
         return container;
     }
@@ -95,8 +91,10 @@ public class DbInvoice extends BaseDb {
         return false;
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id) throws SQLException {
+    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id,
+                                    Property.ValueChangeListener listener) throws SQLException {
 
+        Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
                 + "sum(if(tr.acc_currency_id != 2, tr.amount/tr.currency_rate, tr.amount)) as amount, inv.note "
                 + "FROM acc_invoice AS inv "
@@ -111,6 +109,7 @@ public class DbInvoice extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(Settings.button, CheckBox.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("inv.id"));
@@ -118,7 +117,17 @@ public class DbInvoice extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format(result.getTimestamp("inv.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
-
+            CheckBox cb = new CheckBox();
+            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+            cb.setData(result.getInt("inv.id"));
+            if (result.getInt("inv.is_confirmed") == 1) {
+                cb.setValue(true);
+            }
+            if (!currentUser.isPermitted(Settings.cnPayoutsView + ":" + Settings.prmConfirmationControl)) {
+                cb.setEnabled(false);
+            }
+            cb.addValueChangeListener(listener);
+            item.getItemProperty(Settings.button).setValue(cb);
         }
         return container;
     }

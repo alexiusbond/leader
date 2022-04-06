@@ -57,7 +57,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(CashBoxView.class);
     private MyVaadinUI myUI;
-    private Button plusButton, saveButton, searchButton;
+    private Button addButton, saveButton, searchButton;
     private OptionGroup currencySettingsOG;
     private TextField currencyTF;
     private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab, currencyLab;
@@ -155,12 +155,12 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         prev_balanceLab.setImmediate(true);
         prev_balanceLab.setSizeFull();
 
-        plusButton = new Button(myUI.getMessage(SptMessages.AddRecord));
-        plusButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-        plusButton.addStyleName(ValoTheme.BUTTON_SMALL);
-        plusButton.setIcon(FontAwesome.PLUS_SQUARE);
-        plusButton.setWidth(Settings.PERCENTS100);
-        plusButton.addClickListener(this);
+        addButton = new Button(myUI.getMessage(SptMessages.AddRecord));
+        addButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+        addButton.addStyleName(ValoTheme.BUTTON_SMALL);
+        addButton.setIcon(FontAwesome.PLUS_SQUARE);
+        addButton.setWidth(Settings.PERCENTS100);
+        addButton.addClickListener(this);
 
         currencyHl = new HorizontalLayout();
         currencyHl.setWidth(Settings.PERCENTS100);
@@ -218,14 +218,14 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencySettingsHl.setExpandRatio(currencySettingsOG, 1);
 
         addComponent(hl, 0, 0);
-        addComponent(plusButton, 0, 1);
+        addComponent(addButton, 0, 1);
         addComponent(prev_balanceLab, 1, 0);
         addComponent(incomeTtlLab, 1, 1);
         addComponent(expenseTtlLab, 2, 1);
         addComponent(ttlLab, 2, 0);
         addComponent(currencyHl, 3, 0);
         addComponent(currencySettingsHl, 3, 1);
-        setComponentAlignment(plusButton, Alignment.BOTTOM_RIGHT);
+        setComponentAlignment(addButton, Alignment.BOTTOM_RIGHT);
         setComponentAlignment(ttlLab, Alignment.MIDDLE_RIGHT);
         setComponentAlignment(prev_balanceLab, Alignment.BOTTOM_LEFT);
         setColumnExpandRatio(0, 2);
@@ -386,7 +386,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 getTotals();
                 recount();
             }
-        } else if (source == plusButton) {
+        } else if (source == addButton) {
             addGridItem();
         } else if (source == saveButton) {
             if (currencyTF.isValid()) {
@@ -772,7 +772,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullname());
         }
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(today);
-        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(2);
+        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(1);
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(myUI.getDb_currency_rate());
     }
 

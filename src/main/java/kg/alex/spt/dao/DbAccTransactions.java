@@ -78,20 +78,20 @@ public class DbAccTransactions extends BaseDb {
             cb.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Currency)).setValue(cb);
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
-            TextField tf = pav.createTextfieldWithProperty(
+            TextField tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
-            tf = pav.createTextfieldWithProperty(
+            tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(pav.createTextfield(
+            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(pav.createTextField(
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {

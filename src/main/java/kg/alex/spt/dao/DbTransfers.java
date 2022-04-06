@@ -42,7 +42,6 @@ public class DbTransfers extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int invoice_id, int school_id,
                                     int acc_invoice_type_id, TransfersView v) throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
-        
 
         String sql = "SELECT t.id, t.amount, t.acc_category_id, t.acc_currency_id, t.currency_rate, t.note "
                 + "FROM acc_transfers as t where t.invoice_id = ? order by t.id;";
@@ -77,20 +76,20 @@ public class DbTransfers extends BaseDb {
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Currency)).setValue(cb);
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
-            TextField tf = v.createTextfieldWithProperty(
+            TextField tf = v.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
-            tf = v.createTextfieldWithProperty(
+            tf = v.createTextFieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextfield(
+            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextField(
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue),
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));

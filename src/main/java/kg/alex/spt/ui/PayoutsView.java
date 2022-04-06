@@ -49,7 +49,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
     static final Logger logger = LogManager.getLogger(PayoutsView.class);
     private MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, excelBtn, copyBtn, addBtn;
+    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, excelBtn, copyBtn, addBtn, confirmBtn;
     private PopupButton searchBtn;
     private FormattedTable payoutsTable;
     private TextField invoiceNumberTF;
@@ -71,7 +71,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     public PayoutsView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.InvoiceNumber),
+        NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(SptMessages.InvoiceNumber),
                 myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
                 myUI.getMessage(SptMessages.Note)};
 
@@ -168,6 +168,15 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
         buttonsLay.addComponent(excelBtn);
+
+        confirmBtn = new Button();
+        confirmBtn.setDescription(myUI.getMessage(SptMessages.Confirm));
+        confirmBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        confirmBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        confirmBtn.setIcon(FontAwesome.CHECK);
+        confirmBtn.setEnabled(false);
+        confirmBtn.addClickListener(this);
+        buttonsLay.addComponent(confirmBtn);
         settingsLay.addComponent(buttonsLay, 0, 0, 1, 0);
 
         invoiceNumberTF = new TextField(myUI.getMessage(SptMessages.InvoiceNumber));
@@ -218,7 +227,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 2));
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 2, this));
             dbCon.close();
             if (invoicesTable.getContainerDataSource().size() != 0) {
                 invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
@@ -236,27 +245,36 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == modifyBtn && invoicesTable.getValue() != null) {
-            isNew = false;
-            fillFields();
-            prepareModificationMode();
-            invoiceNumberTF.focus();
+            if (currentUser.isPermitted(Settings.cnPayoutsView + ":" + Settings.prmConfirmationControl) ||
+                    invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
+                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
+                isNew = false;
+                fillFields();
+                prepareModificationMode();
+                invoiceNumberTF.focus();
+            } else {
+                Notification.show(myUI.getMessage(SptMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+            }
         } else if (source == createBtn) {
             isNew = true;
             clearFields();
             prepareModificationMode();
         } else if (source == deleteBtn && invoicesTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
+            if (currentUser.isPermitted(Settings.cnPayoutsView + ":" + Settings.prmConfirmationControl) ||
+                    invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
+                            !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
+                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                        myUI.getMessage(SptMessages.ConfirmDeletion),
+                        myUI.getMessage(SptMessages.Yes),
+                        myUI.getMessage(SptMessages.No),
+                        (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 execDelete();
                             }
-                        }
-                    });
+                        });
+            } else {
+                Notification.show(myUI.getMessage(SptMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+            }
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay) && validateTable(payoutsTable, false)) {
@@ -274,7 +292,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
                                 insertPayouts(id, dbAt);
-                                addDatacontainerItem(id, Settings.dtmf.format(dateDF.getValue()));
+                                addDataContainerItem(id, Settings.dtmf.format(dateDF.getValue()));
                                 invoicesTable.setValue(id);
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
@@ -300,7 +318,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             }
                             if (status != 0) {
                                 insertPayouts(invID, dbAt);
-                                updateDatacontainer();
+                                updateDataContainer();
                                 setPayoutsTable();
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
@@ -351,6 +369,36 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             prepareNormalMode();
         } else if (source == addBtn) {
             addPayoutsItem();
+        } else if (source == confirmBtn) {
+            if (currentUser.isPermitted(Settings.cnPayoutsView + ":" + Settings.prmConfirmationControl)) {
+                CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
+                ckb.setValue(true);
+                confirmBtn.setEnabled(false);
+            } else {
+                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                        myUI.getMessage(SptMessages.ConfirmConfirmation),
+                        myUI.getMessage(SptMessages.Yes),
+                        myUI.getMessage(SptMessages.No),
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
+                                ckb.setValue(true);
+                                try {
+                                    DbInvoice dbInvoice = new DbInvoice();
+                                    dbInvoice.connect();
+                                    int status = dbInvoice.exec_update(invID, 1);
+                                    dbInvoice.close();
+                                    if (status == 1) {
+                                        Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                        confirmBtn.setEnabled(false);
+                                    }
+                                } catch (Exception e) {
+                                    logger.error(e);
+                                    logger.catching(e);
+                                }
+                            }
+                        });
+            }
         } else if (source == excelBtn) {
             if (payoutsTable.getContainerDataSource().size() != 0) {
                 excelReport = new EnhancedFormatExcelExport(payoutsTable, myUI.getMessage(SptMessages.Payouts));
@@ -417,6 +465,30 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString());
             }
             invoiceNumberTF.addValueChangeListener(this);
+        } else if (event.getProperty() instanceof CheckBox) {
+            try {
+                int value = 1;
+                if (event.getProperty().getValue() == Boolean.FALSE) {
+                    value = 0;
+                }
+                DbInvoice dbInvoice = new DbInvoice();
+                dbInvoice.connect();
+                int status = dbInvoice.exec_update((Integer) ((CheckBox) event.getProperty()).getData(), value);
+                dbInvoice.close();
+                if (status == 1) {
+                    Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                    if ((int) ((CheckBox) event.getProperty()).getData() == (int) invoicesTable.getValue()) {
+                        if (value == 1) {
+                            confirmBtn.setEnabled(false);
+                        } else {
+                            confirmBtn.setEnabled(true);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         } else if (event.getProperty() instanceof ComboBox && ((ComboBox) event.getProperty()).getId() != null) {
             ComboBox catCb = (ComboBox) event.getProperty();
             ((ComboBox) payoutsTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
@@ -428,6 +500,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     }
 
     private void prepareModificationMode() {
+        if (invoicesTable.getValue() != null && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
+            confirmBtn.setEnabled(false);
+        }
         modifyBtn.setEnabled(false);
         createBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
@@ -463,9 +538,23 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         dateDF.setEnabled(false);
         noteTF.setEnabled(false);
         rightLay.setEnabled(false);
+        if (invoicesTable.getValue() != null && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
+            if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
+                confirmBtn.setEnabled(true);
+            } else {
+                confirmBtn.setEnabled(false);
+            }
+        }
     }
 
     private void fillFields() {
+        if (invoicesTable.getValue() != null && invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null) {
+            if (!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
+                confirmBtn.setEnabled(true);
+            } else {
+                confirmBtn.setEnabled(false);
+            }
+        }
         invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
                 myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString());
         try {
@@ -493,7 +582,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         payoutsTable.removeAllItems();
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Date)).setValue(
                 Settings.dtmf.format(dateDF.getValue()));
         try {
@@ -507,7 +596,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 noteTF.getValue());
     }
 
-    private void addDatacontainerItem(int id, String date) {
+    private void addDataContainerItem(int id, String date) {
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(date);
@@ -525,6 +614,15 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             dbCon.connect();
             item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
             dbCon.close();
+            CheckBox cb = new CheckBox();
+            cb.setData(id);
+            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+            if (!currentUser.isPermitted(Settings.cnPayoutsView + ":" + Settings.prmConfirmationControl)) {
+                cb.setEnabled(false);
+            } else {
+                cb.addValueChangeListener(this);
+            }
+            item.getItemProperty(Settings.button).setValue(cb);
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -683,7 +781,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         return btn;
     }
 
-    public TextField createTextfieldWithProperty(Object value, String description, Validator validator, Property p, Converter conv, boolean isEnabled) {
+    public TextField createTextFieldWithProperty(Object value, String description, Validator validator, Property p, Converter conv, boolean isEnabled) {
         TextField tf = new TextField(p);
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -698,7 +796,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         return tf;
     }
 
-    public TextField createTextfield(String value, String description, Validator validator, boolean isRequired) {
+    public TextField createTextField(String value, String description, Validator validator, boolean isRequired) {
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -765,18 +863,18 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         cb = createCombobox(0, myUI.getMessage(SptMessages.Currency), Settings.dbAcc_currency, true, false);
         cb.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
-        TextField tf = createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
+        TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, null),
                 new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
-        tf = createTextfieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
+        tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
                 new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(),
                 currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
-        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfield(
+        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextField(
                 noteTF.getValue(), id, new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         payoutsTable.setVisibleColumns(NATURAL_COL_ORDER_PAYOUTS);
@@ -933,7 +1031,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             }
                         }
                         dbTr.close();
-                        addDatacontainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
+                        addDataContainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
                         invoicesTable.setValue(id);
                         Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                     } else {
