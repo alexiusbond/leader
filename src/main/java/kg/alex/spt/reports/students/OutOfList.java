@@ -54,17 +54,17 @@ public class OutOfList implements Button.ClickListener,
         buildLeftPanel();
         buildRightLayout();
         NATURAL_COL_ORDER = new String[]{
-            myUI.getMessage(SptMessages.Id),
-            myUI.getMessage(SptMessages.FirstName),
-            myUI.getMessage(SptMessages.LastName),
-            myUI.getMessage(SptMessages.Year),
-            myUI.getMessage(SptMessages.Reasons),
-            myUI.getMessage(SptMessages.FromClass),
-            myUI.getMessage(SptMessages.ToClass),
-            myUI.getMessage(SptMessages.Date),
-            myUI.getMessage(SptMessages.Net),
-            myUI.getMessage(SptMessages.Paid),
-            myUI.getMessage(SptMessages.Left)};
+                myUI.getMessage(SptMessages.Id),
+                myUI.getMessage(SptMessages.FirstName),
+                myUI.getMessage(SptMessages.LastName),
+                myUI.getMessage(SptMessages.Year),
+                myUI.getMessage(SptMessages.Reasons),
+                myUI.getMessage(SptMessages.FromClass),
+                myUI.getMessage(SptMessages.ToClass),
+                myUI.getMessage(SptMessages.Date),
+                myUI.getMessage(SptMessages.Net),
+                myUI.getMessage(SptMessages.Paid),
+                myUI.getMessage(SptMessages.Left)};
     }
 
     private void buildLeftPanel() {
@@ -116,7 +116,8 @@ public class OutOfList implements Button.ClickListener,
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
-        };
+        }
+        ;
         yearSelectMCB.addValueChangeListener(this);
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
@@ -146,13 +147,13 @@ public class OutOfList implements Button.ClickListener,
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
-            fromClassTable.setContainerDataSource(
-                    dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            fromClassTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
+        fromClassTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);

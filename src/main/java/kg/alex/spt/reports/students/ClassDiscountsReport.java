@@ -91,6 +91,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
+        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         selectAllDiscountsBtn = new Button(myUI.getMessage(SptMessages.AllDiscounts));
         selectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
@@ -230,7 +231,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                                 + " " + myUI.getMessage(SptMessages.Average) + "%", Table.Align.RIGHT);
                         try {
                             dataTable.setColumnFooter(classTable.getContainerProperty(
-                                    next, myUI.getMessage(SptMessages.Title)).getValue()
+                                            next, myUI.getMessage(SptMessages.Title)).getValue()
                                             + " " + myUI.getMessage(SptMessages.Average) + "%",
                                     Settings.dFormat.format(Double.parseDouble(
                                             dataTable.getColumnFooter(classTable.getContainerProperty(

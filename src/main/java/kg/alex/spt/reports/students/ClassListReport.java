@@ -148,13 +148,13 @@ public class ClassListReport implements Button.ClickListener,
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
-            classTable.setContainerDataSource(
-                    dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            classTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
+        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);

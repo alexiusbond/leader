@@ -142,6 +142,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
+        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);

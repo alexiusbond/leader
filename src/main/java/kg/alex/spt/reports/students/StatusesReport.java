@@ -131,6 +131,7 @@ public class StatusesReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
+        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
 
         selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
         selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
