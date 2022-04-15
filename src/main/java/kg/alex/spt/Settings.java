@@ -70,6 +70,7 @@ public class Settings implements Serializable {
     public static final String activity_status_id = "activity_status_id";
     public static final String working_status_id = "working_status_id";
     public static final String education_status_id = "education_status_id";
+    public static final String class_type_id = "class_type_id";
     public static final String class_name_id = "class_name_id";
     public static final String class_id = "class_id";
     public static final String visible_hr_orders = "visible_hr_orders";
@@ -89,7 +90,8 @@ public class Settings implements Serializable {
     public static final String columnWork_places = "work_places";
     public static final String order_id = "order_id";
     public static final String order_number = "order_number";
-    public static final String edu_order_number = "edu_order_number";
+    public static final String max = "max";
+    public static final String min = "min";
     public static final String class_order_number = "class_order_number";
     public static final String from_education_status_id = "from_education_status_id";
     public static final String from_class_id = "from_class_id";
@@ -124,7 +126,7 @@ public class Settings implements Serializable {
     public static final String dbQuestion = "hr_question";
     public static final String dbActivity_status = "activity_status";
     public static final String dbSchoolType = "school_type";
-    public static final String dbEducationLanguages = "education_language";
+    public static final String dbClassType = "class_type";
     public static final String dbFloor = "dm_floor";
     public static final String dbAccessoriesCategory = "accessories_category";
     public static final String dbGender = "gender";

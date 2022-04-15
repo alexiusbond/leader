@@ -24,10 +24,10 @@ public class DbClassName extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id) throws SQLException {
 
-        String sql = "SELECT cn.id, cn.education_language_id, cn.name, cn.school_id, sc.name_ru, cnum.id, cnum.name, "
-                + "lang.name, cn.activity_status_id, ac.name FROM class_name as cn "
+        String sql = "SELECT cn.id, cn.class_type_id, cn.name, cn.school_id, sc.name_ru, cnum.id, cnum.name, "
+                + "class_type.name, cn.activity_status_id, ac.name FROM class_name as cn "
                 + "left join class_number as cnum on cnum.id = cn.class_number_id "
-                + "left join education_language as lang on lang.id = cn.education_language_id "
+                + "left join class_type on class_type.id = cn.class_type_id "
                 + "left join school as sc on sc.id = cn.school_id "
                 + "left join activity_status as ac on ac.id=cn.activity_status_id "
                 + "where sc.id = ? "
@@ -40,10 +40,10 @@ public class DbClassName extends BaseDb {
         container.addContainerProperty(Settings.number_id, Integer.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Language), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Language), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Type), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
-        container.addContainerProperty(Settings.language_id, Integer.class, 0);
+        container.addContainerProperty(Settings.class_type_id, Integer.class, 0);
         container.addContainerProperty(Settings.school_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.School), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
@@ -54,16 +54,16 @@ public class DbClassName extends BaseDb {
                     result.getString("cnum.name"));
             item.getItemProperty(Settings.number_id).setValue(
                     result.getInt("cnum.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Language)).setValue(
-                    result.getString("lang.name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Type)).setValue(
+                    result.getString("class_type.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("cn.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("cn.activity_status_id"));
-            item.getItemProperty(Settings.language_id).setValue(
-                    result.getInt("cn.education_language_id"));
+            item.getItemProperty(Settings.class_type_id).setValue(
+                    result.getInt("cn.class_type_id"));
             item.getItemProperty(Settings.school_id).setValue(
                     result.getInt("cn.school_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
@@ -75,14 +75,14 @@ public class DbClassName extends BaseDb {
 
     public int exec_insert(ClassName def) throws SQLException {
         String sql = "INSERT IGNORE INTO class_name (name,school_id,"
-                + "class_number_id,activity_status_id,education_language_id) "
+                + "class_number_id,activity_status_id,class_type_id) "
                 + "VALUES(?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, def.getName());
         stat.setInt(2, def.getSchool_id());
         stat.setInt(3, def.getClass_number_id());
         stat.setInt(4, def.getStatus_id());
-        stat.setInt(5, def.getEducation_language_id());
+        stat.setInt(5, def.getClass_type_id());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -94,42 +94,45 @@ public class DbClassName extends BaseDb {
 
     public int exec_update(ClassName cl) throws SQLException {
         String sql = "UPDATE class_name SET name=?, school_id=?,class_number_id=?, "
-                + "activity_status_id=?, education_language_id=? WHERE id=?";
+                + "activity_status_id=?, class_type_id=? WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, cl.getName());
         stat.setInt(2, cl.getSchool_id());
         stat.setInt(3, cl.getClass_number_id());
         stat.setInt(4, cl.getStatus_id());
-        stat.setInt(5, cl.getEducation_language_id());
+        stat.setInt(5, cl.getClass_type_id());
         stat.setInt(6, cl.getId());
         int status = stat.executeUpdate();
         return status;
     }
 
     public IndexedContainer execClass_sel(MyVaadinUI myUi, int scl_id) throws SQLException {
-        String sql = "select cn.id, cn.education_language_id, cnu.order_num, el.order_num, "
+        String sql = "select cn.id, cn.class_type_id, cnu.order_num, el.order_number_max, el.order_number_min, "
                 + "concat(cnu.name,' - ',cn.name) as cl_name from class_name as cn "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
-                + "left join education_language as el on cn.education_language_id = el.id "
+                + "left join class_type as el on cn.class_type_id = el.id "
                 + "where cn.school_id = ? order by cnu.name, cn.name;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(Settings.language_id, Integer.class, 0);
         container.addContainerProperty(Settings.class_order_number, Integer.class, 0);
-        container.addContainerProperty(Settings.edu_order_number, Integer.class, 0);
+        container.addContainerProperty(Settings.max, Integer.class, 0);
+        container.addContainerProperty(Settings.min, Integer.class, 0);
+        container.addContainerProperty(Settings.class_type_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("cn.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("cl_name"));
-            item.getItemProperty(Settings.language_id).setValue(
-                    result.getInt("cn.education_language_id"));
             item.getItemProperty(Settings.class_order_number).setValue(
                     result.getInt("cnu.order_num"));
-            item.getItemProperty(Settings.edu_order_number).setValue(
-                    result.getInt("el.order_num"));
+            item.getItemProperty(Settings.max).setValue(
+                    result.getInt("el.order_number_max"));
+            item.getItemProperty(Settings.min).setValue(
+                    result.getInt("el.order_number_min"));
+            item.getItemProperty(Settings.class_type_id).setValue(
+                    result.getInt("cn.class_type_id"));
         }
         return container;
     }

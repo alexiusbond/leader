@@ -31,7 +31,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
     static final Logger logger = LogManager.getLogger(ClassNameDefinitionView.class);
     private MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private ComboBox classNumberSelect, languageSelect, statusSelect;
+    private ComboBox classNumberSelect, classTypeSelect, statusSelect;
     private Table dataTable;
     private TextField nameTF;
     private boolean isNew;
@@ -45,7 +45,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
 
         NATURAL_COL_ORDER = new String[]{
                 myUI.getMessage(SptMessages.Number), myUI.getMessage(SptMessages.Title),
-                myUI.getMessage(SptMessages.Language), myUI.getMessage(SptMessages.School),
+                myUI.getMessage(SptMessages.Type), myUI.getMessage(SptMessages.School),
                 myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
@@ -150,15 +150,15 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         classNumberSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(classNumberSelect);
 
-        languageSelect = new ComboBox(myUI.getMessage(SptMessages.Language));
-        languageSelect.setNullSelectionAllowed(false);
-        languageSelect.setRequired(true);
-        languageSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        languageSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        languageSelect.setWidth(Settings.PERCENTS100);
-        languageSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        languageSelect.setFilteringMode(FilteringMode.CONTAINS);
-        settingsLay.addComponent(languageSelect);
+        classTypeSelect = new ComboBox(myUI.getMessage(SptMessages.Type));
+        classTypeSelect.setNullSelectionAllowed(false);
+        classTypeSelect.setRequired(true);
+        classTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        classTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        classTypeSelect.setWidth(Settings.PERCENTS100);
+        classTypeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        classTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
+        settingsLay.addComponent(classTypeSelect);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
         statusSelect.setNullSelectionAllowed(false);
@@ -172,7 +172,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
-            languageSelect.setContainerDataSource(dbDef.exec_for_select(myUI, Settings.dbEducationLanguages, false));
+            classTypeSelect.setContainerDataSource(dbDef.exec_for_select(myUI, Settings.dbClassType, false));
             statusSelect.setContainerDataSource(dbDef.exec_for_select(myUI, Settings.dbActivity_status, true));
             classNumberSelect.setContainerDataSource(dbDef.exec_for_select(myUI, Settings.classTable, false));
             dbDef.close();
@@ -283,7 +283,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         nameTF.setEnabled(true);
         classNumberSelect.setEnabled(true);
         statusSelect.setEnabled(true);
-        languageSelect.setEnabled(true);
+        classTypeSelect.setEnabled(true);
     }
 
     private void prepareNormalMode() {
@@ -302,7 +302,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         nameTF.setEnabled(false);
         classNumberSelect.setEnabled(false);
         statusSelect.setEnabled(false);
-        languageSelect.setEnabled(false);
+        classTypeSelect.setEnabled(false);
     }
 
     private void fillFields() {
@@ -311,14 +311,14 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         classNumberSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.number_id).getValue());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.status_id).getValue());
-        languageSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.language_id).getValue());
+        classTypeSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(), Settings.class_type_id).getValue());
     }
 
     private void clearFields() {
         nameTF.setValue("");
         classNumberSelect.setValue(null);
         statusSelect.setValue(null);
-        languageSelect.setValue(null);
+        classTypeSelect.setValue(null);
     }
 
     private void updateDatacontainer() {
@@ -333,14 +333,14 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.language_id).setValue(languageSelect.getValue());
+                Settings.class_type_id).setValue(classTypeSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Language)).setValue(languageSelect.
-                getContainerProperty(languageSelect.getValue(),
+                myUI.getMessage(SptMessages.Type)).setValue(classTypeSelect.
+                getContainerProperty(classTypeSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.school_id).setValue(myUI.getUser().getSchool_id());
@@ -361,11 +361,11 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(myUI.getMessage(SptMessages.Language)).setValue(
-                languageSelect.getContainerProperty(languageSelect.getValue(),
+        item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(
+                classTypeSelect.getContainerProperty(classTypeSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(statusSelect.getValue());
-        item.getItemProperty(Settings.language_id).setValue(languageSelect.getValue());
+        item.getItemProperty(Settings.class_type_id).setValue(classTypeSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
                 myUI.getUser().getSchool_name());
         item.getItemProperty(Settings.school_id).setValue(
@@ -379,7 +379,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         d.setName(nameTF.getValue());
         d.setClass_number_id((Integer) classNumberSelect.getValue());
         d.setStatus_id((Integer) statusSelect.getValue());
-        d.setEducation_language_id((Integer) languageSelect.getValue());
+        d.setClass_type_id((Integer) classTypeSelect.getValue());
         d.setSchool_id(myUI.getUser().getSchool_id());
         d.setId(i);
         return d;

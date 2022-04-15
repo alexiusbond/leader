@@ -1,17 +1,22 @@
 ALTER TABLE `spt`.`education_language` 
-ADD COLUMN `order_num` INT NOT NULL DEFAULT '1' AFTER `name`;
-UPDATE `spt`.`education_language` SET `order_num` = '500' WHERE (`id` = '2');
-ALTER TABLE `spt`.`class_number` 
-ADD COLUMN `order_num` INT NOT NULL DEFAULT '0' AFTER `name`;
-UPDATE `spt`.`class_number` SET `order_num` = '0' WHERE (`id` = '2');
-UPDATE `spt`.`class_number` SET `order_num` = '1' WHERE (`id` = '3');
-UPDATE `spt`.`class_number` SET `order_num` = '2' WHERE (`id` = '4');
-UPDATE `spt`.`class_number` SET `order_num` = '3' WHERE (`id` = '5');
-UPDATE `spt`.`class_number` SET `order_num` = '4' WHERE (`id` = '6');
-UPDATE `spt`.`class_number` SET `order_num` = '5' WHERE (`id` = '7');
-UPDATE `spt`.`class_number` SET `order_num` = '0' WHERE (`id` = '8');
-UPDATE `spt`.`class_number` SET `order_num` = '1' WHERE (`id` = '9');
-UPDATE `spt`.`class_number` SET `order_num` = '2' WHERE (`id` = '10');
-UPDATE `spt`.`class_number` SET `order_num` = '3' WHERE (`id` = '11');
-UPDATE `spt`.`class_number` SET `order_num` = '4' WHERE (`id` = '12');
-UPDATE `spt`.`class_number` SET `order_num` = '5' WHERE (`id` = '13');
+ADD COLUMN `order_number_max` INT NULL AFTER `order_number_min`,
+CHANGE COLUMN `order_num` `order_number_min` INT NOT NULL DEFAULT '1' ;
+ALTER TABLE `spt`.`education_language` 
+RENAME TO  `spt`.`class_type` ;
+ALTER TABLE `spt`.`class_name` 
+DROP FOREIGN KEY `fk_class_name_langl1`;
+ALTER TABLE `spt`.`class_name` 
+CHANGE COLUMN `education_language_id` `class_type_id` INT NOT NULL DEFAULT '1' ;
+ALTER TABLE `spt`.`class_name` 
+ADD CONSTRAINT `fk_class_name_langl1`
+  FOREIGN KEY (`class_type_id`)
+  REFERENCES `spt`.`class_type` (`id`)
+  ON DELETE RESTRICT;
+UPDATE `spt`.`class_type` SET `name` = 'Кыргызский класс' WHERE (`id` = '1');
+UPDATE `spt`.`class_type` SET `name` = 'Русский класс' WHERE (`id` = '2');
+UPDATE `spt`.`class_type` SET `name` = 'Английский класс' WHERE (`id` = '3');
+UPDATE `spt`.`class_type` SET `order_number_max` = '399' WHERE (`id` = '1');
+UPDATE `spt`.`class_type` SET `order_number_max` = '999' WHERE (`id` = '3');
+UPDATE `spt`.`class_type` SET `order_number_max` = '599' WHERE (`id` = '2');
+UPDATE `spt`.`class_type` SET `order_number_max` = '799' WHERE (`id` = '4');
+UPDATE `spt`.`class_type` SET `order_number_max` = '999' WHERE (`id` = '5');

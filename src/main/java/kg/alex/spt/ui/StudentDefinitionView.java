@@ -569,8 +569,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
-            classCB.setContainerDataSource(
-                    dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            classCB.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);
@@ -820,17 +819,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
                                         if (isNew) {
-                                            int year_ord = Integer.parseInt(myUI.getUser().getCurrent_year().getName().substring(2, 4));
-                                            String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
-                                                    classCB.getValue(), Settings.class_order_number).getValue());
-                                            loginTF.setValue(myUI.getUser().getSchool_code() + year_ord + class_num.charAt(class_num.length() - 1) +
-                                                    String.format("%03d", dbst.execSQL_login(
-                                                            myUI.getUser().getCurrent_year().getId() - (Integer) classCB.getContainerProperty(
-                                                                    classCB.getValue(), Settings.class_order_number).getValue(),
-                                                            myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
-                                                                    classCB.getValue(), Settings.language_id).getValue(),
-                                                            (Integer) classCB.getContainerProperty(
-                                                                    classCB.getValue(), Settings.edu_order_number).getValue())));
+                                            loginTF.setValue(generateStudId());
                                             Student student = getStudent(0);
                                             int id = dbst.exec_insert(student);
                                             if (id != 0) {
@@ -1079,25 +1068,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (classCB.getValue() != null) {
                 photoUpl.setEnabled(true);
                 if (isNew) {
-                    try {
-                        DbStudent dbd = new DbStudent();
-                        dbd.connect();
-                        int year_ord = Integer.parseInt(myUI.getUser().getCurrent_year().getName().substring(2, 4));
-                        String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
-                                classCB.getValue(), Settings.class_order_number).getValue());
-                        loginTF.setValue(myUI.getUser().getSchool_code() + year_ord + class_num.charAt(class_num.length() - 1) +
-                                String.format("%03d", dbd.execSQL_login(
-                                        myUI.getUser().getCurrent_year().getId() - (Integer) classCB.getContainerProperty(
-                                                classCB.getValue(), Settings.class_order_number).getValue(),
-                                        myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
-                                                classCB.getValue(), Settings.language_id).getValue(),
-                                        (Integer) classCB.getContainerProperty(
-                                                classCB.getValue(), Settings.edu_order_number).getValue())));
-                        dbd.close();
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                        logger.catching(ex);
-                    }
+                    loginTF.setValue(generateStudId());
                 }
             } else {
                 photoUpl.setEnabled(false);
@@ -1621,8 +1592,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 studDataTable.getValue(), Settings.gender_id).getValue());
         birthDate.setValue((Date) studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), myUI.getMessage(SptMessages.DateOfBirth)).getValue());
+        classCB.removeValueChangeListener(this);
         classCB.setValue(studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), Settings.class_name_id).getValue());
+        classCB.addValueChangeListener(this);
         statusCB.setValue(studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), Settings.education_status_id).getValue());
         if (studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -1730,6 +1703,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
                 statusCB.getContainerDataSource().getContainerProperty(statusCB.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
+        item.getItemProperty(myUI.getMessage(SptMessages.EnteringYear)).setValue(
+                myUI.getUser().getCurrent_year().getName());
         studDataTable.clearFilters();
         studDataTable.setValue(id);
     }
@@ -4569,4 +4544,37 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.setVisibleColumns(NATURAL_COL_ORDER);
     }
 
+    private String generateStudId() {
+        String generated_id = null;
+        try {
+            DbStudent dbCon = new DbStudent();
+            dbCon.connect();
+            int year_ord = Integer.parseInt(myUI.getUser().getCurrent_year().getName().substring(2, 4));
+            String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
+                    classCB.getValue(), Settings.class_order_number).getValue());
+            char cl = (Integer) classCB.getContainerProperty(classCB.getValue(), Settings.class_type_id).getValue() >= 4
+                    ? '0' : class_num.charAt(class_num.length() - 1);
+            int order_number = 1;
+            do {
+                generated_id = myUI.getUser().getSchool_code() + year_ord + cl +
+                        String.format("%03d", dbCon.execSQL_login(
+                                myUI.getUser().getCurrent_year().getId(),
+                                myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
+                                        classCB.getValue(), Settings.class_type_id).getValue(),
+                                order_number, (Integer) classCB.getContainerProperty(
+                                        classCB.getValue(), Settings.min).getValue(),
+                                (Integer) classCB.getContainerProperty(
+                                        classCB.getValue(), Settings.max).getValue()));
+                order_number++;
+                if (order_number == 100) {
+                    break;
+                }
+            } while (dbCon.isLoginExists(generated_id));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        return generated_id;
+    }
 }

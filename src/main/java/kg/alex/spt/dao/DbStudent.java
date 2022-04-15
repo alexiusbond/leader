@@ -143,8 +143,6 @@ public class DbStudent extends BaseDb {
     }
 
     public IndexedContainer execSQL_for_import(MyVaadinUI myUi, int scl_id) throws SQLException {
-
-
         String sql = "SELECT s.login, s.name, s.surname, s.middle_name, s.date_of_birth, g.name, "
                 + "concat(cnu.name,' - ',cn.name) as cl_name, sr.fullname, sr.passport, sr.work_place, "
                 + "sr.phone, sr.adress, r.name FROM student as s "
@@ -656,19 +654,36 @@ public class DbStudent extends BaseDb {
         }
     }
 
-    public int execSQL_login(int year_id, int school_id, int edu_lang_id, int order_num) throws SQLException {
-        String sql = "SELECT count(st.id) + 1 + ? as num FROM student AS st " +
-                "left join class_name as cn on cn.id = st.class_name_id " +
-                "WHERE st.entering_year_id = ? and st.school_id = ? and cn.education_language_id = ?";
+    public int execSQL_login(int year_id, int school_id, int class_type_id, int order_num,
+                             int min, int max) throws SQLException {
+        String sql = "SELECT IFNULL(MAX(CAST(RIGHT(st.login, 3) AS UNSIGNED)), ?) + ? AS num " +
+                "FROM student AS st LEFT JOIN class_name AS cn ON cn.id = st.class_name_id " +
+                "WHERE st.entering_year_id = ? AND st.school_id = ? AND cn.class_type_id = ? " +
+                "AND LENGTH(st.login) = 8 AND CAST(RIGHT(st.login, 3) AS UNSIGNED) BETWEEN ? AND ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, order_num);
-        stat.setInt(2, year_id);
-        stat.setInt(3, school_id);
-        stat.setInt(4, edu_lang_id);
+        stat.setInt(1, min);
+        stat.setInt(2, order_num);
+        stat.setInt(3, year_id);
+        stat.setInt(4, school_id);
+        stat.setInt(5, class_type_id);
+        stat.setInt(6, min);
+        stat.setInt(7, max - 1);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             return result.getInt("num");
         }
         return 0;
+    }
+
+    public boolean isLoginExists(String login) throws SQLException {
+        String sql = "SELECT st.login FROM student AS st where st.login = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setString(1, login);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return true;
+        }
+        return false;
     }
 }

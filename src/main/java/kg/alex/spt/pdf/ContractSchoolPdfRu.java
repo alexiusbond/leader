@@ -470,7 +470,7 @@ public class ContractSchoolPdfRu {
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                     paragraph.add(new Phrase("3.1. Ежегодно с 1 апреля по 15 мая Родители обязаны заключить договор на образовательные услуги на следующий учебный год, ", ordFont));
-                    paragraph.add(new Phrase("с обязательным внесением 20% предоплаты родительского взноса.", ordBoldFont));
+                    paragraph.add(new Phrase("с обязательным внесением 30% предоплаты родительского взноса.", ordBoldFont));
                     document.add(paragraph);
                     paragraph = new Paragraph();
                     paragraph.setFirstLineIndent(30);

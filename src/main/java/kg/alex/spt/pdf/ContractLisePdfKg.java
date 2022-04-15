@@ -489,7 +489,7 @@ public class ContractLisePdfKg {
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                     paragraph.add(new Phrase("2.3.2. Жыл сайын 1-апрелден 15-майга чейин ", ordFont));
-                    paragraph.add(new Phrase("20% алдын ала төлөмдү ", ordBoldFont));
+                    paragraph.add(new Phrase("30% алдын ала төлөмдү ", ordBoldFont));
                     paragraph.add(new Phrase("сөзсүз төлөө менен кийинки окуу жылына Келишим түзүү.", ordFont));
                     document.add(paragraph);
 
