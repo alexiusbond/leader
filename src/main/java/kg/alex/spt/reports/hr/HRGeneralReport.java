@@ -438,7 +438,7 @@ public class HRGeneralReport implements Button.ClickListener,
                     gpc.addGeneratedProperty(Settings.button, new PropertyValueGenerator<Component>() {
                         @Override
                         public Component getValue(Item item, Object itemId, Object propertyId) {
-                            Button button = new Button("CV");
+                            Button button = new Button(Settings.cv);
                             button.setStyleName(ValoTheme.BUTTON_LINK);
                             button.addStyleName(ValoTheme.BUTTON_TINY);
                             button.addStyleName("cv");

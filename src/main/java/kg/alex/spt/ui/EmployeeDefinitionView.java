@@ -146,7 +146,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.LastName),
                 myUI.getMessage(SptMessages.FirstName),
                 myUI.getMessage(SptMessages.WorkingStatus),
-                myUI.getMessage(SptMessages.MainPosition)};
+                myUI.getMessage(SptMessages.MainPosition),
+                myUI.getMessage(SptMessages.MainBranch)};
 
         Label eduStatusLab = new Label();
         eduStatusLab.setSizeUndefined();

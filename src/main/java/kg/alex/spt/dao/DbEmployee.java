@@ -66,17 +66,17 @@ public class DbEmployee extends BaseDb {
     }
 
     public float execSQL_completeness(int employee_id) throws SQLException {
-        String sql = "SELECT ROUND(IF(e.hr_martial_status_id = 2, (IF(extra.id IS NOT NULL, 1, 0) + IF(sp.id IS NOT NULL, 1, 0) " +
+        String sql = "SELECT ROUND(IF(e.hr_martial_status_id = 2, (IF(e.photo IS NOT NULL, 1, 0) + IF(extra.id IS NOT NULL, 1, 0) + IF(sp.id IS NOT NULL, 1, 0) " +
                 "+ IF(cont.id IS NOT NULL, 1, 0) + IF(sch.id IS NOT NULL, 1, 0) + IF(cmpl.phones IS NOT NULL, 1, 0) " +
                 "+ IF(cmpl.branches IS NOT NULL, 1, 0) + IF(cmpl.education IS NOT NULL, 1, 0) + IF(cmpl.work_places IS NOT NULL, 1, 0) " +
                 "+ IF(cmpl.exams IS NOT NULL, 1, 0) + IF(cmpl.seminars IS NOT NULL, 1, 0) + IF(cmpl.certificates IS NOT NULL, 1, 0) " +
                 "+ IF(cmpl.languages IS NOT NULL, 1, 0) + IF(cmpl.spouse_education IS NOT NULL, 1, 0) " +
-                "+ IF(cmpl.spouse_work_places IS NOT NULL, 1, 0) + IF(cmpl.children IS NOT NULL, 1, 0)) / 15, " +
-                "(IF(extra.id IS NOT NULL, 1, 0) + IF(cont.id IS NOT NULL, 1, 0) + IF(sch.id IS NOT NULL, 1, 0) " +
+                "+ IF(cmpl.spouse_work_places IS NOT NULL, 1, 0) + IF(cmpl.children IS NOT NULL, 1, 0)) / 16, " +
+                "(IF(e.photo IS NOT NULL, 1, 0) + IF(extra.id IS NOT NULL, 1, 0) + IF(cont.id IS NOT NULL, 1, 0) + IF(sch.id IS NOT NULL, 1, 0) " +
                 "+ IF(cmpl.phones IS NOT NULL, 1, 0) + IF(cmpl.branches IS NOT NULL, 1, 0) " +
                 "+ IF(cmpl.education IS NOT NULL, 1, 0) + IF(cmpl.work_places IS NOT NULL, 1, 0) + IF(cmpl.exams IS NOT NULL, 1, 0) " +
                 "+ IF(cmpl.seminars IS NOT NULL, 1, 0) + IF(cmpl.certificates IS NOT NULL, 1, 0) + IF(cmpl.languages IS NOT NULL, 1, 0) " +
-                "+ IF(cmpl.children IS NOT NULL, 1, 0)) / 12), 2) AS points FROM employee AS e " +
+                "+ IF(cmpl.children IS NOT NULL, 1, 0)) / 13), 2) AS points FROM employee AS e " +
                 "LEFT JOIN hr_employee_completeness AS cmpl ON cmpl.employee_id = e.id " +
                 "LEFT JOIN hr_employee_contacts AS cont ON cont.employee_id = e.id " +
                 "LEFT JOIN hr_employee_grad_school AS sch ON sch.employee_id = e.id " +

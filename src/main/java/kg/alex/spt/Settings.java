@@ -233,6 +233,7 @@ public class Settings implements Serializable {
     public static final String cnEmployeeDefinitionView = "EmployeeDefinitionView";
     public static final String cnEmployeeTransferView = "EmployeeTransferView";
     public static final String cnCV_Window = "CV_Window";
+    public static final String cv = "CV";
     public static final String cnLessonAssessmentView = "LessonAssessmentView";
     public static final String cnImportBranchesFromExcelView = "ImportBranchesFromExcelView";
     public static final String cnSchoolModificationView = "SchoolModificationView";

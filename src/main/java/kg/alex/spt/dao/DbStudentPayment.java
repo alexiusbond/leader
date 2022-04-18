@@ -383,6 +383,22 @@ public class DbStudentPayment extends BaseDb {
         return s;
     }
 
+    public double execGetTotalPaid(int scl_id, int year_id) throws SQLException {
+
+        String sql = "SELECT ifnull(sum(if(sp.payment_category_id = 3, -sp.amount, sp.amount)),0.00) as paid "
+                + "FROM student_payments as sp "
+                + "left join student as st on st.id = sp.student_id "
+                + "where st.school_id = ? and sp.year_id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, scl_id);
+        stat.setInt(2, year_id);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            return result.getDouble("paid");
+        }
+        return 0.0;
+    }
+
     public String execGetMonthlyPaid(String students, int scl_id, int year_id)
             throws SQLException {
 

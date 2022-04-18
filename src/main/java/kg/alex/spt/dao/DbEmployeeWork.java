@@ -216,8 +216,7 @@ public class DbEmployeeWork extends BaseDb {
 
     public String execSQL_work_experience(int employee_id, int own_id, boolean isSapat) throws SQLException {
 
-        String sql = "SELECT ROUND((SUM(TIMESTAMPDIFF(DAY, start_date, ifnull(ew.end_date, NOW()))) / 30) / 12) as years, " +
-                "ROUND(MOD(SUM(TIMESTAMPDIFF(DAY, ew.start_date, ifnull(ew.end_date, NOW()))) / 30, 12)) as months " +
+        String sql = "SELECT SUM(TIMESTAMPDIFF(DAY, start_date, IFNULL(ew.end_date, NOW()))) / 365 as years " +
                 "FROM hr_employee_work AS ew WHERE ew.hr_own_id = ? AND ew.employee_id = ?";
         if (isSapat) {
             sql += " AND ew.is_sapat = ?";
@@ -230,10 +229,10 @@ public class DbEmployeeWork extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         while (result.next()) {
-            return (result.getInt("years") > 0 ? result.getInt("years") + " "
-                    + Settings.generateYearPostfix(result.getInt("years")) + " " : "")
-                    + (result.getInt("months") > 0 && result.getInt("months") < 12 ? result.getInt("months") + " "
-                    + Settings.generateMonthPostfix(result.getInt("months")) : "");
+            int years = result.getInt("years");
+            int months = (int) Math.round((result.getDouble("years") - result.getInt("years")) * 12);
+            return (years > 0 ? years + " " + Settings.generateYearPostfix(years) + " " : "")
+                    + (months > 0 && months < 12 ? months + " " + Settings.generateMonthPostfix(months) : "");
         }
         return "";
     }
