@@ -654,12 +654,19 @@ public class DbStudent extends BaseDb {
         }
     }
 
-    public int execSQL_login(int year_id, int school_id, int class_type_id, int order_num,
-                             int min, int max) throws SQLException {
+    public int execSQL_login(MyVaadinUI myUi, int year_id, int school_id, int class_type_id, int order_num,
+                             int min, int max, String school_level) throws SQLException {
         String sql = "SELECT IFNULL(MAX(CAST(RIGHT(st.login, 3) AS UNSIGNED)), ?) + ? AS num " +
-                "FROM student AS st LEFT JOIN class_name AS cn ON cn.id = st.class_name_id " +
+                "FROM student AS st " +
+                "LEFT JOIN class_name AS cn ON cn.id = st.class_name_id " +
+                "LEFT JOIN class_number AS cnu ON cnu.id = cn.class_number_id " +
                 "WHERE st.entering_year_id = ? AND st.school_id = ? AND cn.class_type_id = ? " +
-                "AND LENGTH(st.login) = 8 AND CAST(RIGHT(st.login, 3) AS UNSIGNED) BETWEEN ? AND ?";
+                "AND LENGTH(st.login) = 8 AND CAST(RIGHT(st.login, 3) AS UNSIGNED) BETWEEN ? AND ? ";
+        if (school_level != null && school_level.equals(myUi.getMessage(SptMessages.PrimaryCode))) {
+            sql += "AND cnu.name < 7";
+        } else if (school_level != null && school_level.equals(myUi.getMessage(SptMessages.SecondaryCode))) {
+            sql += "AND cnu.name >= 7";
+        }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, min);
         stat.setInt(2, order_num);
@@ -668,7 +675,6 @@ public class DbStudent extends BaseDb {
         stat.setInt(5, class_type_id);
         stat.setInt(6, min);
         stat.setInt(7, max - 1);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             return result.getInt("num");

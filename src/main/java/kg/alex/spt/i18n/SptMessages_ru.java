@@ -135,6 +135,8 @@ public class SptMessages_ru extends SptMessages {
             {EmployeeTransfer, "Трансфер сотрудников"},
             {SchoolModification, "Редактирование школы"},
             {Code, "Код"},
+            {PrimaryCode, "Код начальной школы"},
+            {SecondaryCode, "Код средней школы"},
             {CourseCode, "Код урока"},
             {LecturerID, "ID преподавателя"},
             {TitleRu, "Название на русском"},

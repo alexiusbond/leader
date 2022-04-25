@@ -4549,6 +4549,28 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbStudent dbCon = new DbStudent();
             dbCon.connect();
+            String school_code = (Integer) classCB.getContainerProperty(
+                    classCB.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue() < 7 ?
+                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                            myUI.getMessage(SptMessages.PrimaryCode)).getValue().toString() :
+                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                            myUI.getMessage(SptMessages.SecondaryCode)).getValue().toString();
+            String school_level = null;
+            if ((Integer) classCB.getContainerProperty(
+                    classCB.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue() < 7 &&
+                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                            myUI.getMessage(SptMessages.PrimaryCode)).getValue().equals(
+                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                                    myUI.getMessage(SptMessages.SecondaryCode)).getValue())) {
+                school_level = myUI.getMessage(SptMessages.PrimaryCode);
+            } else if ((Integer) classCB.getContainerProperty(
+                    classCB.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue() >= 7 &&
+                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                            myUI.getMessage(SptMessages.PrimaryCode)).getValue().equals(
+                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                                    myUI.getMessage(SptMessages.SecondaryCode)).getValue())) {
+                myUI.getMessage(SptMessages.SecondaryCode);
+            }
             int year_ord = Integer.parseInt(myUI.getUser().getCurrent_year().getName().substring(2, 4));
             String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
                     classCB.getValue(), Settings.class_order_number).getValue());
@@ -4556,15 +4578,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     ? '0' : class_num.charAt(class_num.length() - 1);
             int order_number = 1;
             do {
-                generated_id = myUI.getUser().getSchool_code() + year_ord + cl +
-                        String.format("%03d", dbCon.execSQL_login(
-                                myUI.getUser().getCurrent_year().getId(),
-                                myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
-                                        classCB.getValue(), Settings.class_type_id).getValue(),
-                                order_number, (Integer) classCB.getContainerProperty(
-                                        classCB.getValue(), Settings.min).getValue(),
-                                (Integer) classCB.getContainerProperty(
-                                        classCB.getValue(), Settings.max).getValue()));
+                generated_id = school_code + year_ord + cl + String.format("%03d", dbCon.execSQL_login(myUI,
+                        myUI.getUser().getCurrent_year().getId(),
+                        myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
+                                classCB.getValue(), Settings.class_type_id).getValue(),
+                        order_number, (Integer) classCB.getContainerProperty(
+                                classCB.getValue(), Settings.min).getValue(),
+                        (Integer) classCB.getContainerProperty(
+                                classCB.getValue(), Settings.max).getValue(), school_level));
                 order_number++;
                 if (order_number == 100) {
                     break;

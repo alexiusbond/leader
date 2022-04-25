@@ -107,7 +107,7 @@ public class DbClassName extends BaseDb {
     }
 
     public IndexedContainer execClass_sel(MyVaadinUI myUi, int scl_id) throws SQLException {
-        String sql = "select cn.id, cn.class_type_id, cnu.order_num, el.order_number_max, el.order_number_min, "
+        String sql = "select cn.id, cn.class_type_id, cnu.name, cnu.order_num, el.order_number_max, el.order_number_min, "
                 + "concat(cnu.name,' - ',cn.name) as cl_name from class_name as cn "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
                 + "left join class_type as el on cn.class_type_id = el.id "
@@ -118,6 +118,7 @@ public class DbClassName extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(Settings.class_order_number, Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(SptMessages.ClassNumber), Integer.class, 0);
         container.addContainerProperty(Settings.max, Integer.class, 0);
         container.addContainerProperty(Settings.min, Integer.class, 0);
         container.addContainerProperty(Settings.class_type_id, Integer.class, 0);
@@ -127,6 +128,8 @@ public class DbClassName extends BaseDb {
                     result.getString("cl_name"));
             item.getItemProperty(Settings.class_order_number).setValue(
                     result.getInt("cnu.order_num"));
+            item.getItemProperty(myUi.getMessage(SptMessages.ClassNumber)).setValue(
+                    result.getInt("cnu.name"));
             item.getItemProperty(Settings.max).setValue(
                     result.getInt("el.order_number_max"));
             item.getItemProperty(Settings.min).setValue(
