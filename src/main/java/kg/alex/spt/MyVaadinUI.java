@@ -34,6 +34,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -49,6 +51,7 @@ public class MyVaadinUI extends UI {
     public VaadinRequest r;
     private IndexedContainer schoolCont;
     private double nbkr_currency_rate;
+    private Date nbkr_time = new Date();
     private boolean isManualRate;
     private Button messagesBtn;
 
@@ -185,7 +188,11 @@ public class MyVaadinUI extends UI {
     }
 
     public double getCurrencyRateFromBank() {
-        if (nbkr_currency_rate == 0.00) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(nbkr_time);
+        c.add(Calendar.MINUTE, 30);
+        if (nbkr_currency_rate == 0.00 || c.getTime().before(new Date())) {
+            nbkr_time = new Date();
             DecimalFormatSymbols symbols = new DecimalFormatSymbols();
             symbols.setDecimalSeparator(',');
             DecimalFormat format = new DecimalFormat("##.##");
