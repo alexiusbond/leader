@@ -270,7 +270,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("2.2.6. Бул келишим күтүлбөгөн жагдайлардын айынан бузулган учурда, кайтарыла турган сумма Лицейдин сарптаган бардык чыгымдарын эске алуу менен Лицейдин мүмкүнчүлүгүнө жараша, бирок кийинки жылдын май айына чейин кайтарылат.", ordFont));
+                    paragraph.add(new Phrase("2.2.6. Бул келишим күтүлбөгөн жагдайлардын айынан бузулган учурда, кайтарыла турган сумма Мектептин сарптаган бардык чыгымдарын эске алуу менен Мектептин мүмкүнчүлүгүнө жараша, бирок кийинки жылдын май айына чейин кайтарылат.", ordFont));
                     document.add(paragraph);
 
                     paragraph = new Paragraph();
@@ -475,7 +475,7 @@ public class ContractSchoolPdfKg {
                     paragraph.setIndentationRight(30);
                     paragraph.setLeading(15);
                     paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                    paragraph.add(new Phrase("3.2.3. Төлөмдөр расмий эсеп/invoice келгенден кийин 3 календардык күн ичинде Лицейдин ", ordFont));
+                    paragraph.add(new Phrase("3.2.3. Төлөмдөр расмий эсеп/invoice келгенден кийин 3 календардык күн ичинде Мектептин ", ordFont));
                     paragraph.add(new Phrase( "банк эсебине сом менен", ordBoldFont));
                     paragraph.add(new Phrase(" төлөнөт.", ordFont));
                     document.add(paragraph);

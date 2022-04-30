@@ -164,7 +164,8 @@ public class DbStudentContract extends BaseDb {
                 + "sum(if(sp.payment_category_id=3,sp.amount,0)) "
                 + "FROM student_payments AS sp "
                 + "WHERE sp.student_id = ? and sp.year_id < ?), 0.0) + "
-                + "IFNULL((SELECT SUM(vc.amount) FROM view_corrections AS vc WHERE vc.student_id = ? and vc.year_id < ?), 0.0) AS debt";
+                + "IFNULL((SELECT SUM(vc.amount) FROM view_corrections AS vc "
+                + "WHERE vc.student_id = ? and vc.year_id < ?), 0.0) AS debt";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
