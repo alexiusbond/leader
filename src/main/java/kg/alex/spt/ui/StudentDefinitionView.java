@@ -18,7 +18,6 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
@@ -338,57 +337,54 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tabs.addTab(acsReceiveTableLay).setCaption(myUI.getMessage(SptMessages.MaterialsReceive));
         tabs.addTab(callsTableLay).setCaption(myUI.getMessage(SptMessages.Calls));
         tabs.addSelectedTabChangeListener(
-                new TabSheet.SelectedTabChangeListener() {
-                    public void selectedTabChange(SelectedTabChangeEvent event) {
-                        if (event.getTabSheet().getSelectedTab() == famTableLay
-                                && studDataTable.getValue() != null) {
-                            setRelativesTable();
-                            prepareNormalMode();
-                        } else if (event.getTabSheet().getSelectedTab() == acsGiveTableLay
-                                && studDataTable.getValue() != null) {
-                            setMaterialsTable(give);
-                            prepareNormalMode();
-                        } else if (event.getTabSheet().getSelectedTab() == acsReceiveTableLay
-                                && studDataTable.getValue() != null) {
-                            setMaterialsTable(receive);
-                            prepareNormalMode();
+                (TabSheet.SelectedTabChangeListener) event -> {
+                    if (event.getTabSheet().getSelectedTab() == famTableLay
+                            && studDataTable.getValue() != null) {
+                        setRelativesTable();
+                        prepareNormalMode();
+                    } else if (event.getTabSheet().getSelectedTab() == acsGiveTableLay
+                            && studDataTable.getValue() != null) {
+                        setMaterialsTable(give);
+                        prepareNormalMode();
+                    } else if (event.getTabSheet().getSelectedTab() == acsReceiveTableLay
+                            && studDataTable.getValue() != null) {
+                        setMaterialsTable(receive);
+                        prepareNormalMode();
+                    }
+                    if (event.getTabSheet().getSelectedTab() == contractTabLay
+                            && studDataTable.getValue() != null) {
+                        setInstPlanTable();
+                        setDiscountsTable();
+                        setCorrectionsTable();
+                        setCorrectionsTable();
+                        setContractTab((Integer) studDataTable.getValue(),
+                                myUI.getUser().getCurrent_year().getId());
+                        if (initialPaymentTF.isValid()) {
+                            recountInstPlanLabel();
                         }
-                        if (event.getTabSheet().getSelectedTab() == contractTabLay
-                                && studDataTable.getValue() != null) {
-                            setInstPlanTable();
-                            setDiscountsTable();
-                            setCorrectionsTable();
-                            setCorrectionsTable();
-                            setContractTab((Integer) studDataTable.getValue(),
-                                    myUI.getUser().getCurrent_year().getId());
-                            if (initialPaymentTF.isValid()) {
-                                recountInstPlanLabel();
-                            }
-                            prepareNormalMode();
-                            if ((Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
-                                    Settings.education_status_id).getValue() == 4
-                                    || (Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
-                                    Settings.education_status_id).getValue() == 5) {
-                                //if student outOf or graduated
-                                modifyBtn.setEnabled(false);
-                            }
+                        prepareNormalMode();
+                        if ((Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
+                                Settings.education_status_id).getValue() == 4
+                                || (Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
+                                Settings.education_status_id).getValue() == 5) {
+                            //if student outOf or graduated
+                            modifyBtn.setEnabled(false);
+                        }
 //                    checkForLastContract((Integer) studDataTable.getValue(), myUI.getUser().getCurrent_year().getId());
 
-                        } else if (event.getTabSheet().getSelectedTab() == payTablelay
-                                && studDataTable.getValue() != null) {
-                            setPaymentsTable();
-                            prepareNormalMode();
+                    } else if (event.getTabSheet().getSelectedTab() == payTablelay
+                            && studDataTable.getValue() != null) {
+                        setPaymentsTable();
+                        prepareNormalMode();
 //                    checkForLastContract((Integer) studDataTable.getValue(), myUI.getUser().getCurrent_year().getId());
-                        } else if (event.getTabSheet().getSelectedTab() == callsTableLay
-                                && studDataTable.getValue() != null) {
-                            setCallsTable();
-                            prepareNormalMode();
-                        } else if (event.getTabSheet().getSelectedTab() == studSearchLay) {
-                            prepareNormalMode();
-                        }
+                    } else if (event.getTabSheet().getSelectedTab() == callsTableLay
+                            && studDataTable.getValue() != null) {
+                        setCallsTable();
+                        prepareNormalMode();
+                    } else if (event.getTabSheet().getSelectedTab() == studSearchLay) {
+                        prepareNormalMode();
                     }
                 });
-
         this.setSecondComponent(tabs);
         prepareNormalMode();
     }
@@ -465,7 +461,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         gridStudLay.setMargin(true);
         gridStudLay.setWidth("95%");
 
-        buildphotoLayout();
+        buildPhotoLayout();
         buildFieldsLayout1();
         buildFieldsLayout2();
         buildContractLayout();
@@ -480,7 +476,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         gridStudLay.setColumnExpandRatio(2, 1);
     }
 
-    private void buildphotoLayout() {
+    private void buildPhotoLayout() {
         photoEmb = new Embedded();
         photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
         photoEmb.setImmediate(true);
@@ -599,7 +595,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
         fieldsLay2.addComponent(statusCB);
-
     }
 
     private void buildContractLayout() {
@@ -3476,7 +3471,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private Boolean validateDiscountsTable() {
-        ArrayList<Integer> discount_ids = new ArrayList<Integer>();
+        ArrayList<Integer> discount_ids = new ArrayList<>();
         Iterator iter = discountsTable.getItemIds().iterator();
         while (iter.hasNext()) {
             Object obj = iter.next();
@@ -3501,6 +3496,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (!((ComboBox) discountsTable.getItem(obj).getItemProperty(
                     myUI.getMessage(SptMessages.Title)).getValue()).isValid()) {
                 Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+                return false;
+            }
+            if (((Button) ((HorizontalLayout) discountsTable.getItem(obj).getItemProperty(
+                    myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0)).getData() == null) {
+                Notification.show(myUI.getMessage(SptMessages.NotifUploadDocument),
                         Notification.Type.WARNING_MESSAGE);
                 return false;
             }
@@ -4205,6 +4206,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             delDiscIds.clear();
             dbsd.close();
+            dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

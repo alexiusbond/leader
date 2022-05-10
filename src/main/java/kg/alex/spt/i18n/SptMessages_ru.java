@@ -285,6 +285,7 @@ public class SptMessages_ru extends SptMessages {
             {Passport, "Паспорт"},
             {Responsible, "Ответственный"},
             {NotifOnlyOneMain, "Основная область может быть выбрана только 1"},
+            {NotifUploadDocument, "Загрузите справку для подтверждения скидки"},
             {Main, "Основной"},
             {AddRecord, "Добавить запись"},
             {FamilyInfo, "Информация о семье"},

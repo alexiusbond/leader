@@ -286,6 +286,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Relative = generateId();
     public static final String Responsible = generateId();
     public static final String NotifOnlyOneMain = generateId();
+    public static final String NotifUploadDocument = generateId();
     public static final String Main = generateId();
     public static final String AddRecord = generateId();
     public static final String FamilyInfo = generateId();
