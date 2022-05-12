@@ -31,15 +31,14 @@ public class Settings implements Serializable {
     public static final String datePattern = "dd-MM-yyyy";
     public static final String yearMonthPattern = "MM-yyyy";
     public static final String yearPattern = "yyyy";
-    public static final SimpleDateFormat dateEn = new SimpleDateFormat(
-            "«dd» MMMMM yyyy");
+    public static final SimpleDateFormat dateEn = new SimpleDateFormat("«dd» MMMMM yyyy");
     public static final SimpleDateFormat df = new SimpleDateFormat(datePattern);
     public static final SimpleDateFormat mysql_only_year = new SimpleDateFormat("yyyy-01-01");
     public static final String dateTimeMinPattern = "dd-MM-yyyy HH:mm";
     public static final SimpleDateFormat dtmf = new SimpleDateFormat(dateTimeMinPattern);
     public static final SimpleDateFormat ymdf = new SimpleDateFormat(yearMonthPattern);
     public static final SimpleDateFormat ydf = new SimpleDateFormat(yearPattern);
-
+    public static final long INSTALLMENT_DATE_LIMIT = 1680220800000L;
     public static final String id = "id";
     public static final String count = "count";
     public static final String email = "E-mail";
@@ -438,7 +437,6 @@ public class Settings implements Serializable {
         }
         return set;
     }
-
     public static double round(double value, int places) {
         if (places < 0) {
             throw new IllegalArgumentException();
@@ -449,7 +447,6 @@ public class Settings implements Serializable {
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
-
     public static String generateYearPostfix(int age) {
         int lastChar = Integer.parseInt(("" + age).substring(("" + age).length() - 1));
         String str = "";
@@ -460,7 +457,6 @@ public class Settings implements Serializable {
         else str = "лет";
         return str;
     }
-
     public static String generateMonthPostfix(int age) {
         int lastChar = Integer.parseInt(("" + age).substring(("" + age).length() - 1));
         String str = "";
@@ -471,7 +467,6 @@ public class Settings implements Serializable {
         else str = "месяцев";
         return str;
     }
-
     public static String transliterate(String message) {
         char[] abcCyr = {' ', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
         String[] abcLat = {" ", "a", "b", "v", "g", "d", "e", "e", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "h", "ts", "ch", "sh", "sch", "", "i", "", "e", "ju", "ja", "A", "B", "V", "G", "D", "E", "E", "Zh", "Z", "I", "Y", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "H", "Ts", "Ch", "Sh", "Sch", "", "I", "", "E", "Ju", "Ja", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -485,14 +480,12 @@ public class Settings implements Serializable {
         }
         return builder.toString();
     }
-
     public static IndexedContainer copyContainer(Container source) {
         IndexedContainer cont = new IndexedContainer();
 
         for (Object prop : source.getContainerPropertyIds()) {
             cont.addContainerProperty(prop, source.getType(prop), null);
         }
-
         for (Object id : source.getItemIds()) {
             Item sourceItem = source.getItem(id);
             Item destItem = cont.addItem(id);

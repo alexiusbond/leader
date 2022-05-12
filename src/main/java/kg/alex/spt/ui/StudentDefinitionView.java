@@ -809,7 +809,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (validateRelativesTable(relativesTable)) {
                         if (validateAcsGiveTable(acsGiveTable)) {
                             if (validateAcsReceiveTable(acsReceiveTable)) {
-                                if (validateContractsTab(contractTabLay) && validateDiscountsTable() && validateCorrectionsTable() && validateInstallmentTable()) {
+                                if (validateContractsTab(contractTabLay) && validateDiscountsTable() &&
+                                        validateCorrectionsTable() && validateInstallmentTable()) {
                                     if (validatePaymentsTable(paymentsTable)) {
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
@@ -3272,12 +3273,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             item.getItemProperty(Settings.button).setValue(
                     createButton(myUI.getMessage(SptMessages.DeleteButton), id,
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    createDateField(currDate.getValue(), myUI.getMessage(SptMessages.Date), id, false, true));
+            DateField df =
+                    createDateField(currDate.getValue(), myUI.getMessage(SptMessages.Date), id, false, true);
+            df.setRangeEnd(new Date(Settings.INSTALLMENT_DATE_LIMIT));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     createTextfieldDouble(null, myUI.getMessage(SptMessages.Amount), id));
             item.getItemProperty(Settings.status_id).setValue(1);
-        } else if (autoFill) {
+        } else if (autoFill && instCtrAmount != null) {
             installmentTable.removeAllItems();
             Iterator iter = instPlanCont.getItemIds().iterator();
             Double s = 0.0;
@@ -3295,24 +3298,33 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             left -= s;
             for (int i = 0; i < Integer.parseInt(divideTF.getValue()); i++) {
                 Double divSum = left / Integer.parseInt(divideTF.getValue());
+                Calendar dateLimit = Calendar.getInstance();
+                dateLimit.setTimeInMillis(Settings.INSTALLMENT_DATE_LIMIT);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(currDate.getValue());
                 cal.add(Calendar.MONTH, i + 1);
-                String id = Settings.FreshItem + (--r_table_counter);
                 if (installmentTable.getContainerDataSource().size() == 0) {
                     installmentTable.setContainerDataSource(prepareInstPlanContainer());
                 }
-                Item item;
-                item = ((IndexedContainer) installmentTable.getContainerDataSource()).addItemAt(
-                        installmentTable.getContainerDataSource().size(), id);
-                item.getItemProperty(Settings.button).setValue(
-                        createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                                Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
-                item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                        createDateField(cal.getTime(), myUI.getMessage(SptMessages.Date), id, false, true));
-                item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                        createTextfieldDouble(Settings.round(divSum, 2), myUI.getMessage(SptMessages.Amount), id));
-                item.getItemProperty(Settings.status_id).setValue(1);
+                if (dateLimit.after(cal)) {
+                    String id = Settings.FreshItem + (--r_table_counter);
+                    Item item = ((IndexedContainer) installmentTable.getContainerDataSource()).addItemAt(
+                            installmentTable.getContainerDataSource().size(), id);
+                    item.getItemProperty(Settings.button).setValue(
+                            createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                                    Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
+                    item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                            createDateField(cal.getTime(), myUI.getMessage(SptMessages.Date), id, false, true));
+                    item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+                            createTextfieldDouble(Settings.round(divSum, 2), myUI.getMessage(SptMessages.Amount), id));
+                    item.getItemProperty(Settings.status_id).setValue(1);
+                } else {
+                    String id = Settings.FreshItem + r_table_counter;
+                    Item item = installmentTable.getContainerDataSource().getItem(id);
+                    TextField tf = (TextField) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
+                    tf.getPropertyDataSource().setValue(Settings.round(divSum * (Integer.parseInt(divideTF.getValue()) - i + 1), 2));
+                    break;
+                }
             }
         }
         installmentTable.setVisibleColumns(NATURAL_COL_ORDER_INST_PLAN);
