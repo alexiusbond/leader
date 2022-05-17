@@ -63,7 +63,6 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
 
     public TransactionsView(MyVaadinUI myUI) {
         this.myUI = myUI;
-
         setRows(3);
         setColumns(4);
         setSizeFull();
@@ -538,7 +537,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         }
     }
 
-    public Button createButton(String description, String itemId, String caption, boolean isDisabled, FontAwesome icon) {
+    public Button createButton(String description, String itemId, String caption, boolean isDisabled,
+                               FontAwesome icon, String style) {
         Button btn = new Button(caption);
         if (isDisabled) {
             btn.setEnabled(false);
@@ -546,6 +546,11 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         btn.setDescription(description);
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.addStyleName(ValoTheme.BUTTON_TINY);
+        System.out.println(style);
+        if (style != null) {
+            btn.addStyleName(style);
+        }
+        System.out.println(btn.getStyleName());
         btn.setIcon(icon);
         btn.setData(itemId);
         btn.addClickListener(this);
@@ -586,7 +591,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     }
 
     public ComboBox createCombobox(int value, String description, String itemId,
-                                      String dbTable, boolean isDisabled, boolean isRequired, boolean isValueChangeListener) {
+                                   String dbTable, boolean isDisabled, boolean isRequired, boolean isValueChangeListener) {
         ComboBox cb = new ComboBox();
 
         cb.setDescription(description);
@@ -622,7 +627,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
     }
 
     public ComboBox createComboboxCategory(int value, String description, String itemId,
-                                              int cat_type_id, boolean isDisabled, String tableName) {
+                                           int cat_type_id, boolean isDisabled, String tableName) {
         ComboBox cb = new ComboBox();
         if (isDisabled) {
             cb.setEnabled(false);
@@ -763,9 +768,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         Item item;
         item = ((IndexedContainer) incomesTable.getContainerDataSource()).addItemAt(0, id);
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setSpacing(true);
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Incomes),
-                false, FontAwesome.MINUS_SQUARE));
+                false, FontAwesome.MINUS_SQUARE, "min-padding"));
         item.getItemProperty(Settings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                 createDateField(new Date(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Incomes)));
@@ -791,10 +795,10 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         Item item;
         item = ((IndexedContainer) incomesTable.getContainerDataSource()).addItemAt(0, id);
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setSpacing(true);
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Incomes),
-                false, FontAwesome.MINUS_SQUARE));
-        hl.addComponent(createButton(myUI.getMessage(SptMessages.Print), id, myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
+                false, FontAwesome.MINUS_SQUARE, "min-padding"));
+        hl.addComponent(createButton(myUI.getMessage(SptMessages.Print), id, myUI.getMessage(SptMessages.Print),
+                false, FontAwesome.FILE_PDF_O, "min-padding"));
         item.getItemProperty(Settings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                 createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Incomes)));
@@ -825,9 +829,10 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         Item item;
         item = ((IndexedContainer) expensesTable.getContainerDataSource()).addItemAt(0, id);
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setSpacing(true);
-        hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Expenses), false, FontAwesome.MINUS_SQUARE));
-        hl.addComponent(createButton(myUI.getMessage(SptMessages.Print), id, myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
+        hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Expenses),
+                false, FontAwesome.MINUS_SQUARE, "min-padding"));
+        hl.addComponent(createButton(myUI.getMessage(SptMessages.Print), id, myUI.getMessage(SptMessages.Print),
+                false, FontAwesome.FILE_PDF_O, "min-padding"));
         item.getItemProperty(Settings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                 createDateField(t.getDate(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Expenses)));
@@ -876,9 +881,8 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         Item item;
         item = ((IndexedContainer) expensesTable.getContainerDataSource()).addItemAt(0, id);
         HorizontalLayout hl = new HorizontalLayout();
-        hl.setSpacing(true);
         hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, myUI.getMessage(SptMessages.Expenses),
-                false, FontAwesome.MINUS_SQUARE));
+                false, FontAwesome.MINUS_SQUARE, "min-padding"));
         item.getItemProperty(Settings.button).setValue(hl);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                 createDateField(new Date(), myUI.getMessage(SptMessages.Date), id, false, myUI.getMessage(SptMessages.Expenses)));

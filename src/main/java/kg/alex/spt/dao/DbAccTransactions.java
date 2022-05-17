@@ -141,17 +141,16 @@ public class DbAccTransactions extends BaseDb {
             }
             String tableName = myUI.getMessage(SptMessages.Expenses);
             HorizontalLayout hl = new HorizontalLayout();
-            hl.setSpacing(true);
             if (incOrOut == 1) {
                 hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                        myUI.getMessage(SptMessages.Incomes), isDisabled, FontAwesome.MINUS_SQUARE));
+                        myUI.getMessage(SptMessages.Incomes), isDisabled, FontAwesome.MINUS_SQUARE, "min-padding"));
 
                 tableName = myUI.getMessage(SptMessages.Incomes);
                 item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
                         myUI.getMessage(SptMessages.Category), id, 1, isDisabled, tableName));
             } else {
                 hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                        myUI.getMessage(SptMessages.Expenses), isDisabled, FontAwesome.MINUS_SQUARE));
+                        myUI.getMessage(SptMessages.Expenses), isDisabled, FontAwesome.MINUS_SQUARE, "min-padding"));
 
                 item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
                         myUI.getMessage(SptMessages.Category), id, 2, isDisabled, tableName));
@@ -179,7 +178,7 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
             item.getItemProperty(Settings.order_number).setValue(result.getInt("t.order_number"));
             hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.Print), id,
-                    myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
+                    myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O, "min-padding"));
             item.getItemProperty(Settings.button).setValue(hl);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(result.getTimestamp("t.date_time"), myUI.getMessage(SptMessages.Date), id, isDisabled, tableName));
@@ -269,12 +268,12 @@ public class DbAccTransactions extends BaseDb {
             @Override
             public Component getValue(Item item, Object itemId, Object propertyId) {
                 HorizontalLayout hl = new HorizontalLayout();
-                hl.setWidth("85px");
+                hl.setWidth("52px");
                 hl.addComponent(cbv.createButton(myUI.getMessage(SptMessages.DeleteButton), itemId,
                         myUI.getMessage(SptMessages.DeleteButton),
-                        (Boolean) item.getItemProperty(Settings.is_disabled).getValue(), FontAwesome.MINUS_SQUARE));
+                        (Boolean) item.getItemProperty(Settings.is_disabled).getValue(), FontAwesome.MINUS_SQUARE, "min-padding"));
                 hl.addComponent(cbv.createButton(myUI.getMessage(SptMessages.Print), itemId,
-                        myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O));
+                        myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O, "min-padding"));
                 return hl;
             }
 

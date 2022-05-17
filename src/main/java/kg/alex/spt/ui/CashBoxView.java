@@ -367,13 +367,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(Settings.hashTags).setRenderer(rir);
         grid.getColumn(Settings.button).setRenderer(new ComponentRenderer());
 
-        grid.getColumn(Settings.button).setWidth(85);
-        grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(150);
-        grid.getColumn(myUI.getMessage(SptMessages.Category)).setExpandRatio(1);
-        grid.getColumn(myUI.getMessage(SptMessages.Note)).setExpandRatio(1);
-        if (accordion.getSelectedTab() != null && accordion.getSelectedTab() == expensesGrid) {
-            grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setExpandRatio(1);
+        grid.getColumn(Settings.button).setWidth(52);
+        grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(120);
+        grid.getColumn(myUI.getMessage(SptMessages.Category)).setWidth(350);
+        if (grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)) != null) {
+            grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setWidth(230);
         }
+        grid.getColumn(myUI.getMessage(SptMessages.Note)).setExpandRatio(1);
         grid.getEditorFieldGroup().addCommitHandler(this);
     }
 
@@ -637,7 +637,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
     }
 
-    public Button createButton(String description, Object itemId, String data, boolean isDisabled, FontAwesome icon) {
+    public Button createButton(String description, Object itemId, String data, boolean isDisabled, FontAwesome icon, String style) {
         Button btn = new Button();
         if (isDisabled) {
             btn.setEnabled(false);
@@ -647,6 +647,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.setStyleName(ValoTheme.BUTTON_LINK);
         btn.addStyleName(ValoTheme.BUTTON_TINY);
+        if (style != null) {
+            btn.addStyleName(style);
+        }
         btn.setIcon(icon);
         btn.setId(itemId.toString());
         btn.addClickListener(this);

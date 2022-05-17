@@ -198,10 +198,13 @@
     padding: 3px 16px 3px 32px;
   }
 
+  .v-button-min-padding {
+    padding: 0px 3px;
+  }
+
   .v-table-cell-content-right-aligned {
     text-align: right !important;
   }
-
 
   v-table-cell-wrapper-right-aligned {
     text-align: right !important;
@@ -210,6 +213,7 @@
   .v-textfield-doubleValue {
     text-align: right !important;
   }
+
   .v-upload .v-button {
     height: 27px;
   }

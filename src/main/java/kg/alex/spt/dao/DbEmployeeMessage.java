@@ -59,7 +59,7 @@ public class DbEmployeeMessage extends BaseDb {
     }
 
     public void execSQL(MyVaadinUI myUi, int employee_id, int school_id, FilterTable t) throws SQLException {
-        String sql = "SELECT om.id, e.id, concat(st.name, ' ', st.surname) as student, " +
+        String sql = "SELECT om.id, e.id, ifnull(CONCAT(st.name, ' ', st.surname), om.student) AS student, " +
                 "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, " +
                 "mst.id, mst.name FROM employee_message AS em " +
                 "left join employee as e on e.id = em.employee_id " +
