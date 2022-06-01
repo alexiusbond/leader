@@ -53,7 +53,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(1, invoice_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = pav.preparePayoutsContainer();
-        double total = 0;
+        double totalUsd = 0.0, totalKgs = 0.0;
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
@@ -95,12 +95,14 @@ public class DbAccTransactions extends BaseDb {
                     result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
-                total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
+                totalUsd += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
+                totalKgs += result.getDouble("t.amount");
             } else {
-                total += result.getDouble("t.amount");
+                totalUsd += result.getDouble("t.amount");
+                totalKgs += result.getDouble("t.amount") * result.getDouble("t.currency_rate");
             }
         }
-        pav.setPayoutsFooter(total);
+        pav.setPayoutsFooter(totalUsd, totalKgs);
         return container;
     }
 

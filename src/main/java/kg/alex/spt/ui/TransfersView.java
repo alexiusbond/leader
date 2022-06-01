@@ -483,6 +483,8 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 excelReport.setReportTitle(caption + " (№" + invoiceNumberTF.getValue() + " - " + df.format(dateDF.getValue()) + ")");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
+                excelReport.getTotalsRow().getCell(4).setCellFormula(null);
+                excelReport.getTotalsRow().getCell(4).setCellValue(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Rate)));
                 excelReport.getTotalsRow().getCell(5).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(5).setCellValue(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
 
@@ -1002,7 +1004,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
     }
 
     private void repaintTransfersFooter() {
-        double total = 0.0;
+        double totalUsd = 0.0, totalKgs = 0.0;
         if (transfersTable.getContainerDataSource().size() > 0) {
             Iterator iter = transfersTable.getItemIds().iterator();
             while (iter.hasNext()) {
@@ -1015,18 +1017,27 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                         myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
                     if ((Integer) ((ComboBox) transfersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 2) {
-                        total += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                        totalUsd += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue();
+                        totalKgs += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue() *
+                                (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                        myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
                     } else {
-                        total += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                        totalUsd += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue()
                                 / (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
                                 myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
+                        totalKgs += (Double) ((TextField) transfersTable.getItem(next).getItemProperty(
+                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
                 }
             }
         }
-        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(total) + " $");
+        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
+                Settings.dFormat.format(totalUsd) + " " + Settings.USD);
+        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
+                Settings.dFormat.format(totalKgs) + " " + Settings.KGS);
     }
 
     private void insertTransfers(int invoice_id) {
@@ -1073,8 +1084,11 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         }
     }
 
-    public void setTransfersFooter(double amount) {
-        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(amount) + " $");
+    public void setTransfersFooter(double amountUSD, double amountKGS) {
+        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
+                Settings.dFormat.format(amountUSD) + " " + Settings.USD);
+        transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
+                Settings.dFormat.format(amountKGS) + " " + Settings.KGS);
     }
 
     public Component getNewObj() {

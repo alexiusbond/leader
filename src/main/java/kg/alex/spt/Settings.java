@@ -331,6 +331,7 @@ public class Settings implements Serializable {
     public static final String download_button = "download_button";
     public static final String cancel_upload_button = "cancel_upload_button";
     public static final String KGS = "KGS";
+    public static final String USD = "USD";
     public static final SimpleDateFormat dateRu = new SimpleDateFormat(
             "«dd» MMMMM yyyy год", new DateFormatSymbols() {
         @Override

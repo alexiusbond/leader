@@ -50,7 +50,7 @@ public class DbTransfers extends BaseDb {
         stat.setInt(1, invoice_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = v.prepareTransfersContainer();
-        double total = 0;
+        double totalUSD = 0.0, totalKGS = 0.0;
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
@@ -94,12 +94,14 @@ public class DbTransfers extends BaseDb {
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
-                total += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
+                totalUSD += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
+                totalKGS += result.getDouble("t.amount");
             } else {
-                total += result.getDouble("t.amount");
+                totalUSD += result.getDouble("t.amount");
+                totalKGS += result.getDouble("t.amount") * result.getDouble("t.currency_rate");
             }
         }
-        v.setTransfersFooter(total);
+        v.setTransfersFooter(totalUSD, totalKGS);
         return container;
     }
 

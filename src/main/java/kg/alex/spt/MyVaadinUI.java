@@ -142,7 +142,11 @@ public class MyVaadinUI extends UI {
         try {
             DbEmployeeMessage dbu = new DbEmployeeMessage();
             dbu.connect();
-            getUser().setUnreadMessages(dbu.isUnread(getUser().getId(), getUser().getSchool_id()));
+            if (SecurityUtils.getSubject().isPermitted(Settings.cnMessagesView + ":" + Settings.actReadMessages)) {
+                getUser().setUnreadMessages(dbu.isUnread(getUser().getId(), getUser().getSchool_id()));
+            } else {
+                getUser().setUnreadMessages(dbu.isUnread(getUser().getId(), 0));
+            }
             dbu.close();
         } catch (Exception e) {
             logger.error(e);

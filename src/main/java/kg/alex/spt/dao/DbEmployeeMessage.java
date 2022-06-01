@@ -149,11 +149,11 @@ public class DbEmployeeMessage extends BaseDb {
     public boolean isUnread(int employee_id, int school_id) throws SQLException {
         String sql = "SELECT count(*) as val FROM employee_message as em " +
                 "LEFT JOIN order_messages as om on om.id = em.order_messages_id " +
-                "WHERE em.employee_id = ? OR em.employee_id IN " +
+                "WHERE (em.employee_id = ? OR em.employee_id IN " +
                 "(SELECT eo.employee_id FROM hr_employee_order AS eo " +
                 "WHERE eo.school_id = ? AND eo.hr_orders_id = 1 AND " +
                 "(eo.to_date IS NULL OR DATE(eo.to_date) >= DATE(om.creation_date) " +
-                "OR eo.to_date >= NOW())) and message_status_id = 2;";
+                "OR eo.to_date >= NOW()))) and message_status_id = 2;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);

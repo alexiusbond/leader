@@ -546,11 +546,9 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
         btn.setDescription(description);
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.addStyleName(ValoTheme.BUTTON_TINY);
-        System.out.println(style);
         if (style != null) {
             btn.addStyleName(style);
         }
-        System.out.println(btn.getStyleName());
         btn.setIcon(icon);
         btn.setData(itemId);
         btn.addClickListener(this);

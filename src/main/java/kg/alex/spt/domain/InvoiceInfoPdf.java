@@ -18,9 +18,18 @@ public class InvoiceInfoPdf implements Serializable {
     private String order_number;
     private String scl_logo;
     private String payment_type;
+    private int paymentCategoryId;
     private Date payment_date;
     private double amount;
     private double kurs;
+
+    public int getPaymentCategoryId() {
+        return paymentCategoryId;
+    }
+
+    public void setPaymentCategoryId(int paymentCategoryId) {
+        this.paymentCategoryId = paymentCategoryId;
+    }
 
     public double getKurs() {
         return kurs;

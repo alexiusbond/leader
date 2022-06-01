@@ -674,7 +674,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (studDataTable.getValue() != null) {
                 if ((tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                         || tabs.getSelectedTab() == tabs.getTab(payTablelay).getComponent())
-                        && debt > 0.0 && contract_amount == 0.0 && !currentUser.hasRole(Settings.rnAdmin)) {
+                        && debt > 0.1 && contract_amount == 0.0 && !currentUser.hasRole(Settings.rnAdmin)) {
                     Notification.show(myUI.getMessage(SptMessages.OperationNotAllowedDueToDebt),
                             Notification.Type.WARNING_MESSAGE);
                 } else {
@@ -759,8 +759,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             downloader.setFileDownloadResource(getFileStream(new File(Settings.PATH_TO_UPLOADS
                     + ((Attachment) source.getData()).getUnique_name())));
             downloader.download();
-        } else if (source.getId() != null
-                && source.getId().equals(myUI.getMessage(SptMessages.Invoice))) {
+        } else if (source.getId() != null && source.getId().equals(myUI.getMessage(SptMessages.Invoice))) {
             InvoiceInfoPdf iip = new InvoiceInfoPdf();
             iip.setLogin(loginTF.getValue());
             iip.setClass_name(classCB.getContainerProperty(classCB.getValue(),
@@ -776,6 +775,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             iip.setKurs((Double) (((TextField) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue()));
             iip.setSchool_name(myUI.getUser().getSchool_name());
+            iip.setPaymentCategoryId((Integer) ((ComboBox) paymentsTable.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getValue());
             iip.setPayment_type(((ComboBox) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.PaymentType)).getValue())
                     .getContainerProperty(((ComboBox) paymentsTable.getContainerProperty(source.getData(),
@@ -3273,8 +3274,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             item.getItemProperty(Settings.button).setValue(
                     createButton(myUI.getMessage(SptMessages.DeleteButton), id,
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
-            DateField df =
-                    createDateField(currDate.getValue(), myUI.getMessage(SptMessages.Date), id, false, true);
+            DateField df = createDateField(currDate.getValue(), myUI.getMessage(SptMessages.Date),
+                    id, false, true);
             df.setRangeEnd(new Date(Settings.INSTALLMENT_DATE_LIMIT));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
@@ -3313,8 +3314,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     item.getItemProperty(Settings.button).setValue(
                             createButton(myUI.getMessage(SptMessages.DeleteButton), id,
                                     Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                            createDateField(cal.getTime(), myUI.getMessage(SptMessages.Date), id, false, true));
+                    DateField df = createDateField(cal.getTime(), myUI.getMessage(SptMessages.Date), id,
+                            false, true);
+                    df.setRangeEnd(new Date(Settings.INSTALLMENT_DATE_LIMIT));
+                    item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
                     item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                             createTextfieldDouble(Settings.round(divSum, 2), myUI.getMessage(SptMessages.Amount), id));
                     item.getItemProperty(Settings.status_id).setValue(1);

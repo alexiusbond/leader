@@ -86,8 +86,12 @@ public class InvoicePDF {
                     cell.setPaddingBottom(20);
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     orderTable.addCell(cell);
-
-                    cell = new PdfPCell(new Phrase("ПРИХОДНЫЙ КАССОВЫЙ ОРДЕР", bold_font));
+                    System.out.println(student.getPaymentCategoryId());
+                    if (student.getPaymentCategoryId() == 3) {
+                        cell = new PdfPCell(new Phrase("РАСХОДНЫЙ КАССОВЫЙ ОРДЕР", bold_font));
+                    } else {
+                        cell = new PdfPCell(new Phrase("ПРИХОДНЫЙ КАССОВЫЙ ОРДЕР", bold_font));
+                    }
                     cell.setBorder(0);
                     cell.setPaddingBottom(20);
                     orderTable.addCell(cell);
@@ -106,7 +110,11 @@ public class InvoicePDF {
 
                     Paragraph namePar = new Paragraph();
                     namePar.setLeading(20);
-                    namePar.add(new Chunk("Принято от: ", bold_font));
+                    if (student.getPaymentCategoryId() == 3) {
+                        namePar.add(new Chunk("Выдано: ", bold_font));
+                    } else {
+                        namePar.add(new Chunk("Принято от: ", bold_font));
+                    }
                     if (student.getWhopaid_fullname() != null && !student.getWhopaid_fullname().equals("")) {
                         namePar.add(new Chunk(student.getLogin() + ", " + student.getClass_name() + ", "
                                 + student.getStud_fullname() + " (" + student.getWhopaid_fullname() + ")", underlined_font));
@@ -122,8 +130,13 @@ public class InvoicePDF {
 
                     Paragraph reasonPar = new Paragraph();
                     reasonPar.add(new Chunk("Основание: ", bold_font));
-                    reasonPar.add(new Chunk("оплата за учебу - " + myUI.getUser().getCurrent_year().getName(),
-                            underlined_font));
+                    if (student.getPaymentCategoryId() == 3) {
+                        reasonPar.add(new Chunk("возврат оплаты за учебу - " + myUI.getUser().getCurrent_year().getName(),
+                                underlined_font));
+                    } else {
+                        reasonPar.add(new Chunk("оплата за учебу - " + myUI.getUser().getCurrent_year().getName(),
+                                underlined_font));
+                    }
                     cell = new PdfPCell(reasonPar);
                     cell.setColspan(2);
                     cell.setLeading(20, 0);
@@ -199,7 +212,11 @@ public class InvoicePDF {
                     cell.setPaddingLeft(7);
                     invoiceTable.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase("к приходному кассовому ордеру №__________", bold_font));
+                    if (student.getPaymentCategoryId() == 3) {
+                        cell = new PdfPCell(new Phrase("к расходному кассовому ордеру №__________", bold_font));
+                    } else {
+                        cell = new PdfPCell(new Phrase("к приходному кассовому ордеру №__________", bold_font));
+                    }
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     cell.setBorder(Rectangle.LEFT);
                     cell.setPaddingLeft(7);
@@ -209,7 +226,11 @@ public class InvoicePDF {
                     invoiceTable.addCell(datePhr);
                     Paragraph nameInvPar = new Paragraph();
                     nameInvPar.setLeading(20);
-                    nameInvPar.add(new Chunk("Принято от: ", bold_font));
+                    if (student.getPaymentCategoryId() == 3) {
+                        nameInvPar.add(new Chunk("Выдано: ", bold_font));
+                    } else {
+                        nameInvPar.add(new Chunk("Принято от: ", bold_font));
+                    }
                     if (student.getWhopaid_fullname() != null && !student.getWhopaid_fullname().equals("")) {
                         nameInvPar.add(new Chunk(student.getLogin() + ", " + student.getClass_name() + ", "
                                 + student.getStud_fullname() + " (" + student.getWhopaid_fullname() + ")", underlined_font));
@@ -240,7 +261,7 @@ public class InvoicePDF {
                     document.add(mainTable);
 
                 } catch (Exception e) {
-                        logger.error(e);
+                    logger.error(e);
                     logger.catching(e);
                 } finally {
                     if (document != null) {
@@ -262,7 +283,7 @@ public class InvoicePDF {
         @Override
         public String[] getMonths() {
             return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",
-                "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+                    "июля", "августа", "сентября", "октября", "ноября", "декабря"};
         }
     };
 
