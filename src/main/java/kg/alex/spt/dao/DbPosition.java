@@ -25,7 +25,6 @@ public class DbPosition extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
-
         String sql = "SELECT p.id, p.name, st.id, st.name, pc.id, pc.name, p.default_permissions, pos.id "
                 + "FROM hr_position AS p "
                 + "LEFT JOIN activity_status AS st ON p.activity_status_id = st.id "
@@ -107,27 +106,6 @@ public class DbPosition extends BaseDb {
         int status = stat.executeUpdate();
         return status;
     }
-
-    public IndexedContainer execSQL_cont(MyVaadinUI myUI) throws SQLException {
-
-
-        String sql = "SELECT id, name, hr_position_id "
-                + "FROM position order by id;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        ResultSet result = stat.executeQuery();
-        IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, 0);
-        container.addContainerProperty(Settings.position_id, Integer.class, 0);
-        while (result.next()) {
-            Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
-                    result.getString("name"));
-            item.getItemProperty(Settings.position_id).setValue(
-                    result.getInt("hr_position_id"));
-        }
-        return container;
-    }    
-    
     public int exec_update(int position_id, int id) throws SQLException {
         String sql = "update position set hr_position_id = ? where id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);

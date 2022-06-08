@@ -54,12 +54,15 @@ public class Settings implements Serializable {
     public static final String school_type_id = "school_type_id";
     public static final String category_id = "category_id";
     public static final String payment_category_id = "payment_category_id";
+    public static final String paymentCategoryTable = "payment_category";
     public static final String is_main = "is_main";
     public static final String year_id = "year_id";
     public static final String school_id = "school_id";
     public static final String discount_type_id = "discount_type_id";
     public static final String correction_type_id = "correction_type_id";
     public static final String position_id = "position_id";
+    public static final String hr_position_id = "hr_position_id";
+    public static final String dpProductCategoryTable = "dp_product_category";
     public static final String extra_position_ids = "extra_position_ids";
     public static final String salary_category_id = "salary_category_id";
     public static final String gender_id = "gender_id";
@@ -146,6 +149,7 @@ public class Settings implements Serializable {
     public static final String db_dm_invoice = "dm_invoice";
     public static final String dbAccInvoice = "acc_invoice";
     public static final String db_acc_invoice_id = "acc_invoice_id";
+    public static final String db_acc_type_id = "acc_type_id";
     public static final String invoice_id = "invoice_id";
     public static final String dbStock = "dp_stock";
     public static final String dbOperation = "dp_service_type";
@@ -167,6 +171,7 @@ public class Settings implements Serializable {
     public static final String dbEducationStatus = "education_status";
     public static final String dbDiscountType = "discount_type";
     public static final String hr_positionTable = "hr_position";
+    public static final String positionTable = "position";
     public static final String dbStudent = "student";
     public static final String dbStudentContract = "student_contract";
     public static final String dbStudentDiscount = "student_discount";
@@ -321,7 +326,6 @@ public class Settings implements Serializable {
     public static final String activeStatus = "active";
     public static final String entering_year_id = "entering_year_id";
     public static final String hr_position_category_id = "hr_position_category_id";
-    public static final String language_id = "language_id";
     public static final String dbColumnStudent_payments_id = "student_payments_id";
     public static final String old_amount = "old_amount";
     public static final String old_currency = "old_currency";

@@ -23,9 +23,7 @@ public class DbSalaryCategories extends BaseDb {
 
     public IndexedContainer execSQL_cont(MyVaadinUI myUI) throws SQLException {
 
-
-        String sql = "SELECT id, name, acc_category_id "
-                + "FROM hr_salary_category order by id;";
+        String sql = "SELECT id, name, acc_category_id FROM hr_salary_category order by id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();

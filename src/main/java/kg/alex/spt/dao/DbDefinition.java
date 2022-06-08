@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author alex
@@ -101,6 +102,34 @@ public class DbDefinition extends BaseDb {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name"));
+        }
+        return container;
+    }
+
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName,
+                                            List<String> containerProperties) throws SQLException {
+        String sql = "select t.id, t.name, ";
+        for (int i = 0; i < containerProperties.size(); i++) {
+            sql += containerProperties.get(i);
+            if (i != containerProperties.size() - 1) {
+                sql += ", ";
+            }
+        }
+        sql += " from " + dbTableName + " as t";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        for (int i = 0; i < containerProperties.size(); i++) {
+            container.addContainerProperty(containerProperties.get(i), Integer.class, null);
+        }
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("t.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("t.name"));
+            for (int i = 0; i < containerProperties.size(); i++) {
+                item.getItemProperty(containerProperties.get(i)).setValue(
+                        result.getInt(containerProperties.get(i)));
+            }
         }
         return container;
     }
