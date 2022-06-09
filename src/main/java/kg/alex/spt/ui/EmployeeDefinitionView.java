@@ -968,12 +968,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 ComboBoxMultiselect permMCB = new ComboBoxMultiselect();
                 permMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
                 permMCB.setWidth(Settings.PERCENTS100);
-                permMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-                    @Override
-                    public boolean isShow(String filter, int page) {
-                        return true;
-                    }
-                });
+                permMCB.setPageLength(20);
+                permMCB.setShowSelectAllButton((filter, page) -> true);
                 permMCB.addItems(convertStrToSet(permissionCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Value)).getValue().toString()));
                 permissionCont.getContainerProperty(next,
@@ -999,7 +995,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private Set<?> convertStrToSet(String str) {
         String[] strArr = str.split(",");
-        HashSet<String> hs = new HashSet<String>(strArr.length);
+        HashSet<String> hs = new HashSet<>(strArr.length);
         for (int i = 0; i < strArr.length; i++) {
             hs.add(strArr[i]);
         }
@@ -1701,17 +1697,16 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void repaint() {
-        String str = "";
+        StringBuilder str = new StringBuilder();
         Iterator<Integer> iter = (Iterator<Integer>) workingStatCont.getItemIds().iterator();
         int total = 0;
         while (iter.hasNext()) {
             Integer next = iter.next();
-            str += "&emsp;" + workingStatCont.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue() + ": "
-                    + workingStatCont.getContainerProperty(next, Settings.count).getValue();
+            str.append("&emsp;").append(workingStatCont.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).append(": ").append(workingStatCont.getContainerProperty(next, Settings.count).getValue());
             total += (Integer) workingStatCont.getContainerProperty(next, Settings.count).getValue();
         }
-        str += "&emsp;" + myUI.getMessage(SptMessages.Total) + ": " + total;
-        workingStatTtlLb.setValue(str);
+        str.append("&emsp;").append(myUI.getMessage(SptMessages.Total)).append(": ").append(total);
+        workingStatTtlLb.setValue(str.toString());
     }
 
     private void setEmployeesDataTable(String edu_st_ids) {
@@ -1720,8 +1715,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
             employeesDataTable.setContainerDataSource(
-                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), edu_st_ids, workingStatCont, currentUser.hasRole(Settings.rnAdmin),
-                            currentUser.hasRole(Settings.rnHr), (isMyProfile ? emplID : 0)));
+                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), edu_st_ids, workingStatCont,
+                            currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr),
+                            (currentUser.isPermitted(Settings.prmViewAllEmployees) ? 0 : myUI.getUser().getBranch_id()),
+                            (isMyProfile ? emplID : 0)));
             dbe.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -3209,9 +3206,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     EmployeeChildren ec = new EmployeeChildren();
                     ec.setEmployee_id(employee_id);
                     ec.setFullname(((TextField) childrenTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.FullName)).getValue()).getValue().toString());
+                            myUI.getMessage(SptMessages.FullName)).getValue()).getValue());
                     ec.setInstitution(((TextField) childrenTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Institution)).getValue()).getValue().toString());
+                            myUI.getMessage(SptMessages.Institution)).getValue()).getValue());
                     ec.setDate_of_birth(((DateField) childrenTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.DateOfBirth)).getValue()).getValue());
                     if (((ComboBox) childrenTable.getItem(next).getItemProperty(
@@ -3671,7 +3668,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     eb.setEmployee_id(employee_id);
                     eb.setBranch_id((Integer) ((ComboBox) branchesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Branch)).getValue()).getValue());
-                    eb.setMain((Boolean) ((CheckBox) branchesTable.getItem(next).getItemProperty(
+                    eb.setMain(((CheckBox) branchesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Main)).getValue()).getValue());
                     String str = ((ComboBox) branchesTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Branch)).getValue()).getItemCaption(eb.getBranch_id());
@@ -3696,7 +3693,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             .equals(myUI.getMessage(SptMessages.Insert))) {
                         dbeb.exec_insert(eb);
                     }
-
                 }
             }
             delBranchesIds.clear();
@@ -4180,28 +4176,25 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(cb);
         final ComboBox cb2 = createCombobox(0, myUI.getMessage(SptMessages.WorkPlace), Settings.dbWork_placeTable, true);
         cb2.setNewItemsAllowed(true);
-        cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-            @Override
-            public void addNewItem(String newItemCaption) {
-                try {
-                    DbDefinition dbd = new DbDefinition();
-                    dbd.connect();
-                    int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbWork_placeTable, false);
-                    dbd.close();
-                    if (id != 0) {
-                        Iterator iter = t.getContainerDataSource().getItemIds().iterator();
-                        while (iter.hasNext()) {
-                            Object next = iter.next();
-                            Item item = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id);
-                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                            cb2.setValue(id);
-                        }
+        cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+            try {
+                DbDefinition dbd = new DbDefinition();
+                dbd.connect();
+                int id1 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbWork_placeTable, false);
+                dbd.close();
+                if (id1 != 0) {
+                    Iterator iter = t.getContainerDataSource().getItemIds().iterator();
+                    while (iter.hasNext()) {
+                        Object next = iter.next();
+                        Item item1 = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
+                                myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
+                        item1.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                        cb2.setValue(id1);
                     }
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
                 }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
         });
         item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(cb2);
@@ -4448,11 +4441,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                 createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Hours),
                         new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
-                        new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
+                        new ObjectProperty<>(0), Settings.getStringToIntegerConverter()));
         item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                 createTextfieldWithProperty(null, myUI.getMessage(SptMessages.ExtraHours),
                         new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
-                        new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
+                        new ObjectProperty<>(0), Settings.getStringToIntegerConverter()));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         lessonsTable.setVisibleColumns(NATURAL_COL_ORDER_LESSONS);
         lessonsTable.setPageLength(lessonsTable.size());
@@ -4993,7 +4986,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void insertPermissions(String login) {
-        String permOneStr = "";
+        StringBuilder permOneStr = new StringBuilder();
         try {
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
@@ -5001,7 +4994,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     .getContainerDataSource()).getItemIds().iterator();
             while (iter.hasNext()) {
                 Object next = iter.next();
-                String permission = "";
+                String permission;
                 if (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
                         .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                         .getValue())).getValue()) != null) {
@@ -5009,13 +5002,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                             .getValue())).getValue()));
                     dbe.exec_insert_perm(login, permission);
-                    permOneStr += permission;
+                    permOneStr.append(permission);
                     if (iter.hasNext()) {
-                        permOneStr += ";";
+                        permOneStr.append(";");
                     }
                 }
             }
-            employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.Permissions)).setValue(permOneStr);
+            employeesDataTable.getContainerProperty(emplID, myUI.getMessage(SptMessages.Permissions)).setValue(permOneStr.toString());
             dbe.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -5211,10 +5204,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 clearProfFields();
                 clearSchoolFields();
                 ordersTable.removeAllItems();
-                workingStatCont.getContainerProperty((Integer) employeesDataTable
+                workingStatCont.getContainerProperty(employeesDataTable
                                 .getContainerProperty(emplID,
                                         Settings.working_status_id).getValue(), Settings.count)
-                        .setValue(((Integer) workingStatCont.getContainerProperty((Integer) employeesDataTable
+                        .setValue(((Integer) workingStatCont.getContainerProperty(employeesDataTable
                                         .getContainerProperty(emplID,
                                                 Settings.working_status_id).getValue(),
                                 Settings.count).getValue()) - 1);
@@ -5232,12 +5225,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (property == loginTF) {
-            if (isNew && loginTF.getValue() != null && !loginTF.getValue().equals("")
-                    && loginTF.isEnabled()) {
-                photoUpl.setEnabled(true);
-            } else {
-                photoUpl.setEnabled(false);
-            }
+            photoUpl.setEnabled(isNew && loginTF.getValue() != null && !loginTF.getValue().equals("")
+                    && loginTF.isEnabled());
         } else if (property == noPhonesCkb) {
             phonesTable.setEnabled(!noPhonesCkb.getValue());
             plusPhonesButton.setEnabled(!noPhonesCkb.getValue());

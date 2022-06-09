@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- *
  * @author alex
  */
 public class UserDetails implements Serializable {
@@ -17,15 +16,24 @@ public class UserDetails implements Serializable {
     private int id;
     private String login;
     private int working_status_id;
-    private String fullname;
+    private String fullName;
     private int school_id;
     private int school_type_id;
+    private int branch_id;
     private String school_name;
     private String school_code;
     private String school_logo;
     private Definition current_year;
     private Date transactions_start_date;
     private boolean isUnreadMessages;
+
+    public int getBranch_id() {
+        return branch_id;
+    }
+
+    public void setBranch_id(int branch_id) {
+        this.branch_id = branch_id;
+    }
 
     public Date getTransactions_start_date() {
         return transactions_start_date;
@@ -82,15 +90,15 @@ public class UserDetails implements Serializable {
     /**
      * @return the fullname
      */
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
     /**
-     * @param fullname the fullname to set
+     * @param fullName the fullname to set
      */
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     /**

@@ -93,7 +93,7 @@ public class DbEmployee extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id, String working_statuses,
                                     IndexedContainer workingStatCont, boolean withAdmin,
-                                    boolean withHr, int employee_id) throws SQLException {
+                                    boolean withHr, int branch_id, int employee_id) throws SQLException {
 
         if (working_statuses.equals("") || working_statuses == null) {
             working_statuses = "-1";
@@ -134,6 +134,9 @@ public class DbEmployee extends BaseDb {
             sql += " and e.id= " + employee_id + " ";
         } else {
             sql += " AND ord.working_status_id IS NOT NULL and ws.id in (" + working_statuses + ") ";
+            if (branch_id != 0) {
+                sql += " AND eb.hr_branch_id = ?";
+            }
         }
         sql += " group by e.id order by e.id DESC ";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -141,6 +144,9 @@ public class DbEmployee extends BaseDb {
         stat.setInt(2, school_id);
         stat.setInt(3, school_id);
         stat.setInt(4, school_id);
+        if (branch_id != 0) {
+            stat.setInt(5, branch_id);
+        }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);

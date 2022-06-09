@@ -300,7 +300,7 @@
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
                 <configuration>
-                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=8f79f19d-c079-489f-8c65-562672bcffeb
+                    <extraJvmArgs>-Xmx1024M -Xss1024k -Dvaadin.charts.developer.license=23acd7f4-ab44-4bf0-b2e6-826035b2d5e7
                     </extraJvmArgs>
                     <webappDirectory>${basedir}/src/main/webapp/VAADIN/widgetsets</webappDirectory>
                     <hostedWebapp>${basedir}/src/main/webapp/VAADIN/widgetsets</hostedWebapp>

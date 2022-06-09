@@ -78,9 +78,20 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             acsGivContainer = null, acsRecContainer = null, instPlanCont = null,
             paymentCont = null, discountCont = null, correctionCont = null, callsCont = null;
     private boolean isNew, isNewContract = false;
-    private Label debtLab, contractLab, discountLab, correctionLab, netLab, paidLab, leftLab,
-            instPlanTtlLab, netIPlanTtlLab, planDebt, instPlanDifLab, eduStatTtlLab,
-            tabContractLab, tabContractNetLab, filteredLab;
+    private Label debtLab;
+    private Label contractLab;
+    private Label discountLab;
+    private Label correctionLab;
+    private Label netLab;
+    private Label paidLab;
+    private Label leftLab;
+    private Label instPlanTtlLab;
+    private Label netIPlanTtlLab;
+    private Label planDebt;
+    private Label instPlanDifLab;
+    private Label eduStatTtlLab;
+    private Label tabContractLab;
+    private Label tabContractNetLab;
 
     private String[] NATURAL_COL_ORDER, NATURAL_COL_ORDER_PAYMENTS, NATURAL_COL_ORDER_CALLS,
             NATURAL_COL_ORDER_INST_PLAN, NATURAL_COL_ORDER_DISCOUNTS, NATURAL_COL_ORDER_CORRECTIONS, NATURAL_COL_ORDER_RElATIVES;
@@ -94,7 +105,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Window statusWindow;
     private Button cancelButton;
     private ProgressBar uploadProgressBar;
-    private String photoName, fileName, mimeType, discountsStr = "";
+    private String photoName, fileName, mimeType;
+    StringBuilder discountsStr = new StringBuilder();
     private Embedded photoEmb;
     private Subject currentUser = SecurityUtils.getSubject();
     public IndexedContainer eduStatCont;
@@ -175,7 +187,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         eduStatTtlLab.setSizeUndefined();
         eduStatTtlLab.setImmediate(true);
         eduStatTtlLab.setContentMode(ContentMode.HTML);
-        filteredLab = new Label();
+        Label filteredLab = new Label();
         filteredLab.setSizeUndefined();
         filteredLab.setImmediate(true);
         filteredLab.setContentMode(ContentMode.HTML);
@@ -741,12 +753,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 + "?",
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
-                        new ConfirmDialog.Listener() {
-                            @Override
-                            public void onClose(ConfirmDialog dialog) {
-                                if (dialog.isConfirmed()) {
-                                    execDelete();
-                                }
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                execDelete();
                             }
                         });
             }
@@ -1030,20 +1039,17 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private StreamResource getFileStream(File inputfile) {
 
-        StreamResource.StreamSource source = new StreamResource.StreamSource() {
+        StreamResource.StreamSource source = () -> {
 
-            public InputStream getStream() {
-
-                InputStream input = null;
-                try {
-                    input = new FileInputStream(inputfile);
-                } catch (FileNotFoundException ex) {
-                    logger.error(ex);
-                    logger.catching(ex);
-                }
-                return input;
-
+            InputStream input = null;
+            try {
+                input = new FileInputStream(inputfile);
+            } catch (FileNotFoundException ex) {
+                logger.error(ex);
+                logger.catching(ex);
             }
+            return input;
+
         };
         StreamResource resource = new StreamResource(source, inputfile.getName());
         return resource;
@@ -1162,8 +1168,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr = insertTestPayments(((DateField) paymentsTable.getContainerProperty(itemId,
                                 myUI.getMessage(SptMessages.Date)).getValue()).getValue(), "");
                     }
+                    tf.removeAllValidators();
                     if (tr != null) {
-                        tf.removeAllValidators();
                         if ((Integer) ((ComboBox) paymentsTable.getContainerProperty(itemId,
                                 myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getValue() == 3) {
                             tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance)
@@ -1180,7 +1186,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         + " $ (" + Settings.df.format(tr.getDate()) + ")",
                                 Notification.Type.ERROR_MESSAGE);
                     } else {
-                        tf.removeAllValidators();
                         tf.addValidator(new DoubleRangeValidator(
                                 myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
                     }
@@ -1223,8 +1228,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     studInfo.setCtr_debt(debt);
                     if (discountsTable.size() > 0) {
                         Iterator iter = discountsTable.getItemIds().iterator();
-                        String allDists = "";
-                        String dis = "";
+                        StringBuilder allDists = new StringBuilder();
+                        String dis ;
                         double count_amount = (Double) (contractCB.getContainerProperty(contractCB.getValue(),
                                 myUI.getMessage(SptMessages.Amount)).getValue());
                         while (iter.hasNext()) {
@@ -1234,7 +1239,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.Title)).getValue().toString()));
                             dis = dis.substring(0, dis.indexOf(" - "));
-                            allDists += dis;
+                            allDists.append(dis);
 
                             if (((Integer) ((ComboBox) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                     .getContainerProperty(((ComboBox) discountsTable
@@ -1244,10 +1249,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     .getContainerProperty(((ComboBox) discountsTable
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 3)) {
-                                allDists += " - " + ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue().toString() + "% (" + Settings.dFormat.format(count_amount
+                                allDists.append(" - ").append(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
+                                        .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat.format(count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()) / 100) + "$)";
+                                        .getPropertyDataSource().getValue()) / 100)).append("$)");
                                 count_amount -= count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100;
@@ -1259,36 +1264,36 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     .getContainerProperty(((ComboBox) discountsTable
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 4)) {
-                                allDists += "(" + Settings.dFormat.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()) + "$)";
+                                allDists.append("(").append(Settings.dFormat.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
+                                        .getPropertyDataSource().getValue())).append("$)");
                                 count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
                             }
 
                             if (iter.hasNext()) {
-                                allDists += ", ";
+                                allDists.append(", ");
                             }
                         }
-                        studInfo.setCtr_discountStr(allDists);
-                        studInfo.setCtr_discountPerc(discountsStr);
+                        studInfo.setCtr_discountStr(allDists.toString());
+                        studInfo.setCtr_discountPerc(discountsStr.toString());
                     }
                     if (correctionsTable.size() > 0) {
                         Iterator iter = correctionsTable.getItemIds().iterator();
-                        String allCorrections = "";
-                        String dis = "";
+                        StringBuilder allCorrections = new StringBuilder();
+                        String dis;
                         while (iter.hasNext()) {
                             Object next = iter.next();
                             dis = ((((ComboBox) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue())
                                     .getContainerProperty(((ComboBox) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.Title)).getValue().toString()));
-                            allCorrections += dis;
-                            allCorrections += " (" + Settings.dFormat.format(((TextField) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                    .getPropertyDataSource().getValue()) + "$)";
+                            allCorrections.append(dis);
+                            allCorrections.append(" (").append(Settings.dFormat.format(((TextField) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
+                                    .getPropertyDataSource().getValue())).append("$)");
                             if (iter.hasNext()) {
-                                allCorrections += ", ";
+                                allCorrections.append(", ");
                             }
                         }
-                        studInfo.setCtr_Correction(allCorrections);
+                        studInfo.setCtr_Correction(allCorrections.toString());
                     }
                     studInfo.setCtr_init_payment(instFirstPay);
                     studInfo.setCtr_k_oplate(kOplate);
@@ -1369,7 +1374,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         } else if (property instanceof CheckBox) {
             if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
-                familyTableCheck((Boolean) property.getValue() == true, property);
+                familyTableCheck((Boolean) property.getValue(), property);
             }
         } else if (property instanceof ComboBox && ((ComboBox) property).getId() != null
                 && ((ComboBox) property).getId().equals(Settings.discount_type_id)) {
@@ -1453,11 +1458,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         while (iterator.hasNext()) {
             Component component = iterator.next();
             TabSheet.Tab tab = tabs.getTab(component);
-            if (tab == tabs.getTab(tabs.getSelectedTab())) {
-                tab.setEnabled(true);
-            } else {
-                tab.setEnabled(false);
-            }
+            tab.setEnabled(tab == tabs.getTab(tabs.getSelectedTab()));
         }
     }
 
@@ -1896,132 +1897,117 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
         upl.addStyleName(ValoTheme.BUTTON_TINY);
         upl.setButtonCaption(caption);
-        upl.addStartedListener(new Upload.StartedListener() {
-            @Override
-            public void uploadStarted(Upload.StartedEvent event) {
-                // This method gets called immediatedly after upload is started
+        upl.addStartedListener((Upload.StartedListener) event -> {
+            // This method gets called immediatedly after upload is started
 
-                buildUploadWindow();
-                myUI.addWindow(statusWindow);
-                statusWindow.setClosable(false);
+            buildUploadWindow();
+            myUI.addWindow(statusWindow);
+            statusWindow.setClosable(false);
 
-                uploadProgressBar.setValue(0f);
-                uploadProgressBar.setVisible(true);
-                UI.getCurrent().setPollInterval(500); // hit server frequantly to get
-                cancelButton.setVisible(true);
-                cancelButton.addClickListener((Button.ClickListener) clickEvent -> {
-                    try {
-                        upl.interruptUpload();
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                        logger.catching(ex);
-                    }
-                });
-            }
+            uploadProgressBar.setValue(0f);
+            uploadProgressBar.setVisible(true);
+            UI.getCurrent().setPollInterval(500); // hit server frequantly to get
+            cancelButton.setVisible(true);
+            cancelButton.addClickListener((Button.ClickListener) clickEvent -> {
+                try {
+                    upl.interruptUpload();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
+                }
+            });
         });
 
-        upl.addProgressListener(new Upload.ProgressListener() {
-            @Override
-            public void updateProgress(long readBytes, long contentLength) {
-                // This method gets called several times during the update
-                if ((isPhoto && !mimeType.equals("image/jpeg")) || (!mimeType.equals("image/jpeg") && !mimeType.equals("application/pdf"))) {
-                    try {
-                        upl.interruptUpload();
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                        logger.catching(ex);
-                    }
-                    if (isPhoto) {
-                        photoName = null;
-                        Notification.show(myUI.getMessage(SptMessages.OnlyJpg), Notification.Type.WARNING_MESSAGE);
-                    } else {
-                        fileName = null;
-                        Button b = (Button) upl.getData();
-                        b.setEnabled(false);
-                        b.setData(null);
-                        Notification.show(myUI.getMessage(SptMessages.OnlyJpgOrPdf), Notification.Type.WARNING_MESSAGE);
-                    }
-                } else if (contentLength >= 15000000) {
-                    try {
-                        upl.interruptUpload();
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                        logger.catching(ex);
-                    }
+        upl.addProgressListener((Upload.ProgressListener) (readBytes, contentLength) -> {
+            // This method gets called several times during the update
+            if ((isPhoto && !mimeType.equals("image/jpeg")) || (!mimeType.equals("image/jpeg") && !mimeType.equals("application/pdf"))) {
+                try {
+                    upl.interruptUpload();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
+                }
+                if (isPhoto) {
                     photoName = null;
+                    Notification.show(myUI.getMessage(SptMessages.OnlyJpg), Notification.Type.WARNING_MESSAGE);
+                } else {
                     fileName = null;
                     Button b = (Button) upl.getData();
                     b.setEnabled(false);
                     b.setData(null);
-                    Notification.show(myUI.getMessage(SptMessages.Maxsize), Notification.Type.WARNING_MESSAGE);
-                } else {
-                    uploadProgressBar.setValue(new Float(readBytes / (float) contentLength));
+                    Notification.show(myUI.getMessage(SptMessages.OnlyJpgOrPdf), Notification.Type.WARNING_MESSAGE);
                 }
-            }
-        });
-
-        upl.addSucceededListener(new Upload.SucceededListener() {
-            @Override
-            public void uploadSucceeded(Upload.SucceededEvent event) {
-                // This method gets called when the upload finished successfully
-                if (isPhoto) {
-                    try {
-                        Thumbnails.of(myFile).size(200, 200).toFile(myFile);
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                        logger.catching(ex);
-                    }
-                    photoEmb.setSource(new FileResource(myFile));
-                } else {
-                    Button b = (Button) upl.getData();
-                    b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-                    b.addStyleName(ValoTheme.BUTTON_SMALL);
-                    Attachment attachment = null;
-                    try {
-                        attachment = new Attachment();
-                        attachment.setUnique_name(myFile.getName());
-                        attachment.setExtension(mimeType);
-                        attachment.setName(fileName);
-                        DbAttachment dbCon = new DbAttachment();
-                        dbCon.connect();
-                        int id = dbCon.exec_insert(attachment);
-                        if (id != 0) {
-                            attachment.setId(id);
-                        }
-                        dbCon.close();
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                        logger.catching(ex);
-                    }
-                    b.setData(attachment);
-                }
-                Notification.show(myUI.getMessage(SptMessages.UploadedSuccessfully),
-                        Notification.Type.TRAY_NOTIFICATION);
-            }
-        });
-
-        upl.addFailedListener(new Upload.FailedListener() {
-            @Override
-            public void uploadFailed(Upload.FailedEvent event) {
-                if (statusWindow != null) {
-                    statusWindow.close();
-                }
-                Notification.show(myUI.getMessage(SptMessages.UploadFailed), Notification.Type.ERROR_MESSAGE);
+            } else if (contentLength >= 15000000) {
                 try {
-                    myFile.delete();
+                    upl.interruptUpload();
                 } catch (Exception ex) {
                     logger.error(ex);
-                    ex.printStackTrace();
+                    logger.catching(ex);
                 }
+                photoName = null;
+                fileName = null;
+                Button b = (Button) upl.getData();
+                b.setEnabled(false);
+                b.setData(null);
+                Notification.show(myUI.getMessage(SptMessages.Maxsize), Notification.Type.WARNING_MESSAGE);
+            } else {
+                uploadProgressBar.setValue(readBytes / (float) contentLength);
             }
         });
 
-        upl.addFinishedListener(new Upload.FinishedListener() {
-            @Override
-            public void uploadFinished(Upload.FinishedEvent event) {
-                if (statusWindow != null) {
-                    statusWindow.close();
+        upl.addSucceededListener((Upload.SucceededListener) event -> {
+            // This method gets called when the upload finished successfully
+            if (isPhoto) {
+                try {
+                    Thumbnails.of(myFile).size(200, 200).toFile(myFile);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
                 }
+                photoEmb.setSource(new FileResource(myFile));
+            } else {
+                Button b = (Button) upl.getData();
+                b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+                b.addStyleName(ValoTheme.BUTTON_SMALL);
+                Attachment attachment = null;
+                try {
+                    attachment = new Attachment();
+                    attachment.setUnique_name(myFile.getName());
+                    attachment.setExtension(mimeType);
+                    attachment.setName(fileName);
+                    DbAttachment dbCon = new DbAttachment();
+                    dbCon.connect();
+                    int id = dbCon.exec_insert(attachment);
+                    if (id != 0) {
+                        attachment.setId(id);
+                    }
+                    dbCon.close();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
+                }
+                b.setData(attachment);
+            }
+            Notification.show(myUI.getMessage(SptMessages.UploadedSuccessfully),
+                    Notification.Type.TRAY_NOTIFICATION);
+        });
+
+        upl.addFailedListener((Upload.FailedListener) event -> {
+            if (statusWindow != null) {
+                statusWindow.close();
+            }
+            Notification.show(myUI.getMessage(SptMessages.UploadFailed), Notification.Type.ERROR_MESSAGE);
+            try {
+                myFile.delete();
+            } catch (Exception ex) {
+                logger.error(ex);
+                ex.printStackTrace();
+            }
+        });
+
+        upl.addFinishedListener((Upload.FinishedListener) event -> {
+            if (statusWindow != null) {
+                statusWindow.close();
             }
         });
         return upl;
@@ -2113,7 +2099,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     public TextField createTextfieldDouble(Double value, String description, String itemId) {
-        ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
+        ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         TextField tf = new TextField(property);
         tf.setDescription(description);
         tf.setRequired(true);
@@ -2132,7 +2118,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     public TextField createTextfieldDisc(Double value, Double maxValue, String description, String itemId, boolean isDisabled) {
-        ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
+        ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         TextField tf = new TextField(property);
         tf.setDescription(description);
         tf.setRequired(true);
@@ -2227,11 +2213,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
         cb.setNullSelectionAllowed(false);
         cb.setData(itemId);
-        if (setDefYear == true) {
+        if (setDefYear) {
             cb.setValue(myUI.getUser().getCurrent_year().getId());
-        } else if (setDefPayCatType == true) {
+        } else if (setDefPayCatType) {
             cb.setValue(2);
-        } else if (setDefPayType == true) {
+        } else if (setDefPayType) {
             cb.setValue(1);
         } else {
             cb.setValue(value);
@@ -2346,12 +2332,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         comboMCB.setImmediate(true);
         comboMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         comboMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
-        comboMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        comboMCB.setShowSelectAllButton((filter, page) -> true);
         try {
             DbAccessories dba = new DbAccessories();
             dba.connect();
@@ -2380,7 +2361,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 while (iter.hasNext()) {
                     Object next = iter.next();
                     if (((CheckBox) relativesTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Responsible)).getValue()).getValue() == true) {
+                            myUI.getMessage(SptMessages.Responsible)).getValue()).getValue()) {
                         counter++;
                     }
                     if (!((TextField) relativesTable.getItem(next).getItemProperty(
@@ -2662,14 +2643,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbsp.connect();
             Iterator iter = ((IndexedContainer) installmentTable
                     .getContainerDataSource()).getItemIds().iterator();
-            int z;
             while (iter.hasNext()) {
 
                 Object next = iter.next();
                 StudentInstallmentPlan ip = getInstPlan(0, student_id, installmentTable.getItem(next));
                 if ((Integer) installmentTable.getContainerProperty(next,
                         Settings.status_id).getValue() != 0) {
-                    z = dbip.exec_insert(ip);
+                     dbip.exec_insert(ip);
                 }
             }
             diff = dbsp.exec_get_difference(student_id, myUI.getUser().getCurrent_year().getId());
@@ -2748,7 +2728,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         rel.setPassport(((TextField) item.getItemProperty(
                 myUI.getMessage(SptMessages.Passport)).getValue()).getValue());
         if (((CheckBox) item.getItemProperty(
-                myUI.getMessage(SptMessages.Responsible)).getValue()).getValue() == true) {
+                myUI.getMessage(SptMessages.Responsible)).getValue()).getValue()) {
             rel.setIs_main(1);
         } else {
             rel.setIs_main(0);
@@ -3188,7 +3168,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 createButton(myUI.getMessage(SptMessages.DeleteButton), id,
                         Settings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(new Date()));
-        item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(myUI.getUser().getFullname());
+        item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(myUI.getUser().getFullName());
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                 createTextfieldNote(null, myUI.getMessage(SptMessages.Note), id));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
@@ -3298,7 +3278,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             left -= s;
             for (int i = 0; i < Integer.parseInt(divideTF.getValue()); i++) {
-                Double divSum = left / Integer.parseInt(divideTF.getValue());
+                double divSum = left / Integer.parseInt(divideTF.getValue());
                 Calendar dateLimit = Calendar.getInstance();
                 dateLimit.setTimeInMillis(Settings.INSTALLMENT_DATE_LIMIT);
                 Calendar cal = Calendar.getInstance();
@@ -3335,10 +3315,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private Set<?> convertStrToSet(String str) {
         String[] strArr = str.split(",");
-        HashSet<String> hs = new HashSet<String>(strArr.length);
-        for (int i = 0; i < strArr.length; i++) {
-            hs.add(strArr[i]);
-        }
+        HashSet<String> hs = new HashSet< >(strArr.length);
+        Collections.addAll(hs, strArr);
         return hs;
     }
 
@@ -3388,7 +3366,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(e);
         }
 
-        ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
+        ObjectProperty<Double> property = new ObjectProperty< >(0.0);
         initialPaymentTF = new TextField(myUI.getMessage(SptMessages.InitialPayment), property);
         initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.01, null));
         initialPaymentTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -3526,7 +3504,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private Boolean validateCorrectionsTable() {
         if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
-            ArrayList<Integer> correction_ids = new ArrayList<Integer>();
+            ArrayList<Integer> correction_ids = new ArrayList<>();
             Iterator iter = correctionCont.getItemIds().iterator();
             while (iter.hasNext()) {
                 Object obj = iter.next();
@@ -3694,13 +3672,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             contractCB.setValue(contract_id);
             contractCB.addValueChangeListener(this);
         }
+        initialPaymentTF.removeValueChangeListener(this);
         if (ip == null) {
-            initialPaymentTF.removeValueChangeListener(this);
             initialPaymentTF.setValue(null);
             initialPaymentTF.addValueChangeListener(this);
             initialPaymentTF.setData(null);
         } else {
-            initialPaymentTF.removeValueChangeListener(this);
             initialPaymentTF.getPropertyDataSource().setValue(ip.getAmount());
             initialPaymentTF.addValueChangeListener(this);
             initialPaymentTF.setData(ip);
@@ -3783,7 +3760,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     private void recount() {
         StudentContract c = new StudentContract();
-        StudentPayment sp = new StudentPayment();
+        StudentPayment sp ;
         IndexedContainer discCont = new IndexedContainer();
         try {
             DbStudentContract dbsc = new DbStudentContract();
@@ -3813,37 +3790,37 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
-        discountsStr = "";
+        discountsStr = new StringBuilder() ;
         Iterator iter = discCont.getItemIds().iterator();
         while (iter.hasNext()) {
             Object next = iter.next();
             if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 1) {
-                discountsStr += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Amount)).getValue()) + "%";
+                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Amount)).getValue())).append("%");
                 if (iter.hasNext()) {
-                    discountsStr += ", ";
+                    discountsStr.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 2) {
-                discountsStr += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Amount)).getValue()) + "$";
+                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Amount)).getValue())).append("$");
                 if (iter.hasNext()) {
-                    discountsStr += ", ";
+                    discountsStr.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 3) {
-                discountsStr += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.FreeAmount)).getValue()) + "%";
+                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("%");
                 if (iter.hasNext()) {
-                    discountsStr += ", ";
+                    discountsStr.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 4) {
-                discountsStr += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.FreeAmount)).getValue()) + "$";
+                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("$");
                 if (iter.hasNext()) {
-                    discountsStr += ", ";
+                    discountsStr.append(", ");
                 }
             }
         }
@@ -4376,14 +4353,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     dbat.exec_delete(Settings.dbColumnStudent_payments_id, delPayIds.get(i),
                             dbat.getConnection());//delete transaction
                 }
-                AccTransaction tr = null;
+                AccTransaction tr ;
                 Iterator iter = paymentsTable.getItemIds().iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
                     if (!next.toString().equals(payment_id)) {
                         StudentPayment sp = getPayment(0, 0, paymentsTable.getItem(next));
                         tr = new AccTransaction();
-                        tr.setAmount(Double.valueOf(((TextField) paymentsTable.getContainerProperty(next,
+                        tr.setAmount(Double.parseDouble(((TextField) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getValue()));
                         tr.setDate(sp.getModification_date());
                         tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,

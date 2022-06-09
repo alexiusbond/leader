@@ -26,7 +26,7 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
     public ChangeUserData(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        name = myUI.getUser().getFullname();
+        name = myUI.getUser().getFullName();
 //        surname = myUI.getUser().getSurname();
 
         setSpacing(true);

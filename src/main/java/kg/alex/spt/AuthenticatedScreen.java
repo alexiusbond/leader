@@ -194,7 +194,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     public void updateInfo() {
         infoLabel.setValue("<i class=\"fa fa-user fa-inverse\"></i><b> "
                 + myUI.getMessage(SptMessages.LogInAsLabel) + ": </b>"
-                + myUI.getUser().getFullname());
+                + myUI.getUser().getFullName());
     }
 
     private MenuBar buildMenu() {

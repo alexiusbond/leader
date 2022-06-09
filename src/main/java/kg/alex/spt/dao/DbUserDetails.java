@@ -26,16 +26,17 @@ public class DbUserDetails extends BaseDb {
 
     public UserDetails execSQLUserInfo(String login) throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
-        String sql = "select e.id, ord.working_status_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
+        String sql = "select e.id, ord.working_status_id, eb.hr_branch_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
                 + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, "
                 + "y.id, y.name, y2.id, y2.name, sch.transactions_start_date "
                 + "from employee as e "
-                + "left join hr_employee_order as eo on eo.employee_id=e.id and eo.to_date IS NULL "
-                + "left join hr_orders as ord on ord.id=eo.hr_orders_id "
-                + "left join school as sch on eo.school_id=sch.id "
-                + "left join year as y on sch.year_id=y.id "
-                + "left join year as y2 on e.year_id=y2.id "
-                + "where e.login=? and ord.working_status_id IS NOT NULL";
+                + "left join hr_employee_branch as eb on eb.employee_id = e.id and eb.hr_importance_id = 1 "
+                + "left join hr_employee_order as eo on eo.employee_id = e.id and eo.to_date IS NULL "
+                + "left join hr_orders as ord on ord.id = eo.hr_orders_id "
+                + "left join school as sch on eo.school_id = sch.id "
+                + "left join year as y on sch.year_id = y.id "
+                + "left join year as y2 on e.year_id = y2.id "
+                + "where e.login = ? and ord.working_status_id IS NOT NULL";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, login);
@@ -44,13 +45,14 @@ public class DbUserDetails extends BaseDb {
         while (result.next()) {
             user.setId(result.getInt("e.id"));
             user.setLogin(result.getString("login"));
-            user.setFullname(result.getString("fullname"));
+            user.setFullName(result.getString("fullname"));
             user.setWorking_status_id(result.getInt("ord.working_status_id"));
             user.setSchool_id(result.getInt("eo.school_id"));
             user.setSchool_type_id(result.getInt("sch.school_type_id"));
             user.setSchool_name(result.getString("sch.name_ru"));
             user.setSchool_code(result.getString("sch.code"));
             user.setSchool_logo(result.getString("sch.photo"));
+            user.setBranch_id(result.getInt("eb.hr_branch_id"));
             if (currentUser.hasRole(Settings.rnSapatSecretary)) {
                 user.setCurrent_year(new Definition(result.getInt("y2.id"), result.getString("y2.name")));
             } else {

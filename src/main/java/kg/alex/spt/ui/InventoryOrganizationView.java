@@ -650,7 +650,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         inv.setActivity_status_id(2);
         inv.setSchool_id(myUI.getUser().getSchool_id());
         inv.setEmployee_id(myUI.getUser().getId());
-        inv.setEmployee(myUI.getUser().getFullname());
+        inv.setEmployee(myUI.getUser().getFullName());
         inv.setId(inv_id);
         return inv;
     }

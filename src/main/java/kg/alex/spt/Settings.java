@@ -173,7 +173,6 @@ public class Settings implements Serializable {
     public static final String hr_positionTable = "hr_position";
     public static final String positionTable = "position";
     public static final String dbStudent = "student";
-    public static final String dbStudentContract = "student_contract";
     public static final String dbStudentDiscount = "student_discount";
     public static final String dbDiscount = "discount";
     public static final String dbEmployee = "employee";
@@ -210,7 +209,6 @@ public class Settings implements Serializable {
     public static final String cnSendOrderView = "SendOrderView";
     public static final String cnClassNameDefinitionView = "ClassNameDefinitionView";
     public static final String cnBlockDefinitionView = "BlockDefinitionView";
-    public static final String cnRoomDefinitionView = "RoomDefinitionView";
     public static final String cnContractDefinitionView = "ContractDefinitionView";
     public static final String cnLeavingReasonsDefinitionView = "LeavingReasonsDefinitionView";
     public static final String cnDefinitionView = "DefinitionView";
@@ -258,7 +256,6 @@ public class Settings implements Serializable {
     public static final String cnHRReportsView = "HRReportsView";
     public static final String actAdd = "добавление";
     public static final String contract_info = "информация о контракте";
-    public static final String can_be_advisor_info = "информация о кураторстве";
     public static final String actReadMessages = "просмотр всех сообщений школы";
     public static final String actModify = "изменение";
     public static final String prmChangeOldTransactions = "изменение старых записей";
@@ -278,6 +275,7 @@ public class Settings implements Serializable {
     public static final String prmContractVisible = "видимость контракта";
     public static final String prmOrganizeLessons = "организация уроков";
     public static final String prmOrganizeSupervision = "назначение кураторства";
+    public static final String prmViewAllEmployees = "видимость всех сотрудников";
     public static final String actCopy = "копирование";
     public static final String prmPlanPayments = "план оплат и оплаты";
     public static final String prmClassPayments = "оплаты по классам";
@@ -362,17 +360,16 @@ public class Settings implements Serializable {
     }
 
     public static StringToDoubleConverter getStringToDoubleConverter() {
-        StringToDoubleConverter plainConverter = new StringToDoubleConverter() {
+        return new StringToDoubleConverter() {
             @Override
             protected java.text.NumberFormat getFormat(Locale locale) {
                 return getNumberFormat();
             }
         };
-        return plainConverter;
     }
 
     public static StringToIntegerConverter getStringToIntegerConverter() {
-        StringToIntegerConverter plainConverter = new StringToIntegerConverter() {
+        return new StringToIntegerConverter() {
             @Override
             protected java.text.NumberFormat getFormat(Locale locale) {
                 NumberFormat format = super.getFormat(Locale.ENGLISH);
@@ -381,7 +378,6 @@ public class Settings implements Serializable {
                 return format;
             }
         };
-        return plainConverter;
     }
 
     public static Set<?> convertToSet(Collection<?> coll) {
@@ -396,10 +392,10 @@ public class Settings implements Serializable {
 
     public static Set<?> convertToSet(String str) {
         String[] arr = str.split(",");
-        HashSet<Integer> hs = new HashSet<Integer>();
+        HashSet<Integer> hs = new HashSet<>();
         for (String curVal : arr) {
-            Object next = Integer.parseInt(curVal);
-            hs.add((Integer) next);
+            Integer next = Integer.parseInt(curVal);
+            hs.add(next);
         }
         return hs;
     }
@@ -442,6 +438,7 @@ public class Settings implements Serializable {
         }
         return set;
     }
+
     public static double round(double value, int places) {
         if (places < 0) {
             throw new IllegalArgumentException();
@@ -452,9 +449,10 @@ public class Settings implements Serializable {
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
+
     public static String generateYearPostfix(int age) {
         int lastChar = Integer.parseInt(("" + age).substring(("" + age).length() - 1));
-        String str = "";
+        String str;
         if (age == 11) str = "лет";
         else if (("" + age).endsWith("1")) str = "год";
         else if (age > 11 && age < 15) str = "лет";
@@ -462,9 +460,10 @@ public class Settings implements Serializable {
         else str = "лет";
         return str;
     }
+
     public static String generateMonthPostfix(int age) {
         int lastChar = Integer.parseInt(("" + age).substring(("" + age).length() - 1));
-        String str = "";
+        String str;
         if (age == 11) str = "месяцев";
         else if (("" + age).endsWith("1")) str = "месяц";
         else if (age > 11 && age < 15) str = "месяцев";
@@ -472,6 +471,7 @@ public class Settings implements Serializable {
         else str = "месяцев";
         return str;
     }
+
     public static String transliterate(String message) {
         char[] abcCyr = {' ', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
         String[] abcLat = {" ", "a", "b", "v", "g", "d", "e", "e", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "h", "ts", "ch", "sh", "sch", "", "i", "", "e", "ju", "ja", "A", "B", "V", "G", "D", "E", "E", "Zh", "Z", "I", "Y", "K", "L", "M", "N", "O", "P", "R", "S", "T", "U", "F", "H", "Ts", "Ch", "Sh", "Sch", "", "I", "", "E", "Ju", "Ja", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -485,6 +485,7 @@ public class Settings implements Serializable {
         }
         return builder.toString();
     }
+
     public static IndexedContainer copyContainer(Container source) {
         IndexedContainer cont = new IndexedContainer();
 

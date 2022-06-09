@@ -772,7 +772,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             item = incomesCont.addItemAt(0, id);
         } else {
             item = expensesCont.addItemAt(0, id);
-            item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullname());
+            item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
         }
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(today);
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(1);
@@ -925,7 +925,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                         Notification.Type.HUMANIZED_MESSAGE);
                 Item item = grid.getContainerDataSource().getItem(itemId);
-                item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullname());
+                item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
                 schoolAcc = dbCon.exec_get_ttls(myUI.getUser().getSchool_id(),
                         fromDateDF.getValue(), tillDateDF.getValue(), null);
                 recount();

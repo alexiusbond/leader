@@ -810,7 +810,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                 !currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate), null));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                 createTextfieldDouble(t.getAmount(), myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Incomes)));
-        item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullname());
+        item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
         item.getItemProperty(Settings.old_amount).setValue(t.getAmount());
         item.getItemProperty(Settings.old_rate).setValue(t.getCurrency_rate());
         item.getItemProperty(Settings.old_currency).setValue(t.getCurrency_id());
@@ -844,7 +844,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                 !currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate), null));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                 createTextfieldDouble(t.getAmount(), myUI.getMessage(SptMessages.Amount), id, false, false, myUI.getMessage(SptMessages.Expenses)));
-        item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullname());
+        item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
         item.getItemProperty(Settings.old_amount).setValue(t.getAmount());
         item.getItemProperty(Settings.old_rate).setValue(t.getCurrency_rate());
         item.getItemProperty(Settings.old_currency).setValue(t.getCurrency_id());
@@ -1050,7 +1050,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                             ((ComboBox) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     incomesTable.getContainerProperty(item_id, Settings.old_date).setValue(
                             ((DateField) incomesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Date)).getValue()).getValue());
-                    incomesTable.getContainerProperty(item_id, Settings.from_employee_id).setValue(myUI.getUser().getFullname());
+                    incomesTable.getContainerProperty(item_id, Settings.from_employee_id).setValue(myUI.getUser().getFullName());
                 } else if (expensesTable.getContainerProperty(item_id, Settings.button) != null) {
                     expensesTable.getContainerProperty(item_id, Settings.old_amount).setValue(
                             Settings.dFormat.parse(((TextField) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Amount)).getValue()).getValue()));
@@ -1058,7 +1058,7 @@ public class TransactionsView extends GridLayout implements Button.ClickListener
                             Settings.dFormat.parse(((TextField) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Rate)).getValue()).getValue()));
                     expensesTable.getContainerProperty(item_id, Settings.old_currency).setValue(
                             (Integer) ((ComboBox) expensesTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
-                    expensesTable.getContainerProperty(item_id, Settings.from_employee_id).setValue(myUI.getUser().getFullname());
+                    expensesTable.getContainerProperty(item_id, Settings.from_employee_id).setValue(myUI.getUser().getFullName());
                 }
             } else {
                 AccTransaction accTr = getTransaction(item_id);

@@ -22,7 +22,6 @@ public class DbLog extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int days_interval, String logType) throws SQLException {
-        
 
         String sql = "select dl.id, concat(e.name, ' ', e.surname) as fullname, dl.table_name, dl.column_name, dl.action, "
                 + "dl.old_field, dl.new_field, "
