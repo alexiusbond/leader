@@ -24,7 +24,7 @@ public class DbEmployeeSpouse extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, es.getEmployee_id());
         stat.setInt(2, es.getHealth_status_id());
-        stat.setString(3, es.getFullname());
+        stat.setString(3, es.getFullName());
         if (!es.getPhone().equals("") && es.getPhone() != null) {
             stat.setString(4, es.getPhone());
         } else {
@@ -48,7 +48,7 @@ public class DbEmployeeSpouse extends BaseDb {
                 + "hr_health_status_id=?, fullname=?, phone=?, health_notes=? WHERE employee_id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, es.getHealth_status_id());
-        stat.setString(2, es.getFullname());
+        stat.setString(2, es.getFullName());
         if (!es.getPhone().equals("") && es.getPhone() != null) {
             stat.setString(3, es.getPhone());
         } else {
@@ -69,13 +69,12 @@ public class DbEmployeeSpouse extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         EmployeeSpouse ec = null;
-        while (result.next()) {
+        if (result.next()) {
             ec = new EmployeeSpouse();
-            ec.setFullname(result.getString("es.fullname"));
+            ec.setFullName(result.getString("es.fullname"));
             ec.setPhone(result.getString("es.phone"));
             ec.setHealth_notes(result.getString("es.health_notes"));
             ec.setHealth_status_id(result.getInt("hs.id"));
-            break;
         }
         return ec;
     }

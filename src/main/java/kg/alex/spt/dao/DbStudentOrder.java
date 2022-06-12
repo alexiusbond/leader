@@ -350,7 +350,7 @@ public class DbStudentOrder extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     result.getString("date(so.modification_date)"));
             ol.nets += result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount");
-            ol.paids += result.getDouble("sc.net_payments");
+            ol.paid_amounts += result.getDouble("sc.net_payments");
             item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
                     result.getDouble("sc.debt") + result.getDouble("sc.contr_with_disc") + result.getDouble("vc.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(

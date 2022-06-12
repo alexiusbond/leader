@@ -34,7 +34,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.tepi.filtertable.FilterTreeTable;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
@@ -44,20 +43,18 @@ public class BalanceReport implements Button.ClickListener,
         Property.ValueChangeListener, Serializable {
 
     static final Logger logger = LogManager.getLogger(BalanceReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllAssertsBtn, deselectAllAssertsBtn,
             selectAllDebtsBtn, deselectAllDebtsBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private DateField fromDateDF, tillDateDF;
     public FormattedTreeTable assertsDataTable, debtsDataTable;
     public FilterTreeTable assertsCategoriesTable, debtsCategoriesTable;
 
     private Label assertsTtlLab, debtsTtlLab, ttlLab;
     private HorizontalLayout infoLay;
-    private SchoolAccounting schoolAcc;
-    private TabSheet tabSheet;
-    private Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
+    private final TabSheet tabSheet;
+    private final Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
     private FileDownloader fd;
 
     public BalanceReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -78,7 +75,7 @@ public class BalanceReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 6);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -320,7 +317,7 @@ public class BalanceReport implements Button.ClickListener,
                         try {
                             DbTransfers dbtr = new DbTransfers();
                             dbtr.connect();
-                            schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
+                            SchoolAccounting schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
                                     end_date.getTime(), Settings.convertCollectionToStr(catIds));
                             assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " +
                                     Settings.dFormat.format(schoolAcc.getTotal_income()) + "$</b>");
@@ -405,7 +402,7 @@ public class BalanceReport implements Button.ClickListener,
                     } else {
                         row = sheet.createRow(rowNum);
                     }
-                    Iterator propIter = tables.get(k).getContainerPropertyIds().iterator();
+                    Iterator<?> propIter = tables.get(k).getContainerPropertyIds().iterator();
                     while (propIter.hasNext()) {
                         Object nextProp = propIter.next();
                         cell = row.createCell(colNum);
@@ -436,9 +433,7 @@ public class BalanceReport implements Button.ClickListener,
                         colNum++;
                     }
                     colNum = k * 6 + 1;
-                    Iterator itemsIter = tables.get(k).getItemIds().iterator();
-                    while (itemsIter.hasNext()) {
-                        Object nextItem = itemsIter.next();
+                    for (Object nextItem : tables.get(k).getItemIds()) {
                         if (sheet.getRow(rowNum) != null) {
                             row = sheet.getRow(rowNum);
                         } else {
@@ -515,13 +510,8 @@ public class BalanceReport implements Button.ClickListener,
                 if (fd != null && excelBtn.getExtensions().contains(fd)) {
                     excelBtn.removeExtension(fd);
                 }
-                fd = new FileDownloader(new StreamResource(() -> {
-                    return new ByteArrayInputStream(baos.toByteArray());
-                }, myUI.getMessage(SptMessages.AccountingBalanceReport) + System.currentTimeMillis() + ".xls"));
+                fd = new FileDownloader(new StreamResource(() -> new ByteArrayInputStream(baos.toByteArray()), myUI.getMessage(SptMessages.AccountingBalanceReport) + System.currentTimeMillis() + ".xls"));
                 fd.extend(excelBtn);
-            } catch (FileNotFoundException e) {
-                logger.error(e);
-                logger.catching(e);
             } catch (IOException e) {
                 logger.error(e);
                 logger.catching(e);

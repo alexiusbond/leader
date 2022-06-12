@@ -102,8 +102,7 @@ public class DbClassName extends BaseDb {
         stat.setInt(4, cl.getStatus_id());
         stat.setInt(5, cl.getClass_type_id());
         stat.setInt(6, cl.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer execClass_sel(MyVaadinUI myUi, int scl_id) throws SQLException {
@@ -140,7 +139,7 @@ public class DbClassName extends BaseDb {
         return container;
     }
 
-    public IndexedContainer execClass_for_import(MyVaadinUI myUi, int scl_id) throws SQLException {
+    public IndexedContainer execClass_for_import(int scl_id) throws SQLException {
 
 
         String sql = "select cn.id, concat(cnu.name,' - ',cn.name) as cl_name "

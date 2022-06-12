@@ -89,13 +89,13 @@ public class DbEmployeeCertificate extends BaseDb {
             item.getItemProperty(Settings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
-                    edv.createTextfield(result.getString("ec.note"),
+                    edv.createTextField(result.getString("ec.note"),
                             myUI.getMessage(SptMessages.Note),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 250, true), false));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 250, true), false));
             item.getItemProperty(myUI.getMessage(SptMessages.GivenBy)).setValue(
-                    edv.createTextfield(result.getString("ec.given_by"),
+                    edv.createTextField(result.getString("ec.given_by"),
                             myUI.getMessage(SptMessages.GivenBy),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("ec.date_of_issue"),
                             myUI.getMessage(SptMessages.IssueDate), null,
@@ -103,28 +103,23 @@ public class DbEmployeeCertificate extends BaseDb {
             final ComboBox cb2 = edv.createCombobox(result.getInt("ec.certificate_id"),
                     myUI.getMessage(SptMessages.Certificate), Settings.dbCertificateTable, true);
             cb2.setNewItemsAllowed(true);
-            cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-                @Override
-                public void addNewItem(String newItemCaption) {
-                    try {
-                        DbDefinition dbd = new DbDefinition();
-                        dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbCertificateTable, false);
-                        dbd.close();
-                        if (id != 0) {
-                            Iterator iter = container.getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id);
-                                item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                cb2.setValue(id);
-                            }
+            cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id1 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbCertificateTable, false);
+                    dbd.close();
+                    if (id1 != 0) {
+                        for (Object next : container.getItemIds()) {
+                            Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                            cb2.setValue(id1);
                         }
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
                     }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             });
             item.getItemProperty(myUI.getMessage(SptMessages.Certificate)).setValue(cb2);

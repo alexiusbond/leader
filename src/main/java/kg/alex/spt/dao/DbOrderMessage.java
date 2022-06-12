@@ -16,15 +16,11 @@ import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.SendOrderView;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
 
 import java.sql.*;
 
 public class DbOrderMessage extends BaseDb {
-
-    static final Logger logger = LogManager.getLogger(DbOrderMessage.class);
 
     public DbOrderMessage() throws Exception {
         super();

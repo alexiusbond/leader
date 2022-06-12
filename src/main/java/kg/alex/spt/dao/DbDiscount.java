@@ -100,8 +100,7 @@ public class DbDiscount extends BaseDb {
         stat.setInt(3, d.getStatus_id());
         stat.setInt(4, d.getDisc_type_id());
         stat.setInt(5, d.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL_for_year_sel(MyVaadinUI myUi, int cur_year) throws SQLException {
@@ -129,8 +128,7 @@ public class DbDiscount extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, curr_year);
         stat.setInt(2, selected_year);
-        int st = stat.executeUpdate();
-        return st;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id) throws SQLException {

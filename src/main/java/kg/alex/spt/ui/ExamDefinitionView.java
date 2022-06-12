@@ -22,27 +22,25 @@ import org.apache.logging.log4j.Logger;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
 public class ExamDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(ExamDefinitionView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
     private TextField validityTF;
-    private Table dataTable;
+    private final Table dataTable;
     private TextField nameTF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
 
     public ExamDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.ValidityMonths),
                 myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
@@ -64,7 +62,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -135,7 +133,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 150, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 150, false));
         settingsLay.addComponent(nameTF);
 
         ObjectProperty<Integer> property = new ObjectProperty<>(0);
@@ -147,7 +145,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         validityTF.setConverter(Settings.getStringToIntegerConverter());
         validityTF.setWidth(Settings.PERCENTS100);
         validityTF.addValidator(new IntegerRangeValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, null));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, null));
         settingsLay.addComponent(validityTF);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
@@ -192,12 +190,9 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
@@ -208,7 +203,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
                     if (isNew) {
                         int id = dbCon.exec_insert(getExam(0));
                         if (id != 0) {
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -226,7 +221,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
                             logger.catching(e);
                         }
                         if (status != 0) {
-                            updateDatacontainer();
+                            updateDataContainer();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -237,7 +232,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
                     dbCon.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -301,7 +296,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
         statusSelect.setValue(null);
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -315,7 +310,7 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
@@ -370,12 +365,10 @@ public class ExamDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;

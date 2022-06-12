@@ -73,8 +73,7 @@ public class DbLeavingReasons extends BaseDb {
         stat.setString(1, c.getName());
         stat.setInt(2, c.getStatus_id());
         stat.setInt(3, c.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUi, boolean all) throws SQLException {

@@ -26,7 +26,7 @@ public class DbExam extends BaseDb {
         String sql = "select t.id from hr_exam as t where t.is_main=1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("t.id");
         }
         return 0;
@@ -39,8 +39,7 @@ public class DbExam extends BaseDb {
         sql = "update hr_exam set is_main = 1 where id = ?;";
         stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
 
@@ -98,8 +97,7 @@ public class DbExam extends BaseDb {
         stat.setInt(2, exam.getValidity());
         stat.setInt(3, exam.getStatus_id());
         stat.setInt(4, exam.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUi, int id) throws SQLException {

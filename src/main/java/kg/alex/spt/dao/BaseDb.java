@@ -12,13 +12,12 @@ import java.sql.SQLException;
 
 public class BaseDb {
 
-    protected String query;
     protected Connection dbCon;
     protected DataSource pool;
 
     /* Creates a new instance of BaseDb */
     public BaseDb() throws Exception {
-        Context env = null;
+        Context env;
         try {
             env = (Context) new InitialContext().lookup("java:comp/env");
             pool = (DataSource) env.lookup("jdbc/spt");

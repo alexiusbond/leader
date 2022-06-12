@@ -23,27 +23,25 @@ import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
 public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(AccCategoriesDefinitionView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox parentSelect, statusSelect;
-    private TreeTable dataTable;
+    private final TreeTable dataTable;
     private TextField nameTF, codeTF;
     private TextArea noteTF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
     private String parent_code = "";
     private Label parent_code_label;
     private VerticalLayout settingsLay;
-    private GridLayout codeLay;
-    private Subject currentUser = SecurityUtils.getSubject();
-    private int movement_type_id;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final int movement_type_id;
 
     public AccCategoriesDefinitionView(MyVaadinUI myUI, int movement_type_id) {
         this.myUI = myUI;
@@ -85,7 +83,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -97,7 +95,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
         settingsLay.setWidth(Settings.PERCENTS100);
-        codeLay = new GridLayout(2, 1);
+        GridLayout codeLay = new GridLayout(2, 1);
         codeLay.setMargin(false);
         codeLay.setSpacing(false);
         codeLay.setWidth(Settings.PERCENTS100);
@@ -160,7 +158,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 350, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false));
         settingsLay.addComponent(nameTF);
 
         parent_code_label = new Label();
@@ -175,7 +173,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         codeTF.setWidth(Settings.PERCENTS100);
         codeTF.addValidator(new RegexpValidator("[0-9]{1,20}", true,
-                myUI.getMessage(SptMessages.NotifWrongValue)));
+                myUI.getMessage(SptMessages.NotificationWrongValue)));
         codeLay.addComponent(codeTF, 1, 0);
         codeLay.setColumnExpandRatio(1, 1);
         settingsLay.addComponent(codeLay);
@@ -186,7 +184,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         noteTF.setRows(3);
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         noteTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 0, 200, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 0, 200, false));
         settingsLay.addComponent(noteTF);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
@@ -228,12 +226,9 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
@@ -276,7 +271,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
                     }
                     dbac.close();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -348,7 +343,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
     private void fillFields() {
         if ((Integer) dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.parent_id).getValue() != 0) {
-            parentSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+            parentSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                     Settings.parent_id).getValue());
         } else {
             parentSelect.setValue(null);
@@ -372,7 +367,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         }
         codeTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Code)).getValue().toString().replace((parent_code + "."), ""));
-        statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+        statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue());
     }
 
@@ -431,12 +426,10 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;

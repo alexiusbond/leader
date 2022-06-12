@@ -37,19 +37,32 @@ public class HRGeneralReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(HRGeneralReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private VerticalLayout leftLay;
-    private ComboBoxMultiselect schoolsMCB, positionsMCB, extraPositionsMCB, workingStatusesMCB, genderMCB, nationalityMCB,
-            citizenshipMCB, martialStatusMCB, canBeAdvisorMCB, contractTypeMCB, gradSchoolMCB, healthStatusMCB, examMCB,
-            mainBranchMCB, extraBranchMCB, universityMCB, workPlaceMCB, certificateMCB, languageMCB;
+    private final HorizontalSplitPanel splitPanel;
+    private ComboBoxMultiselect schoolsMCB;
+    private ComboBoxMultiselect positionsMCB;
+    private ComboBoxMultiselect extraPositionsMCB;
+    private ComboBoxMultiselect workingStatusesMCB;
+    private ComboBoxMultiselect genderMCB;
+    private ComboBoxMultiselect nationalityMCB;
+    private ComboBoxMultiselect citizenshipMCB;
+    private ComboBoxMultiselect martialStatusMCB;
+    private ComboBoxMultiselect canBeAdvisorMCB;
+    private ComboBoxMultiselect contractTypeMCB;
+    private ComboBoxMultiselect gradSchoolMCB;
+    private ComboBoxMultiselect healthStatusMCB;
+    private ComboBoxMultiselect examMCB;
+    private ComboBoxMultiselect mainBranchMCB;
+    private ComboBoxMultiselect universityMCB;
+    private ComboBoxMultiselect workPlaceMCB;
+    private ComboBoxMultiselect certificateMCB;
+    private ComboBoxMultiselect languageMCB;
     private ComboBox yearSelect;
-    private EnhancedFormatExcelExport excelReport;
     private Grid.FooterRow footer;
     private TextField nameTF, surnameTF;
 
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
     public Grid dataGrid;
 
     public HRGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -88,7 +101,7 @@ public class HRGeneralReport implements Button.ClickListener,
         p.setSizeFull();
         p.setStyleName(ValoTheme.PANEL_BORDERLESS);
 
-        leftLay = new VerticalLayout();
+        VerticalLayout leftLay = new VerticalLayout();
         leftLay.setWidth(Settings.PERCENTS100);
         leftLay.setSpacing(true);
 
@@ -309,7 +322,7 @@ public class HRGeneralReport implements Button.ClickListener,
         mainBranchMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         leftLay.addComponent(mainBranchMCB);
 
-        extraBranchMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.ExtraBranches));
+        ComboBoxMultiselect extraBranchMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.ExtraBranches));
         extraBranchMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
         extraBranchMCB.addValueChangeListener(this);
         extraBranchMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
@@ -493,7 +506,7 @@ public class HRGeneralReport implements Button.ClickListener,
                 myUI.addWindow(w);
                 w.setContent(t);
 
-                excelReport = new EnhancedFormatExcelExport(t, myUI.getMessage(SptMessages.HRGeneralReport));
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(t, myUI.getMessage(SptMessages.HRGeneralReport));
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.HRGeneralReport));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
@@ -537,29 +550,36 @@ public class HRGeneralReport implements Button.ClickListener,
             try {
                 DbEmployeeWork dbCon = new DbEmployeeWork();
                 dbCon.connect();
-                employeeExtraInfo.setWorkExperience(dbCon.execSQL_work_experience(emp_id, 1, false));
-                employeeExtraInfo.setWorkExperienceSapat(dbCon.execSQL_work_experience(emp_id, 1, true));
+                if (employeeExtraInfo != null) {
+                    employeeExtraInfo.setWorkExperience(dbCon.execSQL_work_experience(emp_id, 1, false));
+                    employeeExtraInfo.setWorkExperienceSapat(dbCon.execSQL_work_experience(emp_id, 1, true));
+                }
                 dbCon.close();
             } catch (Exception ex) {
                 logger.error(ex);
                 ex.printStackTrace();
             }
 
-            employeeExtraInfo.setMainPosition(item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
-            if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue() != null) {
-                employeeExtraInfo.setExtraPositions(item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue().toString());
+            if (employeeExtraInfo != null) {
+                employeeExtraInfo.setMainPosition(item.getItemProperty(myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
+                if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue() != null) {
+                    employeeExtraInfo.setExtraPositions(item.getItemProperty(myUI.getMessage(SptMessages.ExtraPositions)).getValue().toString());
+                }
+                if (item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue() != null) {
+                    employeeExtraInfo.setMainBranch(item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
+                }
+                if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue() != null) {
+                    employeeExtraInfo.setExtraBranches(item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString());
+                }
             }
-            if (item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue() != null) {
-                employeeExtraInfo.setMainBranch(item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
+
+            if (employeeExtraInfo != null) {
+                employeeExtraInfo.setSchool(item.getItemProperty(myUI.getMessage(SptMessages.School)).getValue().toString());
+                employeeExtraInfo.setWorkingStatus(item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).getValue().toString());
+                employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue());
+                employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue());
+                employeeExtraInfo.setCanBeAdvisor(item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).getValue().toString());
             }
-            if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue() != null) {
-                employeeExtraInfo.setExtraBranches(item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString());
-            }
-            employeeExtraInfo.setSchool(item.getItemProperty(myUI.getMessage(SptMessages.School)).getValue().toString());
-            employeeExtraInfo.setWorkingStatus(item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).getValue().toString());
-            employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue());
-            employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue());
-            employeeExtraInfo.setCanBeAdvisor(item.getItemProperty(myUI.getMessage(SptMessages.CanBeAdvisor)).getValue().toString());
             myUI.addWindow(new EmployeeCvWindow(myUI, employee, employeeExtraInfo, yearSelect.getItemCaption(yearSelect.getValue())));
         }
     }

@@ -19,7 +19,6 @@ import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.accounting.SchoolsReport;
 import kg.alex.spt.ui.CashBoxView;
 import kg.alex.spt.ui.PayoutsView;
-import kg.alex.spt.ui.TransactionsView;
 import kg.alex.spt.utils.FormattedTreeTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,19 +79,19 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(pav.createTextField(
-                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
+                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, 250, true), true));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
                 totalUsd += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
@@ -105,120 +104,6 @@ public class DbAccTransactions extends BaseDb {
         pav.setPayoutsFooter(totalUsd, totalKgs);
         return container;
     }
-
-    public IndexedContainer execSQL(MyVaadinUI myUI, int incOrOut, int school_id,
-                                    TransactionsView dw, Date from, Date till) throws SQLException {
-        IndexedContainer employeesContainer = null, currenciesContainer = null;
-
-        Subject currentUser = SecurityUtils.getSubject();
-        String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, "
-                + "t.currency_rate, t.amount, t.note, if(t.student_payments_id is not null or t.dp_invoice_id is not null "
-                + "or t.acc_invoice_id is not null,true, false) as isDisabled, "
-                + "if(t.date_time > DATE_SUB(NOW(), INTERVAL 24 HOUR), true, false) as isNotOld, "
-                + "t.from_to_employee_id, concat(e.surname, ' ', e.name) as fullname "
-                + "FROM acc_transactions as t "
-                + "left join acc_category as ac on t.acc_category_id = ac.id "
-                + "left join employee as e on t.employee_id = e.id "
-                + "where ac.acc_type_id = ? and t.school_id = ? AND DATE(t.date_time) >= ? and DATE(t.date_time) <= ? order by t.date_time desc;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, incOrOut);
-        stat.setInt(2, school_id);
-        stat.setDate(3, new java.sql.Date(from.getTime()));
-        stat.setDate(4, new java.sql.Date(till.getTime()));
-        ResultSet result = stat.executeQuery();
-        IndexedContainer container;
-
-        if (incOrOut == 1) {
-            container = dw.prepareIncomesContainer();
-        } else {
-            container = dw.prepareExpensesContainer();
-        }
-        while (result.next()) {
-            String id = result.getString("t.id");
-            Item item = container.addItem(id);
-            boolean isDisabled = result.getBoolean("isDisabled");
-            if (!isDisabled) {
-                isDisabled = !(currentUser.isPermitted(Settings.cnTransactionsView + ":"
-                        + Settings.prmChangeOldTransactions) || result.getBoolean("isNotOld"));
-            }
-            String tableName = myUI.getMessage(SptMessages.Expenses);
-            HorizontalLayout hl = new HorizontalLayout();
-            if (incOrOut == 1) {
-                hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                        myUI.getMessage(SptMessages.Incomes), isDisabled, FontAwesome.MINUS_SQUARE, "min-padding"));
-
-                tableName = myUI.getMessage(SptMessages.Incomes);
-                item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
-                        myUI.getMessage(SptMessages.Category), id, 1, isDisabled, tableName));
-            } else {
-                hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                        myUI.getMessage(SptMessages.Expenses), isDisabled, FontAwesome.MINUS_SQUARE, "min-padding"));
-
-                item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(dw.createComboboxCategory(result.getInt("t.acc_category_id"),
-                        myUI.getMessage(SptMessages.Category), id, 2, isDisabled, tableName));
-                ComboBox cb = dw.createCombobox(0, myUI.getMessage(SptMessages.ToEmployee), id, null, false, false, false);
-                if (employeesContainer == null) {
-                    try {
-                        DbEmployee dbCon = new DbEmployee();
-                        dbCon.connect();
-                        employeesContainer = dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0);
-                        cb.setContainerDataSource(employeesContainer);
-                        dbCon.close();
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
-                    }
-                } else {
-                    cb.setContainerDataSource(Settings.copyContainer(employeesContainer));
-                }
-                cb.setValue(result.getInt("t.from_to_employee_id"));
-                cb.addValueChangeListener(dw);
-                cb.setNullSelectionAllowed(true);
-                cb.setEnabled(!isDisabled);
-                item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(cb);
-            }
-            item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
-            item.getItemProperty(Settings.order_number).setValue(result.getInt("t.order_number"));
-            hl.addComponent(dw.createButton(myUI.getMessage(SptMessages.Print), id,
-                    myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O, "min-padding"));
-            item.getItemProperty(Settings.button).setValue(hl);
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    dw.createDateField(result.getTimestamp("t.date_time"), myUI.getMessage(SptMessages.Date), id, isDisabled, tableName));
-            ComboBox cb = dw.createCombobox(0, myUI.getMessage(SptMessages.Currency), id, null, isDisabled, true, false);
-            if (currenciesContainer == null) {
-                try {
-                    DbDefinition dbd = new DbDefinition();
-                    dbd.connect();
-                    currenciesContainer = dbd.exec_for_select(myUI, Settings.dbAcc_currency, true);
-                    cb.setContainerDataSource(currenciesContainer);
-                    dbd.close();
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
-                }
-            } else {
-                cb.setContainerDataSource(Settings.copyContainer(currenciesContainer));
-            }
-            cb.setValue(result.getInt("t.acc_currency_id"));
-            cb.addValueChangeListener(dw);
-            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(dw.createTextfieldDouble(result.getDouble("t.amount"),
-                    myUI.getMessage(SptMessages.Amount), id, false, isDisabled, tableName));
-            item.getItemProperty(Settings.old_amount).setValue(result.getDouble("t.amount"));
-            item.getItemProperty(Settings.old_rate).setValue(result.getDouble("t.currency_rate"));
-            item.getItemProperty(Settings.old_currency).setValue(result.getInt("t.acc_currency_id"));
-            item.getItemProperty(Settings.old_date).setValue(result.getDate("t.date_time"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(dw.createTextfieldNote(result.getString("t.note"),
-                    myUI.getMessage(SptMessages.Note), id, isDisabled));
-            if (!isDisabled && !currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
-                isDisabled = true;
-            }
-            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(dw.createTextfieldDouble(result.getDouble("currency_rate"),
-                    myUI.getMessage(SptMessages.Rate), id, true, isDisabled, null));
-        }
-        return container;
-    }
-
     public void execSQL(MyVaadinUI myUI, int incOrOut, int school_id,
                         Grid grid, CashBoxView cbv, Date from, Date till) throws SQLException {
 
@@ -475,9 +360,7 @@ public class DbAccTransactions extends BaseDb {
             current.add(Calendar.MONTH, 1);
         }
         t.setColumnFooter(myUI.getMessage(SptMessages.Total), "0.00");
-        Iterator categories_iter = categoriesTable.getContainerDataSource().getItemIds().iterator();
-        while (categories_iter.hasNext()) {
-            Object catNext = categories_iter.next();
+        for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
                 item.getItemProperty(myUI.getMessage(SptMessages.Title))
@@ -528,8 +411,7 @@ public class DbAccTransactions extends BaseDb {
 
 
         Set<Integer> selectedCategoryIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
-        Set<Integer> selectedSchoolIds = new HashSet<>();
-        selectedSchoolIds.addAll((Set<Integer>) schoolsTable.getValue());
+        Set<Integer> selectedSchoolIds = new HashSet<>((Set<Integer>) schoolsTable.getValue());
         String sql = "SELECT cat.id, cat.parent_id, CONCAT(ifnull(concat(cat.parent_code,'.',cat.code), cat.code), ' - ', cat.name) AS name, "
                 + "sum(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt, tr.school_id  "
                 + "FROM acc_category AS cat "
@@ -550,7 +432,7 @@ public class DbAccTransactions extends BaseDb {
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         Set<Integer> selectedSchools = (Set<Integer>) schoolsTable.getValue();
-        Iterator schools_iter = null;
+        Iterator schools_iter;
         while (current.before(till)) {
             schools_iter = (schoolsTable.getContainerDataSource().getItemIds()).iterator();
             while (schools_iter.hasNext()) {
@@ -585,19 +467,17 @@ public class DbAccTransactions extends BaseDb {
             current.add(Calendar.MONTH, 1);
         }
         t.setColumnFooter(myUI.getMessage(SptMessages.Total), "0.00");
-        Iterator itr = categoriesTable.getContainerDataSource().getItemIds().iterator();
-        while (itr.hasNext()) {
-            Object catNext = itr.next();
+        for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
-                Item item = container.addItem((Integer) catNext);
+                Item item = container.addItem(catNext);
                 item.getItemProperty(myUI.getMessage(SptMessages.Title))
                         .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
-                Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
+                Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     container.setParent(catNext, parent);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
+                if (categoriesTable.getContainerDataSource().getChildren(catNext) != null) {
                     container.setChildrenAllowed(catNext, true);
                     t.setCollapsed(catNext, false);
                 }
@@ -885,28 +765,26 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Ratio), Double.class, null);
         t.setContainerDataSource(container);
         double total_remains = 0.0, total_salaries = 0.0;
-        Iterator itr = categoriesTable.getContainerDataSource().getItemIds().iterator();
-        while (itr.hasNext()) {
-            Object catNext = itr.next();
+        for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
-                Item item = container.addItem((Integer) catNext);
+                Item item = container.addItem(catNext);
                 item.getItemProperty(myUI.getMessage(SptMessages.Title))
                         .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
-                Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
+                Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
-                        item = container.addItem((Integer) parent);
+                        item = container.addItem(parent);
                         item.getItemProperty(myUI.getMessage(SptMessages.Title))
                                 .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
                     }
                     container.setParent(catNext, parent);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
+                if (categoriesTable.getContainerDataSource().getChildren(catNext) != null) {
                     container.setChildrenAllowed(catNext, true);
                     t.setCollapsed(catNext, false);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(parent) != null) {
+                if (categoriesTable.getContainerDataSource().getChildren(parent) != null) {
                     container.setChildrenAllowed(parent, true);
                     t.setCollapsed(parent, false);
                 }
@@ -970,13 +848,10 @@ public class DbAccTransactions extends BaseDb {
     public IndexedContainer exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, Date from_date, Date till_date,
                                                 FilterTreeTable categoriesTable) throws SQLException {
 
-        Set<Integer> selectedIds = new HashSet<Integer>();
-        selectedIds.addAll((Set<Integer>) categoriesTable.getValue());
-        Iterator iter = ((Set<Integer>) categoriesTable.getValue()).iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        Set<Integer> selectedIds = new HashSet<>((Set<Integer>) categoriesTable.getValue());
+        for (Object next : (Set<Integer>) categoriesTable.getValue()) {
             if (categoriesTable.getChildren(next) != null) {
-                selectedIds.addAll(new HashSet<Integer>(
+                selectedIds.addAll(new HashSet<>(
                         (Collection<Integer>) categoriesTable.getChildren(next)));
             }
         }
@@ -1127,7 +1002,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(date.getTime()));
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getDouble("amount");
         }
         return 0.0;
@@ -1161,15 +1036,15 @@ public class DbAccTransactions extends BaseDb {
             stat.setDouble(4, -new_amount);
         }
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             AccTransaction tr = new AccTransaction();
             tr.setDate(result.getDate("balances_table.date_time"));
             if (inOut == 1) {
                 tr.setLimit(old_amount - result.getDouble("balance"));
-                tr.setOverlimit((result.getDouble("balance") - old_amount + new_amount) * -1);
+                tr.setOverLimit((result.getDouble("balance") - old_amount + new_amount) * -1);
             } else {
                 tr.setLimit(result.getDouble("balance") + old_amount);
-                tr.setOverlimit((result.getDouble("balance") + old_amount - new_amount) * -1);
+                tr.setOverLimit((result.getDouble("balance") + old_amount - new_amount) * -1);
             }
             return tr;
         }
@@ -1196,7 +1071,7 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int getMaxOrderNum(int school_id, int acc_type_id) throws SQLException {
-        int maxValue = 0;
+        int maxValue;
         String sql = "select (ifnull(max(tr.order_number), 0) + 1) as max_plus1 "
                 + "from acc_transactions as tr "
                 + "left join acc_category as c on c.id = tr.acc_category_id "

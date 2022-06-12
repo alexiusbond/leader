@@ -25,7 +25,7 @@ public class FormattedTable extends Table {
 
             if (property.getValue() != null) // Format a decimal value for a specific locale
             {
-                return Settings.dFormat.format((Double) property.getValue());
+                return Settings.dFormat.format(property.getValue());
             }
         }
         return super.formatPropertyValue(rowId, colId, property);

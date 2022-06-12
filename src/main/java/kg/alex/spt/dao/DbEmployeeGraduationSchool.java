@@ -59,12 +59,11 @@ public class DbEmployeeGraduationSchool extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         EmployeeGraduationSchool egs = null;
-        while (result.next()) {
+        if (result.next()) {
             egs = new EmployeeGraduationSchool();
             egs.setSchool_id(result.getInt("egs.school_id"));
             egs.setStart(result.getDate("egs.start_date"));
             egs.setEnd(result.getDate("egs.end_date"));
-            break;
         }
         return egs;
     }

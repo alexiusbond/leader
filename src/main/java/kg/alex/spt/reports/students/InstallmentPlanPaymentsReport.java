@@ -35,24 +35,29 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(InstallmentPlanPaymentsReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid, rightGrid;
-    private EnhancedFormatExcelExport excelReport;
-    private double debt, amount, plan_debt, ttl_payment, kOplate, ttl_left;
-    private String discounts, corrections;
+    private final HorizontalSplitPanel splitPanel;
+    private GridLayout rightGrid;
+    private double debt, amount, plan_debt, ttl_payment, to_pay, ttl_left;
+    private StringBuilder discounts;
+    private String corrections;
     private StudentInfoPdf st;
     private FormattedTable installmentTable, paymentsTable;
     private FilterTable studentsTable, classTable;
     private ComboBox yearSelect;
     private IndexedContainer installmentCont, paymentsCont;
     private CheckBox paymentsCkb, instPlanCkb;
-    private Label debtLab, contractLab, discountLab, correctionLab, planDebt, netLab, paidLab,
-            leftLab, loginLab, nameLab, surnameLab, classLab;
-    private Embedded photoEmb;
+    private Label debtLab;
+    private Label contractLab;
+    private Label discountLab;
+    private Label correctionLab;
+    private Label planDebt;
+    private Label netLab;
+    private Label paidLab;
+    private Label leftLab;
 
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
     public double total_inst, total_pay;
 
     public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -66,7 +71,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     }
 
     private void buildLeftPanel() {
-        leftGrid = new GridLayout(4, 5);
+        GridLayout leftGrid = new GridLayout(4, 5);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -110,7 +115,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         studentsTable = new FilterTable();
         studentsTable.setFilterDecorator(new MyFilterDecorator(myUI));
@@ -186,14 +191,14 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     logger.error(e);
                     logger.catching(e);
                 }
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     buildRightPanel();
                     st.setCtr_contract_sum(amount);
                     st.setCtr_debt(debt);
-                    st.setCtr_instplan_debt(plan_debt - ttl_payment);
-                    st.setCtr_discountStr(discounts);
+                    st.setCtr_installment_plan_debt(plan_debt - ttl_payment);
+                    st.setCtr_discountStr(discounts.toString());
                     st.setCtr_Correction(corrections);
-                    st.setCtr_k_oplate(kOplate);
+                    st.setCtr_to_pay(to_pay);
                     st.setCtr_ttl_left_sum(ttl_left);
                     st.setCtr_paid(ttl_payment);
                     st.setYear(yearSelect.getContainerProperty(yearSelect.getValue(),
@@ -201,12 +206,12 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     makePdfBtn.setEnabled(true);
                     excelBtn.setEnabled(true);
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             }
         } else if (source == makePdfBtn) {
-            if (st.getScl_accountent_fullname() != null) {
+            if (st.getScl_accountant_full_name() != null) {
                 if (st.getScl_address() != null && st.getScl_phone() != null
                         && st.getScl_name_ru() != null) {
                     new InstallmentPlanPaymentsPdf(myUI, st, installmentCont, paymentsCont, total_inst,
@@ -216,26 +221,27 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                             Notification.Type.WARNING_MESSAGE);
                 }
             } else {
-                Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                         Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == excelBtn) {
             try {
-                if (paymentsCkb.getValue() == true && instPlanCkb.getValue() == false) {
+                EnhancedFormatExcelExport excelReport;
+                if (paymentsCkb.getValue() && !instPlanCkb.getValue()) {
                     if (paymentsTable.getContainerDataSource().size() != 0) {
                         excelReport = new EnhancedFormatExcelExport(paymentsTable, "sheet1");
                         excelReport.setReportTitle(paymentsTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.export();
                     }
-                } else if (paymentsCkb.getValue() == false && instPlanCkb.getValue() == true) {
+                } else if (!paymentsCkb.getValue() && instPlanCkb.getValue()) {
                     if (installmentTable.getContainerDataSource().size() != 0) {
                         excelReport = new EnhancedFormatExcelExport(installmentTable, "sheet1");
                         excelReport.setReportTitle(installmentTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.export();
                     }
-                } else if (paymentsCkb.getValue() == true && instPlanCkb.getValue() == true) {
+                } else if (paymentsCkb.getValue() && instPlanCkb.getValue()) {
                     if (installmentTable.getContainerDataSource().size() != 0
                             && paymentsTable.getContainerDataSource().size() != 0) {
                         excelReport = new EnhancedFormatExcelExport(paymentsTable, "sheet1");
@@ -288,7 +294,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         recount();
         installmentCont = null;
         paymentsCont = null;
-        if (instPlanCkb.getValue() == true) {
+        if (instPlanCkb.getValue()) {
             installmentTable = new FormattedTable();
             installmentTable.setCaption(myUI.getMessage(SptMessages.InstallmentPlan));
             installmentTable.setFooterVisible(true);
@@ -310,14 +316,14 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             installmentTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
             installmentTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), "Total "
                     + Settings.dFormat.format(total_inst));
-            if (paymentsCkb.getValue() == false) {
+            if (!paymentsCkb.getValue()) {
                 rightGrid.addComponent(installmentTable, 0, 4, 6, 4);
             } else {
                 rightGrid.addComponent(installmentTable, 0, 4, 2, 4);
             }
             rightGrid.setRowExpandRatio(4, 1);
         }
-        if (paymentsCkb.getValue() == true) {
+        if (paymentsCkb.getValue()) {
             paymentsTable = new FormattedTable();
             paymentsTable.setCaption(myUI.getMessage(SptMessages.Payments));
             paymentsTable.setFooterVisible(true);
@@ -341,12 +347,12 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), "Total "
                     + Settings.dFormat.format(total_pay));
 
-            if (instPlanCkb.getValue() == false) {
+            if (!instPlanCkb.getValue()) {
                 rightGrid.addComponent(paymentsTable, 0, 4, 6, 4);
             } else {
                 rightGrid.addComponent(paymentsTable, 3, 4, 6, 4);
             }
-            paymentsTable.setVisibleColumns(NATURAL_COL_ORDER);
+            paymentsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
             rightGrid.setRowExpandRatio(4, 1);
         }
         splitPanel.setSecondComponent(rightGrid);
@@ -408,7 +414,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
 
     private void buildStudInfo() {
         if (studentsTable.getValue() != null) {
-            photoEmb = new Embedded();
+            Embedded photoEmb = new Embedded();
             if (st.getStud_photo() != null && !st.getStud_photo().equals("")) {
                 photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + st.getStud_photo())));
             } else {
@@ -418,25 +424,25 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             photoEmb.setHeight("110px");
             rightGrid.addComponent(photoEmb, 0, 0, 0, 3);
 
-            loginLab = new Label();
+            Label loginLab = new Label();
             loginLab.setSizeFull();
             loginLab.setStyleName(ValoTheme.LABEL_SUCCESS);
             loginLab.setValue(myUI.getMessage(SptMessages.Id) + ": " + st.getStud_login());
             rightGrid.addComponent(loginLab, 1, 0, 2, 0);
 
-            nameLab = new Label();
+            Label nameLab = new Label();
             nameLab.setSizeFull();
             nameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
             nameLab.setValue(myUI.getMessage(SptMessages.FirstName) + ": " + st.getStud_name());
             rightGrid.addComponent(nameLab, 1, 1, 2, 1);
 
-            surnameLab = new Label();
+            Label surnameLab = new Label();
             surnameLab.setSizeFull();
             surnameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
             surnameLab.setValue(myUI.getMessage(SptMessages.LastName) + ": " + st.getStud_sur_name());
             rightGrid.addComponent(surnameLab, 1, 2, 2, 2);
 
-            classLab = new Label();
+            Label classLab = new Label();
             classLab.setSizeFull();
             classLab.setStyleName(ValoTheme.LABEL_SUCCESS);
             classLab.setValue(myUI.getMessage(SptMessages.ClassName) + ": " + st.getStud_class_name());
@@ -446,7 +452,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
 
     private void recount() {
         StudentContract c = new StudentContract();
-        StudentPayment sp = new StudentPayment();
+        StudentPayment sp;
         IndexedContainer discCont = new IndexedContainer();
         try {
             DbStudentContract dbsc = new DbStudentContract();
@@ -466,7 +472,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                     (Integer) yearSelect.getValue());
             ttl_payment = sp.getTtl_pay();
             plan_debt = c.getPlan_debt() - total_pay;
-            kOplate = c.getContr_with_disc() + debt + c.getCorrection();
+            to_pay = c.getContr_with_disc() + debt + c.getCorrection();
             ttl_left = (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection();
             dbsc.close();
             dbsd.close();
@@ -475,43 +481,43 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        Iterator iter = discCont.getItemIds().iterator();
-        discounts = "";
+        Iterator<?> iter = discCont.getItemIds().iterator();
+        discounts = new StringBuilder();
         while (iter.hasNext()) {
             Object next = iter.next();
             if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 1) {
-                discounts += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Amount)).getValue()).toString() + "%";
+                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Amount)).getValue())).append("%");
                 if (iter.hasNext()) {
-                    discounts += ", ";
+                    discounts.append( ", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 2) {
-                discounts += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Amount)).getValue()).toString() + "$";
+                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Amount)).getValue())).append("$");
                 if (iter.hasNext()) {
-                    discounts += ", ";
+                    discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 3) {
-                discounts += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.FreeAmount)).getValue()).toString() + "%";
+                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("%");
                 if (iter.hasNext()) {
-                    discounts += ", ";
+                    discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 4) {
-                discounts += Settings.dFormat.format(discCont.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.FreeAmount)).getValue()).toString() + "$";
+                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("$");
                 if (iter.hasNext()) {
-                    discounts += ", ";
+                    discounts.append(", ");
                 }
             }
         }
         corrections = c.getCorrectionDetails() == null ? "0.00$" : c.getCorrectionDetails();
         contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + Settings.dFormat.format(c.getAmount()) + "$");
-        discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts);
+        discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts.toString());
         correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + corrections);
         if (debt > 0) {
             debtLab.setStyleName(ValoTheme.LABEL_FAILURE);

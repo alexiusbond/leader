@@ -26,17 +26,15 @@ public class StockGeneralReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(StockGeneralReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
-    private HorizontalSplitPanel splitPanel;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox schoolSelect;
     private ComboBoxMultiselect stocksMSB;
     private OptionGroup operationOG;
-    private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     private FormattedTreeTable dataTable;
     private FilterTreeTable productsTable;
-    private EnhancedFormatExcelExport excelReport;
 
     public StockGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -47,7 +45,7 @@ public class StockGeneralReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 7);
+        GridLayout leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -112,12 +110,7 @@ public class StockGeneralReport implements Button.ClickListener,
         stocksMSB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         stocksMSB.setFilteringMode(FilteringMode.CONTAINS);
         stocksMSB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        stocksMSB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        stocksMSB.setShowSelectAllButton((filter, page) -> true);
         stocksMSB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         stocksMSB.addValueChangeListener(this);
 
@@ -229,7 +222,7 @@ public class StockGeneralReport implements Button.ClickListener,
                                 Settings.convertCollectionToStr((Set<?>) stocksMSB.getValue()), dataTable);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AveragePrice), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AvarageRate), Table.Align.RIGHT);
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.AverageRate), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                     }
 
@@ -246,7 +239,7 @@ public class StockGeneralReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable);
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.StockGeneralReport) + " ("
                             + operationOG.getContainerProperty(operationOG.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue() + ") - [" + myUI.getMessage(SptMessages.From).toLowerCase() + " "

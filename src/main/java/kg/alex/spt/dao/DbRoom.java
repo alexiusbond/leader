@@ -99,8 +99,7 @@ public class DbRoom extends BaseDb {
         stat.setInt(4, room.getFloor_id());
         stat.setInt(5, room.getActivity_status_id());
         stat.setInt(6, room.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUi, int block_id,

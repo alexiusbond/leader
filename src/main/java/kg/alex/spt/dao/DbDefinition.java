@@ -108,15 +108,15 @@ public class DbDefinition extends BaseDb {
 
     public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName,
                                             List<String> containerProperties) throws SQLException {
-        String sql = "select t.id, t.name, ";
+        StringBuilder sql = new StringBuilder("select t.id, t.name, ");
         for (int i = 0; i < containerProperties.size(); i++) {
-            sql += containerProperties.get(i);
+            sql.append(containerProperties.get(i));
             if (i != containerProperties.size() - 1) {
-                sql += ", ";
+                sql.append(", ");
             }
         }
-        sql += " from " + dbTableName + " as t";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
+        sql.append(" from ").append(dbTableName).append(" as t");
+        PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
@@ -284,8 +284,7 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, new_id);
         stat.setInt(2, old_id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update_emp_id(int id, int emp_id, String dbTableName) throws SQLException {
@@ -294,8 +293,7 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_delete(int id, String dbTableName) throws SQLException {
@@ -394,7 +392,7 @@ public class DbDefinition extends BaseDb {
                 "WHERE e.login IS NULL LIMIT 1;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("l.login");
         }
         return 0;
@@ -426,7 +424,7 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, value);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("id");
         }
         return 0;

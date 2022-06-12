@@ -30,14 +30,12 @@ public class SchoolsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(SchoolsReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     public FormattedTable dataTable;
     private DateField fromDateDF, tillDateDF;
     public FilterTable schoolTable;
-    private EnhancedFormatExcelExport excelReport;
 
     public SchoolsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -48,7 +46,7 @@ public class SchoolsReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 4);
+        GridLayout leftGrid = new GridLayout(4, 4);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -179,7 +177,7 @@ public class SchoolsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SchoolDiscounts));
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SchoolDiscounts));
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SchoolDiscounts)
                             + "(" + Settings.df.format(fromDateDF.getValue()) + " - " + Settings.df.format(tillDateDF.getValue()) + ")");
                     excelReport.setDisplayTotals(true);

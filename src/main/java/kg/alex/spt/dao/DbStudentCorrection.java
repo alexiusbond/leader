@@ -54,10 +54,10 @@ public class DbStudentCorrection extends BaseDb {
             ComboBox cb = dw.createComboboxCorr(result.getInt("t.correction_type_id"),
                     myUI.getMessage(SptMessages.Title), id);
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb);
-            TextField discTf = dw.createTextfieldDouble(result.getDouble("t.amount"),
+            TextField discTf = dw.createTextFieldDouble(result.getDouble("t.amount"),
                     myUI.getMessage(SptMessages.CorrectionAmount), id);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(discTf);
-            TextField tf = dw.createTextfield(result.getString("t.note"),
+            TextField tf = dw.createTextField(result.getString("t.note"),
                     myUI.getMessage(SptMessages.Note), id, true, false);
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             HorizontalLayout hl = new HorizontalLayout();

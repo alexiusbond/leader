@@ -8,7 +8,6 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 
 import java.sql.PreparedStatement;
@@ -40,7 +39,6 @@ public class DbProductCategories extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cat_id);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 }

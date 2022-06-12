@@ -15,11 +15,11 @@ import org.tepi.filtertable.FilterTable;
  *
  * @author alex
  */
-public class ResetingFilterGenerator implements FilterGenerator {
+public class ResetableFilterGenerator implements FilterGenerator {
 
-    private FilterTable t;
+    private final FilterTable t;
 
-    public ResetingFilterGenerator(FilterTable t) {
+    public ResetableFilterGenerator(FilterTable t) {
         this.t = t;
     }
 

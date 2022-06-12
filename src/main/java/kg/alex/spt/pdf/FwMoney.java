@@ -35,20 +35,20 @@ abstract class AbstractWritableSumm implements WritableSumm {
     abstract protected int getUnitGender(int idx);
     // наш главный метод
     public String numberToString(Number num) {
-        String res = "";
+        StringBuilder res = new StringBuilder();
         if (num.longValue() == 0) {
-            res = getS1(0, 0) + " " + getUnit(1, 0);
+            res = new StringBuilder(getS1(0, 0) + " " + getUnit(1, 0));
         }
         int idx = 0;
         num = num.longValue() * 1000 + (long)((num.doubleValue() - num.longValue()) * 100);
         while (num.longValue() > 0) {
             String triad = triadToString((int)(num.longValue() % 1000),
                     getUnitGender(idx), idx < 1);
-            res = triad + getUnit(idx, num.longValue() % 1000) + " " + res;
+            res.insert(0, triad + getUnit(idx, num.longValue() % 1000) + " ");
             num = num.longValue() / 1000;
             idx++;
         }
-        return res;
+        return res.toString();
     }
 }
 

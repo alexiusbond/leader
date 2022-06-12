@@ -48,7 +48,7 @@ public class DbStudentInfoPdf extends BaseDb {
                 sti.setStud_middle_name(result.getString("s.middle_name"));
             }
             if (result.getInt("s.gender_id") == 2) {
-                sti.setIsStudentFeminitive(true);
+                sti.setIsStudentFemininity(true);
             }
             sti.setScl_city(result.getString("scl.city"));
             sti.setScl_name_ru(result.getString("scl.name_ru"));
@@ -59,9 +59,8 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.setScl_bank(result.getString("scl.bank"));
             sti.setScl_bank_account(result.getString("scl.bank_account"));
             sti.setScl_phone(result.getString("scl.phone"));
-            sti.setScl_contr_type(result.getInt("scl.school_type_id"));
             sti.setScl_year_name(result.getString("y.name"));
-            sti.setRel_fullname(result.getString("sr.fullname"));
+            sti.setRel_full_name(result.getString("sr.fullname"));
             sti.setRel_phone(result.getString("sr.phone"));
             sti.setRel_address(result.getString("sr.adress"));
             sti.setRel_passport(result.getString("sr.passport"));

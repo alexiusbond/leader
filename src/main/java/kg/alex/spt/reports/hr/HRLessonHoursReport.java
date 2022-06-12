@@ -40,20 +40,19 @@ public class HRLessonHoursReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(HRLessonHoursReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
             selectAllBranchesBtn, deselectAllBranchesBtn, selectAllPositionsBtn, deselectAllPositionsBtn,
             selectAllExtraPositionsBtn, deselectAllExtraPositionsBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private FilterTable schoolTable, branchTable, positionTable, extraPositionTable;
     private ComboBoxMultiselect workingStatusesMCB;
     private ComboBox yearSelect;
     private EnhancedFormatExcelExport excelReport;
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
 
-    private Subject currentUser = SecurityUtils.getSubject();
-    private VerticalLayout vl = new VerticalLayout();
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final VerticalLayout vl = new VerticalLayout();
 
     public HRLessonHoursReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -65,7 +64,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 4);
+        GridLayout leftGrid = new GridLayout(4, 4);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -107,7 +106,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
             DbSchool dbs = new DbSchool();
             dbs.connect();
             schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns(NATURAL_COL_ORDER);
+            schoolTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
@@ -237,12 +236,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
         workingStatusesMCB.setFilteringMode(FilteringMode.CONTAINS);
         workingStatusesMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
         workingStatusesMCB.setShowSelectedOnTop(false);
-        workingStatusesMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        workingStatusesMCB.setShowSelectAllButton((filter, page) -> true);
         workingStatusesMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -252,10 +246,10 @@ public class HRLessonHoursReport implements Button.ClickListener,
             branchTable.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbBranchTable, true));
             positionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
                     currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
-            positionTable.setVisibleColumns(NATURAL_COL_ORDER);
+            positionTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
             extraPositionTable.setContainerDataSource(dbd.exec_positions_for_select(myUI,
                     currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
-            extraPositionTable.setVisibleColumns(NATURAL_COL_ORDER);
+            extraPositionTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -319,7 +313,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
                         && !((Set<?>) positionTable.getValue()).isEmpty()) {
                     IndexedContainer container = null;
                     LinkedList<Integer> branchIds = null;
-                    int totalEmpl = 0;
+                    int totalEmployees = 0;
                     int totalAsMainBranch = 0;
                     int totalAsExtraBranch = 0;
                     if (((Set<?>) schoolTable.getValue()).size() > 1) {
@@ -332,23 +326,21 @@ public class HRLessonHoursReport implements Button.ClickListener,
                         container.addContainerProperty(myUI.getMessage(SptMessages.MainBranch), String.class, "0");
                         container.addContainerProperty(myUI.getMessage(SptMessages.ExtraBranches), String.class, "0");
                         container.addItem("t");
-                        branchIds = new LinkedList<Integer>((Set<Integer>) branchTable.getValue());
+                        branchIds = new LinkedList<>((Set<Integer>) branchTable.getValue());
                         Collections.sort(branchIds);
                     }
-                    Iterator<Integer> iter = ((Set<Integer>) schoolTable.getValue()).iterator();
-                    while (iter.hasNext()) {
-                        Integer next = iter.next();
+                    for (Integer next : (Set<Integer>) schoolTable.getValue()) {
                         try {
-                            Label schholNameLbl = new Label();
-                            schholNameLbl.setWidth(Settings.PERCENTS100);
-                            schholNameLbl.setContentMode(ContentMode.HTML);
-                            schholNameLbl.setValue(schoolTable.getContainerProperty(next,
+                            Label schoolNameLbl = new Label();
+                            schoolNameLbl.setWidth(Settings.PERCENTS100);
+                            schoolNameLbl.setContentMode(ContentMode.HTML);
+                            schoolNameLbl.setValue(schoolTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Title)).getValue().toString());
-                            schholNameLbl.setStyleName("tableCpt");
-                            vl.addComponent(schholNameLbl);
+                            schoolNameLbl.setStyleName("tableCpt");
+                            vl.addComponent(schoolNameLbl);
 
-                            DbEmployeeLessons dbel = new DbEmployeeLessons();
-                            dbel.connect();
+                            DbEmployeeLessons dbCon = new DbEmployeeLessons();
+                            dbCon.connect();
                             FormattedTable dataTable = new FormattedTable();
                             dataTable.setFooterVisible(false);
                             dataTable.setWidth(Settings.PERCENTS100);
@@ -356,24 +348,20 @@ public class HRLessonHoursReport implements Button.ClickListener,
                             dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
                             dataTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
                             dataTable.addStyleName("noWrapHeader");
-                            dataTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
+                            dataTable.setCellStyleGenerator((Table.CellStyleGenerator) (source1, itemId, propertyId) -> {
 
-                                @Override
-                                public String getStyle(Table source, Object itemId, Object propertyId) {
-
-                                    if (propertyId == null) {
-                                        // Styling for row
-                                        if (itemId.toString().startsWith("s")) {
-                                            return "highlight-green";
-                                        } else if (itemId.toString().startsWith("t")) {
-                                            return "highlight-darkgreen";
-                                        } else {
-                                            return null;
-                                        }
+                                if (propertyId == null) {
+                                    // Styling for row
+                                    if (itemId.toString().startsWith("s")) {
+                                        return "highlight-green";
+                                    } else if (itemId.toString().startsWith("t")) {
+                                        return "highlight-darkgreen";
                                     } else {
-                                        // styling for column propertyId
                                         return null;
                                     }
+                                } else {
+                                    // styling for column propertyId
+                                    return null;
                                 }
                             });
                             vl.addComponent(dataTable);
@@ -385,7 +373,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
                                 dataTable.setPageLength(0);
                             }
 
-                            dataTable.setContainerDataSource(dbel.execSQLHours(myUI, (Integer) yearSelect.getValue(), next,
+                            dataTable.setContainerDataSource(dbCon.execSQLHours(myUI, (Integer) yearSelect.getValue(), next,
                                     Settings.convertCollectionToStr((Set<?>) branchTable.getValue()),
                                     Settings.convertCollectionToStr((Set<?>) positionTable.getValue()),
                                     Settings.convertCollectionToStr((Set<?>) extraPositionTable.getValue()),
@@ -394,30 +382,35 @@ public class HRLessonHoursReport implements Button.ClickListener,
                             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.ExtraHours), Table.Align.RIGHT);
                             if (((Set<?>) schoolTable.getValue()).size() > 1) {
 
-                                Item item = container.getItem("t");
-                                item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
-                                        (Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue()
-                                                + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.Hours)).getValue());
-                                item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
-                                        (Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue()
-                                                + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.ExtraHours)).getValue());
-                                totalEmpl += Integer.parseInt((dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.Employee)).getValue()
-                                        .toString().replace(myUI.getMessage(SptMessages.TotalEmployees), "")));
-                                item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
-                                        myUI.getMessage(SptMessages.TotalEmployees) + totalEmpl);
-                                totalAsMainBranch += Integer.parseInt((dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.MainBranch)).getValue()
-                                        .toString().replace(myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + ": ", "")));
-                                item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
-                                        myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + ": " + totalAsMainBranch);
-                                totalAsExtraBranch += Integer.parseInt((dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.ExtraBranches)).getValue()
-                                        .toString().replace(myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch) + ": ", "")));
-                                item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(
-                                        myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch) + ": " + totalAsExtraBranch);
-                                item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
-                                        myUI.getMessage(SptMessages.TotalBranches) + ((Set<?>) branchTable.getValue()).size());
-
-                                Iterator<Integer> iter2 = branchIds.descendingIterator();
-                                while (iter2.hasNext()) {
+                                Item item;
+                                if (container != null) {
+                                    item = container.getItem("t");
+                                    item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
+                                            (Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue()
+                                                    + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.Hours)).getValue());
+                                    item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
+                                            (Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue()
+                                                    + (Integer) dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.ExtraHours)).getValue());
+                                    totalEmployees += Integer.parseInt((dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.Employee)).getValue()
+                                            .toString().replace(myUI.getMessage(SptMessages.TotalEmployees), "")));
+                                    item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
+                                            myUI.getMessage(SptMessages.TotalEmployees) + totalEmployees);
+                                    totalAsMainBranch += Integer.parseInt((dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.MainBranch)).getValue()
+                                            .toString().replace(myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + ": ", "")));
+                                    item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
+                                            myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + ": " + totalAsMainBranch);
+                                    totalAsExtraBranch += Integer.parseInt((dataTable.getContainerProperty("t", myUI.getMessage(SptMessages.ExtraBranches)).getValue()
+                                            .toString().replace(myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch) + ": ", "")));
+                                    item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(
+                                            myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch) + ": " + totalAsExtraBranch);
+                                    item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
+                                            myUI.getMessage(SptMessages.TotalBranches) + ((Set<?>) branchTable.getValue()).size());
+                                }
+                                Iterator<Integer> iter2 = null;
+                                if (branchIds != null) {
+                                    iter2 = branchIds.descendingIterator();
+                                }
+                                while (iter2 != null && iter2.hasNext()) {
                                     Integer branchId = iter2.next();
                                     item = container.addItem("s" + branchId);
                                     if (item == null) {
@@ -460,19 +453,19 @@ public class HRLessonHoursReport implements Button.ClickListener,
                             if (dataTable.getContainerDataSource().size() != 0) {
                                 excelBtn.setEnabled(true);
                             }
-                            dbel.close();
+                            dbCon.close();
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
                         }
                     }
                     if (((Set<?>) schoolTable.getValue()).size() > 1) {
-                        Label schholNameLbl = new Label();
-                        schholNameLbl.setWidth(Settings.PERCENTS100);
-                        schholNameLbl.setContentMode(ContentMode.HTML);
-                        schholNameLbl.setValue(myUI.getMessage(SptMessages.AllSchools));
-                        schholNameLbl.setStyleName("tableCpt");
-                        vl.addComponent(schholNameLbl);
+                        Label schoolNameLbl = new Label();
+                        schoolNameLbl.setWidth(Settings.PERCENTS100);
+                        schoolNameLbl.setContentMode(ContentMode.HTML);
+                        schoolNameLbl.setValue(myUI.getMessage(SptMessages.AllSchools));
+                        schoolNameLbl.setStyleName("tableCpt");
+                        vl.addComponent(schoolNameLbl);
 
                         FormattedTable dataTable = new FormattedTable();
                         dataTable.setFooterVisible(false);
@@ -481,24 +474,20 @@ public class HRLessonHoursReport implements Button.ClickListener,
                         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
                         dataTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
                         dataTable.addStyleName("noWrapHeader");
-                        dataTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
+                        dataTable.setCellStyleGenerator((Table.CellStyleGenerator) (source12, itemId, propertyId) -> {
 
-                            @Override
-                            public String getStyle(Table source, Object itemId, Object propertyId) {
-
-                                if (propertyId == null) {
-                                    // Styling for row
-                                    if (itemId.toString().startsWith("s")) {
-                                        return "highlight-green";
-                                    } else if (itemId.toString().startsWith("t")) {
-                                        return "highlight-darkgreen";
-                                    } else {
-                                        return null;
-                                    }
+                            if (propertyId == null) {
+                                // Styling for row
+                                if (itemId.toString().startsWith("s")) {
+                                    return "highlight-green";
+                                } else if (itemId.toString().startsWith("t")) {
+                                    return "highlight-darkgreen";
                                 } else {
-                                    // styling for column propertyId
                                     return null;
                                 }
+                            } else {
+                                // styling for column propertyId
+                                return null;
                             }
                         });
                         vl.addComponent(dataTable);

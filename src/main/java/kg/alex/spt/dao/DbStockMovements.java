@@ -31,7 +31,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 public class DbStockMovements extends BaseDb {
@@ -58,10 +57,7 @@ public class DbStockMovements extends BaseDb {
         v.prepareOriginalContainer();
         double total = 0;
         while (result.next()) {
-            boolean is_modifyable = true;
-            if (result.getDouble("t.amount") != result.getDouble("t.remain")) {
-                is_modifyable = false;
-            }
+            boolean is_modifyable = result.getDouble("t.amount") == result.getDouble("t.remain");
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
@@ -82,9 +78,9 @@ public class DbStockMovements extends BaseDb {
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Product)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextfield(
+            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextField(
                     result.getString("t.note"), myUi.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, false), true));
+                    new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, 250, false), true));
             cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(SptMessages.Measurement),
                     Settings.dbMeasurement, true, is_modifyable);
             cb.setId(id);
@@ -95,19 +91,19 @@ public class DbStockMovements extends BaseDb {
             if (result.getDouble("t.remain") < result.getDouble("t.amount")) {
                 minVal = result.getDouble("t.amount") - result.getDouble("t.remain");
             }
-            TextField tf = v.createTextfieldWithProperty(
+            TextField tf = v.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Quantity),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), minVal, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), (result.getDouble("t.remain") > 0));
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), minVal, null),
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), (result.getDouble("t.remain") > 0));
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
             item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
             item.getItemProperty(Settings.quantity_id).setValue(result.getDouble("t.amount"));
-            tf = v.createTextfieldWithProperty(
+            tf = v.createTextFieldWithProperty(
                     result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), is_modifyable);
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), is_modifyable);
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Price));
@@ -192,18 +188,18 @@ public class DbStockMovements extends BaseDb {
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Product)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextfield(
+            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextField(
                     result.getString("t.note"), myUi.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 250, false), true));
+                    new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, 250, false), true));
             cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(SptMessages.Measurement), Settings.dbMeasurement, true);
             cb.setId(id);
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Measurement)).setValue(cb);
             item.getItemProperty(Settings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
-            TextField tf = v.createTextfieldWithProperty(
+            TextField tf = v.createTextFieldWithProperty(
                     result.getDouble("amount"), myUi.getMessage(SptMessages.Quantity),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter());
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter());
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
@@ -291,17 +287,6 @@ public class DbStockMovements extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public double execSQL_remain(int stock_movement_id) throws SQLException {
-        String sql = "SELECT remain as rmn FROM dp_stock_movements where id = ?;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, stock_movement_id);
-        ResultSet result = stat.executeQuery();
-        while (result.next()) {
-            return result.getDouble("rmn");
-        }
-        return 0.0;
-    }
-
     public double execSQL_remain(int acc_category_id, int measurement_id, int stock_id) throws SQLException {
         String sql = "SELECT remain FROM view_stock_remains where acc_category_id = ? and dp_measurement_id = ? and stock_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -309,7 +294,7 @@ public class DbStockMovements extends BaseDb {
         stat.setDouble(2, measurement_id);
         stat.setInt(3, stock_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getDouble("remain");
         }
         return 0.0;
@@ -329,7 +314,7 @@ public class DbStockMovements extends BaseDb {
         stat.setInt(2, acc_category_id);
         stat.setInt(3, stock_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getDouble("remain");
         }
         return 0.0;
@@ -348,7 +333,7 @@ public class DbStockMovements extends BaseDb {
         stat.setDate(2, new java.sql.Date(date.getTime()));
         stat.setInt(3, acc_category_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getDouble("balance");
         }
         return 0.0;
@@ -429,36 +414,34 @@ public class DbStockMovements extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Quantity), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Measurement), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.AveragePrice), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.AvarageRate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.AverageRate), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         t.setContainerDataSource(container);
         double total_amount = 0.0;
-        Iterator itr = categoriesTable.getContainerDataSource().getItemIds().iterator();
-        while (itr.hasNext()) {
-            Object catNext = itr.next();
+        for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
-                Item item = container.addItem((Integer) catNext);
+                Item item = container.addItem(catNext);
                 item.getItemProperty(myUI.getMessage(SptMessages.Title))
                         .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
-                Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
+                Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
-                        item = container.addItem((Integer) parent);
+                        item = container.addItem(parent);
                         item.getItemProperty(myUI.getMessage(SptMessages.Title))
                                 .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
                     } else {
-                        item.getItemProperty(myUI.getMessage(SptMessages.AvarageRate)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(SptMessages.AverageRate)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.AveragePrice)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
+                if (categoriesTable.getContainerDataSource().getChildren(catNext) != null) {
                     container.setChildrenAllowed(catNext, true);
                     t.setCollapsed(catNext, false);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(parent) != null) {
+                if (categoriesTable.getContainerDataSource().getChildren(parent) != null) {
                     container.setChildrenAllowed(parent, true);
                     t.setCollapsed(parent, false);
                 }
@@ -472,7 +455,7 @@ public class DbStockMovements extends BaseDb {
             if (result.getDouble("amount") != 0.0) {
                 item.getItemProperty(myUI.getMessage(SptMessages.AveragePrice)).setValue(
                         result.getDouble("total") / result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(SptMessages.AvarageRate)).setValue(
+                item.getItemProperty(myUI.getMessage(SptMessages.AverageRate)).setValue(
                         result.getDouble("currency_rate") / result.getDouble("amount"));
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("total"));
@@ -530,18 +513,16 @@ public class DbStockMovements extends BaseDb {
                 myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(till), Double.class, null);
         t.setContainerDataSource(container);
         double total_in_amount = 0.0, total_out_amount = 0.0;
-        Iterator itr = categoriesTable.getContainerDataSource().getItemIds().iterator();
-        while (itr.hasNext()) {
-            Object catNext = itr.next();
+        for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
-                Item item = container.addItem((Integer) catNext);
+                Item item = container.addItem(catNext);
                 item.getItemProperty(myUI.getMessage(SptMessages.Title))
                         .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
-                Object parent = ((HierarchicalContainer) categoriesTable.getContainerDataSource()).getParent(catNext);
+                Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
-                        item = container.addItem((Integer) parent);
+                        item = container.addItem(parent);
                         item.getItemProperty(myUI.getMessage(SptMessages.Title))
                                 .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
                     } else {
@@ -552,11 +533,11 @@ public class DbStockMovements extends BaseDb {
                     }
                     container.setParent(catNext, parent);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(catNext) != null) {
+                if (categoriesTable.getContainerDataSource().getChildren(catNext) != null) {
                     container.setChildrenAllowed(catNext, true);
                     t.setCollapsed(catNext, false);
                 }
-                if (((HierarchicalContainer) categoriesTable.getContainerDataSource()).getChildren(parent) != null) {
+                if (categoriesTable.getContainerDataSource().getChildren(parent) != null) {
                     container.setChildrenAllowed(parent, true);
                     t.setCollapsed(parent, false);
                 }

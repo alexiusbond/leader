@@ -12,8 +12,8 @@ public class InvoiceInfoPdf implements Serializable {
 
     private String login;
     private String class_name;
-    private String stud_fullname;
-    private String whopaid_fullname;
+    private String studentFullName;
+    private String whoPaidFullName;
     private String school_name;
     private String order_number;
     private String scl_logo;
@@ -87,20 +87,20 @@ public class InvoiceInfoPdf implements Serializable {
         this.class_name = class_name;
     }
 
-    public String getStud_fullname() {
-        return stud_fullname;
+    public String getStudentFullName() {
+        return studentFullName;
     }
 
-    public void setStud_fullname(String stud_fullname) {
-        this.stud_fullname = stud_fullname;
+    public void setStudentFullName(String studentFullName) {
+        this.studentFullName = studentFullName;
     }
 
-    public String getWhopaid_fullname() {
-        return whopaid_fullname;
+    public String getWhoPaidFullName() {
+        return whoPaidFullName;
     }
 
-    public void setWhopaid_fullname(String whopiad_fullname) {
-        this.whopaid_fullname = whopiad_fullname;
+    public void setWhoPaidFullName(String whopiad_fullname) {
+        this.whoPaidFullName = whopiad_fullname;
     }
 
     public String getOrder_number() {

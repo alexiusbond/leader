@@ -60,7 +60,7 @@ public class DbStudentCalls extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
                     result.getString("fullname"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
-                    dw.createTextfieldNote(result.getString("sc.note"),
+                    dw.createTextFieldNote(result.getString("sc.note"),
                             myUI.getMessage(SptMessages.Note), id));
             item.getItemProperty(Settings.crud_status)
                     .setValue(myUI.getMessage(SptMessages.Update));
@@ -146,7 +146,7 @@ public class DbStudentCalls extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         ResultSet result = stat.executeQuery();
-        String c = new String();
+        String c = "";
         while (result.next()) {
             c = result.getString("last_call");
         }

@@ -160,8 +160,7 @@ public class DbSchool extends BaseDb {
         stat.setInt(14, scl.getSchool_type_id());
         stat.setInt(15, scl.getId());
 
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_insert(School scl) throws SQLException {
@@ -352,7 +351,7 @@ public class DbSchool extends BaseDb {
             st.setScl_name_ru(result.getString("sc.name_ru"));
             st.setScl_address(result.getString("sc.adress"));
             st.setScl_phone(result.getString("sc.phone"));
-            st.setScl_accountent_fullname(result.getString("fullname"));
+            st.setScl_accountant_full_name(result.getString("fullname"));
             st.setScl_dir_f_name(result.getString("sc.director_fullname"));
         }
         return st;

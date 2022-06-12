@@ -27,7 +27,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 
 public class DbInventoryOrganization extends BaseDb {
 
@@ -103,56 +102,46 @@ public class DbInventoryOrganization extends BaseDb {
             final ComboBox cb = v.createCombobox(result.getInt("t.brand_id"), myUi.getMessage(SptMessages.Brand),
                     Settings.dbInventoryBrandTable, true, true);
             cb.setNewItemsAllowed(true);
-            cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-                @Override
-                public void addNewItem(String newItemCaption) {
-                    try {
-                        DbDefinition dbd = new DbDefinition();
-                        dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryBrandTable, false);
-                        dbd.close();
-                        if (id != 0) {
-                            Iterator iter = container.getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                        myUi.getMessage(SptMessages.Brand)).getValue()).getContainerDataSource()).addItem(id);
-                                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                cb.setValue(id);
-                            }
+            cb.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id1 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryBrandTable, false);
+                    dbd.close();
+                    if (id1 != 0) {
+                        for (Object next : container.getItemIds()) {
+                            Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                    myUi.getMessage(SptMessages.Brand)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                            cb.setValue(id1);
                         }
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
                     }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             });
             item.getItemProperty(myUi.getMessage(SptMessages.Brand)).setValue(cb);
             final ComboBox cb2 = v.createCombobox(result.getInt("t.title_id"), myUi.getMessage(SptMessages.Title),
                     Settings.dbInventoryTitleTable, true, true);
             cb2.setNewItemsAllowed(true);
-            cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-                @Override
-                public void addNewItem(String newItemCaption) {
-                    try {
-                        DbDefinition dbd = new DbDefinition();
-                        dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryTitleTable, false);
-                        dbd.close();
-                        if (id != 0) {
-                            Iterator iter = container.getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                        myUi.getMessage(SptMessages.Title)).getValue()).getContainerDataSource()).addItem(id);
-                                item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                cb2.setValue(id);
-                            }
+            cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id12 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryTitleTable, false);
+                    dbd.close();
+                    if (id12 != 0) {
+                        for (Object next : container.getItemIds()) {
+                            Item item12 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                    myUi.getMessage(SptMessages.Title)).getValue()).getContainerDataSource()).addItem(id12);
+                            item12.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                            cb2.setValue(id12);
                         }
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
                     }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             });
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(cb2);
@@ -160,27 +149,27 @@ public class DbInventoryOrganization extends BaseDb {
                     v.createDateFiled(result.getDate("t.purchase_date"),
                             myUi.getMessage(SptMessages.PurchaseYear), null, Resolution.YEAR, Settings.yearPattern));
             item.getItemProperty(myUi.getMessage(SptMessages.LifeTime)).setValue(
-                    v.createTextfieldWithProperty(
+                    v.createTextFieldWithProperty(
                             result.getInt("t.life_time"), myUi.getMessage(SptMessages.LifeTime),
-                            new IntegerRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 1, null),
-                            new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter(), true));
+                            new IntegerRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 1, null),
+                            new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true));
             int minVal = 1;
             if (result.getInt("r.remain") < result.getInt("t.quantity")) {
                 minVal = result.getInt("t.quantity") - result.getInt("r.remain");
             }
-            TextField tf = v.createTextfieldWithProperty(
+            TextField tf = v.createTextFieldWithProperty(
                     result.getInt("t.quantity"), myUi.getMessage(SptMessages.Quantity),
-                    new IntegerRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), minVal, null),
-                    new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter(), true);
+                    new IntegerRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), minVal, null),
+                    new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true);
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
             item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
             item.getItemProperty(Settings.quantity_id).setValue(result.getInt("t.quantity"));
-            tf = v.createTextfieldWithProperty(
+            tf = v.createTextFieldWithProperty(
                     result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                    new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Price));

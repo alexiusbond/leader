@@ -38,7 +38,7 @@ public class DbCurrencyRate extends BaseDb {
         stat.setDouble(1, r.getValue());
         stat.setInt(2, r.getSchool_id());
         stat.setInt(3, r.getEmployee_id());
-        stat.setInt(4, r.getMannual());
+        stat.setInt(4, r.getManual());
         stat.executeUpdate();
         return getLastInsertedId();
     }

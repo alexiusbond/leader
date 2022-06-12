@@ -36,10 +36,10 @@ public class TextFieldValidated extends TextField {
                     if (value != null
                             && value.toString().startsWith("-")) {
                         throw new Validator.InvalidValueException(
-                                myui.getMessage(SptMessages.NotifWrongValue));
+                                myui.getMessage(SptMessages.NotificationWrongValue));
                     } else {
                         throw new Validator.InvalidValueException(
-                                myui.getMessage(SptMessages.NotifWrongValue));
+                                myui.getMessage(SptMessages.NotificationWrongValue));
                     }
                 }
             }

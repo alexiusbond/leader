@@ -71,17 +71,17 @@ public class DbEmployeeSeminar extends BaseDb {
             item.getItemProperty(Settings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeSeminar, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
-                    edv.createTextfield(result.getString("es.name"),
+                    edv.createTextField(result.getString("es.name"),
                             myUI.getMessage(SptMessages.Title),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.Subject)).setValue(
-                    edv.createTextfield(result.getString("es.subject"),
+                    edv.createTextField(result.getString("es.subject"),
                             myUI.getMessage(SptMessages.Subject),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
-                    edv.createTextfield(result.getString("es.note"),
+                    edv.createTextField(result.getString("es.note"),
                             myUI.getMessage(SptMessages.Note),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), false));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 200, true), false));
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("es.date_of_issue"),
                             myUI.getMessage(SptMessages.IssueDate), null,

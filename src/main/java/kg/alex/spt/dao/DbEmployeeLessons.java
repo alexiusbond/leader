@@ -94,12 +94,12 @@ public class DbEmployeeLessons extends BaseDb {
                     edv.createCombobox(result.getInt("ex.year_id"),
                             myUI.getMessage(SptMessages.AcademicYear), Settings.dbYear, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
-                    edv.createTextfieldWithProperty(result.getInt("ex.hours"), myUI.getMessage(SptMessages.Hours),
-                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
+                    edv.createTextFieldWithProperty(result.getInt("ex.hours"), myUI.getMessage(SptMessages.Hours),
+                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 999),
                             new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
-                    edv.createTextfieldWithProperty(result.getInt("ex.extra_hours"), myUI.getMessage(SptMessages.ExtraHours),
-                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
+                    edv.createTextFieldWithProperty(result.getInt("ex.extra_hours"), myUI.getMessage(SptMessages.ExtraHours),
+                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0, 999),
                             new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
             item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
         }
@@ -182,7 +182,7 @@ public class DbEmployeeLessons extends BaseDb {
                 hours = result.getInt("ebr.hours");
             }
             TextField tf = createTextfieldWithProperty(myUI, hours, myUI.getMessage(SptMessages.Hours),
-                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 999),
+                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 999),
                     new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter());
             tf.setData(result.getInt("ebr.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(tf);
@@ -192,7 +192,7 @@ public class DbEmployeeLessons extends BaseDb {
             }
             item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                     createTextfieldWithProperty(myUI, extra_hours, myUI.getMessage(SptMessages.ExtraHours),
-                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0, 999),
+                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0, 999),
                             new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
         }
         return container;

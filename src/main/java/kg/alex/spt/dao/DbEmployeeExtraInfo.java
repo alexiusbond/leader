@@ -88,14 +88,13 @@ public class DbEmployeeExtraInfo extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         EmployeeExtraInfo eei = null;
-        while (result.next()) {
+        if (result.next()) {
             eei = new EmployeeExtraInfo();
             eei.setHobbies(result.getString("eei.hobbies"));
             eei.setPhobias(result.getString("eei.fobbies"));
             eei.setShort_notes(result.getString("eei.info"));
             eei.setHealth_notes(result.getString("eei.health_notes"));
             eei.setHealth_status_id(result.getInt("hs.id"));
-            break;
         }
         return eei;
     }
@@ -128,7 +127,7 @@ public class DbEmployeeExtraInfo extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         EmployeeExtraInfo eei = null;
-        while (result.next()) {
+        if (result.next()) {
             eei = new EmployeeExtraInfo();
             eei.setMartialStatus(result.getString("m.name"));
             eei.setNationality(result.getString("n.name"));
@@ -156,7 +155,6 @@ public class DbEmployeeExtraInfo extends BaseDb {
             eei.setAddress(result.getString("cont.address"));
             eei.setEmail(result.getString("cont.email"));
             eei.setBirth_place(result.getString("cont.birth_place"));
-            break;
         }
         return eei;
     }

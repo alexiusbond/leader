@@ -35,18 +35,16 @@ public class StatusesReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(StatusesReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
             selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox yearSelect;
     public ComboBoxMultiselect statusMS;
     public FormattedTable dataTable;
     public FilterTable classTable, schoolsTable;
-    private EnhancedFormatExcelExport excelReport;
 
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public StatusesReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -57,7 +55,7 @@ public class StatusesReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 7);
+        GridLayout leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -87,12 +85,7 @@ public class StatusesReport implements Button.ClickListener,
         statusMS.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         statusMS.setFilteringMode(FilteringMode.CONTAINS);
         statusMS.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        statusMS.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        statusMS.setShowSelectAllButton((filter, page) -> true);
         statusMS.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         statusMS.addValueChangeListener(this);
 
@@ -131,7 +124,7 @@ public class StatusesReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
         selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
@@ -163,7 +156,7 @@ public class StatusesReport implements Button.ClickListener,
             dbsc.connect();
             schoolsTable.setContainerDataSource(dbsc.execSchoolSel(myUI, 0));
             dbsc.close();
-            schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+            schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -232,8 +225,8 @@ public class StatusesReport implements Button.ClickListener,
                     dataTable.setContainerDataSource(null);
                     dbs.execSQL_Statuses_by_classes(myUI,
                             (Integer) yearSelect.getValue(), this);
-                    Iterator class_iter = ((Set<?>) classTable.getValue()).iterator();
-                    Iterator status_iter;
+                    Iterator<?> class_iter = ((Set<?>) classTable.getValue()).iterator();
+                    Iterator<?> status_iter;
                     while (class_iter.hasNext()) {
                         Object nextClass = class_iter.next();
                         status_iter = ((Set<?>) statusMS.getValue()).iterator();
@@ -261,7 +254,7 @@ public class StatusesReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.StatusesReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
@@ -296,7 +289,7 @@ public class StatusesReport implements Button.ClickListener,
     }
 
     private Set<?> convertToSet(int val) {
-        HashSet<Integer> hs = new HashSet<Integer>(1);
+        HashSet<Integer> hs = new HashSet<>(1);
         hs.add(val);
         return hs;
     }

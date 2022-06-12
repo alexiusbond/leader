@@ -6,29 +6,20 @@
 package kg.alex.spt.pdf;
 
 public class Decliner {
-    /// <summary>
-    /// 
-    /// </summary>        /// <param name="Surname">Фамилия</param>
-    /// <param name="Name">Имя</param>
-    /// <param name="Patronymic">Отчество</param>
-    /// <param name="Case">Падеж</param>
-    /// <param name="Gender">Пол</param>
-    /// <param name="Shorten">Сокращенно</param>
-    /// <returns>Возвращает массив из трех элементов [Фамилия, Имя, Отчество]</returns>
 
     public String[] Decline(String Surname, String Name, String Patronymic, int Case, int Gender, boolean Shorten) {
-        String temp = null;
-        int caseNumber = 0;
-        String surname = null;
-        String name = null;
-        String patronymic = null;
-        String patronymicAfter = null;
-        String patronymicBefore = null;
-        int gender = 0;
-        boolean isFeminine = false;
-        int index = 0;
-        String surnameNew = null;
-        String surnameOld = null;
+        String temp;
+        int caseNumber;
+        String surname;
+        String name;
+        String patronymic;
+        String patronymicAfter;
+        String patronymicBefore;
+        int gender;
+        boolean isFeminine;
+        int index;
+        StringBuilder surnameNew;
+        String surnameOld;
 
         caseNumber = Case;
         gender = Gender;
@@ -68,19 +59,19 @@ public class Decliner {
         isFeminine = (gender == 2);
 
         surnameOld = surname;
-        surnameNew = "";
+        surnameNew = new StringBuilder();
         index = surnameOld.indexOf("-");
 
         while (index > 0) {
             temp = this.ProperCase(surnameOld.substring(0, index));
-            surnameNew = surnameNew + DeclineSurname(temp, caseNumber, isFeminine) + "-";
+            surnameNew.append(DeclineSurname(temp, caseNumber, isFeminine)).append("-");
             surnameOld = surnameOld.substring(index + 1);
             index = surnameOld.indexOf("-");
         }
 
         temp = this.ProperCase(surnameOld);
-        surnameNew = surnameNew + DeclineSurname(temp, caseNumber, isFeminine);
-        surname = surnameNew;
+        surnameNew.append(DeclineSurname(temp, caseNumber, isFeminine));
+        surname = surnameNew.toString();
 
         switch (caseNumber) {
             case 2:
@@ -118,12 +109,12 @@ public class Decliner {
 
     public String Decline(String FullName, int Case, int Gender, boolean Shorten) {
         String strF = null;
-        String strI = null;
+        String strI;
         String strO = null;
-        String str1 = null;
+        String str1;
         String str2 = null;
         String str3 = null;
-        int iInd = 0;
+        int iInd;
 
         iInd = FullName.indexOf(" ");
 
@@ -155,7 +146,7 @@ public class Decliner {
             }
         } else {
             if (str2.endsWith("ич") || str2.endsWith("вна") || str2.endsWith("чна")) {
-                strI = this.ProperCase(str1);;
+                strI = this.ProperCase(str1);
                 strO = this.ProperCase(str2);
             } else {
                 strF = this.ProperCase(str1);
@@ -210,14 +201,12 @@ public class Decliner {
         }
 
         if (Shorten) {
-            Name = Name.substring(0, 1) + ".";
+            Name = Name.charAt(0) + ".";
         } else {
             temp = Name;
 
-            switch (substringRight(Name, 3).toLowerCase()) {
-                case "лев":
-                    Name = SetEnd(Name, 2, "ьва");
-                    break;
+            if ("лев".equalsIgnoreCase(substringRight(Name, 3))) {
+                Name = SetEnd(Name, 2, "ьва");
             }
 
             if (Name == temp) {
@@ -939,7 +928,7 @@ public class Decliner {
         if (!IsFeminine) {
             switch (end) {
                 case "а":
-                    
+
                     switch (Surname.substring(Surname.length() - 2, 1)) {
                         case "а":
                         case "е":

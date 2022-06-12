@@ -15,11 +15,8 @@ import kg.alex.spt.i18n.SptMessages;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class DbAccessories extends BaseDb {
-
-    public ArrayList<Accessories> q = null;
 
     public DbAccessories() throws Exception {
         super();
@@ -82,8 +79,7 @@ public class DbAccessories extends BaseDb {
         stat.setInt(2, acc.getStatus_id());
         stat.setInt(3, acc.getCategory_id());
         stat.setInt(4, acc.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUi, int cat_id) throws SQLException {

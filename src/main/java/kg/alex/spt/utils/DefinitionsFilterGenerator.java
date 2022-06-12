@@ -18,7 +18,7 @@ import org.tepi.filtertable.FilterTable;
  */
 public class DefinitionsFilterGenerator implements FilterGenerator {
 
-    private FilterTable t;
+    private final FilterTable t;
 
     public DefinitionsFilterGenerator(FilterTable t) {
         this.t = t;

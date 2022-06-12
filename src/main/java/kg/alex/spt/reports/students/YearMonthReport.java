@@ -38,24 +38,23 @@ public class YearMonthReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(YearMonthReport.class);
-    private MyVaadinUI myUI;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final MyVaadinUI myUI;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private FilterTable schoolTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private EnhancedFormatExcelExport excelReport;
 
-    private String[] NATURAL_COL_ORDER_YEAR;
-    private String[] NATURAL_COL_ORDER_MONTH;
-    private String[] NATURAL_COL_ORDER_SUMMARY;
+    private final String[] NATURAL_COL_ORDER_YEAR;
+    private final String[] NATURAL_COL_ORDER_MONTH;
+    private final String[] NATURAL_COL_ORDER_SUMMARY;
     public VerticalLayout rightLay;
     private OptionGroup type;
     public int totalStudents = 0, totalActive = 0;
     public double contracts = 0.0, discounts = 0.0, debts = 0.0, corrections = 0.0, nets = 0.0,
-            paids = 0.0, lefts = 0.0, inst_plans = 0.0;
+            paid_amounts = 0.0, lefts = 0.0, inst_plans = 0.0;
 
     public YearMonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -94,7 +93,7 @@ public class YearMonthReport implements Button.ClickListener,
     }
 
     private void buildLeftPanel() {
-        leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 6);
         leftGrid.setSpacing(true);
         leftGrid.setWidth(Settings.PERCENTS100);
 
@@ -115,12 +114,7 @@ public class YearMonthReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -168,7 +162,7 @@ public class YearMonthReport implements Button.ClickListener,
             DbSchool dbs = new DbSchool();
             dbs.connect();
             schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+            schoolTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
@@ -273,9 +267,9 @@ public class YearMonthReport implements Button.ClickListener,
         if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Yearly))
                 || type.getValue().toString().equals(myUI.getMessage(SptMessages.Summary))) {
             if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Yearly))) {
-                dataTable.setVisibleColumns(NATURAL_COL_ORDER_YEAR);
+                dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_YEAR);
             } else {
-                dataTable.setVisibleColumns(NATURAL_COL_ORDER_SUMMARY);
+                dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SUMMARY);
             }
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total_Active), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
@@ -285,7 +279,7 @@ public class YearMonthReport implements Button.ClickListener,
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), Table.Align.RIGHT);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
         } else {
-            dataTable.setVisibleColumns(NATURAL_COL_ORDER_MONTH);
+            dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_MONTH);
             dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
         }
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Left), Table.Align.RIGHT);
@@ -336,7 +330,7 @@ public class YearMonthReport implements Button.ClickListener,
                                     (Integer) yearSelect.getValue(), this);
                         }
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.NotifNothingIsSelected),
+                        Notification.show(myUI.getMessage(SptMessages.NotificationNothingIsSelected),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                     dbsc.close();
@@ -356,7 +350,7 @@ public class YearMonthReport implements Button.ClickListener,
                 dbsc.connect();
                 st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
                 dbsc.close();
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
                         if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Yearly))) {
@@ -371,7 +365,7 @@ public class YearMonthReport implements Button.ClickListener,
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {

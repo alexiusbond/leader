@@ -23,27 +23,25 @@ import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
 public class BlockDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(BlockDefinitionView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
-    private Table dataTable;
+    private final Table dataTable;
     private TextField nameTF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public BlockDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{
+        String[] NATURAL_COL_ORDER = new String[]{
                 myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
@@ -64,7 +62,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -135,7 +133,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 50, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 50, false));
         settingsLay.addComponent(nameTF);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
@@ -180,12 +178,9 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
@@ -196,7 +191,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
                     if (isNew) {
                         int id = dbCon.exec_insert(getBlock(0));
                         if (id != 0) {
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -229,7 +224,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
                                 logger.catching(e);
                             }
                             if (status != 0) {
-                                updateDatacontainer();
+                                updateDataContainer();
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
                             } else {
@@ -241,7 +236,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
                     dbCon.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -297,7 +292,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
-        statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+        statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue());
     }
 
@@ -306,7 +301,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
         statusSelect.setValue(null);
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -317,7 +312,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
@@ -370,12 +365,10 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;

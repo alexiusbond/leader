@@ -26,7 +26,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Iterator;
 
 public class DbEmployeeEducation extends BaseDb {
 
@@ -100,9 +99,9 @@ public class DbEmployeeEducation extends BaseDb {
             item.getItemProperty(Settings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeEducation, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.Department)).setValue(
-                    edv.createTextfield(result.getString("ed.department"),
+                    edv.createTextField(result.getString("ed.department"),
                             myUI.getMessage(SptMessages.Department),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 250, true), true));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 250, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
                     edv.createDateField(result.getDate("ed.start_date"),
                             myUI.getMessage(SptMessages.Start), null, true,
@@ -120,28 +119,23 @@ public class DbEmployeeEducation extends BaseDb {
             final ComboBox cb = edv.createCombobox(result.getInt("ed.hr_university_id"),
                     myUI.getMessage(SptMessages.University), Settings.dbUniversityTable, true);
             cb.setNewItemsAllowed(true);
-            cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-                @Override
-                public void addNewItem(String newItemCaption) {
-                    try {
-                        DbDefinition dbd = new DbDefinition();
-                        dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbUniversityTable, false);
-                        dbd.close();
-                        if (id != 0) {
-                            Iterator iter = container.getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id);
-                                item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                cb.setValue(id);
-                            }
+            cb.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id1 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbUniversityTable, false);
+                    dbd.close();
+                    if (id1 != 0) {
+                        for (Object next : container.getItemIds()) {
+                            Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.University)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                            cb.setValue(id1);
                         }
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
                     }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             });
             item.getItemProperty(myUI.getMessage(SptMessages.University)).setValue(cb);

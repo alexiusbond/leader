@@ -47,37 +47,37 @@ public class DbStudentRelative extends BaseDb {
                             Settings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
             if (result.getInt("sr.is_main") == 1) {
                 item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
-                        dw.createTextfield(result.getString("sr.fullname"),
+                        dw.createTextField(result.getString("sr.fullname"),
                                 myUi.getMessage(SptMessages.FullName), id, false, true));
                 item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
-                        dw.createTextfield(result.getString("sr.adress"),
+                        dw.createTextField(result.getString("sr.adress"),
                                 myUi.getMessage(SptMessages.Address), id, true, true));
                 item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
-                        dw.createTextfield(result.getString("sr.phone"),
+                        dw.createTextField(result.getString("sr.phone"),
                                 myUi.getMessage(SptMessages.Phone), id, true, true));
                 item.getItemProperty(myUi.getMessage(SptMessages.WorkPlace)).setValue(
-                        dw.createTextfield(result.getString("sr.work_place"),
+                        dw.createTextField(result.getString("sr.work_place"),
                                 myUi.getMessage(SptMessages.WorkPlace), id, true, true));
                 item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
-                        dw.createTextfield(result.getString("sr.passport"),
+                        dw.createTextField(result.getString("sr.passport"),
                                 myUi.getMessage(SptMessages.Passport), id, true, true));
                 item.getItemProperty(myUi.getMessage(SptMessages.Responsible)).setValue(
                         dw.createCheckBox(true, myUi.getMessage(SptMessages.Responsible), id));
             } else {
                 item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
-                        dw.createTextfield(result.getString("sr.fullname"),
+                        dw.createTextField(result.getString("sr.fullname"),
                                 myUi.getMessage(SptMessages.FullName), id, false, false));
                 item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
-                        dw.createTextfield(result.getString("sr.adress"),
+                        dw.createTextField(result.getString("sr.adress"),
                                 myUi.getMessage(SptMessages.Address), id, true, false));
                 item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
-                        dw.createTextfield(result.getString("sr.phone"),
+                        dw.createTextField(result.getString("sr.phone"),
                                 myUi.getMessage(SptMessages.Phone), id, true, false));
                 item.getItemProperty(myUi.getMessage(SptMessages.WorkPlace)).setValue(
-                        dw.createTextfield(result.getString("sr.work_place"),
+                        dw.createTextField(result.getString("sr.work_place"),
                                 myUi.getMessage(SptMessages.WorkPlace), id, true, false));
                 item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
-                        dw.createTextfield(result.getString("sr.passport"),
+                        dw.createTextField(result.getString("sr.passport"),
                                 myUi.getMessage(SptMessages.Passport), id, true, false));
                 item.getItemProperty(myUi.getMessage(SptMessages.Responsible)).setValue(
                         dw.createCheckBox(false, myUi.getMessage(SptMessages.Responsible), id));
@@ -97,7 +97,7 @@ public class DbStudentRelative extends BaseDb {
                 + "VALUES(?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, r.getStudent_id());
-        stat.setString(2, r.getFullname());
+        stat.setString(2, r.getFullName());
         stat.setString(3, r.getWork_place());
         stat.setString(4, r.getPhone());
         stat.setString(5, r.getAddress());
@@ -120,7 +120,7 @@ public class DbStudentRelative extends BaseDb {
                 + "passport=?, is_main=?, relatives_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());
-        stat.setString(2, sr.getFullname());
+        stat.setString(2, sr.getFullName());
         stat.setString(3, sr.getWork_place());
         stat.setString(4, sr.getPhone());
         stat.setString(5, sr.getAddress());

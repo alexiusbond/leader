@@ -36,20 +36,17 @@ public class DebtReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(DebtReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private EnhancedFormatExcelExport excelReport;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private FilterTable classTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer installmentCont;
-    private Date fromDate, tillDate;
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
     public double inst_total, paid_total, debt_total;
 
     public DebtReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -63,7 +60,7 @@ public class DebtReport implements Button.ClickListener,
     }
 
     private void buildLeftPanel() {
-        leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 6);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -84,12 +81,7 @@ public class DebtReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -141,7 +133,7 @@ public class DebtReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
@@ -211,11 +203,11 @@ public class DebtReport implements Button.ClickListener,
                 st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
                 dbsc.close();
 
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
-                        fromDate = fromDateDF.getValue();
-                        tillDate = tillDateDF.getValue();
+                        Date fromDate = fromDateDF.getValue();
+                        Date tillDate = tillDateDF.getValue();
                         new DebtsPdf(myUI, installmentCont,
                                 yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(SptMessages.Title)).getValue().toString(),
@@ -226,7 +218,7 @@ public class DebtReport implements Button.ClickListener,
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -240,7 +232,7 @@ public class DebtReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.DebtReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
@@ -297,7 +289,7 @@ public class DebtReport implements Button.ClickListener,
                 Settings.dFormat.format(paid_total));
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
                 Settings.dFormat.format(debt_total));
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);
     }

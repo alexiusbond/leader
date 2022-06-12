@@ -50,25 +50,27 @@ import org.vaadin.grid.cellrenderers.view.RowIndexRenderer;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 
 public class CashBoxView extends GridLayout implements Button.ClickListener,
         Property.ValueChangeListener, FieldGroup.CommitHandler {
 
     static final Logger logger = LogManager.getLogger(CashBoxView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button addButton, saveButton, searchButton;
     private OptionGroup currencySettingsOG;
     private TextField currencyTF;
-    private Label incomeTtlLab, expenseTtlLab, ttlLab, prev_balanceLab, currencyLab;
+    private Label incomeTtlLab;
+    private Label expenseTtlLab;
+    private Label ttlLab;
+    private Label prev_balanceLab;
     public SchoolAccounting schoolAcc;
     private DateField fromDateDF, tillDateDF;
 
-    private Grid expensesGrid, incomesGrid;
+    private final Grid expensesGrid, incomesGrid;
     private GeneratedPropertyContainer incomesCont = null, expensesCont = null;
     private int r_table_counter = 1000;
-    private Accordion accordion;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Accordion accordion;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private HorizontalLayout currencyHl;
     private ComboBox expensesCategoryCb, incomesCategoryCb, toEmployeesCb;
     private Date today;
@@ -167,7 +169,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencyHl.setSpacing(true);
         currencyHl.setEnabled(currentUser.hasRole(Settings.rnAdmin) && myUI.isManualRate());
 
-        currencyLab = new Label();
+        Label currencyLab = new Label();
         currencyLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         currencyLab.setImmediate(true);
         currencyLab.setSizeUndefined();
@@ -180,7 +182,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencyTF.setNullRepresentation("0.1");
         currencyTF.setNullSettingAllowed(false);
         currencyTF.setConverter(Settings.getStringToDoubleConverter());
-        currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+        currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
         currencyTF.setPropertyDataSource(property);
         currencyTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
 
@@ -249,7 +251,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 }
                 TextField amountTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.Amount)).getEditorField();
                 amountTf.removeAllValidators();
-                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
             } else {
                 grid.setEditorEnabled(false);
             }
@@ -303,13 +305,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(myUI.getMessage(SptMessages.Currency)).setEditorField(createCombobox(Settings.dbAcc_currency, true, this));
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setEditorField(createDateField(this));
         grid.getColumn(myUI.getMessage(SptMessages.Amount)).setEditorField(createTextField(
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.01, null),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setEditorField(createTextField(
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.01, null),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
         grid.getColumn(myUI.getMessage(SptMessages.Note)).setEditorField(createTextField(
-                new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 350, false),
+                new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false),
                 null, null, null));
 
         grid.getColumn(Settings.hashTags).setSortable(false);
@@ -399,9 +401,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     cr.setSchool_id(myUI.getUser().getSchool_id());
                     if (currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual))) {
                         cr.setValue((Double) currencyTF.getPropertyDataSource().getValue());
-                        cr.setMannual(1);
+                        cr.setManual(1);
                     } else {
-                        cr.setMannual(0);
+                        cr.setManual(0);
                     }
                     st = dbCon.exec_insert(cr);
                     dbCon.close();
@@ -410,13 +412,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     logger.catching(e);
                 }
                 if (st != 0) {
-                    if (cr.getMannual() == 0) {
+                    if (cr.getManual() == 0) {
                         currencyTF.getPropertyDataSource().setValue(myUI.getCurrencyRateFromBank());
                     }
                     Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                 }
             } else {
-                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue), Notification.Type.WARNING_MESSAGE);
+                Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue), Notification.Type.WARNING_MESSAGE);
             }
         } else if (source.getData().equals(myUI.getMessage(SptMessages.Print)) && !source.getId().contains(Settings.FreshItem)) {
             Item item;
@@ -499,7 +501,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
                 if (accordion.getSelectedTab() == expensesGrid) {
                     categoryCb = expensesCategoryCb;
-                    if (amountTf.getPropertyDataSource().getValue() != null && (
+                    if (rateTf != null && amountTf.getPropertyDataSource().getValue() != null && (
                             !currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
                                     rateTf.getPropertyDataSource().getValue() != null) && dateDf.getValue() != null && categoryCb.getValue() != null) {
                         try {
@@ -524,41 +526,41 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                 dbTr.connect();
                                 AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
                                         dateDf.getValue(), old_amount, amount, 2);
+                                amountTf.removeAllValidators();
                                 if (tr != null) {
-                                    amountTf.removeAllValidators();
                                     double limit = tr.getLimit();
                                     if (isKGS) {
                                         limit = limit * rate;
                                     }
-                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
+                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                                             + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1, Settings.round(limit, 2)));
-                                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
+                                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                 } else {
-                                    amountTf.removeAllValidators();
-                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                                 }
                                 dbTr.close();
                             } else {
                                 amountTf.removeAllValidators();
-                                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                             }
                         } catch (Exception e) {
                             amountTf.removeAllValidators();
-                            amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                            amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                             logger.error(e);
                             logger.catching(e);
                         }
                     }
                 } else if (accordion.getSelectedTab() == incomesGrid && !itemId.contains(Settings.FreshItem)) {
                     categoryCb = incomesCategoryCb;
-                    if (amountTf.getPropertyDataSource().getValue() != null &&
+                    if (rateTf != null && amountTf.getPropertyDataSource().getValue() != null &&
                             (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
                                     rateTf.getPropertyDataSource().getValue() != null)
                             && dateDf.getValue() != null && categoryCb.getValue() != null) {
                         try {
                             double amount = Settings.dFormat.parse(amountTf.getValue()).doubleValue();
-                            double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
+                            double rate;
+                            rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
                                     Settings.dFormat.parse(rateTf.getValue()).doubleValue() :
                                     (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue();
                             boolean isKGS = (Integer) currencyCb.getValue() == 1;
@@ -574,45 +576,44 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                 if ((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Currency)).getValue() == 1) {
                                     old_amount = Settings.round(old_amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
                                 }
-                                if (amount <= old_amount || DateUtils.truncate(dateDf.getValue(), java.util.Calendar.DAY_OF_MONTH)
+                                if (amount <= old_amount || DateUtils.truncate(dateDf.getValue(), Calendar.DAY_OF_MONTH)
                                         .compareTo((Date) item.getItemProperty(myUI.getMessage(SptMessages.Date)).getValue()) != 0) {
                                     DbAccTransactions dbTr = new DbAccTransactions();
                                     dbTr.connect();
                                     AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
                                             dateDf.getValue(), old_amount, amount, 1);
+                                    amountTf.removeAllValidators();
                                     if (tr != null) {
-                                        amountTf.removeAllValidators();
                                         double limit = tr.getLimit();
                                         if (isKGS) {
                                             limit = limit * rate;
                                         }
-                                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
+                                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                                                 + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
-                                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
+                                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                                                 + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                     } else {
-                                        amountTf.removeAllValidators();
-                                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                                     }
                                     dbTr.close();
                                 } else {
                                     amountTf.removeAllValidators();
-                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), amount, null));
+                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), amount, null));
                                 }
                             } else {
                                 amountTf.removeAllValidators();
-                                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                             }
                         } catch (Exception e) {
                             amountTf.removeAllValidators();
-                            amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                            amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                             logger.error(e);
                             logger.catching(e);
                         }
                     }
                 } else {
                     amountTf.removeAllValidators();
-                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                 }
             }
         }
@@ -787,9 +788,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             container = expensesCont.getWrappedContainer();
         }
         Item item = container.addItemAt(0, itemId);
-        Iterator<?> iter = container.getContainerPropertyIds().iterator();
-        while (iter.hasNext()) {
-            Object propId = iter.next();
+        for (Object propId : container.getContainerPropertyIds()) {
             item.getItemProperty(propId).setValue(container.getItem(oldItemId).getItemProperty(propId).getValue());
         }
         container.removeItem(oldItemId);
@@ -813,7 +812,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                         (Date) incomesCont.getContainerProperty(source.getId(),
                                 myUI.getMessage(SptMessages.Date)).getValue(), amount, 0.0, 1);
                 if (tr != null) {
-                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverlimit())
+                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                 } else {
                     dbDef.exec_update_emp_id(Integer.parseInt(source.getId()),

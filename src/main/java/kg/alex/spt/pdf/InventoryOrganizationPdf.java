@@ -32,10 +32,8 @@ public class InventoryOrganizationPdf {
 
     static final Logger logger = LogManager.getLogger(InventoryOrganizationPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1 = null;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource = null;
-    SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+    private  ByteArrayOutputStream buffer = null;
+    private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private Document document = null;
 
 
@@ -43,11 +41,8 @@ public class InventoryOrganizationPdf {
                                     final IndexedContainer inventoriesCont, final String totalQuantity,
                                     String totalAmount, final StudentInfoPdf schoolInfo) {
 
-        source1 = new StreamResource.StreamSource() {
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/PT_Sans-Web-Bold.ttf";
@@ -114,10 +109,10 @@ public class InventoryOrganizationPdf {
                     document.add(Thead);
                     document.add(new Paragraph(20, " "));
 
-                    float[] Tpayments_colsWidth = {0.75f, 2f, 2f, 2f, 6f, 1.8f, 1.8f, 1.6f, 2.1f, 1.3f};
+                    float[] table_payments_colsWidth = {0.75f, 2f, 2f, 2f, 6f, 1.8f, 1.8f, 1.6f, 2.1f, 1.3f};
                     PdfPTable table = new PdfPTable(10);
                     table.setWidthPercentage(90f);
-                    table.setWidths(Tpayments_colsWidth);
+                    table.setWidths(table_payments_colsWidth);
                     table.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     table.addCell(new Phrase(" №", ordFontBold));
@@ -131,7 +126,7 @@ public class InventoryOrganizationPdf {
                     table.addCell(new Phrase(myUI.getMessage(SptMessages.PurchaseYear), ordFontBold));
                     table.addCell(new Phrase(myUI.getMessage(SptMessages.LifeTime), ordFontBold));
 
-                    Iterator iter1 = inventoriesCont.getItemIds().iterator();
+                    Iterator<?> iter1 = inventoriesCont.getItemIds().iterator();
                     int y = 0;
                     if (inventoriesCont.size() > 0) {
                         y = 1;
@@ -215,7 +210,7 @@ public class InventoryOrganizationPdf {
             }
         };
 
-        resource = new StreamResource(source1, "StockMovements"
+        StreamResource resource = new StreamResource(source1, "StockMovements"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 

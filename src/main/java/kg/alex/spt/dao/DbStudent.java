@@ -37,7 +37,7 @@ public class DbStudent extends BaseDb {
             throws SQLException {
 
 
-        if (edu_sts.equals("") || edu_sts == null) {
+        if (edu_sts.equals("")) {
             edu_sts = "-1";
         }
         String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, "
@@ -281,7 +281,7 @@ public class DbStudent extends BaseDb {
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getPassword());
         stat.setString(3, s.getName());
-        stat.setString(4, s.getSur_name());
+        stat.setString(4, s.getSurname());
         stat.setString(5, s.getMiddle_name());
         stat.setDate(6, new java.sql.Date(s.getBirth_date().getTime()));
         stat.setString(7, s.getPhoto());
@@ -309,7 +309,7 @@ public class DbStudent extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getName());
-        stat.setString(3, s.getSur_name());
+        stat.setString(3, s.getSurname());
         stat.setString(4, s.getMiddle_name());
         stat.setDate(5, new java.sql.Date(s.getBirth_date().getTime()));
         stat.setString(6, s.getPhoto());
@@ -318,8 +318,7 @@ public class DbStudent extends BaseDb {
         stat.setInt(9, s.getClass_name_id());
         stat.setInt(10, s.getEmployee_id());
         stat.setInt(11, s.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update(int student_id, int education_status_id, int class_id,
@@ -331,8 +330,7 @@ public class DbStudent extends BaseDb {
         stat.setInt(2, class_id);
         stat.setInt(3, employee_id);
         stat.setInt(4, student_id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update(int student_id, int education_status_id,
@@ -343,8 +341,7 @@ public class DbStudent extends BaseDb {
         stat.setInt(1, education_status_id);
         stat.setInt(2, employee_id);
         stat.setInt(3, student_id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer execStud_sel(MyVaadinUI myUi, int cl_id, int year_id)
@@ -406,7 +403,7 @@ public class DbStudent extends BaseDb {
             st.setScl_name_ru(result.getString("sc.name_ru"));
             st.setScl_address(result.getString("sc.adress"));
             st.setScl_phone(result.getString("sc.phone"));
-            st.setScl_accountent_fullname(result.getString("fullname"));
+            st.setScl_accountant_full_name(result.getString("fullname"));
             st.setScl_dir_f_name(result.getString("sc.director_fullname"));
         }
         return st;
@@ -528,7 +525,7 @@ public class DbStudent extends BaseDb {
             e.setPre_registered(result.getString("prereg"));
             e.setActive(result.getString("active"));
             e.setNot_confirmed(result.getString("notcon"));
-            e.setOutof(result.getString("outof"));
+            e.setOutOf(result.getString("outof"));
             e.setGraduated(result.getString("graduated"));
             e.setTotal(result.getString("ttl"));
         }
@@ -539,40 +536,23 @@ public class DbStudent extends BaseDb {
                                             StatusesReport sr) throws SQLException {
 
 
-        String sql = "SELECT sch.id, sch.name_ru, COUNT(IF(st.entering_year_id<="
+        StringBuilder sql = new StringBuilder("SELECT sch.id, sch.name_ru, COUNT(IF(st.entering_year_id<="
                 + year_id + " AND cna.class_number_id IN ("
                 + Settings.convertCollectionToStr(((Set<?>) sr.classTable.getValue())) + ") "
                 + "AND edu.id IN ("
-                + Settings.convertCollectionToStr(((Set<?>) sr.statusMS.getValue())) + "),1,NULL)) AS quantity";
-        Iterator class_iter = ((Set<?>) sr.classTable.getValue()).iterator();
-        Iterator status_iter;
+                + Settings.convertCollectionToStr(((Set<?>) sr.statusMS.getValue())) + "),1,NULL)) AS quantity");
+        Iterator<?> class_iter = ((Set<?>) sr.classTable.getValue()).iterator();
+        Iterator<?> status_iter;
         while (class_iter.hasNext()) {
             Object nextClass = class_iter.next();
             status_iter = ((Set<?>) sr.statusMS.getValue()).iterator();
             while (status_iter.hasNext()) {
                 Object nextStatus = status_iter.next();
-                sql += ", COUNT(IF(st.entering_year_id<="
-                        + year_id + " and cna.class_number_id = " + nextClass
-                        + " and edu.id= " + nextStatus + ", 1, NULL)) AS quantity" + nextClass
-                        + "_" + nextStatus + " ";
+                sql.append(", COUNT(IF(st.entering_year_id<=").append(year_id).append(" and cna.class_number_id = ").append(nextClass).append(" and edu.id= ").append(nextStatus).append(", 1, NULL)) AS quantity").append(nextClass).append("_").append(nextStatus).append(" ");
             }
         }
-        sql
-                += " FROM school as sch "
-                + "LEFT JOIN student AS st on st.school_id=sch.id "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN class_name AS cna ON cna.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
-                + "ELSE stud_o.to_class_name_id END "
-                + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
-                + "ELSE stud_o.to_education_status_id END "
-                + "WHERE sch.id IN (" + Settings.convertCollectionToStr(((Set<?>) sr.schoolsTable.getValue())) + ") "
-                + "GROUP BY sch.id;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
+        sql.append(" FROM school as sch " + "LEFT JOIN student AS st on st.school_id=sch.id " + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 " + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN class_name AS cna ON cna.id = CASE " + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id " + "ELSE stud_o.to_class_name_id END " + "LEFT JOIN education_status AS edu ON edu.id = CASE " + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id " + "ELSE stud_o.to_education_status_id END " + "WHERE sch.id IN (").append(Settings.convertCollectionToStr(((Set<?>) sr.schoolsTable.getValue()))).append(") ").append("GROUP BY sch.id;");
+        PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         stat.setInt(1, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -676,7 +656,7 @@ public class DbStudent extends BaseDb {
         stat.setInt(6, min);
         stat.setInt(7, max - 1);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("num");
         }
         return 0;
@@ -687,9 +667,6 @@ public class DbStudent extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, login);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
-            return true;
-        }
-        return false;
+        return result.next();
     }
 }

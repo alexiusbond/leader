@@ -28,25 +28,18 @@ public class InstallmentPlanPaymentsPdf {
 
     static final Logger logger = LogManager.getLogger(InstallmentPlanPaymentsPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    Date aDate = new Date(System.currentTimeMillis());
-    private StudentInfoPdf st;
+    private final Date aDate = new Date(System.currentTimeMillis());
+    private final StudentInfoPdf st;
 
 
-    public InstallmentPlanPaymentsPdf(final MyVaadinUI myUI, StudentInfoPdf s,
-                                      final IndexedContainer planCont,
-                                      final IndexedContainer paymentsCont,
-                                      final double ttl_inst, final double ttl_pay) {
+    public InstallmentPlanPaymentsPdf(final MyVaadinUI myUI, StudentInfoPdf s, final IndexedContainer planCont,
+                                      final IndexedContainer paymentsCont, final double ttl_inst, final double ttl_pay) {
         this.st = s;
 
-        source1 = new StreamResource.StreamSource() {
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/PT_Sans-Web-Bold.ttf";
@@ -76,16 +69,16 @@ public class InstallmentPlanPaymentsPdf {
 
                     document.open();
 
-                    float[] Tdate_colsWidth = {3.5f, 1f};
-                    PdfPTable Tdate = new PdfPTable(2);
-                    Tdate.setWidthPercentage(90f);
-                    Tdate.setWidths(Tdate_colsWidth);
-                    Tdate.getDefaultCell().setBorder(0);
-                    Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
-                    document.add(Tdate);
+                    float[] table_date_colsWidth = {3.5f, 1f};
+                    PdfPTable table_date = new PdfPTable(2);
+                    table_date.setWidthPercentage(90f);
+                    table_date.setWidths(table_date_colsWidth);
+                    table_date.getDefaultCell().setBorder(0);
+                    table_date.addCell(new Phrase(" ", ordFont));
+                    table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
+                    document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.InstpLanPaymentsReport)
+                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.InstallmentPLanPaymentsReport)
                             + " (" + st.getYear() + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(24, " "));
@@ -106,7 +99,7 @@ public class InstallmentPlanPaymentsPdf {
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Contract)
                             + ": " + st.getCtr_contract_sum() + "$", ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Net)
-                            + ": " + st.getCtr_k_oplate() + "$", ordFont));
+                            + ": " + st.getCtr_to_pay() + "$", ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName)
                             + ": " + st.getStud_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Discount)
@@ -123,9 +116,9 @@ public class InstallmentPlanPaymentsPdf {
                             + ": " + st.getStud_class_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt)
                             + ": " + st.getCtr_debt() + "$", ordFont));
-                    if (st.getCtr_instplan_debt() > 0) {
+                    if (st.getCtr_installment_plan_debt() > 0) {
                         Thead.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt)
-                                + ": " + Settings.dFormat.format(st.getCtr_instplan_debt()) + "$", ordFont));
+                                + ": " + Settings.dFormat.format(st.getCtr_installment_plan_debt()) + "$", ordFont));
                     } else {
                         Thead.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt)
                                 + ": 0.00$", ordFont));
@@ -136,82 +129,81 @@ public class InstallmentPlanPaymentsPdf {
 
                     if (planCont == null && paymentsCont != null) {
                         //payments table
-                        float[] Tpayments_colsWidth = {0.75f, 2.5f, 2.5f, 4f, 3.2f};
-                        PdfPTable Tpayments = new PdfPTable(5);
-                        Tpayments.setWidthPercentage(90f);
-                        Tpayments.setWidths(Tpayments_colsWidth);
-                        Tpayments.getDefaultCell().
-                                setVerticalAlignment(Element.ALIGN_BOTTOM);
-                        Tpayments.addCell(new Phrase(" №", ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.WhoPaid), ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.PaymentCategoryType), ordFontBold));
+                        float[] table_payments_colsWidth = {0.75f, 2.5f, 2.5f, 4f, 3.2f};
+                        PdfPTable table_payments = new PdfPTable(5);
+                        table_payments.setWidthPercentage(90f);
+                        table_payments.setWidths(table_payments_colsWidth);
+                        table_payments.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
+                        table_payments.addCell(new Phrase(" №", ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.WhoPaid), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.PaymentCategoryType), ordFontBold));
 
-                        Iterator iter1 = paymentsCont.getItemIds().iterator();
+                        Iterator<?> iter1 = paymentsCont.getItemIds().iterator();
                         int y = 0;
                         if (paymentsCont.size() > 0) {
                             y = 1;
                         }
                         while (iter1.hasNext()) {
                             Object next = iter1.next();
-                            Tpayments.addCell(new Phrase(new Phrase(y + "", tableFont)));
-                            Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
+                            table_payments.addCell(new Phrase(new Phrase(y + "", tableFont)));
+                            table_payments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
-                            Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tpayments.addCell(new Phrase(Settings.dFormat.format(paymentsCont.getContainerProperty(next,
+                            table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            table_payments.addCell(new Phrase(Settings.dFormat.format(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
-                            Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                            Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
+                            table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                            table_payments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.WhoPaid)).getValue().toString(), tableFont));
-                            Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
+                            table_payments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PaymentCategoryType)).getValue().toString(), tableFont));
                             y++;
                         }
 
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
                                 + ": " + Settings.dFormat.format(ttl_pay) + "$", ordFontBold));
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
 
-                        document.add(Tpayments);
+                        document.add(table_payments);
                     }
                     if (paymentsCont == null && planCont != null) {
                         //installment plan table
-                        float[] Tplan_colsWidth = {0.75f, 3f, 3f};
-                        PdfPTable Tplan = new PdfPTable(3);
-                        Tplan.setWidthPercentage(90f);
-                        Tplan.setWidths(Tplan_colsWidth);
-                        Tplan.getDefaultCell().
+                        float[] table_plan_colsWidth = {0.75f, 3f, 3f};
+                        PdfPTable table_plan = new PdfPTable(3);
+                        table_plan.setWidthPercentage(90f);
+                        table_plan.setWidths(table_plan_colsWidth);
+                        table_plan.getDefaultCell().
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
-                        Tplan.addCell(new Phrase(" №", ordFontBold));
-                        Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                        Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
+                        table_plan.addCell(new Phrase(" №", ordFontBold));
+                        table_plan.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
+                        table_plan.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
 
-                        Iterator iter = planCont.getItemIds().iterator();
+                        Iterator<?> iter = planCont.getItemIds().iterator();
                         int i = 0;
                         if (planCont.size() > 0) {
                             i = 1;
                         }
                         while (iter.hasNext()) {
                             Object next = iter.next();
-                            Tplan.addCell(new Phrase(i + "", tableFont));
-                            Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
+                            table_plan.addCell(new Phrase(i + "", tableFont));
+                            table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
-                            Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tplan.addCell(new Phrase(Settings.dFormat.format(planCont.getContainerProperty(next,
+                            table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            table_plan.addCell(new Phrase(Settings.dFormat.format(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
-                            Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                            table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             i++;
                         }
-                        Tplan.addCell(new Phrase(" ", ordFontBold));
-                        Tplan.addCell(new Phrase(" ", ordFontBold));
-                        Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
+                        table_plan.addCell(new Phrase(" ", ordFontBold));
+                        table_plan.addCell(new Phrase(" ", ordFontBold));
+                        table_plan.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
                                 + ": " + Settings.dFormat.format(ttl_inst) + "$", ordFontBold));
 
-                        document.add(Tplan);
+                        document.add(table_plan);
                     }
                     if (planCont != null && paymentsCont != null) {
                         float[] Tbody_colsWidth = {2f, 4f};
@@ -222,17 +214,17 @@ public class InstallmentPlanPaymentsPdf {
                         Tbody.addCell(new Phrase(myUI.getMessage(SptMessages.InstallmentPlan), ordFontBold));
                         Tbody.addCell(new Phrase(myUI.getMessage(SptMessages.Payments), ordFontBold));
                         //installment plan table
-                        float[] Tplan_colsWidth = {0.75f, 3f, 3f};
-                        PdfPTable Tplan = new PdfPTable(3);
-                        Tplan.setWidthPercentage(100f);
-                        Tplan.setWidths(Tplan_colsWidth);
-                        Tplan.getDefaultCell().
+                        float[] table_plan_colsWidth = {0.75f, 3f, 3f};
+                        PdfPTable table_plan = new PdfPTable(3);
+                        table_plan.setWidthPercentage(100f);
+                        table_plan.setWidths(table_plan_colsWidth);
+                        table_plan.getDefaultCell().
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
-                        Tplan.addCell(new Phrase(" №", ordFontBold));
-                        Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                        Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
+                        table_plan.addCell(new Phrase(" №", ordFontBold));
+                        table_plan.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
+                        table_plan.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
 
-                        Iterator iter = planCont.getItemIds().iterator();
+                        Iterator<?> iter = planCont.getItemIds().iterator();
                         int i = 0;
                         double ttl_plan = 0;
                         if (planCont.size() > 0) {
@@ -240,38 +232,38 @@ public class InstallmentPlanPaymentsPdf {
                         }
                         while (iter.hasNext()) {
                             Object next = iter.next();
-                            Tplan.addCell(new Phrase(i + "", tableFont));
-                            Tplan.addCell(new Phrase(planCont.getContainerProperty(next,
+                            table_plan.addCell(new Phrase(i + "", tableFont));
+                            table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
-                            Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tplan.addCell(new Phrase(Settings.dFormat.format(planCont.getContainerProperty(next,
+                            table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            table_plan.addCell(new Phrase(Settings.dFormat.format(planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
-                            Tplan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                            table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             i++;
                             ttl_plan += (Double) planCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue();
                         }
-                        Tplan.addCell(new Phrase(" ", ordFontBold));
-                        Tplan.addCell(new Phrase(" ", ordFontBold));
-                        Tplan.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
+                        table_plan.addCell(new Phrase(" ", ordFontBold));
+                        table_plan.addCell(new Phrase(" ", ordFontBold));
+                        table_plan.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
                                 + ": " + Settings.dFormat.format(ttl_plan) + "$", ordFontBold));
 
-                        Tbody.addCell(Tplan);
+                        Tbody.addCell(table_plan);
 
                         //payments table
-                        float[] Tpayments_colsWidth = {0.75f, 2.5f, 2.5f, 4f, 3.2f};
-                        PdfPTable Tpayments = new PdfPTable(5);
-                        Tpayments.setWidthPercentage(100f);
-                        Tpayments.setWidths(Tpayments_colsWidth);
-                        Tpayments.getDefaultCell().
+                        float[] table_payments_colsWidth = {0.75f, 2.5f, 2.5f, 4f, 3.2f};
+                        PdfPTable table_payments = new PdfPTable(5);
+                        table_payments.setWidthPercentage(100f);
+                        table_payments.setWidths(table_payments_colsWidth);
+                        table_payments.getDefaultCell().
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
-                        Tpayments.addCell(new Phrase(" №", ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.WhoPaid), ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.PaymentCategoryType), ordFontBold));
+                        table_payments.addCell(new Phrase(" №", ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.WhoPaid), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.PaymentCategoryType), ordFontBold));
 
-                        Iterator iter1 = paymentsCont.getItemIds().iterator();
+                        Iterator<?> iter1 = paymentsCont.getItemIds().iterator();
                         int y = 0;
                         double ttl_pay = 0;
                         if (planCont.size() > 0) {
@@ -279,16 +271,16 @@ public class InstallmentPlanPaymentsPdf {
                         }
                         while (iter1.hasNext()) {
                             Object next = iter1.next();
-                            Tpayments.addCell(new Phrase(y + "", tableFont));
-                            Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
+                            table_payments.addCell(new Phrase(y + "", tableFont));
+                            table_payments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
-                            Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            Tpayments.addCell(new Phrase(Settings.dFormat.format(paymentsCont.getContainerProperty(next,
+                            table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+                            table_payments.addCell(new Phrase(Settings.dFormat.format(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Amount)).getValue()) + "$", tableFont));
-                            Tpayments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                            Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
+                            table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                            table_payments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.WhoPaid)).getValue().toString(), tableFont));
-                            Tpayments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
+                            table_payments.addCell(new Phrase(paymentsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PaymentCategoryType)).getValue().toString(), tableFont));
                             y++;
 
@@ -302,14 +294,14 @@ public class InstallmentPlanPaymentsPdf {
                             }
                         }
 
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
-                        Tpayments.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Total)
                                 + ": " + Settings.dFormat.format(ttl_pay) + "$", ordFontBold));
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
-                        Tpayments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
+                        table_payments.addCell(new Phrase(" ", ordFontBold));
 
-                        Tbody.addCell(Tpayments);
+                        Tbody.addCell(table_payments);
 
                         document.add(Tbody);
 
@@ -325,7 +317,7 @@ public class InstallmentPlanPaymentsPdf {
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
-                    T2.addCell(new Phrase(st.getScl_accountent_fullname(), ordFont));
+                    T2.addCell(new Phrase(st.getScl_accountant_full_name(), ordFont));
                     T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));
                     document.add(T2);
 
@@ -344,7 +336,7 @@ public class InstallmentPlanPaymentsPdf {
             }
         };
 
-        resource = new StreamResource(source1, "InstallmentPlanPayments"
+        StreamResource resource = new StreamResource(source1, "InstallmentPlanPayments"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 

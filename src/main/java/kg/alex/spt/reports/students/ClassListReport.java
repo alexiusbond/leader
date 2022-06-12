@@ -35,20 +35,18 @@ public class ClassListReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(ClassListReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private FormattedTable dataTable;
     private FilterTable classTable;
     private IndexedContainer dataCont;
-    private EnhancedFormatExcelExport excelReport;
 
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
-    public double contracts, discounts, corrections, debts, nets, paids, lefts;
+    public double contracts, discounts, corrections, debts, nets, paid_amounts, lefts;
 
     public ClassListReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -76,7 +74,7 @@ public class ClassListReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 5);
+        GridLayout leftGrid = new GridLayout(4, 5);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -97,12 +95,7 @@ public class ClassListReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -154,7 +147,7 @@ public class ClassListReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -219,7 +212,7 @@ public class ClassListReport implements Button.ClickListener,
                             Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
                     dataTable.setContainerDataSource(dataCont);
-                    dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+                    dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), Table.Align.RIGHT);
@@ -242,7 +235,7 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
                             Settings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(paids));
+                            Settings.dFormat.format(paid_amounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
                             Settings.dFormat.format(lefts));
                     if (dataCont.size() != 0) {
@@ -264,7 +257,7 @@ public class ClassListReport implements Button.ClickListener,
                 dbsc.connect();
                 st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
                 dbsc.close();
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
                         new ClassListPdf(myUI, dataCont, st, this);
@@ -273,7 +266,7 @@ public class ClassListReport implements Button.ClickListener,
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -282,7 +275,7 @@ public class ClassListReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             if (dataTable.getContainerDataSource().size() != 0) {
-                excelReport = new EnhancedFormatExcelExport(dataTable);
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.ClassList));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();

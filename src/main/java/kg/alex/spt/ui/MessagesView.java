@@ -17,10 +17,9 @@ import org.tepi.filtertable.FilterTable;
 public class MessagesView extends VerticalLayout {
 
     static final Logger logger = LogManager.getLogger(MessagesView.class);
-    private MyVaadinUI myUI;
-    private FilterTable dataTable;
-    private String[] NATURAL_COL_ORDER;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final MyVaadinUI myUI;
+    private final String[] NATURAL_COL_ORDER;
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public MessagesView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -36,7 +35,7 @@ public class MessagesView extends VerticalLayout {
 
     public void buildBody() {
 
-        dataTable = new FilterTable();
+        FilterTable dataTable = new FilterTable();
         dataTable.setSizeFull();
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setStyleName(ValoTheme.TABLE_SMALL);
@@ -57,26 +56,23 @@ public class MessagesView extends VerticalLayout {
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Message), 1);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Date), 80);
         dataTable.setColumnWidth(Settings.button, 60);
-        dataTable.setCellStyleGenerator(new CustomTable.CellStyleGenerator() {
-            @Override
-            public String getStyle(CustomTable source, Object itemId, Object propertyId) {
+        dataTable.setCellStyleGenerator((CustomTable.CellStyleGenerator) (source, itemId, propertyId) -> {
 
-                if (propertyId == null) {
-                    // Styling for row
-                    if ((Integer) source.getContainerProperty(itemId,
-                            Settings.status_id).getValue() == 2) {
-                        return "highlight-red";
-                    } else {
-                        return null;
-                    }
+            if (propertyId == null) {
+                // Styling for row
+                if ((Integer) source.getContainerProperty(itemId,
+                        Settings.status_id).getValue() == 2) {
+                    return "highlight-red";
                 } else {
-                    // styling for column propertyId
                     return null;
                 }
+            } else {
+                // styling for column propertyId
+                return null;
             }
         });
         addComponent(dataTable);

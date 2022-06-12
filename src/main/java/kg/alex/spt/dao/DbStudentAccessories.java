@@ -37,8 +37,7 @@ public class DbStudentAccessories extends BaseDb {
         stat.setInt(3, a.getAccessories_id());
         stat.setInt(4, a.getEmployee_id());
         stat.executeUpdate();
-        int id = getLastInsertedSt_id();
-        return id;
+        return getLastInsertedSt_id();
     }
 
     public int getLastInsertedSt_id() throws SQLException {

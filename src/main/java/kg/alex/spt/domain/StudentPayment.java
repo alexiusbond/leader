@@ -19,19 +19,19 @@ public class StudentPayment implements Serializable {
     private double rate;
     private int payment_type_id;
     private int payment_cat_type_id;
-    private int emplooyee_id;
+    private int employee_id;
     private int school_id;
     private String who_paid;
     private String note;
-    private String noteForKassa;
+    private String noteForCashBox;
     private Date modification_date;
 
-    public String getNoteForKassa() {
-        return noteForKassa;
+    public String getNoteForCashBox() {
+        return noteForCashBox;
     }
 
-    public void setNoteForKassa(String noteForKassa) {
-        this.noteForKassa = noteForKassa;
+    public void setNoteForCashBox(String noteForCashBox) {
+        this.noteForCashBox = noteForCashBox;
     }
 
     public int getSchool_id() {
@@ -130,12 +130,12 @@ public class StudentPayment implements Serializable {
         this.payment_type_id = payment_type_id;
     }
 
-    public int getEmplooyee_id() {
-        return emplooyee_id;
+    public int getEmployee_id() {
+        return employee_id;
     }
 
-    public void setEmplooyee_id(int emplooyee_id) {
-        this.emplooyee_id = emplooyee_id;
+    public void setEmployee_id(int employee_id) {
+        this.employee_id = employee_id;
     }
 
     public Date getModification_date() {

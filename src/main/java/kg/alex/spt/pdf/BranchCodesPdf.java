@@ -25,17 +25,13 @@ public class BranchCodesPdf {
 
     static final Logger logger = LogManager.getLogger(BranchCodesPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1 = null;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource = null;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
     public BranchCodesPdf(final MyVaadinUI myUI, final IndexedContainer branchesCont) {
-        source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
+
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/PT_Sans-Web-Bold.ttf";
@@ -56,7 +52,6 @@ public class BranchCodesPdf {
                             BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
                     Font fontBold = new Font(baseFontBold, 14);
-                    Font ordFont = new Font(baseFont, 11);
                     Font ordFontBold = new Font(baseFontBold, 11);
                     Font tableFont = new Font(baseFont, 10);
 
@@ -69,17 +64,17 @@ public class BranchCodesPdf {
                     document.add(new Paragraph(24, " "));
 
                     //installment plan table
-                    float[] Tplan_colsWidth = {0.2f, 0.4f, 3f};
+                    float[] table_plan_colsWidth = {0.2f, 0.4f, 3f};
                     PdfPTable infoTable = new PdfPTable(3);
                     infoTable.setWidthPercentage(90f);
-                    infoTable.setWidths(Tplan_colsWidth);
+                    infoTable.setWidths(table_plan_colsWidth);
                     infoTable.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     infoTable.addCell(new Phrase(" №", ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.CourseCode), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Title), ordFontBold));
 
-                    Iterator iter = branchesCont.getItemIds().iterator();
+                    Iterator<?> iter = branchesCont.getItemIds().iterator();
                     int i = 1;
                     while (iter.hasNext()) {
                         Object id = iter.next();
@@ -112,7 +107,7 @@ public class BranchCodesPdf {
             }
         };
 
-        resource = new StreamResource(source1, "ClassPayments"
+        StreamResource resource = new StreamResource(source1, "ClassPayments"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 

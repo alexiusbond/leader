@@ -69,9 +69,9 @@ public class DbEmployeeQuestion extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Question)).setValue(result.getString("q.name"));
             item.getItemProperty(Settings.id).setValue(result.getInt("eq.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Answer)).setValue(
-                    edv.createTextfield(result.getString("eq.answer"),
+                    edv.createTextField(result.getString("eq.answer"),
                             myUI.getMessage(SptMessages.Answer),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 350, true), false));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 350, true), false));
         }
         return container;
     }

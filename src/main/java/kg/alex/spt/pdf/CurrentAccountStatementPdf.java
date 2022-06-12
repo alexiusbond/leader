@@ -28,21 +28,15 @@ public class CurrentAccountStatementPdf {
 
     static final Logger logger = LogManager.getLogger(CurrentAccountStatementPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1 = null;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource = null;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    Date aDate = new Date(System.currentTimeMillis());
-    
+    private final Date aDate = new Date(System.currentTimeMillis());
 
 
     public CurrentAccountStatementPdf(final MyVaadinUI myUI, final Table t,
-            final String acc_category, final String currency, final Date from, final Date to, final StudentInfoPdf st) {
-        source1 = new StreamResource.StreamSource() {
+                                      final String acc_category, final String currency, final Date from, final Date to, final StudentInfoPdf st) {
+               StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/PT_Sans-Web-Bold.ttf";
@@ -73,16 +67,16 @@ public class CurrentAccountStatementPdf {
 
                     document.open();
 
-                    float[] Tdate_colsWidth = {2f, 1f};
-                    PdfPTable Tdate = new PdfPTable(2);
-                    Tdate.setWidthPercentage(90f);
-                    Tdate.setWidths(Tdate_colsWidth);
-                    Tdate.getDefaultCell().setBorder(0);
-                    Tdate.addCell(new Phrase("Счет: " + acc_category, ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
-                    Tdate.addCell(new Phrase("Валюта: " + currency, tableFont));
-                    Tdate.addCell(new Phrase(" " , tableFont));
-                    document.add(Tdate);
+                    float[] table_date_colsWidth = {2f, 1f};
+                    PdfPTable table_date = new PdfPTable(2);
+                    table_date.setWidthPercentage(90f);
+                    table_date.setWidths(table_date_colsWidth);
+                    table_date.getDefaultCell().setBorder(0);
+                    table_date.addCell(new Phrase("Счет: " + acc_category, ordFont));
+                    table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
+                    table_date.addCell(new Phrase("Валюта: " + currency, tableFont));
+                    table_date.addCell(new Phrase(" ", tableFont));
+                    document.add(table_date);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.CurrentAccountStatementReport) + " "
                             + myUI.getMessage(SptMessages.From) + " " + Settings.df.format(from) + " "
@@ -93,10 +87,10 @@ public class CurrentAccountStatementPdf {
                     document.add(new Paragraph(20, " "));
 
                     //installment plan table
-                    float[] Tplan_colsWidth = {0.1f, 0.4f, 0.4f, 1.2f, 0.4f, 0.4f, 0.4f};
+                    float[] table_plan_colsWidth = {0.1f, 0.4f, 0.4f, 1.2f, 0.4f, 0.4f, 0.4f};
                     PdfPTable dataTable = new PdfPTable(7);
                     dataTable.setWidthPercentage(90f);
-                    dataTable.setWidths(Tplan_colsWidth);
+                    dataTable.setWidths(table_plan_colsWidth);
                     dataTable.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     dataTable.addCell(new Phrase(" №", ordFontBold));
@@ -107,7 +101,7 @@ public class CurrentAccountStatementPdf {
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Payout), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Balance), ordFontBold));
 
-                    Iterator iter = t.getItemIds().iterator();
+                    Iterator<?> iter = t.getItemIds().iterator();
                     int i = 0;
                     while (iter.hasNext()) {
                         Object next = iter.next();
@@ -162,7 +156,7 @@ public class CurrentAccountStatementPdf {
             }
         };
 
-        resource = new StreamResource(source1, "CurrentAccountStatement"
+        StreamResource resource = new StreamResource(source1, "CurrentAccountStatement"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 

@@ -14,8 +14,6 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Invoice;
 import kg.alex.spt.i18n.SptMessages;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -85,10 +83,7 @@ public class DbInvoice extends BaseDb {
         stat.setInt(5, id);
         ResultSet result = stat.executeQuery();
 
-        while (result.next()) {
-            return true;
-        }
-        return false;
+        return result.next();
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id,
@@ -137,7 +132,7 @@ public class DbInvoice extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getString("inv_num");
         }
         return null;
@@ -150,7 +145,7 @@ public class DbInvoice extends BaseDb {
         stat.setInt(2, acc_invoice_type_id);
         stat.setDate(3, date);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getString("note2");
         }
         return null;
@@ -162,7 +157,7 @@ public class DbInvoice extends BaseDb {
         stat.setInt(1, school_id);
         stat.setInt(2, acc_invoice_type_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("inv_num");
         }
         return 0;
@@ -214,8 +209,7 @@ public class DbInvoice extends BaseDb {
         }
         stat.setInt(4, inv.getEmployee_id());
         stat.setInt(5, inv.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update(int id, int is_confirmed) throws SQLException {
@@ -223,7 +217,6 @@ public class DbInvoice extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, is_confirmed);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 }

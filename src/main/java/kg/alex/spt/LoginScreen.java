@@ -6,10 +6,7 @@ import kg.alex.spt.i18n.SptMessages;
 
 public class LoginScreen extends VerticalLayout {
 
-    private MyVaadinUI myUI;
-
     public LoginScreen(MyVaadinUI myUI) {
-        this.myUI = myUI;
 
         setSizeFull();
         setStyleName("mainLayout");

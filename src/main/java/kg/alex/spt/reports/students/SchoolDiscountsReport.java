@@ -33,16 +33,14 @@ public class SchoolDiscountsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(SchoolDiscountsReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
             selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     public FormattedTable dataTable;
     public FilterTable schoolTable, discountsTable;
-    private EnhancedFormatExcelExport excelReport;
 
     public SchoolDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -53,7 +51,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 7);
+        GridLayout leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -149,12 +147,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -217,9 +210,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                     dbsc.execSQL_Discounts_by_schools(myUI, (Integer) yearSelect.getValue(),
                             Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
-                    Iterator school_iter = ((Set<?>) schoolTable.getValue()).iterator();
-                    while (school_iter.hasNext()) {
-                        Object next = school_iter.next();
+                    for (Object next : (Set<?>) schoolTable.getValue()) {
                         dataTable.setColumnAlignment(schoolTable.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.Students), Table.Align.RIGHT);
@@ -231,13 +222,13 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                                 + " " + myUI.getMessage(SptMessages.Average) + "%", Table.Align.RIGHT);
                         try {
                             dataTable.setColumnFooter(schoolTable.getContainerProperty(
-                                    next, myUI.getMessage(SptMessages.Title)).getValue()
-                                    + " " + myUI.getMessage(SptMessages.Average) + "%",
+                                            next, myUI.getMessage(SptMessages.Title)).getValue()
+                                            + " " + myUI.getMessage(SptMessages.Average) + "%",
                                     Settings.dFormat.format(Double.parseDouble(dataTable.getColumnFooter(schoolTable.getContainerProperty(
                                             next, myUI.getMessage(SptMessages.Title)).getValue()
                                             + " " + myUI.getMessage(SptMessages.Average) + "%"))
                                             / dataTable.getContainerDataSource().size()));
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
                         }
                     }
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total) + " "
@@ -258,11 +249,11 @@ public class SchoolDiscountsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable);
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SchoolDiscounts));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
-                    Iterator school_iter = ((Set<?>) schoolTable.getValue()).iterator();
+                    Iterator<?> school_iter = ((Set<?>) schoolTable.getValue()).iterator();
                     int i = 3;
                     while (school_iter.hasNext()) {
                         Object next = school_iter.next();
@@ -308,7 +299,7 @@ public class SchoolDiscountsReport implements Button.ClickListener,
                 discountsTable.setContainerDataSource(
                         dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
                 dbd.close();
-                discountsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+                discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

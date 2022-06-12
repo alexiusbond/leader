@@ -30,31 +30,30 @@ import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.hene.popupbutton.PopupButton;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
-public class ContractDefintionView extends HorizontalSplitPanel implements Button.ClickListener,
+public class ContractDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(ContractDefintionView.class);
-    private MyVaadinUI myUI;
+    static final Logger logger = LogManager.getLogger(ContractDefinitionView.class);
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect, yearSelect;
-    private FormattedFilterTable dataTable;
+    private final FormattedFilterTable dataTable;
     private PopupButton copyButton;
     private TextField nameTF, valueTF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
 
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
-    public ContractDefintionView(MyVaadinUI myUI) {
+    public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
-            myUI.getMessage(SptMessages.Value), myUI.getMessage(SptMessages.School),
-            myUI.getMessage(SptMessages.Year), myUI.getMessage(SptMessages.Status)};
+                myUI.getMessage(SptMessages.Value), myUI.getMessage(SptMessages.School),
+                myUI.getMessage(SptMessages.Year), myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -158,10 +157,10 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 250, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 250, false));
         settingsLay.addComponent(nameTF);
 
-        ObjectProperty<Double> property = new ObjectProperty<Double>(0.0);
+        ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         valueTF = new TextField(myUI.getMessage(SptMessages.Value), property);
         valueTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         valueTF.setRequired(true);
@@ -170,7 +169,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
         valueTF.setConverter(Settings.getStringToDoubleConverter());
         valueTF.setWidth(Settings.PERCENTS100);
         valueTF.addValidator(new DoubleRangeValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
         settingsLay.addComponent(valueTF);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
@@ -212,11 +211,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                 logger.error(e);
                 logger.catching(e);
             }
-            if (i != 0) {
-                valueTF.setEnabled(false);
-            } else {
-                valueTF.setEnabled(true);
-            }
+            valueTF.setEnabled(i == 0);
         } else if (source == createBtn) {
             isNew = true;
             clearFields();
@@ -227,14 +222,11 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
@@ -245,7 +237,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                         int id = dbDis.exec_insert(c);
                         if (id != 0) {
                             removeTableFilters();
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -264,7 +256,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                         }
                         if (status != 0) {
                             removeTableFilters();
-                            updateDatacontainer();
+                            updateDataContainer();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -275,7 +267,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
                     dbDis.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -316,19 +308,16 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
             try {
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
                         myUI.getMessage(SptMessages.ConfirmContractCopy)
-                        + yearSelect.getContainerProperty(yearSelect.getValue(),
-                                myUI.getMessage(SptMessages.Title))
+                                + yearSelect.getContainerProperty(yearSelect.getValue(),
+                                        myUI.getMessage(SptMessages.Title))
                                 .getValue().toString() + " года?",
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
-                        new ConfirmDialog.Listener() {
-                    @Override
-                    public void onClose(ConfirmDialog dialog) {
-                        if (dialog.isConfirmed()) {
-                            copyContracts();
-                        }
-                    }
-                });
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                copyContracts();
+                            }
+                        });
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -374,7 +363,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
-        valueTF.getPropertyDataSource().setValue((Double) dataTable.getContainerProperty(dataTable.getValue(),
+        valueTF.getPropertyDataSource().setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Value)).getValue());
         statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue().toString()));
@@ -387,39 +376,35 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
         statusSelect.setValue(null);
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Value)).setValue(
-                (Double) valueTF.getPropertyDataSource().getValue());
+                valueTF.getPropertyDataSource().getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.status_id).setValue(
-                        (Integer) statusSelect.getValue());
+                Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.school_id).setValue(
-                        myUI.getUser().getSchool_id());
+                Settings.school_id).setValue(myUI.getUser().getSchool_id());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.School)).setValue(
-                myUI.getUser().getSchool_name());
+                myUI.getMessage(SptMessages.School)).setValue(myUI.getUser().getSchool_name());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 nameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Value)).setValue(
-                (Double) valueTF.getPropertyDataSource().getValue());
+                valueTF.getPropertyDataSource().getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(Settings.status_id).setValue(
-                (Integer) statusSelect.getValue());
+        item.getItemProperty(Settings.status_id).setValue(statusSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());
         item.getItemProperty(Settings.year_id).setValue(
@@ -475,12 +460,10 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -504,7 +487,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Value), CustomTable.Align.RIGHT);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
@@ -533,9 +516,7 @@ public class ContractDefintionView extends HorizontalSplitPanel implements Butto
     }
 
     private void removeTableFilters() {
-        Iterator iter = dataTable.getContainerPropertyIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : dataTable.getContainerPropertyIds()) {
             dataTable.setFilterFieldValue(next, null);
         }
     }

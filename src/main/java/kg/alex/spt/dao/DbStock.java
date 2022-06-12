@@ -77,24 +77,7 @@ public class DbStock extends BaseDb {
         stat.setInt(2, cl.getSchool_id());
         stat.setInt(3, cl.getStatus_id());
         stat.setInt(4, cl.getId());
-        int status = stat.executeUpdate();
-        return status;
-    }
-
-    public IndexedContainer execStock_sel(MyVaadinUI myUi, int scl_id) throws SQLException {
-        String sql = "select t.id, t.name from dp_stock as t "
-                + "where t.school_id = ? order by t.name;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl_id);
-        ResultSet result = stat.executeQuery();
-        IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        while (result.next()) {
-            Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
-                    result.getString("t.name"));
-        }
-        return container;
+        return stat.executeUpdate();
     }
 
 }

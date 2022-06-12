@@ -33,16 +33,14 @@ public class ClassDiscountsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(ClassDiscountsReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
             selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     public FormattedTable dataTable;
     public FilterTable classTable, discountsTable;
-    private EnhancedFormatExcelExport excelReport;
 
     public ClassDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -53,7 +51,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 7);
+        GridLayout leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -83,15 +81,15 @@ public class ClassDiscountsReport implements Button.ClickListener,
         classTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         classTable.addValueChangeListener(this);
         try {
-            DbClassName dbcn = new DbClassName();
-            dbcn.connect();
-            classTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
-            dbcn.close();
+            DbClassName dbCon = new DbClassName();
+            dbCon.connect();
+            classTable.setContainerDataSource(dbCon.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         selectAllDiscountsBtn = new Button(myUI.getMessage(SptMessages.AllDiscounts));
         selectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
@@ -150,12 +148,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -211,15 +204,13 @@ public class ClassDiscountsReport implements Button.ClickListener,
         if (source == generateBtn) {
             if (!((Set<?>) classTable.getValue()).isEmpty() && !((Set<?>) discountsTable.getValue()).isEmpty()) {
                 try {
-                    DbStudentDiscount dbsc = new DbStudentDiscount();
-                    dbsc.connect();
+                    DbStudentDiscount dbCon = new DbStudentDiscount();
+                    dbCon.connect();
                     dataTable.setContainerDataSource(null);
-                    dbsc.execSQL_Discounts_by_classes(myUI, (Integer) yearSelect.getValue(),
+                    dbCon.execSQL_Discounts_by_classes(myUI, (Integer) yearSelect.getValue(),
                             Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
-                    Iterator class_iter = ((Set<?>) classTable.getValue()).iterator();
-                    while (class_iter.hasNext()) {
-                        Object next = class_iter.next();
+                    for (Object next : (Set<?>) classTable.getValue()) {
                         dataTable.setColumnAlignment(classTable.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                 + myUI.getMessage(SptMessages.Students), Table.Align.RIGHT);
@@ -238,7 +229,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                                                     next, myUI.getMessage(SptMessages.Title)).getValue()
                                                     + " " + myUI.getMessage(SptMessages.Average) + "%"))
                                             / dataTable.getContainerDataSource().size()));
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
                         }
                     }
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total) + " "
@@ -251,7 +242,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
                     }
-                    dbsc.close();
+                    dbCon.close();
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
@@ -260,11 +251,11 @@ public class ClassDiscountsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable);
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SchoolDiscounts));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
-                    Iterator school_iter = ((Set<?>) classTable.getValue()).iterator();
+                    Iterator<?> school_iter = ((Set<?>) classTable.getValue()).iterator();
                     int i = 3;
                     while (school_iter.hasNext()) {
                         Object next = school_iter.next();
@@ -310,7 +301,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                 discountsTable.setContainerDataSource(
                         dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
                 dbd.close();
-                discountsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+                discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

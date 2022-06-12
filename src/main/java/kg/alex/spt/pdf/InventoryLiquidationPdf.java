@@ -30,10 +30,8 @@ public class InventoryLiquidationPdf {
 
     static final Logger logger = LogManager.getLogger(InventoryLiquidationPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1 = null;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource = null;
-    SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+    private ByteArrayOutputStream buffer = null;
+    private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private Document document = null;
 
 
@@ -41,11 +39,8 @@ public class InventoryLiquidationPdf {
                                    final IndexedContainer inventoriesCont, final String totalQuantity,
                                    final StudentInfoPdf schoolInfo) {
 
-        source1 = new StreamResource.StreamSource() {
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/PT_Sans-Web-Bold.ttf";
@@ -122,7 +117,7 @@ public class InventoryLiquidationPdf {
                     table.addCell(new Phrase(myUI.getMessage(SptMessages.InventoryItem), ordFontBold));
                     table.addCell(new Phrase(myUI.getMessage(SptMessages.Quantity), ordFontBold));
 
-                    Iterator iter1 = inventoriesCont.getItemIds().iterator();
+                    Iterator<?> iter1 = inventoriesCont.getItemIds().iterator();
                     int y = 0;
                     if (inventoriesCont.size() > 0) {
                         y = 1;
@@ -177,7 +172,7 @@ public class InventoryLiquidationPdf {
             }
         };
 
-        resource = new StreamResource(source1, "StockMovements"
+        StreamResource resource = new StreamResource(source1, "StockMovements"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 

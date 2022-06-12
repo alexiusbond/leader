@@ -103,8 +103,7 @@ public class DbContract extends BaseDb {
         stat.setInt(3, c.getStatus_id());
         stat.setInt(4, c.getEmployee_id());
         stat.setInt(5, c.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL_for_year_sel(MyVaadinUI myUi, int cur_year,
@@ -126,17 +125,16 @@ public class DbContract extends BaseDb {
         return container;
     }
 
-    public int exec_copy(int selected_year, MyVaadinUI myui) throws SQLException {
+    public int exec_copy(int selected_year, MyVaadinUI myUi) throws SQLException {
         String sql = "insert ignore into contract (name, amount, year_id, school_id, "
                 + "activity_status_id, employee_id) select name, amount, ? as year_id,school_id, "
                 + "activity_status_id, ? from contract where year_id = ? and activity_status_id = 2 and school_id = ? ";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, myui.getUser().getCurrent_year().getId());
-        stat.setInt(2, myui.getUser().getId());
+        stat.setInt(1, myUi.getUser().getCurrent_year().getId());
+        stat.setInt(2, myUi.getUser().getId());
         stat.setInt(3, selected_year);
-        stat.setInt(4, myui.getUser().getSchool_id());
-        int st = stat.executeUpdate();
-        return st;
+        stat.setInt(4, myUi.getUser().getSchool_id());
+        return stat.executeUpdate();
     }
 
     public IndexedContainer exec_contr_select(MyVaadinUI myUi, int year_id, int school_id,

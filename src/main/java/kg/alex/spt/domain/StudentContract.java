@@ -6,7 +6,6 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
-import java.util.Set;
 
 public class StudentContract implements Serializable {
 
@@ -17,8 +16,6 @@ public class StudentContract implements Serializable {
     private int employee_id;
     private int status_id;
     private Double amount;
-    private Set discount_ids;
-    private double freeAmount;
     private double plan_debt;
     private double correction;
     private double contr_with_disc;
@@ -54,22 +51,6 @@ public class StudentContract implements Serializable {
 
     public void setPlan_debt(double plan_debt) {
         this.plan_debt = plan_debt;
-    }
-
-    public Set getDiscount_ids() {
-        return discount_ids;
-    }
-
-    public void setDiscount_ids(Set discount_ids) {
-        this.discount_ids = discount_ids;
-    }
-
-    public double getFreeAmount() {
-        return freeAmount;
-    }
-
-    public void setFreeAmount(double freeAmount) {
-        this.freeAmount = freeAmount;
     }
 
     public Double getAmount() {

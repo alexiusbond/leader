@@ -93,21 +93,21 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentType)).setValue(
                     dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(SptMessages.PaymentType), id,
                             Settings.dbPaymentType, false, false, false, isDisabled));
-            TextField tf = dw.createTextfieldDouble(result.getDouble("sp.amount"), myUI.getMessage(SptMessages.Amount), id);
+            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), myUI.getMessage(SptMessages.Amount), id);
             tf.setId(myUI.getMessage(SptMessages.Payments));
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
-            tf = dw.createTextfieldDouble(null, Settings.KGS, id);
+            tf = dw.createTextFieldDouble(null, Settings.KGS, id);
             tf.setId(Settings.KGS);
             tf.setRequired(false);
             tf.removeAllValidators();
-            tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.0, null));
+            tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.0, null));
             tf.setEnabled(!isDisabled);
             item.getItemProperty(Settings.KGS).setValue(tf);
-            tf = dw.createTextfieldDouble(result.getDouble("sp.dollar_rate"), myUI.getMessage(SptMessages.Rate), id);
+            tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), myUI.getMessage(SptMessages.Rate), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
-            tf = dw.createTextfield(result.getString("sp.who_paid"), myUI.getMessage(SptMessages.WhoPaid), id, false, false);
+            tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(SptMessages.WhoPaid), id, false, false);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(tf);
             DateField df = dw.createDateField(result.getTimestamp("sp.modification_date"),
@@ -120,11 +120,11 @@ public class DbStudentPayment extends BaseDb {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MINUTE, -1441);
                 df.setRangeStart(calendar.getTime());
-                df.addValidator(new DateRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue),
+                df.addValidator(new DateRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
                         df.getRangeStart(), df.getRangeEnd(), Resolution.MINUTE));
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
-            tf = dw.createTextfieldNote(result.getString("sp.note"), myUI.getMessage(SptMessages.Note), id);
+            tf = dw.createTextFieldNote(result.getString("sp.note"), myUI.getMessage(SptMessages.Note), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             Button b = dw.createButton(myUI.getMessage(SptMessages.Print), id,
@@ -148,7 +148,7 @@ public class DbStudentPayment extends BaseDb {
         stat.setDouble(2, sp.getAmount());
         stat.setInt(3, sp.getPayment_type_id());
         stat.setInt(4, sp.getPayment_cat_type_id());
-        stat.setInt(5, sp.getEmplooyee_id());
+        stat.setInt(5, sp.getEmployee_id());
         stat.setString(6, sp.getWho_paid());
         stat.setString(7, sp.getNote());
         stat.setTimestamp(8, new java.sql.Timestamp(sp.getModification_date().getTime()));
@@ -168,7 +168,7 @@ public class DbStudentPayment extends BaseDb {
         stat.setDouble(3, sp.getAmount());
         stat.setInt(4, sp.getPayment_type_id());
         stat.setInt(5, sp.getPayment_cat_type_id());
-        stat.setInt(6, sp.getEmplooyee_id());
+        stat.setInt(6, sp.getEmployee_id());
         stat.setString(7, sp.getWho_paid());
         stat.setInt(8, order_num);
         stat.setString(9, sp.getNote());
@@ -211,7 +211,7 @@ public class DbStudentPayment extends BaseDb {
     }
 
     public int getMaxOrderNum(int id) throws SQLException {
-        int maxValue = 0;
+        int maxValue;
         String sql = "select (max(sp.order_number)+1) as max_plus1 "
                 + "from student_payments as sp "
                 + "left join student as s on s.id = sp.student_id where "
@@ -228,7 +228,7 @@ public class DbStudentPayment extends BaseDb {
     }
 
     public String getOrderNum(String id) throws SQLException {
-        String orderNum = "";
+        String orderNum;
         String sql = "select order_number "
                 + "from student_payments "
                 + "where id = ?;";
@@ -383,22 +383,6 @@ public class DbStudentPayment extends BaseDb {
         return s;
     }
 
-    public double execGetTotalPaid(int scl_id, int year_id) throws SQLException {
-
-        String sql = "SELECT ifnull(sum(if(sp.payment_category_id = 3, -sp.amount, sp.amount)),0.00) as paid "
-                + "FROM student_payments as sp "
-                + "left join student as st on st.id = sp.student_id "
-                + "where st.school_id = ? and sp.year_id = ?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl_id);
-        stat.setInt(2, year_id);
-        ResultSet result = stat.executeQuery();
-        while (result.next()) {
-            return result.getDouble("paid");
-        }
-        return 0.0;
-    }
-
     public String execGetMonthlyPaid(String students, int scl_id, int year_id)
             throws SQLException {
 
@@ -424,8 +408,7 @@ public class DbStudentPayment extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setString(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL_Payments(MyVaadinUI myUI, int currency_id, int school_id, Date from, Date till, Table t) throws SQLException {

@@ -8,7 +8,6 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 
 public class Contract implements Serializable {
-
     private int id;
     private String name;
     private String year;

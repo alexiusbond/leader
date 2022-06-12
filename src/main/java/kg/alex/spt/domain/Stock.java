@@ -38,16 +38,10 @@ public class Stock implements Serializable {
         this.school_id = school_id;
     }
 
-    /**
-     * @return the status_id
-     */
     public int getStatus_id() {
         return status_id;
     }
 
-    /**
-     * @param status_id the status_id to set
-     */
     public void setStatus_id(int status_id) {
         this.status_id = status_id;
     }

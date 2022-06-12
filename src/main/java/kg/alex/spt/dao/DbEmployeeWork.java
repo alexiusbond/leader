@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.sql.*;
-import java.util.Iterator;
 
 public class DbEmployeeWork extends BaseDb {
 
@@ -139,28 +138,23 @@ public class DbEmployeeWork extends BaseDb {
             final ComboBox cb2 = edv.createCombobox(result.getInt("ew.hr_work_place_id"),
                     myUI.getMessage(SptMessages.WorkPlace), Settings.dbWork_placeTable, true);
             cb2.setNewItemsAllowed(true);
-            cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-                @Override
-                public void addNewItem(String newItemCaption) {
-                    try {
-                        DbDefinition dbd = new DbDefinition();
-                        dbd.connect();
-                        int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbWork_placeTable, false);
-                        dbd.close();
-                        if (id != 0) {
-                            Iterator iter = container.getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
-                                Item item = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id);
-                                item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                                cb2.setValue(id);
-                            }
+            cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    int id1 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbWork_placeTable, false);
+                    dbd.close();
+                    if (id1 != 0) {
+                        for (Object next : container.getItemIds()) {
+                            Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                            cb2.setValue(id1);
                         }
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
                     }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
             });
             item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(cb2);
@@ -228,7 +222,7 @@ public class DbEmployeeWork extends BaseDb {
             stat.setInt(3, 1);
         }
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             int years = result.getInt("years");
             int months = (int) Math.round((result.getDouble("years") - result.getInt("years")) * 12);
             return (years > 0 ? years + " " + Settings.generateYearPostfix(years) + " " : "")

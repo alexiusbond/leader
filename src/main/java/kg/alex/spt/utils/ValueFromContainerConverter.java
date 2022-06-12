@@ -13,9 +13,9 @@ import java.util.Locale;
 
 public class ValueFromContainerConverter implements Converter<String, Integer> {
     static final Logger logger = LogManager.getLogger(ValueFromContainerConverter.class);
-    private IndexedContainer container;
-    private String propertyId;
-    private MyVaadinUI myUi;
+    private final IndexedContainer container;
+    private final String propertyId;
+    private final MyVaadinUI myUi;
 
     public ValueFromContainerConverter(IndexedContainer container, String propertyId, MyVaadinUI myUi) {
         this.container = container;

@@ -275,8 +275,7 @@ public class DbAccCategory extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, code);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update_activity_status(int id, int activity_status_id, String namePostfix) throws SQLException {

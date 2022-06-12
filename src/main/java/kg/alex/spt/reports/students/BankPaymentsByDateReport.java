@@ -25,15 +25,13 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(BankPaymentsByDateReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, excelBtn;
     private OptionGroup typeOG;
     private ComboBox schoolSelect, currencySelect;
-    private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;
-    private ExcelExport excelReport;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public BankPaymentsByDateReport(final MyVaadinUI ui) {
         this.myUI = ui;
@@ -47,7 +45,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 5);
+        GridLayout leftGrid = new GridLayout(4, 5);
         leftGrid.setWidth("100%");
         leftGrid.setSpacing(true);
         leftGrid.setMargin(new MarginInfo(false, false, false, true));
@@ -193,7 +191,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new ExcelExport(dataTable);
+                    ExcelExport excelReport = new ExcelExport(dataTable);
                     excelReport.setReportTitle(typeOG.getValue() + " - [" + myUI.getMessage(SptMessages.From).toLowerCase() + " "
                             + Settings.df.format(fromDateDF.getValue())
                             + " " + myUI.getMessage(SptMessages.To).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");

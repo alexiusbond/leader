@@ -17,11 +17,10 @@ import org.apache.shiro.subject.Subject;
 public class ChangeUserData extends VerticalLayout implements Button.ClickListener {
 
     static final Logger logger = LogManager.getLogger(ChangeUserData.class);
-    private Subject currentUser = SecurityUtils.getSubject();
-    private MyVaadinUI myUI;
-    private FormLayout body;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final MyVaadinUI myUI;
     private Form userForm;
-    private String name;
+    private final String name;
 
     public ChangeUserData(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -35,7 +34,7 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
     }
 
     public void buildBody() {
-        body = new FormLayout();
+        FormLayout body = new FormLayout();
         body.setWidth("50%");
         userForm = new Form();
         ThemeResource iconOK = new ThemeResource("../mytheme/icons/16/ok.png");
@@ -52,20 +51,8 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
         userForm.addField("name",
                 new TextField(myUI.getMessage(SptMessages.FullName),
                         name));
-        // userForm.getField("name").setRequired(true);
-        // userForm.getField("name").setRequiredError("Please enter your First Name!");
-        // userForm.getField("name").addValidator(new StringLengthValidator
-        // ("First Name must be 3-25 characters", 3, 25, false));
         userForm.getField("name").setEnabled(false);
 
-//        userForm.addField("surname",
-//                new TextField(myUI.getMessage(SptMessages.Surname),
-//                        surname));
-        // userForm.getField("surname").setRequired(true);
-        // userForm.getField("surname").setRequiredError("Please enter your Last Name!");
-        // userForm.getField("surname").addValidator(new StringLengthValidator
-        // ("First Name must be 3-50 characters", 3, 50, false));
-//        userForm.getField("surname").setEnabled(false);
         userForm.addField("pass",
                 new PasswordField(myUI.getMessage(SptMessages.FormFiledCurPassword)));
         userForm.getField("pass").setRequired(true);
@@ -94,7 +81,7 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
             userForm.commit();
             if (!userForm.getField("new_pass").getValue().equals(
                     userForm.getField("conf_pass").getValue())) {
-                Notification.show(myUI.getMessage(SptMessages.NotifDontMatch),
+                Notification.show(myUI.getMessage(SptMessages.NotificationDontMatch),
                         Notification.Type.WARNING_MESSAGE);
             } else {
                 try {
@@ -105,9 +92,9 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
 
                         dbUser.editPass(currentUser.getPrincipal().toString(),
                                 new Sha256Hash(userForm.getField("new_pass").getValue()).toString());
-                        Notification.show(myUI.getMessage(SptMessages.NotifSuccessfulChange));
+                        Notification.show(myUI.getMessage(SptMessages.NotificationSuccessfulChange));
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.NotifWrongCurrPassword),
+                        Notification.show(myUI.getMessage(SptMessages.NotificationWrongCurrPassword),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                     dbUser.close();

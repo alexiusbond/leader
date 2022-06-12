@@ -25,7 +25,6 @@ import org.vaadin.inputmask.InputMask;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,23 +32,22 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         Property.ValueChangeListener {
 
     static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(YearDefinitionView         .class);
-    private MyVaadinUI myUI;
-    private AuthenticatedScreen as;
+    private final MyVaadinUI myUI;
+    private final AuthenticatedScreen as;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
-    private Table dataTable;
+    private final Table dataTable;
     private TextField nameTF;
     private TextField period, periodKg;
     private DateField start_date, end_date;
     private boolean isNew;
-    private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public YearDefinitionView(MyVaadinUI myUI, AuthenticatedScreen as) {
         this.myUI = myUI;
         this.as = as;
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Period),
-            myUI.getMessage(SptMessages.PeriodKg), myUI.getMessage(SptMessages.StartDate), myUI.getMessage(SptMessages.EndDate)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Period),
+                myUI.getMessage(SptMessages.PeriodKg), myUI.getMessage(SptMessages.StartDate), myUI.getMessage(SptMessages.EndDate)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -69,7 +67,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -140,7 +138,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 9, 9, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 9, 9, false));
         InputMask im = new InputMask("2099-2099");
         im.extend(nameTF);
         im.setClearIncomplete(true);
@@ -202,14 +200,11 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
@@ -218,7 +213,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                     if (isNew) {
                         int id = dby.exec_insert(getYearDefinition(0));
                         if (id != 0) {
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             try {
                                 DbDefinition dbd = new DbDefinition();
                                 dbd.connect();
@@ -248,7 +243,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                             logger.catching(e);
                         }
                         if (status != 0) {
-                            updateDatacontainer();
+                            updateDataContainer();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -271,7 +266,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
                     dby.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -362,7 +357,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         end_date.setValue(null);
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -378,7 +373,7 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
@@ -401,8 +396,8 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
         y.setName(nameTF.getValue());
         y.setPeriod(period.getValue());
         y.setPeriod_kg(periodKg.getValue());
-        y.setStart_date((Date) start_date.getValue());
-        y.setEnd_date((Date) end_date.getValue());
+        y.setStart_date(  start_date.getValue());
+        y.setEnd_date(  end_date.getValue());
         y.setId(i);
         return y;
     }
@@ -451,12 +446,10 @@ public class YearDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;

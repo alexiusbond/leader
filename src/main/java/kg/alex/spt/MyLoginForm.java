@@ -17,8 +17,8 @@ import org.apache.shiro.authc.*;
  */
 public class MyLoginForm extends LoginForm {
 
-    private MyVaadinUI myUI;
-    private Label errorLbl = new Label();
+    private final MyVaadinUI myUI;
+    private final Label errorLbl = new Label();
 
     public MyLoginForm(MyVaadinUI ui) {
         myUI = ui;
@@ -77,23 +77,8 @@ public class MyLoginForm extends LoginForm {
                 MyVaadinUI.getInstance().login(userName, password);
                 // Switch to the protected view
                 myUI.setContent(new AuthenticatedScreen(myUI));
-            } catch (UnknownAccountException uae) {
+            } catch (Exception uae) {
                 uae.printStackTrace();
-                error = true;
-            } catch (IncorrectCredentialsException ice) {
-                ice.printStackTrace();
-                error = true;
-            } catch (LockedAccountException lae) {
-                lae.printStackTrace();
-                error = true;
-            } catch (ExcessiveAttemptsException eae) {
-                eae.printStackTrace();
-                error = true;
-            } catch (AuthenticationException ae) {
-                ae.printStackTrace();
-                error = true;
-            } catch (Exception ex) {
-                ex.printStackTrace();
                 error = true;
             }
             if (error) {

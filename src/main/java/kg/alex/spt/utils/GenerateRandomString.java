@@ -14,7 +14,7 @@ public class GenerateRandomString {
            "abcdefghjktuvwxyz123456789";
    
    public String getAlphaNumeric(int len) {
-      StringBuffer sb = new StringBuffer(len);
+      StringBuilder sb = new StringBuilder(len);
       for (int i=0;  i<len;  i++) {
          int ndx = (int)(Math.random()*ALPHA_NUM.length());
          sb.append(ALPHA_NUM.charAt(ndx));

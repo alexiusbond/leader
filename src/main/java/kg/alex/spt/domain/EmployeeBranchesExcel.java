@@ -34,10 +34,6 @@ public class EmployeeBranchesExcel implements Serializable {
         return course_code;
     }
 
-    public void setCourse_code(String course_code) {
-        this.course_code = course_code;
-    }
-
     public String getHours() {
         return hours;
     }

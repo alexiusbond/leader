@@ -48,12 +48,11 @@ public class DbEmployeeContact extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         EmployeeContact ec = null;
-        while (result.next()) {
+        if (result.next()) {
             ec = new EmployeeContact();
             ec.setAddress(result.getString("ec.address"));
             ec.setBirth_place(result.getString("ec.birth_place"));
             ec.setEmail(result.getString("ec.email"));
-            break;
         }
         return ec;
     }

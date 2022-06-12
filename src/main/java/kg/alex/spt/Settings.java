@@ -326,8 +326,6 @@ public class Settings implements Serializable {
     public static final String hr_position_category_id = "hr_position_category_id";
     public static final String dbColumnStudent_payments_id = "student_payments_id";
     public static final String old_amount = "old_amount";
-    public static final String old_currency = "old_currency";
-    public static final String old_rate = "old_rate";
     public static final String old_date = "old_date";
     public static final String old_category = "old_category";
     public static final String download_button = "download_button";
@@ -381,7 +379,7 @@ public class Settings implements Serializable {
     }
 
     public static Set<?> convertToSet(Collection<?> coll) {
-        Iterator iter = coll.iterator();
+        Iterator<?> iter = coll.iterator();
         HashSet<Integer> hs = new HashSet<>();
         while (iter.hasNext()) {
             Object next = iter.next();
@@ -411,9 +409,8 @@ public class Settings implements Serializable {
     public static String convertCollectionToStr(Collection<?> set, IndexedContainer container, Object property) {
         Set ids = new HashSet();
         if (!set.isEmpty()) {
-            Iterator iterator = set.iterator();
-            while (iterator.hasNext()) {
-                ids.add(container.getContainerProperty(iterator.next(), property).getValue());
+            for (Object o : set) {
+                ids.add(container.getContainerProperty(o, property).getValue());
             }
             return StringUtils.join(ids, ",");
         } else {
@@ -423,15 +420,13 @@ public class Settings implements Serializable {
 
     public static Set<Integer> getChild_ids(HierarchicalContainer container, Set<?> selectedIds) {
         Set<Integer> set = new HashSet<>();
-        Iterator selectedIter = selectedIds.iterator();
-        while (selectedIter.hasNext()) {
-            Integer nextId = (Integer) selectedIter.next();
+        for (Object selectedId : selectedIds) {
+            Integer nextId = (Integer) selectedId;
             set.add(nextId);
             if (container.hasChildren(nextId)) {
-                Iterator iter = container.getChildren(nextId).iterator();
-                while (iter.hasNext()) {
+                for (Object o : container.getChildren(nextId)) {
                     Set<Integer> setChild = new HashSet<>();
-                    setChild.add((Integer) iter.next());
+                    setChild.add((Integer) o);
                     set.addAll(getChild_ids(container, setChild));
                 }
             }

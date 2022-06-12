@@ -36,20 +36,18 @@ public class MonthReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(MonthReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
             selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private DateField fromDateDF, tillDateDF;
     public FormattedTreeTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
     public FilterTable schoolsTable;
-    private EnhancedFormatExcelExport excelReport;
 
     private VerticalLayout rightLayout;
-    private Subject currentUser = SecurityUtils.getSubject();
-    private Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final Calendar fromDate = Calendar.getInstance(), tillDate = Calendar.getInstance();
 
     public MonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -60,7 +58,7 @@ public class MonthReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 8);
+        GridLayout leftGrid = new GridLayout(4, 8);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -162,7 +160,7 @@ public class MonthReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -296,7 +294,7 @@ public class MonthReport implements Button.ClickListener,
                                     excelBtn.setEnabled(true);
                                 }
                             }
-                            Iterator school_iter = null;
+                            Iterator school_iter ;
                             Calendar current = Calendar.getInstance();
                             Calendar prev_date = Calendar.getInstance();
                             current.setTime(fromDate.getTime());
@@ -363,6 +361,7 @@ public class MonthReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             try {
+                EnhancedFormatExcelExport excelReport;
                 if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()
                         && !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0
@@ -372,7 +371,7 @@ public class MonthReport implements Button.ClickListener,
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
                         int i = 1;
-                        Iterator iter = incomesDataTable.getContainerPropertyIds().iterator();
+                        Iterator<?> iter = incomesDataTable.getContainerPropertyIds().iterator();
                         if (iter.hasNext()) {
                             iter.next();
                         }
@@ -403,7 +402,7 @@ public class MonthReport implements Button.ClickListener,
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
                         int i = 1;
-                        Iterator iter = incomesDataTable.getContainerPropertyIds().iterator();
+                        Iterator<?> iter = incomesDataTable.getContainerPropertyIds().iterator();
                         if (iter.hasNext()) {
                             iter.next();
                         }
@@ -420,7 +419,7 @@ public class MonthReport implements Button.ClickListener,
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
                         int i = 1;
-                        Iterator iter = outcomesDataTable.getContainerPropertyIds().iterator();
+                        Iterator<?> iter = outcomesDataTable.getContainerPropertyIds().iterator();
                         if (iter.hasNext()) {
                             iter.next();
                         }
@@ -438,7 +437,7 @@ public class MonthReport implements Button.ClickListener,
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
                         int i = 1;
-                        Iterator iter = outcomesDataTable.getContainerPropertyIds().iterator();
+                        Iterator<?> iter = outcomesDataTable.getContainerPropertyIds().iterator();
                         if (iter.hasNext()) {
                             iter.next();
                         }
@@ -456,7 +455,7 @@ public class MonthReport implements Button.ClickListener,
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
                         int i = 1;
-                        Iterator iter = incomesDataTable.getContainerPropertyIds().iterator();
+                        Iterator<?> iter = incomesDataTable.getContainerPropertyIds().iterator();
                         if (iter.hasNext()) {
                             iter.next();
                         }

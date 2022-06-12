@@ -34,19 +34,15 @@ public class OutOfList implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(OutOfList.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBoxMultiselect yearSelectMCB, reasonsMCB;
     private FormattedTable dataTable;
     private FilterTable fromClassTable;
-    private IndexedContainer dataCont;
-    private EnhancedFormatExcelExport excelReport;
 
-    private String[] NATURAL_COL_ORDER;
-    public int activeStudents, discountedStudents;
-    public double nets, paids, lefts;
+    private final String[] NATURAL_COL_ORDER;
+    public double nets, paid_amounts;
 
     public OutOfList(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -69,7 +65,7 @@ public class OutOfList implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 5);
+        GridLayout leftGrid = new GridLayout(4, 5);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -81,12 +77,7 @@ public class OutOfList implements Button.ClickListener,
         yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelectMCB.setFilteringMode(FilteringMode.CONTAINS);
         yearSelectMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        yearSelectMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        yearSelectMCB.setShowSelectAllButton((filter, page) -> true);
         yearSelectMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
 
         reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Reasons));
@@ -95,12 +86,7 @@ public class OutOfList implements Button.ClickListener,
         reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
         reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        reasonsMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        reasonsMCB.setShowSelectAllButton((filter, page) -> true);
         reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
 
         try {
@@ -117,7 +103,6 @@ public class OutOfList implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        ;
         yearSelectMCB.addValueChangeListener(this);
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
@@ -153,7 +138,7 @@ public class OutOfList implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        fromClassTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        fromClassTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -203,13 +188,13 @@ public class OutOfList implements Button.ClickListener,
                 try {
                     DbStudentOrder dbor = new DbStudentOrder();
                     dbor.connect();
-                    dataCont = dbor.execSQL_outOf(myUI,
+                    IndexedContainer dataCont = dbor.execSQL_outOf(myUI,
                             Settings.convertCollectionToStr((Set<?>) yearSelectMCB.getValue()),
                             Settings.convertCollectionToStr((Set<?>) fromClassTable.getValue()),
-                            getMulticomboCaptions((Set<?>) reasonsMCB.getValue()),
+                            getMultiComboCaptions((Set<?>) reasonsMCB.getValue()),
                             myUI.getUser().getSchool_id(), this);
                     dataTable.setContainerDataSource(dataCont);
-                    dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+                    dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Left), Table.Align.RIGHT);
@@ -219,9 +204,9 @@ public class OutOfList implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
                             Settings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(paids));
+                            Settings.dFormat.format(paid_amounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            Settings.dFormat.format(nets - paids));
+                            Settings.dFormat.format(nets - paid_amounts));
                     if (dataCont.size() != 0) {
                         excelBtn.setEnabled(true);
                     }
@@ -234,7 +219,7 @@ public class OutOfList implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable);
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.OutOfReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
@@ -263,21 +248,21 @@ public class OutOfList implements Button.ClickListener,
         }
     }
 
-    private String getMulticomboCaptions(Set<?> set) {
+    private String getMultiComboCaptions(Set<?> set) {
         if (!set.isEmpty()) {
-            Iterator iter = set.iterator();
+            Iterator<?> iter = set.iterator();
             boolean isFirst = true;
-            String reasons = "";
+            StringBuilder reasons = new StringBuilder();
             while (iter.hasNext()) {
                 Object next = iter.next();
                 if (!isFirst) {
-                    reasons += ", ";
+                    reasons.append(", ");
                 }
-                reasons += reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Title)).getValue();
+                reasons.append(reasonsMCB.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Title)).getValue());
                 isFirst = false;
             }
-            return reasons;
+            return reasons.toString();
         } else {
             return null;
         }

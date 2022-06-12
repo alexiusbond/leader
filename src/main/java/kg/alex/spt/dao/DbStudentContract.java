@@ -67,8 +67,7 @@ public class DbStudentContract extends BaseDb {
         stat.setDouble(5, c.getContr_with_disc());
         stat.setInt(6, c.getStudent_id());
         stat.setInt(7, c.getYear_id());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_delete(int stud_id, int year_id) throws SQLException {
@@ -112,8 +111,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(1, activity_status);
         stat.setInt(2, employee_id);
         stat.setInt(3, student_id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update_status_by_id(int student_id, int activity_status, int employee_id)
@@ -124,8 +122,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(1, activity_status);
         stat.setInt(2, employee_id);
         stat.setInt(3, exec_last_by_student_id(student_id));
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_last_by_student_id(int student_id) throws SQLException {
@@ -157,7 +154,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public Double exec_get_debt(int st_id, int year_id) throws SQLException {
-        Double debt = 0.0;
+        double debt = 0.0;
         String sql = "SELECT IFNULL((SELECT SUM(sc.contr_with_disc) FROM student_contract AS sc "
                 + "WHERE sc.student_id = ? and sc.year_id < ?),0.0) - "
                 + "IFNULL((SELECT SUM(if(sp.payment_category_id!=3,sp.amount,0)) - "
@@ -190,8 +187,7 @@ public class DbStudentContract extends BaseDb {
         stat.setDouble(1, ttl_pay);
         stat.setInt(2, stud_id);
         stat.setInt(3, year_id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL_ClassList(MyVaadinUI myUI, String class_ids, int year_id,
@@ -200,7 +196,7 @@ public class DbStudentContract extends BaseDb {
         clr.discountedStudents = 0;
         clr.debts = 0;
         clr.nets = 0;
-        clr.paids = 0;
+        clr.paid_amounts = 0;
         clr.contracts = 0;
         clr.discounts = 0;
         clr.corrections = 0;
@@ -300,7 +296,7 @@ public class DbStudentContract extends BaseDb {
                         result.getDouble("sc.contr_with_disc") + result.getDouble("sc.debt") + result.getDouble("vc.amount"));
                 clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("sc.net_payments"));
-                clr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() - result.getDouble("sc.net_payments"));
                 clr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
@@ -319,7 +315,7 @@ public class DbStudentContract extends BaseDb {
         dr.discountedStudents = 0;
         dr.debts = 0;
         dr.nets = 0;
-        dr.paids = 0;
+        dr.paid_amounts = 0;
         dr.contracts = 0;
         dr.discounts = 0;
         dr.corrections = 0;
@@ -414,7 +410,7 @@ public class DbStudentContract extends BaseDb {
                 dr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("sc.net_payments"));
-                dr.paids += (Double) item.getItemProperty(
+                dr.paid_amounts += (Double) item.getItemProperty(
                         myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
@@ -492,11 +488,11 @@ public class DbStudentContract extends BaseDb {
                     t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                             Settings.dFormat.format(ymr.nets));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(ymr.paids));
+                            Settings.dFormat.format(ymr.paid_amounts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Left),
                             Settings.dFormat.format(ymr.lefts));
                     if (ymr.nets != 0.0) {
-                        t.setColumnFooter(Settings.percentage, Settings.dFormat.format(ymr.paids * 100 / ymr.nets));
+                        t.setColumnFooter(Settings.percentage, Settings.dFormat.format(ymr.paid_amounts * 100 / ymr.nets));
                     }
                     ymr.totalStudents = 0;
                     ymr.totalActive = 0;
@@ -505,7 +501,7 @@ public class DbStudentContract extends BaseDb {
                     ymr.debts = 0.0;
                     ymr.corrections = 0.0;
                     ymr.nets = 0.0;
-                    ymr.paids = 0.0;
+                    ymr.paid_amounts = 0.0;
                     ymr.lefts = 0.0;
                 }
                 t = ymr.createTable(result.getString("sch.code")
@@ -542,7 +538,7 @@ public class DbStudentContract extends BaseDb {
                 ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("payments"));
-                ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
                                 - result.getDouble("payments"));
@@ -571,12 +567,12 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                     Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
                     Settings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
-                        ymr.paids * 100 / ymr.nets));
+                        ymr.paid_amounts * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
             ymr.totalActive = 0;
@@ -585,7 +581,7 @@ public class DbStudentContract extends BaseDb {
             ymr.debts = 0.0;
             ymr.corrections = 0.0;
             ymr.nets = 0.0;
-            ymr.paids = 0.0;
+            ymr.paid_amounts = 0.0;
             ymr.lefts = 0.0;
         }
         if (ymr.rightLay.getComponentCount() != 0) {
@@ -636,15 +632,15 @@ public class DbStudentContract extends BaseDb {
                     t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
                             Settings.dFormat.format(ymr.inst_plans));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(ymr.paids));
+                            Settings.dFormat.format(ymr.paid_amounts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Left),
                             Settings.dFormat.format(ymr.lefts));
                     if (ymr.inst_plans != 0.0) {
                         t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
-                                ymr.paids * 100 / ymr.inst_plans));
+                                ymr.paid_amounts * 100 / ymr.inst_plans));
                     }
                     ymr.inst_plans = 0.0;
-                    ymr.paids = 0.0;
+                    ymr.paid_amounts = 0.0;
                     ymr.lefts = 0.0;
                 }
                 t = ymr.createTable(result.getString("s_temp.code") + " - " + result.getString("s_temp.name_ru"));
@@ -661,7 +657,7 @@ public class DbStudentContract extends BaseDb {
                         myUI.getMessage(SptMessages.InstPlanDebt)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("p_temp.amn"));
-                ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
                                 - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
@@ -677,15 +673,15 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
                     Settings.dFormat.format(ymr.inst_plans));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
                     Settings.dFormat.format(ymr.lefts));
             if (ymr.inst_plans != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
-                        ymr.paids * 100 / ymr.inst_plans));
+                        ymr.paid_amounts * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;
-            ymr.paids = 0.0;
+            ymr.paid_amounts = 0.0;
             ymr.lefts = 0.0;
         }
         if (ymr.rightLay.getComponentCount() != 0) {
@@ -731,7 +727,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(2, year_id);
         stat.setInt(3, year_id);
         ResultSet result = stat.executeQuery();
-        Table t = null;
+        Table t;
         int i = 0;
         t = ymr.createTable(myUI.getMessage(SptMessages.Total));
         ymr.rightLay.addComponent(t);
@@ -765,7 +761,7 @@ public class DbStudentContract extends BaseDb {
                 ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("payments"));
-                ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
                                 - result.getDouble("payments"));
@@ -794,12 +790,12 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                     Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
                     Settings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
-                        ymr.paids * 100 / ymr.nets));
+                        ymr.paid_amounts * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
             ymr.totalActive = 0;
@@ -808,7 +804,7 @@ public class DbStudentContract extends BaseDb {
             ymr.discounts = 0.0;
             ymr.debts = 0.0;
             ymr.nets = 0.0;
-            ymr.paids = 0.0;
+            ymr.paid_amounts = 0.0;
             ymr.lefts = 0.0;
         }
     }
@@ -846,7 +842,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(2, year_id);
         stat.setInt(3, year_id);
         ResultSet result = stat.executeQuery();
-        Table t = null;
+        Table t;
         int i = 0;
         ymr.clearLayout();
         t = ymr.createTable(myUI.getMessage(SptMessages.Total));
@@ -881,7 +877,7 @@ public class DbStudentContract extends BaseDb {
                 ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("payments"));
-                ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
                                 - result.getDouble("payments"));
@@ -911,12 +907,12 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                     Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
                     Settings.dFormat.format(ymr.lefts));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
-                        ymr.paids * 100 / ymr.nets));
+                        ymr.paid_amounts * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
             ymr.totalActive = 0;
@@ -925,7 +921,7 @@ public class DbStudentContract extends BaseDb {
             ymr.discounts = 0.0;
             ymr.debts = 0.0;
             ymr.nets = 0.0;
-            ymr.paids = 0.0;
+            ymr.paid_amounts = 0.0;
             ymr.lefts = 0.0;
         }
     }
@@ -973,7 +969,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(3, year_id);
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
-        Table t = null;
+        Table t;
         int i = 0;
         t = ymr.createTable(myUI.getMessage(SptMessages.Total));
         ymr.rightLay.addComponent(t);
@@ -988,7 +984,7 @@ public class DbStudentContract extends BaseDb {
                         myUI.getMessage(SptMessages.InstPlanDebt)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("p_temp.amn"));
-                ymr.paids += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
                         (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
                                 - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
@@ -1004,17 +1000,17 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
                     Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paids));
+                    Settings.dFormat.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Left),
                     Settings.dFormat.format(ymr.lefts));
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
                     Settings.dFormat.format(ymr.inst_plans));
             if (ymr.inst_plans != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
-                        ymr.paids * 100 / ymr.inst_plans));
+                        ymr.paid_amounts * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;
-            ymr.paids = 0.0;
+            ymr.paid_amounts = 0.0;
             ymr.lefts = 0.0;
         }
     }
@@ -1176,22 +1172,6 @@ public class DbStudentContract extends BaseDb {
         return ct;
     }
 
-    public boolean execSQL_isLastContract(int st_id, int year_id) throws SQLException {
-        String sql = "SELECT IFNULL(IF(sc.year_id <= ?, TRUE, FALSE), TRUE) AS isLastContract " +
-                "FROM student_contract as sc " +
-                "left join student as st on st.id = sc.student_id " +
-                "WHERE st.id = ? ORDER BY sc.id DESC LIMIT 1;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, st_id);
-        ResultSet result = stat.executeQuery();
-        boolean contr = true;
-        if (result.next()) {
-            contr = result.getBoolean("isLastContract");
-        }
-        return contr;
-    }
-
     public int exec_next_contract_number(int school_id, int year_id) throws SQLException {
         String sql = "SELECT (ifnull(max(tr.contract_number), 0) + 1) as num FROM student_contract tr "
                 + "LEFT JOIN student st ON st.id = tr.student_id where st.school_id = ? and tr.year_id = ?;";
@@ -1199,7 +1179,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(1, school_id);
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("num");
         }
         return 0;

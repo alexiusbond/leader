@@ -93,7 +93,6 @@ public class DbYear extends BaseDb {
         stat.setDate(4, new java.sql.Date(y.getStart_date().getTime()));
         stat.setDate(5, new java.sql.Date(y.getEnd_date().getTime()));
         stat.setInt(6, y.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 }

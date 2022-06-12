@@ -11,17 +11,15 @@ import com.vaadin.ui.ComboBox;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.i18n.SptMessages;
 
-import java.util.Iterator;
-
 /**
  * @author alex
  */
 public class ExistsValidator implements Validator {
 
-    private Container container;
-    private MyVaadinUI myUi;
-    private ComboBox comboBox;
-    private String propertyName;
+    private final Container container;
+    private final MyVaadinUI myUi;
+    private final ComboBox comboBox;
+    private final String propertyName;
 
     public ExistsValidator(MyVaadinUI myUi, Container container, ComboBox comboBox, String propertyName) {
         this.myUi = myUi;
@@ -38,9 +36,7 @@ public class ExistsValidator implements Validator {
     }
 
     private boolean isValid(Object value) {
-        Iterator iter = container.getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : container.getItemIds()) {
             if (((ComboBox) container.getItem(next).getItemProperty(
                     propertyName).getValue()).getValue() != null &&
                     comboBox != container.getItem(next).getItemProperty(propertyName).getValue()

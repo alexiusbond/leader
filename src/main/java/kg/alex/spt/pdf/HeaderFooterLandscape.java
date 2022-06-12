@@ -20,8 +20,8 @@ public class HeaderFooterLandscape extends PdfPageEventHelper {
 
     static final Logger logger = LogManager.getLogger(HeaderFooterLandscape.class);
     private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
-    private String name, address, phone;
-    private MyVaadinUI myUI;
+    private final String name, address, phone;
+    private final MyVaadinUI myUI;
 
     public HeaderFooterLandscape(MyVaadinUI mu, String name, String address, String phone) {
         this.myUI = mu;

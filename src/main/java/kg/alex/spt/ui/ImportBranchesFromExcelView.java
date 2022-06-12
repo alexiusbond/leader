@@ -31,23 +31,19 @@ import org.vaadin.dialogs.ConfirmDialog;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(ImportBranchesFromExcelView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button deleteBtn, saveBtn, templateBtn, branchesPDF_Btn;
     private ComboBox yearSelect;
-    private FormattedFilterTable dataTable;
-    private FormattedTable importTable;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final FormattedFilterTable dataTable;
+    private final FormattedTable importTable;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private VerticalLayout settingsLay;
-    private Upload fileUpl;
-    private ExcelUploader<?> excelUploader;
-    private List list = null;
 
     public ImportBranchesFromExcelView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -102,7 +98,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(new String[]{
+        dataTable.setVisibleColumns((Object[]) new String[]{
                 myUI.getMessage(SptMessages.Lecturer), myUI.getMessage(SptMessages.Lesson),
                 myUI.getMessage(SptMessages.ClassName),
                 myUI.getMessage(SptMessages.Hours),
@@ -153,16 +149,15 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         deleteBtn.setEnabled(currentUser.isPermitted(Settings.cnImportBranchesFromExcelView + ":" + Settings.actDelete));
         buttonsLay.addComponent(deleteBtn);
 
-        excelUploader = new ExcelUploader<>(EmployeeBranchesExcel.class);
+        ExcelUploader<?> excelUploader = new ExcelUploader<>(EmployeeBranchesExcel.class);
         excelUploader.addSucceededListener((event, items) -> {
-            list = items;
             importTable.setContainerDataSource(buildContainer(items));
             importTable.setColumnAlignment(myUI.getMessage(SptMessages.Hours), Table.Align.RIGHT);
             importTable.setColumnAlignment(myUI.getMessage(SptMessages.ExtraHours), Table.Align.RIGHT);
             importTable.setColumnAlignment(myUI.getMessage(SptMessages.ClassName), Table.Align.RIGHT);
         });
 
-        fileUpl = new Upload(null, excelUploader);
+        Upload fileUpl = new Upload(null, excelUploader);
         fileUpl.setImmediate(true);
         fileUpl.setStyleName("large");
         fileUpl.setButtonCaption(myUI.getMessage(SptMessages.UploadExcel));
@@ -219,9 +214,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                 dbEl.connect();
                 DbDefinition dbDef = new DbDefinition();
                 dbDef.connect();
-                Iterator iter = importTable.getItemIds().iterator();
-                while (iter.hasNext()) {
-                    Object item_id = iter.next();
+                for (Object item_id : importTable.getItemIds()) {
                     EmployeeLessons el = new EmployeeLessons();
                     el.setSchool_id(myUI.getUser().getSchool_id());
                     el.setYear_id((Integer) yearSelect.getValue());
@@ -380,17 +373,17 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                 try {
                     item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
                             Integer.parseInt(list.get(i).getHours()));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 try {
                     item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
                             Integer.parseInt(list.get(i).getExtra_hours()));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 try {
                     item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                             Integer.parseInt(list.get(i).getClass_number()));
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         }

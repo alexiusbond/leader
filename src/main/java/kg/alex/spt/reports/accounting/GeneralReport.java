@@ -44,10 +44,10 @@ public class GeneralReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(GeneralReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, PDFBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid, totalsGrid;
+    private final HorizontalSplitPanel splitPanel;
+    private GridLayout totalsGrid;
     private VerticalLayout rightLay;
     private FormattedTable transactionsTable, paymentsTable;
     private FilterTable schoolsTable;
@@ -56,13 +56,13 @@ public class GeneralReport implements Button.ClickListener,
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
 
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
     private String[] NATURAL_COL_ORDER_TRANSACTIONS;
     private String[] NATURAL_COL_ORDER_PAYMENTS;
     private Label outcomeLastDateLbl, outcomeTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
     private SchoolAccounting schoolAcc;
     private ContractTotal contractTtl;
-    private Calendar prevDayCal;
+    private final Calendar prevDayCal;
 
     public GeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -74,7 +74,7 @@ public class GeneralReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 4);
+        GridLayout leftGrid = new GridLayout(4, 4);
         leftGrid.setWidth(Settings.PERCENTS100);
         leftGrid.setSpacing(true);
 
@@ -95,12 +95,7 @@ public class GeneralReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -140,7 +135,7 @@ public class GeneralReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -192,7 +187,6 @@ public class GeneralReport implements Button.ClickListener,
         final Button source = event.getButton();
         if (source == generateBtn) {
             if (schoolsTable.getValue() != null) {
-                //set datasources to all tables and drawcharts
                 try {
                     DbAccTransactions dbacc = new DbAccTransactions();
                     dbacc.connect();
@@ -243,7 +237,7 @@ public class GeneralReport implements Button.ClickListener,
             c.getTitle().setText(null);
             chartDisc.drawChart(c);
             chartPaid.drawChart(c);
-            chartPayments.getConfiguration().setSeries(new ListSet<Series>());
+            chartPayments.getConfiguration().setSeries(new ListSet<>());
             chartPayments.drawChart(c);
             PDFBtn.setEnabled(false);
         }
@@ -590,7 +584,7 @@ public class GeneralReport implements Button.ClickListener,
                     new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()).getTime()),
                     new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()).getTime()),
                     transactionsTable);
-            transactionsTable.setVisibleColumns(NATURAL_COL_ORDER_TRANSACTIONS);
+            transactionsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_TRANSACTIONS);
             transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
             transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Payments), Table.Align.RIGHT);
             transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Incomes), Table.Align.RIGHT);
@@ -609,7 +603,7 @@ public class GeneralReport implements Button.ClickListener,
 
     private void setPaymentsTableOptions() {
         paymentsTable.setContainerDataSource(transactionsTable.getContainerDataSource());
-        paymentsTable.setVisibleColumns(NATURAL_COL_ORDER_PAYMENTS);
+        paymentsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PAYMENTS);
         paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
         paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Payments), Table.Align.RIGHT);
         paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
@@ -629,14 +623,12 @@ public class GeneralReport implements Button.ClickListener,
         List<String> months = new ArrayList<>();
         List<Number> instList = new ArrayList<>();
         List<Number> paymentsList = new ArrayList<>();
-        Iterator iter = paymentsTable.getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : paymentsTable.getItemIds()) {
             months.add(paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Month)).getValue().toString());
             instList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.InstallmentPlan)).getValue());
             paymentsList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Payments)).getValue());
         }
-        confPayments.getxAxis().setCategories(months.toArray(new String[months.size()]));
+        confPayments.getxAxis().setCategories(months.toArray(new String[0]));
         ListSeries ls = new ListSeries();
         ls.setName(myUI.getMessage(SptMessages.InstallmentPlan));
         ls.setData(instList);

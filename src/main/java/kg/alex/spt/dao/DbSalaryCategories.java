@@ -8,7 +8,6 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 
 import java.sql.PreparedStatement;
@@ -19,24 +18,6 @@ public class DbSalaryCategories extends BaseDb {
 
     public DbSalaryCategories() throws Exception {
         super();
-    }
-
-    public IndexedContainer execSQL_cont(MyVaadinUI myUI) throws SQLException {
-
-        String sql = "SELECT id, name, acc_category_id FROM hr_salary_category order by id;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        ResultSet result = stat.executeQuery();
-        IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
-        while (result.next()) {
-            Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
-                    result.getString("name"));
-            item.getItemProperty(Settings.acc_category_id).setValue(
-                    result.getInt("acc_category_id"));
-        }
-        return container;
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI) throws SQLException {
@@ -80,7 +61,6 @@ public class DbSalaryCategories extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cat_id);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 }

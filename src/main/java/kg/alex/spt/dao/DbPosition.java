@@ -103,15 +103,13 @@ public class DbPosition extends BaseDb {
             stat.setNull(4, Types.VARCHAR);
         }
         stat.setInt(5, p.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
     public int exec_update(int position_id, int id) throws SQLException {
         String sql = "update position set hr_position_id = ? where id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, position_id);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 }

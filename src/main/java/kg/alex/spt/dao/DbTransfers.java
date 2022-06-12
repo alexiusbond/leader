@@ -78,19 +78,19 @@ public class DbTransfers extends BaseDb {
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = v.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = v.createTextFieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
             item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextField(
-                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue),
+                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue),
                             null, 250, acc_invoice_type_id == 1), acc_invoice_type_id != 1));
             item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {

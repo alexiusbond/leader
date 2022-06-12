@@ -35,13 +35,11 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(CallsView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private GridLayout leftLay;
     private FormattedTable dataTable;
-    private EnhancedFormatExcelExport excelReport;
     private FilterTable classTable;
     private Button generateBtn, excelBtn, makePdfBtn, selectAllBtn, deselectAllBtn;
-    private IndexedContainer container;
 
     public double total;
 
@@ -72,7 +70,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                 dbsc.connect();
                 st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
                 dbsc.close();
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
                         new CallsPdf(myUI, dataTable, st);
@@ -81,7 +79,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -94,7 +92,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                     dataTable.setColumnCollapsingAllowed(true);
                     dataTable.setColumnCollapsed(Settings.button, true);
                     dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), true);
-                    excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.excludeCollapsedColumns();
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.Calls));
                     excelReport.setDisplayTotals(true);
@@ -112,7 +110,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         } else if (source == deselectAllBtn) {
             classTable.setValue(null);
         } else {
-            int i = 0;
+            int i;
             try {
                 DbStudentCalls dbsc = new DbStudentCalls();
                 dbsc.connect();
@@ -274,7 +272,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
     }
 
     public IndexedContainer prepareContainer() {
-        container = new IndexedContainer();
+        IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);

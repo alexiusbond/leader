@@ -36,19 +36,16 @@ public class CallsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(CallsReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private FilterTable classTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
-    private EnhancedFormatExcelExport excelReport;
     private IndexedContainer callsCont;
-    private Date fromDate, tillDate;
 
     public int total;
 
@@ -60,7 +57,7 @@ public class CallsReport implements Button.ClickListener,
     }
 
     private void buildLeftPanel() {
-        leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 6);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -81,12 +78,7 @@ public class CallsReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -130,15 +122,15 @@ public class CallsReport implements Button.ClickListener,
         classTable.setSelectable(true);
         classTable.addValueChangeListener(this);
         try {
-            DbClassName dbcn = new DbClassName();
-            dbcn.connect();
-            classTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
-            dbcn.close();
+            DbClassName dbCon = new DbClassName();
+            dbCon.connect();
+            classTable.setContainerDataSource(dbCon.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
@@ -203,16 +195,16 @@ public class CallsReport implements Button.ClickListener,
         } else if (source == makePdfBtn) {
             StudentInfoPdf st;
             try {
-                DbSchool dbsc = new DbSchool();
-                dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
-                dbsc.close();
+                DbSchool dbCon = new DbSchool();
+                dbCon.connect();
+                st = dbCon.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                dbCon.close();
 
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
-                        fromDate = fromDateDF.getValue();
-                        tillDate = tillDateDF.getValue();
+                        Date fromDate = fromDateDF.getValue();
+                        Date tillDate = tillDateDF.getValue();
                         new ClassCallsPdf(myUI, callsCont,
                                 yearSelect.getContainerProperty(yearSelect.getValue(),
                                         myUI.getMessage(SptMessages.Title)).getValue().toString(),
@@ -222,7 +214,7 @@ public class CallsReport implements Button.ClickListener,
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -236,7 +228,7 @@ public class CallsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable);
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.CallsReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
@@ -276,17 +268,17 @@ public class CallsReport implements Button.ClickListener,
 
     private void setRightTable() {
         try {
-            DbStudentCalls dbsc = new DbStudentCalls();
-            dbsc.connect();
+            DbStudentCalls dbCon = new DbStudentCalls();
+            dbCon.connect();
             dataTable.clear();
             total = 0;
-            callsCont = dbsc.execSQL_getCallsReport(myUI,
+            callsCont = dbCon.execSQL_getCallsReport(myUI,
                     fromDateDF.getValue(), tillDateDF.getValue(),
                     (Integer) yearSelect.getValue(),
                     Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
                     Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
             dataTable.setContainerDataSource(callsCont);
-            dbsc.close();
+            dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

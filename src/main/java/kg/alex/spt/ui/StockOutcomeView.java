@@ -42,18 +42,26 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(StockIncomeView.class);
-    private MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, printBtn, addBtn;
+    private final MyVaadinUI myUI;
+    private Button createBtn;
+    private Button modifyBtn;
+    private Button deleteBtn;
+    private Button saveBtn;
+    private Button cancelBtn;
+    private Button printBtn;
+    private final Button addBtn;
     private PopupButton searchBtn;
     private ComboBox stockSelect, fromEmployeeSelect, toEmployeeSelect, productCategorySelect;
-    private FormattedTable movementsTable;
+    private final FormattedTable movementsTable;
     private TextField invoiceNumberTF;
     private TextArea noteTF;
     private DateField dateDF;
     private boolean isNew;
-    private String[] NATURAL_COL_ORDER, NATURAL_COL_ORDER_MOVEMENTS;
-    private GridLayout settingsLay, rightLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final String[] NATURAL_COL_ORDER;
+    private String[] NATURAL_COL_ORDER_MOVEMENTS;
+    private GridLayout settingsLay;
+    private final GridLayout rightLay;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedFilterTable invoicesTable;
     private IndexedContainer movementsCont;
     private int r_table_counter = 1000;
@@ -287,7 +295,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             logger.error(e);
             logger.catching(e);
         }
-        invoicesTable.setVisibleColumns(NATURAL_COL_ORDER);
+        invoicesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         invoicesTable.setPageLength(5);
         invoicesTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), CustomTable.Align.RIGHT);
     }
@@ -314,7 +322,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 dbsc.connect();
                 StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
                 dbsc.close();
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
                         new StockMovementsPdf(myUI, myUI.getMessage(SptMessages.StockOutcome), stInv, movementsCont, st,
@@ -334,17 +342,14 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
             try {
-                if (validate(settingsLay) && validateTable(movementsTable, false)) {
+                if (validate(settingsLay) && validateTable(movementsTable)) {
                     DbStockInvoice dbCon = new DbStockInvoice();
                     dbCon.connect();
                     if (isNew) {
@@ -352,7 +357,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                         int id = dbCon.exec_insert(inv);
                         if (id != 0) {
                             insertMovements(id);
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             invoicesTable.setValue(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -369,7 +374,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                         }
                         if (status != 0) {
                             insertMovements(invID);
-                            updateDatacontainer();
+                            updateDataContainer();
                             setMovementsTable();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
@@ -381,7 +386,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     dbCon.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -449,9 +454,9 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             }
         } else if (property == invoiceNumberTF) {
             invoiceNumberTF.removeValueChangeListener(this);
-            Iterator iter = invoicesTable.getItemIds().iterator();
+            Iterator<?> iter = invoicesTable.getItemIds().iterator();
             boolean isFound = false;
-            Object next = null;
+            Object next;
             while (iter.hasNext()) {
                 next = iter.next();
                 if (invoicesTable.getContainerProperty(next, myUI.getMessage(SptMessages.InvoiceNumber)).getValue().equals(property.getValue())) {
@@ -466,7 +471,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             }
             invoiceNumberTF.addValueChangeListener(this);
         } else {
-            Object changedItemId = ((AbstractField) property).getId();
+            Object changedItemId = ((AbstractField<?>) property).getId();
 
             if (((ComboBox) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
@@ -510,7 +515,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                         }
                     }
                     if (movementsTable.getContainerDataSource().size() > 0) {
-                        Iterator iter = movementsTable.getItemIds().iterator();
+                        Iterator<?> iter = movementsTable.getItemIds().iterator();
                         ArrayList<StockMovement> list = dbCon.execSQL_remains(cat_id, msr_id, (Integer) stockSelect.getValue());
                         int i = 0;
                         while (iter.hasNext()) {
@@ -573,7 +578,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     logger.catching(e);
                 }
             }
-            if (((AbstractField) property).getData() != null && ((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))) {
+            if (((AbstractField<?>) property).getData() != null && ((AbstractField<?>) property).getData().equals(myUI.getMessage(SptMessages.Quantity))) {
                 TextField quantityTF = (TextField) movementsTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Quantity)).getValue();
                 if (movementsTable.getContainerProperty(changedItemId, myUI.getMessage(SptMessages.Price)).getValue() != null
@@ -603,9 +608,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
 
     private void recalculateRemaindersAfterDelete(Object changedItemId, int acc_category_id, int measurement_id, double quantity) {
         double remain = 0;
-        Iterator iter = movementsTable.getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : movementsTable.getItemIds()) {
             if (((ComboBox) movementsTable.getContainerProperty(next,
                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                     && ((ComboBox) movementsTable.getContainerProperty(next,
@@ -629,7 +632,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     myUI.getMessage(SptMessages.Quantity)).getValue()).removeAllValidators();
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue())
-                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, remain));
+                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, remain));
         }
         if (!disableFields(movementsTable)) {
             enableFields(movementsTable);
@@ -643,9 +646,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 myUI.getMessage(SptMessages.Measurement)).getValue()).getValue();
         double curr_remainder = 0.0, old_remainder = 0.0, value_from_db = 0.0;
         boolean isExistsSame = false;
-        Iterator iter = movementsTable.getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : movementsTable.getItemIds()) {
             if (((ComboBox) movementsTable.getContainerProperty(next,
                     myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                     && ((ComboBox) movementsTable.getContainerProperty(next,
@@ -669,9 +670,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         if (!isExistsSame) {
             double old_value = 0.0;
             if (getOriginalCont() != null) {
-                iter = getOriginalCont().getItemIds().iterator();
-                while (iter.hasNext()) {
-                    Object next = iter.next();
+                for (Object next : getOriginalCont().getItemIds()) {
                     if (acc_category_id == (Integer) getOriginalCont().getContainerProperty(next, Settings.acc_category_id).getValue()
                             && measurement_id == (Integer) getOriginalCont().getContainerProperty(next, Settings.measurement_id).getValue()) {
                         old_value -= (Double) getOriginalCont().getContainerProperty(next, Settings.quantity_id).getValue();
@@ -692,9 +691,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             }
         }
         if (isExistsSame) {
-            iter = movementsTable.getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
+            for (Object next : movementsTable.getItemIds()) {
                 if (((ComboBox) movementsTable.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Product)).getValue()).getValue() != null
                         && ((ComboBox) movementsTable.getContainerProperty(next,
@@ -717,13 +714,13 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     myUI.getMessage(SptMessages.Quantity)).getValue()).removeAllValidators();
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue())
-                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, 0.0));
+                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, 0.0));
         } else if (old_remainder > 0) {
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue()).removeAllValidators();
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue())
-                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, old_remainder));
+                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, old_remainder));
         }
         if (!disableFields(movementsTable)) {
             enableFields(movementsTable);
@@ -782,13 +779,13 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             logger.error(e);
             logger.catching(e);
         }
-        stockSelect.setValue((Integer) invoicesTable.getContainerProperty(invoicesTable.getValue(),
+        stockSelect.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
                 Settings.stock_id).getValue());
-        productCategorySelect.setValue((Integer) invoicesTable.getContainerProperty(invoicesTable.getValue(),
+        productCategorySelect.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
                 Settings.acc_category_id).getValue());
-        fromEmployeeSelect.setValue((Integer) invoicesTable.getContainerProperty(invoicesTable.getValue(),
+        fromEmployeeSelect.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
                 Settings.from_employee_id).getValue());
-        toEmployeeSelect.setValue((Integer) invoicesTable.getContainerProperty(invoicesTable.getValue(),
+        toEmployeeSelect.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
                 Settings.to_employee_id).getValue());
         if (invoicesTable.getContainerProperty(invoicesTable.getValue(),
                 myUI.getMessage(SptMessages.Note)).getValue() != null) {
@@ -814,7 +811,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         movementsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), null);
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Date)).setValue(
                 Settings.dtmf.format(dateDF.getValue()));
         try {
@@ -843,7 +840,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 toEmployeeSelect.getValue());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
@@ -957,12 +954,10 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -976,25 +971,20 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         return result;
     }
 
-    private boolean validateTable(Table t, boolean isEmptyAllowed) {
-        if (t.size() == 0 && !isEmptyAllowed) {
-            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+    private boolean validateTable(Table t) {
+        if (t.size() == 0) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                     Notification.Type.WARNING_MESSAGE);
             return false;
         } else {
-            Iterator iter = ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
-                Iterator iterProp = ((IndexedContainer) t
-                        .getContainerDataSource()).getContainerPropertyIds().iterator();
-                while (iterProp.hasNext()) {
-                    Object next1 = iterProp.next();
+            for (Object next : ((IndexedContainer) t
+                    .getContainerDataSource()).getItemIds()) {
+                for (Object next1 : (t.getContainerDataSource()).getContainerPropertyIds()) {
                     Object c = t.getItem(next).getItemProperty(
                             next1).getValue();
                     if (c instanceof AbstractField) {
                         try {
-                            ((AbstractField) c).validate();
+                            ((AbstractField<?>) c).validate();
                         } catch (Exception e) {
                             //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                             return false;
@@ -1010,7 +1000,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         return true;
     }
 
-    public ComboBox createCombobox(int value, String description, String dbtable, boolean isRequired) {
+    public ComboBox createCombobox(int value, String description, String db_table, boolean isRequired) {
         ComboBox cb = new ComboBox();
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
@@ -1022,10 +1012,10 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         }
         try {
-            if (dbtable != null) {
+            if (db_table != null) {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable, true));
+                cb.setContainerDataSource(dbp.exec_for_select(myUI, db_table, true));
                 dbp.close();
             }
         } catch (Exception e) {
@@ -1050,7 +1040,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         return btn;
     }
 
-    public TextField createTextfieldWithProperty(Object value, String description, Validator validator, Property p, Converter conv) {
+    public TextField createTextFieldWithProperty(Object value, String description, Validator validator, Property p, Converter conv) {
         TextField tf = new TextField(p);
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_SMALL);
@@ -1064,7 +1054,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         return tf;
     }
 
-    public TextField createTextfield(String value, String description, Validator validator, boolean isRequired) {
+    public TextField createTextField(String value, String description, Validator validator, boolean isRequired) {
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -1102,7 +1092,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         return movementsCont;
     }
 
-    public IndexedContainer prepareOriginalContainer() {
+    public void prepareOriginalContainer() {
         if (getOriginalCont() == null) {
             originalCont = new IndexedContainer();
             getOriginalCont().addContainerProperty(Settings.acc_category_id, Integer.class, 0);
@@ -1112,7 +1102,6 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         } else {
             getOriginalCont().removeAllItems();
         }
-        return getOriginalCont();
     }
 
     private void addMovementsItem() {
@@ -1148,23 +1137,23 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         cb.addValueChangeListener(this);
         cb.setId(id);
         item.getItemProperty(myUI.getMessage(SptMessages.Product)).setValue(cb);
-        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextfield(
+        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextField(
                 null, myUI.getMessage(SptMessages.Note),
-                new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 250, false), true));
+                new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 250, false), true));
         cb = createCombobox(0, myUI.getMessage(SptMessages.Measurement), Settings.dbMeasurement, true);
         cb.addValueChangeListener(this);
         cb.setId(id);
         item.getItemProperty(myUI.getMessage(SptMessages.Measurement)).setValue(cb);
-        TextField tf = createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Quantity),
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter());
+        TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Quantity),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter());
         tf.addValueChangeListener(this);
         tf.setId(id);
         tf.setData(myUI.getMessage(SptMessages.Quantity));
         item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(tf);
 
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
-        movementsTable.setVisibleColumns(NATURAL_COL_ORDER_MOVEMENTS);
+        movementsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_MOVEMENTS);
         movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Product), 1);
         movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
         movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
@@ -1189,7 +1178,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             dbepn.connect();
             movementsTable.setContainerDataSource(dbepn.execSQL(myUI, invID, this));
             dbepn.close();
-            movementsTable.setVisibleColumns(NATURAL_COL_ORDER_MOVEMENTS);
+            movementsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_MOVEMENTS);
             movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Product), 1);
             movementsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
             movementsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
@@ -1205,9 +1194,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
     private void repaintMovementsFooter() {
         double totPrice = 0.0;
         if (movementsTable.getContainerDataSource().size() > 0) {
-            Iterator iter = movementsTable.getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
+            for (Object next : movementsTable.getItemIds()) {
                 totPrice += (Double) movementsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue();
             }
         }
@@ -1225,7 +1212,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 }
             }
             if (movementsTable.getContainerDataSource().size() > 0) {
-                Iterator iter = movementsTable.getItemIds().iterator();
+                Iterator<?> iter = movementsTable.getItemIds().iterator();
                 int order_num = 1;
                 while (iter.hasNext()) {
                     Object next = iter.next();
@@ -1233,7 +1220,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     smv.setInvoice_id(invoice_id);
                     smv.setOrder_number(order_num++);
                     smv.setNote(((TextField) movementsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Note)).getValue()).getValue().toString());
+                            myUI.getMessage(SptMessages.Note)).getValue()).getValue());
                     smv.setAcc_category_id((Integer) ((ComboBox) movementsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Product)).getValue()).getValue());
                     smv.setMeasurement_id((Integer) ((ComboBox) movementsTable.getItem(next).getItemProperty(
@@ -1271,16 +1258,12 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
     }
 
     private void enableFields(Table t) {
-        Iterator iter = ((IndexedContainer) t
-                .getContainerDataSource()).getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
-            Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
-            while (iterProp.hasNext()) {
-                Object next1 = iterProp.next();
+        for (Object next : ((IndexedContainer) t
+                .getContainerDataSource()).getItemIds()) {
+            for (Object next1 : (t.getContainerDataSource()).getContainerPropertyIds()) {
                 Object c = t.getItem(next).getItemProperty(next1).getValue();
                 if (c instanceof AbstractField) {
-                    ((AbstractField) c).setEnabled(true);
+                    ((AbstractField<?>) c).setEnabled(true);
                 } else if (c instanceof AbstractComponent) {
                     ((AbstractComponent) c).setEnabled(true);
                 }
@@ -1290,19 +1273,15 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
 
     private boolean disableFields(Table t) {
         Object idToEnable = null;
-        Iterator iter = ((IndexedContainer) t
-                .getContainerDataSource()).getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
-            Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
-            while (iterProp.hasNext()) {
-                Object next1 = iterProp.next();
+        for (Object next : ((IndexedContainer) t
+                .getContainerDataSource()).getItemIds()) {
+            for (Object next1 : t.getContainerDataSource().getContainerPropertyIds()) {
                 Object c = t.getItem(next).getItemProperty(next1).getValue();
                 if (c instanceof AbstractField) {
-                    if (!((AbstractField) c).isValid()) {
+                    if (!((AbstractField<?>) c).isValid()) {
                         idToEnable = next;
                     } else {
-                        ((AbstractField) c).setEnabled(false);
+                        ((AbstractField<?>) c).setEnabled(false);
                     }
                 } else if (c instanceof AbstractComponent) {
                     ((AbstractComponent) c).setEnabled(false);
@@ -1318,12 +1297,10 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
     }
 
     public void enableRow(Table t, Object itemId) {
-        Iterator iterProp = ((IndexedContainer) t.getContainerDataSource()).getContainerPropertyIds().iterator();
-        while (iterProp.hasNext()) {
-            Object next1 = iterProp.next();
+        for (Object next1 : t.getContainerDataSource().getContainerPropertyIds()) {
             Object c = t.getItem(itemId).getItemProperty(next1).getValue();
             if (c instanceof AbstractField) {
-                ((AbstractField) c).setEnabled(true);
+                ((AbstractField<?>) c).setEnabled(true);
             } else if (c instanceof AbstractComponent) {
                 ((AbstractComponent) c).setEnabled(true);
             }

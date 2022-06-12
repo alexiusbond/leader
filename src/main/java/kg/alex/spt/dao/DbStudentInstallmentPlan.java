@@ -50,7 +50,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(date, myUI.getMessage(SptMessages.Date), id, false, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    dw.createTextfieldDouble(result.getDouble("ip.amount"), myUI.getMessage(SptMessages.Amount), id));
+                    dw.createTextFieldDouble(result.getDouble("ip.amount"), myUI.getMessage(SptMessages.Amount), id));
             item.getItemProperty(Settings.status_id)
                     .setValue(result.getInt("ip.is_visible"));
         }

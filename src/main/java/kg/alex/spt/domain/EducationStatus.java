@@ -13,7 +13,7 @@ public class EducationStatus implements Serializable {
     private String pre_registered;
     private String active;
     private String not_confirmed;
-    private String outof;
+    private String outOf;
     private String graduated;
 
     public String getTotal() {
@@ -48,12 +48,12 @@ public class EducationStatus implements Serializable {
         this.not_confirmed = not_confirmed;
     }
 
-    public String getOutof() {
-        return outof;
+    public String getOutOf() {
+        return outOf;
     }
 
-    public void setOutof(String outof) {
-        this.outof = outof;
+    public void setOutOf(String outOf) {
+        this.outOf = outOf;
     }
 
     public String getGraduated() {

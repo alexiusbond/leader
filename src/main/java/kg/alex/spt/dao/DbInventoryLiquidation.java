@@ -67,11 +67,11 @@ public class DbInventoryLiquidation extends BaseDb {
             cb.setId(id);
             cb.setData(myUi.getMessage(SptMessages.InventoryItem));
             item.getItemProperty(myUi.getMessage(SptMessages.InventoryItem)).setValue(cb);
-            TextField tf = v.createTextfieldWithProperty(
+            TextField tf = v.createTextFieldWithProperty(
                     result.getInt("t.quantity"), myUi.getMessage(SptMessages.Quantity),
-                    new IntegerRangeValidator(myUi.getMessage(SptMessages.NotifWrongValue),
+                    new IntegerRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue),
                             1, result.getInt("r.remain") + result.getInt("t.quantity")),
-                    new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter(), true);
+                    new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true);
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));

@@ -147,17 +147,17 @@ public class DbStudentDiscount extends BaseDb {
             if (result.getString("d.discount_type_id").equals("1")
                     || result.getString("d.discount_type_id").equals("2")) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                        dw.createTextfieldDisc(result.getDouble("d.amount"), null,
+                        dw.createTextFieldDisc(result.getDouble("d.amount"), null,
                                 myUI.getMessage(SptMessages.DiscountAmount), id, true));
             } else if (result.getString("d.discount_type_id").equals("3")
                     || result.getString("d.discount_type_id").equals("4")) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                        dw.createTextfieldDisc(result.getDouble("sd.free_entry_amount"),
+                        dw.createTextFieldDisc(result.getDouble("sd.free_entry_amount"),
                                 result.getDouble("d.amount"),
                                 myUI.getMessage(SptMessages.DiscountAmount), id,
                                 !currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actModify)));
             }
-            TextField tf = dw.createTextfield(result.getString("sd.note"),
+            TextField tf = dw.createTextField(result.getString("sd.note"),
                     myUI.getMessage(SptMessages.Note), id, true, false);
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
             HorizontalLayout hl = new HorizontalLayout();
@@ -200,38 +200,16 @@ public class DbStudentDiscount extends BaseDb {
                                              String edu_statuses_ids, ClassDiscountsReport cdr) throws SQLException {
 
 
-        String sql = "SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
+        StringBuilder sql = new StringBuilder("SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
                 + "SUM(sd.discount_value) AS disc_amount, "
-                + "SUM(c.amount) AS contr_amount";
-        Iterator class_iter = ((Set<?>) cdr.classTable.getValue()).iterator();
+                + "SUM(c.amount) AS contr_amount");
+        Iterator<?> class_iter = ((Set<?>) cdr.classTable.getValue()).iterator();
         while (class_iter.hasNext()) {
             Object next = class_iter.next();
-            sql += ", COUNT(IF(cna.id = " + next + ", 1, NULL)) AS disc_quantity" + next + ", "
-                    + "SUM(IF(cna.id = " + next + ", sd.discount_value, 0)) AS disc_amount" + next + ", "
-                    + "SUM(IF(cna.id = " + next + ", c.amount, 0)) AS contr_amount" + next + " ";
+            sql.append(", COUNT(IF(cna.id = ").append(next).append(", 1, NULL)) AS disc_quantity").append(next).append(", ").append("SUM(IF(cna.id = ").append(next).append(", sd.discount_value, 0)) AS disc_amount").append(next).append(", ").append("SUM(IF(cna.id = ").append(next).append(", c.amount, 0)) AS contr_amount").append(next).append(" ");
         }
-        sql += " FROM student_discount AS sd "
-                + "LEFT JOIN student AS st ON sd.student_id = st.id "
-                + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id "
-                + "AND sd.year_id = sc.year_id "
-                + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN class_name AS cna ON cna.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
-                + "ELSE stud_o.to_class_name_id END "
-                + "LEFT JOIN education_status AS edu ON edu.id = "
-                + "CASE WHEN stud_o.to_education_status_id IS NULL "
-                + "THEN st.education_status_id ELSE stud_o.to_education_status_id END "
-                + "WHERE sd.year_id = ? AND cna.id IN ("
-                + Settings.convertCollectionToStr(((Set<?>) cdr.classTable.getValue())) + ") "
-                + "AND sd.discount_id IN ("
-                + Settings.convertCollectionToStr(((Set<?>) cdr.discountsTable.getValue())) + ") "
-                + "AND edu.id IN (" + edu_statuses_ids + ") "
-                + "GROUP BY sd.discount_id;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
+        sql.append(" FROM student_discount AS sd " + "LEFT JOIN student AS st ON sd.student_id = st.id " + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id " + "AND sd.year_id = sc.year_id " + "LEFT JOIN contract AS c ON c.id = sc.contract_id " + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 " + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN class_name AS cna ON cna.id = CASE " + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id " + "ELSE stud_o.to_class_name_id END " + "LEFT JOIN education_status AS edu ON edu.id = " + "CASE WHEN stud_o.to_education_status_id IS NULL " + "THEN st.education_status_id ELSE stud_o.to_education_status_id END " + "WHERE sd.year_id = ? AND cna.id IN (").append(Settings.convertCollectionToStr(((Set<?>) cdr.classTable.getValue()))).append(") ").append("AND sd.discount_id IN (").append(Settings.convertCollectionToStr(((Set<?>) cdr.discountsTable.getValue()))).append(") ").append("AND edu.id IN (").append(edu_statuses_ids).append(") ").append("GROUP BY sd.discount_id;");
+        PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
@@ -257,10 +235,8 @@ public class DbStudentDiscount extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Total) + " "
                 + myUI.getMessage(SptMessages.Average) + "%", Double.class, 0.0);
         cdr.dataTable.setContainerDataSource(container);
-        Iterator disc_iter = ((Set<?>) cdr.discountsTable.getValue()).iterator();
-        while (disc_iter.hasNext()) {
-            Object next = disc_iter.next();
-            Item item = container.addItem((Integer) next);
+        for (Object next : (Set<?>) cdr.discountsTable.getValue()) {
+            Item item = container.addItem(next);
             item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
                     cdr.discountsTable.getContainerProperty(
                             next, myUI.getMessage(SptMessages.Title)).getValue());
@@ -399,7 +375,7 @@ public class DbStudentDiscount extends BaseDb {
             }
             counter++;
         }
-        Iterator iter = cdr.dataTable.getContainerDataSource().getItemIds().iterator();
+        Iterator<?> iter = cdr.dataTable.getContainerDataSource().getItemIds().iterator();
         double totalDiscAmount = 0.0;
         String footerVal = cdr.dataTable.getColumnFooter(myUI.getMessage(SptMessages.Total) + " "
                 + myUI.getMessage(SptMessages.DiscountAmount));
@@ -425,35 +401,16 @@ public class DbStudentDiscount extends BaseDb {
                                              String edu_statuses_ids, SchoolDiscountsReport sdr) throws SQLException {
 
 
-        String sql = "SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
+        StringBuilder sql = new StringBuilder("SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
                 + "SUM(sd.discount_value) AS disc_amount, "
-                + "SUM(c.amount) AS contr_amount";
-        Iterator school_iter = ((Set<?>) sdr.schoolTable.getValue()).iterator();
+                + "SUM(c.amount) AS contr_amount");
+        Iterator<?> school_iter = ((Set<?>) sdr.schoolTable.getValue()).iterator();
         while (school_iter.hasNext()) {
             Object next = school_iter.next();
-            sql += ", COUNT(IF(st.school_id = " + next + ", 1, NULL)) AS disc_quantity" + next + ", "
-                    + "SUM(IF(st.school_id = " + next + ", sd.discount_value, 0)) AS disc_amount" + next + ", "
-                    + "SUM(IF(st.school_id = " + next + ", c.amount, 0)) AS contr_amount" + next + " ";
+            sql.append(", COUNT(IF(st.school_id = ").append(next).append(", 1, NULL)) AS disc_quantity").append(next).append(", ").append("SUM(IF(st.school_id = ").append(next).append(", sd.discount_value, 0)) AS disc_amount").append(next).append(", ").append("SUM(IF(st.school_id = ").append(next).append(", c.amount, 0)) AS contr_amount").append(next).append(" ");
         }
-        sql += " FROM student_discount AS sd "
-                + "LEFT JOIN student AS st ON sd.student_id = st.id "
-                + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id "
-                + "AND sd.year_id = sc.year_id "
-                + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = "
-                + "CASE WHEN stud_o.to_education_status_id IS NULL "
-                + "THEN st.education_status_id ELSE stud_o.to_education_status_id END "
-                + "WHERE sd.year_id = ? AND st.school_id IN ("
-                + Settings.convertCollectionToStr(((Set<?>) sdr.schoolTable.getValue())) + ") "
-                + "AND sd.discount_id IN ("
-                + Settings.convertCollectionToStr(((Set<?>) sdr.discountsTable.getValue())) + ") "
-                + "AND edu.id IN (" + edu_statuses_ids + ") "
-                + "GROUP BY sd.discount_id;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
+        sql.append(" FROM student_discount AS sd " + "LEFT JOIN student AS st ON sd.student_id = st.id " + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id " + "AND sd.year_id = sc.year_id " + "LEFT JOIN contract AS c ON c.id = sc.contract_id " + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 " + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN education_status AS edu ON edu.id = " + "CASE WHEN stud_o.to_education_status_id IS NULL " + "THEN st.education_status_id ELSE stud_o.to_education_status_id END " + "WHERE sd.year_id = ? AND st.school_id IN (").append(Settings.convertCollectionToStr(((Set<?>) sdr.schoolTable.getValue()))).append(") ").append("AND sd.discount_id IN (").append(Settings.convertCollectionToStr(((Set<?>) sdr.discountsTable.getValue()))).append(") ").append("AND edu.id IN (").append(edu_statuses_ids).append(") ").append("GROUP BY sd.discount_id;");
+        PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
@@ -479,10 +436,8 @@ public class DbStudentDiscount extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Total) + " "
                 + myUI.getMessage(SptMessages.Average) + "%", Double.class, 0.0);
         sdr.dataTable.setContainerDataSource(container);
-        Iterator disc_iter = ((Set<?>) sdr.discountsTable.getValue()).iterator();
-        while (disc_iter.hasNext()) {
-            Object next = disc_iter.next();
-            Item item = container.addItem((Integer) next);
+        for (Object next : (Set<?>) sdr.discountsTable.getValue()) {
+            Item item = container.addItem(next);
             item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
                     sdr.discountsTable.getContainerProperty(
                             next, myUI.getMessage(SptMessages.Title)).getValue());
@@ -623,7 +578,7 @@ public class DbStudentDiscount extends BaseDb {
 
             counter++;
         }
-        Iterator iter = sdr.dataTable.getContainerDataSource().getItemIds().iterator();
+        Iterator<?> iter = sdr.dataTable.getContainerDataSource().getItemIds().iterator();
         double totalDiscAmount = 0.0;
         String footerVal = sdr.dataTable.getColumnFooter(myUI.getMessage(SptMessages.Total) + " "
                 + myUI.getMessage(SptMessages.DiscountAmount));
@@ -663,7 +618,6 @@ public class DbStudentDiscount extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setString(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 }

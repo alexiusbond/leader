@@ -28,15 +28,12 @@ public class SalariesReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(SalariesReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
-    private HorizontalSplitPanel splitPanel;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox currencySelect;
-    private GridLayout leftGrid;
     public FormattedTreeTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
-
-    private EnhancedFormatExcelExport excelReport;
 
     public SalariesReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -47,7 +44,7 @@ public class SalariesReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 4);
+        GridLayout leftGrid = new GridLayout(4, 4);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -172,7 +169,7 @@ public class SalariesReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             try {
-                excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");

@@ -30,7 +30,7 @@ public class DbEmployeeChildren extends BaseDb {
                 + "VALUES(?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ech.getEmployee_id());
-        stat.setString(2, ech.getFullname());
+        stat.setString(2, ech.getFullName());
         stat.setDate(3, new Date(ech.getDate_of_birth().getTime()));
         if (!ech.getInstitution().equals("") && ech.getInstitution() != null) {
             stat.setString(4, ech.getInstitution());
@@ -55,7 +55,7 @@ public class DbEmployeeChildren extends BaseDb {
         String sql = "update hr_employee_children set "
                 + "fullname=?, date_of_birth=?, institution=?, hr_education_status_id=?, hr_health_status_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, ech.getFullname());
+        stat.setString(1, ech.getFullName());
         stat.setDate(2, new Date(ech.getDate_of_birth().getTime()));
         if (!ech.getInstitution().equals("") && ech.getInstitution() != null) {
             stat.setString(3, ech.getInstitution());
@@ -88,17 +88,17 @@ public class DbEmployeeChildren extends BaseDb {
             item.getItemProperty(Settings.button).setValue(
                     edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeChildren, FontAwesome.MINUS_SQUARE));
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
-                    edv.createTextfield(result.getString("ech.fullname"),
+                    edv.createTextField(result.getString("ech.fullname"),
                             myUI.getMessage(SptMessages.FullName),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true), true));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 200, true), true));
             item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
                     edv.createDateField(result.getDate("ech.date_of_birth"),
                             myUI.getMessage(SptMessages.DateOfBirth), null,
                             true, Settings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(SptMessages.Institution)).setValue(
-                    edv.createTextfield(result.getString("ech.institution"),
+                    edv.createTextField(result.getString("ech.institution"),
                             myUI.getMessage(SptMessages.Institution),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 300, true), false));
             item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
                     edv.createCombobox(result.getInt("ech.hr_education_status_id"),
                             myUI.getMessage(SptMessages.EducationStatus), Settings.dbHrEducationStatus, false));

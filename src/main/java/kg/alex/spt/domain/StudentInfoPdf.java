@@ -18,7 +18,6 @@ public class StudentInfoPdf implements Serializable {
     private String stud_class_name;
     private String scl_name_ru;
     private String scl_name_kg;
-    private int scl_contr_type;
     private String scl_year_name;
     private String scl_city;
     private String scl_dir_f_name;
@@ -27,9 +26,8 @@ public class StudentInfoPdf implements Serializable {
     private String scl_bank;
     private String scl_bank_account;
     private String scl_phone;
-    private String scl_photo;
-    private String scl_accountent_fullname;
-    private String rel_fullname;
+    private String scl_accountant_full_name;
+    private String rel_full_name;
     private String rel_phone;
     private String rel_passport;
     private String rel_address;
@@ -42,15 +40,14 @@ public class StudentInfoPdf implements Serializable {
     private double ctr_contract_sum;
     private double ctr_init_payment;
     private double ctr_ttl_left_sum;
-    private double ctr_ttl_instplan_sum;
-    private double ctr_instplan_debt;
+    private double ctr_installment_plan_debt;
     private double ctr_debt;
-    private double ctr_k_oplate;
+    private double ctr_to_pay;
     private double ctr_paid;
     private String ctr_discountStr;
-    private String ctr_discountPerc;
+    private String ctr_discount_percentage;
     private String ctr_Correction;
-    private boolean isStudentFeminitive;
+    private boolean isStudentFemininity;
     private int contract_number;
 
     public int getContract_number() {
@@ -85,20 +82,12 @@ public class StudentInfoPdf implements Serializable {
         this.scl_year_name = scl_year_name;
     }
 
-    public int getScl_contr_type() {
-        return scl_contr_type;
+    public double getCtr_to_pay() {
+        return ctr_to_pay;
     }
 
-    public void setScl_contr_type(int scl_contr_type) {
-        this.scl_contr_type = scl_contr_type;
-    }
-
-    public double getCtr_k_oplate() {
-        return ctr_k_oplate;
-    }
-
-    public void setCtr_k_oplate(double ctr_k_oplate) {
-        this.ctr_k_oplate = ctr_k_oplate;
+    public void setCtr_to_pay(double ctr_to_pay) {
+        this.ctr_to_pay = ctr_to_pay;
     }
 
     public String getYear() {
@@ -140,37 +129,28 @@ public class StudentInfoPdf implements Serializable {
     public void setStud_class_name(String stud_class_name) {
         this.stud_class_name = stud_class_name;
     }
-
-    public String getScl_photo() {
-        return scl_photo;
+    public String getScl_accountant_full_name() {
+        return scl_accountant_full_name;
     }
 
-    public void setScl_photo(String scl_photo) {
-        this.scl_photo = scl_photo;
+    public void setScl_accountant_full_name(String scl_accountant_full_name) {
+        this.scl_accountant_full_name = scl_accountant_full_name;
     }
 
-    public String getScl_accountent_fullname() {
-        return scl_accountent_fullname;
+    public double getCtr_installment_plan_debt() {
+        return ctr_installment_plan_debt;
     }
 
-    public void setScl_accountent_fullname(String scl_accountent_fullname) {
-        this.scl_accountent_fullname = scl_accountent_fullname;
+    public void setCtr_installment_plan_debt(double ctr_installment_plan_debt) {
+        this.ctr_installment_plan_debt = ctr_installment_plan_debt;
     }
 
-    public double getCtr_instplan_debt() {
-        return ctr_instplan_debt;
+    public String getCtr_discount_percentage() {
+        return ctr_discount_percentage;
     }
 
-    public void setCtr_instplan_debt(double ctr_instplan_debt) {
-        this.ctr_instplan_debt = ctr_instplan_debt;
-    }
-
-    public String getCtr_discountPerc() {
-        return ctr_discountPerc;
-    }
-
-    public void setCtr_discountPerc(String ctr_discountPerc) {
-        this.ctr_discountPerc = ctr_discountPerc;
+    public void setCtr_discount_percentage(String ctr_discount_percentage) {
+        this.ctr_discount_percentage = ctr_discount_percentage;
     }
 
     public String getPeriod_kg() {
@@ -187,14 +167,6 @@ public class StudentInfoPdf implements Serializable {
 
     public void setStud_id(int stud_id) {
         this.stud_id = stud_id;
-    }
-
-    public double getCtr_ttl_instplan_sum() {
-        return ctr_ttl_instplan_sum;
-    }
-
-    public void setCtr_ttl_instplan_sum(double ctr_ttl_instplan_sum) {
-        this.ctr_ttl_instplan_sum = ctr_ttl_instplan_sum;
     }
 
     public double getCtr_contract_sum() {
@@ -317,12 +289,12 @@ public class StudentInfoPdf implements Serializable {
         this.scl_phone = scl_phone;
     }
 
-    public String getRel_fullname() {
-        return rel_fullname;
+    public String getRel_full_name() {
+        return rel_full_name;
     }
 
-    public void setRel_fullname(String rel_fullname) {
-        this.rel_fullname = rel_fullname;
+    public void setRel_full_name(String rel_full_name) {
+        this.rel_full_name = rel_full_name;
     }
 
     public String getRel_name() {
@@ -357,72 +329,42 @@ public class StudentInfoPdf implements Serializable {
         this.class_name = class_name;
     }
 
-    /**
-     * @return the isStudentFeminitive
-     */
-    public boolean isStudentFeminitive() {
-        return isStudentFeminitive;
+    public boolean isStudentFemininity() {
+        return isStudentFemininity;
     }
 
-    /**
-     * @param isStudentFeminitive the isStudentFeminitive to set
-     */
-    public void setIsStudentFeminitive(boolean isStudentFeminitive) {
-        this.isStudentFeminitive = isStudentFeminitive;
+    public void setIsStudentFemininity(boolean isStudentFemininity) {
+        this.isStudentFemininity = isStudentFemininity;
     }
 
-    /**
-     * @return the rel_phone
-     */
     public String getRel_phone() {
         return rel_phone;
     }
 
-    /**
-     * @param rel_phone the rel_phone to set
-     */
     public void setRel_phone(String rel_phone) {
         this.rel_phone = rel_phone;
     }
 
-    /**
-     * @return the rel_address
-     */
     public String getRel_address() {
         return rel_address;
     }
 
-    /**
-     * @param rel_address the rel_address to set
-     */
     public void setRel_address(String rel_address) {
         this.rel_address = rel_address;
     }
 
-    /**
-     * @return the scl_name
-     */
     public String getScl_name_kg() {
         return scl_name_kg;
     }
 
-    /**
-     * @param scl_name_kg the scl_name to set
-     */
     public void setScl_name_kg(String scl_name_kg) {
         this.scl_name_kg = scl_name_kg;
     }
 
-    /**
-     * @return the rel_passport
-     */
     public String getRel_passport() {
         return rel_passport;
     }
 
-    /**
-     * @param rel_passport the rel_passport to set
-     */
     public void setRel_passport(String rel_passport) {
         this.rel_passport = rel_passport;
     }

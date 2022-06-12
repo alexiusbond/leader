@@ -3,18 +3,16 @@ package kg.alex.spt.utils;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 import org.tepi.filtertable.FilterDecorator;
 import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.util.Locale;
 
 public class MyFilterDecorator implements FilterDecorator, Serializable {
 
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
 
     public MyFilterDecorator(MyVaadinUI myUi) {
         myUI = myUi;
@@ -84,10 +82,6 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
     @Override
     public Resolution getDateFieldResolution(Object propertyId) {
         return Resolution.DAY;
-    }
-
-    public DateFormat getDateFormat(Object propertyId) {
-        return Settings.df;
     }
 
     @Override

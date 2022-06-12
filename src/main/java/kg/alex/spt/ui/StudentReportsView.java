@@ -17,11 +17,11 @@ import org.apache.shiro.subject.Subject;
 
 public class StudentReportsView extends HorizontalSplitPanel implements Property.ValueChangeListener {
 
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private ComboBox repTypeSelect;
 
     private GridLayout leftGrid, rightGrid;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public StudentReportsView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -61,7 +61,7 @@ public class StudentReportsView extends HorizontalSplitPanel implements Property
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassPayments));
         }
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmClassInstPlan)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassInstallementPlan));
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassInstallmentPlan));
         }
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmDebtReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.DebtReport));
@@ -109,7 +109,7 @@ public class StudentReportsView extends HorizontalSplitPanel implements Property
                 new DiscountsReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SchoolDiscounts))) {
                 new SchoolDiscountsReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ClassInstallementPlan))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ClassInstallmentPlan))) {
                 new ClassInstPlanReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.DebtReport))) {
                 new DebtReport(myUI, this);

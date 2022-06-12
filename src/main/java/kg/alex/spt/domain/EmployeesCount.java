@@ -12,7 +12,7 @@ public class EmployeesCount implements Serializable {
     private int others_count;
     private String director;
     private String others;
-    private String accountent;
+    private String accountant;
 
     public int getOthers_count() {
         return others_count;
@@ -38,12 +38,12 @@ public class EmployeesCount implements Serializable {
         this.others = others;
     }
 
-    public String getAccountent() {
-        return accountent;
+    public String getAccountant() {
+        return accountant;
     }
 
-    public void setAccountent(String accountent) {
-        this.accountent = accountent;
+    public void setAccountant(String accountant) {
+        this.accountant = accountant;
     }
 
 }

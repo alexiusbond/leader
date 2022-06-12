@@ -11,7 +11,6 @@ import java.io.Serializable;
  * @author alex
  */
 public class ClassName implements Serializable {
-
     private int id;
     private String name;
     private int class_type_id;

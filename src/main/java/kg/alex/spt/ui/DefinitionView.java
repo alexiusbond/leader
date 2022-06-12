@@ -24,26 +24,24 @@ import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.hene.popupbutton.PopupButton;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
 public class DefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(DefinitionView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, replaceSaveBtn;
     private PopupButton replaceBtn;
-    private Table dataTable;
+    private final Table dataTable;
     private TextField nameTF;
     private ComboBox statusSelect, replaceItemSelect;
-    private boolean withActivityStatus;
-    private String dbTableName, dbTableReplaceIn, dbReplaceColumn;
+    private final boolean withActivityStatus;
+    private final String dbTableName, dbTableReplaceIn, dbReplaceColumn;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-    private Subject currentUser = SecurityUtils.getSubject();
-    private String permissionView;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final String permissionView;
 
     public DefinitionView(MyVaadinUI myUI, String dbTable, String dbTableReplaceIn, String dbReplaceColumn,
                           boolean withActivityStatus, String permissionView) {
@@ -53,6 +51,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         this.myUI = myUI;
         this.permissionView = permissionView;
         this.withActivityStatus = withActivityStatus;
+        String[] NATURAL_COL_ORDER;
         if (this.withActivityStatus) {
             NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
                     myUI.getMessage(SptMessages.Status)};
@@ -79,7 +78,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -194,9 +193,9 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
             nameTF.setPropertyDataSource(new ObjectProperty<>(0));
             nameTF.setConverter(Settings.getStringToIntegerConverter());
             nameTF.addValidator(new IntegerRangeValidator(
-                    myUI.getMessage(SptMessages.NotifWrongValue), 0, null));
+                    myUI.getMessage(SptMessages.NotificationWrongValue), 0, null));
         } else {
-            nameTF.setPropertyDataSource(new ObjectProperty<String>(""));
+            nameTF.setPropertyDataSource(new ObjectProperty<>(""));
         }
         nameTF.setNullRepresentation("");
         nameTF.setNullSettingAllowed(false);
@@ -286,7 +285,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                     logger.catching(e);
                 }
             } else {
-                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == saveBtn) {
@@ -297,7 +296,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                     if (isNew) {
                         int id = dbDef.exec_insert(getDefinition(0), dbTableName, withActivityStatus);
                         if (id != 0) {
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -316,7 +315,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                             logger.catching(e);
                         }
                         if (status != 0) {
-                            updateDatacontainer();
+                            updateDataContainer();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -327,7 +326,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                     dbDef.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -396,7 +395,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
                     myUI.getMessage(SptMessages.Title)).getValue().toString());
         }
         if (withActivityStatus) {
-            statusSelect.setValue((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+            statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                     Settings.activity_status_id).getValue());
         }
     }
@@ -408,18 +407,18 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         }
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         if (withActivityStatus) {
             dataTable.getContainerProperty(dataTable.getValue(),
                     myUI.getMessage(SptMessages.Status)).setValue(statusSelect.getItemCaption(statusSelect.getValue()));
             dataTable.getContainerProperty(dataTable.getValue(),
-                    Settings.activity_status_id).setValue((Integer) statusSelect.getValue());
+                    Settings.activity_status_id).setValue(statusSelect.getValue());
         }
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
@@ -428,7 +427,7 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
         if (withActivityStatus) {
             item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
                     statusSelect.getItemCaption(statusSelect.getValue()));
-            item.getItemProperty(Settings.activity_status_id).setValue((Integer) statusSelect.getValue());
+            item.getItemProperty(Settings.activity_status_id).setValue(statusSelect.getValue());
         }
         dataTable.setValue(id);
     }
@@ -475,12 +474,10 @@ public class DefinitionView extends HorizontalSplitPanel implements Button.Click
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;

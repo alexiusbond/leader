@@ -13,8 +13,8 @@ public class ViewManager implements Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
-    HashMap<String, Layout> views = new HashMap<String, Layout>();
-    Stack<Layout> screenStack = new Stack<Layout>();
+    HashMap<String, Layout> views = new HashMap< >();
+    Stack<Layout> screenStack = new Stack< >();
     MyVaadinUI myUI;
 
     public ViewManager(MyVaadinUI myUI) {

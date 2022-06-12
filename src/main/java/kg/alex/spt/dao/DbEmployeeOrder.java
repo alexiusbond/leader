@@ -230,9 +230,9 @@ public class DbEmployeeOrder extends BaseDb {
                 df.setEnabled(false);
             }
             item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
-            TextField tf = edv.createTextfield(result.getString("eo.Note"),
+            TextField tf = edv.createTextField(result.getString("eo.Note"),
                     myUI.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false);
+                    new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 300, true), false);
             if (result.getInt("o.id") == 8) {
                 tf.setEnabled(false);
             }
@@ -322,9 +322,9 @@ public class DbEmployeeOrder extends BaseDb {
                 df.setEnabled(false);
             }
             item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
-            TextField tf = edv.createTextfield(result.getString("eo.Note"),
+            TextField tf = edv.createTextField(result.getString("eo.Note"),
                     myUI.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), null, 300, true), false);
+                    new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 300, true), false);
             if (result.getInt("o.id") == 8) {
                 tf.setEnabled(false);
             }

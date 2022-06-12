@@ -16,7 +16,7 @@ import kg.alex.spt.dao.DbEmployeeLessons;
 import kg.alex.spt.domain.EmployeeLessons;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.MyFilterDecorator;
-import kg.alex.spt.utils.ResetingFilterGenerator;
+import kg.alex.spt.utils.ResetableFilterGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -25,19 +25,16 @@ import org.tepi.filtertable.FilterTable;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
 public class LessonAssessmentView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(LessonAssessmentView.class);
-    private MyVaadinUI myUI;
-    private Button saveBtn;
-    private ComboBox classNumberSelect;
-    private Table lessonsTable;
-    private FilterTable employeesTable;
-
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final MyVaadinUI myUI;
+    private final Button saveBtn;
+    private final ComboBox classNumberSelect;
+    private final Table lessonsTable;
+    private final FilterTable employeesTable;
 
     public LessonAssessmentView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -54,6 +51,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         try {
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
+            Subject currentUser = SecurityUtils.getSubject();
             employeesTable.setContainerDataSource(
                     dbe.execSQL(myUI, myUI.getUser().getSchool_id(), currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
             dbe.close();
@@ -62,7 +60,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             logger.catching(e);
         }
         employeesTable.setColumnWidth(myUI.getMessage(SptMessages.TotalHours), 10);
-        employeesTable.setFilterGenerator(new ResetingFilterGenerator(employeesTable));
+        employeesTable.setFilterGenerator(new ResetableFilterGenerator(employeesTable));
 
         VerticalLayout vl2 = new VerticalLayout();
         vl2.setMargin(true);
@@ -125,12 +123,10 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         final Button source = event.getButton();
         if (source == saveBtn) {
             try {
-                if (validateTable(lessonsTable, false)) {
+                if (validateTable(lessonsTable)) {
                     DbEmployeeLessons dbel = new DbEmployeeLessons();
                     dbel.connect();
-                    Iterator iter = lessonsTable.getItemIds().iterator();
-                    while (iter.hasNext()) {
-                        Object next = iter.next();
+                    for (Object next : lessonsTable.getItemIds()) {
                         CheckBox cb = (CheckBox) lessonsTable.getContainerProperty(next, Settings.button).getValue();
                         if (cb.getValue()) {
                             EmployeeLessons el = new EmployeeLessons();
@@ -159,7 +155,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                     dbel.close();
 
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -203,14 +199,11 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                         myUI.getMessage(SptMessages.ConfirmDeletion),
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
-                        new ConfirmDialog.Listener() {
-                    @Override
-                    public void onClose(ConfirmDialog dialog) {
-                        if (dialog.isConfirmed()) {
-                            execDelete(branch_id);
-                        }
-                    }
-                });
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                execDelete(branch_id);
+                            }
+                        });
 
             }
         }
@@ -251,12 +244,10 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -270,25 +261,21 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         return result;
     }
 
-    private boolean validateTable(Table t, boolean isEmptyAllowed) {
-        if (t.size() == 0 && !isEmptyAllowed) {
-            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+    private boolean validateTable(Table t) {
+        if (t.size() == 0) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                     Notification.Type.WARNING_MESSAGE);
             return false;
         } else {
-            Iterator iter = ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
-                Iterator iterProp = ((IndexedContainer) t
-                        .getContainerDataSource()).getContainerPropertyIds().iterator();
-                while (iterProp.hasNext()) {
-                    Object next1 = iterProp.next();
+            for (Object next : ((IndexedContainer) t
+                    .getContainerDataSource()).getItemIds()) {
+                for (Object next1 : t
+                        .getContainerDataSource().getContainerPropertyIds()) {
                     Object c = t.getItem(next).getItemProperty(
                             next1).getValue();
                     if (c instanceof AbstractField) {
                         try {
-                            ((AbstractField) c).validate();
+                            ((AbstractField<?>) c).validate();
                         } catch (Exception e) {
                             //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                             return false;

@@ -75,7 +75,7 @@ public class DbStockInvoice extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getString("inv_num");
         }
         return null;
@@ -87,7 +87,7 @@ public class DbStockInvoice extends BaseDb {
         stat.setInt(1, school_id);
         stat.setInt(2, service_type_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("inv_num");
         }
         return 0;
@@ -151,8 +151,7 @@ public class DbStockInvoice extends BaseDb {
         stat.setInt(8, inv.getEmployee_id());
         stat.setInt(9, inv.getAcc_category_id());
         stat.setInt(10, inv.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
 }

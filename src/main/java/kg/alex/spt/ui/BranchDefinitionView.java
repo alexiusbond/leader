@@ -20,26 +20,24 @@ import org.apache.logging.log4j.Logger;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
 public class BranchDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(BranchDefinitionView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
-    private Table dataTable;
+    private final Table dataTable;
     private TextField nameTF, codeTF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
 
     public BranchDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{
+        String[] NATURAL_COL_ORDER = new String[]{
                 myUI.getMessage(SptMessages.Code), myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
@@ -61,7 +59,7 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -132,7 +130,7 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 150, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 150, false));
         settingsLay.addComponent(nameTF);
 
         codeTF = new TextField(myUI.getMessage(SptMessages.Code));
@@ -141,7 +139,7 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
         codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         codeTF.setWidth(Settings.PERCENTS100);
         codeTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 3, 5, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 3, 5, false));
         settingsLay.addComponent(codeTF);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
@@ -186,12 +184,9 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
@@ -230,7 +225,7 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
                     dbCon.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -365,12 +360,10 @@ public class BranchDefinitionView extends HorizontalSplitPanel implements Button
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;

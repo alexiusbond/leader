@@ -81,7 +81,7 @@ public class DbInventoryInvoice extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getString("inv_num");
         }
         return null;
@@ -94,7 +94,7 @@ public class DbInventoryInvoice extends BaseDb {
         stat.setInt(1, school_id);
         stat.setInt(2, activity_status_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("inv_num");
         }
         return 0;
@@ -138,8 +138,7 @@ public class DbInventoryInvoice extends BaseDb {
         stat.setInt(3, inv.getRoom_id());
         stat.setInt(4, inv.getEmployee_id());
         stat.setInt(5, inv.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public boolean isUsed(int block_id, int room_id) throws SQLException {
@@ -163,9 +162,6 @@ public class DbInventoryInvoice extends BaseDb {
             stat.setInt(++counter, room_id);
         }
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
-            return true;
-        }
-        return false;
+        return result.next();
     }
 }

@@ -28,18 +28,14 @@ public class CallsPdf {
 
     static final Logger logger = LogManager.getLogger(CallsPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1 = null;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource = null;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    Date aDate = new Date(System.currentTimeMillis());
+    private final Date aDate = new Date(System.currentTimeMillis());
 
     public CallsPdf(final MyVaadinUI myUI, final Table dataTable, final StudentInfoPdf st) {
-        source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
+
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/PT_Sans-Web-Bold.ttf";
@@ -70,14 +66,14 @@ public class CallsPdf {
 
                     document.open();
 
-                    float[] Tdate_colsWidth = {3.5f, 1f};
-                    PdfPTable Tdate = new PdfPTable(2);
-                    Tdate.setWidthPercentage(90f);
-                    Tdate.setWidths(Tdate_colsWidth);
-                    Tdate.getDefaultCell().setBorder(0);
-                    Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
-                    document.add(Tdate);
+                    float[] dates_table_colsWidth = {3.5f, 1f};
+                    PdfPTable table_date = new PdfPTable(2);
+                    table_date.setWidthPercentage(90f);
+                    table_date.setWidths(dates_table_colsWidth);
+                    table_date.getDefaultCell().setBorder(0);
+                    table_date.addCell(new Phrase(" ", ordFont));
+                    table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
+                    document.add(table_date);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassList), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
@@ -86,10 +82,10 @@ public class CallsPdf {
                     document.add(new Paragraph(20, " "));
 
                     //installment plan table
-                    float[] Tplan_colsWidth = {0.1f, 0.27f, 0.3f, 0.3f, 0.15f, 0.65f, 0.27f, 0.27f, 0.51f, 0.47f};
+                    float[] plan_table_colsWidth = {0.1f, 0.27f, 0.3f, 0.3f, 0.15f, 0.65f, 0.27f, 0.27f, 0.51f, 0.47f};
                     PdfPTable t = new PdfPTable(10);
                     t.setWidthPercentage(90f);
-                    t.setWidths(Tplan_colsWidth);
+                    t.setWidths(plan_table_colsWidth);
                     t.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
                     t.addCell(new Phrase(" №", ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.Id), ordFontBold));
@@ -102,7 +98,7 @@ public class CallsPdf {
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.LastCall), ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.LastPayment), ordFontBold));
 
-                    Iterator iter = dataTable.getItemIds().iterator();
+                    Iterator<?> iter = dataTable.getItemIds().iterator();
                     int i = 0;
                     if (dataTable.size() > 0) {
                         i = 1;
@@ -162,7 +158,7 @@ public class CallsPdf {
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
-                    T2.addCell(new Phrase(st.getScl_accountent_fullname(), ordFont));
+                    T2.addCell(new Phrase(st.getScl_accountant_full_name(), ordFont));
                     T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));
                     document.add(T2);
 
@@ -179,7 +175,7 @@ public class CallsPdf {
             }
         };
 
-        resource = new StreamResource(source1, "Calls"
+        StreamResource resource = new StreamResource(source1, "Calls"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 

@@ -5,9 +5,8 @@
  */
 package kg.alex.spt.domain;
 
-import java.io.Serializable;
 
-public class InventoryInvoice extends Invoice implements Serializable {
+public class InventoryInvoice extends Invoice {
 
     private int id;
     private int room_id;

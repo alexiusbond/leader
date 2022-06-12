@@ -24,6 +24,7 @@ import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -32,26 +33,27 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(PositionDefinitionView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox categorySelect, statusSelect;
-    private Table dataTable, permissionTable;
+    private final Table dataTable;
+    private Table permissionTable;
     private IndexedContainer permissionCont;
     private TextField nameTF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER, PERMISSION_NATURAL_COL_ORDER;
+    private final String[] PERMISSION_NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public PositionDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
         PERMISSION_NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.ClassCaption),
             myUI.getMessage(SptMessages.Functions)};
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
-            myUI.getMessage(SptMessages.Category),
-            myUI.getMessage(SptMessages.Status)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
+                myUI.getMessage(SptMessages.Category),
+                myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -71,7 +73,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -142,7 +144,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 100, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 100, false));
         settingsLay.addComponent(nameTF);
 
         categorySelect = new ComboBox(myUI.getMessage(SptMessages.Category));
@@ -207,14 +209,11 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete();
-                    }
-                }
-            });
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
+                        }
+                    });
         } else if (source == saveBtn) {
             try {
                 if (validate(settingsLay)) {
@@ -223,7 +222,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                     if (isNew) {
                         int id = dbp.exec_insert(getPosition(0));
                         if (id != 0) {
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -241,7 +240,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                             logger.catching(e);
                         }
                         if (status != 0) {
-                            updateDatacontainer();
+                            updateDataContainer();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
@@ -252,7 +251,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                     dbp.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -273,12 +272,8 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         if (property == dataTable) {
             if (dataTable.getItem(dataTable.getValue()) != null) {
                 fillFields();
-                if ((Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.position_id).getValue() == 5
-                        || (Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.position_id).getValue() == 25) {
-                    permissionTable.setVisible(false);
-                } else {
-                    permissionTable.setVisible(true);
-                }
+                permissionTable.setVisible((Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.position_id).getValue() != 5
+                        && (Integer) dataTable.getContainerProperty(dataTable.getValue(), Settings.position_id).getValue() != 25);
             }
         }
     }
@@ -319,10 +314,10 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).getValue().toString());
         categorySelect.setValue(
-                (Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                dataTable.getContainerProperty(dataTable.getValue(),
                         Settings.hr_position_category_id).getValue());
         statusSelect.setValue(
-                (Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                dataTable.getContainerProperty(dataTable.getValue(),
                         Settings.activity_status_id).getValue());
         clearPermissionTable();
         if (dataTable.getContainerProperty(dataTable.getValue(),
@@ -339,7 +334,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
         clearPermissionTable();
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -360,7 +355,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
@@ -420,9 +415,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
                     ((AbstractField) c).validate();
@@ -449,25 +442,18 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
             dbd.connect();
             permissionCont = dbd.execPermissionSQL(myUI);
             dbd.close();
-            Iterator iter = permissionCont.getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
+            for (Object next : permissionCont.getItemIds()) {
                 ComboBoxMultiselect permMCB = new ComboBoxMultiselect();
                 permMCB.setStyleName(ValoTheme.COMBOBOX_TINY);
                 permMCB.setWidth(Settings.PERCENTS100);
-                permMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-                    @Override
-                    public boolean isShow(String filter, int page) {
-                        return true;
-                    }
-                });
+                permMCB.setShowSelectAllButton((filter, page) -> true);
                 permMCB.addItems(convertStrToSet(permissionCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Value)).getValue().toString()));
                 permissionCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Functions)).setValue(permMCB);
             }
             permissionTable.setContainerDataSource(permissionCont);
-            permissionTable.setVisibleColumns(PERMISSION_NATURAL_COL_ORDER);
+            permissionTable.setVisibleColumns((Object[]) PERMISSION_NATURAL_COL_ORDER);
             permissionTable.setPageLength(7);
         } catch (Exception e) {
             logger.error(e);
@@ -477,34 +463,32 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
     private Set<?> convertStrToSet(String str) {
         String[] strArr = str.split(",");
-        HashSet<String> hs = new HashSet<String>(strArr.length);
-        for (int i = 0; i < strArr.length; i++) {
-            hs.add(strArr[i]);
-        }
+        HashSet<String> hs = new HashSet<>(strArr.length);
+        hs.addAll(Arrays.asList(strArr));
         return hs;
     }
 
     private String permJoinSingleStr() {
-        Iterator iter = ((IndexedContainer) permissionTable
+        Iterator<?> iter = ((IndexedContainer) permissionTable
                 .getContainerDataSource()).getItemIds().iterator();
-        String permissions = "";
+        StringBuilder permissions = new StringBuilder();
         while (iter.hasNext()) {
             Object next = iter.next();
             if (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
                     .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
                     .getValue())).getValue()) != null) {
-                permissions += next + ":" + (Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
+                permissions.append(next).append(":").append(Settings.convertCollectionToStr((Set) ((ComboBoxMultiselect) (permissionTable
                         .getContainerProperty(next, myUI.getMessage(SptMessages.Functions))
-                        .getValue())).getValue())) + ";";
+                        .getValue())).getValue())).append(";");
             }
         }
         if (permissions.length() > 1) {
-            permissions = permissions.substring(0, permissions.length() - 1);
+            permissions = new StringBuilder(permissions.substring(0, permissions.length() - 1));
         }
-        if (permissions.equals("")) {
+        if (permissions.toString().equals("")) {
             return null;
         } else {
-            return permissions;
+            return permissions.toString();
         }
     }
 

@@ -92,7 +92,7 @@ public class ExcelExport extends TableExport {
     protected CellStyle dateCellStyle, doubleCellStyle, totalsCellStyle, columnHeaderCellStyle,
             titleCellStyle;
     protected Short dateDataFormat, doubleDataFormat;
-    protected Map<Short, CellStyle> dataFormatCellStylesMap = new HashMap<Short, CellStyle>();
+    protected Map<Short, CellStyle> dataFormatCellStylesMap = new HashMap<>();
 
     /**
      * The default row header style is null and, if row headers are specified with
@@ -105,8 +105,7 @@ public class ExcelExport extends TableExport {
      * The totals row.
      */
     protected Row titleRow, headerRow, totalsRow;
-    protected Row hierarchicalTotalsRow;
-    protected Map<Object, String> propertyExcelFormatMap = new HashMap<Object, String>();
+    protected Map<Object, String> propertyExcelFormatMap = new HashMap<>();
 
     /**
      * At minimum, we need a Table to export. Everything else has default settings.
@@ -286,9 +285,7 @@ public class ExcelExport extends TableExport {
             if (null == mimeType) {
                 setMimeType(EXCEL_MIME_TYPE);
             }
-            final boolean success =
-                    super.sendConvertedFileToUser(getTable().getUI(), tempFile, exportFileName);
-            return success;
+            return super.sendConvertedFileToUser(getTable().getUI(), tempFile, exportFileName);
         } catch (final IOException e) {
             LOGGER.warning("Converting to XLS failed with IOException " + e);
             return false;
@@ -296,7 +293,7 @@ public class ExcelExport extends TableExport {
             tempFile.deleteOnExit();
             try {
                 fileOut.close();
-            } catch (final IOException e) {
+            } catch (final IOException ignored) {
             }
         }
     }
@@ -426,7 +423,7 @@ public class ExcelExport extends TableExport {
          * at the top and the grouped/outlined subcategories below.
          */
         sheet.setRowSumsBelow(false);
-        int count = 0;
+        int count;
         for (final Object rootId : roots) {
             count = addDataRowRecursively(sheetToAddTo, rootId, localRow);
             localRow = localRow + count;

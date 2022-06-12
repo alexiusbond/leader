@@ -33,21 +33,18 @@ public class DiscountsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(DiscountsReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
             selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private FormattedTable dataTable;
     private FilterTable classTable, discountsTable;
-    private IndexedContainer dataCont;
-    private EnhancedFormatExcelExport excelReport;
 
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
-    public double contracts, discounts, corrections, debts, nets, paids, lefts;
+    public double contracts, discounts, corrections, debts, nets, paid_amounts, lefts;
 
     public DiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -72,7 +69,7 @@ public class DiscountsReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 7);
+        GridLayout leftGrid = new GridLayout(4, 7);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -93,12 +90,7 @@ public class DiscountsReport implements Button.ClickListener,
         educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
         educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        educationStatusMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
         educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
@@ -172,7 +164,7 @@ public class DiscountsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -230,14 +222,14 @@ public class DiscountsReport implements Button.ClickListener,
                 try {
                     DbStudentContract dbsc = new DbStudentContract();
                     dbsc.connect();
-                    dataCont = dbsc.execSQL_Discounts(myUI,
+                    IndexedContainer dataCont = dbsc.execSQL_Discounts(myUI,
                             Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
                             Settings.convertCollectionToStr((Set<?>) discountsTable.getValue()),
                             (Integer) yearSelect.getValue(),
                             Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             this);
                     dataTable.setContainerDataSource(dataCont);
-                    dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+                    dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), Table.Align.RIGHT);
@@ -260,7 +252,7 @@ public class DiscountsReport implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
                             Settings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(paids));
+                            Settings.dFormat.format(paid_amounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
                             Settings.dFormat.format(lefts));
                     if (dataCont.size() != 0) {
@@ -276,7 +268,7 @@ public class DiscountsReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             if (dataTable.getContainerDataSource().size() != 0) {
-                excelReport = new EnhancedFormatExcelExport(dataTable);
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.DiscountsReport));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
@@ -313,7 +305,7 @@ public class DiscountsReport implements Button.ClickListener,
                 discountsTable.setContainerDataSource(
                         dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
                 dbd.close();
-                discountsTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+                discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

@@ -38,11 +38,10 @@ public class DateReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(DateReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn,
             selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
-    private GridLayout leftGrid;
+    private final HorizontalSplitPanel splitPanel;
     private DateField fromDateDF, tillDateDF;
     public FormattedTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
@@ -62,7 +61,7 @@ public class DateReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 6);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -247,11 +246,9 @@ public class DateReport implements Button.ClickListener,
                     Set<Integer> catIds = new HashSet<>();
                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
-                        Iterator iter = ((Set<Integer>) incomeCategoriesTable.getValue()).iterator();
-                        while (iter.hasNext()) {
-                            Object next = iter.next();
+                        for (Object next : (Set<Integer>) incomeCategoriesTable.getValue()) {
                             if (incomeCategoriesTable.getChildren(next) != null) {
-                                catIds.addAll(new HashSet<Integer>(
+                                catIds.addAll(new HashSet<>(
                                         (Collection<Integer>) incomeCategoriesTable.getChildren(next)));
                             }
                         }
@@ -276,11 +273,9 @@ public class DateReport implements Button.ClickListener,
                     }
                     if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
-                        Iterator iter = ((Set<Integer>) outcomeCategoriesTable.getValue()).iterator();
-                        while (iter.hasNext()) {
-                            Object next = iter.next();
+                        for (Object next : (Set<Integer>) outcomeCategoriesTable.getValue()) {
                             if (outcomeCategoriesTable.getChildren(next) != null) {
-                                catIds.addAll(new HashSet<Integer>(
+                                catIds.addAll(new HashSet<>(
                                         (Collection<Integer>) outcomeCategoriesTable.getChildren(next)));
                             }
                         }
@@ -338,7 +333,7 @@ public class DateReport implements Button.ClickListener,
                 dbsc.connect();
                 st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
                 dbsc.close();
-                if (st.getScl_accountent_fullname() != null) {
+                if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
                             && st.getScl_name_ru() != null) {
                         if (rightLayout.getComponentCount() != 0) {
@@ -374,7 +369,7 @@ public class DateReport implements Button.ClickListener,
                                     cell.setCellValue(myUI.getMessage(SptMessages.Director));
                                     cell.setCellStyle(style);
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
-                                    row.createCell(1).setCellValue(st.getScl_accountent_fullname());
+                                    row.createCell(1).setCellValue(st.getScl_accountant_full_name());
                                     row.createCell(5).setCellValue(st.getScl_dir_f_name());
 
                                     excelReport.getWorkbook().getSheet(sheet).addMergedRegion(
@@ -396,7 +391,7 @@ public class DateReport implements Button.ClickListener,
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountent),
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
                 if (excelReport != null) {

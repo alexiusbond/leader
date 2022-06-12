@@ -31,11 +31,10 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(CurrentAccountStatementReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, pdfBtn;
-    private HorizontalSplitPanel splitPanel;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox currencySelect;
-    private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     public FormattedTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
@@ -49,7 +48,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 4);
+        GridLayout leftGrid = new GridLayout(4, 4);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 

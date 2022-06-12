@@ -42,23 +42,31 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(InventoryOrganizationView.class);
-    private MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, printBtn, addBtn;
+    private final MyVaadinUI myUI;
+    private Button createBtn;
+    private Button modifyBtn;
+    private Button deleteBtn;
+    private Button saveBtn;
+    private Button cancelBtn;
+    private Button printBtn;
+    private final Button addBtn;
     private PopupButton searchBtn;
     private ComboBox blockSelect, floorSelect, roomSelect;
-    private FormattedTable inventoriesTable;
+    private final FormattedTable inventoriesTable;
     private TextField invoiceNumberTF;
     private TextArea noteTF;
     private DateField dateDF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER, NATURAL_COL_ORDER_INVENTORIES;
-    private GridLayout settingsLay, rightLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final String[] NATURAL_COL_ORDER;
+    private String[] NATURAL_COL_ORDER_INVENTORIES;
+    private GridLayout settingsLay;
+    private final GridLayout rightLay;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedFilterTable invoicesTable;
     private IndexedContainer inventoriesCont;
     private int r_table_counter = 1000;
-    private ArrayList<String> delInventoryIds = new ArrayList<>();
+    private final ArrayList<String> delInventoryIds = new ArrayList<>();
     private int invID;
 
     public InventoryOrganizationView(MyVaadinUI myUI) {
@@ -254,7 +262,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             logger.error(e);
             logger.catching(e);
         }
-        invoicesTable.setVisibleColumns(NATURAL_COL_ORDER);
+        invoicesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         invoicesTable.setPageLength(5);
         invoicesTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), CustomTable.Align.RIGHT);
     }
@@ -296,17 +304,14 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
             try {
-                if (validate(settingsLay) && validateTable(inventoriesTable, false)) {
+                if (validate(settingsLay) && validateTable(inventoriesTable)) {
                     DbInventoryInvoice dbCon = new DbInventoryInvoice();
                     dbCon.connect();
                     if (isNew) {
@@ -320,7 +325,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
                                 insertInventories(id);
-                                addDatacontainerItem(id);
+                                addDataContainerItem(id);
                                 invoicesTable.setValue(id);
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                 prepareNormalMode();
@@ -345,7 +350,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                             }
                             if (status != 0) {
                                 insertInventories(invID);
-                                updateDatacontainer();
+                                updateDataContainer();
                                 setInventoriesTable();
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
@@ -358,7 +363,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                     }
                     dbCon.close();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -427,9 +432,9 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             }
         } else if (property == invoiceNumberTF) {
             invoiceNumberTF.removeValueChangeListener(this);
-            Iterator iter = invoicesTable.getItemIds().iterator();
+            Iterator<?> iter = invoicesTable.getItemIds().iterator();
             boolean isFound = false;
-            Object next = null;
+            Object next;
             while (iter.hasNext()) {
                 next = iter.next();
                 if (invoicesTable.getContainerProperty(next,
@@ -446,16 +451,16 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             }
             invoiceNumberTF.addValueChangeListener(this);
         } else {
-            Object changedItemId = ((AbstractField) property).getId();
-            if (((AbstractField) property).getData() != null
-                    && (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
-                    || ((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Price)))) {
+            Object changedItemId = ((AbstractField<?>) property).getId();
+            if (((AbstractField<?>) property).getData() != null
+                    && (((AbstractField<?>) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
+                    || ((AbstractField<?>) property).getData().equals(myUI.getMessage(SptMessages.Price)))) {
 
                 TextField quantityTF = (TextField) inventoriesTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Quantity)).getValue();
                 TextField priceTF = (TextField) inventoriesTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Price)).getValue();
-                if (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
+                if (((AbstractField<?>) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
                         && quantityTF != null && quantityTF.getPropertyDataSource().getValue() != null) {
                     if (inventoriesTable.getContainerProperty(changedItemId,
                             myUI.getMessage(SptMessages.Remain)).getValue() == null) {
@@ -559,7 +564,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         setInventoriesFooter(null, null);
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Date)).setValue(
                 Settings.dtmf.format(dateDF.getValue()));
         try {
@@ -588,7 +593,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                 floorSelect.getValue());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
@@ -691,12 +696,10 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -711,9 +714,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
     }
 
     private String isUsed(Object selected) {
-        Iterator iter = invoicesTable.getContainerDataSource().getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : invoicesTable.getContainerDataSource().getItemIds()) {
             if ((selected == null || !selected.equals(next)) && roomSelect.getValue().equals(
                     invoicesTable.getContainerProperty(next, Settings.room_id).getValue())) {
                 return invoicesTable.getContainerProperty(next,
@@ -723,25 +724,21 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         return null;
     }
 
-    private boolean validateTable(Table t, boolean isEmptyAllowed) {
-        if (t.size() == 0 && !isEmptyAllowed) {
-            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+    private boolean validateTable(Table t) {
+        if (t.size() == 0) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                     Notification.Type.WARNING_MESSAGE);
             return false;
         } else {
-            Iterator iter = ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
-                Iterator iterProp = ((IndexedContainer) t
-                        .getContainerDataSource()).getContainerPropertyIds().iterator();
-                while (iterProp.hasNext()) {
-                    Object next1 = iterProp.next();
+            for (Object next : ((IndexedContainer) t
+                    .getContainerDataSource()).getItemIds()) {
+                for (Object next1 : t
+                        .getContainerDataSource().getContainerPropertyIds()) {
                     Object c = t.getItem(next).getItemProperty(
                             next1).getValue();
                     if (c instanceof AbstractField) {
                         try {
-                            ((AbstractField) c).validate();
+                            ((AbstractField<?>) c).validate();
                         } catch (Exception e) {
                             //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                             return false;
@@ -757,7 +754,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         return true;
     }
 
-    public ComboBox createCombobox(int value, String description, String dbtable, boolean isRequired, boolean isEnabled) {
+    public ComboBox createCombobox(int value, String description, String db_table, boolean isRequired, boolean isEnabled) {
         ComboBox cb = new ComboBox();
         if (isEnabled) {
             cb.setDescription(description);
@@ -773,10 +770,10 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         }
         try {
-            if (dbtable != null) {
+            if (db_table != null) {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable, true));
+                cb.setContainerDataSource(dbp.exec_for_select(myUI, db_table, true));
                 dbp.close();
             }
         } catch (Exception e) {
@@ -806,7 +803,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         return btn;
     }
 
-    public TextField createTextfieldWithProperty(Object value, String description, Validator validator, Property p,
+    public TextField createTextFieldWithProperty(Object value, String description, Validator validator, Property p,
                                                  Converter conv, boolean isEnabled) {
         TextField tf = new TextField(p);
         if (isEnabled) {
@@ -838,22 +835,6 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         df.setDateFormat(pattern);
         df.setValue(value);
         return df;
-    }
-
-    public TextField createTextfield(String value, String description, Validator validator, boolean isRequired) {
-        TextField tf = new TextField();
-        tf.setDescription(description);
-        tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        tf.setWidth(Settings.PERCENTS100);
-        tf.addValidator(validator);
-        if (isRequired) {
-            tf.setRequired(true);
-            tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
-        }
-        if (value != null) {
-            tf.setValue(value);
-        }
-        return tf;
     }
 
     public IndexedContainer prepareInventoriesContainer() {
@@ -912,28 +893,23 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                 createCombobox(0, myUI.getMessage(SptMessages.Brand),
                         Settings.dbInventoryBrandTable, true, true);
         cb.setNewItemsAllowed(true);
-        cb.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-            @Override
-            public void addNewItem(String newItemCaption) {
-                try {
-                    DbDefinition dbd = new DbDefinition();
-                    dbd.connect();
-                    int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryBrandTable, false);
-                    dbd.close();
-                    if (id != 0) {
-                        Iterator iter = inventoriesTable.getContainerDataSource().getItemIds().iterator();
-                        while (iter.hasNext()) {
-                            Object next = iter.next();
-                            Item item = ((IndexedContainer) ((ComboBox) inventoriesTable.getContainerDataSource().getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Brand)).getValue()).getContainerDataSource()).addItem(id);
-                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                            cb.setValue(id);
-                        }
+        cb.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+            try {
+                DbDefinition dbd = new DbDefinition();
+                dbd.connect();
+                int id1 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryBrandTable, false);
+                dbd.close();
+                if (id1 != 0) {
+                    for (Object next : inventoriesTable.getContainerDataSource().getItemIds()) {
+                        Item item1 = ((IndexedContainer) ((ComboBox) inventoriesTable.getContainerDataSource().getContainerProperty(next,
+                                myUI.getMessage(SptMessages.Brand)).getValue()).getContainerDataSource()).addItem(id1);
+                        item1.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                        cb.setValue(id1);
                     }
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
                 }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
         });
         item.getItemProperty(myUI.getMessage(SptMessages.Brand)).setValue(cb);
@@ -941,28 +917,23 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                 createCombobox(0, myUI.getMessage(SptMessages.Title),
                         Settings.dbInventoryTitleTable, true, true);
         cb2.setNewItemsAllowed(true);
-        cb2.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-            @Override
-            public void addNewItem(String newItemCaption) {
-                try {
-                    DbDefinition dbd = new DbDefinition();
-                    dbd.connect();
-                    int id = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryTitleTable, false);
-                    dbd.close();
-                    if (id != 0) {
-                        Iterator iter = inventoriesTable.getContainerDataSource().getItemIds().iterator();
-                        while (iter.hasNext()) {
-                            Object next = iter.next();
-                            Item item = ((IndexedContainer) ((ComboBox) inventoriesTable.getContainerDataSource().getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Title)).getValue()).getContainerDataSource()).addItem(id);
-                            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
-                            cb2.setValue(id);
-                        }
+        cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
+            try {
+                DbDefinition dbd = new DbDefinition();
+                dbd.connect();
+                int id12 = dbd.exec_insert(new Definition(0, newItemCaption), Settings.dbInventoryTitleTable, false);
+                dbd.close();
+                if (id12 != 0) {
+                    for (Object next : inventoriesTable.getContainerDataSource().getItemIds()) {
+                        Item item12 = ((IndexedContainer) ((ComboBox) inventoriesTable.getContainerDataSource().getContainerProperty(next,
+                                myUI.getMessage(SptMessages.Title)).getValue()).getContainerDataSource()).addItem(id12);
+                        item12.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                        cb2.setValue(id12);
                     }
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
                 }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
             }
         });
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb2);
@@ -970,26 +941,26 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                 createDateFiled(new Date(), myUI.getMessage(SptMessages.PurchaseYear),
                         null, Resolution.YEAR, Settings.yearPattern));
         item.getItemProperty(myUI.getMessage(SptMessages.LifeTime)).setValue(
-                createTextfieldWithProperty(null, myUI.getMessage(SptMessages.LifeTime),
-                        new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, null),
-                        new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter(), true));
-        TextField tf = createTextfieldWithProperty(
+                createTextFieldWithProperty(null, myUI.getMessage(SptMessages.LifeTime),
+                        new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, null),
+                        new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true));
+        TextField tf = createTextFieldWithProperty(
                 1, myUI.getMessage(SptMessages.Quantity),
-                new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, null),
-                new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter(), true);
+                new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, null),
+                new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true);
         tf.addValueChangeListener(this);
         tf.setId(id);
         tf.setData(myUI.getMessage(SptMessages.Quantity));
         item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(tf);
-        tf = createTextfieldWithProperty(null, myUI.getMessage(SptMessages.Price),
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 0.1, null),
-                new ObjectProperty<Double>(0.0), Settings.getStringToDoubleConverter(), true);
+        tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Price),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
         tf.addValueChangeListener(this);
         tf.setId(id);
         tf.setData(myUI.getMessage(SptMessages.Price));
         item.getItemProperty(myUI.getMessage(SptMessages.Price)).setValue(tf);
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
-        inventoriesTable.setVisibleColumns(NATURAL_COL_ORDER_INVENTORIES);
+        inventoriesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_INVENTORIES);
         inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Quantity), 1);
         inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Price), 1);
         inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LifeTime), 1);
@@ -1002,7 +973,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
     }
 
     private void repaintCodes() {
-        Iterator iter = inventoriesTable.getContainerDataSource().getItemIds().iterator();
+        Iterator<?> iter = inventoriesTable.getContainerDataSource().getItemIds().iterator();
         int counter = 0;
         while (iter.hasNext()) {
             Object next = iter.next();
@@ -1032,7 +1003,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             dbCon.connect();
             inventoriesTable.setContainerDataSource(dbCon.execSQL(myUI, invID, this));
             dbCon.close();
-            inventoriesTable.setVisibleColumns(NATURAL_COL_ORDER_INVENTORIES);
+            inventoriesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_INVENTORIES);
             inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Quantity), 1);
             inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Price), 1);
             inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LifeTime), 1);
@@ -1051,9 +1022,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         double totalAmount = 0.0;
         int totalQuantity = 0;
         if (inventoriesTable.getContainerDataSource().size() > 0) {
-            Iterator iter = inventoriesTable.getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
+            for (Object next : inventoriesTable.getItemIds()) {
                 if (inventoriesTable.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue() != null) {
                     totalAmount += (Double) inventoriesTable.getContainerProperty(next,
@@ -1081,9 +1050,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
                 }
             }
             if (inventoriesTable.getContainerDataSource().size() > 0) {
-                Iterator iter = inventoriesTable.getItemIds().iterator();
-                while (iter.hasNext()) {
-                    Object next = iter.next();
+                for (Object next : inventoriesTable.getItemIds()) {
                     InventoryOrganization imv = new InventoryOrganization();
                     imv.setInvoice_id(invoice_id);
                     imv.setPrice((Double) ((TextField) inventoriesTable.getItem(next).getItemProperty(

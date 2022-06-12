@@ -48,9 +48,7 @@ public class DbUserDetails extends BaseDb {
             user.setFullName(result.getString("fullname"));
             user.setWorking_status_id(result.getInt("ord.working_status_id"));
             user.setSchool_id(result.getInt("eo.school_id"));
-            user.setSchool_type_id(result.getInt("sch.school_type_id"));
             user.setSchool_name(result.getString("sch.name_ru"));
-            user.setSchool_code(result.getString("sch.code"));
             user.setSchool_logo(result.getString("sch.photo"));
             user.setBranch_id(result.getInt("eb.hr_branch_id"));
             if (currentUser.hasRole(Settings.rnSapatSecretary)) {

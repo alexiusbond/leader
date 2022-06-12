@@ -31,12 +31,11 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
     static final Logger logger = LogManager.getLogger(HomePageView.class);
     private final MyVaadinUI myUI;
 
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button weekLog, monthLog, allLog;
     private Table logTable;
-    private Label logTablecaption;
+    private Label logTableCaption;
     private ComboBox logsTypeSelect;
-    private VerticalLayout accLayout = new VerticalLayout();
     private ContractTotal tc;
 
     public HomePageView(MyVaadinUI myUI) {
@@ -59,6 +58,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             this.addComponent(buildStudEduCount(), 0, 1);
         }
         if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingInfo)) {
+            VerticalLayout accLayout = new VerticalLayout();
             accLayout.addComponent(buildWeekPlan());
             accLayout.addComponent(buildMonthPlan());
             accLayout.addComponent(buildTotalContract());
@@ -108,13 +108,13 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         final Button source = event.getButton();
         if (source == weekLog) {
             setLogTable(6);
-            logTablecaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
+            logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
         } else if (source == monthLog) {
             setLogTable(30);
-            logTablecaption.setValue(myUI.getMessage(SptMessages.Last30DaysLogs));
+            logTableCaption.setValue(myUI.getMessage(SptMessages.Last30DaysLogs));
         } else if (source == allLog) {
             setLogTable(0);
-            logTablecaption.setValue(myUI.getMessage(SptMessages.ForAllTimeLogs));
+            logTableCaption.setValue(myUI.getMessage(SptMessages.ForAllTimeLogs));
         }
     }
 
@@ -163,17 +163,17 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         directorLab.setValue(emp.getDirector());
         layout.addComponent(directorLab);
 
-        Label accountentLabCpt = new Label();
-        accountentLabCpt.setContentMode(ContentMode.HTML);
-        accountentLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
-        accountentLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.Accountant) + ":</b> ");
-        layout.addComponent(accountentLabCpt);
+        Label accountantLabCpt = new Label();
+        accountantLabCpt.setContentMode(ContentMode.HTML);
+        accountantLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
+        accountantLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.Accountant) + ":</b> ");
+        layout.addComponent(accountantLabCpt);
 
-        Label accountentLab = new Label();
-        accountentLab.setContentMode(ContentMode.HTML);
-        accountentLab.setStyleName(ValoTheme.LABEL_SMALL);
-        accountentLab.setValue(emp.getAccountent());
-        layout.addComponent(accountentLab);
+        Label accountantLab = new Label();
+        accountantLab.setContentMode(ContentMode.HTML);
+        accountantLab.setStyleName(ValoTheme.LABEL_SMALL);
+        accountantLab.setValue(emp.getAccountant());
+        layout.addComponent(accountantLab);
 
         Label othersLabCpt = new Label();
         othersLabCpt.setContentMode(ContentMode.HTML);
@@ -350,7 +350,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         layout.addComponent(notConfLab);
         layout.addComponent(new Label(ed.getNot_confirmed()));
         layout.addComponent(outOfLab);
-        layout.addComponent(new Label(ed.getOutof()));
+        layout.addComponent(new Label(ed.getOutOf()));
         layout.addComponent(graduatedLab);
         layout.addComponent(new Label(ed.getGraduated()));
         layout.setColumnExpandRatio(0, 2);
@@ -403,7 +403,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             tc = dbsc.execSQLTotals(myUI.getUser().getSchool_id(),
                     myUI.getUser().getCurrent_year().getId());
             dbsc.close();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
@@ -428,10 +428,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         layout.setHeight("100%");
         layout.setSpacing(true);
 
-        logTablecaption = new Label();
-        logTablecaption.setContentMode(ContentMode.HTML);
-        logTablecaption.setStyleName("tableCpt");
-        logTablecaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
+        logTableCaption = new Label();
+        logTableCaption.setContentMode(ContentMode.HTML);
+        logTableCaption.setStyleName("tableCpt");
+        logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
 
         logTable = new Table();
         logTable.setStyleName(ValoTheme.TABLE_SMALL);
@@ -474,7 +474,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logButtonsLayout.addComponent(allLog);
 
         logTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Action), 1);
-        layout.addComponent(logTablecaption);
+        layout.addComponent(logTableCaption);
         layout.addComponent(logTable);
         layout.addComponent(logButtonsLayout);
         layout.setExpandRatio(logTable, 1);
@@ -503,7 +503,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
                 dblo.connect();
                 logTable.setContainerDataSource(dblo.execSQL(myUI, myUI.getUser().getSchool_id(), 6,
                         logsTypeSelect.getValue().toString()));
-                logTablecaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
+                logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
                 dblo.close();
             } catch (Exception e) {
                 logger.error(e);

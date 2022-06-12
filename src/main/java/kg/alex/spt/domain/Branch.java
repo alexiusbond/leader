@@ -11,7 +11,6 @@ import java.io.Serializable;
  * @author alex
  */
 public class Branch implements Serializable {
-
     private int id;
     private String name;
     private String code;

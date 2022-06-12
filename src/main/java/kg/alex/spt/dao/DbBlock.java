@@ -78,7 +78,6 @@ public class DbBlock extends BaseDb {
         stat.setInt(2, block.getSchool_id());
         stat.setInt(3, block.getStatus_id());
         stat.setInt(4, block.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 }

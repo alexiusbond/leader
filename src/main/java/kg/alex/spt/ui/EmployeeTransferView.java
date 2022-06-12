@@ -33,29 +33,30 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Iterator;
 
 public class EmployeeTransferView extends VerticalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener, DropHandler {
 
     static final Logger logger = LogManager.getLogger(EmployeeTransferView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button saveBtn, cancelBtn;
     private ComboBox school1Select, school2Select;
-    private Table data1Table, data2Table;
-    private TextField search1TF, search2TF;
+    private final Table data1Table;
+    private final Table data2Table;
+    private final TextField search1TF;
+    private final TextField search2TF;
     private GridLayout settingsLay;
-    private String[] NATURAL_COL_ORDER;
+    private final String[] NATURAL_COL_ORDER;
 
     public EmployeeTransferView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id),
-            myUI.getMessage(SptMessages.FirstName),
-            myUI.getMessage(SptMessages.LastName),
-            myUI.getMessage(SptMessages.MainPosition),
-            myUI.getMessage(SptMessages.FromDate),
-            myUI.getMessage(SptMessages.Note)};
+                myUI.getMessage(SptMessages.FirstName),
+                myUI.getMessage(SptMessages.LastName),
+                myUI.getMessage(SptMessages.MainPosition),
+                myUI.getMessage(SptMessages.FromDate),
+                myUI.getMessage(SptMessages.Note)};
 
         GridLayout gl = new GridLayout(2, 3);
         gl.setMargin(true);
@@ -204,7 +205,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         GridLayout gl = new GridLayout(3, 9);
         gl.setSizeFull();
 
-        String str = "";
+        String str;
 
         Embedded photoEmb = new Embedded();
         if (item.getItemProperty(myUI.getMessage(SptMessages.Photo)).getValue() == null) {
@@ -223,13 +224,13 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         idLb.setValue("<b>" + myUI.getMessage(SptMessages.Id) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.Id)).getValue().toString());
         gl.addComponent(idLb, 1, 0);
 
-        Label fullnameLb = new Label();
-        fullnameLb.setWidth(Settings.PERCENTS100);
-        fullnameLb.setContentMode(ContentMode.HTML);
-        fullnameLb.setStyleName(ValoTheme.LABEL_SUCCESS);
-        fullnameLb.setValue("<b>" + myUI.getMessage(SptMessages.FullName) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).getValue()
+        Label fullNameLb = new Label();
+        fullNameLb.setWidth(Settings.PERCENTS100);
+        fullNameLb.setContentMode(ContentMode.HTML);
+        fullNameLb.setStyleName(ValoTheme.LABEL_SUCCESS);
+        fullNameLb.setValue("<b>" + myUI.getMessage(SptMessages.FullName) + ":</b> " + item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).getValue()
                 + " " + item.getItemProperty(myUI.getMessage(SptMessages.LastName)).getValue());
-        gl.addComponent(fullnameLb, 2, 0);
+        gl.addComponent(fullNameLb, 2, 0);
 
         Label mainPositionLb = new Label();
         mainPositionLb.setWidth(Settings.PERCENTS100);
@@ -243,7 +244,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         mainBranchLb.setContentMode(ContentMode.HTML);
         mainBranchLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue() != null) {
+        if (item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue() != null) {
             str = item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).getValue().toString();
         }
         mainBranchLb.setValue("<b>" + myUI.getMessage(SptMessages.MainBranchShort) + ":</b> " + str);
@@ -254,7 +255,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         extraPositionsLb.setContentMode(ContentMode.HTML);
         extraPositionsLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).getValue() != null) {
+        if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).getValue() != null) {
             str = item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).getValue().toString();
         }
         extraPositionsLb.setValue("<b>" + myUI.getMessage(SptMessages.ExtraPosition) + ":</b> " + str);
@@ -265,7 +266,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         extraBranchesLb.setContentMode(ContentMode.HTML);
         extraBranchesLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue() != null) {
+        if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue() != null) {
             str = item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString();
         }
         extraBranchesLb.setValue("<b>" + myUI.getMessage(SptMessages.ExtraBranches) + ":</b> " + str);
@@ -276,7 +277,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         lessonsLb.setContentMode(ContentMode.HTML);
         lessonsLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.Lessons)).getValue() != null) {
+        if (item.getItemProperty(myUI.getMessage(SptMessages.Lessons)).getValue() != null) {
             str = item.getItemProperty(myUI.getMessage(SptMessages.Lessons)).getValue().toString();
         }
         lessonsLb.setValue("<b>" + myUI.getMessage(SptMessages.Lessons) + " (" + myUI.getUser().getCurrent_year().getName() + "):</b> " + str);
@@ -287,7 +288,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         spouseLb.setContentMode(ContentMode.HTML);
         spouseLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.SpouseInfo)).getValue() != null) {
+        if (item.getItemProperty(myUI.getMessage(SptMessages.SpouseInfo)).getValue() != null) {
             str = item.getItemProperty(myUI.getMessage(SptMessages.SpouseInfo)).getValue().toString();
         }
         spouseLb.setValue("<b>" + myUI.getMessage(SptMessages.SpouseInfo) + ":</b> " + str);
@@ -298,7 +299,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         childrenLb.setContentMode(ContentMode.HTML);
         childrenLb.setStyleName(ValoTheme.LABEL_SUCCESS);
         str = "";
-        if (item != null && item.getItemProperty(myUI.getMessage(SptMessages.Children)).getValue() != null) {
+        if (item.getItemProperty(myUI.getMessage(SptMessages.Children)).getValue() != null) {
             str = item.getItemProperty(myUI.getMessage(SptMessages.Children)).getValue().toString();
         }
         childrenLb.setValue("<b>" + myUI.getMessage(SptMessages.Children) + ":</b> " + str);
@@ -337,8 +338,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == saveBtn) {
-            if (!validateTable(data1Table, true) || !validateTable(data2Table, true)) {
-                Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+            if (!validateTable(data1Table) || !validateTable(data2Table)) {
+                Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
             } else {
                 try {
@@ -418,27 +419,23 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
             logger.error(e);
             logger.catching(e);
         }
-        t.setVisibleColumns(NATURAL_COL_ORDER);
+        t.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         t.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
     }
 
-    private boolean validateTable(Table t, boolean isEmptyAllowed) {
-        if (t.size() == 0 && !isEmptyAllowed) {
+    private boolean validateTable(Table t) {
+        if (t.size() == 0) {
             return false;
         } else {
-            Iterator iter = ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
-                Iterator iterProp = ((IndexedContainer) t
-                        .getContainerDataSource()).getContainerPropertyIds().iterator();
-                while (iterProp.hasNext()) {
-                    Object next1 = iterProp.next();
+            for (Object next : ((IndexedContainer) t
+                    .getContainerDataSource()).getItemIds()) {
+                for (Object next1 : t
+                        .getContainerDataSource().getContainerPropertyIds()) {
                     Object c = t.getItem(next).getItemProperty(
                             next1).getValue();
                     if (c instanceof AbstractField) {
                         try {
-                            ((AbstractField) c).validate();
+                            ((AbstractField<?>) c).validate();
                         } catch (Exception e) {
                             //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                             return false;
@@ -459,10 +456,8 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         try {
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
             dbeo.connect();
-            Iterator iter = ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
+            for (Object next : ((IndexedContainer) t
+                    .getContainerDataSource()).getItemIds()) {
                 if (t.getContainerProperty(next, Settings.crud_status).getValue() != null) {
                     EmployeeOrder eo = new EmployeeOrder();
                     eo.setEmployee_id((Integer) next);
@@ -475,7 +470,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     if (((TextField) t.getContainerProperty(next,
                             myUI.getMessage(SptMessages.Note)).getValue()).getValue() != null
                             && !((TextField) t.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Note)).getValue()).getValue().equals("")) {
+                            myUI.getMessage(SptMessages.Note)).getValue()).getValue().equals("")) {
                         eo.setNote(((TextField) t.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Note)).getValue()).getValue());
                     }
@@ -509,12 +504,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -532,7 +525,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
     public void drop(DragAndDropEvent event) {
         Transferable t = event.getTransferable();
         Object sourceItemId = t.getData("itemId");
-        Table targetTable = (Table) ((AbstractSelect.AbstractSelectTargetDetails) event.getTargetDetails()).getTarget();
+        Table targetTable = (Table) event.getTargetDetails().getTarget();
         Table sourceTable = (Table) t.getSourceComponent();
         if (targetTable != sourceTable && sourceTable.getContainerProperty(sourceItemId, Settings.crud_status).getValue() == null) {
             Object[] propertyIds = sourceTable.getContainerPropertyIds().toArray();
@@ -562,10 +555,10 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
                     ((DateField) value).setEnabled(true);
                     ((DateField) value).setValue(new Date());
                 } else if (value instanceof ComboBox) {
-                    ((AbstractField) value).setEnabled(true);
+                    ((AbstractField<?>) value).setEnabled(true);
                     ((AbstractField) value).setValue(null);
                 } else if (value instanceof TextField) {
-                    ((AbstractField) value).setEnabled(true);
+                    ((AbstractField<?>) value).setEnabled(true);
                     ((AbstractField) value).setValue("");
                 }
             }

@@ -24,21 +24,17 @@ import java.util.List;
 public class SettingsView extends GridLayout {
 
     static final Logger logger = LogManager.getLogger(SettingsView.class);
-    private MyVaadinUI myUI;
-    private Label sebatExamLab;
-    private ComboBox sebatExamCb;
-    private IndexedContainer paymentsContainer = new IndexedContainer();
-    private IndexedContainer salaryContainer = new IndexedContainer();
-    private IndexedContainer productsContainer = new IndexedContainer();
-    private IndexedContainer positionsContainer = new IndexedContainer();
 
     public SettingsView(MyVaadinUI myUI) {
-        this.myUI = myUI;
 
         this.setWidth(Settings.PERCENTS100);
         this.setSpacing(true);
         this.setMargin(true);
 
+        IndexedContainer paymentsContainer = new IndexedContainer();
+        IndexedContainer salaryContainer = new IndexedContainer();
+        IndexedContainer productsContainer = new IndexedContainer();
+        IndexedContainer positionsContainer = new IndexedContainer();
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
@@ -269,11 +265,11 @@ public class SettingsView extends GridLayout {
         captionExams.setValue(myUI.getMessage(SptMessages.ExamsSettings));
         captionExams.setStyleName("tableCpt");
 
-        sebatExamLab = new Label();
+        Label sebatExamLab = new Label();
         sebatExamLab.setSizeUndefined();
-        sebatExamLab.setValue(myUI.getMessage(SptMessages.SebatExam));
+        sebatExamLab.setValue(myUI.getMessage(SptMessages.SapatExam));
 
-        sebatExamCb = new ComboBox();
+        ComboBox sebatExamCb = new ComboBox();
         sebatExamCb.setNullSelectionAllowed(false);
         sebatExamCb.setRequired(true);
         sebatExamCb.setData(5);

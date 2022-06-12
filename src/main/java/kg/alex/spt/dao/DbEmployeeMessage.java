@@ -54,8 +54,7 @@ public class DbEmployeeMessage extends BaseDb {
         stat.setInt(1, status_id);
         stat.setInt(2, order_messages_id);
         stat.setInt(3, employee_id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public void execSQL(MyVaadinUI myUi, int employee_id, int school_id, FilterTable t) throws SQLException {
@@ -107,31 +106,28 @@ public class DbEmployeeMessage extends BaseDb {
             btn.addStyleName(ValoTheme.BUTTON_TINY);
             btn.setIcon(FontAwesome.FILE_PDF_O);
             btn.setData(orderMessage);
-            btn.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(Button.ClickEvent clickEvent) {
-                    try {
-                        DbEmployeeMessage dbCon = new DbEmployeeMessage();
-                        dbCon.connect();
-                        OrderMessage om = (OrderMessage) clickEvent.getButton().getData();
-                        dbCon.exec_update(om.getId(), om.getEmployee_id(), 1);
-                        dbCon.close();
-                        t.getContainerProperty(om.getId(), Settings.status_id).setValue(1);
-                        t.getContainerProperty(om.getId(), myUi.getMessage(SptMessages.Status))
-                                .setValue(myUi.getMessage(SptMessages.UnRead));
-                        int unread = Integer.parseInt(t.getColumnFooter(Settings.status_id));
-                        if (unread > 0) {
-                            t.setColumnFooter(Settings.status_id, (--unread) + "");
-                            t.setColumnFooter(myUi.getMessage(SptMessages.Status),
-                                    myUi.getMessage(SptMessages.UnRead) + ": " + unread);
-                        }
-                        myUi.repaintMessagesButton();
-                    } catch (Exception e) {
-                        logger.error(e);
-                        logger.catching(e);
+            btn.addClickListener((Button.ClickListener) clickEvent -> {
+                try {
+                    DbEmployeeMessage dbCon = new DbEmployeeMessage();
+                    dbCon.connect();
+                    OrderMessage om = (OrderMessage) clickEvent.getButton().getData();
+                    dbCon.exec_update(om.getId(), om.getEmployee_id(), 1);
+                    dbCon.close();
+                    t.getContainerProperty(om.getId(), Settings.status_id).setValue(1);
+                    t.getContainerProperty(om.getId(), myUi.getMessage(SptMessages.Status))
+                            .setValue(myUi.getMessage(SptMessages.UnRead));
+                    int unread1 = Integer.parseInt(t.getColumnFooter(Settings.status_id));
+                    if (unread1 > 0) {
+                        t.setColumnFooter(Settings.status_id, (--unread1) + "");
+                        t.setColumnFooter(myUi.getMessage(SptMessages.Status),
+                                myUi.getMessage(SptMessages.UnRead) + ": " + unread1);
                     }
-                    new OrderPdf(myUi, (OrderMessage) clickEvent.getButton().getData());
+                    myUi.repaintMessagesButton();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
                 }
+                new OrderPdf(myUi, (OrderMessage) clickEvent.getButton().getData());
             });
             item.getItemProperty(Settings.button).setValue(btn);
             if (result.getInt("mst.id") == 2) {
@@ -158,12 +154,8 @@ public class DbEmployeeMessage extends BaseDb {
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
-            if (result.getInt("val") > 0) {
-                return true;
-            } else {
-                return false;
-            }
+        if (result.next()) {
+            return result.getInt("val") > 0;
         }
         return false;
     }

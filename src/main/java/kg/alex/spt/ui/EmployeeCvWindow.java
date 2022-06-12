@@ -25,7 +25,7 @@ import java.util.Date;
 
 public class EmployeeCvWindow extends Window {
     static final Logger logger = LogManager.getLogger(EmployeeCvWindow.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     public Subject currentUser = SecurityUtils.getSubject();
 
     public EmployeeCvWindow(MyVaadinUI myUI, Employee employee, EmployeeExtraInfo employeeExtraInfo, String year) {

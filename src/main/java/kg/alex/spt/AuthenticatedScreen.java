@@ -28,14 +28,13 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(AuthenticatedScreen.class);
-    private MyVaadinUI myUI;
-    private Subject currentUser = SecurityUtils.getSubject();
-    private VerticalSplitPanel verticalPanel;
-    private GridLayout upperLay = new GridLayout(3, 3);
-    private Button changePassBtn;
+    private final MyVaadinUI myUI;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final VerticalSplitPanel verticalPanel;
+    private final Button changePassBtn;
     public ComboBox yearSelect, schoolSelect;
-    private Label header = new Label();
-    private Label infoLabel, schoolLabel, yearLabel;
+    private final Label header = new Label();
+    private Label infoLabel;
 
     School scl = new School();
     int st = 0;
@@ -94,6 +93,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         logout.addStyleName(ValoTheme.BUTTON_SMALL);
         logout.setIcon(FontAwesome.SIGN_OUT);
 
+        GridLayout upperLay = new GridLayout(3, 3);
         upperLay.setSizeFull();
         upperLay.setSpacing(false);
         if (!currentUser.hasRole(Settings.rnBank)) {
@@ -113,7 +113,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         Label warning;
         if (myUi.getUser() != null && myUi.getUser().getWorking_status_id() == 1) {
-            warning = new Label(myUI.getMessage(SptMessages.SystemClosedNotif));
+            warning = new Label(myUI.getMessage(SptMessages.SystemClosedNotification));
             warning.setSizeUndefined();
             warning.setStyleName("mylabel");
             changePassBtn.setEnabled(false);
@@ -133,7 +133,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         infoLabel.setStyleName("labelInfo");
         updateInfo();
 
-        schoolLabel = new Label();
+        Label schoolLabel = new Label();
         schoolLabel.setSizeUndefined();
         schoolLabel.setContentMode(ContentMode.HTML);
         schoolLabel.setStyleName("labelInfo");
@@ -142,11 +142,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         schoolSelect = new ComboBox();
         schoolSelect.setImmediate(true);
-        if (currentUser.isPermitted(Settings.prmChangeSchool + ":" + Settings.actModify)) {
-            schoolSelect.setEnabled(true);
-        } else {
-            schoolSelect.setEnabled(false);
-        }
+        schoolSelect.setEnabled(currentUser.isPermitted(Settings.prmChangeSchool + ":" + Settings.actModify));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -159,7 +155,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         schHl.addComponent(schoolLabel);
         schHl.addComponent(schoolSelect);
 
-        yearLabel = new Label();
+        Label yearLabel = new Label();
         yearLabel.setSizeUndefined();
         yearLabel.setContentMode(ContentMode.HTML);
         yearLabel.setStyleName("labelInfo");
@@ -167,11 +163,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 + myUI.getMessage(SptMessages.Year) + ": </b>");
 
         yearSelect = new ComboBox();
-        if (currentUser.isPermitted(Settings.prmChangeYear + ":" + Settings.actModify)) {
-            yearSelect.setEnabled(true);
-        } else {
-            yearSelect.setEnabled(false);
-        }
+        yearSelect.setEnabled(currentUser.isPermitted(Settings.prmChangeYear + ":" + Settings.actModify));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
@@ -413,7 +405,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
     }
 
-    private Command menuCommand = new Command() {
+    private final Command menuCommand = new Command() {
 
         @Override
         public void menuSelected(MenuItem selectedItem) {
@@ -470,7 +462,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.LeavingReasonsDefinition))) {
                     verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ContractDefinition))) {
-                    verticalPanel.setSecondComponent(new ContractDefintionView(myUI));
+                    verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolDefinition))) {
                     verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeDefinition))) {
@@ -484,8 +476,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.IssueStudentOrder))) {
                     verticalPanel.setSecondComponent(new IssueOrderView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ImportStudentsFromExcel))) {
-                    verticalPanel.setSecondComponent(new ImportFromExcelView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ImportBranchesFromExcel))) {
                     verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendOrders))) {
@@ -573,50 +563,47 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         myUI.getMessage(SptMessages.ConfirmChangeYear),
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
-                        new ConfirmDialog.Listener() {
-                            @Override
-                            public void onClose(ConfirmDialog dialog) {
-                                if (dialog.isConfirmed()) {
-                                    int currentDbYear = 0;
-                                    try {
-                                        scl.setYear_id((Integer) yearSelect.getValue());
-                                        scl.setId(myUI.getUser().getSchool_id());
-                                        DbSchool dbd = new DbSchool();
-                                        dbd.connect();
-                                        currentDbYear = dbd.execGetCurrentDbSchoolYear(myUI.getUser().getSchool_id());
-                                        if (currentDbYear != (Integer) yearSelect.getValue()) {
-                                            st = dbd.execUpdateYear(scl);
-                                        } else {
-                                            st = 1;
-                                        }
-                                        dbd.close();
-                                    } catch (Exception e) {
-                                        logger.error(e);
-                                        logger.catching(e);
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                int currentDbYear = 0;
+                                try {
+                                    scl.setYear_id((Integer) yearSelect.getValue());
+                                    scl.setId(myUI.getUser().getSchool_id());
+                                    DbSchool dbd = new DbSchool();
+                                    dbd.connect();
+                                    currentDbYear = dbd.execGetCurrentDbSchoolYear(myUI.getUser().getSchool_id());
+                                    if (currentDbYear != (Integer) yearSelect.getValue()) {
+                                        st = dbd.execUpdateYear(scl);
+                                    } else {
+                                        st = 1;
                                     }
-                                    if (st != 0) {
-                                        myUI.getUser().getCurrent_year().setId(scl.getYear_id());
-                                        myUI.getUser().getCurrent_year().setName(yearSelect
-                                                .getItemCaption(yearSelect.getValue()));
-                                        Notification.show(myUI.getMessage(SptMessages.ValueSaved),
-                                                Notification.Type.HUMANIZED_MESSAGE);
-                                        if (currentDbYear != (Integer) yearSelect.getValue()) {
-                                            insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
-                                                    myUI.getUser().getId());
-                                        }
-                                        changeYear((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue());
-                                        yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
-                                        setYearSel(myUI.getUser().getCurrent_year().getId());
-                                        updatePage();
-                                    } else if (st == 0) {
-                                        Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
-                                                Notification.Type.WARNING_MESSAGE);
-                                    }
-                                } else {
-                                    yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
-                                    yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
-                                    yearSelect.addValueChangeListener(AuthenticatedScreen.this);
+                                    dbd.close();
+                                } catch (Exception e) {
+                                    logger.error(e);
+                                    logger.catching(e);
                                 }
+                                if (st != 0) {
+                                    myUI.getUser().getCurrent_year().setId(scl.getYear_id());
+                                    myUI.getUser().getCurrent_year().setName(yearSelect
+                                            .getItemCaption(yearSelect.getValue()));
+                                    Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                            Notification.Type.HUMANIZED_MESSAGE);
+                                    if (currentDbYear != (Integer) yearSelect.getValue()) {
+                                        insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
+                                                myUI.getUser().getId());
+                                    }
+                                    changeYear((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue());
+                                    yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
+                                    setYearSel(myUI.getUser().getCurrent_year().getId());
+                                    updatePage();
+                                } else {
+                                    Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                            Notification.Type.WARNING_MESSAGE);
+                                }
+                            } else {
+                                yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
+                                yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+                                yearSelect.addValueChangeListener(AuthenticatedScreen.this);
                             }
                         });
             }
@@ -628,8 +615,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         && !curSchoolName.equals(schoolSelect.getItemCaption(schoolSelect.getValue()))) {
                     myUI.getUser().setSchool_id((Integer) schoolSelect.getValue());
                     myUI.getUser().setSchool_name(schoolSelect.getItemCaption(schoolSelect.getValue()));
-                    myUI.getUser().setSchool_code(schoolSelect.getContainerProperty(schoolSelect.getValue(),
-                            myUI.getMessage(SptMessages.Code)).getValue().toString());
                     if (schoolSelect.getContainerProperty(schoolSelect.getValue(),
                             myUI.getMessage(SptMessages.Logo)).getValue() != null) {
                         myUI.getUser().setSchool_logo(schoolSelect.getContainerProperty(schoolSelect.getValue(),
@@ -682,7 +667,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.ContractDefinition)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new ContractDefintionView(myUI));
+                verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.AccessoriesDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
@@ -715,8 +700,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.HRReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HRReportsView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.ImportStudentsFromExcel)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new ImportFromExcelView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.ImportBranchesFromExcel)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.IssueStudentOrder)).toUpperCase())) {

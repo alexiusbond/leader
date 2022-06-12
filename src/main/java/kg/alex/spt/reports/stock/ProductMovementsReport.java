@@ -27,16 +27,13 @@ public class ProductMovementsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(ProductMovementsReport.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button generateBtn, excelBtn;
-    private HorizontalSplitPanel splitPanel;
+    private final HorizontalSplitPanel splitPanel;
     private ComboBox schoolSelect, stockSelect, categorySelect;
-    private GridLayout leftGrid;
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;
     private FilterTreeTable productsTable;
-
-    private EnhancedFormatExcelExport excelReport;
 
     public ProductMovementsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -47,7 +44,7 @@ public class ProductMovementsReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        leftGrid = new GridLayout(4, 6);
+        GridLayout leftGrid = new GridLayout(4, 6);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -138,10 +135,10 @@ public class ProductMovementsReport implements Button.ClickListener,
         schoolSelect.setValue(myUI.getUser().getSchool_id());
 
         try {
-            DbProductCategories dbpc = new DbProductCategories();
-            dbpc.connect();
-            categorySelect.setContainerDataSource(dbpc.execSQL_for_select(myUI));
-            dbpc.close();
+            DbProductCategories dbCon = new DbProductCategories();
+            dbCon.connect();
+            categorySelect.setContainerDataSource(dbCon.execSQL_for_select(myUI));
+            dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -205,7 +202,7 @@ public class ProductMovementsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
-                    excelReport = new EnhancedFormatExcelExport(dataTable);
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.ProductMovementsReport) + " "
                             + productsTable.getContainerProperty(productsTable.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "

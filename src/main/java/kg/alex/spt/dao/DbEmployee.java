@@ -26,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 public class DbEmployee extends BaseDb {
@@ -58,7 +57,7 @@ public class DbEmployee extends BaseDb {
         EmployeesCount e = new EmployeesCount();
         while (result.next()) {
             e.setDirector(result.getString("director"));
-            e.setAccountent(result.getString("accountent"));
+            e.setAccountant(result.getString("accountent"));
             e.setOthers(result.getString("others"));
             e.setOthers_count(result.getInt("others_count"));
         }
@@ -85,7 +84,7 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getFloat("points");
         }
         return 0.0f;
@@ -95,7 +94,7 @@ public class DbEmployee extends BaseDb {
                                     IndexedContainer workingStatCont, boolean withAdmin,
                                     boolean withHr, int branch_id, int employee_id) throws SQLException {
 
-        if (working_statuses.equals("") || working_statuses == null) {
+        if (working_statuses.equals("")) {
             working_statuses = "-1";
         }
         String sql = "SELECT e.id, e.login, e.name, e.surname, e.middle_name, e.date_of_birth, e.photo, e.can_advisor, "
@@ -147,6 +146,7 @@ public class DbEmployee extends BaseDb {
         if (branch_id != 0) {
             stat.setInt(5, branch_id);
         }
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
@@ -177,9 +177,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.CanBeAdvisor), Boolean.class, null);
         container.addContainerProperty(Settings.id, Integer.class, 0);
 
-        Iterator iter = workingStatCont.getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : workingStatCont.getItemIds()) {
             workingStatCont.getContainerProperty(next, Settings.count).setValue(0);
         }
         while (result.next()) {
@@ -369,7 +367,7 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getString("fullname");
         }
         return null;
@@ -499,7 +497,7 @@ public class DbEmployee extends BaseDb {
             tf.setDescription(myUi.getMessage(SptMessages.Note));
             tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
             tf.setWidth(Settings.PERCENTS100);
-            tf.addValidator(new StringLengthValidator(myUi.getMessage(SptMessages.NotifWrongValue), null, 300, true));
+            tf.addValidator(new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, 300, true));
             if (result.getString("eo.note") != null) {
                 tf.setValue(result.getString("eo.note"));
             }
@@ -576,8 +574,7 @@ public class DbEmployee extends BaseDb {
         stat.setString(10, e.getPhoto());
         stat.setInt(11, e.getCitizenship_id());
         stat.setInt(12, e.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update(int id, boolean canBeAdvisor) throws SQLException {
@@ -585,8 +582,7 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setBoolean(1, canBeAdvisor);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_delete_perm(String role_name) throws SQLException {
@@ -609,8 +605,7 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, login);
         stat.setString(2, perm);
-        int st = stat.executeUpdate();
-        return st;
+        return stat.executeUpdate();
     }
 
     public int exec_insert_role(String loginRName, String roleName) throws SQLException {
@@ -619,8 +614,7 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, loginRName);
         stat.setString(2, roleName);
-        int st = stat.executeUpdate();
-        return st;
+        return stat.executeUpdate();
     }
 
     public int exec_update_role(String oldLogin, String newLogin, String roleName)
@@ -631,8 +625,7 @@ public class DbEmployee extends BaseDb {
         stat.setString(1, newLogin);
         stat.setString(2, roleName);
         stat.setString(3, oldLogin);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int exec_update_perm(String oldroleName, String newroleName)
@@ -642,8 +635,7 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, newroleName);
         stat.setString(2, oldroleName);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, Map<String, String> params) throws SQLException {
@@ -870,7 +862,7 @@ public class DbEmployee extends BaseDb {
         stat.setInt(1, school_id);
         stat.setString(2, login);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("e.id");
         }
         return 0;

@@ -39,25 +39,24 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(SendOrderView.class);
-    private MyVaadinUI myUI;
-    private Button sendBtn, excelBtn;
+    private final MyVaadinUI myUI;
+    private Button sendBtn;
+    private final Button excelBtn;
     private ComboBox schoolSelect, studentSelect;
     private ComboBoxMultiselect employeeMCB;
-    private FormattedFilterTable dataTable;
-    private Table tableForExport;
+    private final FormattedFilterTable dataTable;
+    private final Table tableForExport;
     private TextField orderNumberTF, discountTF, studentTF;
     private DateField dateDF;
     private TextArea contentRTA, messageTA, headlineTA;
-    private EnhancedFormatExcelExport excelReport;
 
-    private String[] NATURAL_COL_ORDER;
     private GridLayout settingsLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public SendOrderView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
                 myUI.getMessage(SptMessages.Employee), myUI.getMessage(SptMessages.OrderNumber),
                 myUI.getMessage(SptMessages.Student), myUI.getMessage(SptMessages.Discount), myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Message), myUI.getMessage(SptMessages.Status),
@@ -94,27 +93,24 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             logger.error(e);
             logger.catching(e);
         }
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Message), 1);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Date), 80);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Title), 240);
         dataTable.setColumnWidth(Settings.button, 60);
-        dataTable.setCellStyleGenerator(new CustomTable.CellStyleGenerator() {
-            @Override
-            public String getStyle(CustomTable source, Object itemId, Object propertyId) {
+        dataTable.setCellStyleGenerator((CustomTable.CellStyleGenerator) (source, itemId, propertyId) -> {
 
-                if (propertyId == null) {
-                    // Styling for row
-                    if ((Integer) source.getContainerProperty(itemId,
-                            Settings.status_id).getValue() == 2) {
-                        return "highlight-red";
-                    } else {
-                        return null;
-                    }
+            if (propertyId == null) {
+                // Styling for row
+                if ((Integer) source.getContainerProperty(itemId,
+                        Settings.status_id).getValue() == 2) {
+                    return "highlight-red";
                 } else {
-                    // styling for column propertyId
                     return null;
                 }
+            } else {
+                // styling for column propertyId
+                return null;
             }
         });
         vl.addComponent(dataTable);
@@ -188,7 +184,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         studentTF.setWidth(Settings.PERCENTS100);
         studentTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), null, 200, true));
+                myUI.getMessage(SptMessages.NotificationWrongValue), null, 200, true));
         studentTF.addValueChangeListener(this);
         settingsLay.addComponent(studentTF, 1, 2, 2, 2);
 
@@ -208,11 +204,11 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         orderNumberTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         orderNumberTF.setWidth(Settings.PERCENTS100);
         orderNumberTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 25, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 25, false));
         orderNumberTF.setValue("01-31/2  ");
         settingsLay.addComponent(orderNumberTF, 1, 3);
 
-        ObjectProperty<Integer> property = new ObjectProperty<Integer>(0);
+        ObjectProperty<Integer> property = new ObjectProperty<>(0);
         discountTF = new TextField(myUI.getMessage(SptMessages.Discount), property);
         discountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         discountTF.setRequired(true);
@@ -221,7 +217,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         discountTF.setConverter(Settings.getStringToIntegerConverter());
         discountTF.setWidth(Settings.PERCENTS100);
         discountTF.addValidator(new IntegerRangeValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 100));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 100));
         discountTF.addValueChangeListener(this);
         settingsLay.addComponent(discountTF, 2, 3);
 
@@ -232,7 +228,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         headlineTA.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         headlineTA.setWidth(Settings.PERCENTS100);
         headlineTA.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotifWrongValue), 1, 300, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 300, false));
         settingsLay.addComponent(headlineTA, 0, 4, 2, 4);
 
         contentRTA = new TextArea(myUI.getMessage(SptMessages.Content));
@@ -270,10 +266,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 if (validate(settingsLay)) {
                     DbOrderMessage dbcn = new DbOrderMessage();
                     dbcn.connect();
-                    OrderMessage orderMessage = getOrderMessage(0);
+                    OrderMessage orderMessage = getOrderMessage();
                     int id = dbcn.exec_insert(orderMessage);
                     if (id != 0) {
-                        Iterator iter = ((Set<?>) employeeMCB.getValue()).iterator();
+                        Iterator<?> iter = ((Set<?>) employeeMCB.getValue()).iterator();
                         DbEmployeeMessage dbem = new DbEmployeeMessage();
                         dbem.connect();
                         while (iter.hasNext()) {
@@ -286,7 +282,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                             employeeMessage.setId(em_id);
                             employeeMessage.setEmployee(employeeMCB.getContainerProperty(
                                     next, myUI.getMessage(SptMessages.Title)).getValue().toString());
-                            addDatacontainerItem(employeeMessage, orderMessage);
+                            addDataContainerItem(employeeMessage, orderMessage);
                         }
                         dbem.close();
                         Notification.show(myUI.getMessage(SptMessages.Sent),
@@ -298,7 +294,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     dbcn.close();
                     clearFields();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -320,7 +316,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     tableForExport.setColumnCollapsingAllowed(true);
                     tableForExport.setColumnCollapsed(Settings.button, true);
                     tableForExport.setColumnCollapsed(Settings.status_id, true);
-                    excelReport = new EnhancedFormatExcelExport(tableForExport, "sheet1");
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(tableForExport, "sheet1");
                     excelReport.excludeCollapsedColumns();
                     excelReport.setReportTitle(myUI.getMessage(SptMessages.SendOrders));
                     excelReport.setDisplayTotals(true);
@@ -338,12 +334,9 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                         myUI.getMessage(SptMessages.ConfirmDeletion),
                         myUI.getMessage(SptMessages.Yes),
                         myUI.getMessage(SptMessages.No),
-                        new ConfirmDialog.Listener() {
-                            @Override
-                            public void onClose(ConfirmDialog dialog) {
-                                if (dialog.isConfirmed()) {
-                                    execDelete(employeeMessage);
-                                }
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                execDelete(employeeMessage);
                             }
                         });
             } else {
@@ -384,7 +377,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 && discountTF != null && studentTF != null && studentSelect != null
                 && studentSelect.getValue() != null && discountTF.getValue() != null
                 && studentTF.getValue() != null) {
-            String student = "", class_name = "";
+            String student, class_name = "";
             if ((Integer) studentSelect.getValue() == 0) {
                 student = studentTF.getValue();
             } else {
@@ -427,7 +420,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         studentTF.setValue("");
     }
 
-    private void addDatacontainerItem(EmployeeMessage employeeMessage, OrderMessage orderMessage) {
+    private void addDataContainerItem(EmployeeMessage employeeMessage, OrderMessage orderMessage) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, employeeMessage.getId());
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
@@ -438,7 +431,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(headlineTA.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.OrderNumber)).setValue(orderNumberTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(discountTF.getPropertyDataSource().getValue());
-        String student = null;
+        String student;
         if ((Integer) studentSelect.getValue() == 0) {
             student = studentTF.getValue();
         } else {
@@ -470,7 +463,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         return btn;
     }
 
-    private OrderMessage getOrderMessage(int i) {
+    private OrderMessage getOrderMessage() {
         OrderMessage om = new OrderMessage();
         om.setMessage(messageTA.getValue());
         om.setContent(contentRTA.getValue());
@@ -483,7 +476,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         om.setDiscount((Integer) discountTF.getPropertyDataSource().getValue());
         om.setTitle(headlineTA.getValue());
         om.setEmployee_id(myUI.getUser().getId());
-        om.setId(i);
+        om.setId(0);
         return om;
     }
 
@@ -498,7 +491,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 try {
                     dbDef.exec_delete(employeeMessage.getOrder_message_id(),
                             Settings.orderMessagesTable);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             dbDef.close();
@@ -515,12 +508,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;

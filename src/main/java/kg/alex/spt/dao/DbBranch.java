@@ -72,8 +72,7 @@ public class DbBranch extends BaseDb {
         stat.setString(2, branch.getCode());
         stat.setInt(3, branch.getStatus_id());
         stat.setInt(4, branch.getId());
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
 }

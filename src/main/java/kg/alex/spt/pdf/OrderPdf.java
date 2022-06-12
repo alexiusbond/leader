@@ -14,22 +14,20 @@ import kg.alex.spt.domain.OrderMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 public class OrderPdf {
 
     static final Logger logger = LogManager.getLogger(OrderPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1 = null;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource = null;
+    private ByteArrayOutputStream buffer = null;
 
     public OrderPdf(final MyVaadinUI myUI, final OrderMessage orderMessage) {
-        source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
+
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
@@ -81,20 +79,20 @@ public class OrderPdf {
                     }
                     img.setAlignment(Image.RIGHT);
                     img.scaleAbsolute(250, 110);
-                    float[] Tdate_colsWidth = {1.0f, 1.0f, 1.0f};
-                    PdfPTable Tdate = new PdfPTable(3);
-                    Tdate.setWidthPercentage(90f);
-                    Tdate.setWidths(Tdate_colsWidth);
-                    Tdate.getDefaultCell().setBorder(0);
-                    Tdate.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    Tdate.addCell(new Phrase("президент", fontBold));
-                    Tdate.addCell(img);
+                    float[] table_date_colsWidth = {1.0f, 1.0f, 1.0f};
+                    PdfPTable table_date = new PdfPTable(3);
+                    table_date.setWidthPercentage(90f);
+                    table_date.setWidths(table_date_colsWidth);
+                    table_date.getDefaultCell().setBorder(0);
+                    table_date.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table_date.addCell(new Phrase("президент", fontBold));
+                    table_date.addCell(img);
                     if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
-                        Tdate.addCell(new Phrase("Кудайбердиев Н.Ш.", fontBold));
+                        table_date.addCell(new Phrase("Кудайбердиев Н.Ш.", fontBold));
                     } else {
-                        Tdate.addCell(new Phrase("Орхан Инанды", fontBold));
+                        table_date.addCell(new Phrase("Орхан Инанды", fontBold));
                     }
-                    ct.addElement(Tdate);
+                    ct.addElement(table_date);
 
                     ct.go();
 
@@ -116,21 +114,10 @@ public class OrderPdf {
             }
         };
 
-        resource = new StreamResource(source1, "Order"
+        StreamResource resource = new StreamResource(source1, "Order"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, "Order", false);
-    }
-
-    private String readCSS() throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        InputStream is = new FileInputStream(new File(Settings.PATH_TO_UPLOADS + "default.css"));
-        while ((length = is.read(buffer)) != -1) {
-            baos.write(buffer, 0, length);
-        }
-        return new String(baos.toByteArray());
     }
 }

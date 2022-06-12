@@ -11,7 +11,7 @@ public class StudentRelative implements Serializable {
 
     private int id;
     private int student_id;
-    private String fullname;
+    private String fullName;
     private String work_place;
     private String phone;
     private String address;
@@ -35,12 +35,12 @@ public class StudentRelative implements Serializable {
         this.student_id = student_id;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getWork_place() {

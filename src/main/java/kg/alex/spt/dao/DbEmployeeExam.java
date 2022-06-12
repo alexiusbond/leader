@@ -93,8 +93,8 @@ public class DbEmployeeExam extends BaseDb {
             cb.setValue(result.getInt("ex.hr_exam_id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Exam)).setValue(cb);
             item.getItemProperty(myUI.getMessage(SptMessages.Score)).setValue(
-                    edv.createTextfield(result.getString("ex.score"), myUI.getMessage(SptMessages.Score),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, 10, false), true));
+                    edv.createTextField(result.getString("ex.score"), myUI.getMessage(SptMessages.Score),
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 10, false), true));
             item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(edv.createDateField(result.getDate("ex.date_of_issue"),
                     myUI.getMessage(SptMessages.IssueDate), null, true, Settings.datePattern, Resolution.DAY));
 

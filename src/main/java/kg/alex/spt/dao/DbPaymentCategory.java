@@ -22,7 +22,6 @@ public class DbPaymentCategory extends BaseDb {
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUi, boolean withInitPay) throws SQLException {
-        Settings systemSettings = new Settings();
         String sql;
         if (withInitPay) {
             sql = "select t.id, t.name, t.acc_category_id from payment_category as t "
@@ -35,12 +34,12 @@ public class DbPaymentCategory extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(systemSettings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name"));
-            item.getItemProperty(systemSettings.acc_category_id).setValue(
+            item.getItemProperty(Settings.acc_category_id).setValue(
                     result.getInt("t.acc_category_id"));
         }
         return container;
@@ -51,15 +50,14 @@ public class DbPaymentCategory extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cat_id);
         stat.setInt(2, id);
-        int status = stat.executeUpdate();
-        return status;
+        return stat.executeUpdate();
     }
 
     public int get_initial_payment_category_id() throws SQLException {
         String sql = "SELECT acc_category_id FROM payment_category where id = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
-        while (result.next()) {
+        if (result.next()) {
             return result.getInt("acc_category_id");
         }
         return 0;

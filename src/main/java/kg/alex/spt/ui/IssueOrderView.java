@@ -28,26 +28,24 @@ import java.util.Set;
 public class IssueOrderView extends HorizontalSplitPanel implements Button.ClickListener {
 
     static final Logger logger = LogManager.getLogger(IssueOrderView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button saveBtn;
     private ComboBox classSelect, orderSelect;
     private ComboBoxMultiselect reasonsMCB;
-    private FilterTable studentsTable;
-    private Table historyTable;
-    private DateField dateDF;
+    private final FilterTable studentsTable;
+    private final Table historyTable;
 
-    private String[] STUDENTS_NATURAL_COL_ORDER;
-    private String[] HISTORY_NATURAL_COL_ORDER;
+    private final String[] HISTORY_NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
     private int selected_student_id = 0;
 
     public IssueOrderView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        STUDENTS_NATURAL_COL_ORDER = new String[]{Settings.button,
-            myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.FirstName),
-            myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
-            myUI.getMessage(SptMessages.EducationStatus)};
+        String[] STUDENTS_NATURAL_COL_ORDER = new String[]{Settings.button,
+                myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.FirstName),
+                myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
+                myUI.getMessage(SptMessages.EducationStatus)};
         HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button,
             myUI.getMessage(SptMessages.OrderType), myUI.getMessage(SptMessages.FromClass),
             myUI.getMessage(SptMessages.ToClass), myUI.getMessage(SptMessages.FromEducationStatus),
@@ -81,7 +79,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
             logger.error(e);
             logger.catching(e);
         }
-        studentsTable.setVisibleColumns(STUDENTS_NATURAL_COL_ORDER);
+        studentsTable.setVisibleColumns((Object[]) STUDENTS_NATURAL_COL_ORDER);
         studentsTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
                 "total  " + studentsTable.size());
         tablesLay.addComponent(studentsTable);
@@ -110,7 +108,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         settingsLay.setSpacing(true);
         settingsLay.setWidth(Settings.PERCENTS100);
 
-        dateDF = new DateField(myUI.getMessage(SptMessages.Date));
+        DateField dateDF = new DateField(myUI.getMessage(SptMessages.Date));
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
         dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
@@ -154,12 +152,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
         reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
-        reasonsMCB.setShowSelectAllButton(new ComboBoxMultiselect.ShowButton() {
-            @Override
-            public boolean isShow(String filter, int page) {
-                return true;
-            }
-        });
+        reasonsMCB.setShowSelectAllButton((filter, page) -> true);
         reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
         settingsLay.addComponent(reasonsMCB);
 
@@ -198,7 +191,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         dbsc.connect();
                         DbStudent dbs = new DbStudent();
                         dbs.connect();
-                        Iterator iter = ((Set<?>) studentsTable.getValue()).iterator();
+                        Iterator<?> iter = ((Set<?>) studentsTable.getValue()).iterator();
                         StudentOrder so = new StudentOrder();
                         so.setEmployee_id(myUI.getUser().getId());
                         so.setOrder_id((Integer) orderSelect.getValue());
@@ -225,11 +218,11 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                         next, Settings.class_id).getValue());
                                 so.setFrom_education_status_id((Integer) studentsTable.getContainerProperty(
                                         next, Settings.education_status_id).getValue());
-                                so.setReasons(getMulticomboCaptions((Set<?>) reasonsMCB.getValue()));
+                                so.setReasons(getMultiComboCaptions((Set<?>) reasonsMCB.getValue()));
                                 int st = 0;
                                 try {
                                     st = dbso.exec_insert(so);
-                                } catch (Exception e) {
+                                } catch (Exception ignored) {
                                 }
                                 if (so.getOrder_id() == 3) {
                                     if (st == 0) {
@@ -256,9 +249,9 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                             .setValue(so.getTo_class_id());
                                     studentsTable.getContainerProperty(next, Settings.education_status_id)
                                             .setValue(so.getTo_education_status_id());
-                                    Object cl_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
-                                    Object edu_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
-                                    if (cl_filt != null && !cl_filt.equals("")) {
+                                    Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
+                                    Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
+                                    if (cl_filled != null && !cl_filled.equals("")) {
                                         studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), null);
                                         studentsTable.getContainerProperty(next,
                                                 myUI.getMessage(SptMessages.ClassName))
@@ -273,8 +266,8 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
                                                             myUI.getMessage(SptMessages.EducationStatus)).getValue());
                                         }
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), cl_filt);
-                                    } else if (edu_filt != null && !edu_filt.equals("")) {
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), cl_filled);
+                                    } else if (edu_filled != null && !edu_filled.equals("")) {
                                         studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), null);
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
@@ -289,7 +282,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                         studentsTable.getContainerProperty(next,
                                                 myUI.getMessage(SptMessages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filt);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filled);
                                     } else {
                                         studentsTable.getContainerProperty(next,
                                                 myUI.getMessage(SptMessages.ClassName))
@@ -321,11 +314,11 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         dbsc.close();
                         dbs.close();
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                        Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifNothingIsSelected),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationNothingIsSelected),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -341,7 +334,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 historyTable.setContainerDataSource(
                         dbso.execSQL(myUI, selected_student_id, this));
                 dbso.close();
-                historyTable.setVisibleColumns(HISTORY_NATURAL_COL_ORDER);
+                historyTable.setVisibleColumns((Object[]) HISTORY_NATURAL_COL_ORDER);
                 historyTable.setCaption(myUI.getMessage(SptMessages.OrdersHistory) + " - "
                         + studentsTable.getContainerProperty(selected_student_id,
                                 myUI.getMessage(SptMessages.FirstName)).getValue() + " "
@@ -357,14 +350,11 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                @Override
-                public void onClose(ConfirmDialog dialog) {
-                    if (dialog.isConfirmed()) {
-                        execDelete(Integer.parseInt(source.getData().toString()));
-                    }
-                }
-            });
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete(Integer.parseInt(source.getData().toString()));
+                        }
+                    });
 
         }
     }
@@ -417,14 +407,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 dbsc.exec_update_status_by_id(selected_student_id, 2, myUI.getUser().getId());
                 dbsc.close();
                 studentsTable.getContainerProperty(selected_student_id, Settings.class_id)
-                        .setValue((Integer) historyTable.getContainerProperty(
+                        .setValue(  historyTable.getContainerProperty(
                                 id, Settings.from_class_id).getValue());
                 studentsTable.getContainerProperty(selected_student_id, Settings.education_status_id)
-                        .setValue((Integer) historyTable.getContainerProperty(
+                        .setValue(  historyTable.getContainerProperty(
                                 id, Settings.from_education_status_id).getValue());
-                Object cl_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
-                Object edu_filt = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
-                if (cl_filt != null && !cl_filt.equals("")) {
+                Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
+                Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
+                if (cl_filled != null && !cl_filled.equals("")) {
                     studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), null);
                     studentsTable.getContainerProperty(selected_student_id,
                             myUI.getMessage(SptMessages.ClassName))
@@ -434,8 +424,8 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                             myUI.getMessage(SptMessages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
-                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), cl_filt);
-                } else if (edu_filt != null && !edu_filt.equals("")) {
+                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), cl_filled);
+                } else if (edu_filled != null && !edu_filled.equals("")) {
                     studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), null);
                     studentsTable.getContainerProperty(selected_student_id,
                             myUI.getMessage(SptMessages.ClassName))
@@ -445,7 +435,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                             myUI.getMessage(SptMessages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
-                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filt);
+                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filled);
                 } else {
                     studentsTable.getContainerProperty(selected_student_id,
                             myUI.getMessage(SptMessages.ClassName))
@@ -479,12 +469,10 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -513,21 +501,21 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         return btn;
     }
 
-    private String getMulticomboCaptions(Set<?> set) {
+    private String getMultiComboCaptions(Set<?> set) {
         if (!set.isEmpty()) {
-            Iterator iter = set.iterator();
+            Iterator<?> iter = set.iterator();
             boolean isFirst = true;
-            String reasons = "";
+            StringBuilder reasons = new StringBuilder();
             while (iter.hasNext()) {
                 Object next = iter.next();
                 if (!isFirst) {
-                    reasons += ", ";
+                    reasons.append(", ");
                 }
-                reasons += reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Title)).getValue();
+                reasons.append(reasonsMCB.getContainerProperty(next,
+                        myUI.getMessage(SptMessages.Title)).getValue());
                 isFirst = false;
             }
-            return reasons;
+            return reasons.toString();
         } else {
             return null;
         }

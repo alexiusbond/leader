@@ -45,7 +45,6 @@ import java.util.ResourceBundle;
 public class MyVaadinUI extends UI {
 
     static final Logger logger = LogManager.getLogger(MyVaadinUI.class);
-    private ViewManager viewManager;
     private ResourceBundle i18nBundle;
     private UserDetails user;
     public VaadinRequest r;
@@ -69,7 +68,7 @@ public class MyVaadinUI extends UI {
 
         getPage().setTitle(i18nBundle.getString(SptMessages.AppTitle));
 
-        viewManager = new ViewManager(this);
+        ViewManager viewManager = new ViewManager(this);
         viewManager.switchScreen(LoginScreen.class.getName(), new LoginScreen(this));
 
     }
@@ -108,19 +107,13 @@ public class MyVaadinUI extends UI {
                 getLocale());
     }
 
-    public ResourceBundle getBundle() {
-        return i18nBundle;
-    }
 
     public String getMessage(String key) {
         return i18nBundle.getString(key);
     }
 
-    public ViewManager getViewManager() {
-        return viewManager;
-    }
 
-    public void workingDetails(Subject currentUser) throws Exception {
+    public void workingDetails(Subject currentUser) {
         try {
             DbSchool dbs = new DbSchool();
             dbs.connect();
@@ -222,7 +215,7 @@ public class MyVaadinUI extends UI {
                 logger.catching(e);
             }
         }
-        return Double.valueOf(Settings.dFormat.format(nbkr_currency_rate));
+        return Double.parseDouble(Settings.dFormat.format(nbkr_currency_rate));
     }
 
     public double getDb_currency_rate() {

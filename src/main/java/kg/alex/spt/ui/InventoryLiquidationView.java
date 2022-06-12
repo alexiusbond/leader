@@ -41,25 +41,32 @@ import java.util.Iterator;
 public class InventoryLiquidationView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
-
     static final Logger logger = LogManager.getLogger(InventoryLiquidationView.class);
-    private MyVaadinUI myUI;
-    private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, printBtn, addBtn;
+    private final MyVaadinUI myUI;
+    private Button createBtn;
+    private Button modifyBtn;
+    private Button deleteBtn;
+    private Button saveBtn;
+    private Button cancelBtn;
+    private Button printBtn;
+    private final Button addBtn;
     private PopupButton searchBtn;
     private ComboBox blockSelect, floorSelect, roomSelect;
-    private FormattedTable inventoriesTable;
+    private final FormattedTable inventoriesTable;
     private TextField invoiceNumberTF, codeTF;
     private TextArea noteTF;
     private DateField dateDF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER, NATURAL_COL_ORDER_INVENTORIES;
-    private GridLayout settingsLay, rightLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final String[] NATURAL_COL_ORDER;
+    private String[] NATURAL_COL_ORDER_INVENTORIES;
+    private GridLayout settingsLay;
+    private final GridLayout rightLay;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private FormattedFilterTable invoicesTable;
     private IndexedContainer inventoriesCont;
     private int r_table_counter = 1000;
-    private ArrayList<String> delInventoryIds = new ArrayList<>();
+    private final ArrayList<String> delInventoryIds = new ArrayList<>();
     private int invID;
     private String[] parsedValues = null;
 
@@ -263,7 +270,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             logger.error(e);
             logger.catching(e);
         }
-        invoicesTable.setVisibleColumns(NATURAL_COL_ORDER);
+        invoicesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         invoicesTable.setPageLength(5);
         invoicesTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), CustomTable.Align.RIGHT);
     }
@@ -317,17 +324,14 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
             try {
-                if (validate(settingsLay) && validateTable(inventoriesTable, false)) {
+                if (validate(settingsLay) && validateTable(inventoriesTable)) {
                     DbInventoryInvoice dbCon = new DbInventoryInvoice();
                     dbCon.connect();
                     if (isNew) {
@@ -341,7 +345,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
                                 insertInventories(id);
-                                addDatacontainerItem(id);
+                                addDataContainerItem(id);
                                 invoicesTable.setValue(id);
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                 prepareNormalMode();
@@ -366,7 +370,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                             }
                             if (status != 0) {
                                 insertInventories(invID);
-                                updateDatacontainer();
+                                updateDataContainer();
                                 setInventoriesTable();
                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
@@ -379,7 +383,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                     }
                     dbCon.close();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -453,14 +457,10 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                 roomSelect.setContainerDataSource(null);
             }
         } else if (property == roomSelect) {
-            if (roomSelect.getValue() != null) {
-                rightLay.setEnabled(true);
-            } else {
-                rightLay.setEnabled(false);
-            }
+            rightLay.setEnabled(roomSelect.getValue() != null);
         } else if (property == invoiceNumberTF) {
             invoiceNumberTF.removeValueChangeListener(this);
-            Iterator iter = invoicesTable.getItemIds().iterator();
+            Iterator<?> iter = invoicesTable.getItemIds().iterator();
             boolean isFound = false;
             while (iter.hasNext()) {
                 Object next = iter.next();
@@ -522,17 +522,17 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             codeTF.setValue("");
             codeTF.focus();
         } else {
-            Object changedItemId = ((AbstractField) property).getId();
-            if (((AbstractField) property).getData() != null
-                    && (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
-                    || ((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.InventoryItem)))) {
+            Object changedItemId = ((AbstractField<?>) property).getId();
+            if (((AbstractField<?>) property).getData() != null
+                    && (((AbstractField<?>) property).getData().equals(myUI.getMessage(SptMessages.Quantity))
+                    || ((AbstractField<?>) property).getData().equals(myUI.getMessage(SptMessages.InventoryItem)))) {
                 TextField quantityTF = (TextField) inventoriesTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.Quantity)).getValue();
                 ComboBox inventoryCB = (ComboBox) inventoriesTable.getContainerProperty(changedItemId,
                         myUI.getMessage(SptMessages.InventoryItem)).getValue();
-                if (((AbstractField) property).getData().equals(myUI.getMessage(SptMessages.InventoryItem))) {
+                if (((AbstractField<?>) property).getData().equals(myUI.getMessage(SptMessages.InventoryItem))) {
                     quantityTF.removeAllValidators();
-                    quantityTF.addValidator(new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue),
+                    quantityTF.addValidator(new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
                             1, (Integer) inventoryCB.getContainerProperty(
                             inventoryCB.getValue(), myUI.getMessage(SptMessages.Remain)).getValue()
                             + (Integer) inventoryCB.getContainerProperty(
@@ -555,9 +555,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
 
     private void setValueByItemCaption(ComboBox cb, String value) {
         if (value != null && !value.isEmpty()) {
-            Iterator iter = cb.getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
+            for (Object next : cb.getItemIds()) {
                 if (cb.getContainerProperty(next, myUI.getMessage(SptMessages.Title))
                         .getValue().toString().trim().equalsIgnoreCase(value)) {
                     cb.setValue(next);
@@ -648,7 +646,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         setInventoriesFooter(null);
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Date)).setValue(
                 Settings.dtmf.format(dateDF.getValue()));
         try {
@@ -677,7 +675,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                 floorSelect.getValue());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
@@ -780,12 +778,10 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -800,9 +796,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
     }
 
     private String isUsed(Object selected) {
-        Iterator iter = invoicesTable.getContainerDataSource().getItemIds().iterator();
-        while (iter.hasNext()) {
-            Object next = iter.next();
+        for (Object next : invoicesTable.getContainerDataSource().getItemIds()) {
             if ((selected == null || !selected.equals(next)) && roomSelect.getValue().equals(
                     invoicesTable.getContainerProperty(next, Settings.room_id).getValue())) {
                 return invoicesTable.getContainerProperty(next,
@@ -812,25 +806,21 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         return null;
     }
 
-    private boolean validateTable(Table t, boolean isEmptyAllowed) {
-        if (t.size() == 0 && !isEmptyAllowed) {
-            Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+    private boolean validateTable(Table t) {
+        if (t.size() == 0) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                     Notification.Type.WARNING_MESSAGE);
             return false;
         } else {
-            Iterator iter = ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
-                Iterator iterProp = ((IndexedContainer) t
-                        .getContainerDataSource()).getContainerPropertyIds().iterator();
-                while (iterProp.hasNext()) {
-                    Object next1 = iterProp.next();
+            for (Object next : ((IndexedContainer) t
+                    .getContainerDataSource()).getItemIds()) {
+                for (Object next1 : t
+                        .getContainerDataSource().getContainerPropertyIds()) {
                     Object c = t.getItem(next).getItemProperty(
                             next1).getValue();
                     if (c instanceof AbstractField) {
                         try {
-                            ((AbstractField) c).validate();
+                            ((AbstractField<?>) c).validate();
                         } catch (Exception e) {
                             //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                             return false;
@@ -846,10 +836,10 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         return true;
     }
 
-    public ComboBox createCombobox(int value, String description, String dbtable,
-                                      boolean isRequired, boolean isEnabled, boolean isExistsValiator) {
+    public ComboBox createCombobox(int value, String description, String db_table,
+                                      boolean isRequired, boolean isEnabled, boolean isExistsValidator) {
         ComboBox cb = new ComboBox();
-        if (isExistsValiator) {
+        if (isExistsValidator) {
             cb.addValidator(new ExistsValidator(myUI, inventoriesCont, cb, description));
         }
         if (isEnabled) {
@@ -866,10 +856,10 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         }
         try {
-            if (dbtable != null) {
+            if (db_table != null) {
                 DbDefinition dbp = new DbDefinition();
                 dbp.connect();
-                cb.setContainerDataSource(dbp.exec_for_select(myUI, dbtable, true));
+                cb.setContainerDataSource(dbp.exec_for_select(myUI, db_table, true));
                 dbp.close();
             }
         } catch (Exception e) {
@@ -899,7 +889,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         return btn;
     }
 
-    public TextField createTextfieldWithProperty(Object value, String description, Validator validator, Property p,
+    public TextField createTextFieldWithProperty(Object value, String description, Validator validator, Property p,
                                                  Converter conv, boolean isEnabled) {
         TextField tf = new TextField(p);
         if (isEnabled) {
@@ -933,7 +923,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         return df;
     }
 
-    public TextField createTextfield(String value, String description, Validator validator, boolean isRequired) {
+    public TextField createTextField(String value, String description, Validator validator, boolean isRequired) {
         TextField tf = new TextField();
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -995,10 +985,10 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         cb.setId(id);
         cb.setData(myUI.getMessage(SptMessages.InventoryItem));
         item.getItemProperty(myUI.getMessage(SptMessages.InventoryItem)).setValue(cb);
-        TextField tf = createTextfieldWithProperty(
+        TextField tf = createTextFieldWithProperty(
                 1, myUI.getMessage(SptMessages.Quantity),
-                new IntegerRangeValidator(myUI.getMessage(SptMessages.NotifWrongValue), 1, null),
-                new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter(), true);
+                new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, null),
+                new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true);
         tf.addValueChangeListener(this);
         tf.setId(id);
         tf.setData(myUI.getMessage(SptMessages.Quantity));
@@ -1007,7 +997,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             cb.setValue(codeTF.getValue().toLowerCase());
         }
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
-        inventoriesTable.setVisibleColumns(NATURAL_COL_ORDER_INVENTORIES);
+        inventoriesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_INVENTORIES);
         inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.InventoryItem), 1);
         inventoriesTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
         repaintInventoriesFooter();
@@ -1023,7 +1013,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             dbCon.connect();
             inventoriesTable.setContainerDataSource(dbCon.execSQL(myUI, invID, this));
             dbCon.close();
-            inventoriesTable.setVisibleColumns(NATURAL_COL_ORDER_INVENTORIES);
+            inventoriesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_INVENTORIES);
             inventoriesTable.setColumnExpandRatio(myUI.getMessage(SptMessages.InventoryItem), 1);
             inventoriesTable.setColumnAlignment(myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
         } catch (Exception e) {
@@ -1035,9 +1025,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
     private void repaintInventoriesFooter() {
         int totalQuantity = 0;
         if (inventoriesTable.getContainerDataSource().size() > 0) {
-            Iterator iter = inventoriesTable.getItemIds().iterator();
-            while (iter.hasNext()) {
-                Object next = iter.next();
+            for (Object next : inventoriesTable.getItemIds()) {
                 totalQuantity += (Integer) ((TextField) inventoriesTable.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Quantity)).getValue()).getPropertyDataSource().getValue();
             }
@@ -1057,9 +1045,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
                 }
             }
             if (inventoriesTable.getContainerDataSource().size() > 0) {
-                Iterator iter = inventoriesTable.getItemIds().iterator();
-                while (iter.hasNext()) {
-                    Object next = iter.next();
+                for (Object next : inventoriesTable.getItemIds()) {
                     InventoryLiquidation imv = new InventoryLiquidation();
                     imv.setInvoice_id(invoice_id);
                     imv.setQuantity((Integer) ((TextField) inventoriesTable.getItem(next).getItemProperty(

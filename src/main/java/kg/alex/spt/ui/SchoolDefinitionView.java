@@ -30,36 +30,33 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Iterator;
 
 public class SchoolDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
 
     static final Logger logger = LogManager.getLogger(SchoolDefinitionView.class);
-    private MyVaadinUI myUI;
+    private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect, typeSelect;
-    private Table dataTable;
+    private final Table dataTable;
     private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
             innTF, bankTF, bankAccountTF, phoneTF, cityTF;
     private boolean isNew;
 
-    private String[] NATURAL_COL_ORDER;
     private Upload photoUpl;
     private File myFile;
     private Window statusWindow;
     private Button cancelButton;
     private ProgressBar uploadProgressBar;
     private String photoName, mimeType;
-    private MyReceiver receiver;
     private Embedded photoEmb;
     private GridLayout settingsLay;
-    private Subject currentUser = SecurityUtils.getSubject();
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public SchoolDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
                 myUI.getMessage(SptMessages.TitleRu), myUI.getMessage(SptMessages.TitleKg),
                 myUI.getMessage(SptMessages.TitleEn), myUI.getMessage(SptMessages.Year),
                 myUI.getMessage(SptMessages.SchoolType), myUI.getMessage(SptMessages.Status),
@@ -94,7 +91,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Address), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Phone), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Logo), true);
-        dataTable.setVisibleColumns(NATURAL_COL_ORDER);
+        dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -295,12 +292,9 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                     myUI.getMessage(SptMessages.ConfirmDeletion),
                     myUI.getMessage(SptMessages.Yes),
                     myUI.getMessage(SptMessages.No),
-                    new ConfirmDialog.Listener() {
-                        @Override
-                        public void onClose(ConfirmDialog dialog) {
-                            if (dialog.isConfirmed()) {
-                                execDelete();
-                            }
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete();
                         }
                     });
         } else if (source == saveBtn) {
@@ -318,9 +312,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             dbsc.close();
                             DbAccCategory dba = new DbAccCategory();
                             dba.connect();
-                            Iterator iter = salCont.getItemIds().iterator();
-                            while (iter.hasNext()) {
-                                Object next = iter.next();
+                            for (Object next : salCont.getItemIds()) {
                                 AccCategory ac = new AccCategory();
                                 ac.setCode(sch.getCode());
                                 ac.setName(salCont.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
@@ -333,7 +325,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 dba.exec_insert(ac);
                             }
                             dba.close();
-                            addDatacontainerItem(id);
+                            addDataContainerItem(id);
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                             Item item = (myUI.getSchoolCont()).addItem(id);
@@ -358,9 +350,9 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             logger.catching(e);
                         }
                         if (status != 0) {
-                            if (!school.getCode().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                            if (!school.getCode().equals(dataTable.getContainerProperty(dataTable.getContainerProperty(dataTable.getValue(),
                                     Settings.id).getValue(), myUI.getMessage(SptMessages.Code)).getValue())
-                                    || !school.getName_kg().equals(dataTable.getContainerProperty((Integer) dataTable.getContainerProperty(dataTable.getValue(),
+                                    || !school.getName_kg().equals(dataTable.getContainerProperty(dataTable.getContainerProperty(dataTable.getValue(),
                                     Settings.id).getValue(), myUI.getMessage(SptMessages.TitleRu)).getValue())) {
                                 DbSalaryCategories dbsc = new DbSalaryCategories();
                                 dbsc.connect();
@@ -368,9 +360,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 dbsc.close();
                                 DbAccCategory dba = new DbAccCategory();
                                 dba.connect();
-                                Iterator iter = salCont.getItemIds().iterator();
-                                while (iter.hasNext()) {
-                                    Object next = iter.next();
+                                for (Object next : salCont.getItemIds()) {
                                     int id = dba.exec_id((Integer) next, school.getId());
                                     dba.exec_update_code(id, school.getCode(), salCont.getContainerProperty(next,
                                             myUI.getMessage(SptMessages.Title)).getValue() + " - " + school.getName_ru());
@@ -380,7 +370,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 }
                                 dba.close();
                             }
-                            updateDatacontainer();
+                            updateDataContainer();
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                             myUI.getSchoolCont().getContainerProperty(dataTable.getValue(),
@@ -393,7 +383,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                     dbScl.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotifWrongValue),
+                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -557,7 +547,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         photoName = null;
     }
 
-    private void updateDatacontainer() {
+    private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -598,7 +588,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
     }
 
-    private void addDatacontainerItem(int id) {
+    private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
@@ -703,12 +693,10 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
     private boolean validate(ComponentContainer layout) {
         boolean result = true;
-        Iterator<Component> i = layout.iterator();
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : layout) {
             if (c instanceof AbstractField) {
                 try {
-                    ((AbstractField) c).validate();
+                    ((AbstractField<?>) c).validate();
                 } catch (Exception e) {
                     //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
                     result = false;
@@ -778,86 +766,70 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     }
 
     private void buildUpload() {
-        receiver = new MyReceiver();
+        MyReceiver receiver = new MyReceiver();
         photoUpl = new Upload(null, receiver);
         photoUpl.setImmediate(true);
         photoUpl.setStyleName(ValoTheme.BUTTON_SMALL);
         photoUpl.setButtonCaption(myUI.getMessage(SptMessages.Upload));
         photoUpl.setWidth(Settings.PERCENTS100);
 
-        photoUpl.addStartedListener(new Upload.StartedListener() {
-            @Override
-            public void uploadStarted(Upload.StartedEvent event) {
-                // This method gets called immediatedly after upload is started
+        photoUpl.addStartedListener((Upload.StartedListener) event -> {
 
-                buildUploadWindow();
-                myUI.addWindow(statusWindow);
-                statusWindow.setClosable(false);
+            buildUploadWindow();
+            myUI.addWindow(statusWindow);
+            statusWindow.setClosable(false);
 
-                uploadProgressBar.setValue(0f);
-                uploadProgressBar.setVisible(true);
-                UI.getCurrent().setPollInterval(500); // hit server frequantly to get
+            uploadProgressBar.setValue(0f);
+            uploadProgressBar.setVisible(true);
+            UI.getCurrent().setPollInterval(500);
 
-                cancelButton.setVisible(true);
+            cancelButton.setVisible(true);
+        });
+
+        photoUpl.addProgressListener((Upload.ProgressListener) (readBytes, contentLength) -> {
+            // This method gets called several times during the update
+            if (!mimeType.equals("image/jpeg")) {
+                photoUpl.interruptUpload();
+                photoName = null;
+                Notification.show(myUI.getMessage(SptMessages.OnlyJpg),
+                        Notification.Type.WARNING_MESSAGE);
+            } else if (contentLength >= 5000000) {
+                photoUpl.interruptUpload();
+                photoName = null;
+                Notification.show(myUI.getMessage(SptMessages.Maxsize),
+                        Notification.Type.WARNING_MESSAGE);
+            } else {
+
+                uploadProgressBar.setValue(readBytes / (float) contentLength);
             }
         });
 
-        photoUpl.addProgressListener(new Upload.ProgressListener() {
-            @Override
-            public void updateProgress(long readBytes, long contentLength) {
-                // This method gets called several times during the update
-                if (!mimeType.equals("image/jpeg")) {
-                    photoUpl.interruptUpload();
-                    photoName = null;
-                    Notification.show(myUI.getMessage(SptMessages.OnlyJpg),
-                            Notification.Type.WARNING_MESSAGE);
-                } else if (contentLength >= 5000000) {
-                    photoUpl.interruptUpload();
-                    photoName = null;
-                    Notification.show(myUI.getMessage(SptMessages.Maxsize),
-                            Notification.Type.WARNING_MESSAGE);
-                } else {
+        photoUpl.addSucceededListener((Upload.SucceededListener) event -> {
+            // This method gets called when the upload finished successfully
+            try {
+                Thumbnails.of(myFile).size(300, 300).toFile(myFile);
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            photoEmb.setSource(new FileResource(myFile));
+        });
 
-                    uploadProgressBar.setValue(new Float(readBytes / (float) contentLength));
-                }
+        photoUpl.addFailedListener((Upload.FailedListener) event -> {
+            if (statusWindow != null) {
+                statusWindow.close();
+            }
+            try {
+                myFile.delete();
+            } catch (Exception ex) {
+                logger.error(ex);
+                ex.printStackTrace();
             }
         });
 
-        photoUpl.addSucceededListener(new Upload.SucceededListener() {
-            @Override
-            public void uploadSucceeded(Upload.SucceededEvent event) {
-                // This method gets called when the upload finished successfully
-                try {
-                    Thumbnails.of(myFile).size(300, 300).toFile(myFile);
-                } catch (Exception e) {
-                    logger.error(e);
-                    logger.catching(e);
-                }
-                photoEmb.setSource(new FileResource(myFile));
-            }
-        });
-
-        photoUpl.addFailedListener(new Upload.FailedListener() {
-            @Override
-            public void uploadFailed(Upload.FailedEvent event) {
-                if (statusWindow != null) {
-                    statusWindow.close();
-                }
-                try {
-                    myFile.delete();
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        photoUpl.addFinishedListener(new Upload.FinishedListener() {
-            @Override
-            public void uploadFinished(Upload.FinishedEvent event) {
-                if (statusWindow != null) {
-                    statusWindow.close();
-                }
+        photoUpl.addFinishedListener((Upload.FinishedListener) event -> {
+            if (statusWindow != null) {
+                statusWindow.close();
             }
         });
     }

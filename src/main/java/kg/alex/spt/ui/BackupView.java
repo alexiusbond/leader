@@ -17,16 +17,16 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 
 public class BackupView extends HorizontalSplitPanel implements Button.ClickListener {
 
     static final Logger logger = LogManager.getLogger(BackupView.class);
-    private MyVaadinUI myUI;
-    private Table dataTable;
-    private Button takeBakup;
-
-    private IndexedContainer container;
+    private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final Button takeBakup;
 
     public BackupView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -85,22 +85,25 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
     }
 
     private void setDataTable() {
-        container = new IndexedContainer();
+        IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         try {
             File folder = new File("/home/logo/backups");
             File[] listOfFiles = folder.listFiles();
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    String id = listOfFiles[i].getName();
-                    Item item = container.addItem(id);
-                    item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
-                            listOfFiles[i].getName());
-                    item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                            new Date(listOfFiles[i].lastModified()));
-                    item.getItemProperty(Settings.button).setValue(createButton(id));
+            if (listOfFiles != null) {
+                for (File listOfFile : listOfFiles) {
+                    BasicFileAttributes basicFileAttributes = Files.readAttributes(listOfFile.toPath(), BasicFileAttributes.class);
+                    if (basicFileAttributes.isRegularFile()) {
+                        String id = listOfFile.getName();
+                        Item item = container.addItem(id);
+                        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+                                listOfFile.getName());
+                        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                                new Date(basicFileAttributes.lastModifiedTime().toMillis()));
+                        item.getItemProperty(Settings.button).setValue(createButton(id));
+                    }
                 }
             }
             dataTable.clear();

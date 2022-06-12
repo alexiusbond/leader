@@ -18,13 +18,13 @@ import org.tepi.filtertable.FilterTable;
  */
 public class MyFilterGenerator implements FilterGenerator {
 
-    private Label l;
-    private String labeltext;
-    private FilterTable t;
+    private final Label l;
+    private final String labelText;
+    private final FilterTable t;
 
     public MyFilterGenerator(Label l, String labeltext, FilterTable t) {
         this.l = l;
-        this.labeltext = labeltext;
+        this.labelText = labeltext;
         this.t = t;
     }
 
@@ -46,12 +46,12 @@ public class MyFilterGenerator implements FilterGenerator {
 
     @Override
     public void filterRemoved(Object propertyId) {
-        l.setValue(labeltext + ": " + t.size());
+        l.setValue(labelText + ": " + t.size());
     }
 
     @Override
     public void filterAdded(Object propertyId, Class<? extends Filter> filterType, Object value) {
-        l.setValue(labeltext + ": " + t.size());
+        l.setValue(labelText + ": " + t.size());
     }
 
     @Override

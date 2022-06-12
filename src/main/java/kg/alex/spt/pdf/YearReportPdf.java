@@ -30,20 +30,16 @@ public class YearReportPdf {
 
     static final Logger logger = LogManager.getLogger(YearReportPdf.class);
     private byte[] b = null;
-    private StreamResource.StreamSource source1 = null;
-    ByteArrayOutputStream buffer = null;
-    StreamResource resource = null;
+    private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    Date aDate = new Date(System.currentTimeMillis());
+    private final Date aDate = new Date(System.currentTimeMillis());
 
 
     public YearReportPdf(final MyVaadinUI myUI, final ComponentContainer layout,
                          final StudentInfoPdf st) {
-        source1 = new StreamResource.StreamSource() {
 
-            /**
-             *
-             */
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
+
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
             private final static String FONT_LOCATION2 = "/home/logo/PT_Sans-Web-Bold.ttf";
@@ -74,14 +70,14 @@ public class YearReportPdf {
 
                     document.open();
 
-                    float[] Tdate_colsWidth = {3.5f, 1f};
-                    PdfPTable Tdate = new PdfPTable(2);
-                    Tdate.setWidthPercentage(90f);
-                    Tdate.setWidths(Tdate_colsWidth);
-                    Tdate.getDefaultCell().setBorder(0);
-                    Tdate.addCell(new Phrase(" ", ordFont));
-                    Tdate.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
-                    document.add(Tdate);
+                    float[] table_dates_colsWidth = {3.5f, 1f};
+                    PdfPTable table_date = new PdfPTable(2);
+                    table_date.setWidthPercentage(90f);
+                    table_date.setWidths(table_dates_colsWidth);
+                    table_date.getDefaultCell().setBorder(0);
+                    table_date.addCell(new Phrase(" ", ordFont));
+                    table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
+                    document.add(table_date);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Yearly)
                             + " " + myUI.getMessage(SptMessages.Report), fontBold);
@@ -89,20 +85,19 @@ public class YearReportPdf {
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
 
-                    Iterator<Component> i = layout.iterator();
-                    while (i.hasNext()) {
+                    for (Component component : layout) {
                         document.add(new Paragraph(24, " "));
-                        Table dataTable = (Table) i.next();
+                        Table dataTable = (Table) component;
                         Paragraph p = new Paragraph(dataTable.getCaption(), ordFontBold);
                         p.setIndentationLeft(30);
                         p.setSpacingAfter(7);
                         document.add(p);
 
                         //installment plan table
-                        float[] Tplan_colsWidth = {0.07f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
+                        float[] table_plan_colsWidth = {0.07f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
                         PdfPTable pdfTable = new PdfPTable(11);
                         pdfTable.setWidthPercentage(90f);
-                        pdfTable.setWidths(Tplan_colsWidth);
+                        pdfTable.setWidths(table_plan_colsWidth);
                         pdfTable.getDefaultCell().
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -118,7 +113,7 @@ public class YearReportPdf {
                         pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Left), tableFontBold));
                         pdfTable.addCell(new Phrase(Settings.percentage, tableFontBold));
 
-                        Iterator iter = dataTable.getContainerDataSource().getItemIds().iterator();
+                        Iterator<?> iter = dataTable.getContainerDataSource().getItemIds().iterator();
                         int j = 0;
                         if (dataTable.getContainerDataSource().size() > 0) {
                             j = 1;
@@ -184,7 +179,7 @@ public class YearReportPdf {
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
-                    T2.addCell(new Phrase(st.getScl_accountent_fullname(), ordFont));
+                    T2.addCell(new Phrase(st.getScl_accountant_full_name(), ordFont));
                     T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));
                     document.add(T2);
 
@@ -203,7 +198,7 @@ public class YearReportPdf {
             }
         };
 
-        resource = new StreamResource(source1, "YearReport"
+        StreamResource resource = new StreamResource(source1, "YearReport"
                 + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
