@@ -247,7 +247,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             if (!(Boolean) event.getItem().getItemProperty(Settings.is_disabled).getValue()) {
                 grid.setEditorEnabled(true);
                 if (!grid.isEditorActive()) {
-                    grid.editItem(event.getItemId());
+                    try {
+                        grid.editItem(event.getItemId());
+                    } catch (Exception ignored) {
+                    }
                 }
                 TextField amountTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.Amount)).getEditorField();
                 amountTf.removeAllValidators();
@@ -492,7 +495,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             if (grid != null && grid.isEditorActive() && grid.getEditedItemId() != null) {
                 TextField amountTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Amount));
                 String itemId = grid.getEditedItemId().toString();
-                ComboBox categoryCb, currencyCb = (ComboBox) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Currency));
+                ComboBox currencyCb = (ComboBox) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Currency));
                 if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                     rateTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Rate));
                 }
@@ -500,10 +503,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 Item item = grid.getContainerDataSource().getItem(itemId);
 
                 if (accordion.getSelectedTab() == expensesGrid) {
-                    categoryCb = expensesCategoryCb;
-                    if (rateTf != null && amountTf.getPropertyDataSource().getValue() != null && (
-                            !currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
-                                    rateTf.getPropertyDataSource().getValue() != null) && dateDf.getValue() != null && categoryCb.getValue() != null) {
+                    if (amountTf.isValid() && amountTf.getValue() != null &&
+                            (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
+                                    rateTf.isValid() && rateTf.getValue() != null) && dateDf.isValid() && dateDf.getValue() != null) {
                         try {
                             double amount = Settings.dFormat.parse(amountTf.getValue()).doubleValue();
                             double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
@@ -550,13 +552,14 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                             logger.error(e);
                             logger.catching(e);
                         }
+                    } else {
+                        amountTf.removeAllValidators();
+                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                     }
                 } else if (accordion.getSelectedTab() == incomesGrid && !itemId.contains(Settings.FreshItem)) {
-                    categoryCb = incomesCategoryCb;
-                    if (rateTf != null && amountTf.getPropertyDataSource().getValue() != null &&
+                    if (amountTf.isValid() && amountTf.getValue() != null &&
                             (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
-                                    rateTf.getPropertyDataSource().getValue() != null)
-                            && dateDf.getValue() != null && categoryCb.getValue() != null) {
+                                    rateTf.isValid() && rateTf.getValue() != null) && dateDf.isValid() && dateDf.getValue() != null) {
                         try {
                             double amount = Settings.dFormat.parse(amountTf.getValue()).doubleValue();
                             double rate;
@@ -610,6 +613,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                             logger.error(e);
                             logger.catching(e);
                         }
+                    } else {
+                        amountTf.removeAllValidators();
+                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
                     }
                 } else {
                     amountTf.removeAllValidators();

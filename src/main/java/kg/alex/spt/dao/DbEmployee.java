@@ -146,7 +146,6 @@ public class DbEmployee extends BaseDb {
         if (branch_id != 0) {
             stat.setInt(5, branch_id);
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);

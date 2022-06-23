@@ -4197,6 +4197,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 }
             }
             delCorrectionIds.clear();
+            dbCon.close();
             dbsd.close();
         } catch (Exception e) {
             logger.error(e);

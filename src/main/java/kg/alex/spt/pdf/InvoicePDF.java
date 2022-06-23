@@ -80,7 +80,6 @@ public class InvoicePDF {
                 cell.setPaddingBottom(20);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 orderTable.addCell(cell);
-                System.out.println(student.getPaymentCategoryId());
                 if (student.getPaymentCategoryId() == 3) {
                     cell = new PdfPCell(new Phrase("РАСХОДНЫЙ КАССОВЫЙ ОРДЕР", bold_font));
                 } else {
