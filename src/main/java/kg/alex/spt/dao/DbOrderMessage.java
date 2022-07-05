@@ -26,32 +26,33 @@ public class DbOrderMessage extends BaseDb {
         super();
     }
 
-    public int exec_insert(OrderMessage d) throws SQLException {
-        String sql = "INSERT INTO order_messages (message, order_number, " +
-                "order_title, order_content, student_id, creation_date, employee_id, discount, student) "
-                + "VALUES(?,?,?,?,?,?,?,?,?);";
+    public int exec_insert(OrderMessage orderMessage) throws SQLException {
+        String sql = "INSERT INTO order_messages (message, order_number, order_title, order_content, student_id, " +
+                "creation_date, employee_id, discount, student, year_id) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        if (d.getMessage() != null) {
-            stat.setString(1, d.getMessage());
+        if (orderMessage.getMessage() != null) {
+            stat.setString(1, orderMessage.getMessage());
         } else {
             stat.setNull(1, Types.VARCHAR);
         }
-        stat.setString(2, d.getOrder_number());
-        stat.setString(3, d.getTitle());
-        stat.setString(4, d.getContent());
-        if (d.getStudent_id() != 0) {
-            stat.setInt(5, d.getStudent_id());
+        stat.setString(2, orderMessage.getOrder_number());
+        stat.setString(3, orderMessage.getTitle());
+        stat.setString(4, orderMessage.getContent());
+        if (orderMessage.getStudent_id() != 0) {
+            stat.setInt(5, orderMessage.getStudent_id());
         } else {
             stat.setNull(5, Types.INTEGER);
         }
-        stat.setDate(6, new Date(d.getDate().getTime()));
-        stat.setInt(7, d.getEmployee_id());
-        stat.setDouble(8, d.getDiscount());
-        if (d.getStudent() != null) {
-            stat.setString(9, d.getStudent());
+        stat.setDate(6, new Date(orderMessage.getDate().getTime()));
+        stat.setInt(7, orderMessage.getEmployee_id());
+        stat.setDouble(8, orderMessage.getDiscount());
+        if (orderMessage.getStudent() != null) {
+            stat.setString(9, orderMessage.getStudent());
         } else {
             stat.setNull(9, Types.VARCHAR);
         }
+        stat.setInt(10, orderMessage.getYear_id());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -61,13 +62,14 @@ public class DbOrderMessage extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int employee_id, FilterTable t, SendOrderView view) throws SQLException {
-        String sql = "SELECT em.id, concat(e.name, ' ', e.surname) as employee, " +
+        String sql = "SELECT em.id, concat(e.name, ' ', e.surname) as employee, y.name, " +
                 "concat(st.name, ' ', st.surname) as student, om.id, om.discount, om.student as student_info, " +
                 "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, om.student_id, " +
                 "mst.id, mst.name FROM employee_message AS em " +
                 "left join employee as e on e.id = em.employee_id " +
                 "left join message_status as mst on mst.id = em.message_status_id " +
                 "left join order_messages as om on om.id = em.order_messages_id " +
+                "left join year as y on y.id = om.year_id " +
                 "left join student as st on st.id = om.student_id ";
         if (employee_id != 0) {
             sql += " WHERE om.employee_id = ? ";
@@ -85,6 +87,7 @@ public class DbOrderMessage extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Message), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Student), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Discount), Integer.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(Settings.button, HorizontalLayout.class, null);
@@ -100,6 +103,7 @@ public class DbOrderMessage extends BaseDb {
             } else {
                 item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
             }
+            item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(result.getString("y.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Discount)).setValue(result.getInt("discount"));
             item.getItemProperty(myUi.getMessage(SptMessages.Message)).setValue(result.getString("om.message"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("om.order_title"));

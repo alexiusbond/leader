@@ -27,11 +27,13 @@ public class DbUserDetails extends BaseDb {
     public UserDetails execSQLUserInfo(String login) throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "select e.id, ord.working_status_id, eb.hr_branch_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
-                + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, "
+                + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, pos.id, "
                 + "y.id, y.name, y2.id, y2.name, sch.transactions_start_date "
                 + "from employee as e "
                 + "left join hr_employee_branch as eb on eb.employee_id = e.id and eb.hr_importance_id = 1 "
                 + "left join hr_employee_order as eo on eo.employee_id = e.id and eo.to_date IS NULL "
+                + "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id "
+                + "LEFT JOIN position AS pos ON p.id = pos.hr_position_id "
                 + "left join hr_orders as ord on ord.id = eo.hr_orders_id "
                 + "left join school as sch on eo.school_id = sch.id "
                 + "left join year as y on sch.year_id = y.id "
@@ -51,6 +53,7 @@ public class DbUserDetails extends BaseDb {
             user.setSchool_name(result.getString("sch.name_ru"));
             user.setSchool_logo(result.getString("sch.photo"));
             user.setBranch_id(result.getInt("eb.hr_branch_id"));
+            user.setPosition_id(result.getInt("pos.id"));
             if (currentUser.hasRole(Settings.rnSapatSecretary)) {
                 user.setCurrent_year(new Definition(result.getInt("y2.id"), result.getString("y2.name")));
             } else {

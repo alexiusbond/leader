@@ -666,7 +666,6 @@ public class DbAccTransactions extends BaseDb {
     public void exec_current_account_state(MyVaadinUI myUI, int acc_category_id, Date from, Date till, Table t,
                                            int currency_id, int school_id) throws SQLException {
 
-
         String sign = "/";
         if (currency_id == 1) {
             sign = "*";

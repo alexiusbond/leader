@@ -20,8 +20,17 @@ public class OrderMessage implements Serializable {
     private String student;
     private Date date;
     private int student_id;
+    private int year_id;
     private int employee_id;
     private int discount;
+
+    public int getYear_id() {
+        return year_id;
+    }
+
+    public void setYear_id(int year_id) {
+        this.year_id = year_id;
+    }
 
     public String getStudent() {
         return student;

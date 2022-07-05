@@ -16,6 +16,7 @@ public class UserDetails implements Serializable {
     private int id;
     private String login;
     private int working_status_id;
+    private int position_id;
     private String fullName;
     private int school_id;
     private int branch_id;
@@ -111,5 +112,13 @@ public class UserDetails implements Serializable {
 
     public void setCurrent_year(Definition current_year) {
         this.current_year = current_year;
+    }
+
+    public int getPosition_id() {
+        return position_id;
+    }
+
+    public void setPosition_id(int position_id) {
+        this.position_id = position_id;
     }
 }
