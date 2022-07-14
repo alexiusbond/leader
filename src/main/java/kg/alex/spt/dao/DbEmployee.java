@@ -143,7 +143,7 @@ public class DbEmployee extends BaseDb {
         stat.setInt(2, school_id);
         stat.setInt(3, school_id);
         stat.setInt(4, school_id);
-        if (branch_id != 0) {
+        if (employee_id == 0 && branch_id != 0) {
             stat.setInt(5, branch_id);
         }
         ResultSet result = stat.executeQuery();
