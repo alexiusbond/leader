@@ -287,6 +287,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Id = generateId();
     public static final String PreviousYearDebt = generateId();
     public static final String Debt = generateId();
+    public static final String OverPay = generateId();
     public static final String FreeAmount = generateId();
     public static final String FromClass = generateId();
     public static final String ToClass = generateId();
@@ -506,6 +507,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ExpensesTotal = generateId();
     public static final String AssertsTotal = generateId();
     public static final String DebtsTotal = generateId();
+    public static final String PreviousBalance = generateId();
     public static final String Balance = generateId();
     public static final String LastIncomeDate = generateId();
     public static final String LastExpenseDate = generateId();

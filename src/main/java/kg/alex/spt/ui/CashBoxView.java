@@ -886,7 +886,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         Calendar c = Calendar.getInstance();
         c.setTime(fromDateDF.getValue());
         c.add(Calendar.DAY_OF_MONTH, -1);
-        prev_balanceLab.setValue(myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime()) + "): "
+        prev_balanceLab.setValue(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): "
                 + Settings.dFormat.format(schoolAcc.getPrevious_balance()) + "$");
     }
 

@@ -171,6 +171,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             logger.error(e);
             logger.catching(e);
         }
+        classTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
         selectAllBtn.setWidth(Settings.PERCENTS100);

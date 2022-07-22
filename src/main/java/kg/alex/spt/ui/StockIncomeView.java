@@ -79,7 +79,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                 myUI.getMessage(SptMessages.FromEmployee), myUI.getMessage(SptMessages.ToEmployee),
                 myUI.getMessage(SptMessages.Note)};
 
-        rightLay = new GridLayout(3, 2);
+        rightLay = new GridLayout(2, 2);
         rightLay.setSpacing(true);
         rightLay.setSizeFull();
         rightLay.setMargin(true);
@@ -89,14 +89,14 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         addBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         addBtn.setIcon(FontAwesome.PLUS_SQUARE);
         addBtn.addClickListener(this);
-        rightLay.addComponent(addBtn, 2, 0);
+        rightLay.addComponent(addBtn, 0, 0);
 
         movementsTable = new FormattedTable();
         movementsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         movementsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         movementsTable.setSizeFull();
         movementsTable.setFooterVisible(true);
-        rightLay.addComponent(movementsTable, 0, 1, 2, 1);
+        rightLay.addComponent(movementsTable, 0, 1, 1, 1);
         rightLay.setRowExpandRatio(1, 1);
         rightLay.setColumnExpandRatio(1, 1);
 

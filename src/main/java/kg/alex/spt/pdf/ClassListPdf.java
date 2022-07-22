@@ -86,12 +86,11 @@ public class ClassListPdf {
                     //installment plan table
                     float[] table_plan_colsWidth = {
                             0.1f, 0.22f, 0.20f, 0.4f, 0.4f, 0.15f, 0.25f, 0.43f, 0.25f,
-                            0.21f, 0.25f, 0.25f, 0.25f, 0.25f,};
-                    PdfPTable dataTable = new PdfPTable(14);
+                            0.21f, 0.25f, 0.25f, 0.25f, 0.25f,0.25f,};
+                    PdfPTable dataTable = new PdfPTable(15);
                     dataTable.setWidthPercentage(90f);
                     dataTable.setWidths(table_plan_colsWidth);
-                    dataTable.getDefaultCell().
-                            setVerticalAlignment(Element.ALIGN_BOTTOM);
+                    dataTable.getDefaultCell().                            setVerticalAlignment(Element.ALIGN_BOTTOM);
                     dataTable.addCell(new Phrase(" №", ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Id), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.EducationStatus), ordFontBold));
@@ -105,7 +104,8 @@ public class ClassListPdf {
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Net), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Paid), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Left), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Debt), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.OverPay), ordFontBold));
 
                     Iterator<?> iter = dataCont.getItemIds().iterator();
                     int i = 0;
@@ -152,9 +152,12 @@ public class ClassListPdf {
                             dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
                             dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Left)).getValue()), tableFont));
+                                    myUI.getMessage(SptMessages.Debt)).getValue()), tableFont));
+                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                                    myUI.getMessage(SptMessages.OverPay)).getValue()), tableFont));
                             dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         } else {
+                            dataTable.addCell(new Phrase(" ", tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
@@ -178,10 +181,11 @@ public class ClassListPdf {
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discounted)
                             + clr.discountedStudents, tableFontBold));
                     dataTable.addCell(new Phrase(Settings.dFormat.format(clr.discounts), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.debts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.prevYearDebts), tableFontBold));
                     dataTable.addCell(new Phrase(Settings.dFormat.format(clr.nets), tableFontBold));
                     dataTable.addCell(new Phrase(Settings.dFormat.format(clr.paid_amounts), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.lefts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.debts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.overPays), tableFontBold));
 
                     document.add(dataTable);
 

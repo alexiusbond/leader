@@ -244,7 +244,7 @@ public class GeneralReport implements Button.ClickListener,
         if (event.getProperty() == yearSelect) {
             prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue());
             prevDayCal.add(Calendar.DAY_OF_MONTH, -1);
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
         }
     }
 
@@ -412,7 +412,7 @@ public class GeneralReport implements Button.ClickListener,
         prevBalanceLbl = new Label();
         prevBalanceLbl.setContentMode(ContentMode.HTML);
         prevBalanceLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime())
+        prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime())
                 + "): </b>");
         hl.addComponent(prevBalanceLbl);
 
@@ -513,7 +513,7 @@ public class GeneralReport implements Button.ClickListener,
                     + ": </b>" + Settings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
             outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate)
                     + ": </b>" + schoolAcc.getLast_outcome_date());
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance)
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance)
                     + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + "$");
             totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.CashBox)
@@ -523,7 +523,7 @@ public class GeneralReport implements Button.ClickListener,
             incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
             outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
             totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": </b>");
         }
     }

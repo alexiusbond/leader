@@ -330,7 +330,7 @@ public class MonthReport implements Button.ClickListener,
                                                 tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
-                                                + Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
+                                                + Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.PreviousBalance) + " ("
                                                 + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat.format(scAcc.getPrevious_balance())
                                                 + "; " + myUI.getMessage(SptMessages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
@@ -341,7 +341,7 @@ public class MonthReport implements Button.ClickListener,
                                     SchoolAccounting scAcc = dbTr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
                                             tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
-                                            Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.Balance) + " ("
+                                            Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.PreviousBalance) + " ("
                                                     + Settings.df.format(prev_date.getTime()) + ") - " + Settings.dFormat.format(scAcc.getPrevious_balance())
                                                     + "; " + myUI.getMessage(SptMessages.Total) + " - " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())));
                                     incomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);

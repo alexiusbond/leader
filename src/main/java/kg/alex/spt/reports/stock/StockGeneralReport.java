@@ -215,7 +215,7 @@ public class StockGeneralReport implements Button.ClickListener,
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
-                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance) + " " +
+                        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousBalance) + " " +
                                 myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()), Table.Align.RIGHT);
                     } else {
                         dbCon.exec_stock_operations(myUI, productsTable, fromDateDF.getValue(), tillDateDF.getValue(), (Integer) operationOG.getValue(),

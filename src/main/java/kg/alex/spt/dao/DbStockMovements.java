@@ -509,7 +509,7 @@ public class DbStockMovements extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " " +
+        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousBalance) + " " +
                 myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(till), Double.class, null);
         t.setContainerDataSource(container);
         double total_in_amount = 0.0, total_out_amount = 0.0;
@@ -528,7 +528,7 @@ public class DbStockMovements extends BaseDb {
                     } else {
                         item.getItemProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
                         item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " " +
+                        item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance) + " " +
                                 myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
@@ -553,7 +553,7 @@ public class DbStockMovements extends BaseDb {
                     + " - " + myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("in_total"));
             item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
                     + " - " + myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("out_total"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " " +
+            item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance) + " " +
                     myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(result.getDouble("balance")
                     + result.getDouble("in_amount") - result.getDouble("out_amount"));
 
@@ -609,7 +609,7 @@ public class DbStockMovements extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousBalance), Double.class, 0.0);
         int i = 0;
         double balance = execSQL_category_balance(acc_category_id, stock_id + "", from),
                 totalOut = 0.0, totalIn = 0.0, netAmount = 0.0;
@@ -639,12 +639,12 @@ public class DbStockMovements extends BaseDb {
                 totalIn += result.getDouble("amount");
                 netAmount += result.getDouble("total");
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(balance);
+            item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance)).setValue(balance);
         }
         t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome), Settings.dFormat.format(totalIn));
         t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome), Settings.dFormat.format(totalOut));
         t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(netAmount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Balance), Settings.dFormat.format(balance));
+        t.setColumnFooter(myUI.getMessage(SptMessages.PreviousBalance), Settings.dFormat.format(balance));
         t.setContainerDataSource(container);
     }
 

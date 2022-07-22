@@ -35,7 +35,7 @@ public class CurrentAccountStatementPdf {
 
     public CurrentAccountStatementPdf(final MyVaadinUI myUI, final Table t,
                                       final String acc_category, final String currency, final Date from, final Date to, final StudentInfoPdf st) {
-               StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
+        StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;
             private final static String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
@@ -107,8 +107,10 @@ public class CurrentAccountStatementPdf {
                         Object next = iter.next();
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         dataTable.addCell(new Phrase((++i) + "", tableFont));
-                        dataTable.addCell(new Phrase(t.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
+                        dataTable.addCell(new Phrase(
+                                t.getContainerProperty(next, myUI.getMessage(SptMessages.Date)).getValue() == null ? "" :
+                                        t.getContainerProperty(next,
+                                                myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                         dataTable.addCell(new Phrase(t.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Type)).getValue().toString(), tableFont));
                         if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Note)).getValue() != null) {

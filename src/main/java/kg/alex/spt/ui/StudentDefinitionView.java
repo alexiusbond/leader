@@ -315,7 +315,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         famTableLay.setSpacing(true);
         famTableLay.setMargin(true);
         famTableLay.addComponent(plusRelButton);
-        famTableLay.setComponentAlignment(plusRelButton, Alignment.BOTTOM_RIGHT);
+        famTableLay.setComponentAlignment(plusRelButton, Alignment.BOTTOM_LEFT);
         famTableLay.addComponent(relativesTable);
         famTableLay.setExpandRatio(relativesTable, 1);
 
@@ -328,7 +328,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         acsGiveTableLay.setSpacing(true);
         acsGiveTableLay.setMargin(true);
         acsGiveTableLay.addComponent(plusMatGiveButton);
-        acsGiveTableLay.setComponentAlignment(plusMatGiveButton, Alignment.BOTTOM_RIGHT);
+        acsGiveTableLay.setComponentAlignment(plusMatGiveButton, Alignment.BOTTOM_LEFT);
         acsGiveTableLay.addComponent(acsGiveTable);
         acsGiveTableLay.setExpandRatio(acsGiveTable, 1);
 
@@ -341,7 +341,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         acsReceiveTableLay.setSpacing(true);
         acsReceiveTableLay.setMargin(true);
         acsReceiveTableLay.addComponent(plusMatReceiveButton);
-        acsReceiveTableLay.setComponentAlignment(plusMatReceiveButton, Alignment.BOTTOM_RIGHT);
+        acsReceiveTableLay.setComponentAlignment(plusMatReceiveButton, Alignment.BOTTOM_LEFT);
         acsReceiveTableLay.addComponent(acsReceiveTable);
         acsReceiveTableLay.setExpandRatio(acsReceiveTable, 1);
 
@@ -356,7 +356,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         payTableLay.setSpacing(true);
         payTableLay.setMargin(true);
         payTableLay.addComponent(plusPayButton);
-        payTableLay.setComponentAlignment(plusPayButton, Alignment.BOTTOM_RIGHT);
+        payTableLay.setComponentAlignment(plusPayButton, Alignment.BOTTOM_LEFT);
         payTableLay.addComponent(paymentsTable);
         payTableLay.setExpandRatio(paymentsTable, 1);
 
@@ -369,7 +369,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         callsTableLay.setSpacing(true);
         callsTableLay.setMargin(true);
         callsTableLay.addComponent(plusCallButton);
-        callsTableLay.setComponentAlignment(plusCallButton, Alignment.BOTTOM_RIGHT);
+        callsTableLay.setComponentAlignment(plusCallButton, Alignment.BOTTOM_LEFT);
         callsTableLay.addComponent(callsTable);
         callsTableLay.setExpandRatio(callsTable, 1);
 
@@ -3393,11 +3393,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         GridLayout glInst = new GridLayout(2, 2);
         glInst.setSpacing(true);
         glInst.setSizeFull();
-        glInst.addComponent(captionInst, 0, 0);
-        glInst.addComponent(plusInstButton, 1, 0);
+        glInst.addComponent(captionInst, 1, 0);
+        glInst.addComponent(plusInstButton, 0, 0);
         glInst.addComponent(installmentTable, 0, 1, 1, 1);
         glInst.setRowExpandRatio(1, 1);
-        glInst.setColumnExpandRatio(0, 1);
+        glInst.setColumnExpandRatio(1, 1);
 
         contractTabLay.addComponent(contractCB, 0, 0);
         contractTabLay.addComponent(initialPaymentTF, 1, 0);
@@ -3416,7 +3416,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             discountsLay.setSpacing(true);
             discountsLay.setSizeFull();
             discountsLay.addComponent(plusDiscButton);
-            discountsLay.setComponentAlignment(plusDiscButton, Alignment.MIDDLE_RIGHT);
+            discountsLay.setComponentAlignment(plusDiscButton, Alignment.BOTTOM_LEFT);
             discountsLay.addComponent(discountsTable);
             discountsLay.setExpandRatio(discountsTable, 1);
 
@@ -3424,7 +3424,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             correctionsLay.setSpacing(true);
             correctionsLay.setSizeFull();
             correctionsLay.addComponent(plusCorrectionButton);
-            correctionsLay.setComponentAlignment(plusCorrectionButton, Alignment.MIDDLE_RIGHT);
+            correctionsLay.setComponentAlignment(plusCorrectionButton, Alignment.BOTTOM_LEFT);
             correctionsLay.addComponent(correctionsTable);
             correctionsLay.setExpandRatio(correctionsTable, 1);
 

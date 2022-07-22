@@ -188,7 +188,7 @@ public class ProductMovementsReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Price), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousBalance), Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -216,7 +216,7 @@ public class ProductMovementsReport implements Button.ClickListener,
                     excelReport.getTotalsRow().getCell(7).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(7).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
                     excelReport.getTotalsRow().getCell(10).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(10).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Balance)));
+                    excelReport.getTotalsRow().getCell(10).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.PreviousBalance)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {

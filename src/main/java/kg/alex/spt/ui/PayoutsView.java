@@ -84,7 +84,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
                 myUI.getMessage(SptMessages.Note)};
 
-        rightLay = new GridLayout(3, 2);
+        rightLay = new GridLayout(2, 2);
         rightLay.setSpacing(true);
         rightLay.setSizeFull();
         rightLay.setMargin(true);
@@ -94,14 +94,14 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         addBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         addBtn.setIcon(FontAwesome.PLUS_SQUARE);
         addBtn.addClickListener(this);
-        rightLay.addComponent(addBtn, 2, 0);
+        rightLay.addComponent(addBtn, 0, 0);
 
         payoutsTable = new FormattedTable();
         payoutsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         payoutsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         payoutsTable.setSizeFull();
         payoutsTable.setFooterVisible(true);
-        rightLay.addComponent(payoutsTable, 0, 1, 2, 1);
+        rightLay.addComponent(payoutsTable, 0, 1, 1, 1);
         rightLay.setRowExpandRatio(1, 1);
         rightLay.setColumnExpandRatio(1, 1);
 

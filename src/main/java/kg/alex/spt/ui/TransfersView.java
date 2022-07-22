@@ -104,7 +104,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                     myUI.getMessage(SptMessages.Note)};
         }
 
-        rightLay = new GridLayout(3, 2);
+        rightLay = new GridLayout(2, 2);
         rightLay.setSpacing(true);
         rightLay.setSizeFull();
         rightLay.setMargin(true);
@@ -114,14 +114,14 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         addBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         addBtn.setIcon(FontAwesome.PLUS_SQUARE);
         addBtn.addClickListener(this);
-        rightLay.addComponent(addBtn, 2, 0);
+        rightLay.addComponent(addBtn, 0, 0);
 
         transfersTable = new FormattedTable();
         transfersTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         transfersTable.setStyleName(ValoTheme.TABLE_COMPACT);
         transfersTable.setSizeFull();
         transfersTable.setFooterVisible(true);
-        rightLay.addComponent(transfersTable, 0, 1, 2, 1);
+        rightLay.addComponent(transfersTable, 0, 1, 1, 1);
         rightLay.setRowExpandRatio(1, 1);
         rightLay.setColumnExpandRatio(1, 1);
 

@@ -104,6 +104,7 @@ public class DbAccTransactions extends BaseDb {
         pav.setPayoutsFooter(totalUsd, totalKgs);
         return container;
     }
+
     public void execSQL(MyVaadinUI myUI, int incOrOut, int school_id,
                         Grid grid, CashBoxView cbv, Date from, Date till) throws SQLException {
 
@@ -596,7 +597,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.LastIncomeDate), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ExpensesTotal), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastExpenseDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime()) + ")", Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")", Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.CashBox), Double.class, 0.0);
         double ttlInc = 0;
         double ttlExp = 0;
@@ -621,7 +622,7 @@ public class DbAccTransactions extends BaseDb {
             }
             item.getItemProperty(myUI.getMessage(SptMessages.CashBox)).setValue(
                     result.getDouble("incTtl") + result.getDouble("prev_balance") - result.getDouble("expTtl"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime()) + ")").setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")").setValue(
                     result.getDouble("prev_balance"));
             ttlPrev += result.getDouble("prev_balance");
         }
@@ -633,7 +634,7 @@ public class DbAccTransactions extends BaseDb {
                 Settings.dFormat.format(ttlInc));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.ExpensesTotal),
                 Settings.dFormat.format(ttlExp));
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Balance) + " (" + Settings.df.format(c.getTime()) + ")",
+        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")",
                 Settings.dFormat.format(ttlPrev));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.CashBox),
                 Settings.dFormat.format(ttlInc - ttlExp));
@@ -655,6 +656,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, acc_category_id);
         stat.setDate(5, new java.sql.Date(till.getTime()));
         stat.setInt(6, school_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
 
         while (result.next()) {
@@ -707,8 +709,26 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
         int i = 0;
         double balance = exec_salary_balance(school_id, acc_category_id, from), totalPayouts = 0.0, totalAccruals = 0.0;
+        Item item = container.addItem(++i);
+
+        String type = myUI.getMessage(SptMessages.Accrual);
+        if (balance < 0) {
+            type = myUI.getMessage(SptMessages.Payout);
+            item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(balance * -1);
+            item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(balance * -1))
+                    + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
+            totalPayouts += balance;
+        } else {
+            item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(balance);
+            item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(balance)
+                    + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
+            totalAccruals += balance;
+        }
+        item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(type);
+        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(myUI.getMessage(SptMessages.PreviousBalance));
+
         while (result.next()) {
-            Item item = container.addItem(++i);
+            item = container.addItem(++i);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
