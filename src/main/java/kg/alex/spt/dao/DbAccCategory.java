@@ -49,14 +49,14 @@ public class DbAccCategory extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, int id, boolean withParents) throws SQLException {
+    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, boolean withParents) throws SQLException {
 
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code, sc.acc_currency_id, "
                 + "c.employee_id from acc_category as c "
                 + "left join acc_category as cp on cp.id = c.parent_id "
                 + "left join hr_salary_category as sc on sc.acc_category_id = cp.parent_id "
-                + "where c.acc_type_id = ? and (c.school_id is null or c.school_id = ?) "
-                + "and (c.activity_status_id = 2 or c.id = ?) ";
+                + "where c.acc_type_id = ? and (c.school_id is null or c.school_id = ?) ";
+                // + "and (c.activity_status_id = 2 or c.id = ?) ";
         if (!withParents) {
             sql += "and c.parent_id is not null ";
         }
@@ -64,7 +64,6 @@ public class DbAccCategory extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
         stat.setInt(2, school_id);
-        stat.setInt(3, id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);

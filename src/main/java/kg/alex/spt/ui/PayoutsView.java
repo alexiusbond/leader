@@ -844,7 +844,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            cb.setContainerDataSource(dbCon.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0, false));
+            cb.setContainerDataSource(dbCon.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), false));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);

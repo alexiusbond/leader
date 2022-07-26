@@ -546,7 +546,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             invoiceNumberTF.removeValueChangeListener(this);
             Iterator<?> iter = invoicesTable.getItemIds().iterator();
             boolean isFound = false;
-            Object next  ;
+            Object next;
             while (iter.hasNext()) {
                 next = iter.next();
                 if (invoicesTable.getContainerProperty(next, myUI.getMessage(SptMessages.InvoiceNumber)).getValue().equals(property.getValue())) {
@@ -942,7 +942,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
             cb.setContainerDataSource(dbCon.exec_for_select(myUI, getAcc_category_type_id(), myUI.getUser().getSchool_id(),
-                    0, acc_invoice_type_id != 1));
+                    acc_invoice_type_id != 1));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -957,12 +957,12 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
         TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, null),
-                new ObjectProperty< >(0.0), Settings.getStringToDoubleConverter(), true);
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
         tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
-                new ObjectProperty< >(0.0), Settings.getStringToDoubleConverter(),
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                 currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
