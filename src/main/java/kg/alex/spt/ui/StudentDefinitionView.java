@@ -3736,7 +3736,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void recount() {
-        StudentContract c = new StudentContract();
+        StudentContract studentContract = new StudentContract();
         StudentPayment sp;
         IndexedContainer discCont = new IndexedContainer();
         try {
@@ -3746,7 +3746,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbsc.connect();
             dbsd.connect();
             dbsp.connect();
-            c = dbsc.exec_recount_contract((Integer) studDataTable.getValue(),
+            studentContract = dbsc.exec_recount_contract((Integer) studDataTable.getValue(),
                     myUI.getUser().getCurrent_year().getId());
             discCont = dbsd.exec_disc_strCont(myUI, (Integer) studDataTable.getValue(),
                     myUI.getUser().getCurrent_year().getId());
@@ -3756,13 +3756,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getUser().getCurrent_year().getId());
             ttl_payment = sp.getTtl_pay();
             init_payment = sp.getInit_pay();
-            contract_amount = c.getAmount();
-            toPay = c.getContr_with_disc() + c.getCorrection() + debt;
-            ttl_left = (c.getContr_with_disc() + c.getCorrection() + debt) - ttl_payment;
+            contract_amount = studentContract.getAmount();
+            toPay = studentContract.getContr_with_disc() + studentContract.getCorrection() + debt;
+            ttl_left = (studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) - ttl_payment;
             dbsc.close();
             dbsd.close();
             dbsp.close();
-            contr_id = c.getContract_id();
+            contr_id = studentContract.getContract_id();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -3802,23 +3802,24 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfo)) {
-            contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + Settings.dFormat.format(c.getAmount()) + " $");
+            contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + Settings.dFormat.format(studentContract.getAmount())
+                    + " $ (" + Settings.df.format(studentContract.getCreationDate()) + ")");
             discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discountsStr);
-            correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + (c.getCorrectionDetails() == null ? "0.00 $" : c.getCorrectionDetails()));
+            correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + (studentContract.getCorrectionDetails() == null ? "0.00 $" : studentContract.getCorrectionDetails()));
             if (debt > 0) {
                 debtLab.setStyleName(ValoTheme.LABEL_FAILURE);
             } else {
                 debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
             }
             debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + Settings.dFormat.format(debt) + " $");
-            netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + Settings.dFormat.format(c.getContr_with_disc() + c.getCorrection() + debt) + " $");
+            netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + Settings.dFormat.format(studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) + " $");
             paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + Settings.dFormat.format(ttl_payment) + " $");
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfoLeftDebt)) {
-            leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + Settings.dFormat.format((c.getContr_with_disc() + c.getCorrection() + debt) - ttl_payment) + " $");
-            if ((c.getPlan_debt() - ttl_payment) > 0) {
+            leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + Settings.dFormat.format((studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) - ttl_payment) + " $");
+            if ((studentContract.getPlan_debt() - ttl_payment) > 0) {
                 planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
-                planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat.format(c.getPlan_debt() - ttl_payment) + " $");
+                planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat.format(studentContract.getPlan_debt() - ttl_payment) + " $");
             } else {
                 planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
                 planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat.format(0.0) + " $");

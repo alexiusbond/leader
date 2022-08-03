@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class ContractCambridgePdfEn {
@@ -27,7 +26,6 @@ public class ContractCambridgePdfEn {
     private ByteArrayOutputStream buffer = null;
     private final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
     private final MyVaadinUI myUI;
     private final StudentInfoPdf student;
 
@@ -65,17 +63,10 @@ public class ContractCambridgePdfEn {
 
                 Paragraph spr = new Paragraph();
                 spr.add(new Phrase("Student Contract № "
-                        + String.format("%07d", student.getContract_number()), font_header));
+                        + String.format("%07d", student.getContractNumber()), font_header));
                 spr.add(Chunk.NEWLINE);
                 spr.add(new Phrase("by parental contributions", font_header));
                 spr.add(Chunk.NEWLINE);
-
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(2017, Calendar.JULY, 10);
 
                 spr.setAlignment(Element.ALIGN_CENTER);
                 document.add(spr);
@@ -89,12 +80,8 @@ public class ContractCambridgePdfEn {
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 table_date.addCell(new Phrase(" ", ordBoldFont));
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                if (aDate.before(cal.getTime())) {
-                    table_date.addCell(new Phrase(Settings.dateEn.format(cal.getTime()), ordBoldFont));
-                } else {
-                    table_date.addCell(new Phrase(Settings.dateEn.format(aDate), ordBoldFont));
-                }
-                document.add(table_date);
+                    table_date.addCell(new Phrase(Settings.dateEn.format(student.getContractCreationDate()), ordBoldFont));
+                 document.add(table_date);
                 document.add(new Paragraph(10, " "));
 
                 Paragraph paragraph = new Paragraph();

@@ -6,6 +6,7 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class StudentInfoPdf implements Serializable {
 
@@ -48,14 +49,23 @@ public class StudentInfoPdf implements Serializable {
     private String ctr_discount_percentage;
     private String ctr_Correction;
     private boolean isStudentFemininity;
-    private int contract_number;
+    private int contractNumber;
+    private Date contractCreationDate;
 
-    public int getContract_number() {
-        return contract_number;
+    public Date getContractCreationDate() {
+        return contractCreationDate;
     }
 
-    public void setContract_number(int contract_number) {
-        this.contract_number = contract_number;
+    public void setContractCreationDate(Date contractCreationDate) {
+        this.contractCreationDate = contractCreationDate;
+    }
+
+    public int getContractNumber() {
+        return contractNumber;
+    }
+
+    public void setContractNumber(int contractNumber) {
+        this.contractNumber = contractNumber;
     }
 
     public String getCtr_Correction() {
@@ -129,6 +139,7 @@ public class StudentInfoPdf implements Serializable {
     public void setStud_class_name(String stud_class_name) {
         this.stud_class_name = stud_class_name;
     }
+
     public String getScl_accountant_full_name() {
         return scl_accountant_full_name;
     }

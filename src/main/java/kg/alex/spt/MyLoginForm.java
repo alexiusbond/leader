@@ -9,7 +9,6 @@ import com.ejt.vaadin.loginform.LoginForm;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.ui.*;
 import kg.alex.spt.i18n.SptMessages;
-import org.apache.shiro.authc.*;
 
 /**
  *

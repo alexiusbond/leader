@@ -34,8 +34,8 @@ public class DbStudentContract extends BaseDb {
 
     public int exec_insert_st_contract(MyVaadinUI myUi, StudentContract c) throws SQLException {
         String sql = "INSERT INTO student_contract (student_id, year_id, contract_id, debt, employee_id, " +
-                "modification_date, activity_status_id, contr_with_disc, contract_number) "
-                + "VALUES(?,?,?,?,?,NOW(),?,?,?);";
+                "modification_date, activity_status_id, contr_with_disc, contract_number, creation_date) "
+                + "VALUES(?,?,?,?,?,NOW(),?,?,?,NOW());";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, c.getStudent_id());
         stat.setInt(2, c.getYear_id());
@@ -79,7 +79,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public StudentContract exec_recount_contract(int stud_id, int year_id) throws SQLException {
-        String sql = "SELECT sc.contract_id, sc.debt, c.amount, sc.contr_with_disc, vc.details, vc.amount, "
+        String sql = "SELECT sc.contract_id, sc.creation_date, sc.debt, c.amount, sc.contr_with_disc, vc.details, vc.amount, "
                 + "sum(ip.amount) as plan_debt FROM student_contract as sc "
                 + "left join contract as c on c.id = sc.contract_id "
                 + "LEFT JOIN view_corrections as vc on vc.student_id = sc.student_id and vc.year_id = sc.year_id "
@@ -99,6 +99,7 @@ public class DbStudentContract extends BaseDb {
             c.setPlan_debt(result.getDouble("plan_debt"));
             c.setCorrection(result.getDouble("vc.amount"));
             c.setCorrectionDetails(result.getString("vc.details"));
+            c.setCreationDate(result.getDate("sc.creation_date"));
         }
         return c;
     }

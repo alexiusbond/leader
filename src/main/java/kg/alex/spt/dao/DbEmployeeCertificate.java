@@ -23,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.Iterator;
 
 public class DbEmployeeCertificate extends BaseDb {
     static final Logger logger = LogManager.getLogger(DbEmployeeCertificate.class);

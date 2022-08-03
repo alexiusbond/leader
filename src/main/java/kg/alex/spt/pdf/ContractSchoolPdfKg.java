@@ -16,9 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
 public class ContractSchoolPdfKg {
@@ -26,9 +23,7 @@ public class ContractSchoolPdfKg {
     static final Logger logger = LogManager.getLogger(ContractSchoolPdfKg.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
-    private final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     private Document document = null;
-    private final Date aDate = new Date(System.currentTimeMillis());
     private final MyVaadinUI myUI;
     private final StudentInfoPdf student;
 
@@ -69,15 +64,8 @@ public class ContractSchoolPdfKg {
                 spr.add(new Phrase("Акылуу билим берүү кызматын көрсөтүү боюнча ", font_header));
                 spr.add(Chunk.NEWLINE);
                 spr.add(new Phrase("КЕЛИШИМ № "
-                        + String.format("%07d", student.getContract_number()), font_header));
+                        + String.format("%07d", student.getContractNumber()), font_header));
                 spr.add(Chunk.NEWLINE);
-
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                cal.set(2017, Calendar.JULY, 10);
 
                 spr.setAlignment(Element.ALIGN_CENTER);
                 document.add(spr);
@@ -91,11 +79,7 @@ public class ContractSchoolPdfKg {
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 table_date.addCell(new Phrase(student.getScl_city() + " ш.", ordBoldFont));
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                if (aDate.before(cal.getTime())) {
-                    table_date.addCell(new Phrase(Settings.df.format(cal.getTime()), ordBoldFont));
-                } else {
-                    table_date.addCell(new Phrase(Settings.df.format(aDate), ordBoldFont));
-                }
+                table_date.addCell(new Phrase(Settings.df.format(student.getContractCreationDate()), ordBoldFont));
                 document.add(table_date);
                 document.add(new Paragraph(10, " "));
 
@@ -692,8 +676,8 @@ public class ContractSchoolPdfKg {
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Классы: ", ordFont));
                 text15.add(new Phrase(student.getClass_name(), ordBoldFont));
-                text15.add(new Phrase(" Каттоо Датасы: ", ordFont));
-                text15.add(new Phrase(df.format(new Date()), ordBoldFont));
+                text15.add(new Phrase(". Каттоо Датасы: ", ordFont));
+                text15.add(new Phrase(Settings.df.format(student.getContractCreationDate()), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Төлөмдүн көлөмү: ", ordFont));
                 text15.add(new Phrase((Settings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));

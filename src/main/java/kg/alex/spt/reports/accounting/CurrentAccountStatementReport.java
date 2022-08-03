@@ -19,6 +19,7 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.CurrentAccountStatementPdf;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +33,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(CurrentAccountStatementReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, pdfBtn;
+    private Button generateBtn, pdfBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
     private ComboBox currencySelect;
     private DateField fromDateDF, tillDateDF;
@@ -88,6 +89,14 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         pdfBtn.addClickListener(this);
 
+        excelBtn = new Button();
+        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setWidth(Settings.PERCENTS100);
+        excelBtn.setEnabled(false);
+        excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
+        excelBtn.addClickListener(this);
+
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
@@ -130,7 +139,8 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
         leftGrid.addComponent(currencySelect, 0, 1, 3, 1);
         leftGrid.addComponent(employeeCategoriesTable, 0, 2, 3, 2);
-        leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
+        leftGrid.addComponent(generateBtn, 0, 3, 1, 3);
+        leftGrid.addComponent(excelBtn, 2, 3);
         leftGrid.addComponent(pdfBtn, 3, 3);
         leftGrid.setRowExpandRatio(2, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
@@ -169,6 +179,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         pdfBtn.setEnabled(true);
+                        excelBtn.setEnabled(true);
                     }
                     dbat.close();
                 } catch (Exception e) {
@@ -196,6 +207,27 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
+        } else if (source == excelBtn) {
+            try {
+                if (dataTable.getContainerDataSource().size() != 0) {
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
+                    excelReport.setExportFileName(myUI.getMessage(SptMessages.CurrentAccountStatementReport));
+                    excelReport.setReportTitle(employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
+                            myUI.getMessage(SptMessages.Title)).getValue()
+                            + "( " + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
+                            + myUI.getMessage(SptMessages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
+                            + myUI.getMessage(SptMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                    excelReport.setDisplayTotals(true);
+                    excelReport.convertTable();
+                    excelReport.getTotalsRow().getCell(0).setCellFormula(null);
+                    excelReport.getTotalsRow().getCell(3).setCellFormula(null);
+                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Balance)));
+                    excelReport.sendConverted();
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         }
     }
 
@@ -205,6 +237,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         if (pdfBtn.isEnabled()) {
             if (property == employeeCategoriesTable || property == tillDateDF || property == fromDateDF || property == currencySelect) {
                 pdfBtn.setEnabled(false);
+                excelBtn.setEnabled(false);
                 dataTable.setContainerDataSource(null);
             }
         }

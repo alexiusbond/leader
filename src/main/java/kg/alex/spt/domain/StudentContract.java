@@ -6,6 +6,7 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class StudentContract implements Serializable {
 
@@ -20,6 +21,15 @@ public class StudentContract implements Serializable {
     private double correction;
     private double contr_with_disc;
     private String correctionDetails;
+    private Date creationDate;
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public double getCorrection() {
         return correction;

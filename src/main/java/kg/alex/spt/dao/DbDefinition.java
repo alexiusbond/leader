@@ -223,7 +223,7 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer exec_years_for_select(MyVaadinUI myUi, int current_year_id) throws SQLException {
-        String sql = "select t.id, t.name from year as t where t.id between ? and ? order by t.id desc;";
+        String sql = "select t.id, t.name, t.start_date, t.end_date from year as t where t.id between ? and ? order by t.id desc;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, current_year_id - 1);
         stat.setInt(2, current_year_id + 1);
@@ -232,7 +232,9 @@ public class DbDefinition extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("t.name"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("t.name") + " (" +
+                    myUi.getMessage(SptMessages.From) + " " + Settings.df.format(result.getDate("t.start_date")) + " " +
+                    myUi.getMessage(SptMessages.To) + " " + Settings.df.format(result.getDate("t.end_date")) + ")");
         }
         return container;
     }

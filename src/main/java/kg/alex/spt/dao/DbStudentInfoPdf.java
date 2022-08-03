@@ -22,7 +22,7 @@ public class DbStudentInfoPdf extends BaseDb {
         String sql = "SELECT s.id, s.login, s.surname, s.name, s.middle_name, scl.city, scl.name_ru, scl.name_kg, scl.name_en, s.gender_id, "
                 + "scl.director_fullname, scl.adress, scl.inn, scl.bank, scl.bank_account, "
                 + "scl.school_type_id, scl.phone, sr.fullname, sr.phone, sr.passport, sr.adress, r.name_ru, r.name_ru_dec, "
-                + "y.period, y.period_kg, y.name, sc.contract_number, "
+                + "y.period, y.period_kg, y.name, sc.contract_number, sc.creation_date, "
                 + "concat(cnum.name, ' - ',cn.name) as class_name "
                 + "FROM student as s "
                 + "left join school as scl on scl.id = s.school_id "
@@ -69,7 +69,8 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.setPeriod(result.getString("y.period"));
             sti.setPeriod_kg(result.getString("y.period_kg"));
             sti.setClass_name(result.getString("class_name"));
-            sti.setContract_number(result.getInt("sc.contract_number"));
+            sti.setContractNumber(result.getInt("sc.contract_number"));
+            sti.setContractCreationDate(result.getDate("sc.creation_date"));
         }
         return sti;
     }

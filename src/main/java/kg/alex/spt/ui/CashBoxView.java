@@ -374,6 +374,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         grid.getColumn(Settings.button).setWidth(52);
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(120);
+        grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(80);
         grid.getColumn(myUI.getMessage(SptMessages.Category)).setWidth(350);
         if (grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)) != null) {
             grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setWidth(230);

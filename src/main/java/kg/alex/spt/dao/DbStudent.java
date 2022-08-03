@@ -431,6 +431,7 @@ public class DbStudent extends BaseDb {
                 + "concat(sr.phone,' (',sr.fullname,')') "
                 + "as is_main, MAX(IF(ip.is_visible = 1, ip.date_of_payment, NULL)) AS plan_debt_date, "
                 + "ifnull((sum(ip.amount) - sc.net_payments),0.0) as plan_debt, "
+                + "sc.contr_with_disc + sc.debt + ifnull(vc.amount, 0.0) - sc.net_payments as remain, "
                 + "(SELECT concat(FORMAT(sp.amount, 2), ' (', date(sp.modification_date),')') FROM student_payments sp "
                 + "where sp.student_id = st.id and sp.year_id = ? and sp.payment_category_id != 3 order by sp.id desc limit 1) as last_payment, "
                 + "(SELECT CONCAT(DATE_FORMAT(modification_date, '%d-%m-%Y'), IF((note IS NOT NULL AND note != ''), CONCAT(' (', note, ')'), '')) "
@@ -438,6 +439,7 @@ public class DbStudent extends BaseDb {
                 + "from student as st "
                 + "left join student_relatives as sr on st.id = sr.student_id "
                 + "left join student_contract as sc on st.id = sc.student_id "
+                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "left join student_installement_plan as ip on st.id = ip.student_id "
                 + "and sc.year_id = ip.year_id AND ip.date_of_payment <= NOW() "
                 + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so "
@@ -461,12 +463,8 @@ public class DbStudent extends BaseDb {
         IndexedContainer container = cv.prepareContainer();
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
-                    result.getString("st.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
-                    result.getString("st.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
-                    result.getString("st.surname"));
+            item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+                    result.getString("st.name") + " " + result.getString("st.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
@@ -477,6 +475,7 @@ public class DbStudent extends BaseDb {
             }
             item.getItemProperty(myUi.getMessage(SptMessages.InstPlanDebt)).setValue(
                     result.getDouble("plan_debt"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain"));
             cv.total += result.getDouble("plan_debt");
             if (result.getString("last_call") != null) {
                 item.getItemProperty(myUi.getMessage(SptMessages.LastCall)).setValue(result.getString("last_call"));

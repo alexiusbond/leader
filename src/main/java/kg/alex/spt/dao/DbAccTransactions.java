@@ -62,7 +62,7 @@ public class DbAccTransactions extends BaseDb {
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
-                cb.setContainerDataSource(dbCon.exec_for_select(myUi, 2, school_id,   false));
+                cb.setContainerDataSource(dbCon.exec_for_select(myUi, 2, school_id, false));
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -656,7 +656,6 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, acc_category_id);
         stat.setDate(5, new java.sql.Date(till.getTime()));
         stat.setInt(6, school_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
 
         while (result.next()) {
@@ -708,24 +707,9 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Payout), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
         int i = 0;
-        double balance = exec_salary_balance(school_id, acc_category_id, from), totalPayouts = 0.0, totalAccruals = 0.0;
-        Item item = container.addItem(++i);
-
-        String type = myUI.getMessage(SptMessages.Accrual);
-        if (balance < 0) {
-            type = myUI.getMessage(SptMessages.Payout);
-            item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(balance * -1);
-            item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(balance * -1))
-                    + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
-            totalPayouts += balance;
-        } else {
-            item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(balance);
-            item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(balance)
-                    + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
-            totalAccruals += balance;
-        }
-        item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(type);
-        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(myUI.getMessage(SptMessages.PreviousBalance));
+        double currentBalance = exec_salary_balance(school_id, acc_category_id, from), totalAccruals = 0.0;
+        double prevBalance = currentBalance;
+        Item item;
 
         while (result.next()) {
             item = container.addItem(++i);
@@ -735,25 +719,42 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.rate"));
             if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payout))) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(result.getDouble("t.amount"));
-                balance -= result.getDouble("t.amount");
-                totalPayouts += result.getDouble("t.amount");
+                currentBalance -= result.getDouble("t.amount");
             } else {
                 item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(result.getDouble("t.amount"));
-                balance += result.getDouble("t.amount");
+                currentBalance += result.getDouble("t.amount");
                 totalAccruals += result.getDouble("t.amount");
             }
-            if (balance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(balance * -1))
+            if (currentBalance < 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(currentBalance * -1))
                         + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(balance)
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(currentBalance)
                         + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
                     item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
         }
+        if (container.size() > 0) {
+            item = container.addItemAt(0, 0);
+
+            String type = myUI.getMessage(SptMessages.Accrual);
+            if (prevBalance < 0) {
+                type = myUI.getMessage(SptMessages.Payout);
+                item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(prevBalance * -1);
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(prevBalance * -1))
+                        + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(prevBalance);
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(prevBalance)
+                        + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
+                totalAccruals += prevBalance;
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(type);
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(myUI.getMessage(SptMessages.PreviousBalance));
+        }
         t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), Settings.dFormat.format(totalAccruals));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), Settings.dFormat.format(totalPayouts));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), Settings.dFormat.format(totalAccruals - currentBalance));
         t.setContainerDataSource(container);
     }
 
