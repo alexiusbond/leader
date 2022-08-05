@@ -135,8 +135,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        Property property = event.getProperty();
-        if (property == classTable) {
+        if (event.getProperty() == classTable) {
             excelBtn.setEnabled(false);
             makePdfBtn.setEnabled(false);
         }
@@ -244,10 +243,10 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.FullName), 130);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 100);
         dataTable.setColumnWidth(myUI.getMessage(SptMessages.PlanDebtDate), 85);
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastPayment), 100);
-        //dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastCall), 130);
+        dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastPayment), 95);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.LastPayment), Table.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
         dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LastCall), 1);
 
         vl.addComponent(dataTable);

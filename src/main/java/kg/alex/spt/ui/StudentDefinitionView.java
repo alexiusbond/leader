@@ -99,6 +99,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private final ArrayList<StudentDiscount> delDiscIds = new ArrayList<>();
     private final ArrayList<String> delRelIds = new ArrayList<>();
     private PopupButton printButton;
+    private Button financialHistoryButton;
     private IndexedContainer productsContainer = null,
             acsGivContainer = null, acsRecContainer = null, instPlanCont = null,
             paymentCont = null, discountCont = null, correctionCont = null, callsCont = null;
@@ -481,6 +482,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
 
+        financialHistoryButton = new Button();
+        financialHistoryButton.setDescription(myUI.getMessage(SptMessages.FinancialHistory));
+        financialHistoryButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+        financialHistoryButton.setIcon(FontAwesome.DOLLAR);
+        financialHistoryButton.setEnabled(false);
+        financialHistoryButton.addClickListener(this);
+        buttonsLay.addComponent(financialHistoryButton);
+
         contLangOG = new OptionGroup();
         contLangOG.setNullSelectionAllowed(true);
         contLangOG.addValueChangeListener(this);
@@ -795,8 +804,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             }
                         });
             }
-        } else if (source.getId() != null &&
-                source.getId().equals(Settings.download_button)) {
+        } else if (source.getId() != null && source.getId().equals(Settings.download_button)) {
             if (downloader == null) {
                 downloader = new SimpleFileDownloader();
                 addExtension(downloader);
@@ -1013,6 +1021,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             fileName = null;
         } else if (source == printButton) {
+        } else if (source == financialHistoryButton) {
+            if (studDataTable.getValue() != null) {
+                int st_id = (Integer) studDataTable.getValue();
+                myUI.addWindow(new StudentFinancialHistoryWindow(myUI, myUI.getMessage(SptMessages.FinancialHistory) + " - " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.FirstName)).getValue() + " " +
+                                studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.LastName)).getValue() + "; " +
+                                studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.ClassName)).getValue(), st_id));
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
             delRelIds.add((String) source.getData());
             relativesTable.removeItem(event.getButton().getData().toString());
@@ -1099,6 +1115,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 fillFields();
                 recount();
                 printButton.setEnabled(true);
+                financialHistoryButton.setEnabled(true);
                 setContractCb(contr_id);
                 initialPaymentTF.setData(null);
             }
@@ -3802,8 +3819,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfo)) {
-            contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + Settings.dFormat.format(studentContract.getAmount())
-                    + " $ (" + Settings.df.format(studentContract.getCreationDate()) + ")");
+            String value = myUI.getMessage(SptMessages.Contract) + ": " +
+                    Settings.dFormat.format(studentContract.getAmount()) + " $";
+            if (studentContract.getCreationDate() != null) {
+                value += " (" + Settings.df.format(studentContract.getCreationDate()) + ")";
+            }
+            contractLab.setValue(value);
             discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discountsStr);
             correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + (studentContract.getCorrectionDetails() == null ? "0.00 $" : studentContract.getCorrectionDetails()));
             if (debt > 0) {

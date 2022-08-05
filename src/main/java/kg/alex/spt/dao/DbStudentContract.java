@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.dao;
 
+import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
@@ -196,6 +197,7 @@ public class DbStudentContract extends BaseDb {
         clr.activeStudents = 0;
         clr.discountedStudents = 0;
         clr.prevYearDebts = 0;
+        clr.prevYearOverpays = 0;
         clr.nets = 0;
         clr.paid_amounts = 0;
         clr.contracts = 0;
@@ -251,6 +253,7 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.CorrectionType), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearOverpay), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
@@ -293,10 +296,18 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.CorrectionType)).setValue(result.getString("vc.full_details"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(result.getDouble("vc.amount"));
                 clr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(result.getDouble("sc.debt"));
+                double prevYearDebt = result.getDouble("sc.debt");
+                if (prevYearDebt >= 0) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(prevYearDebt);
+                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(0.0);
+                } else {
+                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(0.0);
+                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(-1 * prevYearDebt);
+                }
                 clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("sc.contr_with_disc") + result.getDouble("sc.debt") + result.getDouble("vc.amount"));
+                clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("sc.contr_with_disc")
+                        + result.getDouble("sc.debt") + result.getDouble("vc.amount"));
                 clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("sc.net_payments"));
                 clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
@@ -1194,5 +1205,90 @@ public class DbStudentContract extends BaseDb {
             return result.getInt("num");
         }
         return 0;
+    }
+
+    public void execFinancialHistory(MyVaadinUI myUI, int studentId, Table t) throws SQLException {
+
+        String sql = "SELECT * FROM (" +
+                "(SELECT y.name AS academic_year, sc.creation_date AS creation_date, 'Контракт' AS type, " +
+                "c.name AS note, c.amount AS amount FROM student_contract AS sc " +
+                "LEFT JOIN year AS y ON sc.year_id = y.id " +
+                "LEFT JOIN contract AS c ON sc.contract_id = c.id WHERE sc.student_id = ? " +
+                "ORDER BY sc.year_id , sc.creation_date) " +
+                "UNION " +
+                "(SELECT y.name AS academic_year, sd.creation_date AS creation_date, 'Скидка' AS type, " +
+                "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') " +
+                "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') " +
+                "WHEN 3 THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
+                "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$') END AS note, " +
+                "sd.discount_value AS amount FROM student_discount AS sd " +
+                "LEFT JOIN year AS y ON sd.year_id = y.id " +
+                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
+                "WHERE sd.student_id = ? ORDER BY sd.year_id , sd.creation_date) " +
+                "UNION " +
+                "(SELECT y.name AS academic_year, scc.creation_date AS creation_date, 'Корректировка' AS type, " +
+                "CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` " +
+                "FROM student_correction AS scc LEFT JOIN year AS y ON scc.year_id = y.id " +
+                "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
+                "WHERE scc.student_id = ? ORDER BY scc.year_id , scc.creation_date) " +
+                "UNION " +
+                "(SELECT y.name AS academic_year, DATE(sp.modification_date) AS creation_date, 'Оплата' AS type, " +
+                "CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
+                "IF(sp.acc_currency_id = 2, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
+                "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
+                "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
+                "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
+                "WHERE sp.student_id = ? ORDER BY sp.year_id , DATE(sp.modification_date))) AS t " +
+                "ORDER BY t.academic_year , t.creation_date";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, studentId);
+        stat.setInt(2, studentId);
+        stat.setInt(3, studentId);
+        stat.setInt(4, studentId);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.AcademicYear), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Accrual), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Payment), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
+        int i = 0;
+        double currentBalance = 0.0, totalAccruals = 0.0;
+        Item item;
+
+        while (result.next()) {
+            item = container.addItem(++i);
+            item.getItemProperty(myUI.getMessage(SptMessages.AcademicYear)).setValue(
+                    result.getString("t.academic_year"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
+            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
+            if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payment))) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Payment)).setValue(result.getDouble("t.amount"));
+                currentBalance -= result.getDouble("t.amount");
+            } else if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Discount))) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(result.getDouble("t.amount"));
+                currentBalance -= result.getDouble("t.amount");
+                totalAccruals -= result.getDouble("t.amount");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(result.getDouble("t.amount"));
+                currentBalance += result.getDouble("t.amount");
+                totalAccruals += result.getDouble("t.amount");
+            }
+            if (currentBalance < 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(currentBalance * -1))
+                        + " (" + myUI.getMessage(SptMessages.Payment).charAt(0) + ")");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(currentBalance)
+                        + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
+            }
+            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
+                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
+        }
+        t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), Settings.dFormat.format(totalAccruals));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Payment), Settings.dFormat.format(totalAccruals - currentBalance));
+        t.setContainerDataSource(container);
     }
 }

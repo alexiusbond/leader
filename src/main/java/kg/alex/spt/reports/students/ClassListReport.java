@@ -46,7 +46,7 @@ public class ClassListReport implements Button.ClickListener,
 
     private final String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
-    public double contracts, discounts, corrections, prevYearDebts, nets, paid_amounts, debts, overPays;
+    public double contracts, discounts, corrections, prevYearDebts, prevYearOverpays, nets, paid_amounts, debts, overPays;
 
     public ClassListReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -64,6 +64,7 @@ public class ClassListReport implements Button.ClickListener,
                 myUI.getMessage(SptMessages.CorrectionType),
                 myUI.getMessage(SptMessages.Correction),
                 myUI.getMessage(SptMessages.PreviousYearDebt),
+                myUI.getMessage(SptMessages.PreviousYearOverpay),
                 myUI.getMessage(SptMessages.Net),
                 myUI.getMessage(SptMessages.Paid),
                 myUI.getMessage(SptMessages.Debt),
@@ -218,9 +219,11 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearOverpay), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Left), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.OverPay), Table.Align.RIGHT);
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
                             myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
@@ -233,6 +236,8 @@ public class ClassListReport implements Button.ClickListener,
                             Settings.dFormat.format(corrections));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
                             Settings.dFormat.format(prevYearDebts));
+                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+                            Settings.dFormat.format(prevYearOverpays));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
                             Settings.dFormat.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),

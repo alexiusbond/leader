@@ -75,8 +75,8 @@ public class DbStudentCorrection extends BaseDb {
 
     public int exec_insert(StudentCorrection cc) throws SQLException {
         String sql = "INSERT INTO student_correction "
-                + "(student_id, year_id, correction_type_id, amount, employee_id, modification_date, note) "
-                + "VALUES(?,?,?,?,?,NOW(),?)";
+                + "(student_id, year_id, correction_type_id, amount, employee_id, modification_date, note, creation_date) "
+                + "VALUES(?,?,?,?,?,NOW(),?, NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cc.getStudent_id());
         stat.setInt(2, cc.getYear_id());

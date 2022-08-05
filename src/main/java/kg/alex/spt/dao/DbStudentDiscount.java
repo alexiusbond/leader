@@ -42,7 +42,7 @@ public class DbStudentDiscount extends BaseDb {
     public int exec_insert_st_discount(StudentDiscount d) throws SQLException {
         String sql = "INSERT INTO student_discount (free_entry_amount,discount_id,"
                 + "student_id,year_id,employee_id,modification_date,note,"
-                + "discount_value,attachment_id) VALUES(?,?,?,?,?,NOW(),?,?,?);";
+                + "discount_value,attachment_id,creation_date) VALUES(?,?,?,?,?,NOW(),?,?,?,NOW());";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (d.getFree_entry_amount() == 0.0) {
             stat.setNull(1, Types.VARCHAR);
