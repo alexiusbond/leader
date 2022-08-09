@@ -192,7 +192,7 @@ public class DbStudentContract extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public IndexedContainer execSQL_ClassList(MyVaadinUI myUI, String class_ids, int year_id,
+    public IndexedContainer execSQL_ClassList(MyVaadinUI myUI, String class_ids, int year_id, Date from_date, Date till_date,
                                               String edu_statuses_ids, ClassListReport clr) throws SQLException {
         clr.activeStudents = 0;
         clr.discountedStudents = 0;
@@ -205,41 +205,122 @@ public class DbStudentContract extends BaseDb {
         clr.corrections = 0;
         clr.debts = 0;
         clr.overPays = 0;
-        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, sc.debt, vc.amount, vc.full_details, "
-                + "sc.contr_with_disc, sc.net_payments, edu.id, sr.fullname, sr.phone, "
-                + "rel.name, GROUP_CONCAT(DISTINCT "
-                + "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') "
-                + "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') "
-                + "WHEN 3 THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') "
-                + "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$') END "
-                + "ORDER BY sd.id SEPARATOR '; ') AS disc, "
-                + "CONCAT(cl.name, ' - ', cln.name) AS class "
-                + "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
-                + "ELSE stud_o.to_education_status_id END "
-                + "LEFT JOIN class_name AS cln ON cln.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
-                + "ELSE stud_o.to_class_name_id END "
-                + "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id "
-                + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? "
-                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
-                + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
-                + "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? "
-                + "LEFT JOIN discount AS d ON d.id = sd.discount_id "
-                + "LEFT JOIN student_relatives AS sr ON st.id = sr.student_id AND sr.is_main=1 "
-                + "LEFT JOIN relatives AS rel ON sr.relatives_id = rel.id "
-                + "WHERE cln.id IN (" + class_ids + ") and st.entering_year_id <= ? "
-                + "AND edu.id IN (" + edu_statuses_ids + ") "
-                + "GROUP BY st.id ORDER BY cl.id, cln.id, st.name, st.surname;";
+        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, " +
+                "sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
+                "- prev_sc.net_payments) AS prev_debt, vc.amount, vc.full_details, " +
+                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, rel.name, ";
+        if (from_date != null && till_date != null) {
+            sql += "(select get_contract_with_discounts(c.amount, st.id, ?, ?, ?)) as contr_with_disc, " +
+                    "GROUP_CONCAT(DISTINCT " +
+                    "CASE WHEN (sd.creation_date < ? OR sd.creation_date > ?) THEN NULL " +
+                    "WHEN (d.discount_type_id = 1) THEN CONCAT(d.name, ' - ', d.amount, '%') " +
+                    "WHEN (d.discount_type_id = 2) THEN CONCAT(d.name, ' - ', d.amount, '$') " +
+                    "WHEN (d.discount_type_id = 3) THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
+                    "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$')  END  ORDER BY sd.id  SEPARATOR '; ') AS disc, ";
+        } else if (from_date != null) {
+            sql += "(select get_contract_with_discounts(c.amount, st.id, ?, ?, NULL)) as contr_with_disc, " +
+                    "GROUP_CONCAT(DISTINCT " +
+                    "CASE WHEN (sd.creation_date < ?) THEN NULL " +
+                    "WHEN (d.discount_type_id = 1) THEN CONCAT(d.name, ' - ', d.amount, '%') " +
+                    "WHEN (d.discount_type_id = 2) THEN CONCAT(d.name, ' - ', d.amount, '$') " +
+                    "WHEN (d.discount_type_id = 3) THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
+                    "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$')  END  ORDER BY sd.id  SEPARATOR '; ') AS disc, ";
+        } else if (till_date != null) {
+            sql += "(select get_contract_with_discounts(c.amount, st.id, ?, NULL, ?)) as contr_with_disc, " +
+                    "GROUP_CONCAT(DISTINCT " +
+                    "CASE WHEN (sd.creation_date > ?) THEN NULL " +
+                    "WHEN (d.discount_type_id = 1) THEN CONCAT(d.name, ' - ', d.amount, '%') " +
+                    "WHEN (d.discount_type_id = 2) THEN CONCAT(d.name, ' - ', d.amount, '$') " +
+                    "WHEN (d.discount_type_id = 3) THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
+                    "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$')  END  ORDER BY sd.id  SEPARATOR '; ') AS disc, ";
+        } else {
+            sql += "sc.contr_with_disc as contr_with_disc, GROUP_CONCAT(DISTINCT " +
+                    "CASE WHEN (d.discount_type_id = 1) THEN CONCAT(d.name, ' - ', d.amount, '%') " +
+                    "WHEN (d.discount_type_id = 2) THEN CONCAT(d.name, ' - ', d.amount, '$') " +
+                    "WHEN (d.discount_type_id = 3) THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
+                    "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$')  END  ORDER BY sd.id  SEPARATOR '; ') AS disc, ";
+        }
+        sql += "CONCAT(cl.name, ' - ', cln.name) AS class FROM student AS st " +
+                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " +
+                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp " +
+                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
+                "LEFT JOIN education_status AS edu ON edu.id = CASE WHEN stud_o.to_education_status_id IS NULL " +
+                "THEN st.education_status_id ELSE stud_o.to_education_status_id END " +
+                "LEFT JOIN class_name AS cln ON cln.id = CASE WHEN stud_o.to_class_name_id IS NULL " +
+                "THEN st.class_name_id ELSE stud_o.to_class_name_id END " +
+                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
+                "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
+                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
+                "LEFT JOIN " +
+                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
+                "scc.amount, ' $' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
+                "FROM student_correction scc LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
+                "WHERE year_id = ? ";
+        if (from_date != null) {
+            sql += "AND scc.creation_date >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND scc.creation_date <= ? ";
+        }
+        sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
+                "LEFT JOIN " +
+                "(SELECT sp.student_id AS student_id, SUM(sp.amount) AS amount " +
+                "FROM student_payments as sp WHERE sp.year_id = ? ";
+        if (from_date != null) {
+            sql += "AND date(sp.modification_date) >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND date(sp.modification_date) <= ? ";
+        }
+        sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
+                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
+                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
+                "AND prev_vc.year_id = prev_sc.year_id " +
+                "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
+                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
+                "LEFT JOIN student_relatives AS sr ON st.id = sr.student_id AND sr.is_main = 1 " +
+                "LEFT JOIN relatives AS rel ON sr.relatives_id = rel.id " +
+                "WHERE cln.id IN (" + class_ids + ") and st.entering_year_id <= ? " +
+                "AND edu.id IN (" + edu_statuses_ids + ") " +
+                "GROUP BY st.id ORDER BY cl.id, cln.id, st.name, st.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, year_id);
-        stat.setInt(3, year_id);
-        stat.setInt(4, year_id);
+        int counter = 0;
+        if (from_date != null && till_date != null) {
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+        } else if (from_date != null) {
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+        } else if (till_date != null) {
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+        }
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        if (from_date != null) {
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+        }
+        if (till_date != null) {
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+        }
+        stat.setInt(++counter, year_id);
+        if (from_date != null) {
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+        }
+        if (till_date != null) {
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+        }
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        stat.setInt(++counter, year_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
@@ -281,13 +362,26 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(
                         result.getString("sr.phone"));
             }
+            double prevYearDebt = result.getDouble("sc.debt");
+            if (result.wasNull()) {
+                prevYearDebt = result.getDouble("prev_debt");
+            }
+            if (prevYearDebt >= 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(prevYearDebt);
+                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(0.0);
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(0.0);
+                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(-1 * prevYearDebt);
+            }
+            clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
+            clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
             if (result.getDouble("c.amount") != 0.0) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(result.getDouble("c.amount"));
                 clr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
                 if (result.getString("disc") != null) {
                     item.getItemProperty(myUI.getMessage(SptMessages.DiscountType)).setValue(result.getString("disc"));
                     item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
-                            result.getDouble("c.amount") - result.getDouble("sc.contr_with_disc"));
+                            result.getDouble("c.amount") - result.getDouble("contr_with_disc"));
                     clr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
                     clr.discountedStudents++;
                 } else {
@@ -296,23 +390,13 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.CorrectionType)).setValue(result.getString("vc.full_details"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(result.getDouble("vc.amount"));
                 clr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-                double prevYearDebt = result.getDouble("sc.debt");
-                if (prevYearDebt >= 0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(prevYearDebt);
-                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(0.0);
-                } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(0.0);
-                    item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(-1 * prevYearDebt);
-                }
-                clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-                clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("sc.contr_with_disc")
+                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("contr_with_disc")
                         + result.getDouble("sc.debt") + result.getDouble("vc.amount"));
                 clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("sc.net_payments"));
+                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("net_payments"));
                 clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
                 double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                        - result.getDouble("sc.net_payments");
+                        - result.getDouble("net_payments");
                 if (debt >= 0) {
                     item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
                     item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);

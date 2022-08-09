@@ -211,7 +211,6 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setExportFileName(myUI.getMessage(SptMessages.CurrentAccountStatementReport));
                     excelReport.setReportTitle(employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue()
                             + "( " + currencySelect.getItemCaption(currencySelect.getValue()) + ") "

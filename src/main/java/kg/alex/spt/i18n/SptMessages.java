@@ -551,6 +551,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String CorrectionType = generateId();
     public static final String Correction = generateId();
     public static final String Any = generateId();
+    public static final String AnyDate = generateId();
     public static final String DateAndPlaceOfBirth = generateId();
     public static final String DontHave = generateId();
     public static final String Lecturer = generateId();

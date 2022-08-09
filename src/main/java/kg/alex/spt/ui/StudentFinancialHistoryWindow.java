@@ -71,7 +71,6 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setExportFileName(myUI.getMessage(SptMessages.FinancialHistory));
                     excelReport.setReportTitle(this.getCaption());
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();

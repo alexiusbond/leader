@@ -10,6 +10,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
@@ -47,6 +48,7 @@ public class ClassListReport implements Button.ClickListener,
     private final String[] NATURAL_COL_ORDER;
     public int activeStudents, discountedStudents;
     public double contracts, discounts, corrections, prevYearDebts, prevYearOverpays, nets, paid_amounts, debts, overPays;
+    private PopupDateField fromDateDF, tillDateDF;
 
     public ClassListReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -76,7 +78,7 @@ public class ClassListReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        GridLayout leftGrid = new GridLayout(4, 5);
+        GridLayout leftGrid = new GridLayout(4, 6);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -110,11 +112,27 @@ public class ClassListReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        educationStatusMCB.setValue(Settings.convertToSet(
-                educationStatusMCB.getContainerDataSource().getItemIds()));
+        educationStatusMCB.setValue(Settings.convertToSet(educationStatusMCB.getContainerDataSource().getItemIds()));
+        educationStatusMCB.addValueChangeListener(this);
 
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
+
+        fromDateDF = new PopupDateField(myUI.getMessage(SptMessages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        fromDateDF.setWidth(Settings.PERCENTS100);
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setDateFormat(Settings.datePattern);
+        fromDateDF.setResolution(Resolution.DAY);
+        fromDateDF.addValueChangeListener(this);
+
+        tillDateDF = new PopupDateField(myUI.getMessage(SptMessages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        tillDateDF.setWidth(Settings.PERCENTS100);
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setDateFormat(Settings.datePattern);
+        tillDateDF.setResolution(Resolution.DAY);
+        tillDateDF.addValueChangeListener(this);
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
         selectAllBtn.setWidth(Settings.PERCENTS100);
@@ -174,14 +192,16 @@ public class ClassListReport implements Button.ClickListener,
         excelBtn.addClickListener(this);
 
         leftGrid.addComponent(yearSelect, 0, 0, 3, 0);
-        leftGrid.addComponent(educationStatusMCB, 0, 1, 3, 1);
-        leftGrid.addComponent(selectAllBtn, 0, 2, 1, 2);
-        leftGrid.addComponent(deselectAllBtn, 2, 2, 3, 2);
-        leftGrid.addComponent(classTable, 0, 3, 3, 3);
-        leftGrid.addComponent(generateBtn, 0, 4, 1, 4);
-        leftGrid.addComponent(makePdfBtn, 2, 4);
-        leftGrid.addComponent(excelBtn, 3, 4);
-        leftGrid.setRowExpandRatio(3, 1);
+        leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);
+        leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
+        leftGrid.addComponent(educationStatusMCB, 0, 2, 3, 2);
+        leftGrid.addComponent(selectAllBtn, 0, 3, 1, 3);
+        leftGrid.addComponent(deselectAllBtn, 2, 3, 3, 3);
+        leftGrid.addComponent(classTable, 0, 4, 3, 4);
+        leftGrid.addComponent(generateBtn, 0, 5, 1, 5);
+        leftGrid.addComponent(makePdfBtn, 2, 5);
+        leftGrid.addComponent(excelBtn, 3, 5);
+        leftGrid.setRowExpandRatio(4, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
 
@@ -210,9 +230,8 @@ public class ClassListReport implements Button.ClickListener,
                     dbsc.connect();
                     dataCont = dbsc.execSQL_ClassList(myUI,
                             Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
-                            (Integer) yearSelect.getValue(),
-                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
-                            this);
+                            (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(),
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
                     dataTable.setContainerDataSource(dataCont);
                     dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
@@ -308,9 +327,12 @@ public class ClassListReport implements Button.ClickListener,
         if (property == classTable && classTable.getValue() != null) {
             makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
-        } else if (property == yearSelect) {
+            dataTable.setContainerDataSource(null);
+        } else if (property == yearSelect || property == educationStatusMCB
+                || property == fromDateDF || property == tillDateDF) {
             makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
+            dataTable.setContainerDataSource(null);
         }
     }
 }

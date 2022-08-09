@@ -1026,8 +1026,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 int st_id = (Integer) studDataTable.getValue();
                 myUI.addWindow(new StudentFinancialHistoryWindow(myUI, myUI.getMessage(SptMessages.FinancialHistory) + " - " +
                         studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.FirstName)).getValue() + " " +
-                                studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.LastName)).getValue() + "; " +
-                                studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.ClassName)).getValue(), st_id));
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.LastName)).getValue() + "; " +
+                        studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.ClassName)).getValue(), st_id));
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
             delRelIds.add((String) source.getData());
@@ -1250,11 +1250,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(SptMessages.Amount)).getValue();
             TextField tfRate = (TextField) paymentsTable.getContainerProperty(itemId,
                     myUI.getMessage(SptMessages.Rate)).getValue();
-            TextField tfKGS = (TextField) paymentsTable.getContainerProperty(itemId,
-                    Settings.KGS).getValue();
-            if (tfRate.isValid()
-                    && tfKGS.isValid()
-                    && (Double) tfRate.getPropertyDataSource().getValue() != 0.0 && (Double) tfKGS.getPropertyDataSource().getValue() != 0.0) {
+            TextField tfKGS = (TextField) paymentsTable.getContainerProperty(itemId, Settings.KGS).getValue();
+            if (tfRate.isValid() && tfKGS.isValid()
+                    && (Double) tfRate.getPropertyDataSource().getValue() != 0.0
+                    && tfKGS.getPropertyDataSource().getValue() != null
+                    && (Double) tfKGS.getPropertyDataSource().getValue() != 0.0) {
                 tfAmount.getPropertyDataSource().setValue((Double) tfKGS.getPropertyDataSource().getValue() /
                         (Double) tfRate.getPropertyDataSource().getValue());
                 tfKGS.getPropertyDataSource().setValue(0.0);

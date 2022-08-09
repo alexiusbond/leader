@@ -121,8 +121,7 @@ public class StudentReportsView extends HorizontalSplitPanel implements Property
                 new YearMonthReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.CallsReport))) {
                 new CallsReport(myUI, this);
-            } 
-            else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.OutOfReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.OutOfReport))) {
                 new OutOfList(myUI, this);
             }
         }
