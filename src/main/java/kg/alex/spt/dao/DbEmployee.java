@@ -103,7 +103,7 @@ public class DbEmployee extends BaseDb {
                 + "group_concat(DISTINCT p2.name ORDER BY eo2.id ASC separator ', ') as extra_positions, cat.id, "
                 + "group_concat(DISTINCT if(eb.hr_importance_id = 1, br.name, null) ORDER BY eb.id ASC separator ', ') as main_branch, "
                 + "group_concat(DISTINCT if(eb.hr_importance_id = 2, br.name, null) ORDER BY eb.id ASC separator ', ') as extra_branches, "
-                + "group_concat(DISTINCT up.permissions separator ';') as permissions, ebh.hours, ebh.extra, eo3.id, cat.parent_id "
+                + "group_concat(DISTINCT up.permissions separator ';') as permissions, ebh.hours, ebh.extra, cat.parent_id "
                 + "FROM employee AS e LEFT JOIN gender AS g ON g.id = e.gender_id "
                 + "LEFT JOIN nationality AS n ON n.id = e.nationality_id "
                 + "LEFT JOIN hr_country AS cntr ON cntr.id = e.hr_country_id "
@@ -120,7 +120,6 @@ public class DbEmployee extends BaseDb {
                 + "LEFT JOIN hr_position AS p2 ON p2.id = eo2.hr_position_id "
                 + "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id "
                 + "LEFT JOIN working_status AS ws ON ord.working_status_id = ws.id "
-                + "LEFT JOIN hr_employee_order AS eo3 ON eo3.employee_id = e.id AND eo3.from_to_school_id = ? AND eo3.hr_orders_id = 8 "
                 + "left join user_permission as up on up.role_name = e.login "
                 + "LEFT JOIN acc_category as cat ON cat.employee_id = e.id and cat.school_id = eo.school_id "
                 + "WHERE eo.school_id = ? ";
@@ -142,10 +141,10 @@ public class DbEmployee extends BaseDb {
         stat.setInt(1, myUi.getUser().getCurrent_year().getId());
         stat.setInt(2, school_id);
         stat.setInt(3, school_id);
-        stat.setInt(4, school_id);
         if (employee_id == 0 && branch_id != 0) {
-            stat.setInt(5, branch_id);
+            stat.setInt(4, branch_id);
         }
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
@@ -218,9 +217,8 @@ public class DbEmployee extends BaseDb {
                     result.getInt("cntr.id"));
             item.getItemProperty(Settings.martial_status_id).setValue(
                     result.getInt("m.id"));
-            item.getItemProperty(Settings.working_status_id).setValue(
-                    result.getInt("ws.id"));
-            if (result.getInt("eo3.id") != 0) {
+            item.getItemProperty(Settings.working_status_id).setValue(result.getInt("ws.id"));
+            if (result.getInt("ws.id") == 3) {
                 item.getItemProperty(Settings.is_modifiable).setValue(false);
             }
             item.getItemProperty(myUi.getMessage(SptMessages.CanBeAdvisor)).setValue(

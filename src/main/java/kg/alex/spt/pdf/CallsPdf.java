@@ -82,18 +82,17 @@ public class CallsPdf {
                     document.add(new Paragraph(20, " "));
 
                     //installment plan table
-                    float[] plan_table_colsWidth = {0.1f, 0.27f, 0.3f, 0.3f, 0.15f, 0.65f, 0.27f, 0.27f, 0.51f, 0.47f};
-                    PdfPTable t = new PdfPTable(10);
+                    float[] plan_table_colsWidth = {0.1f, 0.5f, 0.15f, 0.65f, 0.27f, 0.27f, 0.27f, 0.51f, 0.47f};
+                    PdfPTable t = new PdfPTable(9);
                     t.setWidthPercentage(90f);
                     t.setWidths(plan_table_colsWidth);
                     t.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
                     t.addCell(new Phrase(" №", ordFontBold));
-                    t.addCell(new Phrase(myUI.getMessage(SptMessages.Id), ordFontBold));
-                    t.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName), ordFontBold));
-                    t.addCell(new Phrase(myUI.getMessage(SptMessages.LastName), ordFontBold));
+                    t.addCell(new Phrase(myUI.getMessage(SptMessages.FullName), ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.Phone), ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt), ordFontBold));
+                    t.addCell(new Phrase(myUI.getMessage(SptMessages.Remain), ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.PlanDebtDate), ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.LastCall), ordFontBold));
                     t.addCell(new Phrase(myUI.getMessage(SptMessages.LastPayment), ordFontBold));
@@ -108,11 +107,7 @@ public class CallsPdf {
                         t.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         t.addCell(new Phrase(i + "", tableFont));
                         t.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Id)).getValue().toString(), tableFont));
-                        t.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.FirstName)).getValue().toString(), tableFont));
-                        t.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.LastName)).getValue().toString(), tableFont));
+                                myUI.getMessage(SptMessages.FullName)).getValue().toString(), tableFont));
                         t.addCell(new Phrase(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
                         t.addCell(new Phrase(dataTable.getContainerProperty(next,
@@ -120,6 +115,8 @@ public class CallsPdf {
                         t.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         t.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.InstPlanDebt)).getValue()), tableFont));
+                        t.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                                myUI.getMessage(SptMessages.Remain)).getValue()), tableFont));
                         t.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         t.addCell(new Phrase(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.PlanDebtDate)).getValue().toString(), tableFont));

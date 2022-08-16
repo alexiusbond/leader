@@ -402,6 +402,8 @@ public class SptMessages_ru extends SptMessages {
             {AllExtraPositions, "Все доп. должности"},
             {AllDiscounts, "Все скидки"},
             {ConfirmStudentDeletion, "Вы действительно хотите навсегда удалить "},
+            {ConfirmActionNotInLastYear, "Вы действительно хотите совершить это действие? Выбранный год"},
+            {NotCurrentYear, "не является текущим"},
             {StudentDeletedSuccessfully, "Ученик(ца) удален(а) успешно!"},
             {SchoolType, "Тип учреждения"},
             {ClassInstallmentPlan, "План оплат по классам"},

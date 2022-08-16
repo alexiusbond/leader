@@ -265,7 +265,8 @@ public class DbStudentContract extends BaseDb {
         }
         sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
                 "LEFT JOIN " +
-                "(SELECT sp.student_id AS student_id, SUM(sp.amount) AS amount " +
+                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, sp.amount, 0)) " +
+                "- SUM(IF(sp.payment_category_id = 3, sp.amount, 0))) AS amount " +
                 "FROM student_payments as sp WHERE sp.year_id = ? ";
         if (from_date != null) {
             sql += "AND date(sp.modification_date) >= ? ";

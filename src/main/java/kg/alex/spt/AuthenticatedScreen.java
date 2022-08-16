@@ -585,8 +585,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                                 }
                                 if (st != 0) {
                                     myUI.getUser().getCurrent_year().setId(scl.getYear_id());
-                                    myUI.getUser().getCurrent_year().setName(yearSelect
-                                            .getItemCaption(yearSelect.getValue()));
+                                    myUI.getUser().getCurrent_year().setName(yearSelect.getContainerProperty(
+                                            yearSelect.getValue(), Settings.titleShort).getValue().toString());
+                                    myUI.getUser().getCurrent_year().setLast((Boolean) yearSelect.getContainerProperty(
+                                            yearSelect.getValue(), Settings.is_last).getValue());
                                     Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                             Notification.Type.HUMANIZED_MESSAGE);
                                     if (currentDbYear != (Integer) yearSelect.getValue()) {

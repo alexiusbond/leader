@@ -56,6 +56,8 @@ public class Settings implements Serializable {
     public static final String payment_category_id = "payment_category_id";
     public static final String paymentCategoryTable = "payment_category";
     public static final String is_main = "is_main";
+    public static final String is_last = "is_last";
+    public static final String titleShort = "TitleShort";
     public static final String year_id = "year_id";
     public static final String school_id = "school_id";
     public static final String discount_type_id = "discount_type_id";

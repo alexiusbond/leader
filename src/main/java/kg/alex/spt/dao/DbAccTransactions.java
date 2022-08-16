@@ -314,6 +314,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(1, type_id);
         stat.setInt(2, id);
         stat.setInt(3, school_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);

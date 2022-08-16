@@ -734,17 +734,20 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         && debt > 0.1 && contract_amount == 0.0 && !currentUser.hasRole(Settings.rnAdmin)) {
                     Notification.show(myUI.getMessage(SptMessages.OperationNotAllowedDueToDebt),
                             Notification.Type.WARNING_MESSAGE);
+                } else if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent() && !myUI.getUser().getCurrent_year().isLast()) {
+                    ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                            myUI.getMessage(SptMessages.ConfirmActionNotInLastYear)
+                                    + " (" + myUI.getUser().getCurrent_year().getName()
+                                    + ") " + myUI.getMessage(SptMessages.NotCurrentYear) + ".",
+                            myUI.getMessage(SptMessages.Yes),
+                            myUI.getMessage(SptMessages.No),
+                            (ConfirmDialog.Listener) dialog -> {
+                                if (dialog.isConfirmed()) {
+                                    modifyBtnAction();
+                                }
+                            });
                 } else {
-                    isNew = false;
-                    photoUpl.setEnabled(true);
-                    fillFields();
-                    prepareModificationMode();
-                    classCB.setEnabled(false);
-                    addRowIfTableEmpty();
-                    if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
-                            && contractCB.getValue() == null) {
-                        isNewContract = true;
-                    }
+                    modifyBtnAction();
                 }
             }
         } else if (source == plusRelButton) {
@@ -777,16 +780,21 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (source == plusCorrectionButton) {
             addCorrectionsItem();
         } else if (source == createBtn) {
-            isNew = true;
-            tabs.getTab(famTableLay).setEnabled(true);
-            tabs.setSelectedTab(famTableLay);
-            clearFields();
-            prepareModificationMode();
-            statusCB.setValue(1);
-            loginTF.focus();
-            delRelIds.clear();
-            plusRelButton.click();
-            clearContractInfo();
+            if (!myUI.getUser().getCurrent_year().isLast()) {
+                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                        myUI.getMessage(SptMessages.ConfirmActionNotInLastYear)
+                                + " (" + myUI.getUser().getCurrent_year().getName()
+                                + ") " + myUI.getMessage(SptMessages.NotCurrentYear) + ".",
+                        myUI.getMessage(SptMessages.Yes),
+                        myUI.getMessage(SptMessages.No),
+                        (ConfirmDialog.Listener) dialog -> {
+                            if (dialog.isConfirmed()) {
+                                createBtnAction();
+                            }
+                        });
+            } else {
+                createBtnAction();
+            }
         } else if (source == deleteBtn) {
             if (studDataTable.getValue() != null) {
                 ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
@@ -1088,6 +1096,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
         }
     }
+
 
     private StreamResource getFileStream(File inputFile) {
 
@@ -2134,7 +2143,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         return tf;
     }
 
-    public TextField createTextFieldDisc(Double value, Double maxValue, String description, String itemId, boolean isDisabled) {
+    public TextField createTextFieldDisc(Double value, Double maxValue, String description, String itemId,
+                                         boolean isDisabled) {
         ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         TextField tf = new TextField(property);
         tf.setDescription(description);
@@ -2171,7 +2181,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         return tf;
     }
 
-    public DateField createDateField(Date value, String description, String itemId, boolean setDefDate, boolean isFutureAvailable) {
+    public DateField createDateField(Date value, String description, String itemId, boolean setDefDate,
+                                     boolean isFutureAvailable) {
         DateField df = new DateField();
         df.setDescription(description);
         df.setRequired(true);
@@ -4571,5 +4582,31 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.catching(ex);
         }
         return generated_id;
+    }
+
+    private void createBtnAction() {
+        isNew = true;
+        tabs.getTab(famTableLay).setEnabled(true);
+        tabs.setSelectedTab(famTableLay);
+        clearFields();
+        prepareModificationMode();
+        statusCB.setValue(1);
+        loginTF.focus();
+        delRelIds.clear();
+        plusRelButton.click();
+        clearContractInfo();
+    }
+
+    private void modifyBtnAction() {
+        isNew = false;
+        photoUpl.setEnabled(true);
+        fillFields();
+        prepareModificationMode();
+        classCB.setEnabled(false);
+        addRowIfTableEmpty();
+        if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
+                && contractCB.getValue() == null) {
+            isNewContract = true;
+        }
     }
 }
