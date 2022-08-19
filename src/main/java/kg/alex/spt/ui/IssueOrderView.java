@@ -46,11 +46,11 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.FirstName),
                 myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
                 myUI.getMessage(SptMessages.EducationStatus)};
-        HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button,
-            myUI.getMessage(SptMessages.OrderType), myUI.getMessage(SptMessages.FromClass),
-            myUI.getMessage(SptMessages.ToClass), myUI.getMessage(SptMessages.FromEducationStatus),
-            myUI.getMessage(SptMessages.ToEducationStatus), myUI.getMessage(SptMessages.Year),
-            myUI.getMessage(SptMessages.Reasons)};
+        HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(SptMessages.Date),
+                myUI.getMessage(SptMessages.OrderType), myUI.getMessage(SptMessages.FromClass),
+                myUI.getMessage(SptMessages.ToClass), myUI.getMessage(SptMessages.FromEducationStatus),
+                myUI.getMessage(SptMessages.ToEducationStatus), myUI.getMessage(SptMessages.Year),
+                myUI.getMessage(SptMessages.Reasons)};
         buildSettingsLayout();
 
         VerticalLayout tablesLay = new VerticalLayout();
@@ -205,7 +205,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                             if ((Integer) studentsTable.getContainerProperty(
                                     next, Settings.education_status_id).getValue() != 4
                                     && (Integer) studentsTable.getContainerProperty(
-                                            next, Settings.education_status_id).getValue() != 5) {
+                                    next, Settings.education_status_id).getValue() != 5) {
                                 so.setStudent_id((Integer) next);
                                 so.setYear_id(myUI.getUser().getCurrent_year().getId());
                                 if (so.getTo_education_status_id() == 3) {
@@ -254,15 +254,15 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                     if (cl_filled != null && !cl_filled.equals("")) {
                                         studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), null);
                                         studentsTable.getContainerProperty(next,
-                                                myUI.getMessage(SptMessages.ClassName))
+                                                        myUI.getMessage(SptMessages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                    myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(SptMessages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                    myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(SptMessages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
                                                             myUI.getMessage(SptMessages.EducationStatus)).getValue());
                                         }
@@ -271,29 +271,29 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                         studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), null);
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                    myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(SptMessages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                    myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(SptMessages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
                                                             myUI.getMessage(SptMessages.EducationStatus)).getValue());
                                         }
                                         studentsTable.getContainerProperty(next,
-                                                myUI.getMessage(SptMessages.ClassName))
+                                                        myUI.getMessage(SptMessages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
                                         studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filled);
                                     } else {
                                         studentsTable.getContainerProperty(next,
-                                                myUI.getMessage(SptMessages.ClassName))
+                                                        myUI.getMessage(SptMessages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                    myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(SptMessages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                    myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(SptMessages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
                                                             myUI.getMessage(SptMessages.EducationStatus)).getValue());
                                         }
@@ -331,15 +331,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 selected_student_id = Integer.parseInt(source.getData().toString());
                 DbStudentOrder dbso = new DbStudentOrder();
                 dbso.connect();
-                historyTable.setContainerDataSource(
-                        dbso.execSQL(myUI, selected_student_id, this));
+                historyTable.setContainerDataSource(dbso.execSQL(myUI, selected_student_id, this));
                 dbso.close();
                 historyTable.setVisibleColumns((Object[]) HISTORY_NATURAL_COL_ORDER);
                 historyTable.setCaption(myUI.getMessage(SptMessages.OrdersHistory) + " - "
                         + studentsTable.getContainerProperty(selected_student_id,
-                                myUI.getMessage(SptMessages.FirstName)).getValue() + " "
+                        myUI.getMessage(SptMessages.FirstName)).getValue() + " "
                         + studentsTable.getContainerProperty(selected_student_id,
-                                myUI.getMessage(SptMessages.LastName)).getValue());
+                        myUI.getMessage(SptMessages.LastName)).getValue());
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
@@ -407,42 +406,42 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 dbsc.exec_update_status_by_id(selected_student_id, 2, myUI.getUser().getId());
                 dbsc.close();
                 studentsTable.getContainerProperty(selected_student_id, Settings.class_id)
-                        .setValue(  historyTable.getContainerProperty(
+                        .setValue(historyTable.getContainerProperty(
                                 id, Settings.from_class_id).getValue());
                 studentsTable.getContainerProperty(selected_student_id, Settings.education_status_id)
-                        .setValue(  historyTable.getContainerProperty(
+                        .setValue(historyTable.getContainerProperty(
                                 id, Settings.from_education_status_id).getValue());
                 Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
                 Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
                 if (cl_filled != null && !cl_filled.equals("")) {
                     studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), null);
                     studentsTable.getContainerProperty(selected_student_id,
-                            myUI.getMessage(SptMessages.ClassName))
+                                    myUI.getMessage(SptMessages.ClassName))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                            myUI.getMessage(SptMessages.EducationStatus))
+                                    myUI.getMessage(SptMessages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
                     studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), cl_filled);
                 } else if (edu_filled != null && !edu_filled.equals("")) {
                     studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), null);
                     studentsTable.getContainerProperty(selected_student_id,
-                            myUI.getMessage(SptMessages.ClassName))
+                                    myUI.getMessage(SptMessages.ClassName))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                            myUI.getMessage(SptMessages.EducationStatus))
+                                    myUI.getMessage(SptMessages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
                     studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filled);
                 } else {
                     studentsTable.getContainerProperty(selected_student_id,
-                            myUI.getMessage(SptMessages.ClassName))
+                                    myUI.getMessage(SptMessages.ClassName))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                            myUI.getMessage(SptMessages.EducationStatus))
+                                    myUI.getMessage(SptMessages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
                                     id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
                 }

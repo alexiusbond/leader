@@ -205,8 +205,17 @@ public class DbStudentContract extends BaseDb {
         clr.corrections = 0;
         clr.debts = 0;
         clr.overPays = 0;
-        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, " +
-                "sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
+        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, ";
+        if (from_date != null && till_date != null) {
+            sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (from_date != null) {
+            sql += "IF(sc.creation_date >= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (till_date != null) {
+            sql += "IF(sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else {
+            sql += "c.amount AS contract_amount, ";
+        }
+        sql += "sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
                 "- prev_sc.net_payments) AS prev_debt, vc.amount, vc.full_details, " +
                 "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, rel.name, ";
         if (from_date != null && till_date != null) {
@@ -242,13 +251,24 @@ public class DbStudentContract extends BaseDb {
         }
         sql += "CONCAT(cl.name, ' - ', cln.name) AS class FROM student AS st " +
                 "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " +
-                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp " +
-                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
-                "LEFT JOIN education_status AS edu ON edu.id = CASE WHEN stud_o.to_education_status_id IS NULL " +
-                "THEN st.education_status_id ELSE stud_o.to_education_status_id END " +
-                "LEFT JOIN class_name AS cln ON cln.id = CASE WHEN stud_o.to_class_name_id IS NULL " +
-                "THEN st.class_name_id ELSE stud_o.to_class_name_id END " +
-                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
+                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 ";
+        if (from_date != null && till_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? AND DATE(so.modification_date) <= ? ";
+        } else if (from_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? ";
+        } else if (till_date != null) {
+            sql += "AND DATE(so.modification_date) <= ? ";
+        }
+        sql += "GROUP BY so.student_id) AS o_temp " +
+                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid ";
+        if (from_date != null || till_date != null) {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
+                    "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
+        } else {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+        }
+        sql += "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
                 "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
                 "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
                 "LEFT JOIN " +
@@ -269,10 +289,10 @@ public class DbStudentContract extends BaseDb {
                 "- SUM(IF(sp.payment_category_id = 3, sp.amount, 0))) AS amount " +
                 "FROM student_payments as sp WHERE sp.year_id = ? ";
         if (from_date != null) {
-            sql += "AND date(sp.modification_date) >= ? ";
+            sql += "AND DATE(sp.modification_date) >= ? ";
         }
         if (till_date != null) {
-            sql += "AND date(sp.modification_date) <= ? ";
+            sql += "AND DATE(sp.modification_date) <= ? ";
         }
         sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
                 "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
@@ -288,21 +308,33 @@ public class DbStudentContract extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         int counter = 0;
         if (from_date != null && till_date != null) {
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
         } else if (from_date != null) {
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
         } else if (till_date != null) {
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
         }
         stat.setInt(++counter, year_id);
+        if (from_date != null && till_date != null) {
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+        } else if (from_date != null) {
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+        } else if (till_date != null) {
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+        }
         stat.setInt(++counter, year_id);
         stat.setInt(++counter, year_id);
         if (from_date != null) {
@@ -376,13 +408,13 @@ public class DbStudentContract extends BaseDb {
             }
             clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
             clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
-            if (result.getDouble("c.amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(result.getDouble("c.amount"));
+            if (result.getDouble("contract_amount") != 0.0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(result.getDouble("contract_amount"));
                 clr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
                 if (result.getString("disc") != null) {
                     item.getItemProperty(myUI.getMessage(SptMessages.DiscountType)).setValue(result.getString("disc"));
                     item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
-                            result.getDouble("c.amount") - result.getDouble("contr_with_disc"));
+                            result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
                     clr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
                     clr.discountedStudents++;
                 } else {

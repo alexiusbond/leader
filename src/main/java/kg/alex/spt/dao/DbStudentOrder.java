@@ -34,7 +34,8 @@ public class DbStudentOrder extends BaseDb {
             throws SQLException {
 
 
-        String sql = "SELECT so.id, o.name, from_edu.name, from_edu.id, to_edu.name, y.name, "
+        String sql = "SELECT so.id, so.orders_id, date(so.modification_date) as creation_date, o.name, "
+                + "from_edu.name, from_edu.id, to_edu.name, y.name, "
                 + "concat(from_class_number.name,' - ', from_class_name.name) as from_class, "
                 + "concat(to_class_number.name,' - ', to_class_name.name) as to_class, "
                 + "from_class_name.id, to_class_name.id, o.id, so.student_id, so.reason "
@@ -49,38 +50,37 @@ public class DbStudentOrder extends BaseDb {
                 + "left join education_status as from_edu on from_edu.id=so.from_education_status_id "
                 + "left join education_status as to_edu on to_edu.id=so.to_education_status_id "
                 + "left join year as y on y.id=so.year_id "
-                + "where so.student_id = ? and so.year_id=? and so.is_valid=1 "
-                + "and so.orders_id<4 order by so.id DESC;";
+                + "where so.student_id = ? and so.is_valid = 1 order by so.id DESC;";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, student_id);
-        stat.setInt(2, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(Settings.button, Button.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.OrderType), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FromClass), String.class, null);
         container.addContainerProperty(Settings.from_class_id, Integer.class, 0);
         container.addContainerProperty(Settings.to_class_id, Integer.class, 0);
         container.addContainerProperty(Settings.student_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ToClass), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.FromEducationStatus),
-                String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.FromEducationStatus), String.class, null);
         container.addContainerProperty(Settings.order_id, Integer.class, 0);
         container.addContainerProperty(Settings.from_education_status_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ToEducationStatus),
-                String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.ToEducationStatus), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Reasons), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
         boolean is_delete_added = false;
         while (result.next()) {
             Item item = container.addItem(result.getInt("so.id"));
-            if (!is_delete_added) {
+            if (!is_delete_added && result.getInt("so.orders_id") < 4) {
                 item.getItemProperty(Settings.button).setValue(iv.createButton(
                         myUi.getMessage(SptMessages.DeleteButton),
                         result.getString("so.id"), FontAwesome.MINUS));
                 is_delete_added = true;
             }
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(
+                    Settings.df.format(result.getDate("creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.OrderType)).setValue(
                     result.getString("o.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.FromClass)).setValue(
