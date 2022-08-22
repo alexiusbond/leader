@@ -190,7 +190,7 @@ public class GeneralReport implements Button.ClickListener,
                 try {
                     DbAccTransactions dbacc = new DbAccTransactions();
                     dbacc.connect();
-                    schoolAcc = dbacc.exec_get_ttls((Integer) schoolsTable.getValue(),
+                    schoolAcc = dbacc.exec_get_totals((Integer) schoolsTable.getValue(),
                             ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()),
                             ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()), null);
                     dbacc.close();

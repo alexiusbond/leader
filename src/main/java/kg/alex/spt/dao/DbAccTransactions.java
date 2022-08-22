@@ -136,10 +136,14 @@ public class DbAccTransactions extends BaseDb {
             Item item = container.addItem(id);
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(result.getTimestamp("t.date_time"));
             item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("t.amount"));
+            if (result.getInt("t.acc_currency_id") == 1) {
+                item.getItemProperty(myUI.getMessage(SptMessages.AmountKGS)).setValue(result.getDouble("t.amount"));
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).setValue(result.getDouble("t.amount"));
+            }
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getInt("t.acc_currency_id"));
+            item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             if (incOrOut == 2) {
                 item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(result.getInt("t.from_to_employee_id"));
             }
@@ -174,11 +178,9 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_insert(AccTransaction t, Connection conn) throws SQLException {
-        String sql = "INSERT INTO acc_transactions "
-                + "(date_time, amount, acc_currency_id, currency_rate, note, "
+        String sql = "INSERT INTO acc_transactions (date_time, amount, acc_currency_id, currency_rate, note, "
                 + "acc_category_id, employee_id, school_id, modification_date, dp_invoice_id, student_payments_id, "
-                + "from_to_employee_id, acc_invoice_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,NOW(),?,?,?,?);";
+                + "from_to_employee_id, acc_invoice_id) VALUES(?,?,?,?,?,?,?,?,NOW(),?,?,?,?);";
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
@@ -221,9 +223,9 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_update(AccTransaction t) throws SQLException {
-        String sql = "Update acc_transactions set date_time=?, "
-                + "amount=?, acc_currency_id=?, currency_rate=?, note=?, acc_category_id=?, "
-                + "employee_id=?, school_id=?, modification_date=NOW(), from_to_employee_id = ? WHERE id=?;";
+        String sql = "UPDATE acc_transactions set date_time = ?, amount = ?, acc_currency_id = ?, " +
+                "currency_rate = ?, note = ?, acc_category_id = ?, employee_id = ?, school_id = ?, " +
+                "modification_date = NOW(), from_to_employee_id = ? WHERE id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setTimestamp(1, new java.sql.Timestamp(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
@@ -246,12 +248,10 @@ public class DbAccTransactions extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_update(AccTransaction t, String by_column_name,
-                           int by_column_value, Connection conn) throws SQLException {
+    public int exec_update(AccTransaction t, String by_column_name, int by_column_value, Connection conn) throws SQLException {
 
-        String sql = "update acc_transactions set date_time=?, "
-                + "amount=?, acc_currency_id=?, currency_rate=?, note=?, acc_category_id=?, "
-                + "employee_id=?, modification_date=NOW() WHERE " + by_column_name + "=?;";
+        String sql = "update acc_transactions set date_time = ?, amount = ?, acc_currency_id = ?, currency_rate = ?, " +
+                "note = ?, acc_category_id = ?, employee_id = ?, modification_date = NOW() WHERE " + by_column_name + " = ?;";
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(t.getDate().getTime()));
         stat.setDouble(2, t.getAmount());
@@ -276,9 +276,8 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public int exec_delete_by_st_id(int st_id) throws SQLException {
-        String sql = "delete act from acc_transactions as act "
-                + "left join student_payments as sp on sp.id = act.student_payments_id "
-                + "where sp.student_id = ?;";
+        String sql = "delete act from acc_transactions as act left join student_payments as sp " +
+                "on sp.id = act.student_payments_id where sp.student_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         return stat.executeUpdate();
@@ -330,7 +329,8 @@ public class DbAccTransactions extends BaseDb {
                                   FilterTreeTable categoriesTable, Calendar from, Calendar till, FormattedTreeTable t)
             throws SQLException {
 
-        Set<Integer> selectedIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
+        Set<Integer> selectedIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(),
+                (Set<?>) categoriesTable.getValue());
         String sql = "SELECT cat.id, cat.parent_id, CONCAT(ifnull(concat(cat.parent_code,'.',cat.code), cat.code), ' - ', cat.name) AS name, "
                 + "sum(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt "
                 + "FROM acc_category AS cat "
@@ -407,10 +407,8 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public void execSQL_by_months(MyVaadinUI myUI, int type_id, FilterTable schoolsTable,
-                                  FilterTreeTable categoriesTable, Calendar from, Calendar till, FormattedTreeTable t)
-            throws SQLException {
-
+    public void execSQL_by_months(MyVaadinUI myUI, int type_id, FilterTable schoolsTable, FilterTreeTable categoriesTable,
+                                  Calendar from, Calendar till, FormattedTreeTable t) throws SQLException {
 
         Set<Integer> selectedCategoryIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
         Set<Integer> selectedSchoolIds = new HashSet<>((Set<Integer>) schoolsTable.getValue());
@@ -423,7 +421,8 @@ public class DbAccTransactions extends BaseDb {
                 + ") AND DATE(tr.date_time) >= ? AND DATE(tr.date_time) <= ? AND cat.acc_type_id = ? "
                 + "AND tr.school_id IN ("
                 + Settings.convertCollectionToStr(selectedSchoolIds)
-                + ") GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
+                + ") GROUP BY cat.id, YEAR(tr.date_time), MONTH(tr.date_time), tr.school_id " +
+                "ORDER BY ifnull(concat(cat.parent_code,'.',cat.code), cat.code);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(from.getTime().getTime()));
         stat.setDate(2, new java.sql.Date(till.getTime().getTime()));
@@ -525,8 +524,7 @@ public class DbAccTransactions extends BaseDb {
         }
     }
 
-    public SchoolAccounting exec_get_ttls(int scl_id, Date from, Date till, String cat_ids) throws SQLException {
-
+    public SchoolAccounting exec_get_totals(int scl_id, Date from, Date till, String cat_ids) throws SQLException {
 
         String sql = "SELECT "
                 + "MAX(IF(cat.acc_type_id = 2, DATE(tr.date_time), null)) as max_exp, "
@@ -566,7 +564,6 @@ public class DbAccTransactions extends BaseDb {
 
     public void exec_schools_accounting(MyVaadinUI myUI, String school_ids, Date from_date, Date till_date,
                                         SchoolsReport sar) throws SQLException {
-
 
         String sql = "SELECT sch.id, sch.name_ru, "
                 + "MAX(IF(cat.acc_type_id = 2, DATE(tr.date_time), null)) as max_exp, "
@@ -919,9 +916,8 @@ public class DbAccTransactions extends BaseDb {
         return container;
     }
 
-    public void execSQL_Plan_Payments(MyVaadinUI myUI, int year_id, String edu_statuses_ids,
-                                      int school_id, Date acad_year_start_date, Date acad_year_end_date, Table t) throws SQLException {
-
+    public void execSQL_Plan_Payments(MyVaadinUI myUI, int year_id, String edu_statuses_ids, int school_id,
+                                      Date academic_year_start_date, Date academic_year_end_date, Table t) throws SQLException {
 
         String sql = "SELECT months.name AS month_name, months.id, i_temp.amn AS inst, p_temp.amn AS payments, "
                 + "in_temp.amn AS income, out_temp.amn AS outcome FROM months LEFT JOIN (SELECT SUM(inst.amount) AS amn, "
@@ -961,11 +957,11 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(5, year_id);
         stat.setInt(6, school_id);
         stat.setInt(7, school_id);
-        stat.setDate(8, new java.sql.Date(acad_year_start_date.getTime()));
-        stat.setDate(9, new java.sql.Date(acad_year_end_date.getTime()));
+        stat.setDate(8, new java.sql.Date(academic_year_start_date.getTime()));
+        stat.setDate(9, new java.sql.Date(academic_year_end_date.getTime()));
         stat.setInt(10, school_id);
-        stat.setDate(11, new java.sql.Date(acad_year_start_date.getTime()));
-        stat.setDate(12, new java.sql.Date(acad_year_end_date.getTime()));
+        stat.setDate(11, new java.sql.Date(academic_year_start_date.getTime()));
+        stat.setDate(12, new java.sql.Date(academic_year_end_date.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Month), String.class, null);
@@ -1009,26 +1005,6 @@ public class DbAccTransactions extends BaseDb {
         t.setColumnFooter(myUI.getMessage(SptMessages.Difference), Settings.dFormat.format(totalTransactions));
     }
 
-    public double getBalances(int school_id, Date date, boolean isDateIncluded) throws SQLException {
-
-        String sql = "SELECT SUM(IF(cat.acc_type_id = 1, tr.amount, - tr.amount)) AS amount FROM acc_transactions AS tr "
-                + "LEFT JOIN acc_category AS cat ON cat.id = tr.acc_category_id where tr.school_id = ? and DATE(tr.date_time) ";
-        if (isDateIncluded) {
-            sql += "<=";
-        } else {
-            sql += "<";
-        }
-        sql += "?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, school_id);
-        stat.setDate(2, new java.sql.Date(date.getTime()));
-        ResultSet result = stat.executeQuery();
-        if (result.next()) {
-            return result.getDouble("amount");
-        }
-        return 0.0;
-    }
-
     public AccTransaction exec_low_balance(Connection conn, int school_id, Date date, double old_amount,
                                            double new_amount, int inOut) throws SQLException {
 
@@ -1049,6 +1025,9 @@ public class DbAccTransactions extends BaseDb {
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(d.getTime()));
+        System.out.println("in_out " + inOut);
+        System.out.println("old_amount " + old_amount);
+        System.out.println("new_amount " + new_amount);
         if (inOut == 1) {
             stat.setDouble(3, -old_amount);
             stat.setDouble(4, new_amount);
@@ -1056,6 +1035,7 @@ public class DbAccTransactions extends BaseDb {
             stat.setDouble(3, old_amount);
             stat.setDouble(4, -new_amount);
         }
+        System.out.println("exec_low_balance " + stat);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             AccTransaction tr = new AccTransaction();
@@ -1067,6 +1047,8 @@ public class DbAccTransactions extends BaseDb {
                 tr.setLimit(result.getDouble("balance") + old_amount);
                 tr.setOverLimit((result.getDouble("balance") + old_amount - new_amount) * -1);
             }
+            System.out.println(tr.getLimit());
+            System.out.println(tr.getOverLimit());
             return tr;
         }
         return null;
@@ -1093,8 +1075,7 @@ public class DbAccTransactions extends BaseDb {
 
     public int getMaxOrderNum(int school_id, int acc_type_id) throws SQLException {
         int maxValue;
-        String sql = "select (ifnull(max(tr.order_number), 0) + 1) as max_plus1 "
-                + "from acc_transactions as tr "
+        String sql = "select (ifnull(max(tr.order_number), 0) + 1) as max_plus1 from acc_transactions as tr "
                 + "left join acc_category as c on c.id = tr.acc_category_id "
                 + "where tr.school_id = ? and c.acc_type_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -1111,7 +1092,7 @@ public class DbAccTransactions extends BaseDb {
 
     public int exec_update_order_number(String id, int school_id, int acc_type_id) throws SQLException {
         int order_number = getMaxOrderNum(school_id, acc_type_id);
-        String sql = "update acc_transactions set order_number=? WHERE id=? and order_number IS NULL;";
+        String sql = "update acc_transactions set order_number = ? WHERE id = ? and order_number IS NULL;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, order_number);
         stat.setString(2, id);

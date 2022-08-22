@@ -302,7 +302,7 @@ public class DateReport implements Button.ClickListener,
                     try {
                         DbAccTransactions dbtr = new DbAccTransactions();
                         dbtr.connect();
-                        schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), fromDateDF.getValue(),
+                        schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool_id(), fromDateDF.getValue(),
                                 tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
                         incomeTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat.format(
                                 schoolAcc.getTotal_income()) + "$</b>");

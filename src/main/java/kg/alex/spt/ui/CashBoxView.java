@@ -182,7 +182,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencyTF.setNullRepresentation("0.1");
         currencyTF.setNullSettingAllowed(false);
         currencyTF.setConverter(Settings.getStringToDoubleConverter());
-        currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+        currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1.0, null));
         currencyTF.setPropertyDataSource(property);
         currencyTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
 
@@ -252,9 +252,21 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     } catch (Exception ignored) {
                     }
                 }
-                TextField amountTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.Amount)).getEditorField();
-                amountTf.removeAllValidators();
-                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                TextField amountUSDTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).getEditorField();
+                TextField amountKGSTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).getEditorField();
+                refreshValidators(amountUSDTf);
+                refreshValidators(amountKGSTf);
+                if (grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(SptMessages.AmountUSD)).getValue() == null &&
+                        grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(SptMessages.AmountKGS)).getValue() == null) {
+                    amountUSDTf.setRequired(true);
+                    amountKGSTf.setRequired(true);
+                } else if (grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(SptMessages.AmountUSD)).getValue() == null) {
+                    amountKGSTf.setRequired(true);
+                    amountUSDTf.setRequired(false);
+                } else if (grid.getContainerDataSource().getContainerProperty(event.getItemId(), myUI.getMessage(SptMessages.AmountKGS)).getValue() == null) {
+                    amountUSDTf.setRequired(true);
+                    amountKGSTf.setRequired(false);
+                }
             } else {
                 grid.setEditorEnabled(false);
             }
@@ -263,6 +275,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(Settings.from_employee_id).setHidden(true);
         grid.getColumn(Settings.is_disabled).setHidden(true);
         grid.getColumn(Settings.order_number).setHidden(true);
+        grid.getColumn(Settings.acc_currency_id).setHidden(true);
         if (grid == expensesGrid) {
             if (expensesCategoryCb == null) {
                 expensesCategoryCb = createCombobox(null, true, null);
@@ -305,13 +318,15 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             }
             grid.getColumn(myUI.getMessage(SptMessages.Category)).setEditorField(incomesCategoryCb);
         }
-        grid.getColumn(myUI.getMessage(SptMessages.Currency)).setEditorField(createCombobox(Settings.dbAcc_currency, true, this));
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setEditorField(createDateField(this));
-        grid.getColumn(myUI.getMessage(SptMessages.Amount)).setEditorField(createTextField(
+        grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setEditorField(createTextField(
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
+        grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setEditorField(createTextField(
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setEditorField(createTextField(
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1.0, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
         grid.getColumn(myUI.getMessage(SptMessages.Note)).setEditorField(createTextField(
                 new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false),
@@ -319,6 +334,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         grid.getColumn(Settings.hashTags).setSortable(false);
         grid.getColumn(Settings.hashTags).setEditable(false);
+        grid.getColumn(Settings.acc_currency_id).setEditable(false);
         grid.getColumn(Settings.button).setEditable(false);
         grid.getColumn(Settings.from_employee_id).setEditable(false);
         grid.getColumn(Settings.order_number).setEditable(false);
@@ -330,8 +346,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         grid.setCellStyleGenerator((Grid.CellReference cellReference) -> {
             if (cellReference.getProperty().getType() == Double.class || cellReference.getProperty().getType() == Date.class
-                    || cellReference.getPropertyId().equals(Settings.hashTags)
-                    || cellReference.getPropertyId().equals(myUI.getMessage(SptMessages.Currency))) {
+                    || cellReference.getPropertyId().equals(Settings.hashTags)) {
                 return "align-right";
             } else {
                 return null;
@@ -348,7 +363,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         });
 
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setRenderer(new DateRenderer(Settings.dtmf));
-        grid.getColumn(myUI.getMessage(SptMessages.Amount)).setRenderer(
+        grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setRenderer(
+                new NumberRenderer(Settings.getNumberFormat()));
+        grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setRenderer(
                 new NumberRenderer(Settings.getNumberFormat()));
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setRenderer(
                 new NumberRenderer(Settings.getNumberFormat()));
@@ -364,9 +381,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) incomesCategoryCb.getContainerDataSource(),
                             myUI.getMessage(SptMessages.Category), myUI));
         }
-        grid.getColumn(myUI.getMessage(SptMessages.Currency)).setRenderer(
-                new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) ((ComboBox) grid.getEditorFieldGroup().getField(
-                        myUI.getMessage(SptMessages.Currency))).getContainerDataSource(), null, myUI));
         RowIndexRenderer rir = new RowIndexRenderer();
         rir.setOffset(1);
         grid.getColumn(Settings.hashTags).setRenderer(rir);
@@ -374,7 +388,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         grid.getColumn(Settings.button).setWidth(52);
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(120);
-        grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(80);
+        grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(75);
+        grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setWidth(105);
+        grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setWidth(105);
         grid.getColumn(myUI.getMessage(SptMessages.Category)).setWidth(350);
         if (grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)) != null) {
             grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setWidth(230);
@@ -485,100 +501,147 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
+        System.out.println("value change " + event);
         Property property = event.getProperty();
-        if (property == currencySettingsOG) {
-            currencyHl.setEnabled(currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual)));
-        } else {
-
+        if (property != currencySettingsOG) {
             Grid grid = (Grid) accordion.getSelectedTab();
             TextField rateTf = null;
 
             if (grid != null && grid.isEditorActive() && grid.getEditedItemId() != null) {
-                TextField amountTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Amount));
                 String itemId = grid.getEditedItemId().toString();
-                ComboBox currencyCb = (ComboBox) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Currency));
+                Item item = grid.getContainerDataSource().getItem(itemId);
+                TextField amountUSDTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.AmountUSD));
+                TextField amountKGSTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.AmountKGS));
+                System.out.println("KGS " + amountKGSTf.getValue());
+                System.out.println("USD " + amountUSDTf.getValue());
+                if (property == amountKGSTf && amountKGSTf.getValue() != null) {
+                    System.out.println(">>> property == amountKGSTf && amountKGSTf.getValue() != null");
+                    item.getItemProperty(Settings.acc_currency_id).setValue(1);
+                    amountKGSTf.setRequired(true);
+                    amountUSDTf.removeValueChangeListener(this);
+                    amountUSDTf.setValue(null);
+                    amountUSDTf.setRequired(false);
+                    amountUSDTf.addValueChangeListener(this);
+                } else if (property == amountUSDTf && amountUSDTf.getValue() != null) {
+                    System.out.println(">>> property == amountUSDTf && amountUSDTf.getValue() != null");
+                    item.getItemProperty(Settings.acc_currency_id).setValue(2);
+                    amountUSDTf.setRequired(true);
+                    amountKGSTf.removeValueChangeListener(this);
+                    amountKGSTf.setValue(null);
+                    amountKGSTf.setRequired(false);
+                    amountKGSTf.addValueChangeListener(this);
+                } else if ((property == amountUSDTf || property == amountKGSTf) && amountUSDTf.getValue() == null && amountKGSTf.getValue() == null) {
+                    System.out.println(">>> amountUSDTf.getValue() == null && amountKGSTf.getValue() == null");
+                    if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1) {
+                        amountKGSTf.setRequired(true);
+                    } else {
+                        amountUSDTf.setRequired(true);
+                    }
+                }
+                System.out.println(amountKGSTf.isRequired());
+                System.out.println(amountUSDTf.isRequired());
                 if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                     rateTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Rate));
                 }
                 DateField dateDf = (DateField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Date));
-                Item item = grid.getContainerDataSource().getItem(itemId);
 
                 if (accordion.getSelectedTab() == expensesGrid) {
-                    if (amountTf.isValid() && amountTf.getValue() != null &&
-                            (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
-                                    rateTf.isValid() && rateTf.getValue() != null) && dateDf.isValid() && dateDf.getValue() != null) {
+                    if ((amountUSDTf.getValue() != null || amountKGSTf != null)
+                            && (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
+                            rateTf.getValue() != null) && dateDf.getValue() != null) {
                         try {
-                            double amount = Settings.dFormat.parse(amountTf.getValue()).doubleValue();
+                            double amount;
                             double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
                                     Settings.dFormat.parse(rateTf.getValue()).doubleValue() :
                                     (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue();
-                            boolean isKGS = (Integer) currencyCb.getValue() == 1;
+                            boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
                             if (isKGS) {
+                                amount = Settings.dFormat.parse(amountKGSTf.getValue()).doubleValue();
                                 if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                                     amount = Settings.round(amount / rate, 2);
                                 } else {
                                     amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
                                 }
+                            } else {
+                                amount = Settings.dFormat.parse(amountUSDTf.getValue()).doubleValue();
                             }
                             if (amount > 0.0) {
-                                double old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
-                                if ((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Currency)).getValue() == 1) {
+                                double old_amount = 0;
+                                if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1 &&
+                                        item.getItemProperty(myUI.getMessage(SptMessages.AmountKGS)).getValue() != null) {
+                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.AmountKGS)).getValue();
                                     old_amount = Settings.round(old_amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
+                                } else if (item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).getValue() != null) {
+                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).getValue();
                                 }
                                 DbAccTransactions dbTr = new DbAccTransactions();
                                 dbTr.connect();
                                 AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
                                         dateDf.getValue(), old_amount, amount, 2);
-                                amountTf.removeAllValidators();
+                                amountUSDTf.removeAllValidators();
+                                amountKGSTf.removeAllValidators();
                                 if (tr != null) {
                                     double limit = tr.getLimit();
                                     if (isKGS) {
                                         limit = limit * rate;
+                                        amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1, Settings.round(limit, 2)));
+                                    } else {
+                                        amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1, Settings.round(limit, 2)));
                                     }
-                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
-                                            + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1, Settings.round(limit, 2)));
                                     Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                 } else {
-                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                                    refreshValidators(amountUSDTf);
+                                    refreshValidators(amountKGSTf);
                                 }
                                 dbTr.close();
                             } else {
-                                amountTf.removeAllValidators();
-                                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                                refreshValidators(amountUSDTf);
+                                refreshValidators(amountKGSTf);
                             }
                         } catch (Exception e) {
-                            amountTf.removeAllValidators();
-                            amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                            showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
+                            refreshValidators(amountUSDTf);
+                            refreshValidators(amountKGSTf);
                             logger.error(e);
                             logger.catching(e);
                         }
                     } else {
-                        amountTf.removeAllValidators();
-                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                        showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
+                        refreshValidators(amountUSDTf);
+                        refreshValidators(amountKGSTf);
                     }
                 } else if (accordion.getSelectedTab() == incomesGrid && !itemId.contains(Settings.FreshItem)) {
-                    if (amountTf.isValid() && amountTf.getValue() != null &&
+                    if ((amountUSDTf.getValue() != null || amountKGSTf.getValue() != null) &&
                             (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
-                                    rateTf.isValid() && rateTf.getValue() != null) && dateDf.isValid() && dateDf.getValue() != null) {
+                                    rateTf.getValue() != null) && dateDf.getValue() != null) {
                         try {
-                            double amount = Settings.dFormat.parse(amountTf.getValue()).doubleValue();
+                            double amount;
                             double rate;
                             rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
                                     Settings.dFormat.parse(rateTf.getValue()).doubleValue() :
                                     (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue();
-                            boolean isKGS = (Integer) currencyCb.getValue() == 1;
+                            boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
                             if (isKGS) {
+                                amount = Settings.dFormat.parse(amountKGSTf.getValue()).doubleValue();
                                 if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                                     amount = Settings.round(amount / rate, 2);
                                 } else {
                                     amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
                                 }
+                            } else {
+                                amount = Settings.dFormat.parse(amountUSDTf.getValue()).doubleValue();
                             }
                             if (amount > 0.0) {
-                                double old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
-                                if ((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Currency)).getValue() == 1) {
+                                double old_amount = 0;
+                                if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1 &&
+                                        item.getItemProperty(myUI.getMessage(SptMessages.AmountKGS)).getValue() != null) {
+                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.AmountKGS)).getValue();
                                     old_amount = Settings.round(old_amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
+                                } else if (item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).getValue() != null) {
+                                    old_amount = (Double) item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).getValue();
                                 }
                                 if (amount <= old_amount || DateUtils.truncate(dateDf.getValue(), Calendar.DAY_OF_MONTH)
                                         .compareTo((Date) item.getItemProperty(myUI.getMessage(SptMessages.Date)).getValue()) != 0) {
@@ -586,44 +649,87 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                     dbTr.connect();
                                     AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
                                             dateDf.getValue(), old_amount, amount, 1);
-                                    amountTf.removeAllValidators();
+                                    amountUSDTf.removeAllValidators();
+                                    amountKGSTf.removeAllValidators();
                                     if (tr != null) {
                                         double limit = tr.getLimit();
                                         if (isKGS) {
                                             limit = limit * rate;
+                                            amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
+                                        } else {
+                                            amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
                                         }
-                                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
-                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
                                         Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                                                 + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                     } else {
-                                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                                        refreshValidators(amountUSDTf);
+                                        refreshValidators(amountKGSTf);
                                     }
                                     dbTr.close();
                                 } else {
-                                    amountTf.removeAllValidators();
-                                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), amount, null));
+                                    refreshValidators(amountUSDTf);
+                                    refreshValidators(amountKGSTf);
                                 }
+
                             } else {
-                                amountTf.removeAllValidators();
-                                amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                                refreshValidators(amountUSDTf);
+                                refreshValidators(amountKGSTf);
                             }
                         } catch (Exception e) {
-                            amountTf.removeAllValidators();
-                            amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                            showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
+                            refreshValidators(amountUSDTf);
+                            refreshValidators(amountKGSTf);
                             logger.error(e);
                             logger.catching(e);
                         }
                     } else {
-                        amountTf.removeAllValidators();
-                        amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                        showMessageIfAnyInvalid(rateTf, amountUSDTf, amountKGSTf, dateDf);
+                        refreshValidators(amountUSDTf);
+                        refreshValidators(amountKGSTf);
                     }
                 } else {
-                    amountTf.removeAllValidators();
-                    amountTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                    refreshValidators(amountUSDTf);
+                    refreshValidators(amountKGSTf);
                 }
             }
+        } else {
+            currencyHl.setEnabled(currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual)));
         }
+    }
+
+    private void showMessageIfAnyInvalid(TextField rateTf, TextField amountUSDTf, TextField amountKGSTf, DateField dateDf) {
+        if (amountUSDTf.getValue() != null && !amountUSDTf.isValid()) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue) + ": " +
+                            myUI.getMessage(SptMessages.AmountUSD) + " - " + amountUSDTf.getValue(),
+                    Notification.Type.ERROR_MESSAGE);
+            amountUSDTf.setValue(null);
+        }
+        if (amountKGSTf.getValue() != null && !amountKGSTf.isValid()) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue) + ": " +
+                            myUI.getMessage(SptMessages.AmountKGS) + " - " + amountKGSTf.getValue(),
+                    Notification.Type.ERROR_MESSAGE);
+            amountKGSTf.setValue(null);
+        }
+        if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)
+                && rateTf.getValue() != null && !rateTf.isValid()) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue) + ": " + myUI.getMessage(SptMessages.Rate) + " - "
+                    + rateTf.getValue(), Notification.Type.ERROR_MESSAGE);
+            rateTf.setValue(null);
+        }
+        if (dateDf.getValue() != null && !dateDf.isValid()) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue) + ": " +
+                            myUI.getMessage(SptMessages.Date) + " - " + dateDf.getValue(),
+                    Notification.Type.ERROR_MESSAGE);
+            dateDf.setValue(null);
+        }
+    }
+
+    private void refreshValidators(TextField tf) {
+        System.out.println("refresh validators");
+        tf.removeAllValidators();
+        tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
     }
 
     private void setGridData(int in_out) {
@@ -721,12 +827,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         if (property != null) {
             tf.addStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
             tf.setPropertyDataSource(property);
-            tf.setNullRepresentation("0.0");
             tf.setNullSettingAllowed(false);
             tf.setConverter(converter);
-        } else {
-            tf.setNullRepresentation("");
         }
+        tf.setNullRepresentation("");
         tf.setValue(null);
         if (valueChangeListener != null) {
             tf.addValueChangeListener(valueChangeListener);
@@ -760,12 +864,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         container.addContainerProperty(Settings.hashTags, String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Category), Integer.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Currency), Integer.class, 0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(SptMessages.AmountUSD), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.AmountKGS), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
         container.addContainerProperty(Settings.from_employee_id, String.class, null);
         container.addContainerProperty(Settings.order_number, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
         container.addContainerProperty(Settings.is_disabled, Boolean.class, false);
         return container;
     }
@@ -783,7 +888,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
         }
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(today);
-        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(1);
+        item.getItemProperty(Settings.acc_currency_id).setValue(1);
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(myUI.getDb_currency_rate());
     }
 
@@ -808,12 +913,16 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             if (accordion.getSelectedTab() == incomesGrid) {
                 DbAccTransactions dbTr = new DbAccTransactions();
                 dbTr.connect();
-                double amount = (Double) incomesCont.getContainerProperty(source.getId(),
-                        myUI.getMessage(SptMessages.Amount)).getValue();
-                if ((Integer) incomesCont.getContainerProperty(source.getId(),
-                        myUI.getMessage(SptMessages.Currency)).getValue() == 1) {
-                    amount = Settings.round(amount / (Double) incomesCont.getContainerProperty(source.getId(),
+                double amount = 0;
+                if ((Integer) incomesCont.getContainerProperty(source.getId(), Settings.acc_currency_id).getValue() == 1 &&
+                        incomesCont.getContainerProperty(source.getId(), myUI.getMessage(SptMessages.AmountKGS)).getValue() != null) {
+                    amount = Settings.round((Double) incomesCont.getContainerProperty(source.getId(),
+                            myUI.getMessage(SptMessages.AmountKGS)).getValue()
+                            / (Double) incomesCont.getContainerProperty(source.getId(),
                             myUI.getMessage(SptMessages.Rate)).getValue(), 2);
+                } else if (incomesCont.getContainerProperty(source.getId(), myUI.getMessage(SptMessages.AmountUSD)).getValue() != null) {
+                    amount = (Double) incomesCont.getContainerProperty(source.getId(),
+                            myUI.getMessage(SptMessages.AmountUSD)).getValue();
                 }
                 AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
                         (Date) incomesCont.getContainerProperty(source.getId(),
@@ -847,8 +956,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
-                    Notification.Type.WARNING_MESSAGE);
+            Notification.show(myUI.getMessage(SptMessages.CanNotDelete), Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
         } catch (Exception e) {
@@ -862,9 +970,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         t.setId(id);
         t.setDate((Date) item.getItemProperty(myUI.getMessage(SptMessages.Date)).getValue());
         t.setCategory_id((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Category)).getValue());
-        t.setCurrency_id((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Currency)).getValue());
+        t.setCurrency_id((Integer) item.getItemProperty(Settings.acc_currency_id).getValue());
         t.setCurrency_rate((Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue());
-        t.setAmount((Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue());
+        if (t.getCurrency_id() == 1) {
+            t.setAmount((Double) item.getItemProperty(myUI.getMessage(SptMessages.AmountKGS)).getValue());
+        } else {
+            t.setAmount((Double) item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).getValue());
+        }
         if (item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)) != null &&
                 item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).getValue() != null) {
             t.setFrom_to_employee_id((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).getValue());
@@ -895,7 +1007,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         try {
             DbAccTransactions dbAc = new DbAccTransactions();
             dbAc.connect();
-            schoolAcc = dbAc.exec_get_ttls(myUI.getUser().getSchool_id(),
+            schoolAcc = dbAc.exec_get_totals(myUI.getUser().getSchool_id(),
                     fromDateDF.getValue(), tillDateDF.getValue(), null);
             dbAc.close();
         } catch (Exception e) {
@@ -928,11 +1040,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             }
 
             if (status != 0) {
-                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
-                        Notification.Type.HUMANIZED_MESSAGE);
+                Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                 Item item = grid.getContainerDataSource().getItem(itemId);
                 item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
-                schoolAcc = dbCon.exec_get_ttls(myUI.getUser().getSchool_id(),
+                schoolAcc = dbCon.exec_get_totals(myUI.getUser().getSchool_id(),
                         fromDateDF.getValue(), tillDateDF.getValue(), null);
                 recount();
             }

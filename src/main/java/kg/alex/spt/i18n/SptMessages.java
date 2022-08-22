@@ -49,6 +49,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Reasons = generateId();
     public static final String ClassCaption = generateId();
     public static final String NotificationWrongValue = generateId();
+    public static final String NotificationEmptyAmount = generateId();
+    public static final String NotificationCommitFailed = generateId();
     public static final String NotificationDateRageExceeds = generateId();
     public static final String NotificationNothingIsSelected = generateId();
     public static final String NotificationWrongValueCounter = generateId();
@@ -139,6 +141,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String AccessoriesDefinition = generateId();
     public static final String Value = generateId();
     public static final String Amount = generateId();
+    public static final String AmountKGS = generateId();
+    public static final String AmountUSD = generateId();
     public static final String PurchaseYear = generateId();
     public static final String LifeTime = generateId();
     public static final String MaxValue = generateId();
