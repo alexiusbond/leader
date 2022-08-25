@@ -1145,7 +1145,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             try {
                 double amount = 0.0;
                 if (initialPaymentTF.getValue() != null && !initialPaymentTF.getValue().equals("")) {
-                    amount = Double.parseDouble(initialPaymentTF.getValue());
+                    amount = Settings.dFormat.parse(initialPaymentTF.getValue()).doubleValue();
                 }
                 if (amount >= 0 && initialPaymentTF.getData() != null) {
                     if (amount <= ((StudentPayment) initialPaymentTF.getData()).getAmount()) {

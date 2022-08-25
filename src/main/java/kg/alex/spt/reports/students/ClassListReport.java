@@ -57,8 +57,7 @@ public class ClassListReport implements Button.ClickListener,
         buildRightLayout();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id),
                 myUI.getMessage(SptMessages.EducationStatus),
-                myUI.getMessage(SptMessages.FirstName),
-                myUI.getMessage(SptMessages.LastName),
+                myUI.getMessage(SptMessages.FullName),
                 myUI.getMessage(SptMessages.ClassName),
                 myUI.getMessage(SptMessages.Contract),
                 myUI.getMessage(SptMessages.DiscountType),
@@ -72,7 +71,6 @@ public class ClassListReport implements Button.ClickListener,
                 myUI.getMessage(SptMessages.Debt),
                 myUI.getMessage(SptMessages.OverPay),
                 myUI.getMessage(SptMessages.Relative),
-                myUI.getMessage(SptMessages.FullName),
                 myUI.getMessage(SptMessages.Phone)};
     }
 
@@ -228,8 +226,7 @@ public class ClassListReport implements Button.ClickListener,
                 try {
                     DbStudentContract dbsc = new DbStudentContract();
                     dbsc.connect();
-                    dataCont = dbsc.execSQL_ClassList(myUI,
-                            Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                    dataCont = dbsc.execSQL_ClassList(myUI, Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
                             (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(),
                             Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
                     dataTable.setContainerDataSource(dataCont);

@@ -501,7 +501,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        System.out.println("value change " + event);
         Property property = event.getProperty();
         if (property != currencySettingsOG) {
             Grid grid = (Grid) accordion.getSelectedTab();
@@ -512,10 +511,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 Item item = grid.getContainerDataSource().getItem(itemId);
                 TextField amountUSDTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.AmountUSD));
                 TextField amountKGSTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.AmountKGS));
-                System.out.println("KGS " + amountKGSTf.getValue());
-                System.out.println("USD " + amountUSDTf.getValue());
                 if (property == amountKGSTf && amountKGSTf.getValue() != null) {
-                    System.out.println(">>> property == amountKGSTf && amountKGSTf.getValue() != null");
                     item.getItemProperty(Settings.acc_currency_id).setValue(1);
                     amountKGSTf.setRequired(true);
                     amountUSDTf.removeValueChangeListener(this);
@@ -523,7 +519,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     amountUSDTf.setRequired(false);
                     amountUSDTf.addValueChangeListener(this);
                 } else if (property == amountUSDTf && amountUSDTf.getValue() != null) {
-                    System.out.println(">>> property == amountUSDTf && amountUSDTf.getValue() != null");
                     item.getItemProperty(Settings.acc_currency_id).setValue(2);
                     amountUSDTf.setRequired(true);
                     amountKGSTf.removeValueChangeListener(this);
@@ -531,15 +526,12 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     amountKGSTf.setRequired(false);
                     amountKGSTf.addValueChangeListener(this);
                 } else if ((property == amountUSDTf || property == amountKGSTf) && amountUSDTf.getValue() == null && amountKGSTf.getValue() == null) {
-                    System.out.println(">>> amountUSDTf.getValue() == null && amountKGSTf.getValue() == null");
                     if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1) {
                         amountKGSTf.setRequired(true);
                     } else {
                         amountUSDTf.setRequired(true);
                     }
                 }
-                System.out.println(amountKGSTf.isRequired());
-                System.out.println(amountUSDTf.isRequired());
                 if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                     rateTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Rate));
                 }
@@ -727,7 +719,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     }
 
     private void refreshValidators(TextField tf) {
-        System.out.println("refresh validators");
         tf.removeAllValidators();
         tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
     }

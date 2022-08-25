@@ -313,7 +313,6 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(1, type_id);
         stat.setInt(2, id);
         stat.setInt(3, school_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
@@ -1025,9 +1024,6 @@ public class DbAccTransactions extends BaseDb {
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(d.getTime()));
-        System.out.println("in_out " + inOut);
-        System.out.println("old_amount " + old_amount);
-        System.out.println("new_amount " + new_amount);
         if (inOut == 1) {
             stat.setDouble(3, -old_amount);
             stat.setDouble(4, new_amount);
@@ -1035,7 +1031,6 @@ public class DbAccTransactions extends BaseDb {
             stat.setDouble(3, old_amount);
             stat.setDouble(4, -new_amount);
         }
-        System.out.println("exec_low_balance " + stat);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             AccTransaction tr = new AccTransaction();
@@ -1047,8 +1042,6 @@ public class DbAccTransactions extends BaseDb {
                 tr.setLimit(result.getDouble("balance") + old_amount);
                 tr.setOverLimit((result.getDouble("balance") + old_amount - new_amount) * -1);
             }
-            System.out.println(tr.getLimit());
-            System.out.println(tr.getOverLimit());
             return tr;
         }
         return null;

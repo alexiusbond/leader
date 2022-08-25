@@ -5,7 +5,6 @@
  */
 package kg.alex.spt.dao;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
@@ -215,8 +214,8 @@ public class DbStudentContract extends BaseDb {
         } else {
             sql += "c.amount AS contract_amount, ";
         }
-        sql += "sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
-                "- prev_sc.net_payments) AS prev_debt, vc.amount, vc.full_details, " +
+        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
+                "- prev_sc.net_payments)) AS prev_debt, vc.amount, vc.full_details, " +
                 "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, rel.name, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(c.amount, st.id, ?, ?, ?)) as contr_with_disc, " +
@@ -306,60 +305,73 @@ public class DbStudentContract extends BaseDb {
                 "AND edu.id IN (" + edu_statuses_ids + ") " +
                 "GROUP BY st.id ORDER BY cl.id, cln.id, st.name, st.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        int counter = 0;
+        System.out.println(stat);
         if (from_date != null && till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setDate(2, new java.sql.Date(till_date.getTime()));
+            stat.setInt(3, year_id);
+            stat.setDate(4, new java.sql.Date(from_date.getTime()));
+            stat.setDate(5, new java.sql.Date(till_date.getTime()));
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setDate(7, new java.sql.Date(till_date.getTime()));
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setDate(10, new java.sql.Date(till_date.getTime()));
+            stat.setInt(11, year_id);
+            stat.setInt(12, year_id);
+            stat.setDate(13, new java.sql.Date(from_date.getTime()));
+            stat.setDate(14, new java.sql.Date(till_date.getTime()));
+            stat.setInt(15, year_id);
+            stat.setDate(16, new java.sql.Date(from_date.getTime()));
+            stat.setDate(17, new java.sql.Date(till_date.getTime()));
+            stat.setInt(18, year_id);
+            stat.setInt(19, year_id);
+            stat.setInt(20, year_id);
         } else if (from_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setInt(2, year_id);
+            stat.setDate(3, new java.sql.Date(from_date.getTime()));
+            stat.setDate(4, new java.sql.Date(from_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(from_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
         } else if (till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setInt(++counter, year_id);
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setDate(1, new java.sql.Date(till_date.getTime()));
+            stat.setInt(2, year_id);
+            stat.setDate(3, new java.sql.Date(till_date.getTime()));
+            stat.setDate(4, new java.sql.Date(till_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(till_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(till_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(till_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
+        } else {
+            stat.setInt(1, year_id);
+            stat.setInt(2, year_id);
+            stat.setInt(3, year_id);
+            stat.setInt(4, year_id);
+            stat.setInt(5, year_id);
+            stat.setInt(6, year_id);
+            stat.setInt(7, year_id);
         }
-        stat.setInt(++counter, year_id);
-        if (from_date != null && till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-        } else if (from_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-        } else if (till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-        }
-        stat.setInt(++counter, year_id);
-        stat.setInt(++counter, year_id);
-        if (from_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-        }
-        if (till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-        }
-        stat.setInt(++counter, year_id);
-        if (from_date != null) {
-            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
-        }
-        if (till_date != null) {
-            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
-        }
-        stat.setInt(++counter, year_id);
-        stat.setInt(++counter, year_id);
-        stat.setInt(++counter, year_id);
         System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
@@ -368,12 +380,11 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearOverpay), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.OverPay), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Relative), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
@@ -381,30 +392,23 @@ public class DbStudentContract extends BaseDb {
                     result.getString("edu.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
-                    result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
-                    result.getString("st.surname"));
+            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
+                    result.getString("st.name") + " " + result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class"));
             if (result.getString("rel.name") != null) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Relative)).setValue(
-                        result.getString("rel.name"));
-                item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
-                        result.getString("sr.fullname"));
+                        result.getString("rel.name") + " - " + result.getString("sr.fullname"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(
                         result.getString("sr.phone"));
             }
-            double prevYearDebt = result.getDouble("sc.debt");
-            if (result.wasNull()) {
-                prevYearDebt = result.getDouble("prev_debt");
-            }
+            double prevYearDebt = result.getDouble("prev_debt");
             if (prevYearDebt >= 0) {
                 item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(prevYearDebt);
                 item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(0.0);
             } else {
                 item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(0.0);
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(-1 * prevYearDebt);
+                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(prevYearDebt);
             }
             clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
             clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
@@ -424,22 +428,30 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(result.getDouble("vc.amount"));
                 clr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("contr_with_disc")
-                        + result.getDouble("sc.debt") + result.getDouble("vc.amount"));
+                        + result.getDouble("prev_debt") + result.getDouble("vc.amount"));
                 clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("net_payments"));
-                clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                        - result.getDouble("net_payments");
-                if (debt >= 0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
-                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);
-                } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(0.0);
-                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(-1 * debt);
-                }
-                clr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
-                clr.overPays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+            } else if (result.getDouble("prev_debt") != 0.0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("prev_debt"));
+                clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
             }
+            if (result.getString("st.login") == "") {
+                System.out.println(result.getDouble("contr_with_disc"));
+                System.out.println(result.getDouble("prev_debt"));
+                System.out.println(result.getDouble("vc.amount"));
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("net_payments"));
+            clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+            double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
+                    - result.getDouble("net_payments");
+            if (debt >= 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
+                item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(0.0);
+                item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(debt);
+            }
+            clr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+            clr.overPays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
             if (result.getInt("edu.id") == 2) {
                 clr.activeStudents++;
             }
@@ -564,51 +576,181 @@ public class DbStudentContract extends BaseDb {
         return container;
     }
 
-    public void execSQL_Yearly_by_classes(MyVaadinUI myUI, String school_ids,
-                                          String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
+    public void execSQL_Yearly_by_classes(MyVaadinUI myUI, String school_ids, String edu_statuses_ids, int year_id,
+                                          Date from_date, Date till_date, YearMonthReport ymr) throws SQLException {
 
-        String sql = "SELECT sch.id, sch.name_ru, sch.code, CONCAT(cln.name, ' - ', cl.name) AS class, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
-                + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), vc.amount, 0)) AS corrections, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
-                + "sc.contr_with_disc, 0)) AS contr_with_disc, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), sc.debt, 0)) AS debts, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), sc.net_payments, 0)) "
-                + "AS payments, COUNT(st.t_st_id) AS stud_num, "
-                + "COUNT(IF(st.t_edu_id = 2, 1, NULL)) AS active FROM class_name AS cl "
-                + "LEFT JOIN class_number AS cln ON cln.id = cl.class_number_id "
-                + "LEFT JOIN school AS sch ON cl.school_id = sch.id "
-                + "LEFT JOIN (SELECT cl.id AS t_class_id, es.id AS t_edu_id, stud.id AS t_st_id "
-                + "FROM student AS stud "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON stud.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS es ON es.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN stud.education_status_id "
-                + "ELSE stud_o.to_education_status_id END "
-                + "LEFT JOIN class_name AS cl ON cl.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN stud.class_name_id "
-                + "ELSE stud_o.to_class_name_id END WHERE stud.school_id IN (" + school_ids + ") "
-                + "AND stud.entering_year_id <= ?) AS st ON cl.id = st.t_class_id "
-                + "LEFT JOIN student_contract AS sc ON sc.student_id = st.t_st_id AND sc.year_id = ? "
-                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
-                + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
-                + "WHERE cl.school_id IN (" + school_ids + ") GROUP BY cl.id "
-                + "ORDER BY CAST(sch.code AS UNSIGNED), cln.id, cl.id;";
+        String sql = "SELECT t.class_id, t.school_id, sch.code, sch.name_ru, CONCAT(cl.name, ' - ', t.class_name) as cl, " +
+                "COUNT(t.stud_id) as total_studs, COUNT(IF(t.status_id = 2, 1, NULL)) as active_studs, " +
+                "SUM(IFNULL(t.contract_amount, 0.0)) as contract_amount, " +
+                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt > 0.0, t.prev_debt, 0.0)) AS prev_debt, " +
+                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt < 0.0, t.prev_debt, 0.0)) AS prev_overpay, " +
+                "SUM(IFNULL(t.correction, 0.0)) as correction, SUM(IFNULL(t.net_payments, 0.0)) as net_payments, " +
+                "SUM(IFNULL(t.contr_with_disc, 0.0)) as contr_with_disc, " +
+                "SUM(CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) as net, " +
+                "SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0) > 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
+                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0), 0.0)) AS debt, SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
+                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0) < 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay FROM " +
+                "(SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, ";
+        if (from_date != null && till_date != null) {
+            sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (from_date != null) {
+            sql += "IF(sc.creation_date >= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (till_date != null) {
+            sql += "IF(sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else {
+            sql += "c.amount AS contract_amount, ";
+        }
+        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
+                "- prev_sc.net_payments)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, ";
+        if (from_date != null && till_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0), " +
+                    "st.id, ?, ?, ?)) as contr_with_disc, ";
+        } else if (from_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ?, c.amount, 0.0), " +
+                    "st.id, ?, ?, NULL)) as contr_with_disc, ";
+        } else if (till_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date <= ?, c.amount, 0.0), " +
+                    "st.id, ?, NULL, ?)) as contr_with_disc, ";
+        } else {
+            sql += "sc.contr_with_disc as contr_with_disc, ";
+        }
+        sql += "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " +
+                "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " +
+                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 ";
+        if (from_date != null && till_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? AND DATE(so.modification_date) <= ? ";
+        } else if (from_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? ";
+        } else if (till_date != null) {
+            sql += "AND DATE(so.modification_date) <= ? ";
+        }
+        sql += "GROUP BY so.student_id) AS o_temp " +
+                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid ";
+        if (from_date != null || till_date != null) {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
+                    "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
+        } else {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+        }
+        sql += "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
+                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
+                "LEFT JOIN " +
+                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
+                "scc.amount, ' $' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
+                "FROM student_correction scc LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
+                "WHERE year_id = ? ";
+        if (from_date != null) {
+            sql += "AND scc.creation_date >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND scc.creation_date <= ? ";
+        }
+        sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
+                "LEFT JOIN " +
+                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, sp.amount, 0)) " +
+                "- SUM(IF(sp.payment_category_id = 3, sp.amount, 0))) AS amount " +
+                "FROM student_payments as sp WHERE sp.year_id = ? ";
+        if (from_date != null) {
+            sql += "AND DATE(sp.modification_date) >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND DATE(sp.modification_date) <= ? ";
+        }
+        sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
+                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
+                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
+                "AND prev_vc.year_id = prev_sc.year_id " +
+                "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
+                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
+                "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
+                "AND edu.id IN (" + edu_statuses_ids + ") " +
+                "GROUP BY st.id) AS t " +
+                "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
+                "LEFT JOIN school AS sch ON sch.id = t.school_id " +
+                "GROUP BY t.school_id, t.class_id ORDER BY t.school_id, cl.name, t.class_name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, year_id);
-        stat.setInt(3, year_id);
+        if (from_date != null && till_date != null) {
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setDate(2, new java.sql.Date(till_date.getTime()));
+            stat.setDate(3, new java.sql.Date(from_date.getTime()));
+            stat.setDate(4, new java.sql.Date(till_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setDate(7, new java.sql.Date(till_date.getTime()));
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setDate(10, new java.sql.Date(till_date.getTime()));
+            stat.setInt(11, year_id);
+            stat.setInt(12, year_id);
+            stat.setDate(13, new java.sql.Date(from_date.getTime()));
+            stat.setDate(14, new java.sql.Date(till_date.getTime()));
+            stat.setInt(15, year_id);
+            stat.setDate(16, new java.sql.Date(from_date.getTime()));
+            stat.setDate(17, new java.sql.Date(till_date.getTime()));
+            stat.setInt(18, year_id);
+            stat.setInt(19, year_id);
+            stat.setInt(20, year_id);
+        } else if (from_date != null) {
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setDate(2, new java.sql.Date(from_date.getTime()));
+            stat.setInt(3, year_id);
+            stat.setDate(4, new java.sql.Date(from_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(from_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
+        } else if (till_date != null) {
+            stat.setDate(1, new java.sql.Date(till_date.getTime()));
+            stat.setDate(2, new java.sql.Date(till_date.getTime()));
+            stat.setInt(3, year_id);
+            stat.setDate(4, new java.sql.Date(till_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(till_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(till_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(till_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
+        } else {
+            stat.setInt(1, year_id);
+            stat.setInt(2, year_id);
+            stat.setInt(3, year_id);
+            stat.setInt(4, year_id);
+            stat.setInt(5, year_id);
+            stat.setInt(6, year_id);
+            stat.setInt(7, year_id);
+        }
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         int school_id = 0;
         Table t = null;
         int i = 0;
         ymr.clearLayout();
         while (result.next()) {
-            if (school_id != result.getInt("sch.id")) {
+            if (school_id != result.getInt("t.school_id")) {
                 if (t != null) {
                     t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                             ymr.totalStudents + "/" + ymr.totalActive);
@@ -623,13 +765,17 @@ public class DbStudentContract extends BaseDb {
                     t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
                             Settings.dFormat.format(ymr.corrections));
                     t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            Settings.dFormat.format(ymr.debts));
+                            Settings.dFormat.format(ymr.prevYearDebts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+                            Settings.dFormat.format(ymr.prevYearOverpays));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                             Settings.dFormat.format(ymr.nets));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
                             Settings.dFormat.format(ymr.paid_amounts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            Settings.dFormat.format(ymr.lefts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+                            Settings.dFormat.format(ymr.debts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
+                            Settings.dFormat.format(ymr.overpays));
                     if (ymr.nets != 0.0) {
                         t.setColumnFooter(Settings.percentage, Settings.dFormat.format(ymr.paid_amounts * 100 / ymr.nets));
                     }
@@ -637,51 +783,56 @@ public class DbStudentContract extends BaseDb {
                     ymr.totalActive = 0;
                     ymr.contracts = 0.0;
                     ymr.discounts = 0.0;
-                    ymr.debts = 0.0;
+                    ymr.prevYearDebts = 0.0;
+                    ymr.prevYearOverpays = 0.0;
                     ymr.corrections = 0.0;
                     ymr.nets = 0.0;
                     ymr.paid_amounts = 0.0;
-                    ymr.lefts = 0.0;
+                    ymr.debts = 0.0;
+                    ymr.overpays = 0.0;
                 }
                 t = ymr.createTable(result.getString("sch.code")
                         + " - " + result.getString("sch.name_ru"));
                 ymr.rightLay.addComponent(t);
-                school_id = result.getInt("sch.id");
+                school_id = result.getInt("t.school_id");
             }
             if (t != null) {
                 Item item = t.getContainerDataSource().addItem(i++);
                 item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
-                        result.getString("class"));
+                        result.getString("cl"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
-                        result.getInt("stud_num") + "/" + result.getInt("active"));
-                ymr.totalStudents += result.getInt("stud_num");
-                ymr.totalActive += result.getInt("active");
+                        result.getInt("total_studs") + "/" + result.getInt("active_studs"));
+                ymr.totalStudents += result.getInt("total_studs");
+                ymr.totalActive += result.getInt("active_studs");
                 item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
-                        result.getDouble("contr"));
+                        result.getDouble("contract_amount"));
                 ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
-                        result.getDouble("disc"));
-                if (result.getDouble("contr") != 0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue(
-                            (100 * result.getDouble("disc")) / result.getDouble("contr"));
+                        result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
+                if (result.getDouble("contract_amount") != 0) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue((100 *
+                            (result.getDouble("contract_amount") - result.getDouble("contr_with_disc")))
+                            / result.getDouble("contract_amount"));
                 }
                 ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
-                        result.getDouble("corrections"));
+                        result.getDouble("correction"));
                 ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
-                        result.getDouble("debts"));
-                ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("contr_with_disc") + result.getDouble("debts") + result.getDouble("corrections"));
+                        result.getDouble("prev_debt"));
+                ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(
+                        result.getDouble("prev_overpay"));
+                ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("net"));
                 ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
-                        result.getDouble("payments"));
+                        result.getDouble("net_payments"));
                 ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                                - result.getDouble("payments"));
-                ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("debt"));
+                ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+                item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(result.getDouble("overpay"));
+                ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
                     item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
                             / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
@@ -700,15 +851,17 @@ public class DbStudentContract extends BaseDb {
                         Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    Settings.dFormat.format(ymr.debts));
+                    Settings.dFormat.format(ymr.prevYearDebts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+                    Settings.dFormat.format(ymr.prevYearOverpays));
             t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
                     Settings.dFormat.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                     Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
                     Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    Settings.dFormat.format(ymr.lefts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debts), Settings.dFormat.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paid_amounts * 100 / ymr.nets));
@@ -717,20 +870,21 @@ public class DbStudentContract extends BaseDb {
             ymr.totalActive = 0;
             ymr.contracts = 0.0;
             ymr.discounts = 0.0;
-            ymr.debts = 0.0;
+            ymr.prevYearDebts = 0.0;
+            ymr.prevYearOverpays = 0.0;
             ymr.corrections = 0.0;
             ymr.nets = 0.0;
             ymr.paid_amounts = 0.0;
-            ymr.lefts = 0.0;
+            ymr.debts = 0.0;
+            ymr.overpays = 0.0;
         }
         if (ymr.rightLay.getComponentCount() != 0) {
-            execSQL_Yearly_by_class_numbers(myUI, school_ids, edu_statuses_ids, year_id, ymr);
+            execSQL_Yearly_by_class_numbers(myUI, school_ids, edu_statuses_ids, year_id, from_date, till_date, ymr);
         }
     }
 
     public void execSQL_Monthly_by_classes(MyVaadinUI myUI, String school_ids,
                                            String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
-
 
         String sql = "SELECT months.name, months.id, s_temp.id, s_temp.name_ru, s_temp.code, i_temp.amn, p_temp.amn FROM months "
                 + "CROSS JOIN school AS s_temp LEFT JOIN "
@@ -768,19 +922,18 @@ public class DbStudentContract extends BaseDb {
         while (result.next()) {
             if (school_id != result.getInt("s_temp.id")) {
                 if (t != null) {
-                    t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                            Settings.dFormat.format(ymr.inst_plans));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(ymr.paid_amounts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            Settings.dFormat.format(ymr.lefts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat.format(ymr.inst_plans));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat.format(ymr.paid_amounts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(ymr.debts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
                     if (ymr.inst_plans != 0.0) {
                         t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                                 ymr.paid_amounts * 100 / ymr.inst_plans));
                     }
                     ymr.inst_plans = 0.0;
                     ymr.paid_amounts = 0.0;
-                    ymr.lefts = 0.0;
+                    ymr.debts = 0.0;
+                    ymr.overpays = 0.0;
                 }
                 t = ymr.createTable(result.getString("s_temp.code") + " - " + result.getString("s_temp.name_ru"));
                 ymr.rightLay.addComponent(t);
@@ -797,10 +950,17 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("p_temp.amn"));
                 ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
-                                - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
-                ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
+                double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
+                        - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                if (debt > 0.0) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
+                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);
+                    ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+                } else {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(0.0);
+                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(debt);
+                    ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+                }
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
                     item.getItemProperty(Settings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100.0
@@ -809,129 +969,252 @@ public class DbStudentContract extends BaseDb {
             }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    Settings.dFormat.format(ymr.inst_plans));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    Settings.dFormat.format(ymr.lefts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat.format(ymr.inst_plans));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat.format(ymr.paid_amounts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
             if (ymr.inst_plans != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
-                        ymr.paid_amounts * 100 / ymr.inst_plans));
+                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(ymr.paid_amounts * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;
             ymr.paid_amounts = 0.0;
-            ymr.lefts = 0.0;
+            ymr.debts = 0.0;
+            ymr.overpays = 0.0;
         }
-        if (ymr.rightLay.getComponentCount() != 0) {
+        if (ymr.rightLay.getComponentCount() > 1) {
             execSQL_Monthly(myUI, school_ids, edu_statuses_ids, year_id, ymr);
         }
     }
 
-    public void execSQL_Yearly_by_class_numbers(MyVaadinUI myUI, String school_ids,
-                                                String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
+    public void execSQL_Yearly_by_class_numbers(MyVaadinUI myUI, String school_ids, String edu_statuses_ids, int year_id,
+                                                Date from_date, Date till_date, YearMonthReport ymr) throws SQLException {
 
-        String sql = "SELECT cln.name AS class, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
-                + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), "
-                + "sc.contr_with_disc, 0)) AS contr_with_disc, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), vc.amount, 0)) AS corrections, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), sc.debt, 0)) AS debts, "
-                + "SUM(IF(st.t_edu_id IN (" + edu_statuses_ids + "), sc.net_payments,0)) "
-                + "AS payments, COUNT(st.t_st_id) AS stud_num, "
-                + "COUNT(IF(st.t_edu_id = 2, 1, NULL)) AS active FROM class_name AS cl "
-                + "LEFT JOIN class_number AS cln ON cln.id = cl.class_number_id "
-                + "LEFT JOIN (SELECT cl.id AS t_class_id, es.id AS t_edu_id, stud.id AS t_st_id "
-                + "FROM student AS stud "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON stud.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS es ON es.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN stud.education_status_id "
-                + "ELSE stud_o.to_education_status_id END "
-                + "LEFT JOIN class_name AS cl ON cl.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN stud.class_name_id "
-                + "ELSE stud_o.to_class_name_id END WHERE stud.school_id IN (" + school_ids + ") "
-                + "AND stud.entering_year_id <= ?) AS st ON cl.id = st.t_class_id "
-                + "LEFT JOIN student_contract AS sc ON sc.student_id = st.t_st_id AND sc.year_id = ? "
-                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
-                + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
-                + "WHERE cl.school_id IN (" + school_ids + ") GROUP BY cln.id "
-                + "ORDER BY cln.id;";
+        String sql = "SELECT t.class_id, t.school_id, cl.name as cl, " +
+                "COUNT(t.stud_id) as total_studs, COUNT(IF(t.status_id = 2, 1, NULL)) as active_studs, " +
+                "SUM(IFNULL(t.contract_amount, 0.0)) as contract_amount, " +
+                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt > 0.0, t.prev_debt, 0.0)) AS prev_debt, " +
+                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt < 0.0, t.prev_debt, 0.0)) AS prev_overpay, " +
+                "SUM(IFNULL(t.correction, 0.0)) as correction, SUM(IFNULL(t.net_payments, 0.0)) as net_payments, " +
+                "SUM(IFNULL(t.contr_with_disc, 0.0)) as contr_with_disc, " +
+                "SUM(CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) as net, " +
+                "SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0) > 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
+                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0), 0.0)) AS debt, SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
+                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0) < 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay FROM " +
+                "(SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, ";
+        if (from_date != null && till_date != null) {
+            sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (from_date != null) {
+            sql += "IF(sc.creation_date >= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (till_date != null) {
+            sql += "IF(sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else {
+            sql += "c.amount AS contract_amount, ";
+        }
+        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
+                "- prev_sc.net_payments)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, ";
+        if (from_date != null && till_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0), " +
+                    "st.id, ?, ?, ?)) as contr_with_disc, ";
+        } else if (from_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ?, c.amount, 0.0), " +
+                    "st.id, ?, ?, NULL)) as contr_with_disc, ";
+        } else if (till_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date <= ?, c.amount, 0.0), " +
+                    "st.id, ?, NULL, ?)) as contr_with_disc, ";
+        } else {
+            sql += "sc.contr_with_disc as contr_with_disc, ";
+        }
+        sql += "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " +
+                "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " +
+                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 ";
+        if (from_date != null && till_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? AND DATE(so.modification_date) <= ? ";
+        } else if (from_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? ";
+        } else if (till_date != null) {
+            sql += "AND DATE(so.modification_date) <= ? ";
+        }
+        sql += "GROUP BY so.student_id) AS o_temp " +
+                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid ";
+        if (from_date != null || till_date != null) {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
+                    "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
+        } else {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+        }
+        sql += "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
+                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
+                "LEFT JOIN " +
+                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
+                "scc.amount, ' $' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
+                "FROM student_correction scc LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
+                "WHERE year_id = ? ";
+        if (from_date != null) {
+            sql += "AND scc.creation_date >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND scc.creation_date <= ? ";
+        }
+        sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
+                "LEFT JOIN " +
+                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, sp.amount, 0)) " +
+                "- SUM(IF(sp.payment_category_id = 3, sp.amount, 0))) AS amount " +
+                "FROM student_payments as sp WHERE sp.year_id = ? ";
+        if (from_date != null) {
+            sql += "AND DATE(sp.modification_date) >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND DATE(sp.modification_date) <= ? ";
+        }
+        sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
+                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
+                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
+                "AND prev_vc.year_id = prev_sc.year_id " +
+                "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
+                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
+                "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
+                "AND edu.id IN (" + edu_statuses_ids + ") " +
+                "GROUP BY st.id) AS t " +
+                "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
+                "GROUP BY t.class_number_id ORDER BY t.class_number_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, year_id);
-        stat.setInt(3, year_id);
+        if (from_date != null && till_date != null) {
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setDate(2, new java.sql.Date(till_date.getTime()));
+            stat.setDate(3, new java.sql.Date(from_date.getTime()));
+            stat.setDate(4, new java.sql.Date(till_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setDate(7, new java.sql.Date(till_date.getTime()));
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setDate(10, new java.sql.Date(till_date.getTime()));
+            stat.setInt(11, year_id);
+            stat.setInt(12, year_id);
+            stat.setDate(13, new java.sql.Date(from_date.getTime()));
+            stat.setDate(14, new java.sql.Date(till_date.getTime()));
+            stat.setInt(15, year_id);
+            stat.setDate(16, new java.sql.Date(from_date.getTime()));
+            stat.setDate(17, new java.sql.Date(till_date.getTime()));
+            stat.setInt(18, year_id);
+            stat.setInt(19, year_id);
+            stat.setInt(20, year_id);
+        } else if (from_date != null) {
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setDate(2, new java.sql.Date(from_date.getTime()));
+            stat.setInt(3, year_id);
+            stat.setDate(4, new java.sql.Date(from_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(from_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
+        } else if (till_date != null) {
+            stat.setDate(1, new java.sql.Date(till_date.getTime()));
+            stat.setDate(2, new java.sql.Date(till_date.getTime()));
+            stat.setInt(3, year_id);
+            stat.setDate(4, new java.sql.Date(till_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(till_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(till_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(till_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
+        } else {
+            stat.setInt(1, year_id);
+            stat.setInt(2, year_id);
+            stat.setInt(3, year_id);
+            stat.setInt(4, year_id);
+            stat.setInt(5, year_id);
+            stat.setInt(6, year_id);
+            stat.setInt(7, year_id);
+        }
         ResultSet result = stat.executeQuery();
         Table t;
         int i = 0;
         t = ymr.createTable(myUI.getMessage(SptMessages.Total));
         ymr.rightLay.addComponent(t);
         while (result.next()) {
-            if (t != null) {
-                Item item = t.getContainerDataSource().addItem(i++);
-                item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
-                        result.getString("class"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
-                        result.getInt("stud_num") + "/" + result.getInt("active"));
-                ymr.totalStudents += result.getInt("stud_num");
-                ymr.totalActive += result.getInt("active");
-                item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
-                        result.getDouble("contr"));
-                ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
-                        result.getDouble("corrections"));
-                ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
-                        result.getDouble("disc"));
-                if (result.getDouble("contr") != 0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue(
-                            (100 * result.getDouble("disc")) / result.getDouble("contr"));
-                }
-                ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
-                        result.getDouble("debts"));
-                ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("contr_with_disc") + result.getDouble("debts") + result.getDouble("corrections"));
-                ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
-                        result.getDouble("payments"));
-                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                                - result.getDouble("payments"));
-                ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
-                if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
-                }
+            Item item = t.getContainerDataSource().addItem(i++);
+            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+                    result.getString("cl"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
+                    result.getInt("total_studs") + "/" + result.getInt("active_studs"));
+            ymr.totalStudents += result.getInt("total_studs");
+            ymr.totalActive += result.getInt("active_studs");
+            item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
+                    result.getDouble("contract_amount"));
+            ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
+                    result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
+            if (result.getDouble("contract_amount") != 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue((100 *
+                        (result.getDouble("contract_amount") - result.getDouble("contr_with_disc")))
+                        / result.getDouble("contract_amount"));
+            }
+            ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+                    result.getDouble("correction"));
+            ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
+                    result.getDouble("prev_debt"));
+            ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(
+                    result.getDouble("prev_overpay"));
+            ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("net"));
+            ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+                    result.getDouble("net_payments"));
+            ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("debt"));
+            ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(result.getDouble("overpay"));
+            ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+            if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
+                item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
+                        / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
             }
         }
         if (t != null) {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
-            t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    Settings.dFormat.format(ymr.contracts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                    Settings.dFormat.format(ymr.corrections));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    Settings.dFormat.format(ymr.discounts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Contract), Settings.dFormat.format(ymr.contracts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Correction), Settings.dFormat.format(ymr.corrections));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Discount), Settings.dFormat.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
                         Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    Settings.dFormat.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    Settings.dFormat.format(ymr.nets));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    Settings.dFormat.format(ymr.lefts));
+                    Settings.dFormat.format(ymr.prevYearDebts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Net), Settings.dFormat.format(ymr.nets));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat.format(ymr.paid_amounts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paid_amounts * 100 / ymr.nets));
@@ -941,45 +1224,181 @@ public class DbStudentContract extends BaseDb {
             ymr.contracts = 0.0;
             ymr.corrections = 0.0;
             ymr.discounts = 0.0;
-            ymr.debts = 0.0;
+            ymr.prevYearDebts = 0.0;
             ymr.nets = 0.0;
             ymr.paid_amounts = 0.0;
-            ymr.lefts = 0.0;
+            ymr.debts = 0.0;
+            ymr.overpays = 0.0;
         }
     }
 
-    public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids,
-                                       String edu_statuses_ids, int year_id, YearMonthReport ymr) throws SQLException {
+    public void execSQL_Summary_report(MyVaadinUI myUI, String school_ids, String edu_statuses_ids, int year_id,
+                                       Date from_date, Date till_date, YearMonthReport ymr) throws SQLException {
 
-        String sql = "SELECT sch.name_ru, sch.code, "
-                + "SUM(IF(es.id IN (" + edu_statuses_ids + "), c.amount, 0)) AS contr, "
-                + "SUM(IF(es.id IN (" + edu_statuses_ids + "), "
-                + "(c.amount - sc.contr_with_disc), 0)) AS disc, "
-                + "SUM(IF(es.id IN (" + edu_statuses_ids + "), sc.contr_with_disc, 0)) "
-                + "AS contr_with_disc, "
-                + "SUM(IF(es.id IN (" + edu_statuses_ids + "), vc.amount, 0)) AS corrections, "
-                + "SUM(IF(es.id IN (" + edu_statuses_ids + "), sc.debt,0)) AS debts, "
-                + "SUM(IF(es.id IN (" + edu_statuses_ids + "), sc.net_payments,0)) "
-                + "AS payments, COUNT(st.id) AS stud_num, "
-                + "COUNT(IF(es.id = 2, 1, NULL)) AS active FROM school AS sch "
-                + "LEFT JOIN student AS st ON sch.id = st.school_id "
-                + "LEFT JOIN "
-                + "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? and so.is_valid=1 "
-                + "GROUP BY so.student_id) "
-                + "AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS es ON es.id = stud_o.to_education_status_id "
-                + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? "
-                + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
-                + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
-                + "WHERE st.entering_year_id <= ? "
-                + "OR st.entering_year_id IS NULL GROUP BY sch.id "
-                + "HAVING sch.id in (" + school_ids + ") ORDER BY CAST(sch.code AS UNSIGNED);";
+        String sql = "SELECT t.class_id, t.school_id, concat(sch.code, ' - ', sch.name_ru) as school, " +
+                "COUNT(t.stud_id) as total_studs, COUNT(IF(t.status_id = 2, 1, NULL)) as active_studs, " +
+                "SUM(IFNULL(t.contract_amount, 0.0)) as contract_amount, " +
+                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt > 0.0, t.prev_debt, 0.0)) AS prev_debt, " +
+                "SUM(IF(t.prev_debt IS NOT NULL AND t.prev_debt < 0.0, t.prev_debt, 0.0)) AS prev_overpay, " +
+                "SUM(IFNULL(t.correction, 0.0)) as correction, SUM(IFNULL(t.net_payments, 0.0)) as net_payments, " +
+                "SUM(IFNULL(t.contr_with_disc, 0.0)) as contr_with_disc, " +
+                "SUM(CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) as net, " +
+                "SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0) > 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
+                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0), 0.0)) AS debt, SUM(IF((CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 " +
+                "THEN (IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0) < 0, (CASE WHEN IFNULL(t.contract_amount, 0.0) != 0.0 THEN " +
+                "(IFNULL(t.contr_with_disc, 0.0) + IFNULL(t.prev_debt, 0.0) + IFNULL(t.correction, 0.0)) " +
+                "WHEN IFNULL(t.prev_debt, 0.0) != 0.0 THEN IFNULL(t.prev_debt, 0.0) ELSE 0.0 END) - " +
+                "IFNULL(t.net_payments, 0.0), 0.0)) AS overpay FROM " +
+                "(SELECT st.id AS stud_id, st.school_id as school_id, edu.id AS status_id, ";
+        if (from_date != null && till_date != null) {
+            sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (from_date != null) {
+            sql += "IF(sc.creation_date >= ?, c.amount, 0.0) AS contract_amount, ";
+        } else if (till_date != null) {
+            sql += "IF(sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+        } else {
+            sql += "c.amount AS contract_amount, ";
+        }
+        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
+                "- prev_sc.net_payments)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, ";
+        if (from_date != null && till_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0), " +
+                    "st.id, ?, ?, ?)) as contr_with_disc, ";
+        } else if (from_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ?, c.amount, 0.0), " +
+                    "st.id, ?, ?, NULL)) as contr_with_disc, ";
+        } else if (till_date != null) {
+            sql += "(select get_contract_with_discounts(IF(sc.creation_date <= ?, c.amount, 0.0), " +
+                    "st.id, ?, NULL, ?)) as contr_with_disc, ";
+        } else {
+            sql += "sc.contr_with_disc as contr_with_disc, ";
+        }
+        sql += "cln.id AS class_id, cln.class_number_id AS class_number_id, cln.name AS class_name " +
+                "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " +
+                "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 ";
+        if (from_date != null && till_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? AND DATE(so.modification_date) <= ? ";
+        } else if (from_date != null) {
+            sql += "AND DATE(so.modification_date) >= ? ";
+        } else if (till_date != null) {
+            sql += "AND DATE(so.modification_date) <= ? ";
+        }
+        sql += "GROUP BY so.student_id) AS o_temp " +
+                "ON st.id = o_temp.stud_id LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid ";
+        if (from_date != null || till_date != null) {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
+                    "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
+        } else {
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+        }
+        sql += "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
+                "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
+                "LEFT JOIN " +
+                "(SELECT scc.student_id as student_id, GROUP_CONCAT(DISTINCT '(', amr_t.type, ') ', amr_t.name, ' ', " +
+                "scc.amount, ' $' ORDER BY amr_t.id ASC SEPARATOR ', ') AS full_details, " +
+                "SUM(IF(amr_t.type = '+', scc.amount, - scc.amount)) AS amount " +
+                "FROM student_correction scc LEFT JOIN correction_type amr_t ON scc.correction_type_id = amr_t.id " +
+                "WHERE year_id = ? ";
+        if (from_date != null) {
+            sql += "AND scc.creation_date >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND scc.creation_date <= ? ";
+        }
+        sql += " GROUP BY scc.student_id) AS vc ON vc.student_id = sc.student_id " +
+                "LEFT JOIN " +
+                "(SELECT sp.student_id AS student_id, (SUM(IF(sp.payment_category_id != 3, sp.amount, 0)) " +
+                "- SUM(IF(sp.payment_category_id = 3, sp.amount, 0))) AS amount " +
+                "FROM student_payments as sp WHERE sp.year_id = ? ";
+        if (from_date != null) {
+            sql += "AND DATE(sp.modification_date) >= ? ";
+        }
+        if (till_date != null) {
+            sql += "AND DATE(sp.modification_date) <= ? ";
+        }
+        sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
+                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
+                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
+                "AND prev_vc.year_id = prev_sc.year_id " +
+                "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
+                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
+                "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
+                "AND edu.id IN (" + edu_statuses_ids + ") " +
+                "GROUP BY st.id) AS t " +
+                "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
+                "LEFT JOIN school AS sch ON sch.id = t.school_id " +
+                "GROUP BY sch.id ORDER BY CAST(sch.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, year_id);
-        stat.setInt(3, year_id);
+        if (from_date != null && till_date != null) {
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setDate(2, new java.sql.Date(till_date.getTime()));
+            stat.setDate(3, new java.sql.Date(from_date.getTime()));
+            stat.setDate(4, new java.sql.Date(till_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setDate(7, new java.sql.Date(till_date.getTime()));
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setDate(10, new java.sql.Date(till_date.getTime()));
+            stat.setInt(11, year_id);
+            stat.setInt(12, year_id);
+            stat.setDate(13, new java.sql.Date(from_date.getTime()));
+            stat.setDate(14, new java.sql.Date(till_date.getTime()));
+            stat.setInt(15, year_id);
+            stat.setDate(16, new java.sql.Date(from_date.getTime()));
+            stat.setDate(17, new java.sql.Date(till_date.getTime()));
+            stat.setInt(18, year_id);
+            stat.setInt(19, year_id);
+            stat.setInt(20, year_id);
+        } else if (from_date != null) {
+            stat.setDate(1, new java.sql.Date(from_date.getTime()));
+            stat.setDate(2, new java.sql.Date(from_date.getTime()));
+            stat.setInt(3, year_id);
+            stat.setDate(4, new java.sql.Date(from_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(from_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(from_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(from_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
+        } else if (till_date != null) {
+            stat.setDate(1, new java.sql.Date(till_date.getTime()));
+            stat.setDate(2, new java.sql.Date(till_date.getTime()));
+            stat.setInt(3, year_id);
+            stat.setDate(4, new java.sql.Date(till_date.getTime()));
+            stat.setInt(5, year_id);
+            stat.setDate(6, new java.sql.Date(till_date.getTime()));
+            stat.setInt(7, year_id);
+            stat.setInt(8, year_id);
+            stat.setDate(9, new java.sql.Date(till_date.getTime()));
+            stat.setInt(10, year_id);
+            stat.setDate(11, new java.sql.Date(till_date.getTime()));
+            stat.setInt(12, year_id);
+            stat.setInt(13, year_id);
+            stat.setInt(14, year_id);
+        } else {
+            stat.setInt(1, year_id);
+            stat.setInt(2, year_id);
+            stat.setInt(3, year_id);
+            stat.setInt(4, year_id);
+            stat.setInt(5, year_id);
+            stat.setInt(6, year_id);
+            stat.setInt(7, year_id);
+        }
         ResultSet result = stat.executeQuery();
         Table t;
         int i = 0;
@@ -987,45 +1406,45 @@ public class DbStudentContract extends BaseDb {
         t = ymr.createTable(myUI.getMessage(SptMessages.Total));
         ymr.rightLay.addComponent(t);
         while (result.next()) {
-            if (t != null) {
-                Item item = t.getContainerDataSource().addItem(i++);
-                item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
-                        result.getString("sch.name_ru"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
-                        result.getInt("stud_num") + "/" + result.getInt("active"));
-                ymr.totalStudents += result.getInt("stud_num");
-                ymr.totalActive += result.getInt("active");
-                item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
-                        result.getDouble("contr"));
-                ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
-                        result.getDouble("corrections"));
-                ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
-                        result.getDouble("disc"));
-                if (result.getDouble("contr") != 0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue(
-                            result.getDouble("disc") * 100 / result.getDouble("contr"));
-                }
-                ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
-                        result.getDouble("debts"));
-                ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("contr_with_disc") + result.getDouble("debts"));
-                ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
-                        result.getDouble("payments"));
-                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
-                                - result.getDouble("payments"));
-                ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
-                if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(Settings.percentage).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                                    / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
-                }
+            Item item = t.getContainerDataSource().addItem(i++);
+            item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
+                    result.getString("school"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
+                    result.getInt("total_studs") + "/" + result.getInt("active_studs"));
+            ymr.totalStudents += result.getInt("total_studs");
+            ymr.totalActive += result.getInt("active_studs");
+            item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
+                    result.getDouble("contract_amount"));
+            ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
+                    result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
+            if (result.getDouble("contract_amount") != 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue((100 *
+                        (result.getDouble("contract_amount") - result.getDouble("contr_with_disc")))
+                        / result.getDouble("contract_amount"));
+            }
+            ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+                    result.getDouble("correction"));
+            ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
+                    result.getDouble("prev_debt"));
+            ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(
+                    result.getDouble("prev_overpay"));
+            ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("net"));
+            ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+                    result.getDouble("net_payments"));
+            ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("debt"));
+            ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+            item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(result.getDouble("overpay"));
+            ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+            if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
+                item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
+                        / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
             }
         }
         if (t != null) {
@@ -1042,13 +1461,17 @@ public class DbStudentContract extends BaseDb {
                         Settings.dFormat.format(ymr.discounts * 100 / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    Settings.dFormat.format(ymr.debts));
+                    Settings.dFormat.format(ymr.prevYearDebts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+                    Settings.dFormat.format(ymr.prevYearOverpays));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
                     Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
                     Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    Settings.dFormat.format(ymr.lefts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+                    Settings.dFormat.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
+                    Settings.dFormat.format(ymr.overpays));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
                         ymr.paid_amounts * 100 / ymr.nets));
@@ -1058,10 +1481,12 @@ public class DbStudentContract extends BaseDb {
             ymr.contracts = 0.0;
             ymr.corrections = 0.0;
             ymr.discounts = 0.0;
-            ymr.debts = 0.0;
+            ymr.prevYearDebts = 0.0;
+            ymr.prevYearOverpays = 0.0;
             ymr.nets = 0.0;
             ymr.paid_amounts = 0.0;
-            ymr.lefts = 0.0;
+            ymr.debts = 0.0;
+            ymr.overpays = 0.0;
         }
     }
 
@@ -1124,10 +1549,17 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("p_temp.amn"));
                 ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
-                                - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue());
-                ymr.lefts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Left)).getValue();
+                double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
+                        - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                if (debt > 0.0) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
+                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);
+                    ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+                } else {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(0.0);
+                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(debt);
+                    ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+                }
                 if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
                     item.getItemProperty(Settings.percentage).setValue(
                             (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
@@ -1140,8 +1572,10 @@ public class DbStudentContract extends BaseDb {
                     Settings.dFormat.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
                     Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                    Settings.dFormat.format(ymr.lefts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+                    Settings.dFormat.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
+                    Settings.dFormat.format(ymr.overpays));
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
                     Settings.dFormat.format(ymr.inst_plans));
             if (ymr.inst_plans != 0.0) {
@@ -1150,7 +1584,8 @@ public class DbStudentContract extends BaseDb {
             }
             ymr.inst_plans = 0.0;
             ymr.paid_amounts = 0.0;
-            ymr.lefts = 0.0;
+            ymr.debts = 0.0;
+            ymr.overpays = 0.0;
         }
     }
 
@@ -1368,11 +1803,11 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Accrual), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Payment), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Repayment), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
         int i = 0;
-        double currentBalance = 0.0, totalAccruals = 0.0;
+        double currentBalance = 0.0, totalDebt = 0.0;
         Item item;
 
         while (result.next()) {
@@ -1382,30 +1817,36 @@ public class DbStudentContract extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
-            if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payment))) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Payment)).setValue(result.getDouble("t.amount"));
-                currentBalance -= result.getDouble("t.amount");
-            } else if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Discount))) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(result.getDouble("t.amount"));
-                currentBalance -= result.getDouble("t.amount");
-                totalAccruals -= result.getDouble("t.amount");
+            if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payment)) ||
+                    result.getString("t.type").equals(myUI.getMessage(SptMessages.Discount)) ||
+                    (result.getString("t.type").equals(myUI.getMessage(SptMessages.Correction))
+                            && result.getDouble("t.amount") < 0.0)) {
+                if (result.getDouble("t.amount") < 0.0) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(-1 * result.getDouble("t.amount"));
+                    currentBalance -= (-1 * result.getDouble("t.amount"));
+                } else {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(result.getDouble("t.amount"));
+                    currentBalance -= result.getDouble("t.amount");
+                }
+
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(result.getDouble("t.amount"));
+                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("t.amount"));
                 currentBalance += result.getDouble("t.amount");
-                totalAccruals += result.getDouble("t.amount");
+                totalDebt += result.getDouble("t.amount");
             }
             if (currentBalance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(currentBalance * -1))
-                        + " (" + myUI.getMessage(SptMessages.Payment).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
+                        (Settings.dFormat.format(currentBalance * -1))
+                                + " (" + myUI.getMessage(SptMessages.Repayment).charAt(0) + ")");
             } else {
                 item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(currentBalance)
-                        + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
+                        + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
                     item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), Settings.dFormat.format(totalAccruals));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payment), Settings.dFormat.format(totalAccruals - currentBalance));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat.format(totalDebt - currentBalance));
         t.setContainerDataSource(container);
     }
 }

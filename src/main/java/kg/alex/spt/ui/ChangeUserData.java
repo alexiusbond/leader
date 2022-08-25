@@ -87,6 +87,9 @@ public class ChangeUserData extends VerticalLayout implements Button.ClickListen
                 try {
                     DbUserDetails dbUser = new DbUserDetails();
                     dbUser.connect();
+                    System.out.println(userForm.getField("pass").getValue());
+                    System.out.println(new Sha256Hash(userForm.getField("pass").getValue()));
+                    System.out.println(dbUser.execSQL_pass(currentUser.getPrincipal().toString()));
                     if (new Sha256Hash(userForm.getField("pass").getValue()).toString().equals(
                             dbUser.execSQL_pass(currentUser.getPrincipal().toString()))) {
 
