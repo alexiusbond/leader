@@ -27,7 +27,7 @@ public class DbSchool extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
         String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id, y.name, t.name, "
-                + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.adress, "
+                + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.address, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join year as y on y.id = s.year_id "
                 + "left join activity_status as ac on ac.id = s.activity_status_id "
@@ -83,7 +83,7 @@ public class DbSchool extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.City)).setValue(
                     result.getString("s.city"));
             item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
-                    result.getString("s.adress"));
+                    result.getString("s.address"));
             item.getItemProperty(myUi.getMessage(SptMessages.INN)).setValue(
                     result.getString("s.inn"));
             item.getItemProperty(myUi.getMessage(SptMessages.Bank)).setValue(
@@ -100,9 +100,9 @@ public class DbSchool extends BaseDb {
     }
 
     public int exec_update(School scl) throws SQLException {
-        String sql = "UPDATE school SET code=?,name_ru=?,name_kg=?,name_en=?,"
-                + "activity_status_id=?,director_fullname=?,adress=?,"
-                + "inn=?,bank=?,bank_account=?,phone=?,photo=?,city=?,school_type_id=? WHERE id=?";
+        String sql = "UPDATE school SET code = ?, name_ru = ?, name_kg = ?, name_en = ?,"
+                + "activity_status_id = ?, director_fullname = ?,address = ?, "
+                + "inn = ?,bank = ?, bank_account = ?,phone = ?, photo = ?,city = ?,school_type_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());
@@ -165,7 +165,7 @@ public class DbSchool extends BaseDb {
 
     public int exec_insert(School scl) throws SQLException {
         String sql = "INSERT IGNORE INTO school (code,name_ru,name_kg,name_en,"
-                + "year_id,activity_status_id,director_fullname,city,adress,inn,bank,"
+                + "year_id,activity_status_id,director_fullname,city,address,inn,bank,"
                 + "bank_account,phone,photo,school_type_id) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -236,7 +236,7 @@ public class DbSchool extends BaseDb {
     public School execSchool(int scl_id) throws SQLException {
         School scl = new School();
         String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id,y.name, "
-                + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.adress, "
+                + "s.activity_status_id, ac.name, s.director_fullname, s.city, s.address, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join year as y on y.id = s.year_id "
                 + "left join activity_status as ac on ac.id = s.activity_status_id "
@@ -245,7 +245,7 @@ public class DbSchool extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
-            scl.setAddress(result.getString("s.adress"));
+            scl.setAddress(result.getString("s.address"));
             scl.setBank(result.getString("s.bank"));
             scl.setBank_account(result.getString("s.bank_account"));
             scl.setCode(result.getString("s.code"));
@@ -336,7 +336,7 @@ public class DbSchool extends BaseDb {
 
     public StudentInfoPdf execGetSchoolPdf(int scl_id) throws SQLException {
         StudentInfoPdf st = new StudentInfoPdf();
-        String sql = "SELECT sc.id, sc.name_ru, sc.adress, sc.phone, sc.director_fullname, "
+        String sql = "SELECT sc.id, sc.name_ru, sc.address, sc.phone, sc.director_fullname, "
                 + "concat(e.surname, ' ', e.name) as fullname FROM school as sc "
                 + "LEFT JOIN hr_employee_order AS eo ON sc.id = eo.school_id AND eo.to_date IS NULL "
                 + "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id "
@@ -349,7 +349,7 @@ public class DbSchool extends BaseDb {
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             st.setScl_name_ru(result.getString("sc.name_ru"));
-            st.setScl_address(result.getString("sc.adress"));
+            st.setScl_address(result.getString("sc.address"));
             st.setScl_phone(result.getString("sc.phone"));
             st.setScl_accountant_full_name(result.getString("fullname"));
             st.setScl_dir_f_name(result.getString("sc.director_fullname"));

@@ -52,7 +52,7 @@ public class DbAccCategory extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, boolean withParents) throws SQLException {
 
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code, sc.acc_currency_id, "
-                + "c.employee_id from acc_category as c "
+                + "cp.acc_type_id, c.employee_id from acc_category as c "
                 + "left join acc_category as cp on cp.id = c.parent_id "
                 + "left join hr_salary_category as sc on sc.acc_category_id = cp.parent_id "
                 + "where c.acc_type_id = ? and (c.school_id is null or c.school_id = ?) ";
@@ -70,6 +70,7 @@ public class DbAccCategory extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_type_id, Integer.class, 0);
         container.addContainerProperty(Settings.employee_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
@@ -78,6 +79,7 @@ public class DbAccCategory extends BaseDb {
                     result.getString("code") + " - " + result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("sc.acc_currency_id"));
+            item.getItemProperty(Settings.acc_type_id).setValue(result.getInt("cp.acc_type_id"));
             item.getItemProperty(Settings.employee_id).setValue(result.getInt("c.employee_id"));
         }
         return container;

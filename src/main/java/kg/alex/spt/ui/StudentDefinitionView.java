@@ -173,10 +173,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         horSplitPanel.setSecondComponent(contractLay);
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id),
-                myUI.getMessage(SptMessages.FirstName),
-                myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
-                myUI.getMessage(SptMessages.EducationStatus),
-                myUI.getMessage(SptMessages.EnteringYear)};
+                myUI.getMessage(SptMessages.FirstName), myUI.getMessage(SptMessages.LastName),
+                myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.EducationStatus),
+                myUI.getMessage(SptMessages.EnteringYear),
+                myUI.getMessage(SptMessages.Relative), myUI.getMessage(SptMessages.Phone)};
 
         Label eduStatusLab = new Label();
         eduStatusLab.setSizeUndefined();
@@ -882,10 +882,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                             int id = dbst.exec_insert(student);
                                             if (id != 0) {
                                                 insertNewStOrder(id);
+                                                Item relativeItem = null;
                                                 if (relativesTable.isEnabled()) {
-                                                    saveRelatives(id);
+                                                    relativeItem = saveRelatives(id);
                                                 }
-                                                addDataContainerItem(id);
+                                                addDataContainerItem(id, relativeItem);
                                                 Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                                         Notification.Type.HUMANIZED_MESSAGE);
                                                 prepareNormalMode();
@@ -912,8 +913,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     logger.catching(e);
                                                 }
                                                 if (status != 0) {
-                                                    updateDataContainer();
-                                                    saveRelatives((Integer) studDataTable.getValue());
+                                                    Item relativeItem = saveRelatives((Integer) studDataTable.getValue());
+                                                    updateDataContainer(relativeItem);
                                                     setRelativesTable();
                                                     prepareNormalMode();
                                                     Notification.show(myUI.getMessage(SptMessages.ValueSaved),
@@ -926,8 +927,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                             } else if (tabs.getSelectedTab() == tabs.getTab(studSearchLay).getComponent()) {
                                                 int status = 0;
                                                 try {
-                                                    status = dbst.exec_update(
-                                                            getStudent((Integer) studDataTable.getValue()));
+                                                    status = dbst.exec_update(getStudent((Integer) studDataTable.getValue()));
                                                     Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                                             Notification.Type.HUMANIZED_MESSAGE);
                                                 } catch (Exception e) {
@@ -935,7 +935,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     logger.catching(e);
                                                 }
                                                 if (status != 0) {
-                                                    updateDataContainer();
+                                                    updateDataContainer(null);
                                                     prepareNormalMode();
                                                     Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                                             Notification.Type.HUMANIZED_MESSAGE);
@@ -943,7 +943,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     Notification.show(myUI.getMessage(SptMessages.CanNotSaveIdNumber),
                                                             Notification.Type.WARNING_MESSAGE);
                                                 }
-
                                             } else if (tabs.getSelectedTab() == tabs.getTab(acsGiveTableLay).getComponent()) {
                                                 execDeleteAccessoriesFromDb((Integer) studDataTable.getValue(),
                                                         myUI.getUser().getCurrent_year().getId(), give);
@@ -1677,13 +1676,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         discountsTable.removeAllItems();
     }
 
-    private void updateDataContainer() {
+    private void updateDataContainer(Item relativeItem) {
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.Id)).setValue(loginTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.FirstName)).setValue(nameTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.LastName)).setValue(surnameTF.getValue());
+        if (relativeItem != null) {
+            studDataTable.getContainerProperty(studDataTable.getValue(), myUI.getMessage(SptMessages.Relative)).setValue(
+                    ((TextField) relativeItem.getItemProperty(myUI.getMessage(SptMessages.FullName)).getValue()).getValue());
+            studDataTable.getContainerProperty(studDataTable.getValue(), myUI.getMessage(SptMessages.Phone)).setValue(
+                    ((TextField) relativeItem.getItemProperty(myUI.getMessage(SptMessages.Phone)).getValue()).getValue());
+        }
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.MiddleName)).setValue(middleNameTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -1707,11 +1712,17 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     }
 
-    private void addDataContainerItem(int id) {
+    private void addDataContainerItem(int id, Item relativeItem) {
         Item item = ((IndexedContainer) studDataTable.getContainerDataSource()).addItemAt(0, id);
         item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(loginTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(nameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(surnameTF.getValue());
+        if (relativeItem != null) {
+            item.getItemProperty(myUI.getMessage(SptMessages.Relative)).setValue(
+                    ((TextField) relativeItem.getItemProperty(myUI.getMessage(SptMessages.FullName)).getValue()).getValue());
+            item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(
+                    ((TextField) relativeItem.getItemProperty(myUI.getMessage(SptMessages.Phone)).getValue()).getValue());
+        }
         item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(
                 middleNameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
@@ -2602,6 +2613,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 tr.setAmount(sp.getAmount());
                 tr.setDate(sp.getModification_date());
                 tr.setCategory_id(dbpc.get_initial_payment_category_id());
+                tr.setAccTypeId(1);
                 tr.setCurrency_id(2);
                 tr.setCurrency_rate(sp.getRate());
                 tr.setNote(sp.getNoteForCashBox());
@@ -2625,10 +2637,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (status != 0) {
                         if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                 || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                            int update_status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
+                            int update_status = dbat.exec_update_new(tr, Settings.dbColumnStudent_payments_id,
                                     tr.getStudent_payments_id(), dbsp.getConnection());//update transaction normal
                             if (update_status == 0) {
-                                dbat.exec_insert(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
+                                dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
                             }
                         } else if (sp.getModification_date().before(myUI.getUser().getTransactions_start_date())) {
                             dbat.exec_delete(Settings.dbColumnStudent_payments_id, Integer.toString(sp.getId()), dbsp.getConnection()); //delete transaction on payment update if payment date is before transactions start date
@@ -2640,7 +2652,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     tr.setStudent_payments_id(payment_id);
                     if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                             || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                        dbat.exec_insert(tr, dbsp.getConnection());//insert transaction
+                        dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction
                     }
                     initialPaymentTF.setData(dbsp.exec_get_init_payment(student_id, myUI.getUser().getCurrent_year().getId()));
                 }
@@ -4238,7 +4250,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
     }
 
-    private void saveRelatives(int student_id) {
+    private Item saveRelatives(int student_id) {
+        Item mainRelativeItem = null;
         try {
             DbStudentRelative dbsr = new DbStudentRelative();
             dbsr.connect();
@@ -4249,12 +4262,18 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             if (relativesTable.getContainerDataSource().size() > 0) {
                 for (Object next : relativesTable.getItemIds()) {
+                    StudentRelative relative = null;
                     if (relativesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Update))) {
-                        dbsr.exec_update(getRelative(Integer.parseInt(next.toString()), student_id, relativesTable.getItem(next)));
+                        relative = getRelative(Integer.parseInt(next.toString()), student_id, relativesTable.getItem(next));
+                        dbsr.exec_update(relative);
                     } else if (relativesTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(SptMessages.Insert))) {
-                        dbsr.exec_insert(getRelative(0, student_id, relativesTable.getItem(next)));
+                        relative = getRelative(0, student_id, relativesTable.getItem(next));
+                        dbsr.exec_insert(relative);
+                    }
+                    if (relative != null && relative.getIs_main() == 1) {
+                        mainRelativeItem = relativesTable.getItem(next);
                     }
                 }
             }
@@ -4264,6 +4283,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
+        return mainRelativeItem;
     }
 
     private void insertPayments(int student_id) {
@@ -4287,6 +4307,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_category_id).getValue());
+                        tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
+                                myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
+                                Settings.acc_type_id).getValue());
                         tr.setCurrency_id(2);
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
@@ -4296,10 +4319,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbsp.exec_update(sp);
                         if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                 || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                            int update_status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
+                            int update_status = dbat.exec_update_new(tr, Settings.dbColumnStudent_payments_id,
                                     tr.getStudent_payments_id(), dbsp.getConnection());//update transaction normal
                             if (update_status == 0) {
-                                dbat.exec_insert(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
+                                dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
                             }
                         } else if (sp.getModification_date().before(myUI.getUser().getTransactions_start_date())) {
                             dbat.exec_delete(Settings.dbColumnStudent_payments_id, (String) next, dbsp.getConnection()); //delete transaction on payment update if payment date is before transactions start date
@@ -4316,6 +4339,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_category_id).getValue());
+                        tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
+                                myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
+                                Settings.acc_type_id).getValue());
                         tr.setCurrency_id(2);
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
@@ -4324,7 +4350,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setStudent_payments_id(sp.getId());
                         if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                 || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                            dbat.exec_insert(tr, dbsp.getConnection());//insert transaction
+                            dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction
                         }
                     }
                 }
@@ -4359,6 +4385,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
                                 Settings.acc_category_id).getValue());
+                        tr.setAccTypeId((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
+                                myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),
+                                Settings.acc_type_id).getValue());
                         tr.setCurrency_id(2);
                         tr.setCurrency_rate(sp.getRate());
                         tr.setNote(sp.getNoteForCashBox());
@@ -4369,10 +4398,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             tr.setStudent_payments_id(Integer.parseInt(next.toString()));
                             if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                     || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                                int update_status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
+                                int update_status = dbat.exec_update_new(tr, Settings.dbColumnStudent_payments_id,
                                         tr.getStudent_payments_id(), dbat.getConnection());//update transaction normal
                                 if (update_status == 0) {
-                                    dbat.exec_insert(tr, dbat.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
+                                    dbat.exec_insert_new(tr, dbat.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
                                 }
                             } else if (sp.getModification_date().before(myUI.getUser().getTransactions_start_date())) {
                                 dbat.exec_delete(Settings.dbColumnStudent_payments_id, (String) next, dbat.getConnection()); //delete transaction on payment update if payment date is before transactions start date
@@ -4381,7 +4410,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 .equals(myUI.getMessage(SptMessages.Insert))) {
                             if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                     || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                                dbat.exec_insert(tr, dbat.getConnection());//insert transaction
+                                dbat.exec_insert_new(tr, dbat.getConnection());//insert transaction
                             }
                         }
                     }

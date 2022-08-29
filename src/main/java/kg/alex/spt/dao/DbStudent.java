@@ -41,10 +41,11 @@ public class DbStudent extends BaseDb {
             edu_sts = "-1";
         }
         String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, "
-                + "s.date_of_birth, s.photo, s.gender_id, "
-                + "s.education_status_id, es.name, y.name, "
-                + "s.class_name_id, concat(cnu.name,' - ',cn.name) as cl_name "
+                + "s.date_of_birth, s.photo, s.gender_id, s.education_status_id, es.name, y.name, "
+                + "s.class_name_id, concat(cnu.name,' - ',cn.name) as cl_name, sr.fullname, sr.phone, rel.name "
                 + "FROM student as s "
+                + "LEFT JOIN student_relatives AS sr ON s.id = sr.student_id AND sr.is_main = 1 "
+                + "LEFT JOIN relatives AS rel ON sr.relatives_id = rel.id "
                 + "left join education_status as es on s.education_status_id = es.id "
                 + "left join class_name as cn on s.class_name_id = cn.id "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
@@ -59,6 +60,8 @@ public class DbStudent extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Relative), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.DateOfBirth), Date.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Photo), String.class, null);
@@ -83,16 +86,19 @@ public class DbStudent extends BaseDb {
                     result.getString("s.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("s.surname"));
+            if (result.getString("rel.name") != null) {
+                item.getItemProperty(myUi.getMessage(SptMessages.Relative)).setValue(
+                        result.getString("rel.name") + " - " + result.getString("sr.fullname"));
+                item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+                        result.getString("sr.phone"));
+            }
             item.getItemProperty(myUi.getMessage(SptMessages.MiddleName)).setValue(
                     result.getString("s.middle_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.DateOfBirth)).setValue(
                     result.getDate("s.date_of_birth"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(
-                    result.getString("s.photo"));
-            item.getItemProperty(Settings.gender_id).setValue(
-                    result.getInt("s.gender_id"));
-            item.getItemProperty(Settings.education_status_id).setValue(
-                    result.getInt("s.education_status_id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(result.getString("s.photo"));
+            item.getItemProperty(Settings.gender_id).setValue(result.getInt("s.gender_id"));
+            item.getItemProperty(Settings.education_status_id).setValue(result.getInt("s.education_status_id"));
             sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), Settings.count)
                     .setValue(((Integer) sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), Settings.count)
                             .getValue()) + 1);
@@ -145,7 +151,7 @@ public class DbStudent extends BaseDb {
     public IndexedContainer execSQL_for_import(MyVaadinUI myUi, int scl_id) throws SQLException {
         String sql = "SELECT s.login, s.name, s.surname, s.middle_name, s.date_of_birth, g.name, "
                 + "concat(cnu.name,' - ',cn.name) as cl_name, sr.fullname, sr.passport, sr.work_place, "
-                + "sr.phone, sr.adress, r.name FROM student as s "
+                + "sr.phone, sr.address, r.name FROM student as s "
                 + "left join gender as g on s.gender_id = g.id "
                 + "left join class_name as cn on s.class_name_id = cn.id "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
@@ -213,7 +219,7 @@ public class DbStudent extends BaseDb {
                     result.getString("sr.phone"));
             item.getItemProperty(myUi.getMessage(SptMessages.Address) + " ("
                     + myUi.getMessage(SptMessages.Relative) + ")").setValue(
-                    result.getString("sr.adress"));
+                    result.getString("sr.address"));
         }
         return container;
     }
@@ -376,7 +382,7 @@ public class DbStudent extends BaseDb {
 
     public StudentInfoPdf execStudInfo_pdf(int student_id, int year_id)
             throws SQLException {
-        String sql = "SELECT st.login, st.photo, st.name, st.surname, sc.name_ru, sc.adress, sc.phone, sc.director_fullname, "
+        String sql = "SELECT st.login, st.photo, st.name, st.surname, sc.name_ru, sc.address, sc.phone, sc.director_fullname, "
                 + "CONCAT(cnu.name, ' - ', cna.name) AS class_name, concat(e.name, ' ', e.surname) as fullname FROM student AS st "
                 + "LEFT JOIN (SELECT so.to_class_name_id AS tcl, so.student_id as stid "
                 + "FROM student_orders AS so WHERE so.year_id = ? AND so.student_id = ? AND so.is_valid = 1 "
@@ -401,7 +407,7 @@ public class DbStudent extends BaseDb {
             st.setStud_surname(result.getString("st.surname"));
             st.setStud_class_name(result.getString("class_name"));
             st.setScl_name_ru(result.getString("sc.name_ru"));
-            st.setScl_address(result.getString("sc.adress"));
+            st.setScl_address(result.getString("sc.address"));
             st.setScl_phone(result.getString("sc.phone"));
             st.setScl_accountant_full_name(result.getString("fullname"));
             st.setScl_dir_f_name(result.getString("sc.director_fullname"));

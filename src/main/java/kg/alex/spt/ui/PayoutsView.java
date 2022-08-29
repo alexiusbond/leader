@@ -961,14 +961,15 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
                     tr.setCategory_id((Integer) cb.getValue());
+                    tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
                     tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                     tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
                     if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Update))) {
                         tr.setId(next.toString());
-                        dbAt.exec_update(tr);
+                        dbAt.exec_update_new(tr);
                     } else if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Insert))) {
-                        dbAt.exec_insert(tr, dbAt.getConnection());
+                        dbAt.exec_insert_new(tr, dbAt.getConnection());
                     }
                 }
             }
@@ -1022,10 +1023,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
                                 tr.setCategory_id((Integer) cb.getValue());
+                                tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
                                 tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                                 tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
-                                dbTr.exec_insert(tr, dbTr.getConnection());
+                                dbTr.exec_insert_new(tr, dbTr.getConnection());
                             }
                         }
                         dbTr.close();

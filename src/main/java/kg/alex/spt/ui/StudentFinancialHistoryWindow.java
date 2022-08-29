@@ -1,10 +1,13 @@
 package kg.alex.spt.ui;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.dao.*;
+import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
@@ -14,9 +17,8 @@ import org.apache.logging.log4j.Logger;
 public class StudentFinancialHistoryWindow extends Window implements Button.ClickListener {
     static final Logger logger = LogManager.getLogger(StudentFinancialHistoryWindow.class);
     private final MyVaadinUI myUI;
-    private int studentId;
-    private FormattedTable dataTable;
-    private Button excelBtn;
+    private final FormattedTable dataTable;
+    private final Button excelBtn;
 
     public StudentFinancialHistoryWindow(MyVaadinUI myUI, String title, int studentId) {
         this.myUI = myUI;
@@ -24,7 +26,6 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
         this.setHeight("90%");
         this.setModal(true);
         this.setCaption(title);
-        this.studentId = studentId;
 
         VerticalLayout mainLay = new VerticalLayout();
         mainLay.setSizeFull();

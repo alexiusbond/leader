@@ -12,6 +12,7 @@ public class AccTransaction implements Serializable {
     private String id;
     private Date date;
     private int category_id;
+    private int accTypeId;
     private int currency_id;
     private double currency_rate;
     private double amount;
@@ -28,6 +29,14 @@ public class AccTransaction implements Serializable {
     private int student_payments_id;
     private int from_to_employee_id;
     private int order_number;
+
+    public int getAccTypeId() {
+        return accTypeId;
+    }
+
+    public void setAccTypeId(int accTypeId) {
+        this.accTypeId = accTypeId;
+    }
 
     public String getId() {
         return id;

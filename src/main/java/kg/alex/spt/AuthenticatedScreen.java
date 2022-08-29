@@ -285,6 +285,9 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (currentUser.isPermitted(Settings.cnExpensesDefinitionView + ":" + Settings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.ExpensesDefinition), menuCommand);
         }
+        if (currentUser.isPermitted(Settings.cnIncomesExpensesDefinitionView + ":" + Settings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.IncomesExpensesDefinition), menuCommand);
+        }
         if (currentUser.isPermitted(Settings.cnReturnableAssetsDefinitionView + ":" + Settings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.ReturnableAssetsDefinition), menuCommand);
         }
@@ -530,6 +533,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 1));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExpensesDefinition))) {
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 2));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesExpensesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 5));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssetsDefinition))) {
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 3));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebtsDefinition))) {

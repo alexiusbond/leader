@@ -24,10 +24,10 @@ public class DbPaymentCategory extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUi, boolean withInitPay) throws SQLException {
         String sql;
         if (withInitPay) {
-            sql = "select t.id, t.name, t.acc_category_id from payment_category as t "
+            sql = "select t.id, t.name, t.acc_category_id, t.acc_type_id from payment_category as t "
                     + "order by t.id asc;";
         } else {
-            sql = "select t.id, t.name, t.acc_category_id from payment_category as t where t.id != 1 "
+            sql = "select t.id, t.name, t.acc_category_id, t.acc_type_id from payment_category as t where t.id != 1 "
                     + "order by t.id asc;";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -35,12 +35,15 @@ public class DbPaymentCategory extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
+        container.addContainerProperty(Settings.acc_type_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name"));
             item.getItemProperty(Settings.acc_category_id).setValue(
                     result.getInt("t.acc_category_id"));
+            item.getItemProperty(Settings.acc_type_id).setValue(
+                    result.getInt("t.acc_type_id"));
         }
         return container;
     }

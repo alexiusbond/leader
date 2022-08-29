@@ -33,7 +33,7 @@ public class DbStudentRelative extends BaseDb {
         
 
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.work_place, "
-                + "sr.phone, sr.adress, sr.passport, sr.is_main, sr.relatives_id "
+                + "sr.phone, sr.address, sr.passport, sr.is_main, sr.relatives_id "
                 + "FROM student_relatives as sr where sr.student_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
@@ -50,7 +50,7 @@ public class DbStudentRelative extends BaseDb {
                         dw.createTextField(result.getString("sr.fullname"),
                                 myUi.getMessage(SptMessages.FullName), id, false, true));
                 item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
-                        dw.createTextField(result.getString("sr.adress"),
+                        dw.createTextField(result.getString("sr.address"),
                                 myUi.getMessage(SptMessages.Address), id, true, true));
                 item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
@@ -68,7 +68,7 @@ public class DbStudentRelative extends BaseDb {
                         dw.createTextField(result.getString("sr.fullname"),
                                 myUi.getMessage(SptMessages.FullName), id, false, false));
                 item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
-                        dw.createTextField(result.getString("sr.adress"),
+                        dw.createTextField(result.getString("sr.address"),
                                 myUi.getMessage(SptMessages.Address), id, true, false));
                 item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
@@ -93,7 +93,7 @@ public class DbStudentRelative extends BaseDb {
 
     public int exec_insert(StudentRelative r) throws SQLException {
         String sql = "INSERT INTO student_relatives (student_id, fullname, "
-                + "work_place, phone, adress, passport,is_main,relatives_id) "
+                + "work_place, phone, address, passport, is_main, relatives_id) "
                 + "VALUES(?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, r.getStudent_id());
@@ -116,7 +116,7 @@ public class DbStudentRelative extends BaseDb {
     
     public int exec_update(StudentRelative sr) throws SQLException {
         String sql = "Update student_relatives set student_id=?, "
-                + "fullname=?, work_place=?, phone=?, adress=?, "
+                + "fullname=?, work_place=?, phone=?, address=?, "
                 + "passport=?, is_main=?, relatives_id=? WHERE id=?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());

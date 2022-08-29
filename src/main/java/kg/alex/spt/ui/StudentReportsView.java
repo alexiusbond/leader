@@ -78,6 +78,9 @@ public class StudentReportsView extends HorizontalSplitPanel implements Property
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmClassList)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.ClassList));
         }
+        if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmDebtAndRepayment)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.DebtsAndRepaymentsReport));
+        }
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmStatusesReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.StatusesReport));
         }
@@ -115,6 +118,8 @@ public class StudentReportsView extends HorizontalSplitPanel implements Property
                 new DebtReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ClassList))) {
                 new ClassListReport(myUI, this);
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.DebtsAndRepaymentsReport))) {
+                new DebtsAndRepaymentsReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StatusesReport))) {
                 new StatusesReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.YearMonthReport))) {

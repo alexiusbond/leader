@@ -216,7 +216,7 @@ public class DbStudentContract extends BaseDb {
         }
         sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
                 "- prev_sc.net_payments)) AS prev_debt, vc.amount, vc.full_details, " +
-                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, rel.name, ";
+                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, sr.address, sr.work_place, rel.name, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(c.amount, st.id, ?, ?, ?)) as contr_with_disc, " +
                     "GROUP_CONCAT(DISTINCT " +
@@ -305,7 +305,6 @@ public class DbStudentContract extends BaseDb {
                 "AND edu.id IN (" + edu_statuses_ids + ") " +
                 "GROUP BY st.id ORDER BY cl.id, cln.id, st.name, st.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        System.out.println(stat);
         if (from_date != null && till_date != null) {
             stat.setDate(1, new java.sql.Date(from_date.getTime()));
             stat.setDate(2, new java.sql.Date(till_date.getTime()));
@@ -366,7 +365,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(6, year_id);
             stat.setInt(7, year_id);
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
@@ -386,6 +384,8 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.OverPay), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Relative), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Address), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.WorkPlace), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
@@ -401,6 +401,10 @@ public class DbStudentContract extends BaseDb {
                         result.getString("rel.name") + " - " + result.getString("sr.fullname"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(
                         result.getString("sr.phone"));
+                item.getItemProperty(myUI.getMessage(SptMessages.Address)).setValue(
+                        result.getString("sr.address"));
+                item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(
+                        result.getString("sr.work_place"));
             }
             double prevYearDebt = result.getDouble("prev_debt");
             if (prevYearDebt >= 0) {
@@ -433,11 +437,6 @@ public class DbStudentContract extends BaseDb {
             } else if (result.getDouble("prev_debt") != 0.0) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("prev_debt"));
                 clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-            }
-            if (result.getString("st.login") == "") {
-                System.out.println(result.getDouble("contr_with_disc"));
-                System.out.println(result.getDouble("prev_debt"));
-                System.out.println(result.getDouble("vc.amount"));
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("net_payments"));
             clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
@@ -743,7 +742,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(6, year_id);
             stat.setInt(7, year_id);
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         int school_id = 0;
         Table t = null;
@@ -1762,13 +1760,14 @@ public class DbStudentContract extends BaseDb {
     public void execFinancialHistory(MyVaadinUI myUI, int studentId, Table t) throws SQLException {
 
         String sql = "SELECT * FROM (" +
-                "(SELECT y.name AS academic_year, sc.creation_date AS creation_date, 'Контракт' AS type, " +
-                "c.name AS note, c.amount AS amount FROM student_contract AS sc " +
+                "(SELECT concat('sc', sc.id) as  id, y.name AS academic_year, sc.creation_date AS creation_date, " +
+                "'Контракт' AS type, c.name AS note, c.amount AS amount FROM student_contract AS sc " +
                 "LEFT JOIN year AS y ON sc.year_id = y.id " +
                 "LEFT JOIN contract AS c ON sc.contract_id = c.id WHERE sc.student_id = ? " +
                 "ORDER BY sc.year_id , sc.creation_date) " +
                 "UNION " +
-                "(SELECT y.name AS academic_year, sd.creation_date AS creation_date, 'Скидка' AS type, " +
+                "(SELECT concat('sd', sd.id) as  id, y.name AS academic_year, sd.creation_date AS creation_date, " +
+                "'Скидка' AS type, " +
                 "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') " +
                 "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') " +
                 "WHEN 3 THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
@@ -1778,14 +1777,15 @@ public class DbStudentContract extends BaseDb {
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
                 "WHERE sd.student_id = ? ORDER BY sd.year_id , sd.creation_date) " +
                 "UNION " +
-                "(SELECT y.name AS academic_year, scc.creation_date AS creation_date, 'Корректировка' AS type, " +
-                "CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` " +
+                "(SELECT concat('scc', scc.id) as  id, y.name AS academic_year, scc.creation_date AS creation_date, " +
+                "'Корректировка' AS type, CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, " +
+                "IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` " +
                 "FROM student_correction AS scc LEFT JOIN year AS y ON scc.year_id = y.id " +
                 "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
                 "WHERE scc.student_id = ? ORDER BY scc.year_id , scc.creation_date) " +
                 "UNION " +
-                "(SELECT y.name AS academic_year, DATE(sp.modification_date) AS creation_date, 'Оплата' AS type, " +
-                "CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
+                "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
+                "'Оплата' AS type, CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
                 "IF(sp.acc_currency_id = 2, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
                 "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
                 "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
@@ -1797,6 +1797,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(2, studentId);
         stat.setInt(3, studentId);
         stat.setInt(4, studentId);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.AcademicYear), String.class, null);
@@ -1806,14 +1807,163 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Repayment), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
-        int i = 0;
         double currentBalance = 0.0, totalDebt = 0.0;
         Item item;
 
         while (result.next()) {
-            item = container.addItem(++i);
+            item = container.addItem(result.getString("t.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.AcademicYear)).setValue(
                     result.getString("t.academic_year"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
+            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
+            if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payment)) ||
+                    result.getString("t.type").equals(myUI.getMessage(SptMessages.Discount)) ||
+                    (result.getString("t.type").equals(myUI.getMessage(SptMessages.Correction))
+                            && result.getDouble("t.amount") < 0.0)) {
+                if (result.getDouble("t.amount") < 0.0) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(-1 * result.getDouble("t.amount"));
+                    currentBalance -= (-1 * result.getDouble("t.amount"));
+                } else {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(result.getDouble("t.amount"));
+                    currentBalance -= result.getDouble("t.amount");
+                }
+
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("t.amount"));
+                currentBalance += result.getDouble("t.amount");
+                totalDebt += result.getDouble("t.amount");
+            }
+            if (currentBalance < 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
+                        (Settings.dFormat.format(currentBalance * -1))
+                                + " (" + myUI.getMessage(SptMessages.Repayment).charAt(0) + ")");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(currentBalance)
+                        + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
+            }
+            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
+                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
+        }
+        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat.format(totalDebt - currentBalance));
+        t.setContainerDataSource(container);
+    }
+
+    public void execDebtsAndRepayments(MyVaadinUI myUI, int yearId, String classIds, String educationStatusIds,
+                                       Date fromDate, Date tillDate, Table t) throws SQLException {
+
+        String sql = " SELECT * FROM (" +
+                "(SELECT concat('sc', sc.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, " +
+                "edu.name AS education_status, st.login AS login, " +
+                "CONCAT(st.name, ' ', st.surname) AS fullname, sc.creation_date AS creation_date, 'Контракт' AS type, " +
+                "c.name AS note, c.amount AS amount FROM student_contract AS sc " +
+                "LEFT JOIN student AS st ON st.id = sc.student_id LEFT JOIN year AS y ON sc.year_id = y.id " +
+                "LEFT JOIN contract AS c ON sc.contract_id = c.id " +
+                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
+                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
+                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
+                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
+                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
+                "WHERE sc.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "ORDER BY sc.creation_date) UNION " +
+                "(SELECT concat('sd', sd.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, " +
+                "edu.name AS education_status, st.login AS login, " +
+                "CONCAT(st.name, ' ', st.surname) AS fullname, sd.creation_date AS creation_date, 'Скидка' AS type, " +
+                "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') " +
+                "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') " +
+                "WHEN 3 THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
+                "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$') END AS note, sd.discount_value AS amount " +
+                "FROM student_discount AS sd " +
+                "LEFT JOIN student AS st ON st.id = sd.student_id LEFT JOIN year AS y ON sd.year_id = y.id " +
+                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
+                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
+                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
+                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
+                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
+                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
+                "WHERE sd.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "ORDER BY sd.creation_date) UNION (" +
+                "SELECT concat('scc', scc.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, " +
+                "edu.name AS education_status, st.login AS login, " +
+                "CONCAT(st.name, ' ', st.surname) AS fullname, scc.creation_date AS creation_date, 'Корректировка' AS type, " +
+                "CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, " +
+                "IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` FROM student_correction AS scc " +
+                "LEFT JOIN student AS st ON st.id = scc.student_id LEFT JOIN year AS y ON scc.year_id = y.id " +
+                "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
+                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
+                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
+                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
+                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
+                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
+                "WHERE scc.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "ORDER BY scc.creation_date) UNION " +
+                "(SELECT concat('sp', sp.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, edu.name AS education_status, st.login AS login, " +
+                "CONCAT(st.name, ' ', st.surname) AS fullname, DATE(sp.modification_date) AS creation_date, 'Оплата' AS type, " +
+                "CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
+                "IF(sp.acc_currency_id = 2, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
+                "FROM student_payments AS sp LEFT JOIN student AS st ON st.id = sp.student_id " +
+                "LEFT JOIN year AS y ON sp.year_id = y.id LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
+                "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
+                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
+                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
+                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
+                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
+                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
+                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
+                "WHERE sp.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "ORDER BY DATE(sp.modification_date))) AS t WHERE 1 ";
+        if (fromDate != null) {
+            sql += "AND t.creation_date >= ? ";
+        }
+        if (tillDate != null) {
+            sql += "AND t.creation_date <= ? ";
+        }
+        sql += "ORDER BY t.creation_date";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        int counter = 0;
+        stat.setInt(++counter, yearId);
+        stat.setInt(++counter, yearId);
+        stat.setInt(++counter, yearId);
+        stat.setInt(++counter, yearId);
+        stat.setInt(++counter, yearId);
+        stat.setInt(++counter, yearId);
+        stat.setInt(++counter, yearId);
+        stat.setInt(++counter, yearId);
+        if (fromDate != null) {
+            stat.setDate(++counter, new java.sql.Date(fromDate.getTime()));
+        }
+        if (tillDate != null) {
+            stat.setDate(++counter, new java.sql.Date(tillDate.getTime()));
+        }
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Repayment), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
+        double currentBalance = 0.0, totalDebt = 0.0;
+        Item item;
+
+        while (result.next()) {
+            item = container.addItem(result.getString("t.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+                    result.getString("t.class"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
+                    result.getString("t.login"));
+            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
+                    result.getString("t.fullname"));
+            item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
+                    result.getString("t.education_status"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));

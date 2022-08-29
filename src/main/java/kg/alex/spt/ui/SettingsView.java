@@ -45,7 +45,7 @@ public class SettingsView extends GridLayout {
             properties.add(Settings.acc_category_id);
             productsContainer = dbDef.exec_for_select(myUI, Settings.dpProductCategoryTable, properties);
             salaryContainer = dbDef.exec_for_select(myUI, Settings.dbSalaryCategory, properties);
-            properties.add(Settings.db_acc_type_id);
+            properties.add(Settings.acc_type_id);
             paymentsContainer = dbDef.exec_for_select(myUI, Settings.paymentCategoryTable, properties);
             dbDef.close();
         } catch (Exception e) {
@@ -91,10 +91,10 @@ public class SettingsView extends GridLayout {
                 cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
                 cb.setFilteringMode(FilteringMode.CONTAINS);
                 if ((Integer) paymentsContainer.getContainerProperty(itemIds.get(i),
-                        Settings.db_acc_type_id).getValue() == 1) {
+                        Settings.acc_type_id).getValue() == 1) {
                     cb.setContainerDataSource(Settings.copyContainer(incomesContainer));
                 } else if ((Integer) paymentsContainer.getContainerProperty(itemIds.get(i),
-                        Settings.db_acc_type_id).getValue() == 2) {
+                        Settings.acc_type_id).getValue() == 2) {
                     cb.setContainerDataSource(Settings.copyContainer(expensesContainer));
                 }
                 cb.setValue(paymentsContainer.getContainerProperty(itemIds.get(i), Settings.acc_category_id).getValue());

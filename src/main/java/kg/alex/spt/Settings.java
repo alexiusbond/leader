@@ -151,7 +151,7 @@ public class Settings implements Serializable {
     public static final String db_dm_invoice = "dm_invoice";
     public static final String dbAccInvoice = "acc_invoice";
     public static final String db_acc_invoice_id = "acc_invoice_id";
-    public static final String db_acc_type_id = "acc_type_id";
+    public static final String acc_type_id = "acc_type_id";
     public static final String invoice_id = "invoice_id";
     public static final String dbStock = "dp_stock";
     public static final String dbOperation = "dp_service_type";
@@ -219,6 +219,7 @@ public class Settings implements Serializable {
     public static final String cnHomePageView = "HomePageView";
     public static final String cnDiscountDefinitionView = "DiscountDefinitionView";
     public static final String cnExpensesDefinitionView = "ExpensesDefinitionView";
+    public static final String cnIncomesExpensesDefinitionView = "IncomesExpensesDefinitionView";
     public static final String cnShortTermDebtsDefinitionView = "ShortTermDebtsDefinitionView";
     public static final String cnReturnableAssetsDefinitionView = "ReturnableAssetsDefinitionView";
     public static final String cnIncomesDefinitionView = "IncomesDefinitionView";
@@ -274,6 +275,7 @@ public class Settings implements Serializable {
     public static final String prmContractInfo = "информация о контракте";
     public static final String prmContractInfoLeftDebt = "информация о задолженностях";
     public static final String prmMenu = "показ в меню";
+    public static final String prmIncomesExpensesDefinition = "определение двусторонних категорий";
     public static final String prmContractVisible = "видимость контракта";
     public static final String prmOrganizeLessons = "организация уроков";
     public static final String prmOrganizeSupervision = "назначение кураторства";
@@ -287,6 +289,7 @@ public class Settings implements Serializable {
     public static final String prmDebtReport = "отчет по долгам";
     public static final String prmClassInstPlan = "план оплат по классам";
     public static final String prmClassList = "список класса";
+    public static final String prmDebtAndRepayment = "отчет по долгам и погашениям";
     public static final String prmStatusesReport = "отчет по статусам";
     public static final String prmYearMonthReport = "годовой и месячный отчет";
     public static final String prmMonthReport = "отчет по месяцам";

@@ -15,6 +15,8 @@ import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.filter.Compare;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.ItemClickEvent;
@@ -50,6 +52,8 @@ import org.vaadin.grid.cellrenderers.view.RowIndexRenderer;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CashBoxView extends GridLayout implements Button.ClickListener,
         Property.ValueChangeListener, FieldGroup.CommitHandler {
@@ -74,6 +78,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     private HorizontalLayout currencyHl;
     private ComboBox expensesCategoryCb, incomesCategoryCb, toEmployeesCb;
     private Date today;
+    private final Map<String, Container.Filter> filters = new HashMap<>();
 
     public CashBoxView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -397,6 +402,65 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         }
         grid.getColumn(myUI.getMessage(SptMessages.Note)).setExpandRatio(1);
         grid.getEditorFieldGroup().addCommitHandler(this);
+
+        Grid.HeaderRow filterRow = grid.appendHeaderRow();
+        for (Object pid : grid.getContainerDataSource().getContainerPropertyIds()) {
+            if (grid.getColumn(pid).getEditorField() instanceof TextField) {
+                Grid.HeaderCell cell = filterRow.getCell(pid);
+
+                TextField filterField = new TextField();
+                filterField.setStyleName(ValoTheme.TEXTFIELD_TINY);
+                filterField.setWidth(Settings.PERCENTS100);
+                filterField.setInputPrompt(myUI.getMessage(SptMessages.Filter));
+
+                filterField.addTextChangeListener(change -> {
+                    ((GeneratedPropertyContainer) grid.getContainerDataSource()).removeContainerFilter(filters.get(pid));
+                    if (!change.getText().isEmpty()) {
+                        filters.put(pid.toString(), new SimpleStringFilter(pid, change.getText(), true, false));
+                        ((GeneratedPropertyContainer) grid.getContainerDataSource()).addContainerFilter(filters.get(pid));
+                    }
+                });
+                cell.setComponent(filterField);
+            } else if (grid.getColumn(pid).getEditorField() instanceof ComboBox) {
+                Grid.HeaderCell cell = filterRow.getCell(pid);
+
+                ComboBox filterField = createCombobox(null, false, null);
+                filterField.setStyleName(ValoTheme.COMBOBOX_TINY);
+                filterField.setWidth(Settings.PERCENTS100);
+                filterField.setNullSelectionAllowed(true);
+                filterField.setInputPrompt(myUI.getMessage(SptMessages.Filter));
+                try {
+                    if (grid == expensesGrid && pid.equals(myUI.getMessage(SptMessages.Category))) {
+                        DbAccTransactions dbac = new DbAccTransactions();
+                        dbac.connect();
+                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0));
+                        dbac.close();
+                    } else if (grid == incomesGrid && pid.equals(myUI.getMessage(SptMessages.Category))) {
+                        DbAccTransactions dbac = new DbAccTransactions();
+                        dbac.connect();
+                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0));
+                        dbac.close();
+                    } else if (pid.equals(myUI.getMessage(SptMessages.ToEmployee))) {
+                        DbEmployee dbCon = new DbEmployee();
+                        dbCon.connect();
+                        filterField.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0));
+                        dbCon.close();
+                    }
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+
+                filterField.addValueChangeListener(change -> {
+                    ((GeneratedPropertyContainer) grid.getContainerDataSource()).removeContainerFilter(filters.get(pid));
+                    if (change.getProperty().getValue() != null) {
+                        filters.put(pid.toString(), new Compare.Equal(pid, change.getProperty().getValue()));
+                        ((GeneratedPropertyContainer) grid.getContainerDataSource()).addContainerFilter(filters.get(pid));
+                    }
+                });
+                cell.setComponent(filterField);
+            }
+        }
     }
 
     @Override
@@ -448,15 +512,15 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             String orderName;
             if (accordion.getSelectedTab() == incomesGrid) {
                 item = incomesGrid.getContainerDataSource().getItem(source.getId());
-                tr = getTransaction(item, source.getId());
-                categoryCb = incomesCategoryCb;
                 acc_type_id = 1;
+                tr = getTransaction(item, source.getId(), acc_type_id);
+                categoryCb = incomesCategoryCb;
                 orderName = myUI.getMessage(SptMessages.IncomeOrder);
             } else {
                 item = expensesGrid.getContainerDataSource().getItem(source.getId());
-                tr = getTransaction(item, source.getId());
-                categoryCb = expensesCategoryCb;
                 acc_type_id = 2;
+                tr = getTransaction(item, source.getId(), acc_type_id);
+                categoryCb = expensesCategoryCb;
                 orderName = myUI.getMessage(SptMessages.ExpenseOrder);
                 if (item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).getValue() != null
                         && (Integer) item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).getValue() != 0) {
@@ -956,11 +1020,12 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         }
     }
 
-    private AccTransaction getTransaction(Item item, String id) {
+    private AccTransaction getTransaction(Item item, String id, int acc_type_id) {
         AccTransaction t = new AccTransaction();
         t.setId(id);
         t.setDate((Date) item.getItemProperty(myUI.getMessage(SptMessages.Date)).getValue());
         t.setCategory_id((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Category)).getValue());
+        t.setAccTypeId(acc_type_id);
         t.setCurrency_id((Integer) item.getItemProperty(Settings.acc_currency_id).getValue());
         t.setCurrency_rate((Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue());
         if (t.getCurrency_id() == 1) {
@@ -1017,17 +1082,17 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         Grid grid = (Grid) accordion.getSelectedTab();
 
         String itemId = grid.getEditedItemId().toString();
-        AccTransaction tr = getTransaction(grid.getContainerDataSource().getItem(itemId), itemId);
-
+        AccTransaction tr = getTransaction(grid.getContainerDataSource().getItem(itemId),
+                itemId, grid == expensesGrid ? 2 : 1);
         try {
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             if (itemId.contains(Settings.FreshItem)) {
-                status = dbCon.exec_insert(tr, dbCon.getConnection());
+                status = dbCon.exec_insert_new(tr, dbCon.getConnection());
                 copyItemAndDelete(itemId, status + "");
                 itemId = status + "";
             } else {
-                status = dbCon.exec_update(tr);
+                status = dbCon.exec_update_new(tr);
             }
 
             if (status != 0) {

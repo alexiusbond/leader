@@ -24,7 +24,7 @@ public class DbRelative extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 
         String sql = "SELECT sr.fullname, sr.work_place, sr.phone, "
-                + "sr.adress, sr.passport, sr.relatives_id, sr.is_main "
+                + "sr.address, sr.passport, sr.relatives_id, sr.is_main "
                 + "FROM student_relatives as sr where sr.student_id = ? "
                 + "and (sr.relatives_id = 1 or sr.relatives_id = 2) "
                 + "group by sr.relatives_id;";
@@ -48,36 +48,13 @@ public class DbRelative extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
-                    result.getString("sr.adress"));
+                    result.getString("sr.address"));
             item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
                     result.getString("sr.passport"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(Settings.is_main).setValue(
                     result.getInt("sr.is_main"));
-        }
-        return container;
-    }
-
-    public IndexedContainer execSQLSilkRoad(MyVaadinUI myUi, int stud_id) throws SQLException {
-        String sql = "SELECT id, fullname, adress, phone FROM student_relatives "
-                + "where student_id = ? and is_main = 1;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, stud_id);
-        ResultSet result = stat.executeQuery();
-        IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.FullName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Address), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
-
-        while (result.next()) {
-            Item item = container.addItem(result.getInt("id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
-                    result.getString("fullname"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
-                    result.getString("adress"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
-                    result.getString("phone"));
         }
         return container;
     }

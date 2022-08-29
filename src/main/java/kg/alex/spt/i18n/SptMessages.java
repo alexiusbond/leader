@@ -404,6 +404,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String SchoolType = generateId();
     public static final String ClassInstallmentPlan = generateId();
     public static final String ClassList = generateId();
+    public static final String DebtsAndRepaymentsReport = generateId();
     public static final String StatusesReport = generateId();
     public static final String CanNotSaveIdNumber = generateId();
     public static final String NotificationEmptyTable = generateId();
@@ -486,6 +487,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String StudentsInformation = generateId();
     public static final String IncomesDefinition = generateId();
     public static final String ExpensesDefinition = generateId();
+    public static final String IncomesExpensesDefinition = generateId();
     public static final String StockIncome = generateId();
     public static final String StockOutcome = generateId();
     public static final String InventoryOrganization = generateId();
@@ -532,6 +534,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Last30DaysLogs = generateId();
     public static final String ForAllTimeLogs = generateId();
     public static final String Filtered = generateId();
+    public static final String Filter = generateId();
     public static final String TableName = generateId();
     public static final String OldField = generateId();
     public static final String NewField = generateId();

@@ -7,7 +7,6 @@ package kg.alex.spt.reports.students;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -17,14 +16,10 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentContract;
-import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.pdf.ClassListPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
-import kg.alex.spt.utils.DefinitionsFilterGenerator;
-import kg.alex.spt.utils.FormattedFilterTable;
+import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,23 +28,20 @@ import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.util.Set;
 
-public class ClassListReport implements Button.ClickListener,
+public class DebtsAndRepaymentsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(ClassListReport.class);
+    static final Logger logger = LogManager.getLogger(DebtsAndRepaymentsReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
+    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
-    private FormattedFilterTable dataTable;
+    private ComboBox yearSelect;
+    private FormattedTable dataTable;
     private FilterTable classTable;
-    private IndexedContainer dataCont;
-    public int activeStudents, discountedStudents;
-    public double contracts, discounts, corrections, prevYearDebts, prevYearOverpays, nets, paid_amounts, debts, overPays;
     private PopupDateField fromDateDF, tillDateDF;
 
-    public ClassListReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
+    public DebtsAndRepaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
         this.splitPanel = splitPanel;
         buildLeftPanel();
@@ -155,14 +147,6 @@ public class ClassListReport implements Button.ClickListener,
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
-        makePdfBtn = new Button();
-        makePdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
-        makePdfBtn.setWidth(Settings.PERCENTS100);
-        makePdfBtn.setEnabled(false);
-        makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
-        makePdfBtn.addClickListener(this);
-
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
@@ -178,27 +162,23 @@ public class ClassListReport implements Button.ClickListener,
         leftGrid.addComponent(selectAllBtn, 0, 3, 1, 3);
         leftGrid.addComponent(deselectAllBtn, 2, 3, 3, 3);
         leftGrid.addComponent(classTable, 0, 4, 3, 4);
-        leftGrid.addComponent(generateBtn, 0, 5, 1, 5);
-        leftGrid.addComponent(makePdfBtn, 2, 5);
+        leftGrid.addComponent(generateBtn, 0, 5, 2, 5);
         leftGrid.addComponent(excelBtn, 3, 5);
         leftGrid.setRowExpandRatio(4, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
-
     }
 
     private void buildRightLayout() {
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedFilterTable();
-        dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
-        dataTable.setFilterBarVisible(true);
-        dataTable.setFilterGenerator(new DefinitionsFilterGenerator(dataTable));
+        dataTable = new FormattedTable();
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
-        dataTable.setRowHeaderMode(CustomTable.RowHeaderMode.INDEX);
+        dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
+        dataTable.addStyleName("noWrap");
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);
     }
@@ -207,53 +187,23 @@ public class ClassListReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            System.out.println(classTable.getValue());
             if (classTable.getValue() != null && ((Set<?>) classTable.getValue()).size() > 0) {
                 try {
-                    DbStudentContract dbsc = new DbStudentContract();
-                    dbsc.connect();
-                    dataCont = dbsc.execSQL_ClassList(myUI, Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
-                            (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(),
-                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
-                    dataTable.setContainerDataSource(dataCont);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearOverpay), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.OverPay), CustomTable.Align.RIGHT);
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
-                            myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
-                            myUI.getMessage(SptMessages.Active) + activeStudents);
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            Settings.dFormat.format(contracts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            Settings.dFormat.format(discounts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                            Settings.dFormat.format(corrections));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            Settings.dFormat.format(prevYearDebts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
-                            Settings.dFormat.format(prevYearOverpays));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            Settings.dFormat.format(nets));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(paid_amounts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                            Settings.dFormat.format(debts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
-                            Settings.dFormat.format(overPays));
-                    if (dataCont.size() != 0) {
-                        dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
-                                + discountedStudents + " (" + discountedStudents * 100 / dataCont.size() + "%)");
-                        makePdfBtn.setEnabled(true);
+                    DbStudentContract dbCon = new DbStudentContract();
+                    dbCon.connect();
+                    dbCon.execDebtsAndRepayments(myUI, (Integer) yearSelect.getValue(),
+                            Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                            Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
+                            fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Repayment), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
+                    dataTable.setColumnWidth(myUI.getMessage(SptMessages.ClassName), 80);
+                    dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 200);
+                    if (dataTable.size() != 0) {
                         excelBtn.setEnabled(true);
                     }
-                    dbsc.close();
+                    dbCon.close();
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
@@ -262,51 +212,16 @@ public class ClassListReport implements Button.ClickListener,
                 Notification.show(myUI.getMessage(SptMessages.NotificationNothingIsSelected),
                         Notification.Type.WARNING_MESSAGE);
             }
-        } else if (source == makePdfBtn) {
-            StudentInfoPdf st;
-            try {
-                DbSchool dbsc = new DbSchool();
-                dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
-                dbsc.close();
-                if (st.getScl_accountant_full_name() != null) {
-                    if (st.getScl_address() != null && st.getScl_phone() != null
-                            && st.getScl_name_ru() != null) {
-                        new ClassListPdf(myUI, dataCont, st, this);
-                    } else {
-                        Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
-                                Notification.Type.WARNING_MESSAGE);
-                    }
-                } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
-                            Notification.Type.WARNING_MESSAGE);
-                }
-            } catch (Exception e) {
-                logger.error(e);
-                logger.catching(e);
-            }
         } else if (source == excelBtn) {
             if (dataTable.getContainerDataSource().size() != 0) {
-                Table t = new Table();
-                t.setContainerDataSource(dataTable.getContainerDataSource());
-
-                Window w = new Window();
-                w.setModal(true);
-                myUI.addWindow(w);
-                w.setContent(t);
-
-                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(t);
-                excelReport.setReportTitle(myUI.getMessage(SptMessages.ClassList));
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
+                excelReport.setReportTitle(myUI.getMessage(SptMessages.DebtsAndRepaymentsReport));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
-                excelReport.getTotalsRow().getCell(0).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(3).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(8).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Id)));
-                excelReport.getTotalsRow().getCell(3).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.EducationStatus)));
-                excelReport.getTotalsRow().getCell(8).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.DiscountType)));
+                excelReport.getTotalsRow().getCell(9).setCellFormula(null);
+                excelReport.getTotalsRow().getCell(9).setCellValue(
+                        dataTable.getColumnFooter(myUI.getMessage(SptMessages.Balance)));
                 excelReport.sendConverted();
-                w.close();
             }
         } else if (source == selectAllBtn) {
             classTable.setValue(classTable.getContainerDataSource().getItemIds());
@@ -319,12 +234,10 @@ public class ClassListReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (property == classTable && classTable.getValue() != null) {
-            makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
             dataTable.setContainerDataSource(null);
         } else if (property == yearSelect || property == educationStatusMCB
                 || property == fromDateDF || property == tillDateDF) {
-            makePdfBtn.setEnabled(false);
             excelBtn.setEnabled(false);
             dataTable.setContainerDataSource(null);
         }
