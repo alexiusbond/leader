@@ -5,6 +5,7 @@
  */
 package kg.alex.spt.ui;
 
+import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.*;
 import com.vaadin.addon.charts.model.style.SolidColor;
@@ -21,6 +22,7 @@ import kg.alex.spt.domain.ContractTotal;
 import kg.alex.spt.domain.EducationStatus;
 import kg.alex.spt.domain.EmployeesCount;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -32,7 +34,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
     private final MyVaadinUI myUI;
 
     private final Subject currentUser = SecurityUtils.getSubject();
-    private Button weekLog, monthLog, allLog;
+    private Button weekLogBtn, monthLogBtn, allLogBtn, excelBtn;
     private Table logTable;
     private Label logTableCaption;
     private ComboBox logsTypeSelect;
@@ -106,15 +108,29 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
     @Override
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
-        if (source == weekLog) {
+        if (source == weekLogBtn) {
             setLogTable(6);
             logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
-        } else if (source == monthLog) {
+        } else if (source == monthLogBtn) {
             setLogTable(30);
             logTableCaption.setValue(myUI.getMessage(SptMessages.Last30DaysLogs));
-        } else if (source == allLog) {
+        } else if (source == allLogBtn) {
             setLogTable(0);
             logTableCaption.setValue(myUI.getMessage(SptMessages.ForAllTimeLogs));
+        } else if (source == excelBtn) {
+            if (logTable.size() > 0) {
+                try {
+                    EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(logTable);
+                    excelReport.setReportTitle(logsTypeSelect.getItemCaption(logsTypeSelect.getValue() + " - "
+                            + logTableCaption.getValue()));
+                    excelReport.setDisplayTotals(false);
+                    excelReport.convertTable();
+                    excelReport.sendConverted();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            }
         }
     }
 
@@ -185,7 +201,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label othersLab = new Label();
         othersLab.setContentMode(ContentMode.HTML);
         othersLab.setStyleName(ValoTheme.LABEL_SMALL);
-        if (emp.getOthers()!=null && emp.getOthers().length() > 85) {
+        if (emp.getOthers() != null && emp.getOthers().length() > 85) {
             othersLab.setValue(emp.getOthers().substring(0, 80) + "...");
         } else {
             othersLab.setValue(emp.getOthers());
@@ -456,22 +472,30 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logsTypeSelect.setValue(myUI.getMessage(SptMessages.SystemLogs));
         logsTypeSelect.addValueChangeListener(this);
 
-        weekLog = new Button(myUI.getMessage(SptMessages.WeekLogs));
-        weekLog.setWidth(Settings.PERCENTS100);
-        weekLog.addClickListener(this);
-        monthLog = new Button(myUI.getMessage(SptMessages.MonthLogs));
-        monthLog.setWidth(Settings.PERCENTS100);
-        monthLog.addClickListener(this);
-        allLog = new Button(myUI.getMessage(SptMessages.AllLogs));
-        allLog.setWidth(Settings.PERCENTS100);
-        allLog.addClickListener(this);
+        weekLogBtn = new Button(myUI.getMessage(SptMessages.WeekLogs));
+        weekLogBtn.setWidth(Settings.PERCENTS100);
+        weekLogBtn.addClickListener(this);
+
+        monthLogBtn = new Button(myUI.getMessage(SptMessages.MonthLogs));
+        monthLogBtn.setWidth(Settings.PERCENTS100);
+        monthLogBtn.addClickListener(this);
+
+        allLogBtn = new Button(myUI.getMessage(SptMessages.AllLogs));
+        allLogBtn.setWidth(Settings.PERCENTS100);
+        allLogBtn.addClickListener(this);
+
+        excelBtn = new Button(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setWidth(Settings.PERCENTS100);
+        excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
+        excelBtn.addClickListener(this);
 
         setLogTable(6);
 
         logButtonsLayout.addComponent(logsTypeSelect);
-        logButtonsLayout.addComponent(weekLog);
-        logButtonsLayout.addComponent(monthLog);
-        logButtonsLayout.addComponent(allLog);
+        logButtonsLayout.addComponent(weekLogBtn);
+        logButtonsLayout.addComponent(monthLogBtn);
+        logButtonsLayout.addComponent(allLogBtn);
+        logButtonsLayout.addComponent(excelBtn);
 
         logTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Action), 1);
         layout.addComponent(logTableCaption);

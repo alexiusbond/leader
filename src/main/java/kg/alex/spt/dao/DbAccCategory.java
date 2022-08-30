@@ -56,7 +56,7 @@ public class DbAccCategory extends BaseDb {
                 + "left join acc_category as cp on cp.id = c.parent_id "
                 + "left join hr_salary_category as sc on sc.acc_category_id = cp.parent_id "
                 + "where c.acc_type_id = ? and (c.school_id is null or c.school_id = ?) ";
-                // + "and (c.activity_status_id = 2 or c.id = ?) ";
+        // + "and (c.activity_status_id = 2 or c.id = ?) ";
         if (!withParents) {
             sql += "and c.parent_id is not null ";
         }
@@ -106,17 +106,24 @@ public class DbAccCategory extends BaseDb {
         return container;
     }
 
-    public void execSQL(MyVaadinUI myUI, int type, TreeTable t) throws SQLException {
+    public void execSQL(MyVaadinUI myUI, int type, int schoolId, TreeTable t) throws SQLException {
 
 
-        String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.parent_id, s.name, c.activity_status_id, "
-                + "c2.name, c.note FROM acc_category as c "
+        String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, "
+                + "c.parent_id, s.name, c.activity_status_id, c2.name, c.note FROM acc_category as c "
                 + "left join activity_status as s on c.activity_status_id = s.id "
-                + "left join acc_category as c2 on c.parent_id = c2.id where c.acc_type_id = ? and c.school_id is null "
-                + "group by c.id "
-                + "order by ifnull(concat(c.parent_code,'.',c.code),c.code), c.activity_status_id;";
+                + "left join acc_category as c2 on c.parent_id = c2.id where c.acc_type_id = ? ";
+        if (schoolId == 0) {
+            sql += "and c.school_id is null ";
+        } else {
+            sql += "and c.school_id = ? ";
+        }
+        sql += "group by c.id order by ifnull(concat(c.parent_code,'.',c.code),c.code), c.activity_status_id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
+        if (schoolId != 0) {
+            stat.setInt(2, schoolId);
+        }
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, 0);

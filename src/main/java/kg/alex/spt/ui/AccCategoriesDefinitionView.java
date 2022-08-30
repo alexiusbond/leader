@@ -42,10 +42,12 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
     private VerticalLayout settingsLay;
     private final Subject currentUser = SecurityUtils.getSubject();
     private final int movement_type_id;
+    private final String permission;
 
-    public AccCategoriesDefinitionView(MyVaadinUI myUI, int movement_type_id) {
+    public AccCategoriesDefinitionView(MyVaadinUI myUI, int movement_type_id, String permission) {
         this.myUI = myUI;
         this.movement_type_id = movement_type_id;
+        this.permission = permission;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
                 myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Parent),
@@ -75,10 +77,10 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
 
     private void setTableOptions() {
         try {
-            DbAccCategory dbac = new DbAccCategory();
-            dbac.connect();
-            dbac.execSQL(myUI, movement_type_id, dataTable);
-            dbac.close();
+            DbAccCategory dbCon = new DbAccCategory();
+            dbCon.connect();
+            dbCon.execSQL(myUI, movement_type_id, movement_type_id == 5 ? myUI.getUser().getSchool_id() : 0, dataTable);
+            dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -148,6 +150,11 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         parentSelect.setWidth(Settings.PERCENTS100);
         parentSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
         parentSelect.setFilteringMode(FilteringMode.CONTAINS);
+        if (movement_type_id == 5) {
+            parentSelect.setNullSelectionAllowed(false);
+            parentSelect.setRequired(true);
+            parentSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        }
         setParentCombo();
         parentSelect.addValueChangeListener(this);
         settingsLay.addComponent(parentSelect);
@@ -321,13 +328,13 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
     }
 
     private void prepareNormalMode() {
-        if (currentUser.isPermitted(Settings.cnIncomesDefinitionView + ":" + Settings.actModify)) {
+        if (currentUser.isPermitted(permission + ":" + Settings.actModify)) {
             modifyBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(Settings.cnIncomesDefinitionView + ":" + Settings.actAdd)) {
+        if (currentUser.isPermitted(permission + ":" + Settings.actAdd)) {
             createBtn.setEnabled(true);
         }
-        if (currentUser.isPermitted(Settings.cnIncomesDefinitionView + ":" + Settings.actDelete)) {
+        if (currentUser.isPermitted(permission + ":" + Settings.actDelete)) {
             deleteBtn.setEnabled(true);
         }
         saveBtn.setEnabled(false);
@@ -390,6 +397,9 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             ac.setParent_id((Integer) parentSelect.getValue());
             ac.setParent_code(parent_code);
         }
+        if (movement_type_id == 5) {
+            ac.setSchool_id(myUI.getUser().getSchool_id());
+        }
         ac.setStatus_id((Integer) statusSelect.getValue());
         ac.setType_id(movement_type_id);
         ac.setModified_employee_id(myUI.getUser().getId());
@@ -443,16 +453,11 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         return result;
     }
 
-    public Component getNewObj() {
-        return new AccCategoriesDefinitionView(myUI, movement_type_id);
-    }
-
     private void setParentCombo() {
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            parentSelect.setContainerDataSource(
-                    dbac.exec_for_select(myUI, movement_type_id));
+            parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id));
             dbac.close();
         } catch (Exception e) {
             logger.error(e);

@@ -530,15 +530,20 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Settings))) {
                     verticalPanel.setSecondComponent(new SettingsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 1));
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            1, Settings.cnIncomesDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExpensesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 2));
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            2, Settings.cnExpensesDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesExpensesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 5));
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            5, Settings.cnIncomesExpensesDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssetsDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 3));
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            3, Settings.cnReturnableAssetsDefinitionView));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebtsDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 4));
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            4, Settings.cnShortTermDebtsDefinitionView));
                 }
 
                 header.setValue(eventPressed.toUpperCase());
@@ -734,8 +739,9 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Payouts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new PayoutsView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.IncomesDefinition)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 1));
+                    SptMessages.IncomesExpensesDefinition)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                        5, Settings.cnIncomesExpensesDefinitionView));
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StocksDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
@@ -751,8 +757,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals((myUI.getMessage(
                     SptMessages.StockOutcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Expenses)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI, 2));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Settings)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SettingsView(myUI));
             }
