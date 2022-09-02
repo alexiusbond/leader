@@ -51,7 +51,7 @@ public class DbStudent extends BaseDb {
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
                 + "left join year as y on s.entering_year_id = y.id "
                 + "WHERE s.school_id = ? and s.entering_year_id<=? and s.education_status_id in (" + edu_sts + ") "
-                + "ORDER BY s.education_status_id, s.name, s.surname;";
+                + "GROUP BY s.id ORDER BY s.education_status_id, s.name, s.surname;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, myUi.getUser().getCurrent_year().getId());

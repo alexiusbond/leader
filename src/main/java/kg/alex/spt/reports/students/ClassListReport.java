@@ -207,7 +207,6 @@ public class ClassListReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            System.out.println(classTable.getValue());
             if (classTable.getValue() != null && ((Set<?>) classTable.getValue()).size() > 0) {
                 try {
                     DbStudentContract dbsc = new DbStudentContract();

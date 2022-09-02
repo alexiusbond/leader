@@ -214,8 +214,14 @@ public class DbStudentContract extends BaseDb {
         } else {
             sql += "c.amount AS contract_amount, ";
         }
-        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
-                "- prev_sc.net_payments)) AS prev_debt, vc.amount, vc.full_details, " +
+        sql += "IFNULL(sc.debt, " +
+                "IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
+                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
+                "IFNULL((SELECT SUM(IF(payment_category_id != 3, amount, 0)) - " +
+                "SUM(IF(payment_category_id = 3, amount, 0)) FROM student_payments " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount, vc.full_details, " +
                 "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, sr.address, sr.work_place, rel.name, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(c.amount, st.id, ?, ?, ?)) as contr_with_disc, " +
@@ -294,9 +300,6 @@ public class DbStudentContract extends BaseDb {
             sql += "AND DATE(sp.modification_date) <= ? ";
         }
         sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
-                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
-                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
-                "AND prev_vc.year_id = prev_sc.year_id " +
                 "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
                 "LEFT JOIN student_relatives AS sr ON st.id = sr.student_id AND sr.is_main = 1 " +
@@ -305,66 +308,76 @@ public class DbStudentContract extends BaseDb {
                 "AND edu.id IN (" + edu_statuses_ids + ") " +
                 "GROUP BY st.id ORDER BY cl.id, cln.id, st.name, st.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
+        int counter = 0;
         if (from_date != null && till_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setDate(2, new java.sql.Date(till_date.getTime()));
-            stat.setInt(3, year_id);
-            stat.setDate(4, new java.sql.Date(from_date.getTime()));
-            stat.setDate(5, new java.sql.Date(till_date.getTime()));
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setDate(7, new java.sql.Date(till_date.getTime()));
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setDate(10, new java.sql.Date(till_date.getTime()));
-            stat.setInt(11, year_id);
-            stat.setInt(12, year_id);
-            stat.setDate(13, new java.sql.Date(from_date.getTime()));
-            stat.setDate(14, new java.sql.Date(till_date.getTime()));
-            stat.setInt(15, year_id);
-            stat.setDate(16, new java.sql.Date(from_date.getTime()));
-            stat.setDate(17, new java.sql.Date(till_date.getTime()));
-            stat.setInt(18, year_id);
-            stat.setInt(19, year_id);
-            stat.setInt(20, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (from_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setInt(2, year_id);
-            stat.setDate(3, new java.sql.Date(from_date.getTime()));
-            stat.setDate(4, new java.sql.Date(from_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(from_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (till_date != null) {
-            stat.setDate(1, new java.sql.Date(till_date.getTime()));
-            stat.setInt(2, year_id);
-            stat.setDate(3, new java.sql.Date(till_date.getTime()));
-            stat.setDate(4, new java.sql.Date(till_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(till_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(till_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(till_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else {
-            stat.setInt(1, year_id);
-            stat.setInt(2, year_id);
-            stat.setInt(3, year_id);
-            stat.setInt(4, year_id);
-            stat.setInt(5, year_id);
-            stat.setInt(6, year_id);
-            stat.setInt(7, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         }
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
@@ -611,8 +624,14 @@ public class DbStudentContract extends BaseDb {
         } else {
             sql += "c.amount AS contract_amount, ";
         }
-        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
-                "- prev_sc.net_payments)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, ";
+        sql += "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
+                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
+                "IFNULL((SELECT SUM(IF(payment_category_id != 3, amount, 0)) - " +
+                "SUM(IF(payment_category_id = 3, amount, 0)) FROM student_payments " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, " +
+                "vc.amount AS correction, stud_pay.amount AS net_payments, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0), " +
                     "st.id, ?, ?, ?)) as contr_with_disc, ";
@@ -670,9 +689,6 @@ public class DbStudentContract extends BaseDb {
             sql += "AND DATE(sp.modification_date) <= ? ";
         }
         sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
-                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
-                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
-                "AND prev_vc.year_id = prev_sc.year_id " +
                 "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
                 "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
@@ -682,65 +698,74 @@ public class DbStudentContract extends BaseDb {
                 "LEFT JOIN school AS sch ON sch.id = t.school_id " +
                 "GROUP BY t.school_id, t.class_id ORDER BY t.school_id, cl.name, t.class_name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
+        int counter = 0;
         if (from_date != null && till_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setDate(2, new java.sql.Date(till_date.getTime()));
-            stat.setDate(3, new java.sql.Date(from_date.getTime()));
-            stat.setDate(4, new java.sql.Date(till_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setDate(7, new java.sql.Date(till_date.getTime()));
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setDate(10, new java.sql.Date(till_date.getTime()));
-            stat.setInt(11, year_id);
-            stat.setInt(12, year_id);
-            stat.setDate(13, new java.sql.Date(from_date.getTime()));
-            stat.setDate(14, new java.sql.Date(till_date.getTime()));
-            stat.setInt(15, year_id);
-            stat.setDate(16, new java.sql.Date(from_date.getTime()));
-            stat.setDate(17, new java.sql.Date(till_date.getTime()));
-            stat.setInt(18, year_id);
-            stat.setInt(19, year_id);
-            stat.setInt(20, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (from_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setDate(2, new java.sql.Date(from_date.getTime()));
-            stat.setInt(3, year_id);
-            stat.setDate(4, new java.sql.Date(from_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(from_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (till_date != null) {
-            stat.setDate(1, new java.sql.Date(till_date.getTime()));
-            stat.setDate(2, new java.sql.Date(till_date.getTime()));
-            stat.setInt(3, year_id);
-            stat.setDate(4, new java.sql.Date(till_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(till_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(till_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(till_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else {
-            stat.setInt(1, year_id);
-            stat.setInt(2, year_id);
-            stat.setInt(3, year_id);
-            stat.setInt(4, year_id);
-            stat.setInt(5, year_id);
-            stat.setInt(6, year_id);
-            stat.setInt(7, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         }
         ResultSet result = stat.executeQuery();
         int school_id = 0;
@@ -1020,8 +1045,14 @@ public class DbStudentContract extends BaseDb {
         } else {
             sql += "c.amount AS contract_amount, ";
         }
-        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
-                "- prev_sc.net_payments)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, ";
+        sql += "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0) + " +
+                "IFNULL((SELECT SUM(amount) FROM view_corrections " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0) - " +
+                "IFNULL((SELECT SUM(IF(payment_category_id != 3, amount, 0)) - " +
+                "SUM(IF(payment_category_id = 3, amount, 0)) FROM student_payments " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, " +
+                "vc.amount AS correction, stud_pay.amount AS net_payments, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0), " +
                     "st.id, ?, ?, ?)) as contr_with_disc, ";
@@ -1079,9 +1110,6 @@ public class DbStudentContract extends BaseDb {
             sql += "AND DATE(sp.modification_date) <= ? ";
         }
         sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
-                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
-                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
-                "AND prev_vc.year_id = prev_sc.year_id " +
                 "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
                 "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
@@ -1090,65 +1118,71 @@ public class DbStudentContract extends BaseDb {
                 "LEFT JOIN class_number AS cl ON cl.id = t.class_number_id " +
                 "GROUP BY t.class_number_id ORDER BY t.class_number_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
+        int counter = 0;
         if (from_date != null && till_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setDate(2, new java.sql.Date(till_date.getTime()));
-            stat.setDate(3, new java.sql.Date(from_date.getTime()));
-            stat.setDate(4, new java.sql.Date(till_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setDate(7, new java.sql.Date(till_date.getTime()));
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setDate(10, new java.sql.Date(till_date.getTime()));
-            stat.setInt(11, year_id);
-            stat.setInt(12, year_id);
-            stat.setDate(13, new java.sql.Date(from_date.getTime()));
-            stat.setDate(14, new java.sql.Date(till_date.getTime()));
-            stat.setInt(15, year_id);
-            stat.setDate(16, new java.sql.Date(from_date.getTime()));
-            stat.setDate(17, new java.sql.Date(till_date.getTime()));
-            stat.setInt(18, year_id);
-            stat.setInt(19, year_id);
-            stat.setInt(20, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (from_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setDate(2, new java.sql.Date(from_date.getTime()));
-            stat.setInt(3, year_id);
-            stat.setDate(4, new java.sql.Date(from_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(from_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (till_date != null) {
-            stat.setDate(1, new java.sql.Date(till_date.getTime()));
-            stat.setDate(2, new java.sql.Date(till_date.getTime()));
-            stat.setInt(3, year_id);
-            stat.setDate(4, new java.sql.Date(till_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(till_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(till_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(till_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else {
-            stat.setInt(1, year_id);
-            stat.setInt(2, year_id);
-            stat.setInt(3, year_id);
-            stat.setInt(4, year_id);
-            stat.setInt(5, year_id);
-            stat.setInt(6, year_id);
-            stat.setInt(7, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         }
         ResultSet result = stat.executeQuery();
         Table t;
@@ -1266,8 +1300,13 @@ public class DbStudentContract extends BaseDb {
         } else {
             sql += "c.amount AS contract_amount, ";
         }
-        sql += "IFNULL(sc.debt, (prev_sc.contr_with_disc + prev_sc.debt + IFNULL(prev_vc.amount, 0.0) " +
-                "- prev_sc.net_payments)) AS prev_debt, vc.amount AS correction, stud_pay.amount AS net_payments, ";
+        sql += "IFNULL(sc.debt, IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0) + IFNULL((SELECT SUM(amount) " +
+                "FROM view_corrections WHERE student_id = st.id AND year_id < ?), 0.0) - " +
+                "IFNULL((SELECT SUM(IF(payment_category_id != 3, amount, 0)) - " +
+                "SUM(IF(payment_category_id = 3, amount, 0)) FROM student_payments " +
+                "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, " +
+                "vc.amount AS correction, stud_pay.amount AS net_payments, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0), " +
                     "st.id, ?, ?, ?)) as contr_with_disc, ";
@@ -1325,9 +1364,6 @@ public class DbStudentContract extends BaseDb {
             sql += "AND DATE(sp.modification_date) <= ? ";
         }
         sql += "GROUP BY sp.student_id) AS stud_pay ON stud_pay.student_id = sc.student_id " +
-                "LEFT JOIN student_contract AS prev_sc ON prev_sc.student_id = st.id AND prev_sc.year_id = ? - 1 " +
-                "LEFT JOIN view_corrections AS prev_vc ON prev_vc.student_id = prev_sc.student_id " +
-                "AND prev_vc.year_id = prev_sc.year_id " +
                 "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? " +
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
                 "WHERE st.school_id in (" + school_ids + ") AND st.entering_year_id <= ? " +
@@ -1337,65 +1373,74 @@ public class DbStudentContract extends BaseDb {
                 "LEFT JOIN school AS sch ON sch.id = t.school_id " +
                 "GROUP BY sch.id ORDER BY CAST(sch.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
+        int counter =0;
         if (from_date != null && till_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setDate(2, new java.sql.Date(till_date.getTime()));
-            stat.setDate(3, new java.sql.Date(from_date.getTime()));
-            stat.setDate(4, new java.sql.Date(till_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setDate(7, new java.sql.Date(till_date.getTime()));
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setDate(10, new java.sql.Date(till_date.getTime()));
-            stat.setInt(11, year_id);
-            stat.setInt(12, year_id);
-            stat.setDate(13, new java.sql.Date(from_date.getTime()));
-            stat.setDate(14, new java.sql.Date(till_date.getTime()));
-            stat.setInt(15, year_id);
-            stat.setDate(16, new java.sql.Date(from_date.getTime()));
-            stat.setDate(17, new java.sql.Date(till_date.getTime()));
-            stat.setInt(18, year_id);
-            stat.setInt(19, year_id);
-            stat.setInt(20, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (from_date != null) {
-            stat.setDate(1, new java.sql.Date(from_date.getTime()));
-            stat.setDate(2, new java.sql.Date(from_date.getTime()));
-            stat.setInt(3, year_id);
-            stat.setDate(4, new java.sql.Date(from_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(from_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(from_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(from_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else if (till_date != null) {
-            stat.setDate(1, new java.sql.Date(till_date.getTime()));
-            stat.setDate(2, new java.sql.Date(till_date.getTime()));
-            stat.setInt(3, year_id);
-            stat.setDate(4, new java.sql.Date(till_date.getTime()));
-            stat.setInt(5, year_id);
-            stat.setDate(6, new java.sql.Date(till_date.getTime()));
-            stat.setInt(7, year_id);
-            stat.setInt(8, year_id);
-            stat.setDate(9, new java.sql.Date(till_date.getTime()));
-            stat.setInt(10, year_id);
-            stat.setDate(11, new java.sql.Date(till_date.getTime()));
-            stat.setInt(12, year_id);
-            stat.setInt(13, year_id);
-            stat.setInt(14, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         } else {
-            stat.setInt(1, year_id);
-            stat.setInt(2, year_id);
-            stat.setInt(3, year_id);
-            stat.setInt(4, year_id);
-            stat.setInt(5, year_id);
-            stat.setInt(6, year_id);
-            stat.setInt(7, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
         }
         ResultSet result = stat.executeQuery();
         Table t;

@@ -359,7 +359,7 @@ public class BalanceReport implements Button.ClickListener,
             fontBoldWht.setBold(true);
 
             Font fontBlk = workbook.createFont();
-            fontBoldWht.setColor(IndexedColors.BLACK.getIndex());
+            fontBlk.setColor(IndexedColors.BLACK.getIndex());
 
             CellStyle cellStyleGreen = workbook.createCellStyle();
             cellStyleGreen.setFont(fontBoldWht);
@@ -510,7 +510,8 @@ public class BalanceReport implements Button.ClickListener,
                 if (fd != null && excelBtn.getExtensions().contains(fd)) {
                     excelBtn.removeExtension(fd);
                 }
-                fd = new FileDownloader(new StreamResource(() -> new ByteArrayInputStream(baos.toByteArray()), myUI.getMessage(SptMessages.AccountingBalanceReport) + System.currentTimeMillis() + ".xls"));
+                fd = new FileDownloader(new StreamResource(() -> new ByteArrayInputStream(baos.toByteArray()),
+                        myUI.getMessage(SptMessages.AccountingBalanceReport) + System.currentTimeMillis() + ".xls"));
                 fd.extend(excelBtn);
             } catch (IOException e) {
                 logger.error(e);

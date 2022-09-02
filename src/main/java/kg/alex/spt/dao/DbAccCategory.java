@@ -255,8 +255,8 @@ public class DbAccCategory extends BaseDb {
     }
 
     public int exec_update(AccCategory ac) throws SQLException {
-        String sql = "update acc_category set name=?, code=?, parent_id=?, "
-                + "activity_status_id=?, note=?, parent_code=?, modified_employee_id=? where id=?";
+        String sql = "update acc_category set name = ?, code = ?, parent_id = ?, "
+                + "activity_status_id = ?, note = ?, parent_code = ?, modified_employee_id = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ac.getName());
         stat.setString(2, ac.getCode());
