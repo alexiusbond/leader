@@ -115,19 +115,22 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         hl.setWidth(Settings.PERCENTS100);
         hl.setSpacing(true);
 
+        if (today == null) {
+            today = new Date();
+        }
         fromDateDF = new DateField();
         fromDateDF.setDescription(myUI.getMessage(SptMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setDateFormat(Settings.datePattern);
-        fromDateDF.setValue(new Date());
+        fromDateDF.setValue(today);
 
         tillDateDF = new DateField();
         tillDateDF.setDescription(myUI.getMessage(SptMessages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setDateFormat(Settings.datePattern);
-        tillDateDF.setValue(new Date());
+        tillDateDF.setValue(today);
 
         searchButton = new Button();
         searchButton.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -256,6 +259,23 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                         grid.editItem(event.getItemId());
                     } catch (Exception ignored) {
                     }
+                }
+
+                DateField dateDf = (DateField) grid.getColumn(myUI.getMessage(SptMessages.Date)).getEditorField();
+                if (!currentUser.isPermitted(Settings.cnTransactionsView + ":"
+                        + Settings.prmChangeOldTransactions)) {
+                    if (grid.getContainerDataSource().getContainerProperty(event.getItemId(),
+                            myUI.getMessage(SptMessages.Date)).getValue() != null) {
+                        dateDf.setRangeStart((Date) grid.getContainerDataSource().getContainerProperty(event.getItemId(),
+                                myUI.getMessage(SptMessages.Date)).getValue());
+                    } else {
+                        if (today == null) {
+                            today = new Date();
+                        }
+                        dateDf.setRangeStart(today);
+                    }
+                } else {
+                    dateDf.setRangeStart(null);
                 }
                 TextField amountUSDTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).getEditorField();
                 TextField amountKGSTf = (TextField) grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).getEditorField();

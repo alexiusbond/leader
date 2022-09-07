@@ -377,7 +377,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
@@ -1842,7 +1841,6 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(2, studentId);
         stat.setInt(3, studentId);
         stat.setInt(4, studentId);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.AcademicYear), String.class, null);

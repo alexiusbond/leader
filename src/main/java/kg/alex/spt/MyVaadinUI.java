@@ -93,7 +93,6 @@ public class MyVaadinUI extends UI {
         token.setRememberMe(true);
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.login(token);
-
     }
 
     public static MyVaadinUI getInstance() {
