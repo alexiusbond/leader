@@ -52,13 +52,38 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(leftLay);
+
+        buildRightPanel();
     }
 
     @Override
     public void buttonClick(Button.ClickEvent event) {
         Button source = event.getButton();
         if (source == generateBtn) {
-            buildRightPanel();
+            try {
+                DbStudent dbst = new DbStudent();
+                dbst.connect();
+                dataTable.clear();
+                total = 0;
+                dataTable.setContainerDataSource(dbst.execSQLCalls(myUI, myUI.getUser().getCurrent_year().getId(),
+                        Settings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
+                dbst.close();
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
+            dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
+                    + Settings.dFormat.format(total));
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 300);
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.FirstName), 100);
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastName), 120);
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 100);
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.PlanDebtDate), 85);
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastPayment), 95);
+            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.LastPayment), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
+            dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LastCall), 1);
             if (dataTable.size() != 0) {
                 excelBtn.setEnabled(true);
                 makePdfBtn.setEnabled(true);
@@ -225,29 +250,6 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.addStyleName("noWrap");
         dataTable.addStyleName("noWrapHeader");
-        try {
-            DbStudent dbst = new DbStudent();
-            dbst.connect();
-            dataTable.clear();
-            total = 0;
-            dataTable.setContainerDataSource(dbst.execSQLCalls(myUI, myUI.getUser().getCurrent_year().getId(),
-                    Settings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
-            dbst.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-        dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
-                + Settings.dFormat.format(total));
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 300);
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.FullName), 130);
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 100);
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.PlanDebtDate), 85);
-        dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastPayment), 95);
-        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
-        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.LastPayment), Table.Align.RIGHT);
-        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
-        dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LastCall), 1);
 
         vl.addComponent(dataTable);
         this.setSecondComponent(vl);
@@ -276,7 +278,8 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     public IndexedContainer prepareContainer() {
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.InstPlanDebt), Double.class, null);

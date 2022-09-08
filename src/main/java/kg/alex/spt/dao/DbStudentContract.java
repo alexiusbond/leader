@@ -381,7 +381,8 @@ public class DbStudentContract extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
@@ -404,8 +405,8 @@ public class DbStudentContract extends BaseDb {
                     result.getString("edu.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
-                    result.getString("st.name") + " " + result.getString("st.surname"));
+            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("st.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                     result.getString("class"));
             if (result.getString("rel.name") != null) {
@@ -1372,7 +1373,7 @@ public class DbStudentContract extends BaseDb {
                 "LEFT JOIN school AS sch ON sch.id = t.school_id " +
                 "GROUP BY sch.id ORDER BY CAST(sch.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        int counter =0;
+        int counter = 0;
         if (from_date != null && till_date != null) {
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));

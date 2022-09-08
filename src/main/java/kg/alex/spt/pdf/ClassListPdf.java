@@ -85,16 +85,17 @@ public class ClassListPdf {
 
                     //installment plan table
                     float[] table_plan_colsWidth = {
-                            0.1f, 0.32f, 0.4f, 0.4f, 0.15f, 0.25f, 0.43f, 0.25f,
+                            0.1f, 0.24f, 0.23f, 0.28f, 0.35f, 0.15f, 0.25f, 0.43f, 0.25f,
                             0.21f, 0.21f, 0.21f, 0.25f, 0.25f, 0.25f, 0.25f,};
-                    PdfPTable dataTable = new PdfPTable(15);
+                    PdfPTable dataTable = new PdfPTable(16);
                     dataTable.setWidthPercentage(90f);
                     dataTable.setWidths(table_plan_colsWidth);
                     dataTable.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
                     dataTable.addCell(new Phrase(" №", ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Id), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.EducationStatus), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.FullName), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.LastName), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.DiscountType), ordFontBold));
@@ -120,7 +121,9 @@ public class ClassListPdf {
                         dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.EducationStatus)).getValue().toString(), tableFont));
                         dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.FullName)).getValue().toString(), tableFont));
+                                myUI.getMessage(SptMessages.FirstName)).getValue().toString(), tableFont));
+                        dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
+                                myUI.getMessage(SptMessages.LastName)).getValue().toString(), tableFont));
                         dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
