@@ -622,7 +622,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 DateField dateDf = (DateField) grid.getEditorFieldGroup().getField(myUI.getMessage(SptMessages.Date));
 
                 if (accordion.getSelectedTab() == expensesGrid) {
-                    if ((amountUSDTf.getValue() != null || amountKGSTf != null)
+                    if ((amountUSDTf.getValue() != null || amountKGSTf.getValue() != null)
                             && (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
                             rateTf.getValue() != null) && dateDf.getValue() != null) {
                         try {

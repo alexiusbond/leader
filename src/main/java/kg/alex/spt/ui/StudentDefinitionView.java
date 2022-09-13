@@ -48,7 +48,6 @@ import java.util.*;
 
 public class StudentDefinitionView extends VerticalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
-
     static final Logger logger = LogManager.getLogger(StudentDefinitionView.class);
     private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, divideBtn;
@@ -404,7 +403,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             && studDataTable.getValue() != null) {
                         setInstPlanTable();
                         setDiscountsTable();
-                        setCorrectionsTable();
                         setCorrectionsTable();
                         setContractTab((Integer) studDataTable.getValue(),
                                 myUI.getUser().getCurrent_year().getId());
@@ -2051,11 +2049,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void setRelativesTable() {
-        NATURAL_COL_ORDER_RELATIVES = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.RelativeType),
-                myUI.getMessage(SptMessages.FullName), myUI.getMessage(SptMessages.Address),
-                myUI.getMessage(SptMessages.Phone), myUI.getMessage(SptMessages.WorkPlace),
-                myUI.getMessage(SptMessages.Passport), myUI.getMessage(SptMessages.Responsible)};
+        if (NATURAL_COL_ORDER_RELATIVES == null) {
+            NATURAL_COL_ORDER_RELATIVES = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.RelativeType),
+                    myUI.getMessage(SptMessages.FullName), myUI.getMessage(SptMessages.Address),
+                    myUI.getMessage(SptMessages.Phone), myUI.getMessage(SptMessages.WorkPlace),
+                    myUI.getMessage(SptMessages.Passport), myUI.getMessage(SptMessages.Responsible)};
+        }
         try {
             DbStudentRelative dbr = new DbStudentRelative();
             dbr.connect();
@@ -2542,11 +2542,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void addRelativeItem() {
-        NATURAL_COL_ORDER_RELATIVES = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.RelativeType),
-                myUI.getMessage(SptMessages.FullName), myUI.getMessage(SptMessages.Address),
-                myUI.getMessage(SptMessages.Phone), myUI.getMessage(SptMessages.WorkPlace),
-                myUI.getMessage(SptMessages.Passport), myUI.getMessage(SptMessages.Responsible)};
+        if (NATURAL_COL_ORDER_RELATIVES == null) {
+            NATURAL_COL_ORDER_RELATIVES = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.RelativeType),
+                    myUI.getMessage(SptMessages.FullName), myUI.getMessage(SptMessages.Address),
+                    myUI.getMessage(SptMessages.Phone), myUI.getMessage(SptMessages.WorkPlace),
+                    myUI.getMessage(SptMessages.Passport), myUI.getMessage(SptMessages.Responsible)};
+        }
         String id = Settings.FreshItem + (--r_table_counter);
         if (relativesTable.getContainerDataSource().size() == 0) {
             relativesTable.setContainerDataSource(prepareRelativesContainer());
@@ -2840,12 +2842,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void setPaymentsTable() {
-        NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.PaymentCategoryType),
-                myUI.getMessage(SptMessages.PaymentType), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Rate), Settings.KGS,
-                myUI.getMessage(SptMessages.WhoPaid), myUI.getMessage(SptMessages.Date),
-                myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Print)};
+        if (NATURAL_COL_ORDER_PAYMENTS == null) {
+            NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.PaymentCategoryType),
+                    myUI.getMessage(SptMessages.PaymentType), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Rate), Settings.KGS,
+                    myUI.getMessage(SptMessages.WhoPaid), myUI.getMessage(SptMessages.Date),
+                    myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Print)};
+        }
         try {
             DbStudentPayment dbsa = new DbStudentPayment();
             dbsa.connect();
@@ -2864,9 +2868,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void setCallsTable() {
-        NATURAL_COL_ORDER_CALLS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Date),
-                myUI.getMessage(SptMessages.WhoCalled), myUI.getMessage(SptMessages.Note)};
+        if (NATURAL_COL_ORDER_CALLS == null) {
+            NATURAL_COL_ORDER_CALLS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.Date),
+                    myUI.getMessage(SptMessages.WhoCalled), myUI.getMessage(SptMessages.Note)};
+        }
         try {
             DbStudentCalls dbsc = new DbStudentCalls();
             dbsc.connect();
@@ -2901,9 +2907,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void setDiscountsTable() {
-        NATURAL_COL_ORDER_DISCOUNTS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Document)};
+        if (NATURAL_COL_ORDER_DISCOUNTS == null) {
+            NATURAL_COL_ORDER_DISCOUNTS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Document)};
+        }
         try {
             DbStudentDiscount dbsd = new DbStudentDiscount();
             dbsd.connect();
@@ -2925,9 +2933,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void setCorrectionsTable() {
-        NATURAL_COL_ORDER_CORRECTIONS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Note)};
+        if (NATURAL_COL_ORDER_CORRECTIONS == null) {
+            NATURAL_COL_ORDER_CORRECTIONS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Note)};
+        }
         try {
             DbStudentCorrection dbsd = new DbStudentCorrection();
             dbsd.connect();
@@ -3112,12 +3122,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void addPaymentsItem() {
-        NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.PaymentCategoryType),
-                myUI.getMessage(SptMessages.PaymentType), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Rate), Settings.KGS,
-                myUI.getMessage(SptMessages.WhoPaid), myUI.getMessage(SptMessages.Date),
-                myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Print)};
+        if (NATURAL_COL_ORDER_PAYMENTS == null) {
+            NATURAL_COL_ORDER_PAYMENTS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.PaymentCategoryType),
+                    myUI.getMessage(SptMessages.PaymentType), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Rate), Settings.KGS,
+                    myUI.getMessage(SptMessages.WhoPaid), myUI.getMessage(SptMessages.Date),
+                    myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Print)};
+        }
         String id = Settings.FreshItem + (--r_table_counter);
         if (paymentsTable.getContainerDataSource().size() == 0) {
             paymentsTable.setContainerDataSource(preparePaymentsContainer());
@@ -3180,9 +3192,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void addCallsItem() {
-        NATURAL_COL_ORDER_CALLS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Date),
-                myUI.getMessage(SptMessages.WhoCalled), myUI.getMessage(SptMessages.Note)};
+        if (NATURAL_COL_ORDER_CALLS == null) {
+            NATURAL_COL_ORDER_CALLS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.Date),
+                    myUI.getMessage(SptMessages.WhoCalled), myUI.getMessage(SptMessages.Note)};
+        }
         String id = Settings.FreshItem + (--r_table_counter);
         if (callsTable.getContainerDataSource().size() == 0) {
             callsTable.setContainerDataSource(prepareCallsContainer());
@@ -3203,9 +3217,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void addDiscountsItem() {
-        NATURAL_COL_ORDER_DISCOUNTS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Document)};
+        if (NATURAL_COL_ORDER_DISCOUNTS == null) {
+            NATURAL_COL_ORDER_DISCOUNTS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Document)};
+        }
         discCounter++;
         String id = Settings.FreshItem + (--r_table_counter);
         if (discountsTable.getContainerDataSource().size() == 0) {
@@ -3243,9 +3259,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void addCorrectionsItem() {
-        NATURAL_COL_ORDER_CORRECTIONS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Note)};
+        if (NATURAL_COL_ORDER_CORRECTIONS == null) {
+            NATURAL_COL_ORDER_CORRECTIONS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Amount),
+                    myUI.getMessage(SptMessages.Note)};
+        }
         String id = Settings.FreshItem + (--r_table_counter);
         if (correctionsTable.getContainerDataSource().size() == 0) {
             correctionsTable.setContainerDataSource(prepareCorrectionsContainer());
@@ -4379,8 +4397,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (!next.toString().equals(payment_id)) {
                         StudentPayment sp = getPayment(0, 0, paymentsTable.getItem(next));
                         tr = new AccTransaction();
-                        tr.setAmount(Double.parseDouble(((TextField) paymentsTable.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getValue()));
+                        tr.setAmount(Settings.dFormat.parse(((TextField) paymentsTable.getContainerProperty(next,
+                                myUI.getMessage(SptMessages.Amount)).getValue()).getValue()).doubleValue());
                         tr.setDate(sp.getModification_date());
                         tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getContainerProperty(sp.getPayment_cat_type_id(),

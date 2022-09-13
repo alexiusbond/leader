@@ -17,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
  * @author alex
  */
 public class DbDiscount extends BaseDb {
@@ -28,7 +27,7 @@ public class DbDiscount extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi)
             throws SQLException {
-        
+
 
         String sql = "SELECT d.id, d.name, d.amount, d.activity_status_id, dt.name,"
                 + "d.discount_type_id, ac.name, d.year_id, y.name FROM discount as d "
@@ -132,7 +131,7 @@ public class DbDiscount extends BaseDb {
     }
 
     public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id) throws SQLException {
-        
+
 
         String sql = "select t.id, t.name, t.amount, t.discount_type_id "
                 + "from discount as t "
@@ -168,10 +167,10 @@ public class DbDiscount extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int dis_id) 
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int dis_id)
             throws SQLException {
         String sql = "SELECT d.id, d.name, d.amount, d.discount_type_id "
-                + "FROM discount as d " 
+                + "FROM discount as d "
                 + "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
@@ -185,16 +184,20 @@ public class DbDiscount extends BaseDb {
             Item item = container.addItem(result.getInt("d.id"));
             if (result.getInt("d.discount_type_id") == 3) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
-                        result.getString("d.name") + " - (max " + result.getString("d.amount") + "%)");
+                        result.getString("d.name") + " - (max "
+                                + Settings.dFormat.format(result.getDouble("d.amount")) + "%)");
             } else if (result.getInt("d.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
-                        result.getString("d.name") + " - (max " + result.getString("d.amount") + "$)");
+                        result.getString("d.name") + " - (max "
+                                + Settings.dFormat.format(result.getDouble("d.amount")) + "$)");
             } else if (result.getInt("d.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
-                        result.getString("d.name") + " - " + result.getString("d.amount") + "%");
+                        result.getString("d.name") + " - "
+                                + Settings.dFormat.format(result.getDouble("d.amount")) + "%");
             } else if (result.getInt("d.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
-                        result.getString("d.name") + " - " + result.getString("d.amount") + "$");
+                        result.getString("d.name") + " - "
+                                + Settings.dFormat.format(result.getDouble("d.amount")) + "$");
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("d.amount"));

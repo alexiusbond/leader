@@ -1054,7 +1054,9 @@ public class DbAccTransactions extends BaseDb {
         String sql = "SELECT balances_table.date_time, balances_table.amount, balances_table.balance FROM "
                 + "(SELECT gr_transactions.date_time AS date_time, gr_transactions.amount AS amount, "
                 + "(@runtot:=gr_transactions.amount + @runtot) AS balance FROM "
-                + "(SELECT DATE(tr.date_time) AS date_time, SUM(IF(tr.acc_type_id = 1, tr.amount, - tr.amount)) AS amount FROM "
+                + "(SELECT DATE(tr.date_time) AS date_time, SUM(IF(tr.acc_type_id = 1, "
+                + "if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)), "
+                + "-(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2))))) AS amount FROM "
                 + "acc_transactions AS tr where tr.school_id = ? "
                 + "GROUP BY DATE(tr.date_time) ORDER BY DATE(tr.date_time)) AS gr_transactions, (SELECT @runtot:=0) c) AS balances_table "
                 + "WHERE balances_table.date_time <= ?;";
