@@ -168,7 +168,7 @@ public class DbInventoryOrganization extends BaseDb {
             item.getItemProperty(Settings.quantity_id).setValue(result.getInt("t.quantity"));
             tf = v.createTextFieldWithProperty(
                     result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(v);
             tf.setId(id);

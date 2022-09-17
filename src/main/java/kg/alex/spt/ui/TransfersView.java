@@ -961,7 +961,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
         tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                 currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);

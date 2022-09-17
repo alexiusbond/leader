@@ -578,6 +578,7 @@ public class SptMessages_ru extends SptMessages {
             {TransactionNumber, "Номер транзакции"},
             {TransactionsQuantity, "Количество трансакций"},
             {StudentId, "Номер ученика"},
+            {Age, "Возраст"},
     };
 
     @Override

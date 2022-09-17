@@ -79,13 +79,13 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(pav);

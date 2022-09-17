@@ -13,6 +13,7 @@ import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeeExtraInfo;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.CVPdf;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,13 +21,17 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class EmployeeCvWindow extends Window {
     static final Logger logger = LogManager.getLogger(EmployeeCvWindow.class);
     private final MyVaadinUI myUI;
     public Subject currentUser = SecurityUtils.getSubject();
+    private FormattedTable educationTable, workPlacesTable, examsTable, seminarsTable, certificatesTable,
+            spouseEducationTable, spouseWorkPlacesTable, childrenTable;
 
     public EmployeeCvWindow(MyVaadinUI myUI, Employee employee, EmployeeExtraInfo employeeExtraInfo, String year) {
         this.myUI = myUI;
@@ -83,6 +88,8 @@ public class EmployeeCvWindow extends Window {
         }
         photoEmb.setImmediate(true);
         photoEmb.setHeight("200px");
+        photoEmb.setId(myUI.getMessage(SptMessages.Photo));
+        photoEmb.setData(Settings.PATH_TO_UPLOADS_HR + employee.getPhoto());
         rowNum++;
         rightGl.addComponent(photoEmb, 0, rowNum, 1, rowNum);
         rightGl.setComponentAlignment(photoEmb, Alignment.MIDDLE_CENTER);
@@ -152,8 +159,6 @@ public class EmployeeCvWindow extends Window {
             rightGl.addComponent(createLabel("<b>" +
                             myUI.getMessage(SptMessages.CanBeAdvisor) + ": </b>" + employeeExtraInfo.getCanBeAdvisor(), null),
                     0, rowNum, 1, rowNum);
-        }
-        if (currentUser.isPermitted(Settings.cnCV_Window + ":" + Settings.contract_info)) {
             rowNum++;
             rightGl.addComponent(createLabel("<b>" +
                             myUI.getMessage(SptMessages.ContractType) + ": </b>" + employeeExtraInfo.getSalaryCategory(), null),
@@ -163,7 +168,6 @@ public class EmployeeCvWindow extends Window {
         rightGl.addComponent(createLabel("<b>" +
                         myUI.getMessage(SptMessages.Languages) + ": </b>" + employeeExtraInfo.getLanguages(), null),
                 0, rowNum, 1, rowNum);
-
         l = createLabel(myUI.getMessage(SptMessages.MainInfo),
                 new String[]{ValoTheme.LABEL_BOLD, ValoTheme.LABEL_LARGE});
         l.setWidthUndefined();
@@ -219,6 +223,30 @@ public class EmployeeCvWindow extends Window {
         contactsVl.addComponent(createLabel("<i class=\"fa fa-child\"></i><b> "
                 + myUI.getMessage(SptMessages.Children) + ": </b>"
                 + employeeExtraInfo.getChildren(), null));
+        Button pdfBtn = new Button(myUI.getMessage(SptMessages.ExportToPdf));
+        pdfBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+        pdfBtn.addClickListener((Button.ClickListener) event -> {
+            List<Table> tableList = new ArrayList<>();
+            educationTable.setData(myUI.getMessage(SptMessages.Education));
+            tableList.add(educationTable);
+            workPlacesTable.setData(myUI.getMessage(SptMessages.WorkPlaces));
+            tableList.add(workPlacesTable);
+            examsTable.setData(myUI.getMessage(SptMessages.Exams));
+            tableList.add(examsTable);
+            seminarsTable.setData(myUI.getMessage(SptMessages.Seminars));
+            tableList.add(seminarsTable);
+            certificatesTable.setData(myUI.getMessage(SptMessages.Certificates));
+            tableList.add(certificatesTable);
+            spouseEducationTable.setData(myUI.getMessage(SptMessages.SpouseEducation));
+            tableList.add(spouseEducationTable);
+            spouseWorkPlacesTable.setData(myUI.getMessage(SptMessages.SpouseWorkPlaces));
+            tableList.add(spouseWorkPlacesTable);
+            childrenTable.setData(myUI.getMessage(SptMessages.Children));
+            tableList.add(childrenTable);
+            new CVPdf(myUI, employee, employeeExtraInfo, year, tableList);
+        });
+        contactsVl.addComponent(pdfBtn);
+        contactsVl.setComponentAlignment(pdfBtn, Alignment.BOTTOM_RIGHT);
         gl.addComponent(contactsVl, 3, 1);
 
         l = createLabel(myUI.getMessage(SptMessages.Education),
@@ -227,12 +255,13 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 1, 2, 3, 2);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable educationTable = new FormattedTable();
+        educationTable = new FormattedTable();
         educationTable.setWidth(Settings.PERCENTS100);
         educationTable.setColumnReorderingAllowed(false);
         educationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         educationTable.setStyleName(ValoTheme.TABLE_COMPACT);
         educationTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        educationTable.addStyleName("noWrap");
         try {
             DbEmployeeEducation dbCon = new DbEmployeeEducation();
             dbCon.connect();
@@ -252,12 +281,14 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 1, 4, 3, 4);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable workPlacesTable = new FormattedTable();
+        workPlacesTable = new FormattedTable();
         workPlacesTable.setWidth(Settings.PERCENTS100);
         workPlacesTable.setColumnReorderingAllowed(false);
         workPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         workPlacesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         workPlacesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        workPlacesTable.addStyleName("noWrap");
+        workPlacesTable.setColumnWidth(myUI.getMessage(SptMessages.ExtraPositions), 250);
         try {
             DbEmployeeWork dbCon = new DbEmployeeWork();
             dbCon.connect();
@@ -276,12 +307,13 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 6, 1, 6);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable examsTable = new FormattedTable();
+        examsTable = new FormattedTable();
         examsTable.setWidth(Settings.PERCENTS100);
         examsTable.setColumnReorderingAllowed(false);
         examsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         examsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         examsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        examsTable.addStyleName("noWrap");
         try {
             DbEmployeeExam dbCon = new DbEmployeeExam();
             dbCon.connect();
@@ -300,12 +332,14 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 2, 6, 3, 6);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable seminarsTable = new FormattedTable();
+        seminarsTable = new FormattedTable();
         seminarsTable.setWidth(Settings.PERCENTS100);
         seminarsTable.setColumnReorderingAllowed(false);
         seminarsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         seminarsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         seminarsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        seminarsTable.addStyleName("noWrap");
+        seminarsTable.setColumnWidth(myUI.getMessage(SptMessages.Title), 200);
         try {
             DbEmployeeSeminar dbCon = new DbEmployeeSeminar();
             dbCon.connect();
@@ -324,12 +358,13 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 8, 1, 8);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable certificatesTable = new FormattedTable();
+        certificatesTable = new FormattedTable();
         certificatesTable.setWidth(Settings.PERCENTS100);
         certificatesTable.setColumnReorderingAllowed(false);
         certificatesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         certificatesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         certificatesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        certificatesTable.addStyleName("noWrap");
         try {
             DbEmployeeCertificate dbCon = new DbEmployeeCertificate();
             dbCon.connect();
@@ -348,12 +383,13 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 10, 3, 10);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable spouseEducationTable = new FormattedTable();
+        spouseEducationTable = new FormattedTable();
         spouseEducationTable.setWidth(Settings.PERCENTS100);
         spouseEducationTable.setColumnReorderingAllowed(false);
         spouseEducationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         spouseEducationTable.setStyleName(ValoTheme.TABLE_COMPACT);
         spouseEducationTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        spouseEducationTable.addStyleName("noWrap");
         try {
             DbEmployeeEducation dbCon = new DbEmployeeEducation();
             dbCon.connect();
@@ -372,12 +408,13 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 12, 3, 12);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable spouseWorkPlacesTable = new FormattedTable();
+        spouseWorkPlacesTable = new FormattedTable();
         spouseWorkPlacesTable.setWidth(Settings.PERCENTS100);
         spouseWorkPlacesTable.setColumnReorderingAllowed(false);
         spouseWorkPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         spouseWorkPlacesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         spouseWorkPlacesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        spouseWorkPlacesTable.addStyleName("noWrap");
         try {
             DbEmployeeWork dbCon = new DbEmployeeWork();
             dbCon.connect();
@@ -396,12 +433,13 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 14, 3, 14);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        FormattedTable childrenTable = new FormattedTable();
+        childrenTable = new FormattedTable();
         childrenTable.setWidth(Settings.PERCENTS100);
         childrenTable.setColumnReorderingAllowed(false);
         childrenTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         childrenTable.setStyleName(ValoTheme.TABLE_COMPACT);
         childrenTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
+        childrenTable.addStyleName("noWrap");
         try {
             DbEmployeeChildren dbCon = new DbEmployeeChildren();
             dbCon.connect();

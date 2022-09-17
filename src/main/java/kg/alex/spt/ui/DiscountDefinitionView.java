@@ -190,7 +190,7 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setConverter(Settings.getStringToDoubleConverter());
         valueTF.setWidth(Settings.PERCENTS100);
         valueTF.addValidator(new DoubleRangeValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
         settingsLay.addComponent(valueTF);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
@@ -334,22 +334,22 @@ public class DiscountDefinitionView extends HorizontalSplitPanel implements Butt
                 valueTF.setCaption(myUI.getMessage(SptMessages.Value));
                 valueTF.removeAllValidators();
                 valueTF.addValidator(new DoubleRangeValidator(
-                        myUI.getMessage(SptMessages.NotificationWrongPercentValue), 0.1, 100.0));
+                        myUI.getMessage(SptMessages.NotificationWrongPercentValue), 0.01, 100.0));
             } else if ((Integer) discTypeSelect.getValue() == 3) {
                 valueTF.setCaption(myUI.getMessage(SptMessages.MaxValue));
                 valueTF.removeAllValidators();
                 valueTF.addValidator(new DoubleRangeValidator(
-                        myUI.getMessage(SptMessages.NotificationWrongPercentValue), 0.1, 100.0));
+                        myUI.getMessage(SptMessages.NotificationWrongPercentValue), 0.01, 100.0));
             } else if ((Integer) discTypeSelect.getValue() == 2) {
                 valueTF.setCaption(myUI.getMessage(SptMessages.Value));
                 valueTF.removeAllValidators();
                 valueTF.addValidator(new DoubleRangeValidator(
-                        myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                        myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
             } else if ((Integer) discTypeSelect.getValue() == 4) {
                 valueTF.setCaption(myUI.getMessage(SptMessages.MaxValue));
                 valueTF.removeAllValidators();
                 valueTF.addValidator(new DoubleRangeValidator(
-                        myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                        myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
             }
         } else if (property == yearSelect && yearSelect.getValue() != null
                 && dataTable.getValue() != null) {

@@ -729,7 +729,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (studDataTable.getValue() != null) {
                 if ((tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                         || tabs.getSelectedTab() == tabs.getTab(payTableLay).getComponent())
-                        && debt > 0.1 && contract_amount == 0.0 && !currentUser.hasRole(Settings.rnAdmin)) {
+                        && debt > 0.01 && contract_amount == 0.0 && !currentUser.hasRole(Settings.rnAdmin)) {
                     Notification.show(myUI.getMessage(SptMessages.OperationNotAllowedDueToDebt),
                             Notification.Type.WARNING_MESSAGE);
                 } else if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent() && !myUI.getUser().getCurrent_year().isLast()) {
@@ -1167,15 +1167,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbTr.close();
                     } else {
                         initialPaymentTF.removeAllValidators();
-                        initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                        initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
                     }
                 } else {
                     initialPaymentTF.removeAllValidators();
-                    initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                    initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
                 }
             } catch (Exception e) {
                 initialPaymentTF.removeAllValidators();
-                initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
                 logger.error(e);
                 logger.catching(e);
             }
@@ -1213,7 +1213,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         > (Double) paymentsTable.getContainerProperty(itemId, Settings.old_amount).getValue()) {
                     tf.removeAllValidators();
                     tf.addValidator(new DoubleRangeValidator(
-                            myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                            myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
                 } else {
                     if (paymentsTable.getContainerProperty(itemId, Settings.old_date).getValue() != null
                             && DateUtils.truncate(((DateField) paymentsTable.getContainerProperty(itemId,
@@ -1232,7 +1232,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getValue() == 3) {
                             tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance)
                                     + Settings.dFormat.format(tr.getOverLimit())
-                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1,
+                                    + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01,
                                     (Double) tf.getPropertyDataSource().getValue() - tr.getOverLimit()));
                         } else {
                             tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance)
@@ -1245,7 +1245,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 Notification.Type.ERROR_MESSAGE);
                     } else {
                         tf.addValidator(new DoubleRangeValidator(
-                                myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                                myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
                     }
                 }
             }
@@ -2144,7 +2144,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
         tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(new DoubleRangeValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
         tf.setConverter(Settings.getStringToDoubleConverter());
         tf.setNullRepresentation("0.0");
         tf.setNullSettingAllowed(false);
@@ -2164,7 +2164,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             tf.setEnabled(false);
         } else {
             tf.addValidator(new DoubleRangeValidator(
-                    myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, maxValue));
+                    myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, maxValue));
         }
         tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         tf.setStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -4175,7 +4175,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
                 ((TextField) discountsTable.getContainerProperty(((ComboBox) property).getData(),
                         myUI.getMessage(SptMessages.Amount)).getValue()).addValidator(new DoubleRangeValidator(
-                        myUI.getMessage(SptMessages.NotificationWrongValue), 0.1,
+                        myUI.getMessage(SptMessages.NotificationWrongValue), 0.01,
                         (Double) ((ComboBox) discountsTable.getContainerProperty(((ComboBox) property).getData(),
                                 myUI.getMessage(SptMessages.Title)).getValue())
                                 .getContainerProperty(property.getValue(),

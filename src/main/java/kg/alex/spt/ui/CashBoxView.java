@@ -187,7 +187,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         currencyTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         currencyTF.setWidth(Settings.PERCENTS100);
-        currencyTF.setNullRepresentation("0.1");
+        currencyTF.setNullRepresentation("0.01");
         currencyTF.setNullSettingAllowed(false);
         currencyTF.setConverter(Settings.getStringToDoubleConverter());
         currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1.0, null));
@@ -661,10 +661,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                     if (isKGS) {
                                         limit = limit * rate;
                                         amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
-                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1, Settings.round(limit, 2)));
+                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
                                     } else {
                                         amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
-                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.1, Settings.round(limit, 2)));
+                                                + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
                                     }
                                     Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
                                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);

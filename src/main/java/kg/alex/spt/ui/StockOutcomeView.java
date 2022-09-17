@@ -632,7 +632,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     myUI.getMessage(SptMessages.Quantity)).getValue()).removeAllValidators();
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue())
-                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, remain));
+                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, remain));
         }
         if (!disableFields(movementsTable)) {
             enableFields(movementsTable);
@@ -714,13 +714,13 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     myUI.getMessage(SptMessages.Quantity)).getValue()).removeAllValidators();
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue())
-                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, 0.0));
+                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, 0.0));
         } else if (old_remainder > 0) {
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue()).removeAllValidators();
             ((TextField) movementsTable.getContainerProperty(changedItemId,
                     myUI.getMessage(SptMessages.Quantity)).getValue())
-                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, old_remainder));
+                    .addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, old_remainder));
         }
         if (!disableFields(movementsTable)) {
             enableFields(movementsTable);
@@ -1145,7 +1145,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         cb.setId(id);
         item.getItemProperty(myUI.getMessage(SptMessages.Measurement)).setValue(cb);
         TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Quantity),
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter());
         tf.addValueChangeListener(this);
         tf.setId(id);

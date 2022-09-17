@@ -84,7 +84,7 @@ public class DbTransfers extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = v.createTextFieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(v);

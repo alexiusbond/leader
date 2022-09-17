@@ -953,7 +953,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         tf.setData(myUI.getMessage(SptMessages.Quantity));
         item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(tf);
         tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Price),
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
         tf.addValueChangeListener(this);
         tf.setId(id);

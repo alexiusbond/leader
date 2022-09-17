@@ -87,7 +87,7 @@ public class DbStockMovements extends BaseDb {
             cb.addValueChangeListener(v);
             item.getItemProperty(myUi.getMessage(SptMessages.Measurement)).setValue(cb);
             item.getItemProperty(Settings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
-            double minVal = 0.1;
+            double minVal = 0.01;
             if (result.getDouble("t.remain") < result.getDouble("t.amount")) {
                 minVal = result.getDouble("t.amount") - result.getDouble("t.remain");
             }
@@ -102,7 +102,7 @@ public class DbStockMovements extends BaseDb {
             item.getItemProperty(Settings.quantity_id).setValue(result.getDouble("t.amount"));
             tf = v.createTextFieldWithProperty(
                     result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), is_modifyable);
             tf.addValueChangeListener(v);
             tf.setId(id);
@@ -198,7 +198,7 @@ public class DbStockMovements extends BaseDb {
             item.getItemProperty(Settings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
             TextField tf = v.createTextFieldWithProperty(
                     result.getDouble("amount"), myUi.getMessage(SptMessages.Quantity),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.1, null),
+                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter());
             tf.addValueChangeListener(v);
             tf.setId(id);
