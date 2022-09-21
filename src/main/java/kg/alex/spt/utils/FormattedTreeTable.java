@@ -7,25 +7,31 @@ package kg.alex.spt.utils;
 
 import com.vaadin.data.Property;
 import com.vaadin.ui.TreeTable;
+import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
+import kg.alex.spt.i18n.SptMessages;
 
 /**
  * @author alex
  */
 public class FormattedTreeTable extends TreeTable {
 
-    public FormattedTreeTable() {
+    private MyVaadinUI myUI;
+
+    public FormattedTreeTable(MyVaadinUI myUi) {
         super();
+        this.myUI = myUi;
     }
 
     @Override
     protected String formatPropertyValue(Object rowId, Object colId, Property property) {
-
         if (property.getType() == Double.class) {
-
-            if (property.getValue() != null) // Format a decimal value for a specific locale
-            {
-                return Settings.dFormat.format(property.getValue());
+            if (property.getValue() != null) {
+                if (colId.equals(myUI.getMessage(SptMessages.Rate))) {
+                    return Settings.dFormat4.format(property.getValue());
+                } else {
+                    return Settings.dFormat2.format(property.getValue());
+                }
             }
         }
         return super.formatPropertyValue(rowId, colId, property);

@@ -341,7 +341,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
 
                             DbEmployeeLessons dbCon = new DbEmployeeLessons();
                             dbCon.connect();
-                            FormattedTable dataTable = new FormattedTable();
+                            FormattedTable dataTable = new FormattedTable(myUI);
                             dataTable.setFooterVisible(false);
                             dataTable.setWidth(Settings.PERCENTS100);
                             dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -467,7 +467,7 @@ public class HRLessonHoursReport implements Button.ClickListener,
                         schoolNameLbl.setStyleName("tableCpt");
                         vl.addComponent(schoolNameLbl);
 
-                        FormattedTable dataTable = new FormattedTable();
+                        FormattedTable dataTable = new FormattedTable(myUI);
                         dataTable.setFooterVisible(false);
                         dataTable.setWidth(Settings.PERCENTS100);
                         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

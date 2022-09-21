@@ -95,7 +95,7 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.CurrentAccountStatementReport))) {
                 new CurrentAccountStatementReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SalariesReport))) {
-                new SalariesReport(myUI, this);
+                new PayoutsReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.AccountingBalanceReport))) {
                 new BalanceReport(myUI, this);
             }

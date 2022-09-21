@@ -73,7 +73,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                 logger.catching(e);
             }
             dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
-                    + Settings.dFormat.format(total));
+                    + Settings.dFormat2.format(total));
             dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 300);
             dataTable.setColumnWidth(myUI.getMessage(SptMessages.FirstName), 100);
             dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastName), 120);
@@ -243,7 +243,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(FormattedTable.RowHeaderMode.INDEX);

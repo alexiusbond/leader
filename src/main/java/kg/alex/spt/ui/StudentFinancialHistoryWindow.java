@@ -40,7 +40,7 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
         excelBtn.addClickListener(this);
         mainLay.addComponent(excelBtn);
 
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

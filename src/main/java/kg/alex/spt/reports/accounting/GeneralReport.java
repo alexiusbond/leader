@@ -439,7 +439,7 @@ public class GeneralReport implements Button.ClickListener,
         caption.setStyleName("tableCpt");
         caption.setValue(myUI.getMessage(SptMessages.IncomeOutcomeMonthlyCaption));
 
-        transactionsTable = new FormattedTable();
+        transactionsTable = new FormattedTable(myUI);
         transactionsTable.setFooterVisible(true);
         transactionsTable.setSizeFull();
         transactionsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -464,7 +464,7 @@ public class GeneralReport implements Button.ClickListener,
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth(Settings.PERCENTS100);
 
-        paymentsTable = new FormattedTable();
+        paymentsTable = new FormattedTable(myUI);
         paymentsTable.setFooterVisible(true);
         paymentsTable.setSizeFull();
         paymentsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -506,18 +506,18 @@ public class GeneralReport implements Button.ClickListener,
     private void setSchoolAccounting(SchoolAccounting schoolAcc) {
         if (schoolAcc != null) {
             incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal)
-                    + ": </b>" + Settings.dFormat.format(schoolAcc.getTotal_income()) + "$");
+                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$");
             incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate)
                     + ": </b>" + schoolAcc.getLast_income_date());
             outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal)
-                    + ": </b>" + Settings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
+                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$");
             outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate)
                     + ": </b>" + schoolAcc.getLast_outcome_date());
             prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance)
                     + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + "$");
             totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.CashBox)
-                    + ": </b>" + Settings.dFormat.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
+                    + ": </b>" + Settings.dFormat2.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
         } else {
             incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
             incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
@@ -541,13 +541,13 @@ public class GeneralReport implements Button.ClickListener,
         }
         if (contractTtl != null) {
             totalsGrid.addComponent(new Label(contractTtl.getTtl_students() + ""), 1, 1);
-            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_contract()) + "$"), 1, 2);
-            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_debt()) + "$"), 1, 3);
-            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_disc()) + "$"), 1, 4);
-            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_correction()) + "$"), 1, 5);
-            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_net()) + "$"), 1, 6);
-            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_payments()) + "$"), 1, 7);
-            totalsGrid.addComponent(new Label(Settings.dFormat.format(contractTtl.getTtl_left()) + "$"), 1, 8);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_contract()) + "$"), 1, 2);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_debt()) + "$"), 1, 3);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_disc()) + "$"), 1, 4);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_correction()) + "$"), 1, 5);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_net()) + "$"), 1, 6);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_payments()) + "$"), 1, 7);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_left()) + "$"), 1, 8);
             //draw discounts chart
             double totalDisc = contractTtl.getTtl_net() + contractTtl.getTtl_disc();
             if (totalDisc != 0.0) {

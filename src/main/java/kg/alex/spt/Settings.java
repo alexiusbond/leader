@@ -27,7 +27,8 @@ public class Settings implements Serializable {
 
     public static final String PATH_TO_UPLOADS = "/home/logo/";
     public static final String PATH_TO_UPLOADS_HR = "/home/logo/hr/";
-    public static final DecimalFormat dFormat = new DecimalFormat("#,##0.00");
+    public static final DecimalFormat dFormat2 = new DecimalFormat("#,##0.00");
+    public static final DecimalFormat dFormat4 = new DecimalFormat("#,##0.0000");
     public static final String datePattern = "dd-MM-yyyy";
     public static final String yearMonthPattern = "MM-yyyy";
     public static final String yearPattern = "yyyy";
@@ -262,6 +263,7 @@ public class Settings implements Serializable {
     public static final String actReadMessages = "просмотр всех сообщений школы";
     public static final String actModify = "изменение";
     public static final String prmChangeOldTransactions = "изменение старых записей";
+    public static final String prmChangeId = "изменение id";
     public static final String prmPaymentsByDates = "оплаты по датам";
     public static final String prmChangeCurrencyRate = "изменение курса доллара";
     public static final String prmGeneralInfo = "общая информация";
@@ -354,19 +356,19 @@ public class Settings implements Serializable {
         }
     });
 
-    public static NumberFormat getNumberFormat() {
+    public static NumberFormat getNumberFormat(int digits) {
         NumberFormat format = NumberFormat.getNumberInstance();
         format.setGroupingUsed(true);
-        format.setMaximumFractionDigits(2);
-        format.setMinimumFractionDigits(2);
+        format.setMaximumFractionDigits(digits);
+        format.setMinimumFractionDigits(digits);
         return format;
     }
 
-    public static StringToDoubleConverter getStringToDoubleConverter() {
+    public static StringToDoubleConverter getStringToDoubleConverter(int digits) {
         return new StringToDoubleConverter() {
             @Override
             protected java.text.NumberFormat getFormat(Locale locale) {
-                return getNumberFormat();
+                return getNumberFormat(digits);
             }
         };
     }

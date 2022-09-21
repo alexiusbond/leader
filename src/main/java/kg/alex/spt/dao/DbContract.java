@@ -156,7 +156,7 @@ public class DbContract extends BaseDb {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name") + " - "
-                            + Settings.dFormat.format(result.getDouble("t.amount"))
+                            + Settings.dFormat2.format(result.getDouble("t.amount"))
                     + "$ (" + result.getString("y.name") + ")");
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("t.amount"));

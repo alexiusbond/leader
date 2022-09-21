@@ -185,19 +185,19 @@ public class DbDiscount extends BaseDb {
             if (result.getInt("d.discount_type_id") == 3) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - (max "
-                                + Settings.dFormat.format(result.getDouble("d.amount")) + "%)");
+                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "%)");
             } else if (result.getInt("d.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - (max "
-                                + Settings.dFormat.format(result.getDouble("d.amount")) + "$)");
+                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "$)");
             } else if (result.getInt("d.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - "
-                                + Settings.dFormat.format(result.getDouble("d.amount")) + "%");
+                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "%");
             } else if (result.getInt("d.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - "
-                                + Settings.dFormat.format(result.getDouble("d.amount")) + "$");
+                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "$");
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("d.amount"));

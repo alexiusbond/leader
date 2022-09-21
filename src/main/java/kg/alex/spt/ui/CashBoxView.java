@@ -189,7 +189,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencyTF.setWidth(Settings.PERCENTS100);
         currencyTF.setNullRepresentation("0.01");
         currencyTF.setNullSettingAllowed(false);
-        currencyTF.setConverter(Settings.getStringToDoubleConverter());
+        currencyTF.setConverter(Settings.getStringToDoubleConverter(4));
         currencyTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1.0, null));
         currencyTF.setPropertyDataSource(property);
         currencyTF.getPropertyDataSource().setValue(myUI.getDb_currency_rate());
@@ -346,13 +346,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setEditorField(createDateField(this));
         grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setEditorField(createTextField(
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), this));
         grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setEditorField(createTextField(
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), this));
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setEditorField(createTextField(
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1.0, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), this));
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4), this));
         grid.getColumn(myUI.getMessage(SptMessages.Note)).setEditorField(createTextField(
                 new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false),
                 null, null, null));
@@ -389,11 +389,11 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setRenderer(new DateRenderer(Settings.dtmf));
         grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setRenderer(
-                new NumberRenderer(Settings.getNumberFormat()));
+                new NumberRenderer(Settings.getNumberFormat(2)));
         grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setRenderer(
-                new NumberRenderer(Settings.getNumberFormat()));
+                new NumberRenderer(Settings.getNumberFormat(2)));
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setRenderer(
-                new NumberRenderer(Settings.getNumberFormat()));
+                new NumberRenderer(Settings.getNumberFormat(4)));
         if (grid == expensesGrid) {
             grid.getColumn(myUI.getMessage(SptMessages.Category)).setRenderer(
                     new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) expensesCategoryCb.getContainerDataSource(),
@@ -413,7 +413,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         grid.getColumn(Settings.button).setWidth(52);
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(120);
-        grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(75);
+        grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(100);
         grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setWidth(105);
         grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setWidth(105);
         grid.getColumn(myUI.getMessage(SptMessages.Category)).setWidth(350);
@@ -628,18 +628,18 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                         try {
                             double amount;
                             double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
-                                    Settings.dFormat.parse(rateTf.getValue()).doubleValue() :
+                                    Settings.dFormat2.parse(rateTf.getValue()).doubleValue() :
                                     (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue();
                             boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
                             if (isKGS) {
-                                amount = Settings.dFormat.parse(amountKGSTf.getValue()).doubleValue();
+                                amount = Settings.dFormat2.parse(amountKGSTf.getValue()).doubleValue();
                                 if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                                     amount = Settings.round(amount / rate, 2);
                                 } else {
                                     amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
                                 }
                             } else {
-                                amount = Settings.dFormat.parse(amountUSDTf.getValue()).doubleValue();
+                                amount = Settings.dFormat2.parse(amountUSDTf.getValue()).doubleValue();
                             }
                             if (amount > 0.0) {
                                 double old_amount = 0;
@@ -660,13 +660,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                     double limit = tr.getLimit();
                                     if (isKGS) {
                                         limit = limit * rate;
-                                        amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                        amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                 + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
                                     } else {
-                                        amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                        amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                 + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01, Settings.round(limit, 2)));
                                     }
-                                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                 } else {
                                     refreshValidators(amountUSDTf);
@@ -697,18 +697,18 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                             double amount;
                             double rate;
                             rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
-                                    Settings.dFormat.parse(rateTf.getValue()).doubleValue() :
+                                    Settings.dFormat2.parse(rateTf.getValue()).doubleValue() :
                                     (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue();
                             boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
                             if (isKGS) {
-                                amount = Settings.dFormat.parse(amountKGSTf.getValue()).doubleValue();
+                                amount = Settings.dFormat2.parse(amountKGSTf.getValue()).doubleValue();
                                 if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
                                     amount = Settings.round(amount / rate, 2);
                                 } else {
                                     amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Rate)).getValue(), 2);
                                 }
                             } else {
-                                amount = Settings.dFormat.parse(amountUSDTf.getValue()).doubleValue();
+                                amount = Settings.dFormat2.parse(amountUSDTf.getValue()).doubleValue();
                             }
                             if (amount > 0.0) {
                                 double old_amount = 0;
@@ -731,13 +731,13 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                         double limit = tr.getLimit();
                                         if (isKGS) {
                                             limit = limit * rate;
-                                            amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                            amountKGSTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
                                         } else {
-                                            amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                            amountUSDTf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Settings.round(limit, 2), null));
                                         }
-                                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                                 + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                                     } else {
                                         refreshValidators(amountUSDTf);
@@ -1003,7 +1003,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                         (Date) incomesCont.getContainerProperty(source.getId(),
                                 myUI.getMessage(SptMessages.Date)).getValue(), amount, 0.0, 1);
                 if (tr != null) {
-                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                 } else {
                     dbDef.exec_update_emp_id(Integer.parseInt(source.getId()),
@@ -1068,15 +1068,15 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     }
 
     private void recount() {
-        incomeTtlLab.setValue(myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat.format(schoolAcc.getTotal_income()) + "$");
-        expenseTtlLab.setValue(myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat.format(schoolAcc.getTotal_outcome()) + "$");
-        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat.format(
+        incomeTtlLab.setValue(myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$");
+        expenseTtlLab.setValue(myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$");
+        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat2.format(
                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$" + "</b>");
         Calendar c = Calendar.getInstance();
         c.setTime(fromDateDF.getValue());
         c.add(Calendar.DAY_OF_MONTH, -1);
         prev_balanceLab.setValue(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): "
-                + Settings.dFormat.format(schoolAcc.getPrevious_balance()) + "$");
+                + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + "$");
     }
 
     private void getTotals() {

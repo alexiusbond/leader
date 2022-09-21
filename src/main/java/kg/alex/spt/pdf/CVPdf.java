@@ -57,7 +57,7 @@ public class CVPdf {
 
                 try {
 
-                    document = new Document(PageSize.A4.rotate(), 20, 20, 20, 20);
+                    document = new Document(PageSize.A4, 20, 20, 20, 20);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -72,7 +72,7 @@ public class CVPdf {
 
                     document.open();
 
-                    float[] table_data_colsWidth = {1.0f, 1.0f, 1.0f, 1.0f};
+                    float[] table_data_colsWidth = {1.5f, 1.0f, 0.9f, 1.2f};
                     PdfPTable dataTable = new PdfPTable(4);
                     dataTable.setWidthPercentage(100f);
                     dataTable.setWidths(table_data_colsWidth);
@@ -256,26 +256,24 @@ public class CVPdf {
 
                     cell = new PdfPCell(createTable(tableList.get(2), new float[]{0.2f, 2.6f, 1.0f, 1.0f}));
                     cell.setBorder(0);
-                    cell.setColspan(2);
+                    cell.setColspan(4);
                     cell.setPaddingRight(5);
                     cell.setPaddingLeft(5);
                     dataTable.addCell(cell);
 
                     cell = new PdfPCell(createTable(tableList.get(3), new float[]{0.2f, 2.0f, 2.0f, 1.0f, 0.6f}));
                     cell.setBorder(0);
-                    cell.setColspan(2);
+                    cell.setColspan(4);
                     cell.setPaddingRight(5);
                     cell.setPaddingLeft(5);
                     dataTable.addCell(cell);
 
                     cell = new PdfPCell(createTable(tableList.get(4), new float[]{0.2f, 2.0f, 2.0f, 1.0f, 0.6f}));
                     cell.setBorder(0);
-                    cell.setColspan(2);
+                    cell.setColspan(4);
                     cell.setPaddingRight(5);
                     cell.setPaddingLeft(5);
                     dataTable.addCell(cell);
-                    dataTable.addCell(new Phrase(""));
-                    dataTable.addCell(new Phrase(""));
 
                     cell = new PdfPCell(createTable(tableList.get(5), new float[]{0.2f, 1.0f, 2.6f, 2.0f, 1.0f, 1.0f}));
                     cell.setBorder(0);

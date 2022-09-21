@@ -149,7 +149,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

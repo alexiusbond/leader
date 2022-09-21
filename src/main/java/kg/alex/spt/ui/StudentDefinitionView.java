@@ -99,6 +99,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private final ArrayList<String> delRelIds = new ArrayList<>();
     private PopupButton printButton;
     private Button financialHistoryButton;
+    private Button changeIdButton;
     private IndexedContainer productsContainer = null,
             acsGivContainer = null, acsRecContainer = null, instPlanCont = null,
             paymentCont = null, discountCont = null, correctionCont = null, callsCont = null;
@@ -305,7 +306,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         plusCallButton.setIcon(FontAwesome.PLUS_SQUARE);
         plusCallButton.addClickListener(this);
 
-        relativesTable = new FormattedTable();
+        relativesTable = new FormattedTable(myUI);
         relativesTable.setSizeFull();
         relativesTable.setStyleName(ValoTheme.TABLE_SMALL);
         relativesTable.setNullSelectionAllowed(false);
@@ -319,7 +320,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         famTableLay.addComponent(relativesTable);
         famTableLay.setExpandRatio(relativesTable, 1);
 
-        acsGiveTable = new FormattedTable();
+        acsGiveTable = new FormattedTable(myUI);
         acsGiveTable.setSizeFull();
         acsGiveTable.setStyleName(ValoTheme.TABLE_SMALL);
         acsGiveTable.setNullSelectionAllowed(false);
@@ -332,7 +333,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         acsGiveTableLay.addComponent(acsGiveTable);
         acsGiveTableLay.setExpandRatio(acsGiveTable, 1);
 
-        acsReceiveTable = new FormattedTable();
+        acsReceiveTable = new FormattedTable(myUI);
         acsReceiveTable.setSizeFull();
         acsReceiveTable.setStyleName(ValoTheme.TABLE_SMALL);
         acsReceiveTable.setNullSelectionAllowed(false);
@@ -347,7 +348,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
         buildContractTab();
 
-        paymentsTable = new FormattedTable();
+        paymentsTable = new FormattedTable(myUI);
         paymentsTable.setSizeFull();
         paymentsTable.setStyleName(ValoTheme.TABLE_SMALL);
         paymentsTable.setNullSelectionAllowed(false);
@@ -360,7 +361,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         payTableLay.addComponent(paymentsTable);
         payTableLay.setExpandRatio(paymentsTable, 1);
 
-        callsTable = new FormattedTable();
+        callsTable = new FormattedTable(myUI);
         callsTable.setSizeFull();
         callsTable.setStyleName(ValoTheme.TABLE_SMALL);
         callsTable.setNullSelectionAllowed(false);
@@ -487,6 +488,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         financialHistoryButton.setEnabled(false);
         financialHistoryButton.addClickListener(this);
         buttonsLay.addComponent(financialHistoryButton);
+
+        if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmChangeId)) {
+            changeIdButton = new Button();
+            changeIdButton.setDescription(myUI.getMessage(SptMessages.ChangeId));
+            changeIdButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
+            changeIdButton.setIcon(FontAwesome.USER);
+            changeIdButton.setEnabled(false);
+            changeIdButton.addClickListener(this);
+            buttonsLay.addComponent(changeIdButton);
+        }
 
         contLangOG = new OptionGroup();
         contLangOG.setNullSelectionAllowed(true);
@@ -875,7 +886,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         DbStudent dbst = new DbStudent();
                                         dbst.connect();
                                         if (isNew) {
-                                            loginTF.setValue(generateStudId());
+                                            loginTF.setValue(generateStudId(
+                                                    myUI.getUser().getCurrent_year().getId(),
+                                                    myUI.getUser().getCurrent_year().getName()));
                                             Student student = getStudent(0);
                                             int id = dbst.exec_insert(student);
                                             if (id != 0) {
@@ -1034,6 +1047,25 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.LastName)).getValue() + "; " +
                         studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.ClassName)).getValue(), st_id));
             }
+        } else if (source == changeIdButton) {
+            if (studDataTable.getValue() != null) {
+                try {
+                    DbStudent dbCon = new DbStudent();
+                    dbCon.connect();
+                    int st_id = (Integer) studDataTable.getValue();
+                    String login = generateStudId(
+                            (Integer) studDataTable.getContainerProperty(st_id, Settings.entering_year_id).getValue(),
+                            studDataTable.getContainerProperty(st_id,
+                                    myUI.getMessage(SptMessages.EnteringYear)).getValue().toString());
+                    dbCon.exec_updateLogin(st_id, login);
+                    loginTF.setValue(login);
+                    studDataTable.getContainerProperty(st_id, myUI.getMessage(SptMessages.Id)).setValue(login);
+                    dbCon.close();
+                } catch (Exception e) {
+                    logger.error(e);
+                    logger.catching(e);
+                }
+            }
         } else if (tabs.getSelectedTab() == tabs.getTab(famTableLay).getComponent()) {
             delRelIds.add((String) source.getData());
             relativesTable.removeItem(event.getButton().getData().toString());
@@ -1044,14 +1076,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             acsGiveTable.removeItem(event.getButton().getData().toString());
         } else if (tabs.getSelectedTab() == tabs.getTab(acsReceiveTableLay).getComponent()) {
             acsReceiveTable.removeItem(event.getButton().getData().toString());
-        } else if (source.getId() != null
-                && source.getId().equals(Settings.dbStudentInstallment)) {
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentInstallment)) {
             installmentTable.removeItem(event.getButton().getData().toString());
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
             }
-        } else if (source.getId() != null
-                && source.getId().equals(Settings.dbStudentDiscount)) {
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentDiscount)) {
             discCounter--;
             StudentDiscount sd = new StudentDiscount();
             sd.setId(source.getData().toString());
@@ -1065,8 +1095,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
             }
-        } else if (source.getId() != null
-                && source.getId().equals(Settings.dbStudentCorrection)) {
+        } else if (source.getId() != null && source.getId().equals(Settings.dbStudentCorrection)) {
             delCorrectionIds.add(source.getData().toString());
             correctionsTable.removeItem(event.getButton().getData().toString());
             if (initialPaymentTF.isValid()) {
@@ -1087,18 +1116,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 paymentsTable.removeItem(event.getButton().getData().toString());
             } else {
                 delPayIds.remove(source.getData().toString());
-                Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                 + " $ (" + Settings.df.format(tr.getDate()) + ")",
                         Notification.Type.ERROR_MESSAGE);
             }
         }
     }
 
-
     private StreamResource getFileStream(File inputFile) {
-
         StreamResource.StreamSource source = () -> {
-
             InputStream input = null;
             try {
                 input = new FileInputStream(inputFile);
@@ -1107,7 +1133,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 logger.catching(ex);
             }
             return input;
-
         };
         return new StreamResource(source, inputFile.getName());
     }
@@ -1122,6 +1147,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 recount();
                 printButton.setEnabled(true);
                 financialHistoryButton.setEnabled(true);
+                if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmChangeId)) {
+                    changeIdButton.setEnabled(true);
+                }
                 setContractCb(contr_id);
                 initialPaymentTF.setData(null);
             }
@@ -1129,7 +1157,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (classCB.getValue() != null) {
                 photoUpl.setEnabled(true);
                 if (isNew) {
-                    loginTF.setValue(generateStudId());
+                    loginTF.setValue(generateStudId(myUI.getUser().getCurrent_year().getId(),
+                            myUI.getUser().getCurrent_year().getName()));
                 }
             } else {
                 photoUpl.setEnabled(false);
@@ -1142,7 +1171,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             try {
                 double amount = 0.0;
                 if (initialPaymentTF.getValue() != null && !initialPaymentTF.getValue().equals("")) {
-                    amount = Settings.dFormat.parse(initialPaymentTF.getValue()).doubleValue();
+                    amount = Settings.dFormat2.parse(initialPaymentTF.getValue()).doubleValue();
                 }
                 if (amount >= 0 && initialPaymentTF.getData() != null) {
                     if (amount <= ((StudentPayment) initialPaymentTF.getData()).getAmount()) {
@@ -1153,13 +1182,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 ((StudentPayment) initialPaymentTF.getData()).getAmount(), amount, 1);
                         if (tr != null) {
                             initialPaymentTF.removeAllValidators();
-                            initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                            initialPaymentTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance)
+                                    + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", tr.getLimit(), null));
-                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                             + " $ (" + Settings.df.format(tr.getDate()) + ")",
                                     Notification.Type.ERROR_MESSAGE);
                             initialPaymentTF.setRequired(true);
-                            initialPaymentTF.setRequiredError(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                            initialPaymentTF.setRequiredError(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")");
                         } else {
                             initialPaymentTF.setRequired(false);
@@ -1231,16 +1261,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         if ((Integer) ((ComboBox) paymentsTable.getContainerProperty(itemId,
                                 myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getValue() == 3) {
                             tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance)
-                                    + Settings.dFormat.format(tr.getOverLimit())
+                                    + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", 0.01,
                                     (Double) tf.getPropertyDataSource().getValue() - tr.getOverLimit()));
                         } else {
                             tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.LowBalance)
-                                    + Settings.dFormat.format(tr.getOverLimit())
+                                    + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")",
                                     (Double) tf.getPropertyDataSource().getValue() + tr.getOverLimit(), null));
                         }
-                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                        Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                         + " $ (" + Settings.df.format(tr.getDate()) + ")",
                                 Notification.Type.ERROR_MESSAGE);
                     } else {
@@ -1308,7 +1338,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 3)) {
                                 allDisc.append(" - ").append(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat.format(count_amount
+                                        .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat2.format(count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100)).append("$)");
                                 count_amount -= count_amount
@@ -1322,7 +1352,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     .getContainerProperty(((ComboBox) discountsTable
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 4)) {
-                                allDisc.append("(").append(Settings.dFormat.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
+                                allDisc.append("(").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue())).append("$)");
                                 count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
@@ -1345,7 +1375,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     .getContainerProperty(((ComboBox) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.Title)).getValue().toString()));
                             allCorrections.append(dis);
-                            allCorrections.append(" (").append(Settings.dFormat.format(((TextField) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
+                            allCorrections.append(" (").append(Settings.dFormat2.format(((TextField) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                     .getPropertyDataSource().getValue())).append("$)");
                             if (iter.hasNext()) {
                                 allCorrections.append(", ");
@@ -1721,21 +1751,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(
                     ((TextField) relativeItem.getItemProperty(myUI.getMessage(SptMessages.Phone)).getValue()).getValue());
         }
-        item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(
-                middleNameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(
-                birthDate.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Photo)).setValue(
-                photoName);
-        item.getItemProperty(Settings.gender_id).setValue(
-                genderCB.getValue());
-        item.getItemProperty(Settings.class_name_id).setValue(
-                classCB.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(middleNameTF.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(birthDate.getValue());
+        item.getItemProperty(myUI.getMessage(SptMessages.Photo)).setValue(photoName);
+        item.getItemProperty(Settings.gender_id).setValue(genderCB.getValue());
+        item.getItemProperty(Settings.class_name_id).setValue(classCB.getValue());
+        item.getItemProperty(Settings.entering_year_id).setValue(myUI.getUser().getCurrent_year().getId());
         item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
                 classCB.getContainerDataSource().getContainerProperty(classCB.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-        item.getItemProperty(Settings.education_status_id).setValue(
-                statusCB.getValue());
+        item.getItemProperty(Settings.education_status_id).setValue(statusCB.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
                 statusCB.getContainerDataSource().getContainerProperty(statusCB.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
@@ -1770,7 +1795,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbt.connect();
             AccTransaction acTr = dbt.exec_allow_delete_by_st_id((Integer) studDataTable.getValue(), myUI.getUser().getSchool_id());
             if (acTr != null) {
-                Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(acTr.getOverLimit())
+                Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(acTr.getOverLimit())
                         + " $ (" + Settings.df.format(acTr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
             } else {
                 DbStudent dbst = new DbStudent();
@@ -1985,6 +2010,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 b.setEnabled(false);
                 b.setData(null);
                 Notification.show(myUI.getMessage(SptMessages.Maxsize), Notification.Type.WARNING_MESSAGE);
+            } else if (myFile.getName().length() > 255) {
+                try {
+                    upl.interruptUpload();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
+                }
+                photoName = null;
+                fileName = null;
+                Button b = (Button) upl.getData();
+                b.setEnabled(false);
+                b.setData(null);
+                Notification.show(myUI.getMessage(SptMessages.MaxFileName), Notification.Type.WARNING_MESSAGE);
             } else {
                 uploadProgressBar.setValue(readBytes / (float) contentLength);
             }
@@ -2002,9 +2040,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 photoEmb.setSource(new FileResource(myFile));
             } else {
                 Button b = (Button) upl.getData();
+                b.setData(null);
                 b.setStyleName(ValoTheme.BUTTON_FRIENDLY);
                 b.addStyleName(ValoTheme.BUTTON_SMALL);
-                Attachment attachment = null;
+                Attachment attachment;
                 try {
                     attachment = new Attachment();
                     attachment.setUnique_name(myFile.getName());
@@ -2015,13 +2054,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     int id = dbCon.exec_insert(attachment);
                     if (id != 0) {
                         attachment.setId(id);
+                        b.setData(attachment);
                     }
                     dbCon.close();
                 } catch (Exception ex) {
+                    logger.error(">>> ATTACHMENT");
                     logger.error(ex);
                     logger.catching(ex);
                 }
-                b.setData(attachment);
             }
             Notification.show(myUI.getMessage(SptMessages.UploadedSuccessfully),
                     Notification.Type.TRAY_NOTIFICATION);
@@ -2135,7 +2175,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         return tf;
     }
 
-    public TextField createTextFieldDouble(Double value, String description, String itemId) {
+    public TextField createTextFieldDouble(Double value, int digits, String description, String itemId) {
         ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         TextField tf = new TextField(property);
         tf.setDescription(description);
@@ -2145,7 +2185,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tf.setWidth(Settings.PERCENTS100);
         tf.addValidator(new DoubleRangeValidator(
                 myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
-        tf.setConverter(Settings.getStringToDoubleConverter());
+        tf.setConverter(Settings.getStringToDoubleConverter(digits));
         tf.setNullRepresentation("0.0");
         tf.setNullSettingAllowed(false);
         tf.setData(itemId);
@@ -2172,7 +2212,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tf.getPropertyDataSource().setValue(value);
         tf.setNullRepresentation("0.0");
         tf.setNullSettingAllowed(false);
-        tf.setConverter(Settings.getStringToDoubleConverter());
+        tf.setConverter(Settings.getStringToDoubleConverter(2));
         tf.setData(itemId);
         tf.addValueChangeListener(this);
         tf.setImmediate(true);
@@ -3146,16 +3186,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(SptMessages.PaymentType)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.PaymentType), id,
                         Settings.dbPaymentType, false, true, false, false));
-        TextField tf = createTextFieldDouble(null, myUI.getMessage(SptMessages.Amount), id);
+        TextField tf = createTextFieldDouble(null, 2, myUI.getMessage(SptMessages.Amount), id);
         tf.setId(myUI.getMessage(SptMessages.Payments));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
-        tf = createTextFieldDouble(null, Settings.KGS, id);
+        tf = createTextFieldDouble(null, 2, Settings.KGS, id);
         tf.setId(Settings.KGS);
         tf.setRequired(false);
         tf.removeAllValidators();
         tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.0, null));
         item.getItemProperty(Settings.KGS).setValue(tf);
-        tf = createTextFieldDouble(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate), id);
+        tf = createTextFieldDouble(myUI.getDb_currency_rate(), 4, myUI.getMessage(SptMessages.Rate), id);
         tf.setId(myUI.getMessage(SptMessages.Rate));
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
         String wh_paid = null;
@@ -3276,7 +3316,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                 createComboboxCorr(0, myUI.getMessage(SptMessages.Title), id));
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                createTextFieldDouble(null, myUI.getMessage(SptMessages.CorrectionAmount), id));
+                createTextFieldDouble(null, 2, myUI.getMessage(SptMessages.CorrectionAmount), id));
         item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                 createTextField(null, myUI.getMessage(SptMessages.Note), id, true, false));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
@@ -3303,7 +3343,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             df.setRangeEnd(new Date(Settings.INSTALLMENT_DATE_LIMIT));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    createTextFieldDouble(null, myUI.getMessage(SptMessages.Amount), id));
+                    createTextFieldDouble(null, 2, myUI.getMessage(SptMessages.Amount), id));
             item.getItemProperty(Settings.status_id).setValue(1);
         } else if (instCtrAmount != null) {
             installmentTable.removeAllItems();
@@ -3343,7 +3383,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     df.setRangeEnd(new Date(Settings.INSTALLMENT_DATE_LIMIT));
                     item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
                     item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                            createTextFieldDouble(Settings.round(divSum, 2), myUI.getMessage(SptMessages.Amount), id));
+                            createTextFieldDouble(Settings.round(divSum, 2), 2, myUI.getMessage(SptMessages.Amount), id));
                     item.getItemProperty(Settings.status_id).setValue(1);
                 } else {
                     String id = Settings.FreshItem + r_table_counter;
@@ -3370,19 +3410,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTabLay.setSpacing(true);
         contractTabLay.setSizeFull();
 
-        installmentTable = new FormattedTable();
+        installmentTable = new FormattedTable(myUI);
         installmentTable.setSizeFull();
         installmentTable.setSelectable(false);
         installmentTable.setStyleName(ValoTheme.TABLE_SMALL);
         installmentTable.setNullSelectionAllowed(false);
 
-        discountsTable = new FormattedTable();
+        discountsTable = new FormattedTable(myUI);
         discountsTable.setSizeFull();
         discountsTable.setSelectable(false);
         discountsTable.setStyleName(ValoTheme.TABLE_SMALL);
         discountsTable.setNullSelectionAllowed(false);
 
-        correctionsTable = new FormattedTable();
+        correctionsTable = new FormattedTable(myUI);
         correctionsTable.setSizeFull();
         correctionsTable.setSelectable(false);
         correctionsTable.setStyleName(ValoTheme.TABLE_SMALL);
@@ -3417,7 +3457,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         initialPaymentTF.setRequired(false);
         initialPaymentTF.setNullSettingAllowed(true);
         initialPaymentTF.setNullRepresentation("");
-        initialPaymentTF.setConverter(Settings.getStringToDoubleConverter());
+        initialPaymentTF.setConverter(Settings.getStringToDoubleConverter(2));
         initialPaymentTF.addValueChangeListener(this);
 
         currDate = new DateField(myUI.getMessage(SptMessages.StartDate));
@@ -3773,7 +3813,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 d.setDiscount_value(Settings.round((discountAmount), 2));
                 contr_with_disc = contr_with_disc - discountAmount;
             }
-
         }
         return d;
     }
@@ -3831,28 +3870,28 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             Object next = iter.next();
             if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 1) {
-                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discountsStr.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue())).append("%");
                 if (iter.hasNext()) {
                     discountsStr.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 2) {
-                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discountsStr.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue())).append("$");
                 if (iter.hasNext()) {
                     discountsStr.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 3) {
-                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discountsStr.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("%");
                 if (iter.hasNext()) {
                     discountsStr.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 4) {
-                discountsStr.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discountsStr.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("$");
                 if (iter.hasNext()) {
                     discountsStr.append(", ");
@@ -3861,7 +3900,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfo)) {
             String value = myUI.getMessage(SptMessages.Contract) + ": " +
-                    Settings.dFormat.format(studentContract.getAmount()) + " $";
+                    Settings.dFormat2.format(studentContract.getAmount()) + " $";
             if (studentContract.getCreationDate() != null) {
                 value += " (" + Settings.df.format(studentContract.getCreationDate()) + ")";
             }
@@ -3873,18 +3912,18 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             } else {
                 debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
             }
-            debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + Settings.dFormat.format(debt) + " $");
-            netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + Settings.dFormat.format(studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) + " $");
-            paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + Settings.dFormat.format(ttl_payment) + " $");
+            debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + " $");
+            netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + Settings.dFormat2.format(studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) + " $");
+            paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " $");
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfoLeftDebt)) {
-            leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + Settings.dFormat.format((studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) - ttl_payment) + " $");
+            leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + Settings.dFormat2.format((studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) - ttl_payment) + " $");
             if ((studentContract.getPlan_debt() - ttl_payment) > 0) {
                 planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
-                planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat.format(studentContract.getPlan_debt() - ttl_payment) + " $");
+                planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(studentContract.getPlan_debt() - ttl_payment) + " $");
             } else {
                 planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
-                planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat.format(0.0) + " $");
+                planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + " $");
             }
         }
     }
@@ -4008,18 +4047,18 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (ttl_payment != null && ttl_payment != 0.0) {
                 instCtrAmount -= (ttl_payment - init_payment);
             }
-            netIPlanTtlLab.setValue(myUI.getMessage(SptMessages.ToPlan) + ": " + Settings.dFormat.format(Settings.round(instCtrAmount, 2)) + " $");
-            instPlanTtlLab.setValue(myUI.getMessage(SptMessages.InstallmentPlanTotal) + ": " + Settings.dFormat.format(instPlanContSum) + " $");
+            netIPlanTtlLab.setValue(myUI.getMessage(SptMessages.ToPlan) + ": " + Settings.dFormat2.format(Settings.round(instCtrAmount, 2)) + " $");
+            instPlanTtlLab.setValue(myUI.getMessage(SptMessages.InstallmentPlanTotal) + ": " + Settings.dFormat2.format(instPlanContSum) + " $");
             if (instPlanCont != null) {
-                instPlanDifLab.setValue(myUI.getMessage(SptMessages.Difference) + ": " + Settings.dFormat.format(Settings.round(instCtrAmount, 2)
+                instPlanDifLab.setValue(myUI.getMessage(SptMessages.Difference) + ": " + Settings.dFormat2.format(Settings.round(instCtrAmount, 2)
                         - Settings.round(instPlanContSum, 2)) + " $");
             }
             if (contractCB.getValue() != null) {
                 tabContractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": "
-                        + Settings.dFormat.format(contractCB.getContainerProperty(contractCB.getValue(),
+                        + Settings.dFormat2.format(contractCB.getContainerProperty(contractCB.getValue(),
                         myUI.getMessage(SptMessages.Amount)).getValue()) + " $");
                 tabContractNetLab.setValue(myUI.getMessage(SptMessages.Net) + ": "
-                        + Settings.dFormat.format(netContrAmount) + " $");
+                        + Settings.dFormat2.format(netContrAmount) + " $");
             }
         } else {
             clearInstPlanInfo();
@@ -4037,7 +4076,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tabContractLab.setContentMode(ContentMode.HTML);
         if (contractCB.getValue() != null) {
             tabContractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": "
-                    + Settings.dFormat.format(contractCB.getContainerProperty(contractCB.getValue(),
+                    + Settings.dFormat2.format(contractCB.getContainerProperty(contractCB.getValue(),
                     myUI.getMessage(SptMessages.Amount)).getValue()) + " $");
         }
 
@@ -4046,21 +4085,21 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         tabContractNetLab.setContentMode(ContentMode.HTML);
         if (contractCB.getValue() != null) {
             tabContractNetLab.setValue(myUI.getMessage(SptMessages.Net) + ": "
-                    + Settings.dFormat.format(netContrAmount + " $"));
+                    + Settings.dFormat2.format(netContrAmount + " $"));
         }
 
         netIPlanTtlLab = new Label();
         netIPlanTtlLab.setSizeUndefined();
         netIPlanTtlLab.setContentMode(ContentMode.HTML);
         if (instCtrAmount != null) {
-            netIPlanTtlLab.setValue(myUI.getMessage(SptMessages.ToPlan) + ": " + Settings.dFormat.format(instCtrAmount) + " $");
+            netIPlanTtlLab.setValue(myUI.getMessage(SptMessages.ToPlan) + ": " + Settings.dFormat2.format(instCtrAmount) + " $");
         }
 
         instPlanTtlLab = new Label();
         instPlanTtlLab.setSizeUndefined();
         instPlanTtlLab.setContentMode(ContentMode.HTML);
         if (instPlanCont != null) {
-            instPlanTtlLab.setValue(myUI.getMessage(SptMessages.InstallmentPlanTotal) + ": " + Settings.dFormat.format(instPlanContSum) + " $");
+            instPlanTtlLab.setValue(myUI.getMessage(SptMessages.InstallmentPlanTotal) + ": " + Settings.dFormat2.format(instPlanContSum) + " $");
         }
 
         instPlanDifLab = new Label();
@@ -4213,16 +4252,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 }
             }
             contr_with_disc = (Double) contractCB.getContainerProperty(contractCB.getValue(), myUI.getMessage(SptMessages.Amount)).getValue();
+
             if (discountsTable.getContainerDataSource().size() > 0) {
                 for (Object next : discountsTable.getItemIds()) {
-                    if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(SptMessages.Update))) {
-                        dbsd.exec_update(getStudentDiscount((Integer) studDataTable.getValue(),
-                                myUI.getUser().getCurrent_year().getId(), ((String) next)));
-                    } else if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
-                            .equals(myUI.getMessage(SptMessages.Insert))) {
-                        dbsd.exec_insert_st_discount(getStudentDiscount((Integer) studDataTable.getValue(),
-                                myUI.getUser().getCurrent_year().getId(), ((String) next)));
+                    StudentDiscount studentDiscount = getStudentDiscount((Integer) studDataTable.getValue(),
+                            myUI.getUser().getCurrent_year().getId(), ((String) next));
+                    if (studentDiscount.getAttachment_id() != 0) {
+                        if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                                .equals(myUI.getMessage(SptMessages.Update))) {
+                            dbsd.exec_update(studentDiscount);
+                        } else if (discountsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                                .equals(myUI.getMessage(SptMessages.Insert))) {
+                            dbsd.exec_insert_st_discount(studentDiscount);
+                        }
                     }
                 }
             }
@@ -4397,7 +4439,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (!next.toString().equals(payment_id)) {
                         StudentPayment sp = getPayment(0, 0, paymentsTable.getItem(next));
                         tr = new AccTransaction();
-                        tr.setAmount(Settings.dFormat.parse(((TextField) paymentsTable.getContainerProperty(next,
+                        tr.setAmount(Settings.dFormat2.parse(((TextField) paymentsTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()).getValue()).doubleValue());
                         tr.setDate(sp.getModification_date());
                         tr.setCategory_id((Integer) ((ComboBox) paymentsTable.getContainerProperty(next,
@@ -4576,7 +4618,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
     }
 
-    private String generateStudId() {
+    private String generateStudId(int yearId, String yearName) {
         String generated_id = null;
         try {
             DbStudent dbCon = new DbStudent();
@@ -4603,7 +4645,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     myUI.getMessage(SptMessages.SecondaryCode)).getValue())) {
                 myUI.getMessage(SptMessages.SecondaryCode);
             }
-            int year_ord = Integer.parseInt(myUI.getUser().getCurrent_year().getName().substring(2, 4));
+            int year_ord = Integer.parseInt(yearName.substring(2, 4));
             String class_num = Integer.toString(year_ord - (Integer) classCB.getContainerProperty(
                     classCB.getValue(), Settings.class_order_number).getValue());
             char cl = (Integer) classCB.getContainerProperty(classCB.getValue(), Settings.class_type_id).getValue() >= 4
@@ -4611,8 +4653,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             int order_number = 1;
             do {
                 generated_id = school_code + year_ord + cl + String.format("%03d", dbCon.execSQL_login(myUI,
-                        myUI.getUser().getCurrent_year().getId(),
-                        myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
+                        yearId, myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
                                 classCB.getValue(), Settings.class_type_id).getValue(),
                         order_number, (Integer) classCB.getContainerProperty(
                                 classCB.getValue(), Settings.min).getValue(),

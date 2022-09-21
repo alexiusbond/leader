@@ -255,7 +255,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 1, 2, 3, 2);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        educationTable = new FormattedTable();
+        educationTable = new FormattedTable(myUI);
         educationTable.setWidth(Settings.PERCENTS100);
         educationTable.setColumnReorderingAllowed(false);
         educationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -281,7 +281,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 1, 4, 3, 4);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        workPlacesTable = new FormattedTable();
+        workPlacesTable = new FormattedTable(myUI);
         workPlacesTable.setWidth(Settings.PERCENTS100);
         workPlacesTable.setColumnReorderingAllowed(false);
         workPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -307,7 +307,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 6, 1, 6);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        examsTable = new FormattedTable();
+        examsTable = new FormattedTable(myUI);
         examsTable.setWidth(Settings.PERCENTS100);
         examsTable.setColumnReorderingAllowed(false);
         examsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -332,7 +332,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 2, 6, 3, 6);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        seminarsTable = new FormattedTable();
+        seminarsTable = new FormattedTable(myUI);
         seminarsTable.setWidth(Settings.PERCENTS100);
         seminarsTable.setColumnReorderingAllowed(false);
         seminarsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -358,7 +358,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 8, 1, 8);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        certificatesTable = new FormattedTable();
+        certificatesTable = new FormattedTable(myUI);
         certificatesTable.setWidth(Settings.PERCENTS100);
         certificatesTable.setColumnReorderingAllowed(false);
         certificatesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -383,7 +383,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 10, 3, 10);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        spouseEducationTable = new FormattedTable();
+        spouseEducationTable = new FormattedTable(myUI);
         spouseEducationTable.setWidth(Settings.PERCENTS100);
         spouseEducationTable.setColumnReorderingAllowed(false);
         spouseEducationTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -408,7 +408,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 12, 3, 12);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        spouseWorkPlacesTable = new FormattedTable();
+        spouseWorkPlacesTable = new FormattedTable(myUI);
         spouseWorkPlacesTable.setWidth(Settings.PERCENTS100);
         spouseWorkPlacesTable.setColumnReorderingAllowed(false);
         spouseWorkPlacesTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -433,7 +433,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(l, 0, 14, 3, 14);
         gl.setComponentAlignment(l, Alignment.MIDDLE_CENTER);
 
-        childrenTable = new FormattedTable();
+        childrenTable = new FormattedTable(myUI);
         childrenTable.setWidth(Settings.PERCENTS100);
         childrenTable.setColumnReorderingAllowed(false);
         childrenTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

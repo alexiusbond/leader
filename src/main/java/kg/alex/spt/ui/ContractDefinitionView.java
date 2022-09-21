@@ -59,7 +59,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedFilterTable();
+        dataTable = new FormattedFilterTable(myUI);
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.setSizeFull();
@@ -166,7 +166,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setRequired(true);
         valueTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         valueTF.setNullRepresentation("");
-        valueTF.setConverter(Settings.getStringToDoubleConverter());
+        valueTF.setConverter(Settings.getStringToDoubleConverter(2));
         valueTF.setWidth(Settings.PERCENTS100);
         valueTF.addValidator(new DoubleRangeValidator(
                 myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));

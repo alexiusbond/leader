@@ -411,7 +411,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         hl.setComponentAlignment(noPhonesCkb, Alignment.BOTTOM_RIGHT);
         hl.setExpandRatio(captionPhones, 1);
 
-        phonesTable = new FormattedTable();
+        phonesTable = new FormattedTable(myUI);
         phonesTable.setSizeFull();
         phonesTable.setStyleName(ValoTheme.TABLE_SMALL);
         contactInfoLay = new GridLayout(2, 2);
@@ -489,7 +489,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusSpouseEducationButton.addClickListener(this);
         familyInfoLay.addComponent(plusSpouseEducationButton, 1, 2);
 
-        spouseEducationTable = new FormattedTable();
+        spouseEducationTable = new FormattedTable(myUI);
         spouseEducationTable.setSizeFull();
         spouseEducationTable.setStyleName(ValoTheme.TABLE_SMALL);
         familyInfoLay.addComponent(spouseEducationTable, 0, 3, 2, 3);
@@ -513,7 +513,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusSpouseWorkPlacesButton.addClickListener(this);
         familyInfoLay.addComponent(plusSpouseWorkPlacesButton, 1, 4);
 
-        spouseWorkPlacesTable = new FormattedTable();
+        spouseWorkPlacesTable = new FormattedTable(myUI);
         spouseWorkPlacesTable.setSizeFull();
         spouseWorkPlacesTable.setStyleName(ValoTheme.TABLE_SMALL);
         familyInfoLay.addComponent(spouseWorkPlacesTable, 0, 5, 2, 5);
@@ -538,7 +538,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusChildButton.addClickListener(this);
         familyInfoLay.addComponent(plusChildButton, 1, 6);
 
-        childrenTable = new FormattedTable();
+        childrenTable = new FormattedTable(myUI);
         childrenTable.setSizeFull();
         childrenTable.setStyleName(ValoTheme.TABLE_SMALL);
         familyInfoLay.addComponent(childrenTable, 0, 7, 2, 7);
@@ -607,7 +607,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         captionQuestioning.setValue(myUI.getMessage(SptMessages.Questioning));
         captionQuestioning.setStyleName("tableCpt");
 
-        questioningTable = new FormattedTable();
+        questioningTable = new FormattedTable(myUI);
         questioningTable.setSizeFull();
         questioningTable.setStyleName(ValoTheme.TABLE_SMALL);
 
@@ -657,7 +657,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusExamButton.addClickListener(this);
         achievementsInfoLay.addComponent(plusExamButton, 1, 0);
 
-        examsTable = new FormattedTable();
+        examsTable = new FormattedTable(myUI);
         examsTable.setSizeFull();
         examsTable.setStyleName(ValoTheme.TABLE_SMALL);
         achievementsInfoLay.addComponent(examsTable, 0, 1, 2, 1);
@@ -681,7 +681,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusSeminarButton.addClickListener(this);
         achievementsInfoLay.addComponent(plusSeminarButton, 1, 2);
 
-        seminarsTable = new FormattedTable();
+        seminarsTable = new FormattedTable(myUI);
         seminarsTable.setSizeFull();
         seminarsTable.setStyleName(ValoTheme.TABLE_SMALL);
         achievementsInfoLay.addComponent(seminarsTable, 0, 3, 2, 3);
@@ -705,7 +705,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusCertificateButton.addClickListener(this);
         achievementsInfoLay.addComponent(plusCertificateButton, 1, 4);
 
-        certificatesTable = new FormattedTable();
+        certificatesTable = new FormattedTable(myUI);
         certificatesTable.setSizeFull();
         certificatesTable.setStyleName(ValoTheme.TABLE_SMALL);
         achievementsInfoLay.addComponent(certificatesTable, 0, 5, 2, 5);
@@ -729,7 +729,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusLanguageButton.addClickListener(this);
         achievementsInfoLay.addComponent(plusLanguageButton, 1, 6);
 
-        languagesTable = new FormattedTable();
+        languagesTable = new FormattedTable(myUI);
         languagesTable.setSizeFull();
         languagesTable.setStyleName(ValoTheme.TABLE_SMALL);
         achievementsInfoLay.addComponent(languagesTable, 0, 7, 2, 7);
@@ -797,7 +797,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusBranchButton.addClickListener(this);
         profInfoLay.addComponent(plusBranchButton, 1, 2);
 
-        branchesTable = new FormattedTable();
+        branchesTable = new FormattedTable(myUI);
         branchesTable.setSizeFull();
         branchesTable.setStyleName(ValoTheme.TABLE_SMALL);
         profInfoLay.addComponent(branchesTable, 0, 3, 2, 3);
@@ -821,7 +821,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusEducationButton.addClickListener(this);
         profInfoLay.addComponent(plusEducationButton, 1, 4);
 
-        educationTable = new FormattedTable();
+        educationTable = new FormattedTable(myUI);
         educationTable.setSizeFull();
         educationTable.setStyleName(ValoTheme.TABLE_SMALL);
         profInfoLay.addComponent(educationTable, 0, 5, 2, 5);
@@ -845,7 +845,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         plusWorkPlaceButton.addClickListener(this);
         profInfoLay.addComponent(plusWorkPlaceButton, 1, 6);
 
-        workPlacesTable = new FormattedTable();
+        workPlacesTable = new FormattedTable(myUI);
         workPlacesTable.setSizeFull();
         workPlacesTable.setStyleName(ValoTheme.TABLE_SMALL);
         profInfoLay.addComponent(workPlacesTable, 0, 7, 2, 7);
@@ -873,7 +873,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         hl.addComponent(plusOrdersButton);
         hl.setExpandRatio(captionOrders, 1);
 
-        ordersTable = new FormattedTable();
+        ordersTable = new FormattedTable(myUI);
         ordersTable.setImmediate(true);
         ordersTable.setSizeFull();
         ordersTable.setStyleName(ValoTheme.TABLE_SMALL);
@@ -917,7 +917,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             hlSupervision.setComponentAlignment(canBeAdvisorCkb, Alignment.BOTTOM_RIGHT);
             hlSupervision.setExpandRatio(captionSupervision, 1);
 
-            supervisionTable = new FormattedTable();
+            supervisionTable = new FormattedTable(myUI);
             supervisionTable.setSizeFull();
             supervisionTable.setStyleName(ValoTheme.TABLE_SMALL);
         }
@@ -943,7 +943,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             hlLessons.addComponent(plusLessonsButton);
             hlLessons.setExpandRatio(captionLessons, 1);
 
-            lessonsTable = new FormattedTable();
+            lessonsTable = new FormattedTable(myUI);
             lessonsTable.setSizeFull();
             lessonsTable.setStyleName(ValoTheme.TABLE_SMALL);
         }
@@ -974,7 +974,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         String[] NATURAL_COL_ORDER_PERMISSIONS = new String[]{
                 myUI.getMessage(SptMessages.Functions), myUI.getMessage(SptMessages.ClassCaption)};
-        permissionTable = new FormattedTable();
+        permissionTable = new FormattedTable(myUI);
         permissionTable.setSizeFull();
         permissionTable.setStyleName(ValoTheme.TABLE_SMALL);
         try {

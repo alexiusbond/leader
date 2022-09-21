@@ -93,18 +93,18 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.PaymentType)).setValue(
                     dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(SptMessages.PaymentType), id,
                             Settings.dbPaymentType, false, false, false, isDisabled));
-            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), myUI.getMessage(SptMessages.Amount), id);
+            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(SptMessages.Amount), id);
             tf.setId(myUI.getMessage(SptMessages.Payments));
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
-            tf = dw.createTextFieldDouble(null, Settings.KGS, id);
+            tf = dw.createTextFieldDouble(null, 2, Settings.KGS, id);
             tf.setId(Settings.KGS);
             tf.setRequired(false);
             tf.removeAllValidators();
             tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.0, null));
             tf.setEnabled(!isDisabled);
             item.getItemProperty(Settings.KGS).setValue(tf);
-            tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), myUI.getMessage(SptMessages.Rate), id);
+            tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(SptMessages.Rate), id);
             tf.setEnabled(!isDisabled);
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
             tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(SptMessages.WhoPaid), id, false, false);
@@ -378,7 +378,7 @@ public class DbStudentPayment extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("week_paid"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat2.format(result.getDouble("week_paid"));
         }
         return s;
     }
@@ -397,7 +397,7 @@ public class DbStudentPayment extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("month_paid"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat2.format(result.getDouble("month_paid"));
         }
         return s;
     }
@@ -449,7 +449,7 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(result.getString("fullname"));
             total += result.getDouble("amount");
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(total));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total));
         t.setColumnFooter(myUI.getMessage(SptMessages.TransactionNumber), container.size() + "");
         return container;
     }
@@ -487,7 +487,7 @@ public class DbStudentPayment extends BaseDb {
             totalAmount += result.getDouble("amount");
             totalQuantity += result.getDouble("quantity");
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(totalAmount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(totalAmount));
         t.setColumnFooter(myUI.getMessage(SptMessages.TransactionsQuantity), totalQuantity + "");
         return container;
     }

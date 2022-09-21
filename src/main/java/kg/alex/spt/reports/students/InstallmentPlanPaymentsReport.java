@@ -295,7 +295,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         installmentCont = null;
         paymentsCont = null;
         if (instPlanCkb.getValue()) {
-            installmentTable = new FormattedTable();
+            installmentTable = new FormattedTable(myUI);
             installmentTable.setCaption(myUI.getMessage(SptMessages.InstallmentPlan));
             installmentTable.setFooterVisible(true);
             installmentTable.setSizeFull();
@@ -315,7 +315,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             }
             installmentTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
             installmentTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), "Total "
-                    + Settings.dFormat.format(total_inst));
+                    + Settings.dFormat2.format(total_inst));
             if (!paymentsCkb.getValue()) {
                 rightGrid.addComponent(installmentTable, 0, 4, 6, 4);
             } else {
@@ -324,7 +324,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             rightGrid.setRowExpandRatio(4, 1);
         }
         if (paymentsCkb.getValue()) {
-            paymentsTable = new FormattedTable();
+            paymentsTable = new FormattedTable(myUI);
             paymentsTable.setCaption(myUI.getMessage(SptMessages.Payments));
             paymentsTable.setFooterVisible(true);
             paymentsTable.setSizeFull();
@@ -345,7 +345,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             }
             paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
             paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), "Total "
-                    + Settings.dFormat.format(total_pay));
+                    + Settings.dFormat2.format(total_pay));
 
             if (!instPlanCkb.getValue()) {
                 rightGrid.addComponent(paymentsTable, 0, 4, 6, 4);
@@ -487,28 +487,28 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             Object next = iter.next();
             if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 1) {
-                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue())).append("%");
                 if (iter.hasNext()) {
                     discounts.append( ", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 2) {
-                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue())).append("$");
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 3) {
-                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("%");
                 if (iter.hasNext()) {
                     discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 4) {
-                discounts.append(Settings.dFormat.format(discCont.getContainerProperty(next,
+                discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.FreeAmount)).getValue())).append("$");
                 if (iter.hasNext()) {
                     discounts.append(", ");
@@ -516,7 +516,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             }
         }
         corrections = c.getCorrectionDetails() == null ? "0.00$" : c.getCorrectionDetails();
-        contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + Settings.dFormat.format(c.getAmount()) + "$");
+        contractLab.setValue(myUI.getMessage(SptMessages.Contract) + ": " + Settings.dFormat2.format(c.getAmount()) + "$");
         discountLab.setValue(myUI.getMessage(SptMessages.Discount) + ": " + discounts.toString());
         correctionLab.setValue(myUI.getMessage(SptMessages.Correction) + ": " + corrections);
         if (debt > 0) {
@@ -524,18 +524,18 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         } else {
             debtLab.setStyleName(ValoTheme.LABEL_SUCCESS);
         }
-        debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + Settings.dFormat.format(debt) + "$");
-        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + Settings.dFormat.format(c.getContr_with_disc() + debt + c.getCorrection()) + "$");
-        paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + Settings.dFormat.format(ttl_payment) + "$");
-        leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + Settings.dFormat.format(
+        debtLab.setValue(myUI.getMessage(SptMessages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + "$");
+        netLab.setValue(myUI.getMessage(SptMessages.Net) + ": " + Settings.dFormat2.format(c.getContr_with_disc() + debt + c.getCorrection()) + "$");
+        paidLab.setValue(myUI.getMessage(SptMessages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + "$");
+        leftLab.setValue(myUI.getMessage(SptMessages.Left) + ": " + Settings.dFormat2.format(
                 (c.getContr_with_disc() + debt) - ttl_payment + c.getCorrection()) + "$");
         if ((c.getPlan_debt() - ttl_payment) > 0) {
             planDebt.setStyleName(ValoTheme.LABEL_FAILURE);
-            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat.format(
+            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(
                     c.getPlan_debt() - ttl_payment + c.getCorrection()) + "$");
         } else {
             planDebt.setStyleName(ValoTheme.LABEL_SUCCESS);
-            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat.format(0.0) + "$");
+            planDebt.setValue(myUI.getMessage(SptMessages.InstPlanDebt) + ": " + Settings.dFormat2.format(0.0) + "$");
         }
     }
 }

@@ -148,8 +148,8 @@ public class InvoicePDF {
                 Paragraph sumPar = new Paragraph();
                 double rate = student.getKurs();
                 sumPar.add(new Chunk("Сумма цифрами: ", bold_font));
-                sumPar.add(new Chunk(Settings.dFormat.format(Math.round(student.getAmount() * rate))
-                        + " сом (" + Settings.dFormat.format(student.getAmount()) + " USD)", underlined_font));
+                sumPar.add(new Chunk(Settings.dFormat2.format(Math.round(student.getAmount() * rate))
+                        + " сом (" + Settings.dFormat2.format(student.getAmount()) + " USD)", underlined_font));
 
                 cell = new PdfPCell(sumPar);
                 cell.setColspan(2);

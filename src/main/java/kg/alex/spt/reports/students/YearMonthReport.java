@@ -286,7 +286,7 @@ public class YearMonthReport implements Button.ClickListener,
         container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, null);
         container.addContainerProperty(Settings.percentage, Double.class, 0.0);
 
-        FormattedTable dataTable = new FormattedTable();
+        FormattedTable dataTable = new FormattedTable(myUI);
         dataTable.setCaption(caption);
         dataTable.setFooterVisible(true);
         dataTable.setWidth(Settings.PERCENTS100);

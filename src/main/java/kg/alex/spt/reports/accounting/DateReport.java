@@ -127,6 +127,9 @@ public class DateReport implements Button.ClickListener,
             logger.catching(e);
         }
 
+        outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+        incomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -182,14 +185,14 @@ public class DateReport implements Button.ClickListener,
         rightLayout.setSizeFull();
         rightLayout.setImmediate(true);
 
-        incomesDataTable = new FormattedTable();
+        incomesDataTable = new FormattedTable(myUI);
         incomesDataTable.setCaption(myUI.getMessage(SptMessages.Incomes));
         incomesDataTable.setSizeFull();
         incomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         incomesDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         incomesDataTable.addStyleName("noWrapHeader");
 
-        outcomesDataTable = new FormattedTable();
+        outcomesDataTable = new FormattedTable(myUI);
         outcomesDataTable.setCaption(myUI.getMessage(SptMessages.Expenses));
         outcomesDataTable.setSizeFull();
         outcomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -304,16 +307,16 @@ public class DateReport implements Button.ClickListener,
                         dbtr.connect();
                         schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool_id(), fromDateDF.getValue(),
                                 tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
-                        incomeTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat.format(
+                        incomeTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getTotal_income()) + "$</b>");
-                        expenseTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat.format(
+                        expenseTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getTotal_outcome()) + "$</b>");
-                        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat.format(
+                        ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat2.format(
                                 (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$</b>");
                         Calendar c = Calendar.getInstance();
                         c.setTime(fromDateDF.getValue());
                         c.add(Calendar.DAY_OF_MONTH, -1);
-                        prev_balanceLab.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat.format(
+                        prev_balanceLab.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + "): " + Settings.dFormat2.format(
                                 schoolAcc.getPrevious_balance()) + "$</b>");
                         dbtr.close();
                     } catch (Exception e) {
@@ -376,12 +379,12 @@ public class DateReport implements Button.ClickListener,
                                             new CellRangeAddress(excelReport.getTotalsRow().getRowNum(), excelReport.getTotalsRow().getRowNum(),
                                                     excelReport.getTotalsRow().getFirstCellNum(), excelReport.getTotalsRow().getLastCellNum() - 1));
                                     excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
-                                            myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat.format(schoolAcc.getTotal_income()) + "$\t "
-                                                    + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat.format(
+                                            myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$\t "
+                                                    + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(
                                                             schoolAcc.getTotal_outcome()) + "$\t "
                                                     + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
-                                                    + "): " + Settings.dFormat.format(schoolAcc.getPrevious_balance()) + "$\t "
-                                                    + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat.format(
+                                                    + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + "$\t "
+                                                    + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat2.format(
                                                     (schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$\t ");
                                 }
                             }

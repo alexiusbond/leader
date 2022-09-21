@@ -97,7 +97,7 @@ public class SchoolsReport implements Button.ClickListener,
             DbSchool dbs = new DbSchool();
             dbs.connect();
             schoolTable.setContainerDataSource(dbs.execSchoolSel(myUI, 0));
-            schoolTable.setVisibleColumns(new String[]{myUI.getMessage(SptMessages.Title)});
+            schoolTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
@@ -135,7 +135,7 @@ public class SchoolsReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

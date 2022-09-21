@@ -257,7 +257,7 @@ public class DebtReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(FormattedTable.RowHeaderMode.INDEX);
@@ -284,11 +284,11 @@ public class DebtReport implements Button.ClickListener,
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan),
-                Settings.dFormat.format(inst_total));
+                Settings.dFormat2.format(inst_total));
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                Settings.dFormat.format(paid_total));
+                Settings.dFormat2.format(paid_total));
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                Settings.dFormat.format(debt_total));
+                Settings.dFormat2.format(debt_total));
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);

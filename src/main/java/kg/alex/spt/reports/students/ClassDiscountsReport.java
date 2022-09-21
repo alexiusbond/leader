@@ -188,7 +188,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -224,7 +224,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
                             dataTable.setColumnFooter(classTable.getContainerProperty(
                                             next, myUI.getMessage(SptMessages.Title)).getValue()
                                             + " " + myUI.getMessage(SptMessages.Average) + "%",
-                                    Settings.dFormat.format(Double.parseDouble(
+                                    Settings.dFormat2.format(Double.parseDouble(
                                             dataTable.getColumnFooter(classTable.getContainerProperty(
                                                     next, myUI.getMessage(SptMessages.Title)).getValue()
                                                     + " " + myUI.getMessage(SptMessages.Average) + "%"))

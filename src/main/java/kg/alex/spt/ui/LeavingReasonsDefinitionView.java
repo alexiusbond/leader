@@ -52,7 +52,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedFilterTable();
+        dataTable = new FormattedFilterTable(myUI);
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.setSizeFull();

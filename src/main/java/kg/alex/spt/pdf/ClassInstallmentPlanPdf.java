@@ -116,7 +116,7 @@ public class ClassInstallmentPlanPdf {
                         table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        table_plan.addCell(new Phrase(Settings.dFormat.format(
+                        table_plan.addCell(new Phrase(Settings.dFormat2.format(
                                 planCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -128,7 +128,7 @@ public class ClassInstallmentPlanPdf {
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
-                            + Settings.dFormat.format(ttl_plan), ordFontBold));
+                            + Settings.dFormat2.format(ttl_plan), ordFontBold));
 
                     document.add(table_plan);
 

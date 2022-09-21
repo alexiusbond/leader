@@ -50,7 +50,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
                     dw.createDateField(date, myUI.getMessage(SptMessages.Date), id, false, true));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    dw.createTextFieldDouble(result.getDouble("ip.amount"), myUI.getMessage(SptMessages.Amount), id));
+                    dw.createTextFieldDouble(result.getDouble("ip.amount"), 2, myUI.getMessage(SptMessages.Amount), id));
             item.getItemProperty(Settings.status_id)
                     .setValue(result.getInt("ip.is_visible"));
         }
@@ -181,7 +181,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("week_plan"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat2.format(result.getDouble("week_plan"));
         }
         return s;
     }
@@ -201,7 +201,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
         ResultSet result = stat.executeQuery();
         String s = null;
         while (result.next()) {
-            s = result.getString("st") + " " + students + " / " + Settings.dFormat.format(result.getDouble("month_plan"));
+            s = result.getString("st") + " " + students + " / " + Settings.dFormat2.format(result.getDouble("month_plan"));
         }
         return s;
     }

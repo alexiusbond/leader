@@ -189,7 +189,7 @@ public class StockGeneralReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTreeTable();
+        dataTable = new FormattedTreeTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

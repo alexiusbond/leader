@@ -152,9 +152,9 @@ public class InventoryOrganizationPdf {
                                 tf.getPropertyDataSource().getValue() + "", tableFont));
                         tf = (TextField) inventoriesCont.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.Price)).getValue();
-                        table.addCell(new Phrase(Settings.dFormat.format(
+                        table.addCell(new Phrase(Settings.dFormat2.format(
                                 tf.getPropertyDataSource().getValue()), tableFont));
-                        table.addCell(new Phrase(Settings.dFormat.format(inventoriesCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat2.format(inventoriesCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         DateField df = (DateField) inventoriesCont.getContainerProperty(
                                 next, myUI.getMessage(SptMessages.PurchaseYear)).getValue();

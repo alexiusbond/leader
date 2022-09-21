@@ -96,7 +96,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         addBtn.addClickListener(this);
         rightLay.addComponent(addBtn, 0, 0);
 
-        payoutsTable = new FormattedTable();
+        payoutsTable = new FormattedTable(myUI);
         payoutsTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         payoutsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         payoutsTable.setSizeFull();
@@ -226,7 +226,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     }
 
     private void buildSearchLayout() {
-        invoicesTable = new FormattedFilterTable();
+        invoicesTable = new FormattedFilterTable(myUI);
         invoicesTable.setFilterDecorator(new MyFilterDecorator(myUI));
         invoicesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         invoicesTable.setSelectable(true);
@@ -295,7 +295,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         Invoice inv = getInvoice(0);
                         AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), 0, totalAmountUsd, 2);
                         if (tr != null) {
-                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                         } else {
                             int id = dbCon.exec_insert(inv);
@@ -316,7 +316,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         Invoice inv = getInvoice(invID);
                         AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), oldTotalAmountUsd, totalAmountUsd, 2);
                         if (tr != null) {
-                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                         } else {
                             try {
@@ -586,7 +586,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 Settings.dtmf.format(dateDF.getValue()));
         try {
             invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat.parse(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -601,7 +601,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(date);
         try {
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat.parse(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -859,12 +859,12 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
         TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
         tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4),
                 currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
@@ -931,9 +931,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
         }
         payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
-                Settings.dFormat.format(totalAmountUsd) + " " + Settings.USD);
+                Settings.dFormat2.format(totalAmountUsd) + " " + Settings.USD);
         payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
-                Settings.dFormat.format(totalAmountKGS) + " " + Settings.KGS);
+                Settings.dFormat2.format(totalAmountKGS) + " " + Settings.KGS);
     }
 
     private void insertPayouts(int invoice_id, DbAccTransactions dbAt) {
@@ -1002,7 +1002,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             } else {
                 AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), 0, totalAmountUsd, 2);
                 if (tr != null) {
-                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat.format(tr.getOverLimit())
+                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                 } else {
                     int id = dbCon.exec_insert(inv);
@@ -1052,9 +1052,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         totalAmountUsd = amountUsd;
         oldTotalAmountUsd = amountUsd;
         payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
-                Settings.dFormat.format(totalAmountUsd) + " " + Settings.USD);
+                Settings.dFormat2.format(totalAmountUsd) + " " + Settings.USD);
         payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
-                Settings.dFormat.format(amountKgs) + " " + Settings.KGS);
+                Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
     }
 
     public Component getNewObj() {

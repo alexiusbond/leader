@@ -108,6 +108,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String DivideButton = generateId();
     public static final String CancelButton = generateId();
     public static final String FinancialHistory = generateId();
+    public static final String ChangeId = generateId();
     public static final String CreateButton = generateId();
     public static final String RequiredField = generateId();
     public static final String Question = generateId();
@@ -211,6 +212,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String OnlyJpg = generateId();
     public static final String OnlyJpgOrPdf = generateId();
     public static final String Maxsize = generateId();
+    public static final String MaxFileName = generateId();
     public static final String LastName = generateId();
     public static final String FirstName = generateId();
     public static final String CanBeAdvisor = generateId();

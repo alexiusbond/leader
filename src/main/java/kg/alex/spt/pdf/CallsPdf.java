@@ -116,9 +116,9 @@ public class CallsPdf {
                         t.addCell(new Phrase(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Phone)).getValue().toString(), tableFont));
                         t.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        t.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                        t.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.InstPlanDebt)).getValue()), tableFont));
-                        t.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                        t.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Remain)).getValue()), tableFont));
                         t.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         if (dataTable.getContainerProperty(next,

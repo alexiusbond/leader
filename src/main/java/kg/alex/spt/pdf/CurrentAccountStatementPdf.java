@@ -121,13 +121,13 @@ public class CurrentAccountStatementPdf {
                         }
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Accrual)).getValue() != null) {
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(t.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(t.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Accrual)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
                         if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Payout)).getValue() != null) {
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(t.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(t.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Payout)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));

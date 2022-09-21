@@ -90,7 +90,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         addBtn.addClickListener(this);
         rightLay.addComponent(addBtn, 2, 0);
 
-        inventoriesTable = new FormattedTable();
+        inventoriesTable = new FormattedTable(myUI);
         inventoriesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         inventoriesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         inventoriesTable.setSizeFull();
@@ -243,7 +243,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
 
     private void buildSearchLayout() {
 
-        invoicesTable = new FormattedFilterTable();
+        invoicesTable = new FormattedFilterTable(myUI);
         invoicesTable.setFilterDecorator(new MyFilterDecorator(myUI));
         invoicesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         invoicesTable.setSelectable(true);
@@ -954,7 +954,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(tf);
         tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Price),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
         tf.addValueChangeListener(this);
         tf.setId(id);
         tf.setData(myUI.getMessage(SptMessages.Price));
@@ -1091,7 +1091,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
 
     public void setInventoriesFooter(Double amount, Integer quantity) {
         if (amount != null) {
-            inventoriesTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(amount));
+            inventoriesTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(amount));
         } else {
             inventoriesTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), null);
         }

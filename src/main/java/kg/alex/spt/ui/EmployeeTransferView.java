@@ -312,7 +312,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         captionOrders.setStyleName("tableCpt");
         gl.addComponent(captionOrders, 0, 7, 2, 7);
 
-        FormattedTable ordersTable = new FormattedTable();
+        FormattedTable ordersTable = new FormattedTable(myUI);
         ordersTable.setImmediate(true);
         ordersTable.setPageLength(4);
         ordersTable.setSizeFull();

@@ -94,7 +94,7 @@ public class DbStockMovements extends BaseDb {
             TextField tf = v.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Quantity),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), minVal, null),
-                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), (result.getDouble("t.remain") > 0));
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), (result.getDouble("t.remain") > 0));
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
@@ -103,7 +103,7 @@ public class DbStockMovements extends BaseDb {
             tf = v.createTextFieldWithProperty(
                     result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), is_modifyable);
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), is_modifyable);
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Price));
@@ -199,7 +199,7 @@ public class DbStockMovements extends BaseDb {
             TextField tf = v.createTextFieldWithProperty(
                     result.getDouble("amount"), myUi.getMessage(SptMessages.Quantity),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter());
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2));
             tf.addValueChangeListener(v);
             tf.setId(id);
             tf.setData(myUi.getMessage(SptMessages.Quantity));
@@ -468,7 +468,7 @@ public class DbStockMovements extends BaseDb {
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(total_amount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total_amount));
     }
 
     public void exec_stock_balance(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till,
@@ -572,8 +572,8 @@ public class DbStockMovements extends BaseDb {
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(total_in_amount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(total_out_amount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total_in_amount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total_out_amount));
     }
 
     public void exec_product_movements(MyVaadinUI myUI, int acc_category_id, Date from, Date till,
@@ -641,10 +641,10 @@ public class DbStockMovements extends BaseDb {
             }
             item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance)).setValue(balance);
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome), Settings.dFormat.format(totalIn));
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome), Settings.dFormat.format(totalOut));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(netAmount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.PreviousBalance), Settings.dFormat.format(balance));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome), Settings.dFormat2.format(totalIn));
+        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome), Settings.dFormat2.format(totalOut));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(netAmount));
+        t.setColumnFooter(myUI.getMessage(SptMessages.PreviousBalance), Settings.dFormat2.format(balance));
         t.setContainerDataSource(container);
     }
 

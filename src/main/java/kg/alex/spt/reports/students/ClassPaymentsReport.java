@@ -257,7 +257,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(FormattedTable.RowHeaderMode.INDEX);
@@ -280,7 +280,7 @@ public class ClassPaymentsReport implements Button.ClickListener,
         }
         dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
         dataTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Total) + ": " + Settings.dFormat.format(total));
+                myUI.getMessage(SptMessages.Total) + ": " + Settings.dFormat2.format(total));
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
         vl.addComponent(dataTable);
         splitPanel.setSecondComponent(vl);

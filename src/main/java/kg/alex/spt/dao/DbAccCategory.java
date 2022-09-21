@@ -164,7 +164,8 @@ public class DbAccCategory extends BaseDb {
     public void execSQL_for_select_as_tree(MyVaadinUI myUI, int type, FilterTreeTable t,
                                            String school_ids, boolean onlyActive)
             throws SQLException {
-        String sql = "SELECT c.id, concat(ifnull(concat(c.parent_code,'.',c.code),c.code), ' - ', c.name) as name, "
+        String sql = "SELECT c.id, concat(ifnull(concat(c.parent_code,'.',c.code),c.code), ' - ', c.name) as title, " +
+                "ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.name as category, "
                 + "c.parent_id FROM acc_category as c where c.acc_type_id = ? ";
         if (onlyActive) {
             sql += "and c.activity_status_id = 2 ";
@@ -177,6 +178,8 @@ public class DbAccCategory extends BaseDb {
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         t.setContainerDataSource(container);
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
@@ -186,7 +189,9 @@ public class DbAccCategory extends BaseDb {
             if (result.getInt("c.parent_id") != 0) {
                 container.setParent(result.getInt("c.id"), result.getInt("c.parent_id"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("title"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getString("category"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
         }
     }
 

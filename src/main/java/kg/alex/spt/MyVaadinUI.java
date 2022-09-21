@@ -191,7 +191,7 @@ public class MyVaadinUI extends UI {
             nbkr_time = new Date();
             DecimalFormatSymbols symbols = new DecimalFormatSymbols();
             symbols.setDecimalSeparator(',');
-            DecimalFormat format = new DecimalFormat("##.##");
+            DecimalFormat format = new DecimalFormat("##.####");
             format.setDecimalFormatSymbols(symbols);
             try {
                 URL url = new URL("https://www.nbkr.kg/XML/daily.xml");
@@ -214,7 +214,7 @@ public class MyVaadinUI extends UI {
                 logger.catching(e);
             }
         }
-        return Double.parseDouble(Settings.dFormat.format(nbkr_currency_rate));
+        return Double.parseDouble(Settings.dFormat4.format(nbkr_currency_rate));
     }
 
     public double getDb_currency_rate() {

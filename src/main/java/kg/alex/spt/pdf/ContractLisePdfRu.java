@@ -901,7 +901,7 @@ public class ContractLisePdfRu {
                 text15.add(new Phrase(Settings.df.format(student.getContractCreationDate()), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("ИТОГО взноса: ", ordFont));
-                text15.add(new Phrase((Settings.dFormat.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
+                text15.add(new Phrase((Settings.dFormat2.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
                 text15.add(new Phrase(" долларов США.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 if (student.getCtr_debt() >= 0) {
@@ -909,7 +909,7 @@ public class ContractLisePdfRu {
                 } else {
                     text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
                 }
-                text15.add(new Phrase((Settings.dFormat.format(student.getCtr_debt()) + ""), ordBoldFont));
+                text15.add(new Phrase((Settings.dFormat2.format(student.getCtr_debt()) + ""), ordBoldFont));
                 text15.add(new Phrase(" долларов США.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Скидка: ", ordFont));
@@ -923,11 +923,11 @@ public class ContractLisePdfRu {
                 }
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Предоплата: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                text15.add(new Phrase(Settings.dFormat2.format(student.getCtr_init_payment()) + "", ordBoldFont));
                 text15.add(new Phrase(" долларов США.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Остаток: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                text15.add(new Phrase(Settings.dFormat2.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
                 text15.add(new Phrase(" долларов США.", ordFont));
                 document.add(text15);
                 document.add(new Paragraph(10, " "));
@@ -962,7 +962,7 @@ public class ContractLisePdfRu {
                 }
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("Итого:", ordBoldFont));
-                TContract.addCell(new Phrase(Settings.dFormat.format(student.getCtr_to_pay()) + "", ordBoldFont));
+                TContract.addCell(new Phrase(Settings.dFormat2.format(student.getCtr_to_pay()) + "", ordBoldFont));
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("", ordFont));
 

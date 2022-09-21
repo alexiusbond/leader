@@ -89,7 +89,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         addBtn.addClickListener(this);
         rightLay.addComponent(addBtn, 0, 0);
 
-        movementsTable = new FormattedTable();
+        movementsTable = new FormattedTable(myUI);
         movementsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         movementsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         movementsTable.setSizeFull();
@@ -276,7 +276,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
 
     private void buildSearchLayout() {
 
-        invoicesTable = new FormattedFilterTable();
+        invoicesTable = new FormattedFilterTable(myUI);
         invoicesTable.setFilterDecorator(new MyFilterDecorator(myUI));
         invoicesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         invoicesTable.setSelectable(true);
@@ -816,7 +816,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 Settings.dtmf.format(dateDF.getValue()));
         try {
             invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat.parse(movementsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat2.parse(movementsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -847,7 +847,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 Settings.dtmf.format(dateDF.getValue()));
         try {
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat.parse(movementsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat2.parse(movementsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -1146,7 +1146,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
         item.getItemProperty(myUI.getMessage(SptMessages.Measurement)).setValue(cb);
         TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Quantity),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter());
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2));
         tf.addValueChangeListener(this);
         tf.setId(id);
         tf.setData(myUI.getMessage(SptMessages.Quantity));
@@ -1198,7 +1198,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                 totPrice += (Double) movementsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue();
             }
         }
-        movementsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(totPrice));
+        movementsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(totPrice));
     }
 
     private void insertMovements(int invoice_id) {
@@ -1308,7 +1308,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
     }
 
     public void setMovementsFooter(double amount) {
-        movementsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat.format(amount));
+        movementsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(amount));
     }
 
     public ComboBox getProductCategorySelect() {

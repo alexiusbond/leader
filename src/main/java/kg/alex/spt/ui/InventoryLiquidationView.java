@@ -91,7 +91,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
         addBtn.addClickListener(this);
         rightLay.addComponent(addBtn, 2, 0);
 
-        inventoriesTable = new FormattedTable();
+        inventoriesTable = new FormattedTable(myUI);
         inventoriesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         inventoriesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         inventoriesTable.setSizeFull();
@@ -251,7 +251,7 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
 
     private void buildSearchLayout() {
 
-        invoicesTable = new FormattedFilterTable();
+        invoicesTable = new FormattedFilterTable(myUI);
         invoicesTable.setFilterDecorator(new MyFilterDecorator(myUI));
         invoicesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         invoicesTable.setSelectable(true);

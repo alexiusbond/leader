@@ -778,29 +778,29 @@ public class DbStudentContract extends BaseDb {
                     t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                             ymr.totalStudents + "/" + ymr.totalActive);
                     t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            Settings.dFormat.format(ymr.contracts));
+                            Settings.dFormat2.format(ymr.contracts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            Settings.dFormat.format(ymr.discounts));
+                            Settings.dFormat2.format(ymr.discounts));
                     if (ymr.contracts != 0) {
                         t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                                Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                                Settings.dFormat2.format((100 * ymr.discounts) / ymr.contracts));
                     }
                     t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                            Settings.dFormat.format(ymr.corrections));
+                            Settings.dFormat2.format(ymr.corrections));
                     t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            Settings.dFormat.format(ymr.prevYearDebts));
+                            Settings.dFormat2.format(ymr.prevYearDebts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
-                            Settings.dFormat.format(ymr.prevYearOverpays));
+                            Settings.dFormat2.format(ymr.prevYearOverpays));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            Settings.dFormat.format(ymr.nets));
+                            Settings.dFormat2.format(ymr.nets));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(ymr.paid_amounts));
+                            Settings.dFormat2.format(ymr.paid_amounts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                            Settings.dFormat.format(ymr.debts));
+                            Settings.dFormat2.format(ymr.debts));
                     t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
-                            Settings.dFormat.format(ymr.overpays));
+                            Settings.dFormat2.format(ymr.overpays));
                     if (ymr.nets != 0.0) {
-                        t.setColumnFooter(Settings.percentage, Settings.dFormat.format(ymr.paid_amounts * 100 / ymr.nets));
+                        t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(ymr.paid_amounts * 100 / ymr.nets));
                     }
                     ymr.totalStudents = 0;
                     ymr.totalActive = 0;
@@ -866,27 +866,27 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    Settings.dFormat.format(ymr.contracts));
+                    Settings.dFormat2.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    Settings.dFormat.format(ymr.discounts));
+                    Settings.dFormat2.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                        Settings.dFormat2.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    Settings.dFormat.format(ymr.prevYearDebts));
+                    Settings.dFormat2.format(ymr.prevYearDebts));
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
-                    Settings.dFormat.format(ymr.prevYearOverpays));
+                    Settings.dFormat2.format(ymr.prevYearOverpays));
             t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                    Settings.dFormat.format(ymr.corrections));
+                    Settings.dFormat2.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    Settings.dFormat.format(ymr.nets));
+                    Settings.dFormat2.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debts), Settings.dFormat.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
+                    Settings.dFormat2.format(ymr.paid_amounts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debts), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                         ymr.paid_amounts * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -945,12 +945,12 @@ public class DbStudentContract extends BaseDb {
         while (result.next()) {
             if (school_id != result.getInt("s_temp.id")) {
                 if (t != null) {
-                    t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat.format(ymr.inst_plans));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat.format(ymr.paid_amounts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(ymr.debts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat2.format(ymr.inst_plans));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(ymr.debts));
+                    t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
                     if (ymr.inst_plans != 0.0) {
-                        t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
+                        t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                                 ymr.paid_amounts * 100 / ymr.inst_plans));
                     }
                     ymr.inst_plans = 0.0;
@@ -992,12 +992,12 @@ public class DbStudentContract extends BaseDb {
             }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat.format(ymr.inst_plans));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
+            t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat2.format(ymr.inst_plans));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
             if (ymr.inst_plans != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(ymr.paid_amounts * 100 / ymr.inst_plans));
+                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(ymr.paid_amounts * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;
             ymr.paid_amounts = 0.0;
@@ -1234,21 +1234,21 @@ public class DbStudentContract extends BaseDb {
         if (t != null) {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
-            t.setColumnFooter(myUI.getMessage(SptMessages.Contract), Settings.dFormat.format(ymr.contracts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Correction), Settings.dFormat.format(ymr.corrections));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Discount), Settings.dFormat.format(ymr.discounts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Contract), Settings.dFormat2.format(ymr.contracts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Correction), Settings.dFormat2.format(ymr.corrections));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Discount), Settings.dFormat2.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        Settings.dFormat.format((100 * ymr.discounts) / ymr.contracts));
+                        Settings.dFormat2.format((100 * ymr.discounts) / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    Settings.dFormat.format(ymr.prevYearDebts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Net), Settings.dFormat.format(ymr.nets));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat.format(ymr.overpays));
+                    Settings.dFormat2.format(ymr.prevYearDebts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Net), Settings.dFormat2.format(ymr.nets));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                         ymr.paid_amounts * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -1494,29 +1494,29 @@ public class DbStudentContract extends BaseDb {
             t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
             t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                    Settings.dFormat.format(ymr.contracts));
+                    Settings.dFormat2.format(ymr.contracts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                    Settings.dFormat.format(ymr.corrections));
+                    Settings.dFormat2.format(ymr.corrections));
             t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                    Settings.dFormat.format(ymr.discounts));
+                    Settings.dFormat2.format(ymr.discounts));
             if (ymr.contracts != 0) {
                 t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
-                        Settings.dFormat.format(ymr.discounts * 100 / ymr.contracts));
+                        Settings.dFormat2.format(ymr.discounts * 100 / ymr.contracts));
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                    Settings.dFormat.format(ymr.prevYearDebts));
+                    Settings.dFormat2.format(ymr.prevYearDebts));
             t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
-                    Settings.dFormat.format(ymr.prevYearOverpays));
+                    Settings.dFormat2.format(ymr.prevYearOverpays));
             t.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                    Settings.dFormat.format(ymr.nets));
+                    Settings.dFormat2.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paid_amounts));
+                    Settings.dFormat2.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                    Settings.dFormat.format(ymr.debts));
+                    Settings.dFormat2.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
-                    Settings.dFormat.format(ymr.overpays));
+                    Settings.dFormat2.format(ymr.overpays));
             if (ymr.nets != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                         ymr.paid_amounts * 100 / ymr.nets));
             }
             ymr.totalStudents = 0;
@@ -1612,17 +1612,17 @@ public class DbStudentContract extends BaseDb {
         }
         if (t != null) {
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    Settings.dFormat.format(ymr.nets));
+                    Settings.dFormat2.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                    Settings.dFormat.format(ymr.paid_amounts));
+                    Settings.dFormat2.format(ymr.paid_amounts));
             t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                    Settings.dFormat.format(ymr.debts));
+                    Settings.dFormat2.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
-                    Settings.dFormat.format(ymr.overpays));
+                    Settings.dFormat2.format(ymr.overpays));
             t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
-                    Settings.dFormat.format(ymr.inst_plans));
+                    Settings.dFormat2.format(ymr.inst_plans));
             if (ymr.inst_plans != 0.0) {
-                t.setColumnFooter(Settings.percentage, Settings.dFormat.format(
+                t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                         ymr.paid_amounts * 100 / ymr.inst_plans));
             }
             ymr.inst_plans = 0.0;
@@ -1880,17 +1880,17 @@ public class DbStudentContract extends BaseDb {
             }
             if (currentBalance < 0) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
-                        (Settings.dFormat.format(currentBalance * -1))
+                        (Settings.dFormat2.format(currentBalance * -1))
                                 + " (" + myUI.getMessage(SptMessages.Repayment).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(currentBalance)
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
                         + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
                     item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(totalDebt));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat.format(totalDebt - currentBalance));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat2.format(totalDebt - currentBalance));
         t.setContainerDataSource(container);
     }
 
@@ -2030,17 +2030,17 @@ public class DbStudentContract extends BaseDb {
             }
             if (currentBalance < 0) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
-                        (Settings.dFormat.format(currentBalance * -1))
+                        (Settings.dFormat2.format(currentBalance * -1))
                                 + " (" + myUI.getMessage(SptMessages.Repayment).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(currentBalance)
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
                         + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
                     item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(totalDebt));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat.format(totalDebt - currentBalance));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat2.format(totalDebt - currentBalance));
         t.setContainerDataSource(container);
     }
 }

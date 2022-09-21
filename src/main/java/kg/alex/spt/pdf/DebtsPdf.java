@@ -117,13 +117,13 @@ public class DebtsPdf {
                         table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        table_plan.addCell(new Phrase(Settings.dFormat.format(
+                        table_plan.addCell(new Phrase(Settings.dFormat2.format(
                                planCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.InstallmentPlan)).getValue()), tableFont));
-                        table_plan.addCell(new Phrase(Settings.dFormat.format(
+                        table_plan.addCell(new Phrase(Settings.dFormat2.format(
                                  planCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
-                        table_plan.addCell(new Phrase(Settings.dFormat.format(
+                        table_plan.addCell(new Phrase(Settings.dFormat2.format(
                                   planCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Debt)).getValue()), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -133,9 +133,9 @@ public class DebtsPdf {
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
                     table_plan.addCell(new Phrase(" ", ordFontBold));
-                    table_plan.addCell(new Phrase(Settings.dFormat.format(ttl_plan), ordFontBold));
-                    table_plan.addCell(new Phrase(Settings.dFormat.format(total_paid), ordFontBold));
-                    table_plan.addCell(new Phrase(Settings.dFormat.format(total_debt), ordFontBold));
+                    table_plan.addCell(new Phrase(Settings.dFormat2.format(ttl_plan), ordFontBold));
+                    table_plan.addCell(new Phrase(Settings.dFormat2.format(total_paid), ordFontBold));
+                    table_plan.addCell(new Phrase(Settings.dFormat2.format(total_debt), ordFontBold));
 
                     document.add(table_plan);
 

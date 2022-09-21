@@ -60,7 +60,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         captionFromFile.setStyleName("tableCpt");
         vl.addComponent(captionFromFile);
 
-        importTable = new FormattedTable();
+        importTable = new FormattedTable(myUI);
         importTable.setStyleName(ValoTheme.TABLE_COMPACT);
         importTable.setSizeFull();
         vl.addComponent(importTable);
@@ -73,7 +73,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         captionFromDb.setStyleName("tableCpt");
         vl.addComponent(captionFromDb);
 
-        dataTable = new FormattedFilterTable();
+        dataTable = new FormattedFilterTable(myUI);
         dataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         dataTable.setSizeFull();
         vl.addComponent(dataTable);

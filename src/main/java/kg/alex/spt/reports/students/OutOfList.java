@@ -171,7 +171,7 @@ public class OutOfList implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -202,11 +202,11 @@ public class OutOfList implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
                             myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            Settings.dFormat.format(nets));
+                            Settings.dFormat2.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(paid_amounts));
+                            Settings.dFormat2.format(paid_amounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            Settings.dFormat.format(nets - paid_amounts));
+                            Settings.dFormat2.format(nets - paid_amounts));
                     if (dataCont.size() != 0) {
                         excelBtn.setEnabled(true);
                     }

@@ -423,17 +423,17 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         }
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
-        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_contract()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_contract()) + "$"));
         layout.addComponent(ttlDiscLab);
-        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_disc()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_disc()) + "$"));
         layout.addComponent(ttlCorrectionLab);
-        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_correction()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_correction()) + "$"));
         layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_debt()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_debt()) + "$"));
         layout.addComponent(ttlPaymentLab);
-        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_payments()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_payments()) + "$"));
         layout.addComponent(ttlLeftLab);
-        layout.addComponent(new Label(Settings.dFormat.format(tc.getTtl_left()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_left()) + "$"));
         return layout;
     }
 

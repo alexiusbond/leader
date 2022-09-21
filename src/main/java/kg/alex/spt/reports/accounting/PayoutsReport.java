@@ -24,10 +24,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTreeTable;
 
-public class SalariesReport implements Button.ClickListener,
+public class PayoutsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(SalariesReport.class);
+    static final Logger logger = LogManager.getLogger(PayoutsReport.class);
     private final MyVaadinUI myUI;
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private final HorizontalSplitPanel splitPanel;
@@ -35,7 +35,7 @@ public class SalariesReport implements Button.ClickListener,
     public FormattedTreeTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
 
-    public SalariesReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
+    public PayoutsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
         this.splitPanel = splitPanel;
         buildLeftPanel();
@@ -72,6 +72,7 @@ public class SalariesReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
+        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -134,7 +135,7 @@ public class SalariesReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTreeTable();
+        dataTable = new FormattedTreeTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

@@ -80,13 +80,13 @@ public class DbAccTransactions extends BaseDb {
             TextField tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
             tf = pav.createTextFieldWithProperty(
                     result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
                     new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
+                    new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(pav);
             item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
@@ -333,8 +333,8 @@ public class DbAccTransactions extends BaseDb {
 
         Set<Integer> selectedIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
-        String sql = "SELECT cat.id, cat.parent_id, CONCAT(ifnull(concat(cat.parent_code,'.',cat.code), cat.code), ' - ', cat.name) AS name, "
-                + "sum(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt "
+        String sql = "SELECT cat.id, cat.parent_id, sum(if(tr.acc_currency_id = 2, tr.amount, "
+                + "ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt "
                 + "FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
@@ -349,7 +349,8 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, school_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         while (current.before(till)) {
@@ -367,8 +368,10 @@ public class DbAccTransactions extends BaseDb {
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Code))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Code)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Category))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Category)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = (categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
@@ -385,10 +388,10 @@ public class DbAccTransactions extends BaseDb {
             String month = Settings.ymdf.format(result.getDate("dt"));
             item.getItemProperty(month).setValue(result.getDouble("amount"));
             try {
-                t.setColumnFooter(myUI.getMessage(SptMessages.Total), Settings.dFormat.format(
-                        Settings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
+                t.setColumnFooter(myUI.getMessage(SptMessages.Total), Settings.dFormat2.format(
+                        Settings.dFormat2.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
-                t.setColumnFooter(month, Settings.dFormat.format(Settings.dFormat.parse(t.getColumnFooter(month)).doubleValue()
+                t.setColumnFooter(month, Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(month)).doubleValue()
                         + result.getDouble("amount")));
             } catch (Exception e) {
                 logger.error(e);
@@ -414,8 +417,8 @@ public class DbAccTransactions extends BaseDb {
 
         Set<Integer> selectedCategoryIds = Settings.getChild_ids((HierarchicalContainer) categoriesTable.getContainerDataSource(), (Set<?>) categoriesTable.getValue());
         Set<Integer> selectedSchoolIds = new HashSet<>((Set<Integer>) schoolsTable.getValue());
-        String sql = "SELECT cat.id, cat.parent_id, CONCAT(ifnull(concat(cat.parent_code,'.',cat.code), cat.code), ' - ', cat.name) AS name, "
-                + "sum(if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt, tr.school_id  "
+        String sql = "SELECT cat.id, cat.parent_id, sum(if(tr.acc_currency_id = 2, tr.amount, "
+                + "ROUND(tr.amount/tr.currency_rate,2))) as amount, DATE(tr.date_time) AS dt, tr.school_id  "
                 + "FROM acc_category AS cat "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_category_id = cat.id "
                 + "WHERE cat.id IN ("
@@ -431,7 +434,8 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(3, type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         Set<Integer> selectedSchools = (Set<Integer>) schoolsTable.getValue();
@@ -473,8 +477,10 @@ public class DbAccTransactions extends BaseDb {
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Code))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Code)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Category))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Category)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
@@ -493,15 +499,15 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(school + " - " + month).setValue(result.getDouble("amount"));
             try {
                 t.setColumnFooter(myUI.getMessage(SptMessages.Total),
-                        Settings.dFormat.format(Settings.dFormat.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
+                        Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(school + " - " + myUI.getMessage(SptMessages.Total),
-                        Settings.dFormat.format(Settings.dFormat.parse(t.getColumnFooter(school
+                        Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(school
                                 + " - " + myUI.getMessage(SptMessages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(school + " - " + month,
-                        Settings.dFormat.format(
-                                Settings.dFormat.parse(t.getColumnFooter(school + " - " + month)).doubleValue()
+                        Settings.dFormat2.format(
+                                Settings.dFormat2.parse(t.getColumnFooter(school + " - " + month)).doubleValue()
                                         + result.getDouble("amount")));
             } catch (Exception e) {
                 logger.error(e);
@@ -630,13 +636,13 @@ public class DbAccTransactions extends BaseDb {
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.School),
                 myUI.getMessage(SptMessages.Total));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.IncomesTotal),
-                Settings.dFormat.format(ttlInc));
+                Settings.dFormat2.format(ttlInc));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.ExpensesTotal),
-                Settings.dFormat.format(ttlExp));
+                Settings.dFormat2.format(ttlExp));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")",
-                Settings.dFormat.format(ttlPrev));
+                Settings.dFormat2.format(ttlPrev));
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.CashBox),
-                Settings.dFormat.format(ttlInc - ttlExp));
+                Settings.dFormat2.format(ttlInc - ttlExp));
     }
 
     public double exec_salary_balance(int school_id, int acc_category_id, Date till) throws SQLException {
@@ -725,10 +731,10 @@ public class DbAccTransactions extends BaseDb {
                 totalAccruals += result.getDouble("t.amount");
             }
             if (currentBalance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(currentBalance * -1))
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(currentBalance * -1))
                         + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(currentBalance)
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
                         + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
             }
             t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
@@ -741,19 +747,19 @@ public class DbAccTransactions extends BaseDb {
             if (prevBalance < 0) {
                 type = myUI.getMessage(SptMessages.Payout);
                 item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(prevBalance * -1);
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat.format(prevBalance * -1))
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(prevBalance * -1))
                         + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
             } else {
                 item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(prevBalance);
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat.format(prevBalance)
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(prevBalance)
                         + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
                 totalAccruals += prevBalance;
             }
             item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(type);
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(myUI.getMessage(SptMessages.PreviousBalance));
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), Settings.dFormat.format(totalAccruals));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), Settings.dFormat.format(totalAccruals - currentBalance));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), Settings.dFormat2.format(totalAccruals));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), Settings.dFormat2.format(totalAccruals - currentBalance));
         t.setContainerDataSource(container);
     }
 
@@ -763,7 +769,7 @@ public class DbAccTransactions extends BaseDb {
         Set<Integer> selectedCategoryIds = Settings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
-        String sql = " SELECT cat.id, CONCAT(IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code), ' - ', cat.name) AS name, "
+        String sql = " SELECT cat.id, IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code) AS code, cat.name AS name, "
                 + "IFNULL(acr.amount_som, 0.0) - IFNULL(tr.amount_som, 0.0) AS remain_som, "
                 + "IFNULL(acr.amount_usd, 0.0) - IFNULL(tr.amount_usd, 0.0) AS remain_usd, "
                 + "IFNULL(IF((aacr.acc_currency_id <> 2), (aacr.amount / aacr.currency_rate), aacr.amount), 0.0) AS salary_usd, "
@@ -778,7 +784,8 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Remain), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Salary), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Ratio), Double.class, null);
@@ -787,15 +794,19 @@ public class DbAccTransactions extends BaseDb {
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Code))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Code)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(SptMessages.Category))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Category)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem(parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(SptMessages.Code))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Code)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(SptMessages.Category))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Category)).getValue().toString());
                     }
                     container.setParent(catNext, parent);
                 }
@@ -857,10 +868,10 @@ public class DbAccTransactions extends BaseDb {
                 }
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Remain), Settings.dFormat.format(total_remains));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Salary), Settings.dFormat.format(total_salaries));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Remain), Settings.dFormat2.format(total_remains));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Salary), Settings.dFormat2.format(total_salaries));
         if (total_salaries != 0.0) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.Ratio), Settings.dFormat.format(total_remains / total_salaries));
+            t.setColumnFooter(myUI.getMessage(SptMessages.Ratio), Settings.dFormat2.format(total_remains / total_salaries));
         }
     }
 
@@ -874,7 +885,7 @@ public class DbAccTransactions extends BaseDb {
                         (Collection<Integer>) categoriesTable.getChildren(next)));
             }
         }
-        String sql = "SELECT t.id, date(t.date_time), concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as category, "
+        String sql = "SELECT t.id, date(t.date_time), ifnull(concat(ac.parent_code,'.',ac.code), ac.code) as code, ac.name as category, "
                 + "acu.name, t.currency_rate,t.amount,t.note, concat(e.name, ' ', e.surname) as fullname "
                 + "FROM acc_transactions as t  "
                 + "left join acc_category as ac on ac.id = t.acc_category_id  "
@@ -891,7 +902,8 @@ public class DbAccTransactions extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
@@ -901,7 +913,9 @@ public class DbAccTransactions extends BaseDb {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(
                     result.getDate("date(t.date_time)")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(
+                    result.getString("code"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
                     result.getString("category"));
             item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(
                     result.getString("acu.name"));
@@ -998,12 +1012,12 @@ public class DbAccTransactions extends BaseDb {
                     result.getDouble("income") - result.getDouble("outcome"));
             totalTransactions += (result.getDouble("income") - result.getDouble("outcome"));
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan), Settings.dFormat.format(totalInst));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payments), Settings.dFormat.format(totalPayments));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat.format(totalDebt));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Incomes), Settings.dFormat.format(totalIncomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Expenses), Settings.dFormat.format(totalOutcomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Difference), Settings.dFormat.format(totalTransactions));
+        t.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan), Settings.dFormat2.format(totalInst));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Payments), Settings.dFormat2.format(totalPayments));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Incomes), Settings.dFormat2.format(totalIncomes));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Expenses), Settings.dFormat2.format(totalOutcomes));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Difference), Settings.dFormat2.format(totalTransactions));
     }
 
     public AccTransaction exec_low_balance(Connection conn, int school_id, Date date, double old_amount,

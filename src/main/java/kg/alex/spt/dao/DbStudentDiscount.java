@@ -289,7 +289,7 @@ public class DbStudentDiscount extends BaseDb {
                         cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
                                         next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.DiscountAmount),
-                                Settings.dFormat.format(Settings.dFormat.parse(footerVal).doubleValue()
+                                Settings.dFormat2.format(Settings.dFormat2.parse(footerVal).doubleValue()
                                         + result.getDouble("disc_amount" + next)));
                     } catch (ParseException e) {
                         logger.error(e);
@@ -299,7 +299,7 @@ public class DbStudentDiscount extends BaseDb {
                     cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
                                     next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                     + myUI.getMessage(SptMessages.DiscountAmount),
-                            Settings.dFormat.format(result.getDouble("disc_amount" + next)));
+                            Settings.dFormat2.format(result.getDouble("disc_amount" + next)));
                 }
                 if (result.getDouble("contr_amount" + next) != 0.0) {
                     double val = result.getDouble("disc_amount" + next)
@@ -318,7 +318,7 @@ public class DbStudentDiscount extends BaseDb {
                             cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
                                             next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                             + myUI.getMessage(SptMessages.Average) + "%",
-                                    Settings.dFormat.format(Settings.dFormat.parse(footerVal).doubleValue() + val));
+                                    Settings.dFormat2.format(Settings.dFormat2.parse(footerVal).doubleValue() + val));
                         } catch (ParseException e) {
                             logger.error(e);
                             logger.catching(e);
@@ -327,7 +327,7 @@ public class DbStudentDiscount extends BaseDb {
                         cdr.dataTable.setColumnFooter(cdr.classTable.getContainerProperty(
                                         next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.Average) + "%",
-                                Settings.dFormat.format(val));
+                                Settings.dFormat2.format(val));
                     }
                 }
             }
@@ -362,7 +362,7 @@ public class DbStudentDiscount extends BaseDb {
                 try {
                     cdr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total) + " "
                                     + myUI.getMessage(SptMessages.DiscountAmount),
-                            Settings.dFormat.format(Settings.dFormat.parse(footerVal).doubleValue()
+                            Settings.dFormat2.format(Settings.dFormat2.parse(footerVal).doubleValue()
                                     + result.getDouble("disc_amount")));
                 } catch (ParseException e) {
                     logger.error(e);
@@ -371,7 +371,7 @@ public class DbStudentDiscount extends BaseDb {
             } else {
                 cdr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total) + " "
                                 + myUI.getMessage(SptMessages.DiscountAmount),
-                        Settings.dFormat.format(result.getDouble("disc_amount")));
+                        Settings.dFormat2.format(result.getDouble("disc_amount")));
             }
             counter++;
         }
@@ -381,7 +381,7 @@ public class DbStudentDiscount extends BaseDb {
                 + myUI.getMessage(SptMessages.DiscountAmount));
         if (footerVal != null) {
             try {
-                totalDiscAmount = Settings.dFormat.parse(footerVal).doubleValue();
+                totalDiscAmount = Settings.dFormat2.parse(footerVal).doubleValue();
             } catch (ParseException e) {
                 logger.error(e);
                 logger.catching(e);
@@ -490,7 +490,7 @@ public class DbStudentDiscount extends BaseDb {
                         sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
                                         next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.DiscountAmount),
-                                Settings.dFormat.format(Settings.dFormat.parse(footerVal).doubleValue()
+                                Settings.dFormat2.format(Settings.dFormat2.parse(footerVal).doubleValue()
                                         + result.getDouble("disc_amount" + next)));
                     } catch (ParseException e) {
                         logger.error(e);
@@ -500,7 +500,7 @@ public class DbStudentDiscount extends BaseDb {
                     sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
                                     next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                     + myUI.getMessage(SptMessages.DiscountAmount),
-                            Settings.dFormat.format(result.getDouble("disc_amount" + next)));
+                            Settings.dFormat2.format(result.getDouble("disc_amount" + next)));
                 }
                 if (result.getDouble("contr_amount" + next) != 0.0) {
                     double val = result.getDouble("disc_amount" + next)
@@ -519,7 +519,7 @@ public class DbStudentDiscount extends BaseDb {
                             sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
                                             next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                             + myUI.getMessage(SptMessages.Average) + "%",
-                                    Settings.dFormat.format(Settings.dFormat.parse(footerVal).doubleValue()
+                                    Settings.dFormat2.format(Settings.dFormat2.parse(footerVal).doubleValue()
                                             + val));
                         } catch (ParseException e) {
                             logger.error(e);
@@ -529,7 +529,7 @@ public class DbStudentDiscount extends BaseDb {
                         sdr.dataTable.setColumnFooter(sdr.schoolTable.getContainerProperty(
                                         next, myUI.getMessage(SptMessages.Title)).getValue() + " "
                                         + myUI.getMessage(SptMessages.Average) + "%",
-                                Settings.dFormat.format(val));
+                                Settings.dFormat2.format(val));
                     }
                 }
             }
@@ -564,7 +564,7 @@ public class DbStudentDiscount extends BaseDb {
                 try {
                     sdr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total) + " "
                                     + myUI.getMessage(SptMessages.DiscountAmount),
-                            Settings.dFormat.format(Settings.dFormat.parse(footerVal).doubleValue()
+                            Settings.dFormat2.format(Settings.dFormat2.parse(footerVal).doubleValue()
                                     + result.getDouble("disc_amount")));
                 } catch (ParseException e) {
                     logger.error(e);
@@ -573,7 +573,7 @@ public class DbStudentDiscount extends BaseDb {
             } else {
                 sdr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total) + " "
                                 + myUI.getMessage(SptMessages.DiscountAmount),
-                        Settings.dFormat.format(result.getDouble("disc_amount")));
+                        Settings.dFormat2.format(result.getDouble("disc_amount")));
             }
 
             counter++;
@@ -584,7 +584,7 @@ public class DbStudentDiscount extends BaseDb {
                 + myUI.getMessage(SptMessages.DiscountAmount));
         if (footerVal != null) {
             try {
-                totalDiscAmount = Settings.dFormat.parse(footerVal).doubleValue();
+                totalDiscAmount = Settings.dFormat2.parse(footerVal).doubleValue();
             } catch (ParseException e) {
                 logger.error(e);
                 logger.catching(e);

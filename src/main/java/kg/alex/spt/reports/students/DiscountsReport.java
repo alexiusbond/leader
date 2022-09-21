@@ -204,7 +204,7 @@ public class DiscountsReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -242,19 +242,19 @@ public class DiscountsReport implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
                             myUI.getMessage(SptMessages.Active) + activeStudents);
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            Settings.dFormat.format(contracts));
+                            Settings.dFormat2.format(contracts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            Settings.dFormat.format(discounts));
+                            Settings.dFormat2.format(discounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                            Settings.dFormat.format(corrections));
+                            Settings.dFormat2.format(corrections));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            Settings.dFormat.format(debts));
+                            Settings.dFormat2.format(debts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            Settings.dFormat.format(nets));
+                            Settings.dFormat2.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(paid_amounts));
+                            Settings.dFormat2.format(paid_amounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
-                            Settings.dFormat.format(lefts));
+                            Settings.dFormat2.format(lefts));
                     if (dataCont.size() != 0) {
                         dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
                                 + discountedStudents + " (" + discountedStudents * 100 / dataCont.size() + "%)");

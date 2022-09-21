@@ -116,7 +116,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         addBtn.addClickListener(this);
         rightLay.addComponent(addBtn, 0, 0);
 
-        transfersTable = new FormattedTable();
+        transfersTable = new FormattedTable(myUI);
         transfersTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
         transfersTable.setStyleName(ValoTheme.TABLE_COMPACT);
         transfersTable.setSizeFull();
@@ -259,7 +259,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     private void buildSearchLayout() {
 
-        invoicesTable = new FormattedFilterTable();
+        invoicesTable = new FormattedFilterTable(myUI);
         invoicesTable.setFilterDecorator(new MyFilterDecorator(myUI));
         invoicesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         invoicesTable.setSelectable(true);
@@ -684,7 +684,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                 df.format(dateDF.getValue()));
         try {
             invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat2.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -700,7 +700,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(date);
         try {
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+                    Settings.dFormat2.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -957,12 +957,12 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
         TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(), true);
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
         tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
                 new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
-                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(),
+                new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4),
                 currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
@@ -1029,9 +1029,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
             }
         }
         transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
-                Settings.dFormat.format(totalUsd) + " " + Settings.USD);
+                Settings.dFormat2.format(totalUsd) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
-                Settings.dFormat.format(totalKgs) + " " + Settings.KGS);
+                Settings.dFormat2.format(totalKgs) + " " + Settings.KGS);
     }
 
     private void insertTransfers(int invoice_id) {
@@ -1078,9 +1078,9 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
     public void setTransfersFooter(double amountUSD, double amountKGS) {
         transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
-                Settings.dFormat.format(amountUSD) + " " + Settings.USD);
+                Settings.dFormat2.format(amountUSD) + " " + Settings.USD);
         transfersTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
-                Settings.dFormat.format(amountKGS) + " " + Settings.KGS);
+                Settings.dFormat2.format(amountKGS) + " " + Settings.KGS);
     }
 
     public Component getNewObj() {

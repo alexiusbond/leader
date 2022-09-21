@@ -40,7 +40,7 @@ public class DbStudent extends BaseDb {
         if (edu_sts.equals("")) {
             edu_sts = "-1";
         }
-        String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, "
+        String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, s.entering_year_id, "
                 + "s.date_of_birth, s.photo, s.gender_id, s.education_status_id, es.name, y.name, "
                 + "s.class_name_id, concat(cnu.name,' - ',cn.name) as cl_name, sr.fullname, sr.phone, rel.name "
                 + "FROM student as s "
@@ -69,6 +69,7 @@ public class DbStudent extends BaseDb {
         container.addContainerProperty(Settings.education_status_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
         container.addContainerProperty(Settings.class_name_id, Integer.class, 0);
+        container.addContainerProperty(Settings.entering_year_id, Integer.class, 0);
         container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.EnteringYear), String.class, null);
         int total = 0;
@@ -110,6 +111,8 @@ public class DbStudent extends BaseDb {
                     result.getString("cl_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.EnteringYear)).setValue(
                     result.getString("y.name"));
+            item.getItemProperty(Settings.entering_year_id).setValue(
+                    result.getInt("s.entering_year_id"));
             total++;
         }
         sdv.eduStatCont.getContainerProperty(6, Settings.count).setValue(total);
@@ -324,6 +327,14 @@ public class DbStudent extends BaseDb {
         stat.setInt(9, s.getClass_name_id());
         stat.setInt(10, s.getEmployee_id());
         stat.setInt(11, s.getId());
+        return stat.executeUpdate();
+    }
+
+    public int exec_updateLogin(int student_id, String login) throws SQLException {
+        String sql = "UPDATE student SET login = ? WHERE id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setString(1, login);
+        stat.setInt(2, student_id);
         return stat.executeUpdate();
     }
 

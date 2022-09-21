@@ -140,6 +140,8 @@ public class BalanceReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
+        assertsCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+        debtsCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -200,13 +202,13 @@ public class BalanceReport implements Button.ClickListener,
         vl.setSpacing(true);
         vl.setSizeFull();
 
-        assertsDataTable = new FormattedTreeTable();
+        assertsDataTable = new FormattedTreeTable(myUI);
         assertsDataTable.setCaption(myUI.getMessage(SptMessages.Asserts));
         assertsDataTable.setSizeFull();
         assertsDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         assertsDataTable.addStyleName("noWrapHeader");
 
-        debtsDataTable = new FormattedTreeTable();
+        debtsDataTable = new FormattedTreeTable(myUI);
         debtsDataTable.setCaption(myUI.getMessage(SptMessages.Debts));
         debtsDataTable.setSizeFull();
         debtsDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
@@ -320,10 +322,10 @@ public class BalanceReport implements Button.ClickListener,
                             SchoolAccounting schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
                                     end_date.getTime(), Settings.convertCollectionToStr(catIds));
                             assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " +
-                                    Settings.dFormat.format(schoolAcc.getTotal_income()) + "$</b>");
+                                    Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$</b>");
                             debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": "
-                                    + Settings.dFormat.format(schoolAcc.getTotal_outcome()) + "$</b>");
-                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + Settings.dFormat.format(
+                                    + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$</b>");
+                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + Settings.dFormat2.format(
                                     (schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$</b>");
                             assertsDataTable.setData(schoolAcc.getTotal_income());
                             debtsDataTable.setData(schoolAcc.getTotal_outcome());

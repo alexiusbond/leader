@@ -74,6 +74,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
+        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -151,7 +152,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setMargin(true);
         vl.setSizeFull();
-        dataTable = new FormattedTable();
+        dataTable = new FormattedTable(myUI);
         dataTable.setFooterVisible(true);
         dataTable.setSizeFull();
         dataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);

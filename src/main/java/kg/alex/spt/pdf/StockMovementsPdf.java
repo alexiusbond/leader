@@ -138,17 +138,17 @@ public class StockMovementsPdf {
                         table.addCell(new Phrase(tf.getValue(), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Quantity)).getValue();
-                        table.addCell(new Phrase(Settings.dFormat.format( tf.getPropertyDataSource().getValue()), tableFont));
+                        table.addCell(new Phrase(Settings.dFormat2.format( tf.getPropertyDataSource().getValue()), tableFont));
                         if (title.equals(myUI.getMessage(SptMessages.StockIncome))) {
                             tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Price)).getValue();
-                            table.addCell(new Phrase(Settings.dFormat.format( tf.getPropertyDataSource().getValue()), tableFont));
+                            table.addCell(new Phrase(Settings.dFormat2.format( tf.getPropertyDataSource().getValue()), tableFont));
                         } else {
-                            table.addCell(new Phrase(Settings.dFormat.format( stockMovementsCont.getContainerProperty(next,
+                            table.addCell(new Phrase(Settings.dFormat2.format( stockMovementsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Price)).getValue()), tableFont));
                         }
-                        table.addCell(new Phrase(Settings.dFormat.format( stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat2.format( stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Rate)).getValue()), tableFont));
-                        table.addCell(new Phrase(Settings.dFormat.format( stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat2.format( stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         y++;

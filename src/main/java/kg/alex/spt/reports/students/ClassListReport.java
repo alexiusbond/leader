@@ -191,7 +191,7 @@ public class ClassListReport implements Button.ClickListener,
         VerticalLayout vl = new VerticalLayout();
         vl.setSizeFull();
         vl.setMargin(true);
-        dataTable = new FormattedFilterTable();
+        dataTable = new FormattedFilterTable(myUI);
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setFilterBarVisible(true);
         dataTable.setFilterGenerator(new DefinitionsFilterGenerator(dataTable));
@@ -229,23 +229,23 @@ public class ClassListReport implements Button.ClickListener,
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
                             myUI.getMessage(SptMessages.Active) + activeStudents);
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
-                            Settings.dFormat.format(contracts));
+                            Settings.dFormat2.format(contracts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            Settings.dFormat.format(discounts));
+                            Settings.dFormat2.format(discounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
-                            Settings.dFormat.format(corrections));
+                            Settings.dFormat2.format(corrections));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
-                            Settings.dFormat.format(prevYearDebts));
+                            Settings.dFormat2.format(prevYearDebts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
-                            Settings.dFormat.format(prevYearOverpays));
+                            Settings.dFormat2.format(prevYearOverpays));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
-                            Settings.dFormat.format(nets));
+                            Settings.dFormat2.format(nets));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
-                            Settings.dFormat.format(paid_amounts));
+                            Settings.dFormat2.format(paid_amounts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                            Settings.dFormat.format(debts));
+                            Settings.dFormat2.format(debts));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
-                            Settings.dFormat.format(overPays));
+                            Settings.dFormat2.format(overPays));
                     if (dataCont.size() != 0) {
                         dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
                                 + discountedStudents + " (" + discountedStudents * 100 / dataCont.size() + "%)");

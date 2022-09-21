@@ -73,7 +73,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         tableForExport.setVisible(false);
         vl.addComponent(tableForExport);
 
-        dataTable = new FormattedFilterTable();
+        dataTable = new FormattedFilterTable(myUI);
         dataTable.setFilterDecorator(new MyFilterDecorator(myUI));
         dataTable.setStyleName(ValoTheme.TABLE_SMALL);
         dataTable.addStyleName("noWrap");

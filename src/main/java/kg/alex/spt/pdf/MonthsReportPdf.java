@@ -120,13 +120,13 @@ public class MonthsReportPdf {
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Month)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.InstPlanDebt)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Left)).getValue()), tableFont));
-                            pdfTable.addCell(new Phrase(Settings.dFormat.format(dataTable.getContainerProperty(next,
+                            pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                     Settings.percentage).getValue()), tableFont));
                             j++;
                         }

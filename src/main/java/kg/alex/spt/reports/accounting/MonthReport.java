@@ -150,6 +150,8 @@ public class MonthReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
+            outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+            incomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
         }
         try {
             DbSchool dbs = new DbSchool();
@@ -231,7 +233,7 @@ public class MonthReport implements Button.ClickListener,
         rightLayout.setSizeFull();
         rightLayout.setImmediate(true);
 
-        incomesDataTable = new FormattedTreeTable();
+        incomesDataTable = new FormattedTreeTable(myUI);
         incomesDataTable.setCaption(myUI.getMessage(SptMessages.Incomes));
         incomesDataTable.setFooterVisible(true);
         incomesDataTable.setSizeFull();
@@ -240,7 +242,7 @@ public class MonthReport implements Button.ClickListener,
         incomesDataTable.addStyleName("noWrapHeader");
         incomesDataTable.addStyleName("noWrapFooter");
 
-        outcomesDataTable = new FormattedTreeTable();
+        outcomesDataTable = new FormattedTreeTable(myUI);
         outcomesDataTable.setCaption(myUI.getMessage(SptMessages.Expenses));
         outcomesDataTable.setFooterVisible(true);
         outcomesDataTable.setSizeFull();
@@ -294,7 +296,7 @@ public class MonthReport implements Button.ClickListener,
                                     excelBtn.setEnabled(true);
                                 }
                             }
-                            Iterator school_iter ;
+                            Iterator school_iter;
                             Calendar current = Calendar.getInstance();
                             Calendar prev_date = Calendar.getInstance();
                             current.setTime(fromDate.getTime());
@@ -308,22 +310,22 @@ public class MonthReport implements Button.ClickListener,
                                     if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + myUI.getMessage(SptMessages.Total),
                                                 Table.Align.RIGHT);
                                     }
                                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
                                                         + " - " + myUI.getMessage(SptMessages.Total),
                                                 Table.Align.RIGHT);
                                         SchoolAccounting scAcc = dbTr.exec_get_totals((Integer) nextSchool, current.getTime(),
@@ -331,7 +333,7 @@ public class MonthReport implements Button.ClickListener,
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
                                                 + Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.PreviousBalance) + " ("
-                                                + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat.format(scAcc.getPrevious_balance())
+                                                + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat2.format(scAcc.getPrevious_balance())
                                                 + "; " + myUI.getMessage(SptMessages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
                                                 nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
                                                 + Settings.ymdf.format(current.getTime())));
@@ -342,7 +344,7 @@ public class MonthReport implements Button.ClickListener,
                                             tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
                                             Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.PreviousBalance) + " ("
-                                                    + Settings.df.format(prev_date.getTime()) + ") - " + Settings.dFormat.format(scAcc.getPrevious_balance())
+                                                    + Settings.df.format(prev_date.getTime()) + ") - " + Settings.dFormat2.format(scAcc.getPrevious_balance())
                                                     + "; " + myUI.getMessage(SptMessages.Total) + " - " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())));
                                     incomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
                                     outcomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
@@ -501,6 +503,8 @@ public class MonthReport implements Button.ClickListener,
                     logger.error(e);
                     logger.catching(e);
                 }
+                outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+                incomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
             } else {
                 outcomeCategoriesTable.getContainerDataSource().removeAllItems();
                 incomeCategoriesTable.getContainerDataSource().removeAllItems();

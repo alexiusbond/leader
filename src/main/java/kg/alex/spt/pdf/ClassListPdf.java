@@ -129,7 +129,7 @@ public class ClassListPdf {
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         if (dataCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Contract)).getValue() != null) {
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Contract)).getValue()), tableFont));
                             dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             if (dataCont.getContainerProperty(next,
@@ -137,35 +137,35 @@ public class ClassListPdf {
                                 dataTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.DiscountType)).getValue().toString(), tableFont));
                                 dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                                dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                                dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Discount)).getValue()), tableFont));
                             } else {
                                 dataTable.addCell(new Phrase(" ", tableFont));
                                 dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                                 dataTable.addCell(new Phrase("0.00", tableFont));
                             }
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Correction)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Net)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Debt)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.OverPay)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase(" ", tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearDebt)).getValue()), tableFont));
-                            dataTable.addCell(new Phrase(Settings.dFormat.format(dataCont.getContainerProperty(next,
+                            dataTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue()), tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
                             dataTable.addCell(new Phrase(" ", tableFont));
@@ -182,17 +182,17 @@ public class ClassListPdf {
                             + clr.activeStudents, tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.contracts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.contracts), tableFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Discounted)
                             + clr.discountedStudents, tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.discounts), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.corrections), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.prevYearDebts), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.prevYearOverpays), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.nets), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.paid_amounts), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.debts), tableFontBold));
-                    dataTable.addCell(new Phrase(Settings.dFormat.format(clr.overPays), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.discounts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.corrections), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.prevYearDebts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.prevYearOverpays), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.nets), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.paid_amounts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.debts), tableFontBold));
+                    dataTable.addCell(new Phrase(Settings.dFormat2.format(clr.overPays), tableFontBold));
 
                     document.add(dataTable);
 

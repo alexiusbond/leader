@@ -124,7 +124,7 @@ public class ClassPaymentsPdf {
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        infoTable.addCell(new Phrase(Settings.dFormat.format(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(Settings.dFormat2.format(planCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;
@@ -137,7 +137,7 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
-                            + Settings.dFormat.format(total), ordFontBold));
+                            + Settings.dFormat2.format(total), ordFontBold));
 
                     document.add(infoTable);
 
