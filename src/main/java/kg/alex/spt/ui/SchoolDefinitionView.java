@@ -12,10 +12,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.dao.DbAccCategory;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbSalaryCategories;
-import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.AccCategory;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
@@ -30,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 
 public class SchoolDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
@@ -310,6 +308,10 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             dbsc.connect();
                             IndexedContainer salCont = dbsc.execSQL(myUI);
                             dbsc.close();
+                            DbAccType dbAccType = new DbAccType();
+                            dbAccType.connect();
+                            IndexedContainer typesContainer = dbAccType.execSQL(myUI);
+                            dbAccType.close();
                             DbAccCategory dba = new DbAccCategory();
                             dba.connect();
                             for (Object next : salCont.getItemIds()) {
@@ -320,6 +322,18 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 ac.setParent_id((Integer) next);
                                 ac.setStatus_id(2);
                                 ac.setType_id(2);
+                                ac.setSchool_id(id);
+                                ac.setModified_employee_id(myUI.getUser().getId());
+                                dba.exec_insert(ac);
+                            }
+                            for (Object next : typesContainer.getItemIds()) {
+                                AccCategory ac = new AccCategory();
+                                ac.setCode(sch.getCode());
+                                ac.setName(typesContainer.getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
+                                ac.setParent_code(typesContainer.getContainerProperty(next, myUI.getMessage(SptMessages.Code)).getValue().toString());
+                                ac.setParent_id((Integer) next);
+                                ac.setStatus_id(2);
+                                ac.setType_id(5);
                                 ac.setSchool_id(id);
                                 ac.setModified_employee_id(myUI.getUser().getId());
                                 dba.exec_insert(ac);
@@ -358,6 +372,10 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                 dbsc.connect();
                                 IndexedContainer salCont = dbsc.execSQL(myUI);
                                 dbsc.close();
+                                DbAccType dbAccType = new DbAccType();
+                                dbAccType.connect();
+                                IndexedContainer typesContainer = dbAccType.execSQL(myUI);
+                                dbAccType.close();
                                 DbAccCategory dba = new DbAccCategory();
                                 dba.connect();
                                 for (Object next : salCont.getItemIds()) {
@@ -366,7 +384,13 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                                             myUI.getMessage(SptMessages.Title)).getValue() + " - " + school.getName_ru());
                                     dba.exec_update_all_parent_codes(id, salCont.getContainerProperty(next,
                                             myUI.getMessage(SptMessages.Code)).getValue() + "." + school.getCode(), false);
-
+                                }
+                                for (Object next : typesContainer.getItemIds()) {
+                                    int id = dba.exec_id((Integer) next, school.getId());
+                                    dba.exec_update_code(id, school.getCode(), typesContainer.getContainerProperty(next,
+                                            myUI.getMessage(SptMessages.Title)).getValue() + " - " + school.getName_ru());
+                                    dba.exec_update_all_parent_codes(id, typesContainer.getContainerProperty(next,
+                                            myUI.getMessage(SptMessages.Code)).getValue() + "." + school.getCode(), false);
                                 }
                                 dba.close();
                             }

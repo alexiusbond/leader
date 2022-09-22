@@ -107,7 +107,7 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer exec_for_select(MyVaadinUI myUi, String dbTableName,
-                                            List<String> containerProperties) throws SQLException {
+                                            List<String> containerProperties, int id) throws SQLException {
         StringBuilder sql = new StringBuilder("select t.id, t.name, ");
         for (int i = 0; i < containerProperties.size(); i++) {
             sql.append(containerProperties.get(i));
@@ -115,8 +115,14 @@ public class DbDefinition extends BaseDb {
                 sql.append(", ");
             }
         }
-        sql.append(" from ").append(dbTableName).append(" as t");
+        sql.append(" from ").append(dbTableName).append(" as t where 1");
+        if (id != 0) {
+            sql.append(" AND id = ?");
+        }
         PreparedStatement stat = dbCon.prepareStatement(sql.toString());
+        if (id != 0) {
+            stat.setInt(1, id);
+        }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
@@ -307,6 +313,7 @@ public class DbDefinition extends BaseDb {
         String sql = "DELETE FROM " + dbTableName + " WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
+        System.out.println(stat);
         return stat.executeUpdate();
     }
 

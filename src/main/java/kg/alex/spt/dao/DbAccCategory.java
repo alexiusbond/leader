@@ -49,6 +49,30 @@ public class DbAccCategory extends BaseDb {
         return container;
     }
 
+    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id) throws SQLException {
+        String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code "
+                + "from acc_category as c where c.acc_type_id = ? and c.school_id = ? "
+                + "order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, type);
+        stat.setInt(2, school_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+                    result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
+                    result.getString("code") + " - " + result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(
+                    result.getString("code"));
+        }
+        return container;
+    }
+
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id, boolean withParents) throws SQLException {
 
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code, sc.acc_currency_id, "
@@ -106,7 +130,7 @@ public class DbAccCategory extends BaseDb {
         return container;
     }
 
-    public void execSQL(MyVaadinUI myUI, int type, int schoolId, TreeTable t) throws SQLException {
+    public void execSQL(MyVaadinUI myUI, int type, int schoolId, boolean exceptMainParent, TreeTable t) throws SQLException {
 
 
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, "
@@ -117,6 +141,9 @@ public class DbAccCategory extends BaseDb {
             sql += "and c.school_id is null ";
         } else {
             sql += "and c.school_id = ? ";
+        }
+        if (exceptMainParent) {
+            sql += "and c.parent_id != (select acc_category_id from acc_type where id = 5) ";
         }
         sql += "group by c.id order by ifnull(concat(c.parent_code,'.',c.code),c.code), c.activity_status_id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -161,12 +188,12 @@ public class DbAccCategory extends BaseDb {
         }
     }
 
-    public void execSQL_for_select_as_tree(MyVaadinUI myUI, int type, FilterTreeTable t,
+    public void execSQL_for_select_as_tree(MyVaadinUI myUI, String types, FilterTreeTable t,
                                            String school_ids, boolean onlyActive)
             throws SQLException {
         String sql = "SELECT c.id, concat(ifnull(concat(c.parent_code,'.',c.code),c.code), ' - ', c.name) as title, " +
                 "ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.name as category, "
-                + "c.parent_id FROM acc_category as c where c.acc_type_id = ? ";
+                + "c.parent_id FROM acc_category as c where c.acc_type_id in (" + types + ") ";
         if (onlyActive) {
             sql += "and c.activity_status_id = 2 ";
         }
@@ -174,7 +201,6 @@ public class DbAccCategory extends BaseDb {
                 + "and (c.parent_id not in (select acc_category_id from dp_product_category) or c.parent_id is NULL) "
                 + "group by c.id order by c.parent_code, CAST(code AS UNSIGNED);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, type);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);

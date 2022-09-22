@@ -8,10 +8,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.dao.DbAccCategory;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbSalaryCategories;
-import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
 import net.coobird.thumbnailator.Thumbnails;
@@ -251,6 +248,10 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                             dbsc.connect();
                             IndexedContainer salCont = dbsc.execSQL(myUI);
                             dbsc.close();
+                            DbAccType dbAccType = new DbAccType();
+                            dbAccType.connect();
+                            IndexedContainer typesContainer = dbAccType.execSQL(myUI);
+                            dbAccType.close();
                             DbAccCategory dba = new DbAccCategory();
                             dba.connect();
                             for (Object next : salCont.getItemIds()) {
@@ -258,6 +259,13 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                                 dba.exec_update_code(id, sch.getCode(), salCont.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
                                 dba.exec_update_all_parent_codes(id, salCont.getContainerProperty(next,
+                                        myUI.getMessage(SptMessages.Code)).getValue() + "." + sch.getCode(), false);
+                            }
+                            for (Object next : typesContainer.getItemIds()) {
+                                int id = dba.exec_id((Integer) next, sch.getId());
+                                dba.exec_update_code(id, sch.getCode(), typesContainer.getContainerProperty(next,
+                                        myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
+                                dba.exec_update_all_parent_codes(id, typesContainer.getContainerProperty(next,
                                         myUI.getMessage(SptMessages.Code)).getValue() + "." + sch.getCode(), false);
                             }
                             dba.close();

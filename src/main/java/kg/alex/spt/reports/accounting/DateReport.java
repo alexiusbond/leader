@@ -119,8 +119,8 @@ public class DateReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, 2, outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
-            dbac.execSQL_for_select_as_tree(myUI, 1, incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
+            dbac.execSQL_for_select_as_tree(myUI, "2, 5", outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
+            dbac.execSQL_for_select_as_tree(myUI, "1, 5", incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);

@@ -79,7 +79,8 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            dbCon.execSQL(myUI, movement_type_id, movement_type_id == 5 ? myUI.getUser().getSchool_id() : 0, dataTable);
+            dbCon.execSQL(myUI, movement_type_id, movement_type_id == 5 ? myUI.getUser().getSchool_id() : 0,
+                    movement_type_id == 5, dataTable);
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -457,7 +458,11 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id));
+            if (movement_type_id == 5) {
+                parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id, myUI.getUser().getSchool_id()));
+            } else {
+                parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id));
+            }
             dbac.close();
         } catch (Exception e) {
             logger.error(e);

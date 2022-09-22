@@ -186,7 +186,7 @@ public class MyVaadinUI extends UI {
     public double getCurrencyRateFromBank() {
         Calendar c = Calendar.getInstance();
         c.setTime(nbkr_time);
-        c.add(Calendar.MINUTE, 30);
+        c.add(Calendar.MINUTE, 3000);
         if (nbkr_currency_rate == 0.00 || c.getTime().before(new Date())) {
             nbkr_time = new Date();
             DecimalFormatSymbols symbols = new DecimalFormatSymbols();

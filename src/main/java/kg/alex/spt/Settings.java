@@ -157,6 +157,7 @@ public class Settings implements Serializable {
     public static final String dbStock = "dp_stock";
     public static final String dbOperation = "dp_service_type";
     public static final String dbAcc_category = "acc_category";
+    public static final String dbAccType = "acc_type";
     public static final String dbRelatives = "relatives";
     public static final String dbStudentRelatives = "student_relatives";
     public static final String dbStudentAccessories = "student_accessories";

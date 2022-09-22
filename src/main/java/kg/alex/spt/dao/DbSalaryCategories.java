@@ -21,7 +21,7 @@ public class DbSalaryCategories extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI) throws SQLException {
-        String sql = "SELECT sc.id, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.name FROM hr_salary_category sc "
+        String sql = "SELECT c.id, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.name FROM hr_salary_category sc "
                 + "left join acc_category as c on sc.acc_category_id = c.id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();

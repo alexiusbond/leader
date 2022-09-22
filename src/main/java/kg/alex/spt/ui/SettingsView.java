@@ -31,22 +31,24 @@ public class SettingsView extends GridLayout {
         this.setSpacing(true);
         this.setMargin(true);
 
-        IndexedContainer paymentsContainer = new IndexedContainer();
-        IndexedContainer salaryContainer = new IndexedContainer();
-        IndexedContainer productsContainer = new IndexedContainer();
-        IndexedContainer positionsContainer = new IndexedContainer();
+        IndexedContainer paymentsContainer = null;
+        IndexedContainer typesContainer = null;
+        IndexedContainer salaryContainer = null;
+        IndexedContainer productsContainer = null;
+        IndexedContainer positionsContainer = null;
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             List<String> properties = new ArrayList<>();
             properties.add(Settings.hr_position_id);
-            positionsContainer = dbDef.exec_for_select(myUI, Settings.positionTable, properties);
+            positionsContainer = dbDef.exec_for_select(myUI, Settings.positionTable, properties, 0);
             properties = new ArrayList<>();
             properties.add(Settings.acc_category_id);
-            productsContainer = dbDef.exec_for_select(myUI, Settings.dpProductCategoryTable, properties);
-            salaryContainer = dbDef.exec_for_select(myUI, Settings.dbSalaryCategory, properties);
+            productsContainer = dbDef.exec_for_select(myUI, Settings.dpProductCategoryTable, properties, 0);
+            typesContainer = dbDef.exec_for_select(myUI, Settings.dbAccType, properties, 5);
+            salaryContainer = dbDef.exec_for_select(myUI, Settings.dbSalaryCategory, properties, 0);
             properties.add(Settings.acc_type_id);
-            paymentsContainer = dbDef.exec_for_select(myUI, Settings.paymentCategoryTable, properties);
+            paymentsContainer = dbDef.exec_for_select(myUI, Settings.paymentCategoryTable, properties, 0);
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -54,8 +56,8 @@ public class SettingsView extends GridLayout {
         }
 
         this.setRows((positionsContainer.size() + 1) > (paymentsContainer.size() +
-                salaryContainer.size() + productsContainer.size()) ? positionsContainer.size() + 1 + 2 :
-                paymentsContainer.size() + salaryContainer.size() + productsContainer.size() + 2);
+                salaryContainer.size() + productsContainer.size() + typesContainer.size()) ? positionsContainer.size() + 1 + 2 :
+                paymentsContainer.size() + salaryContainer.size() + productsContainer.size() + typesContainer.size() + 2);
         this.setColumns(4);
 
         Label captionAccounting = new Label();
@@ -71,6 +73,7 @@ public class SettingsView extends GridLayout {
             dbCon.connect();
             IndexedContainer expensesContainer = dbCon.exec_for_select(myUI, 2);
             IndexedContainer incomesContainer = dbCon.exec_for_select(myUI, 1);
+            IndexedContainer incomesAndExpensesContainer = dbCon.exec_for_select(myUI, 5);
             dbCon.close();
             List<?> itemIds = paymentsContainer.getItemIds();
             for (int i = 0; i < itemIds.size(); i++) {
@@ -149,17 +152,52 @@ public class SettingsView extends GridLayout {
                 });
                 addComponent(cb, 1, (i + row));
             }
+            row += salaryContainer.size();
+            itemIds = typesContainer.getItemIds();
+            for (int i = 0; i < itemIds.size(); i++) {
+                Label l = new Label();
+                l.setSizeUndefined();
+                l.setValue(typesContainer.getContainerProperty(itemIds.get(i),
+                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                addComponent(l, 0, (i + row));
+                setComponentAlignment(l, Alignment.BOTTOM_LEFT);
+
+                ComboBox cb = new ComboBox();
+                cb.setNullSelectionAllowed(false);
+                cb.setRequired(true);
+                cb.setData(itemIds.get(i));
+                cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+                cb.setStyleName(ValoTheme.COMBOBOX_SMALL);
+                cb.setWidth(Settings.PERCENTS100);
+                cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+                cb.setFilteringMode(FilteringMode.CONTAINS);
+                cb.setContainerDataSource(Settings.copyContainer(incomesAndExpensesContainer));
+                cb.setValue(typesContainer.getContainerProperty(itemIds.get(i), Settings.acc_category_id).getValue());
+                cb.addValueChangeListener((Property.ValueChangeListener) event -> {
+                    try {
+                        DbAccType dbAccType = new DbAccType();
+                        dbAccType.connect();
+                        if (dbAccType.exec_update((Integer) cb.getValue(), (Integer) cb.getData()) != 0) {
+                            Notification.show(myUI.getMessage(SptMessages.ValueSaved));
+                        }
+                        dbAccType.close();
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                });
+                addComponent(cb, 1, (i + row));
+            }
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-
         Label captionStock = new Label();
         captionStock.setSizeFull();
         captionStock.setContentMode(ContentMode.HTML);
         captionStock.setValue(myUI.getMessage(SptMessages.StockSettings));
         captionStock.setStyleName("tableCpt");
-        row += salaryContainer.size();
+        row += typesContainer.size();
         addComponent(captionStock, 0, row, 1, row);
         row += 1;
         try {
