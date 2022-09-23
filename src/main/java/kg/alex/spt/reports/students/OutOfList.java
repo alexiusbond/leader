@@ -132,7 +132,7 @@ public class OutOfList implements Button.ClickListener,
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
-            fromClassTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            fromClassTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);
@@ -192,7 +192,7 @@ public class OutOfList implements Button.ClickListener,
                             Settings.convertCollectionToStr((Set<?>) yearSelectMCB.getValue()),
                             Settings.convertCollectionToStr((Set<?>) fromClassTable.getValue()),
                             getMultiComboCaptions((Set<?>) reasonsMCB.getValue()),
-                            myUI.getUser().getSchool_id(), this);
+                            myUI.getUser().getSchool().getId(), this);
                     dataTable.setContainerDataSource(dataCont);
                     dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);

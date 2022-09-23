@@ -79,7 +79,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            dbCon.execSQL(myUI, movement_type_id, movement_type_id == 5 ? myUI.getUser().getSchool_id() : 0,
+            dbCon.execSQL(myUI, movement_type_id, movement_type_id == 5 ? myUI.getUser().getSchool().getId() : 0,
                     movement_type_id == 5, dataTable);
             dbCon.close();
         } catch (Exception e) {
@@ -399,7 +399,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             ac.setParent_code(parent_code);
         }
         if (movement_type_id == 5) {
-            ac.setSchool_id(myUI.getUser().getSchool_id());
+            ac.setSchool_id(myUI.getUser().getSchool().getId());
         }
         ac.setStatus_id((Integer) statusSelect.getValue());
         ac.setType_id(movement_type_id);
@@ -459,7 +459,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
             if (movement_type_id == 5) {
-                parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id, myUI.getUser().getSchool_id()));
+                parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id, myUI.getUser().getSchool().getId()));
             } else {
                 parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id));
             }

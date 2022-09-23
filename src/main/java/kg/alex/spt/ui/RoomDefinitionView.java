@@ -57,7 +57,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
         try {
             DbRoom dbCon = new DbRoom();
             dbCon.connect();
-            dataTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
+            dataTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -177,7 +177,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             blockSelect.setContainerDataSource(dbDef.exec_for_select(myUI,
-                    Settings.dbBlock, myUI.getUser().getSchool_id(), false));
+                    Settings.dbBlock, myUI.getUser().getSchool().getId(), false));
             floorSelect.setContainerDataSource(
                     dbDef.exec_for_select(myUI, Settings.dbFloor, false));
             statusSelect.setContainerDataSource(

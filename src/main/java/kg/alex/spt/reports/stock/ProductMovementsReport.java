@@ -132,7 +132,7 @@ public class ProductMovementsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolSelect.setValue(myUI.getUser().getSchool_id());
+        schoolSelect.setValue(myUI.getUser().getSchool().getId());
 
         try {
             DbProductCategories dbCon = new DbProductCategories();

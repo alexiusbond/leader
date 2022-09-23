@@ -44,7 +44,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(5, c.getEmployee_id());
         stat.setInt(6, c.getStatus_id());
         stat.setDouble(7, c.getContr_with_disc());
-        stat.setInt(8, exec_next_contract_number(myUi.getUser().getSchool_id(),
+        stat.setInt(8, exec_next_contract_number(myUi.getUser().getSchool().getId(),
                 myUi.getUser().getCurrent_year().getId()));
         int st = stat.executeUpdate();
         if (st != 0) {

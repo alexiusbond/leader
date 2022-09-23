@@ -187,7 +187,7 @@ public class StatusesReport implements Button.ClickListener,
             leftGrid.addComponent(schoolsTable, 0, 5, 3, 5);
             leftGrid.setRowExpandRatio(5, 1);
         } else {
-            schoolsTable.setValue(convertToSet(myUI.getUser().getSchool_id()));
+            schoolsTable.setValue(convertToSet(myUI.getUser().getSchool().getId()));
         }
         leftGrid.addComponent(generateBtn, 0, 6, 2, 6);
         leftGrid.addComponent(excelBtn, 3, 6);

@@ -237,11 +237,11 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         try {
             DbEmployee dbCon = new DbEmployee();
             dbCon.connect();
-            fromEmployeeSelect.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 17));
+            fromEmployeeSelect.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), 17));
             if (fromEmployeeSelect.getContainerDataSource() != null) {
                 fromEmployeeSelect.setValue(((IndexedContainer) fromEmployeeSelect.getContainerDataSource()).firstItemId());
             }
-            toEmployeeSelect.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 100));
+            toEmployeeSelect.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), 100));
             if (toEmployeeSelect.getContainerDataSource() != null) {
                 toEmployeeSelect.setValue(((IndexedContainer) toEmployeeSelect.getContainerDataSource()).firstItemId());
             }
@@ -263,7 +263,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             stockSelect.setContainerDataSource(
-                    dbDef.exec_for_select(myUI, Settings.dbStock, myUI.getUser().getSchool_id(), true));
+                    dbDef.exec_for_select(myUI, Settings.dbStock, myUI.getUser().getSchool().getId(), true));
             dbDef.close();
             DbProductCategories dbpc = new DbProductCategories();
             dbpc.connect();
@@ -289,7 +289,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         try {
             DbStockInvoice dbCon = new DbStockInvoice();
             dbCon.connect();
-            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 1));
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), 1));
             dbCon.close();
             if (invoicesTable.getContainerDataSource().size() != 0) {
                 invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
@@ -324,7 +324,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
                 dbsc.close();
                 if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null
@@ -381,7 +381,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
                     at.setCurrency_rate(myUI.getDb_currency_rate());
                     at.setCurrency_id(1);
                     at.setEmployee_id(myUI.getUser().getId());
-                    at.setSchool_id(myUI.getUser().getSchool_id());
+                    at.setSchool_id(myUI.getUser().getSchool().getId());
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();*/
                     if (isNew) {
@@ -856,7 +856,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             try {
                 DbStockInvoice dbCon = new DbStockInvoice();
                 dbCon.connect();
-                inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool_id(), 1) + 1);
+                inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool().getId(), 1) + 1);
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -874,7 +874,7 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
         inv.setFrom_employee_id((Integer) fromEmployeeSelect.getValue());
         inv.setAcc_category_id((Integer) productCategorySelect.getValue());
         inv.setService_type_id(1);
-        inv.setSchool_id(myUI.getUser().getSchool_id());
+        inv.setSchool_id(myUI.getUser().getSchool().getId());
         inv.setEmployee_id(myUI.getUser().getId());
         inv.setId(inv_id);
         return inv;

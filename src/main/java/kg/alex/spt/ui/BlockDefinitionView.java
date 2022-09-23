@@ -56,7 +56,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
         try {
             DbBlock dbCon = new DbBlock();
             dbCon.connect();
-            dataTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
+            dataTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -330,7 +330,7 @@ public class BlockDefinitionView extends HorizontalSplitPanel implements Button.
         Block block = new Block();
         block.setName(nameTF.getValue());
         block.setStatus_id((Integer) statusSelect.getValue());
-        block.setSchool_id(myUI.getUser().getSchool_id());
+        block.setSchool_id(myUI.getUser().getSchool().getId());
         block.setId(i);
         return block;
     }

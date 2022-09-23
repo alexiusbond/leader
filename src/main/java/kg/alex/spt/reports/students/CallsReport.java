@@ -124,7 +124,7 @@ public class CallsReport implements Button.ClickListener,
         try {
             DbClassName dbCon = new DbClassName();
             dbCon.connect();
-            classTable.setContainerDataSource(dbCon.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            classTable.setContainerDataSource(dbCon.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -197,7 +197,7 @@ public class CallsReport implements Button.ClickListener,
             try {
                 DbSchool dbCon = new DbSchool();
                 dbCon.connect();
-                st = dbCon.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                st = dbCon.execGetSchoolPdf(myUI.getUser().getSchool().getId());
                 dbCon.close();
 
                 if (st.getScl_accountant_full_name() != null) {

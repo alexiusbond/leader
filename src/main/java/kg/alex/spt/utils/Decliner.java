@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kg.alex.spt.pdf;
+package kg.alex.spt.utils;
 
 public class Decliner {
 
@@ -193,7 +193,7 @@ public class Decliner {
     /// <param name="Name"></param>
     /// <param name="IsFeminine"></param>
     /// <returns></returns>
-    protected String DeclineNameGenitive(String Name, boolean IsFeminine, boolean Shorten) {
+    public String DeclineNameGenitive(String Name, boolean IsFeminine, boolean Shorten) {
         String temp;
 
         if (Name.length() <= 1 || Name.endsWith(".")) {
@@ -572,7 +572,7 @@ public class Decliner {
     /// <param name="Name"></param>
     /// <param name="IsFeminine"></param>
     /// <returns></returns>
-    protected String DeclinePatronymicGenitive(String Patronymic, String PatronymicAfter, boolean IsFeminine, boolean Shorten) {
+    public String DeclinePatronymicGenitive(String Patronymic, String PatronymicAfter, boolean IsFeminine, boolean Shorten) {
         if (Patronymic.length() <= 1 || Patronymic.endsWith(".")) {
             return Patronymic;
         }
@@ -814,7 +814,7 @@ public class Decliner {
     /// <param name="Surname"></param>
     /// <param name="IsFeminine"></param>
     /// <returns></returns>
-    protected String DeclineSurnameGenitive(String Surname, boolean IsFeminine) {
+    public String DeclineSurnameGenitive(String Surname, boolean IsFeminine) {
         String temp = Surname;
         String end = null;
 

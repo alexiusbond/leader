@@ -73,7 +73,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
             DbStudent dbs = new DbStudent();
             dbs.connect();
             studentsTable.setContainerDataSource(
-                    dbs.execSQL_for_orders(myUI, myUI.getUser().getSchool_id(), this));
+                    dbs.execSQL_for_orders(myUI, myUI.getUser().getSchool().getId(), this));
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
@@ -138,7 +138,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
             classSelect.setContainerDataSource(
-                    dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+                    dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);

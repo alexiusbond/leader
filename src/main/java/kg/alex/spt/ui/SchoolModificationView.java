@@ -272,9 +272,9 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                         }
                         Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                 Notification.Type.HUMANIZED_MESSAGE);
-                        myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                        myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                                 myUI.getMessage(SptMessages.Title)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
-                        myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                        myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                                 myUI.getMessage(SptMessages.Logo)).setValue(sch.getPhoto());
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),

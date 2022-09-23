@@ -66,7 +66,7 @@ public class PayoutsReport implements Button.ClickListener,
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
             dbac.execSQL_for_select_as_tree(myUI, "2", employeeCategoriesTable,
-                    Integer.toString(myUI.getUser().getSchool_id()), true);
+                    Integer.toString(myUI.getUser().getSchool().getId()), true);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
@@ -154,7 +154,7 @@ public class PayoutsReport implements Button.ClickListener,
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
                     dbat.exec_account_remains(myUI, employeeCategoriesTable,
-                            (Integer) currencySelect.getValue(), myUI.getUser().getSchool_id(), dataTable);
+                            (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId(), dataTable);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Salary), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Ratio), Table.Align.RIGHT);

@@ -11,6 +11,7 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbRelative;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.Decliner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

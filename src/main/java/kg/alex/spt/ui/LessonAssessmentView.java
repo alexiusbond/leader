@@ -53,7 +53,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             dbe.connect();
             Subject currentUser = SecurityUtils.getSubject();
             employeesTable.setContainerDataSource(
-                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
+                    dbe.execSQL(myUI, myUI.getUser().getSchool().getId(), currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr)));
             dbe.close();
         } catch (Exception e) {
             logger.error(e);
@@ -132,7 +132,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                             EmployeeLessons el = new EmployeeLessons();
                             el.setBranch_id((Integer) cb.getData());
                             el.setYear_id(myUI.getUser().getCurrent_year().getId());
-                            el.setSchool_id(myUI.getUser().getSchool_id());
+                            el.setSchool_id(myUI.getUser().getSchool().getId());
                             el.setClass_number_id((Integer) classNumberSelect.getValue());
                             el.setEmployee_id((Integer) employeesTable.getValue());
                             el.setHours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Hours))
@@ -149,7 +149,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                     }
                     employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(SptMessages.TotalHours)
                             + myUI.getUser().getCurrent_year().getName()).setValue(dbel.execSQLTotalHours(myUI,
-                            (Integer) employeesTable.getValue(), myUI.getUser().getSchool_id()));
+                            (Integer) employeesTable.getValue(), myUI.getUser().getSchool().getId()));
                     Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                             Notification.Type.HUMANIZED_MESSAGE);
                     dbel.close();
@@ -173,7 +173,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                 try {
                     DbEmployeeLessons dbel = new DbEmployeeLessons();
                     dbel.connect();
-                    lessonsTable.setContainerDataSource(dbel.execSQLHours(myUI, (Integer) employeesTable.getValue(), myUI.getUser().getSchool_id(),
+                    lessonsTable.setContainerDataSource(dbel.execSQLHours(myUI, (Integer) employeesTable.getValue(), myUI.getUser().getSchool().getId(),
                             (Integer) classNumberSelect.getValue(), this));
                     dbel.close();
                 } catch (Exception e) {
@@ -221,14 +221,14 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         try {
             DbEmployeeLessons dbel = new DbEmployeeLessons();
             dbel.connect();
-            int st = dbel.exec_delete((Integer) employeesTable.getValue(), branch_id, myUI.getUser().getSchool_id(),
+            int st = dbel.exec_delete((Integer) employeesTable.getValue(), branch_id, myUI.getUser().getSchool().getId(),
                     (Integer) classNumberSelect.getValue(), myUI.getUser().getCurrent_year().getId());
             if (st != 0) {
                 Notification.show(myUI.getMessage(SptMessages.ValueDeleted),
                         Notification.Type.HUMANIZED_MESSAGE);
                 employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(SptMessages.TotalHours)
                         + myUI.getUser().getCurrent_year().getName()).setValue(dbel.execSQLTotalHours(myUI,
-                        (Integer) employeesTable.getValue(), myUI.getUser().getSchool_id()));
+                        (Integer) employeesTable.getValue(), myUI.getUser().getSchool().getId()));
             }
             dbel.close();
         } catch (SQLIntegrityConstraintViolationException e) {

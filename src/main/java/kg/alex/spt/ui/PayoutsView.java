@@ -236,7 +236,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 2, this));
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), 2, this));
             dbCon.close();
             if (invoicesTable.getContainerDataSource().size() != 0) {
                 invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
@@ -293,7 +293,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     dbCon.connect();
                     if (isNew) {
                         Invoice inv = getInvoice(0);
-                        AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), 0, totalAmountUsd, 2);
+                        AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), 0, totalAmountUsd, 2);
                         if (tr != null) {
                             Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
@@ -314,7 +314,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     } else {
                         int status = 0;
                         Invoice inv = getInvoice(invID);
-                        AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), oldTotalAmountUsd, totalAmountUsd, 2);
+                        AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), oldTotalAmountUsd, totalAmountUsd, 2);
                         if (tr != null) {
                             Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
@@ -432,7 +432,12 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             cell.setCellValue(cb.getItemCaption(cb.getValue()));
                         } else if (component instanceof TextField) {
                             TextField tf = (TextField) component;
-                            cell.setCellValue(tf.getValue());
+                            if (tf.getPropertyDataSource() != null &&
+                                    tf.getPropertyDataSource().getValue() instanceof Number) {
+                                cell.setCellValue((Double) tf.getPropertyDataSource().getValue());
+                            } else {
+                                cell.setCellValue(tf.getValue());
+                            }
                         } else {
                             cell.setCellValue((i + 1) + "");
                         }
@@ -634,7 +639,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool_id(), 2) + 1);
+            inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool().getId(), 2) + 1);
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -645,7 +650,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         }
         inv.setAcc_invoice_type_id(2);
         inv.setCreation_date(dateDF.getValue());
-        inv.setSchool_id(myUI.getUser().getSchool_id());
+        inv.setSchool_id(myUI.getUser().getSchool().getId());
         inv.setEmployee_id(myUI.getUser().getId());
         inv.setId(i);
         return inv;
@@ -844,7 +849,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            cb.setContainerDataSource(dbCon.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), false));
+            cb.setContainerDataSource(dbCon.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), false));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -888,7 +893,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     myUI.getMessage(SptMessages.Amount)};
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
-            payoutsTable.setContainerDataSource(dbCon.execSQL(myUI, invID, myUI.getUser().getSchool_id(), this));
+            payoutsTable.setContainerDataSource(dbCon.execSQL(myUI, invID, myUI.getUser().getSchool().getId(), this));
             dbCon.close();
             payoutsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PAYOUTS);
             payoutsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Category), 1);
@@ -952,7 +957,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     tr.setAcc_invoice_id(invoice_id);
                     tr.setDate(dateDF.getValue());
                     tr.setEmployee_id(myUI.getUser().getId());
-                    tr.setSchool_id(myUI.getUser().getSchool_id());
+                    tr.setSchool_id(myUI.getUser().getSchool().getId());
                     tr.setAcc_invoice_id(invoice_id);
                     tr.setCurrency_rate((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue());
@@ -1000,7 +1005,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             if (rate == 0.0) {
                 Notification.show(myUI.getMessage(SptMessages.CantGetFromNBKR), Notification.Type.ERROR_MESSAGE);
             } else {
-                AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool_id(), inv.getCreation_date(), 0, totalAmountUsd, 2);
+                AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), 0, totalAmountUsd, 2);
                 if (tr != null) {
                     Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
@@ -1016,7 +1021,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 tr.setAcc_invoice_id(id);
                                 tr.setDate(inv.getCreation_date());
                                 tr.setEmployee_id(myUI.getUser().getId());
-                                tr.setSchool_id(myUI.getUser().getSchool_id());
+                                tr.setSchool_id(myUI.getUser().getSchool().getId());
                                 tr.setCurrency_rate(rate);
                                 tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());

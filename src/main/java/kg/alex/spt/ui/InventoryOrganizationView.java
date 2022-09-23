@@ -210,7 +210,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
             blockSelect.setContainerDataSource(dbDef.exec_for_select(myUI,
-                    Settings.dbBlock, myUI.getUser().getSchool_id(), false));
+                    Settings.dbBlock, myUI.getUser().getSchool().getId(), false));
             floorSelect.setContainerDataSource(
                     dbDef.exec_for_select(myUI, Settings.dbFloor, false));
             dbDef.close();
@@ -253,7 +253,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         try {
             DbInventoryInvoice dbCon = new DbInventoryInvoice();
             dbCon.connect();
-            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 2));
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), 2));
             dbCon.close();
             if (invoicesTable.getContainerDataSource().size() != 0) {
                 invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
@@ -283,7 +283,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
                 dbsc.close();
                 if (st.getScl_address() != null && st.getScl_phone() != null
                         && st.getScl_name_ru() != null) {
@@ -638,7 +638,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             try {
                 DbInventoryInvoice dbCon = new DbInventoryInvoice();
                 dbCon.connect();
-                inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool_id(), 2) + 1);
+                inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool().getId(), 2) + 1);
                 dbCon.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -653,7 +653,7 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
         inv.setCreation_date(dateDF.getValue());
         inv.setRoom_id((Integer) roomSelect.getValue());
         inv.setActivity_status_id(2);
-        inv.setSchool_id(myUI.getUser().getSchool_id());
+        inv.setSchool_id(myUI.getUser().getSchool().getId());
         inv.setEmployee_id(myUI.getUser().getId());
         inv.setEmployee(myUI.getUser().getFullName());
         inv.setId(inv_id);

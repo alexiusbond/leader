@@ -18,13 +18,19 @@ public class UserDetails implements Serializable {
     private int working_status_id;
     private int position_id;
     private String fullName;
-    private int school_id;
     private int branch_id;
-    private String school_name;
-    private String school_logo;
     private Definition current_year;
     private Date transactions_start_date;
     private boolean isUnreadMessages;
+    private School school;
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
+    }
 
     public int getBranch_id() {
         return branch_id;
@@ -80,30 +86,6 @@ public class UserDetails implements Serializable {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public int getSchool_id() {
-        return school_id;
-    }
-
-    public void setSchool_id(int school_id) {
-        this.school_id = school_id;
-    }
-
-    public String getSchool_name() {
-        return school_name;
-    }
-
-    public void setSchool_name(String school_name) {
-        this.school_name = school_name;
-    }
-
-    public String getSchool_logo() {
-        return school_logo;
-    }
-
-    public void setSchool_logo(String school_logo) {
-        this.school_logo = school_logo;
     }
 
     public Definition getCurrent_year() {

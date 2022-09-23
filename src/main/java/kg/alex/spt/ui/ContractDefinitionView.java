@@ -285,7 +285,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                 dbDis.connect();
                 yearSelect.setContainerDataSource(
                         dbDis.execSQL_for_year_sel(myUI, myUI.getUser().getCurrent_year().getId(),
-                                myUI.getUser().getSchool_id()));
+                                myUI.getUser().getSchool().getId()));
                 dbDis.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -389,9 +389,9 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.school_id).setValue(myUI.getUser().getSchool_id());
+                Settings.school_id).setValue(myUI.getUser().getSchool().getId());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.School)).setValue(myUI.getUser().getSchool_name());
+                myUI.getMessage(SptMessages.School)).setValue(myUI.getUser().getSchool().getName_ru());
     }
 
     private void addDataContainerItem(int id) {
@@ -410,9 +410,9 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         item.getItemProperty(Settings.year_id).setValue(
                 myUI.getUser().getCurrent_year().getId());
         item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
-                myUI.getUser().getSchool_name());
+                myUI.getUser().getSchool().getName_ru());
         item.getItemProperty(Settings.school_id).setValue(
-                myUI.getUser().getSchool_id());
+                myUI.getUser().getSchool().getId());
         item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
@@ -422,7 +422,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         c.setName(nameTF.getValue());
         c.setValue((Double) valueTF.getPropertyDataSource().getValue());
         c.setYear_id(myUI.getUser().getCurrent_year().getId());
-        c.setSchool_id(myUI.getUser().getSchool_id());
+        c.setSchool_id(myUI.getUser().getSchool().getId());
         c.setStatus_id((Integer) statusSelect.getValue());
         c.setId(i);
         c.setEmployee_id(myUI.getUser().getId());
@@ -481,7 +481,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         try {
             DbContract dbd = new DbContract();
             dbd.connect();
-            dataTable.setContainerDataSource(dbd.execSQL(myUI, myUI.getUser().getSchool_id()));
+            dataTable.setContainerDataSource(dbd.execSQL(myUI, myUI.getUser().getSchool().getId()));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

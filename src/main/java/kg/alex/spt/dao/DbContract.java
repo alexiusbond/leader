@@ -133,7 +133,7 @@ public class DbContract extends BaseDb {
         stat.setInt(1, myUi.getUser().getCurrent_year().getId());
         stat.setInt(2, myUi.getUser().getId());
         stat.setInt(3, selected_year);
-        stat.setInt(4, myUi.getUser().getSchool_id());
+        stat.setInt(4, myUi.getUser().getSchool().getId());
         return stat.executeUpdate();
     }
 

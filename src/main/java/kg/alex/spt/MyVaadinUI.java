@@ -135,7 +135,7 @@ public class MyVaadinUI extends UI {
             DbEmployeeMessage dbu = new DbEmployeeMessage();
             dbu.connect();
             if (SecurityUtils.getSubject().isPermitted(Settings.cnMessagesView + ":" + Settings.actReadMessages)) {
-                getUser().setUnreadMessages(dbu.isUnread(getUser().getId(), getUser().getSchool_id()));
+                getUser().setUnreadMessages(dbu.isUnread(getUser().getId(), getUser().getSchool().getId()));
             } else {
                 getUser().setUnreadMessages(dbu.isUnread(getUser().getId(), 0));
             }
@@ -222,7 +222,7 @@ public class MyVaadinUI extends UI {
         try {
             DbCurrencyRate dbCon = new DbCurrencyRate();
             dbCon.connect();
-            db_currency_rate = dbCon.execSQL_last_rate(getUser().getSchool_id());
+            db_currency_rate = dbCon.execSQL_last_rate(getUser().getSchool().getId());
             if (db_currency_rate == 0.0) {
                 isManualRate = false;
                 db_currency_rate = this.getCurrencyRateFromBank();
@@ -246,7 +246,7 @@ public class MyVaadinUI extends UI {
             DbEmployeeMessage dbCon = new DbEmployeeMessage();
             dbCon.connect();
             if (SecurityUtils.getSubject().isPermitted(Settings.cnMessagesView + ":" + Settings.actReadMessages)) {
-                getUser().setUnreadMessages(dbCon.isUnread(getUser().getId(), getUser().getSchool_id()));
+                getUser().setUnreadMessages(dbCon.isUnread(getUser().getId(), getUser().getSchool().getId()));
             } else {
                 getUser().setUnreadMessages(dbCon.isUnread(getUser().getId(), 0));
             }

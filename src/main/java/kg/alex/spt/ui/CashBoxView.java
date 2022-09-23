@@ -307,7 +307,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 try {
                     DbAccTransactions dbac = new DbAccTransactions();
                     dbac.connect();
-                    expensesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0));
+                    expensesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), 0));
                     dbac.close();
                 } catch (Exception e) {
                     logger.error(e);
@@ -320,7 +320,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 try {
                     DbEmployee dbCon = new DbEmployee();
                     dbCon.connect();
-                    toEmployeesCb.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0));
+                    toEmployeesCb.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), 0));
                     dbCon.close();
                 } catch (Exception e) {
                     logger.error(e);
@@ -334,7 +334,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 try {
                     DbAccTransactions dbac = new DbAccTransactions();
                     dbac.connect();
-                    incomesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 1, myUI.getUser().getSchool_id(), 0));
+                    incomesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 1, myUI.getUser().getSchool().getId(), 0));
                     dbac.close();
                 } catch (Exception e) {
                     logger.error(e);
@@ -453,17 +453,17 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     if (grid == expensesGrid && pid.equals(myUI.getMessage(SptMessages.Category))) {
                         DbAccTransactions dbac = new DbAccTransactions();
                         dbac.connect();
-                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0));
+                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), 0));
                         dbac.close();
                     } else if (grid == incomesGrid && pid.equals(myUI.getMessage(SptMessages.Category))) {
                         DbAccTransactions dbac = new DbAccTransactions();
                         dbac.connect();
-                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool_id(), 0));
+                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), 0));
                         dbac.close();
                     } else if (pid.equals(myUI.getMessage(SptMessages.ToEmployee))) {
                         DbEmployee dbCon = new DbEmployee();
                         dbCon.connect();
-                        filterField.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), 0));
+                        filterField.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), 0));
                         dbCon.close();
                     }
                 } catch (Exception e) {
@@ -502,7 +502,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     DbCurrencyRate dbCon = new DbCurrencyRate();
                     dbCon.connect();
                     cr.setEmployee_id(myUI.getUser().getId());
-                    cr.setSchool_id(myUI.getUser().getSchool_id());
+                    cr.setSchool_id(myUI.getUser().getSchool().getId());
                     if (currencySettingsOG.getValue().equals(myUI.getMessage(SptMessages.Manual))) {
                         cr.setValue((Double) currencyTF.getPropertyDataSource().getValue());
                         cr.setManual(1);
@@ -565,7 +565,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 }
             }
             item.getItemProperty(Settings.order_number).setValue(tr.getOrder_number());
-            new TransactionInvoicePDF(myUI, tr, myUI.getUser().getSchool_name(), myUI.getUser().getSchool_logo(), orderName);
+            new TransactionInvoicePDF(myUI, tr, myUI.getUser().getSchool().getName_ru(), myUI.getUser().getSchool().getPhoto(), orderName);
         } else if (source.getData().equals(myUI.getMessage(SptMessages.DeleteButton))) {
             if (source.getId().contains(Settings.FreshItem)) {
                 ((Grid) accordion.getSelectedTab()).getContainerDataSource().removeItem(source.getId());
@@ -652,7 +652,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                 }
                                 DbAccTransactions dbTr = new DbAccTransactions();
                                 dbTr.connect();
-                                AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
+                                AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
                                         dateDf.getValue(), old_amount, amount, 2);
                                 amountUSDTf.removeAllValidators();
                                 amountKGSTf.removeAllValidators();
@@ -723,7 +723,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                         .compareTo((Date) item.getItemProperty(myUI.getMessage(SptMessages.Date)).getValue()) != 0) {
                                     DbAccTransactions dbTr = new DbAccTransactions();
                                     dbTr.connect();
-                                    AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
+                                    AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
                                             dateDf.getValue(), old_amount, amount, 1);
                                     amountUSDTf.removeAllValidators();
                                     amountKGSTf.removeAllValidators();
@@ -812,10 +812,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             if (in_out == 1) {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool_id(), incomesGrid, this, fromDateDF.getValue(),
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), incomesGrid, this, fromDateDF.getValue(),
                         tillDateDF.getValue());
             } else {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool_id(), expensesGrid, this, fromDateDF.getValue(),
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), expensesGrid, this, fromDateDF.getValue(),
                         tillDateDF.getValue());
             }
             dbCon.close();
@@ -999,7 +999,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     amount = (Double) incomesCont.getContainerProperty(source.getId(),
                             myUI.getMessage(SptMessages.AmountUSD)).getValue();
                 }
-                AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
+                AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
                         (Date) incomesCont.getContainerProperty(source.getId(),
                                 myUI.getMessage(SptMessages.Date)).getValue(), amount, 0.0, 1);
                 if (tr != null) {
@@ -1063,7 +1063,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         }
         t.setOrder_number((Integer) item.getItemProperty(Settings.order_number).getValue());
         t.setEmployee_id(myUI.getUser().getId());
-        t.setSchool_id(myUI.getUser().getSchool_id());
+        t.setSchool_id(myUI.getUser().getSchool().getId());
         return t;
     }
 
@@ -1083,7 +1083,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         try {
             DbAccTransactions dbAc = new DbAccTransactions();
             dbAc.connect();
-            schoolAcc = dbAc.exec_get_totals(myUI.getUser().getSchool_id(),
+            schoolAcc = dbAc.exec_get_totals(myUI.getUser().getSchool().getId(),
                     fromDateDF.getValue(), tillDateDF.getValue(), null);
             dbAc.close();
         } catch (Exception e) {
@@ -1119,7 +1119,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                 Item item = grid.getContainerDataSource().getItem(itemId);
                 item.getItemProperty(Settings.from_employee_id).setValue(myUI.getUser().getFullName());
-                schoolAcc = dbCon.exec_get_totals(myUI.getUser().getSchool_id(),
+                schoolAcc = dbCon.exec_get_totals(myUI.getUser().getSchool().getId(),
                         fromDateDF.getValue(), tillDateDF.getValue(), null);
                 recount();
             }

@@ -58,7 +58,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         try {
             DbClassName dbDef = new DbClassName();
             dbDef.connect();
-            dataTable.setContainerDataSource(dbDef.execSQL(myUI, myUI.getUser().getSchool_id()));
+            dataTable.setContainerDataSource(dbDef.execSQL(myUI, myUI.getUser().getSchool().getId()));
             dbDef.close();
         } catch (Exception e) {
             logger.error(e);
@@ -338,9 +338,9 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
                 getContainerProperty(classTypeSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
-                Settings.school_id).setValue(myUI.getUser().getSchool_id());
+                Settings.school_id).setValue(myUI.getUser().getSchool().getId());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.School)).setValue(myUI.getUser().getSchool_name());
+                myUI.getMessage(SptMessages.School)).setValue(myUI.getUser().getSchool().getName_ru());
     }
 
     private void addDataContainerItem(int id) {
@@ -362,9 +362,9 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         item.getItemProperty(Settings.status_id).setValue(statusSelect.getValue());
         item.getItemProperty(Settings.class_type_id).setValue(classTypeSelect.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
-                myUI.getUser().getSchool_name());
+                myUI.getUser().getSchool().getName_ru());
         item.getItemProperty(Settings.school_id).setValue(
-                myUI.getUser().getSchool_id());
+                myUI.getUser().getSchool().getId());
         item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
@@ -375,7 +375,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         d.setClass_number_id((Integer) classNumberSelect.getValue());
         d.setStatus_id((Integer) statusSelect.getValue());
         d.setClass_type_id((Integer) classTypeSelect.getValue());
-        d.setSchool_id(myUI.getUser().getSchool_id());
+        d.setSchool_id(myUI.getUser().getSchool().getId());
         d.setId(i);
         return d;
     }

@@ -56,7 +56,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         try {
             DbStock dbCon = new DbStock();
             dbCon.connect();
-            dataTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
+            dataTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -297,7 +297,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.school_id).setValue(
-                        myUI.getUser().getSchool_id());
+                        myUI.getUser().getSchool().getId());
     }
 
     private void addDataContainerItem(int id) {
@@ -311,7 +311,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(Settings.school_id).setValue(
-                myUI.getUser().getSchool_id());
+                myUI.getUser().getSchool().getId());
         item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }
@@ -320,7 +320,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
         Stock d = new Stock();
         d.setName(nameTF.getValue());
         d.setStatus_id((Integer) statusSelect.getValue());
-        d.setSchool_id(myUI.getUser().getSchool_id());
+        d.setSchool_id(myUI.getUser().getSchool().getId());
         d.setId(i);
         return d;
     }

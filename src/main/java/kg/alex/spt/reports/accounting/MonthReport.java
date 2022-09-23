@@ -143,8 +143,8 @@ public class MonthReport implements Button.ClickListener,
             try {
                 DbAccCategory dbac = new DbAccCategory();
                 dbac.connect();
-                dbac.execSQL_for_select_as_tree(myUI, "2", outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
-                dbac.execSQL_for_select_as_tree(myUI, "1", incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
+                dbac.execSQL_for_select_as_tree(myUI, "2", outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), false);
+                dbac.execSQL_for_select_as_tree(myUI, "1", incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), false);
                 dbac.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -274,7 +274,7 @@ public class MonthReport implements Button.ClickListener,
                                             schoolsTable, incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                                 } else {
                                     dbTr.execSQL_by_months(myUI, 1,
-                                            myUI.getUser().getSchool_id(),
+                                            myUI.getUser().getSchool().getId(),
                                             incomeCategoriesTable, fromDate, tillDate, incomesDataTable);
                                 }
                                 if (incomesDataTable.getContainerDataSource().size() != 0) {
@@ -289,7 +289,7 @@ public class MonthReport implements Button.ClickListener,
                                     dbTr.execSQL_by_months(myUI, 2, schoolsTable,
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                                 } else {
-                                    dbTr.execSQL_by_months(myUI, 2, myUI.getUser().getSchool_id(),
+                                    dbTr.execSQL_by_months(myUI, 2, myUI.getUser().getSchool().getId(),
                                             outcomeCategoriesTable, fromDate, tillDate, outcomesDataTable);
                                 }
                                 if (outcomesDataTable.getContainerDataSource().size() != 0) {
@@ -340,7 +340,7 @@ public class MonthReport implements Button.ClickListener,
                                     }
                                 }
                                 if (!currentUser.hasRole(Settings.rnAdmin)) {
-                                    SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool_id(), current.getTime(),
+                                    SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(), current.getTime(),
                                             tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
                                             Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.PreviousBalance) + " ("

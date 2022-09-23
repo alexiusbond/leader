@@ -207,7 +207,7 @@ public class DbEmployeeOrder extends BaseDb {
                 cb = edv.createCombobox(0, myUI.getMessage(SptMessages.ClassName), null, true);
                 DbClassName dbcn = new DbClassName();
                 dbcn.connect();
-                cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+                cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
                 dbcn.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -283,7 +283,7 @@ public class DbEmployeeOrder extends BaseDb {
                     cb = edv.createCombobox(0, myUI.getMessage(SptMessages.ClassName), null, true);
                     DbClassName dbcn = new DbClassName();
                     dbcn.connect();
-                    cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+                    cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
                     dbcn.close();
                 } else if (result.getInt("o.id") == 5 || result.getInt("o.id") == 8) {
                     cb = edv.createCombobox(0, myUI.getMessage(SptMessages.School), null, true);
@@ -292,7 +292,7 @@ public class DbEmployeeOrder extends BaseDb {
                     }
                     DbSchool dbs = new DbSchool();
                     dbs.connect();
-                    cb.setContainerDataSource(dbs.execSchoolSel(myUI, myUI.getUser().getSchool_id()));
+                    cb.setContainerDataSource(dbs.execSchoolSel(myUI, myUI.getUser().getSchool().getId()));
                     dbs.close();
                 } else if (result.getInt("o.id") == 1 || result.getInt("o.id") == 2 || result.getInt("o.id") == 7) {
                     cb = edv.createCombobox(0, myUI.getMessage(SptMessages.Position), null, true);

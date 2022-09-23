@@ -83,7 +83,7 @@ public class ClassDiscountsReport implements Button.ClickListener,
         try {
             DbClassName dbCon = new DbClassName();
             dbCon.connect();
-            classTable.setContainerDataSource(dbCon.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            classTable.setContainerDataSource(dbCon.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);

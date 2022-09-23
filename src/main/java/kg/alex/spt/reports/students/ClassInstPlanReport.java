@@ -128,7 +128,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
             classTable.setContainerDataSource(
-                    dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+                    dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);
@@ -201,7 +201,7 @@ public class ClassInstPlanReport implements Button.ClickListener,
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
                 dbsc.close();
 
                 if (st.getScl_accountant_full_name() != null) {

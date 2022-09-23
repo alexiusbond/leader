@@ -269,7 +269,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id(), acc_invoice_type_id, viewName, this));
+            invoicesTable.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId(), acc_invoice_type_id, viewName, this));
             dbCon.close();
             if (invoicesTable.getContainerDataSource().size() != 0) {
                 invoicesTable.setValue(((IndexedContainer) invoicesTable.getContainerDataSource()).firstItemId());
@@ -328,7 +328,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                     dbCon.connect();
                     if (isNew) {
                         Invoice inv = getInvoice(0);
-                        if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool_id(), acc_invoice_type_id, dateDF.getValue(), 0)) {
+                        if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool().getId(), acc_invoice_type_id, dateDF.getValue(), 0)) {
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
                                 insertTransfers(id);
@@ -343,7 +343,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                             Notification.show(myUI.getMessage(SptMessages.ExistsInvoiceNotification), Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
-                        if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool_id(), acc_invoice_type_id, dateDF.getValue(), invID)) {
+                        if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool().getId(), acc_invoice_type_id, dateDF.getValue(), invID)) {
                             int status = 0;
                             Invoice inv = getInvoice(invID);
                             try {
@@ -393,7 +393,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
 
                                             DbInvoice dbCon = new DbInvoice();
                                             dbCon.connect();
-                                            if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool_id(), acc_invoice_type_id, current.getTime(), 0)) {
+                                            if (acc_invoice_type_id == 1 || !dbCon.isExists(myUI.getUser().getSchool().getId(), acc_invoice_type_id, current.getTime(), 0)) {
                                                 Invoice inv = getInvoice(0);
                                                 inv.setCreation_date(current.getTime());
                                                 int id = dbCon.exec_insert(inv);
@@ -515,7 +515,12 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                             cell.setCellValue(cb.getItemCaption(cb.getValue()));
                         } else if (component instanceof TextField) {
                             TextField tf = (TextField) component;
-                            cell.setCellValue(tf.getValue());
+                            if (tf.getPropertyDataSource() != null &&
+                                    tf.getPropertyDataSource().getValue() instanceof Number) {
+                                cell.setCellValue((Double) tf.getPropertyDataSource().getValue());
+                            } else {
+                                cell.setCellValue(tf.getValue());
+                            }
                         } else {
                             cell.setCellValue((i + 1) + "");
                         }
@@ -733,7 +738,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool_id(), acc_invoice_type_id) + 1);
+            inv.setInvoice_number(dbCon.execSQL_max_invoice_number(myUI.getUser().getSchool().getId(), acc_invoice_type_id) + 1);
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -747,7 +752,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         }
         inv.setAcc_invoice_type_id(acc_invoice_type_id);
         inv.setCreation_date(dateDF.getValue());
-        inv.setSchool_id(myUI.getUser().getSchool_id());
+        inv.setSchool_id(myUI.getUser().getSchool().getId());
         inv.setEmployee_id(myUI.getUser().getId());
         inv.setId(i);
         return inv;
@@ -941,7 +946,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            cb.setContainerDataSource(dbCon.exec_for_select(myUI, getAcc_category_type_id(), myUI.getUser().getSchool_id(),
+            cb.setContainerDataSource(dbCon.exec_for_select(myUI, getAcc_category_type_id(), myUI.getUser().getSchool().getId(),
                     acc_invoice_type_id != 1));
             dbCon.close();
         } catch (Exception e) {
@@ -986,7 +991,7 @@ public class TransfersView extends HorizontalSplitPanel implements Button.ClickL
                     myUI.getMessage(SptMessages.Amount)};
             DbTransfers dbCon = new DbTransfers();
             dbCon.connect();
-            transfersTable.setContainerDataSource(dbCon.execSQL(myUI, invID, myUI.getUser().getSchool_id(), acc_invoice_type_id, this));
+            transfersTable.setContainerDataSource(dbCon.execSQL(myUI, invID, myUI.getUser().getSchool().getId(), acc_invoice_type_id, this));
             dbCon.close();
             transfersTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_TRANSFERS);
             transfersTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Category), 1);

@@ -10,6 +10,9 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.money.WritableSummRu;
+import kg.alex.spt.utils.money.WritableSummRuSOM;
+import kg.alex.spt.utils.money.WritableSummRuUSD;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

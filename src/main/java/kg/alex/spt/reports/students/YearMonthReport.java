@@ -346,7 +346,7 @@ public class YearMonthReport implements Button.ClickListener,
                     if (currentUser.hasRole(Settings.rnAdmin)) {
                         school_ids = Settings.convertCollectionToStr((Set<?>) schoolTable.getValue());
                     } else {
-                        school_ids = myUI.getUser().getSchool_id() + "";
+                        school_ids = myUI.getUser().getSchool().getId() + "";
                     }
                     if (school_ids != null) {
                         if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Yearly))) {
@@ -385,7 +385,7 @@ public class YearMonthReport implements Button.ClickListener,
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
                 dbsc.close();
                 if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null

@@ -133,7 +133,7 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
-            classTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            classTable.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);

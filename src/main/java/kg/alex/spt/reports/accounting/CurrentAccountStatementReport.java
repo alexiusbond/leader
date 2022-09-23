@@ -68,7 +68,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, "2", employeeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
+            dbac.execSQL_for_select_as_tree(myUI, "2", employeeCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
@@ -171,7 +171,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
                     dbat.exec_current_account_state(myUI, (Integer) employeeCategoriesTable.getValue(), fromDateDF.getValue(),
-                            tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool_id());
+                            tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
 
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Accrual), Table.Align.RIGHT);
@@ -193,7 +193,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
                 dbsc.close();
                 if (st.getScl_address() != null && st.getScl_phone() != null
                         && st.getScl_name_ru() != null) {

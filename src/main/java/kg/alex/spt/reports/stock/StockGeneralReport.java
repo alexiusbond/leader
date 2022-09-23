@@ -132,7 +132,7 @@ public class StockGeneralReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolSelect.setValue(myUI.getUser().getSchool_id());
+        schoolSelect.setValue(myUI.getUser().getSchool().getId());
 
         selectAllBtn = new Button(myUI.getMessage(SptMessages.AllCategories));
         selectAllBtn.setWidth(Settings.PERCENTS100);

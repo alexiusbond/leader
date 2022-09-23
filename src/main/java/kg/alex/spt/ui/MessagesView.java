@@ -47,7 +47,7 @@ public class MessagesView extends VerticalLayout {
             DbEmployeeMessage dbCon = new DbEmployeeMessage();
             dbCon.connect();
             if (currentUser.isPermitted(Settings.cnMessagesView + ":" + Settings.actReadMessages)) {
-                dbCon.execSQL(myUI, myUI.getUser().getId(), myUI.getUser().getSchool_id(), dataTable);
+                dbCon.execSQL(myUI, myUI.getUser().getId(), myUI.getUser().getSchool().getId(), dataTable);
             } else {
                 dbCon.execSQL(myUI, myUI.getUser().getId(), 0, dataTable);
             }

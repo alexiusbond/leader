@@ -7,6 +7,7 @@ package kg.alex.spt.dao;
 
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Definition;
+import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.UserDetails;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -49,9 +50,10 @@ public class DbUserDetails extends BaseDb {
             user.setLogin(result.getString("login"));
             user.setFullName(result.getString("fullname"));
             user.setWorking_status_id(result.getInt("ord.working_status_id"));
-            user.setSchool_id(result.getInt("eo.school_id"));
-            user.setSchool_name(result.getString("sch.name_ru"));
-            user.setSchool_logo(result.getString("sch.photo"));
+            user.setSchool(new School());
+            user.getSchool().setId(result.getInt("eo.school_id"));
+            user.getSchool().setName_ru(result.getString("sch.name_ru"));
+            user.getSchool().setPhoto(result.getString("sch.photo"));
             user.setBranch_id(result.getInt("eb.hr_branch_id"));
             user.setPosition_id(result.getInt("pos.id"));
             if (currentUser.hasRole(Settings.rnSapatSecretary)) {

@@ -119,8 +119,8 @@ public class DateReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, "2, 5", outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
-            dbac.execSQL_for_select_as_tree(myUI, "1, 5", incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), false);
+            dbac.execSQL_for_select_as_tree(myUI, "2, 5", outcomeCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), false);
+            dbac.execSQL_for_select_as_tree(myUI, "1, 5", incomeCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
@@ -261,7 +261,7 @@ public class DateReport implements Button.ClickListener,
                             DbAccTransactions dbsc = new DbAccTransactions();
                             dbsc.connect();
                             incomesDataTable.setContainerDataSource(dbsc.exec_report_by_date(myUI, 1,
-                                    myUI.getUser().getSchool_id(), fromDateDF.getValue(), tillDateDF.getValue(),
+                                    myUI.getUser().getSchool().getId(), fromDateDF.getValue(), tillDateDF.getValue(),
                                     incomeCategoriesTable));
                             incomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                             incomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
@@ -288,7 +288,7 @@ public class DateReport implements Button.ClickListener,
                             DbAccTransactions dbsc = new DbAccTransactions();
                             dbsc.connect();
                             outcomesDataTable.setContainerDataSource(dbsc.exec_report_by_date(myUI, 2,
-                                    myUI.getUser().getSchool_id(), fromDateDF.getValue(), tillDateDF.getValue(),
+                                    myUI.getUser().getSchool().getId(), fromDateDF.getValue(), tillDateDF.getValue(),
                                     outcomeCategoriesTable));
 
                             outcomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
@@ -305,7 +305,7 @@ public class DateReport implements Button.ClickListener,
                     try {
                         DbAccTransactions dbtr = new DbAccTransactions();
                         dbtr.connect();
-                        schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool_id(), fromDateDF.getValue(),
+                        schoolAcc = dbtr.exec_get_totals(myUI.getUser().getSchool().getId(), fromDateDF.getValue(),
                                 tillDateDF.getValue(), Settings.convertCollectionToStr(catIds));
                         incomeTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat2.format(
                                 schoolAcc.getTotal_income()) + "$</b>");
@@ -334,7 +334,7 @@ public class DateReport implements Button.ClickListener,
                 c.add(Calendar.DAY_OF_MONTH, -1);
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool_id());
+                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
                 dbsc.close();
                 if (st.getScl_accountant_full_name() != null) {
                     if (st.getScl_address() != null && st.getScl_phone() != null

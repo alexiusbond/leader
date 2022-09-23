@@ -110,7 +110,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
             logger.catching(e);
         }
         if (!currentUser.hasRole(Settings.rnBank)) {
-            schoolSelect.setValue(myUI.getUser().getSchool_id());
+            schoolSelect.setValue(myUI.getUser().getSchool().getId());
         }
         schoolSelect.setVisible(currentUser.hasRole(Settings.rnBank));
 

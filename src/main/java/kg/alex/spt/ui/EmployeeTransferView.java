@@ -197,7 +197,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
             logger.error(e);
             logger.catching(e);
         }
-        school1Select.setValue(myUI.getUser().getSchool_id());
+        school1Select.setValue(myUI.getUser().getSchool().getId());
         school2Select.setValue(((IndexedContainer) school2Select.getContainerDataSource()).nextItemId(school1Select.getValue()));
     }
 

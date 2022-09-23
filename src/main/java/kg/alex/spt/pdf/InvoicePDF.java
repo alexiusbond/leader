@@ -9,6 +9,8 @@ import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.InvoiceInfoPdf;
+import kg.alex.spt.utils.money.WritableSummRu;
+import kg.alex.spt.utils.money.WritableSummRuSOM;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

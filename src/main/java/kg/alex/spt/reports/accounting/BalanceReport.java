@@ -133,8 +133,8 @@ public class BalanceReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, "3", assertsCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), true);
-            dbac.execSQL_for_select_as_tree(myUI, "4", debtsCategoriesTable, Integer.toString(myUI.getUser().getSchool_id()), true);
+            dbac.execSQL_for_select_as_tree(myUI, "3", assertsCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), true);
+            dbac.execSQL_for_select_as_tree(myUI, "4", debtsCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), true);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
@@ -265,7 +265,7 @@ public class BalanceReport implements Button.ClickListener,
                             try {
                                 DbTransfers dbCon = new DbTransfers();
                                 dbCon.connect();
-                                dbCon.exec_report_by_date(myUI, 3, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
+                                dbCon.exec_report_by_date(myUI, 3, myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
                                         assertsDataTable, Settings.convertCollectionToStr(catIds));
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
@@ -280,7 +280,7 @@ public class BalanceReport implements Button.ClickListener,
                             try {
                                 DbInvoice dbCon = new DbInvoice();
                                 dbCon.connect();
-                                assertsDataTable.setId(dbCon.execSQL_Note2(myUI.getUser().getSchool_id(), 3, new java.sql.Date(current.getTime().getTime())));
+                                assertsDataTable.setId(dbCon.execSQL_Note2(myUI.getUser().getSchool().getId(), 3, new java.sql.Date(current.getTime().getTime())));
                                 dbCon.close();
                             } catch (Exception e) {
                                 logger.error(e);
@@ -294,7 +294,7 @@ public class BalanceReport implements Button.ClickListener,
                             try {
                                 DbTransfers dbsc = new DbTransfers();
                                 dbsc.connect();
-                                dbsc.exec_report_by_date(myUI, 4, myUI.getUser().getSchool_id(), current.getTime(), end_date.getTime(),
+                                dbsc.exec_report_by_date(myUI, 4, myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
                                         debtsDataTable, Settings.convertCollectionToStr(catIds));
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
@@ -309,7 +309,7 @@ public class BalanceReport implements Button.ClickListener,
                             try {
                                 DbInvoice dbCon = new DbInvoice();
                                 dbCon.connect();
-                                debtsDataTable.setId(dbCon.execSQL_Note2(myUI.getUser().getSchool_id(), 4, new java.sql.Date(current.getTime().getTime())));
+                                debtsDataTable.setId(dbCon.execSQL_Note2(myUI.getUser().getSchool().getId(), 4, new java.sql.Date(current.getTime().getTime())));
                                 dbCon.close();
                             } catch (Exception e) {
                                 logger.error(e);
@@ -319,7 +319,7 @@ public class BalanceReport implements Button.ClickListener,
                         try {
                             DbTransfers dbtr = new DbTransfers();
                             dbtr.connect();
-                            SchoolAccounting schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool_id(), current.getTime(),
+                            SchoolAccounting schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool().getId(), current.getTime(),
                                     end_date.getTime(), Settings.convertCollectionToStr(catIds));
                             assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " +
                                     Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$</b>");

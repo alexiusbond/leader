@@ -631,7 +631,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
-            classCB.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            classCB.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbcn.close();
         } catch (Exception e) {
             logger.error(e);
@@ -844,7 +844,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue()));
             iip.setKurs((Double) (((TextField) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue()));
-            iip.setSchool_name(myUI.getUser().getSchool_name());
+            iip.setSchool_name(myUI.getUser().getSchool().getName_ru());
             iip.setPaymentCategoryId((Integer) ((ComboBox) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.PaymentCategoryType)).getValue()).getValue());
             iip.setPayment_type(((ComboBox) paymentsTable.getContainerProperty(source.getData(),
@@ -1177,7 +1177,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (amount <= ((StudentPayment) initialPaymentTF.getData()).getAmount()) {
                         DbAccTransactions dbTr = new DbAccTransactions();
                         dbTr.connect();
-                        AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool_id(),
+                        AccTransaction tr = dbTr.exec_low_balance(dbTr.getConnection(), myUI.getUser().getSchool().getId(),
                                 ((StudentPayment) initialPaymentTF.getData()).getModification_date(),
                                 ((StudentPayment) initialPaymentTF.getData()).getAmount(), amount, 1);
                         if (tr != null) {
@@ -1783,7 +1783,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         s.setClass_name_id((Integer) classCB.getValue());
         s.setEdu_status_id((Integer) statusCB.getValue());
         s.setEntering_year_id(myUI.getUser().getCurrent_year().getId());
-        s.setSchool_id(myUI.getUser().getSchool_id());
+        s.setSchool_id(myUI.getUser().getSchool().getId());
         s.setEmployee_id(myUI.getUser().getId());
         s.setId(id);
         return s;
@@ -1793,7 +1793,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbAccTransactions dbt = new DbAccTransactions();
             dbt.connect();
-            AccTransaction acTr = dbt.exec_allow_delete_by_st_id((Integer) studDataTable.getValue(), myUI.getUser().getSchool_id());
+            AccTransaction acTr = dbt.exec_allow_delete_by_st_id((Integer) studDataTable.getValue(), myUI.getUser().getSchool().getId());
             if (acTr != null) {
                 Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(acTr.getOverLimit())
                         + " $ (" + Settings.df.format(acTr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
@@ -2651,7 +2651,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         + studDataTable.getContainerProperty(studDataTable.getValue(),
                         myUI.getMessage(SptMessages.LastName)).getValue().toString());
                 sp.setEmployee_id(myUI.getUser().getId());
-                sp.setSchool_id(myUI.getUser().getSchool_id());
+                sp.setSchool_id(myUI.getUser().getSchool().getId());
                 tr.setAmount(sp.getAmount());
                 tr.setDate(sp.getModification_date());
                 tr.setCategory_id(dbpc.get_initial_payment_category_id());
@@ -2833,7 +2833,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 + studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(SptMessages.LastName)).getValue().toString());
         sp.setEmployee_id(myUI.getUser().getId());
-        sp.setSchool_id(myUI.getUser().getSchool_id());
+        sp.setSchool_id(myUI.getUser().getSchool().getId());
         sp.setModification_date(((DateField) item.getItemProperty(
                 myUI.getMessage(SptMessages.Date)).getValue()).getValue());
         sp.setId(id);
@@ -3443,7 +3443,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbc.connect();
             contractCB.setContainerDataSource(
                     dbc.exec_contr_select(myUI, myUI.getUser().getCurrent_year().getId(),
-                            myUI.getUser().getSchool_id(), contr_id));
+                            myUI.getUser().getSchool().getId(), contr_id));
             dbc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -4475,7 +4475,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         }
                     }
                 }
-                lowBalance = dbat.exec_low_balance(dbat.getConnection(), myUI.getUser().getSchool_id(), date, 0.0, 0.0, 2);
+                lowBalance = dbat.exec_low_balance(dbat.getConnection(), myUI.getUser().getSchool().getId(), date, 0.0, 0.0, 2);
                 dbat.getConnection().rollback();
             } catch (Exception e) {
                 dbat.getConnection().rollback();
@@ -4569,7 +4569,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbc.connect();
             contractCB.setContainerDataSource(
                     dbc.exec_contr_select(myUI, myUI.getUser().getCurrent_year().getId(),
-                            myUI.getUser().getSchool_id(), contract_id));
+                            myUI.getUser().getSchool().getId(), contract_id));
             dbc.close();
         } catch (Exception e) {
             logger.error(e);
@@ -4609,7 +4609,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbStudent dbs = new DbStudent();
             dbs.connect();
             studDataTable.setContainerDataSource(
-                    dbs.execSQL(myUI, myUI.getUser().getSchool_id(), this, edu_st_ids));
+                    dbs.execSQL(myUI, myUI.getUser().getSchool().getId(), this, edu_st_ids));
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
@@ -4625,23 +4625,23 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             dbCon.connect();
             String school_code = (Integer) classCB.getContainerProperty(
                     classCB.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue() < 7 ?
-                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                             myUI.getMessage(SptMessages.PrimaryCode)).getValue().toString() :
-                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                    myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                             myUI.getMessage(SptMessages.SecondaryCode)).getValue().toString();
             String school_level = null;
             if ((Integer) classCB.getContainerProperty(
                     classCB.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue() < 7 &&
-                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                             myUI.getMessage(SptMessages.PrimaryCode)).getValue().equals(
-                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                                     myUI.getMessage(SptMessages.SecondaryCode)).getValue())) {
                 school_level = myUI.getMessage(SptMessages.PrimaryCode);
             } else if ((Integer) classCB.getContainerProperty(
                     classCB.getValue(), myUI.getMessage(SptMessages.ClassNumber)).getValue() >= 7 &&
-                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                    !myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                             myUI.getMessage(SptMessages.PrimaryCode)).getValue().equals(
-                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool_id(),
+                            myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
                                     myUI.getMessage(SptMessages.SecondaryCode)).getValue())) {
                 myUI.getMessage(SptMessages.SecondaryCode);
             }
@@ -4653,7 +4653,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             int order_number = 1;
             do {
                 generated_id = school_code + year_ord + cl + String.format("%03d", dbCon.execSQL_login(myUI,
-                        yearId, myUI.getUser().getSchool_id(), (Integer) classCB.getContainerProperty(
+                        yearId, myUI.getUser().getSchool().getId(), (Integer) classCB.getContainerProperty(
                                 classCB.getValue(), Settings.class_type_id).getValue(),
                         order_number, (Integer) classCB.getContainerProperty(
                                 classCB.getValue(), Settings.min).getValue(),

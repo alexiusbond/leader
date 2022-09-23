@@ -158,7 +158,7 @@ public class GeneralReport implements Button.ClickListener,
             leftGrid.addComponent(schoolsTable, 0, 2, 3, 2);
             leftGrid.setRowExpandRatio(2, 1);
         } else {
-            schoolsTable.setValue(myUI.getUser().getSchool_id());
+            schoolsTable.setValue(myUI.getUser().getSchool().getId());
         }
         leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
         leftGrid.addComponent(PDFBtn, 3, 3);

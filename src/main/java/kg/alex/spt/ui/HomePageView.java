@@ -153,14 +153,14 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label schoolLab = new Label();
         schoolLab.setContentMode(ContentMode.HTML);
         schoolLab.setStyleName(ValoTheme.LABEL_SMALL);
-        schoolLab.setValue(myUI.getUser().getSchool_name());
+        schoolLab.setValue(myUI.getUser().getSchool().getName_ru());
         layout.addComponent(schoolLab);
 
         EmployeesCount emp = new EmployeesCount();
         try {
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
-            emp = dbe.execSQL(myUI.getUser().getSchool_id());
+            emp = dbe.execSQL(myUI.getUser().getSchool().getId());
             dbe.close();
         } catch (Exception e) {
             logger.error(e);
@@ -230,10 +230,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             dbip.connect();
             dbsp.connect();
             week_plan = dbip.execGetWeeklyPlan(myUI.getMessage(SptMessages.Students),
-                    myUI.getUser().getSchool_id(),
+                    myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             week_paid = dbsp.execGetWeeklyPaid(myUI.getMessage(SptMessages.Students),
-                    myUI.getUser().getSchool_id(),
+                    myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             dbip.close();
             dbsp.close();
@@ -277,10 +277,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             dbip.connect();
             dbsp.connect();
             month_plan = dbip.execGetMonthlyPlan(myUI.getMessage(SptMessages.Students),
-                    myUI.getUser().getSchool_id(),
+                    myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             month_paid = dbsp.execGetMonthlyPaid(myUI.getMessage(SptMessages.Students),
-                    myUI.getUser().getSchool_id(),
+                    myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             dbip.close();
             dbsp.close();
@@ -349,7 +349,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         try {
             DbStudent dbst = new DbStudent();
             dbst.connect();
-            ed = dbst.execEduCount(myUI.getUser().getSchool_id(), myUI.getUser().getCurrent_year().getId());
+            ed = dbst.execEduCount(myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId());
             dbst.close();
         } catch (Exception e) {
             logger.error(e);
@@ -416,7 +416,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         try {
             DbStudentContract dbsc = new DbStudentContract();
             dbsc.connect();
-            tc = dbsc.execSQLTotals(myUI.getUser().getSchool_id(),
+            tc = dbsc.execSQLTotals(myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             dbsc.close();
         } catch (Exception ignored) {
@@ -509,7 +509,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         try {
             DbLog dblo = new DbLog();
             dblo.connect();
-            logTable.setContainerDataSource(dblo.execSQL(myUI, myUI.getUser().getSchool_id(), days_int,
+            logTable.setContainerDataSource(dblo.execSQL(myUI, myUI.getUser().getSchool().getId(), days_int,
                     logsTypeSelect.getValue().toString()));
             dblo.close();
         } catch (Exception e) {
@@ -525,7 +525,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             try {
                 DbLog dblo = new DbLog();
                 dblo.connect();
-                logTable.setContainerDataSource(dblo.execSQL(myUI, myUI.getUser().getSchool_id(), 6,
+                logTable.setContainerDataSource(dblo.execSQL(myUI, myUI.getUser().getSchool().getId(), 6,
                         logsTypeSelect.getValue().toString()));
                 logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
                 dblo.close();

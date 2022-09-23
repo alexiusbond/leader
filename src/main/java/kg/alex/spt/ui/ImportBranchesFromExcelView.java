@@ -92,7 +92,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         try {
             DbEmployeeLessons dbCon = new DbEmployeeLessons();
             dbCon.connect();
-            dataTable.setContainerDataSource(dbCon.execSQL(myUI, (Integer) yearSelect.getValue(), myUI.getUser().getSchool_id()));
+            dataTable.setContainerDataSource(dbCon.execSQL(myUI, (Integer) yearSelect.getValue(), myUI.getUser().getSchool().getId()));
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
@@ -216,7 +216,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                 dbDef.connect();
                 for (Object item_id : importTable.getItemIds()) {
                     EmployeeLessons el = new EmployeeLessons();
-                    el.setSchool_id(myUI.getUser().getSchool_id());
+                    el.setSchool_id(myUI.getUser().getSchool().getId());
                     el.setYear_id((Integer) yearSelect.getValue());
                     if (importTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.Hours)).getValue() != null) {
                         el.setHours((Integer) importTable.getContainerProperty(item_id,
@@ -233,7 +233,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
                     if (importTable.getContainerProperty(item_id, myUI.getMessage(SptMessages.LecturerID)).getValue() != null) {
                         int id = 0;
                         try {
-                            id = dbEmp.execSQL_id(myUI.getUser().getSchool_id(), importTable.getContainerProperty(item_id,
+                            id = dbEmp.execSQL_id(myUI.getUser().getSchool().getId(), importTable.getContainerProperty(item_id,
                                     myUI.getMessage(SptMessages.LecturerID)).getValue().toString());
                         } catch (Exception e) {
                             logger.error(e);
@@ -348,7 +348,7 @@ public class ImportBranchesFromExcelView extends HorizontalSplitPanel implements
         try {
             DbEmployeeLessons dbCon = new DbEmployeeLessons();
             dbCon.connect();
-            dbCon.exec_delete(myUI.getUser().getSchool_id(), (Integer) yearSelect.getValue());
+            dbCon.exec_delete(myUI.getUser().getSchool().getId(), (Integer) yearSelect.getValue());
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);

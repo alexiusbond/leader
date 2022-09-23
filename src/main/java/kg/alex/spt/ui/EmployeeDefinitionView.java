@@ -1443,7 +1443,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             DbEmployeeLessons dbel = new DbEmployeeLessons();
             dbel.connect();
             lessonsTable.setContainerDataSource(
-                    dbel.execSQL(myUI, employeeID, myUI.getUser().getSchool_id(), this));
+                    dbel.execSQL(myUI, employeeID, myUI.getUser().getSchool().getId(), this));
             dbel.close();
             lessonsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_LESSONS);
             lessonsTable.setPageLength(lessonsCont.size() > 0 ? lessonsTable.size() : 1);
@@ -1463,7 +1463,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     myUI.getMessage(SptMessages.Note)};
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
             dbeo.connect();
-            supervisionTable.setContainerDataSource(dbeo.execSQL(myUI, employeeID, myUI.getUser().getSchool_id(), this));
+            supervisionTable.setContainerDataSource(dbeo.execSQL(myUI, employeeID, myUI.getUser().getSchool().getId(), this));
             dbeo.close();
             supervisionTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_SUPERVISION);
             supervisionTable.setPageLength(supervisionTable.size() > 0 ? supervisionTable.size() : 1);
@@ -1486,7 +1486,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             DbEmployeeOrder dbeo = new DbEmployeeOrder();
             dbeo.connect();
             ordersTable.setContainerDataSource(
-                    dbeo.execSQL(myUI, employeeID, myUI.getUser().getSchool_id(), currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr), this));
+                    dbeo.execSQL(myUI, employeeID, myUI.getUser().getSchool().getId(), currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr), this));
             dbeo.close();
             ordersTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_ORDERS);
             ordersTable.setColumnExpandRatio(myUI.getMessage(SptMessages.OrderType), 1);
@@ -1723,7 +1723,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             DbEmployee dbe = new DbEmployee();
             dbe.connect();
             employeesDataTable.setContainerDataSource(
-                    dbe.execSQL(myUI, myUI.getUser().getSchool_id(), edu_st_ids, workingStatCont,
+                    dbe.execSQL(myUI, myUI.getUser().getSchool().getId(), edu_st_ids, workingStatCont,
                             currentUser.hasRole(Settings.rnAdmin), currentUser.hasRole(Settings.rnHr),
                             (currentUser.isPermitted(Settings.cnEmployeeDefinitionView
                                     + ":" + Settings.prmViewAllEmployees) ? 0 : myUI.getUser().getBranch_id()), (isMyProfile ? employeeID : 0)));
@@ -1949,7 +1949,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         try {
             DbSalaryCategories dbCon = new DbSalaryCategories();
             dbCon.connect();
-            contractCategoryCB.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool_id()));
+            contractCategoryCB.setContainerDataSource(dbCon.execSQL(myUI, myUI.getUser().getSchool().getId()));
             dbCon.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -2584,7 +2584,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 if (item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue() != null) {
                     employeeExtraInfo.setExtraBranches(item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).getValue().toString());
                 }
-                employeeExtraInfo.setSchool(myUI.getUser().getSchool_name());
+                employeeExtraInfo.setSchool(myUI.getUser().getSchool().getName_ru());
                 employeeExtraInfo.setWorkingStatus(item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).getValue().toString());
                 employeeExtraInfo.setHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue());
                 employeeExtraInfo.setExtraHours((Integer) item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue());
@@ -2678,7 +2678,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 EmployeeOrder eo = new EmployeeOrder();
                                 eo.setOrder_id(1);
                                 eo.setEmployee_id(id);
-                                eo.setSchool_id(myUI.getUser().getSchool_id());
+                                eo.setSchool_id(myUI.getUser().getSchool().getId());
                                 eo.setPosition_id((Integer) mainPositionCB.getValue());
                                 eo.setM_employee_id(myUI.getUser().getId());
                                 eo.setFrom_date(new Date());
@@ -2721,7 +2721,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 ac.setName(employee.getSurname() + " " + employee.getName());
                                 ac.setStatus_id(2);
                                 ac.setType_id(2);
-                                ac.setSchool_id(myUI.getUser().getSchool_id());
+                                ac.setSchool_id(myUI.getUser().getSchool().getId());
                                 ac.setCode(employee.getLogin());
                                 ac.setParent_code(contractCategoryCB.getContainerProperty(contractCategoryCB.getValue(),
                                         myUI.getMessage(SptMessages.Code)).getValue().toString());
@@ -3670,7 +3670,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     Object next = iter.next();
                     EmployeeLessons el = new EmployeeLessons();
                     el.setEmployee_id(employee_id);
-                    el.setSchool_id(myUI.getUser().getSchool_id());
+                    el.setSchool_id(myUI.getUser().getSchool().getId());
                     el.setBranch_id((Integer) ((ComboBox) lessonsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Lesson)).getValue()).getValue());
                     el.setClass_number_id((Integer) ((ComboBox) lessonsTable.getItem(next).getItemProperty(
@@ -3722,7 +3722,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     EmployeeOrder eo = new EmployeeOrder();
                     eo.setEmployee_id(employee_id);
                     eo.setOrder_id(3);
-                    eo.setSchool_id(myUI.getUser().getSchool_id());
+                    eo.setSchool_id(myUI.getUser().getSchool().getId());
                     eo.setPosition_id((Integer) employeesDataTable.getContainerProperty(employee_id, Settings.position_id).getValue());
                     eo.setClass_name_id((Integer) ((ComboBox) supervisionTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.ClassName)).getValue()).getValue());
@@ -3802,7 +3802,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     eo.setEmployee_id(employee_id);
                     eo.setOrder_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.OrderType)).getValue()).getValue());
-                    eo.setSchool_id(myUI.getUser().getSchool_id());
+                    eo.setSchool_id(myUI.getUser().getSchool().getId());
                     eo.setPosition_id((Integer) employeesDataTable.getContainerProperty(employee_id, Settings.position_id).getValue());
                     if (eo.getOrder_id() == 5) {
                         eo.setFrom_to_school_id((Integer) ((ComboBox) ordersTable.getItem(next).getItemProperty(
@@ -3853,7 +3853,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         }
                         if (eo.getOrder_id() == 5) {
                             eo.setSchool_id(eo.getFrom_to_school_id());
-                            eo.setFrom_to_school_id(myUI.getUser().getSchool_id());
+                            eo.setFrom_to_school_id(myUI.getUser().getSchool().getId());
                             eo.setOrder_id(8);
                             dbeo.exec_insert(eo);
                             eo.setOrder_id(5);
@@ -4402,7 +4402,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
-            cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+            cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
             dbcn.close();
         } catch (Exception ex) {
             logger.error(ex);
@@ -5249,7 +5249,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         DbClassName dbcn = new DbClassName();
                         dbcn.connect();
                         orders_extraCB.setContainerDataSource(
-                                dbcn.execClass_sel(myUI, myUI.getUser().getSchool_id()));
+                                dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
                         dbcn.close();
                     } else if ((Integer) ordersCB.getValue() == 5) {
                         orders_extraCB.setVisible(true);
@@ -5259,7 +5259,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         DbSchool dbs = new DbSchool();
                         dbs.connect();
                         orders_extraCB.setContainerDataSource(
-                                dbs.execSchoolSel(myUI, myUI.getUser().getSchool_id()));
+                                dbs.execSchoolSel(myUI, myUI.getUser().getSchool().getId()));
                         dbs.close();
                     } else if ((Integer) ordersCB.getValue() == 1 || (Integer) ordersCB.getValue() == 2
                             || (Integer) ordersCB.getValue() == 7) {

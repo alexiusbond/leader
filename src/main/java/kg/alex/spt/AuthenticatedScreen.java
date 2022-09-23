@@ -148,7 +148,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         schoolSelect.setContainerDataSource(myUI.getSchoolCont());
-        schoolSelect.setValue(myUI.getUser().getSchool_id());
+        schoolSelect.setValue(myUI.getUser().getSchool().getId());
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
 
@@ -475,7 +475,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolModification))) {
                     verticalPanel.setSecondComponent(new SchoolModificationView(
-                            myUI, myUI.getUser().getSchool_id()));
+                            myUI, myUI.getUser().getSchool().getId()));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StudentDefinition))) {
                     verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.IssueStudentOrder))) {
@@ -579,10 +579,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                                 int currentDbYear = 0;
                                 try {
                                     scl.setYear_id((Integer) yearSelect.getValue());
-                                    scl.setId(myUI.getUser().getSchool_id());
+                                    scl.setId(myUI.getUser().getSchool().getId());
                                     DbSchool dbd = new DbSchool();
                                     dbd.connect();
-                                    currentDbYear = dbd.execGetCurrentDbSchoolYear(myUI.getUser().getSchool_id());
+                                    currentDbYear = dbd.execGetCurrentDbSchoolYear(myUI.getUser().getSchool().getId());
                                     if (currentDbYear != (Integer) yearSelect.getValue()) {
                                         st = dbd.execUpdateYear(scl);
                                     } else {
@@ -622,15 +622,15 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             }
         } else if (property == schoolSelect) {
             if (schoolSelect.getValue() != null) {
-                int curSchoolId = myUI.getUser().getSchool_id();
-                String curSchoolName = myUI.getUser().getSchool_name();
+                int curSchoolId = myUI.getUser().getSchool().getId();
+                String curSchoolName = myUI.getUser().getSchool().getName_ru();
                 if (curSchoolId != (Integer) schoolSelect.getValue()
                         && !curSchoolName.equals(schoolSelect.getItemCaption(schoolSelect.getValue()))) {
-                    myUI.getUser().setSchool_id((Integer) schoolSelect.getValue());
-                    myUI.getUser().setSchool_name(schoolSelect.getItemCaption(schoolSelect.getValue()));
+                    myUI.getUser().getSchool().setId((Integer) schoolSelect.getValue());
+                    myUI.getUser().getSchool().setName_ru(schoolSelect.getItemCaption(schoolSelect.getValue()));
                     if (schoolSelect.getContainerProperty(schoolSelect.getValue(),
                             myUI.getMessage(SptMessages.Logo)).getValue() != null) {
-                        myUI.getUser().setSchool_logo(schoolSelect.getContainerProperty(schoolSelect.getValue(),
+                        myUI.getUser().getSchool().setPhoto(schoolSelect.getContainerProperty(schoolSelect.getValue(),
                                 myUI.getMessage(SptMessages.Logo)).getValue().toString());
                     }
                     yearSelect.removeValueChangeListener(this);
@@ -694,7 +694,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.MyInfo)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.SchoolModification)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new SchoolModificationView(myUI, myUI.getUser().getSchool_id()));
+                verticalPanel.setSecondComponent(new SchoolModificationView(myUI, myUI.getUser().getSchool().getId()));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.StudentDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Reports)).toUpperCase())) {
