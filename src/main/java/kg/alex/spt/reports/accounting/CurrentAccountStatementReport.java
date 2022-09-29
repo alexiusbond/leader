@@ -68,7 +68,8 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, "2", employeeCategoriesTable, Integer.toString(myUI.getUser().getSchool().getId()), false);
+            dbac.execSQL_for_select_as_tree(myUI, "2", employeeCategoriesTable,
+                    Integer.toString(myUI.getUser().getSchool().getId()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);

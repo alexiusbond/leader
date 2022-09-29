@@ -645,15 +645,26 @@ public class DbAccTransactions extends BaseDb {
                 Settings.dFormat2.format(ttlInc - ttlExp));
     }
 
-    public double exec_salary_balance(int school_id, int acc_category_id, Date till) throws SQLException {
+    public double exec_salary_balance(int school_id, int acc_category_id, int currency_id, Date till) throws SQLException {
 
-        String sql = "SELECT "
-                + "(SELECT IFNULL(SUM(IF(acr.acc_currency_id != 2, acr.amount / acr.currency_rate, acr.amount)), 0.0) AS amount "
-                + "FROM acc_transfers AS acr "
+        String sql = "SELECT ";
+        if (currency_id == 2) {
+            sql += "(SELECT IFNULL(SUM(IF(acr.acc_currency_id != 2, acr.amount / acr.currency_rate, acr.amount)), 0.0) AS amount ";
+        } else {
+            sql += "(SELECT IFNULL(SUM(IF(acr.acc_currency_id != 1, acr.amount * acr.currency_rate, acr.amount)), 0.0) AS amount ";
+        }
+        sql += "FROM acc_transfers AS acr "
                 + "LEFT JOIN acc_invoice AS inv ON acr.invoice_id = inv.id "
-                + "WHERE acr.acc_category_id = ? AND date(inv.creation_date) < ? AND inv.acc_invoice_type_id = 1 and inv.school_id = ?) - "
-                + "(SELECT IFNULL(SUM(IF(tr.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount)), 0.0) AS amount "
-                + "FROM acc_transactions AS tr WHERE tr.acc_category_id = ? AND date(tr.date_time) < ? and tr.school_id = ?) as balance;";
+                + "WHERE acr.acc_category_id = ? AND date(inv.creation_date) < ? AND inv.acc_invoice_type_id = 1 "
+                + "and inv.school_id = ?) - (SELECT ";
+        if (currency_id == 2) {
+            sql += "IFNULL(SUM(IF(tr.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount)), 0.0) AS amount ";
+        } else {
+            sql += "IFNULL(SUM(IF(tr.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount)), 0.0) AS amount ";
+        }
+        sql += "FROM acc_transactions AS tr WHERE tr.acc_category_id = ? AND date(tr.date_time) < ? and tr.school_id = ?) "
+                + "as balance;";
+
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_category_id);
         stat.setDate(2, new java.sql.Date(till.getTime()));
@@ -661,6 +672,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, acc_category_id);
         stat.setDate(5, new java.sql.Date(till.getTime()));
         stat.setInt(6, school_id);
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
 
         while (result.next()) {
@@ -712,7 +724,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Payout), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
         int i = 0;
-        double currentBalance = exec_salary_balance(school_id, acc_category_id, from), totalAccruals = 0.0;
+        double currentBalance = exec_salary_balance(school_id, acc_category_id, currency_id, from), totalAccruals = 0.0;
         double prevBalance = currentBalance;
         Item item;
 
@@ -769,6 +781,7 @@ public class DbAccTransactions extends BaseDb {
         Set<Integer> selectedCategoryIds = Settings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
+        logger.info(">> cat ids = " + Settings.convertCollectionToStr(selectedCategoryIds));
         String sql = " SELECT cat.id, IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code) AS code, cat.name AS name, "
                 + "IFNULL(acr.amount_som, 0.0) - IFNULL(tr.amount_som, 0.0) AS remain_som, "
                 + "IFNULL(acr.amount_usd, 0.0) - IFNULL(tr.amount_usd, 0.0) AS remain_usd, "
@@ -822,6 +835,7 @@ public class DbAccTransactions extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
+            logger.info(">>>> result.getInt(cat.id) -> " + result.getInt("cat.id"));
             if (currency_id == 1) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_som"));
                 item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_som"));

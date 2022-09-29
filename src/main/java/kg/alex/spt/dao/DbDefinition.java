@@ -381,7 +381,7 @@ public class DbDefinition extends BaseDb {
         if (withTotal) {
             Item item = container.addItem(6);
             item.getItemProperty(Settings.id).setValue(6);
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue("total");
+            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(myUi.getMessage(SptMessages.Total));
         }
 
         return container;

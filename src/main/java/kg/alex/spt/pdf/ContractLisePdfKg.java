@@ -677,6 +677,7 @@ public class ContractLisePdfKg {
                 paragraph.setAlignment(Element.ALIGN_CENTER);
                 paragraph.add(new Phrase("4. Форс-мажор", boldFont));
                 document.add(paragraph);
+
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(30);
                 paragraph.setIndentationLeft(30);

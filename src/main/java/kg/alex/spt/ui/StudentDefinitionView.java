@@ -4524,12 +4524,24 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void repaint() {
-        eduStatTtlLab.setValue("active:" + eduStatCont.getContainerProperty(2, Settings.count).getValue().toString()
-                + "&emsp;" + "pre-registered:" + eduStatCont.getContainerProperty(1, Settings.count).getValue().toString()
-                + "&emsp;" + "not confirmed:" + eduStatCont.getContainerProperty(3, Settings.count).getValue().toString()
-                + "&emsp;" + "graduated:" + eduStatCont.getContainerProperty(5, Settings.count).getValue().toString()
-                + "&emsp;" + "out of:" + eduStatCont.getContainerProperty(4, Settings.count).getValue().toString()
-                + "&emsp;" + "total:" + eduStatCont.getContainerProperty(6, Settings.count).getValue().toString());
+        eduStatTtlLab.setValue(eduStatCont.getContainerProperty(
+                2, myUI.getMessage(SptMessages.Title)).getValue() +
+                ": " + eduStatCont.getContainerProperty(2, Settings.count).getValue().toString()
+                + "&emsp;" + eduStatCont.getContainerProperty(
+                1, myUI.getMessage(SptMessages.Title)).getValue() +
+                ": " + eduStatCont.getContainerProperty(1, Settings.count).getValue().toString()
+                + "&emsp;" + eduStatCont.getContainerProperty(
+                3, myUI.getMessage(SptMessages.Title)).getValue() +
+                ": " + eduStatCont.getContainerProperty(3, Settings.count).getValue().toString()
+                + "&emsp;" + eduStatCont.getContainerProperty(
+                5, myUI.getMessage(SptMessages.Title)).getValue() +
+                ": " + eduStatCont.getContainerProperty(5, Settings.count).getValue().toString()
+                + "&emsp;" + eduStatCont.getContainerProperty(
+                4, myUI.getMessage(SptMessages.Title)).getValue() +
+                ": " + eduStatCont.getContainerProperty(4, Settings.count).getValue().toString()
+                + "&emsp;" + eduStatCont.getContainerProperty(
+                6, myUI.getMessage(SptMessages.Title)).getValue() +
+                ": " + eduStatCont.getContainerProperty(6, Settings.count).getValue().toString());
     }
 
     private void clearContractInfo() {

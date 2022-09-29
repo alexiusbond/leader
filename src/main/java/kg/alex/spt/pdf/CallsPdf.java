@@ -75,14 +75,14 @@ public class CallsPdf {
                     table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassList), fontBold);
+                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Calls), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(9, " "));
                     document.add(spr);
                     document.add(new Paragraph(20, " "));
 
                     //installment plan table
-                    float[] plan_table_colsWidth = {0.1f, 0.3f, 0.3f, 0.15f, 0.65f, 0.27f, 0.27f, 0.27f, 0.51f, 0.47f};
+                    float[] plan_table_colsWidth = {0.1f, 0.3f, 0.3f, 0.15f, 0.5f, 0.23f, 0.23f, 0.26f, 0.96f, 0.25f};
                     PdfPTable t = new PdfPTable(10);
                     t.setWidthPercentage(90f);
                     t.setWidths(plan_table_colsWidth);

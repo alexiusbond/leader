@@ -60,6 +60,8 @@ public class DbStudentDiscount extends BaseDb {
         } else {
             stat.setNull(8, Types.INTEGER);
         }
+        logger.info(d);
+        logger.info(">>> INSERT DISCOUNT " + stat);
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();

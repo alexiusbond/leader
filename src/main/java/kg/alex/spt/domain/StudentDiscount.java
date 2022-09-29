@@ -99,4 +99,20 @@ public class StudentDiscount implements Serializable {
     public void setEmployee_id(int employee_id) {
         this.employee_id = employee_id;
     }
+
+    @Override
+    public String toString() {
+        return ">>>> StudentDiscount{" +
+                "id='" + id + '\'' +
+                ", year_id=" + year_id +
+                ", discount_id=" + discount_id +
+                ", student_id=" + student_id +
+                ", employee_id=" + employee_id +
+                ", free_entry_amount=" + free_entry_amount +
+                ", discount_value=" + discount_value +
+                ", note='" + note + '\'' +
+                ", attachment_id=" + attachment_id +
+                ", attachmentUniqueName='" + attachmentUniqueName + '\'' +
+                '}';
+    }
 }
