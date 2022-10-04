@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 public class ContractTechnicalStuffPdf {
 
@@ -71,7 +72,7 @@ public class ContractTechnicalStuffPdf {
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 table_date.addCell(new Phrase("г. " + this.employeeInfo.getSchool().getCity(), ordBoldFont));
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                table_date.addCell(new Phrase(Settings.dateRu.format(this.employeeInfo.getContractCreationDate()), ordBoldFont));
+                table_date.addCell(new Phrase(Settings.dateRu.format(this.employeeInfo.getContract().getCreationDate()), ordBoldFont));
                 document.add(table_date);
                 document.add(new Paragraph(10, " "));
 
@@ -83,17 +84,16 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("Образовательное учреждение " + this.employeeInfo.getSchool().getName_ru()
+                paragraph.add(new Phrase(this.employeeInfo.getSchool().getName_ru()
                         + ", именуемый в дальнейшем «Работодатель», в лице директора ", ordFont));
-                String fullName;
-                String[] temp = this.employeeInfo.getSchool().getDirector_f_name().split(" ");
-                fullName = temp[0];
+                String fullName = null;
                 try {
-                    if (temp.length > 1) {
-                        fullName = fullName + " " + dcl.DeclineNameGenitive(temp[1], false, false);
-                    }
-                    if (temp.length > 2) {
-                        fullName = fullName + " " + dcl.DeclinePatronymicGenitive(temp[2], null, false, false);
+                    boolean isFeminine = employeeInfo.getDirector().getGender_id() == 2;
+                    fullName = dcl.DeclineSurnameGenitive(employeeInfo.getDirector().getSurname(), isFeminine)
+                            + " " + dcl.DeclineNameGenitive(employeeInfo.getDirector().getName(), isFeminine, false);
+                    if (!Objects.equals(employeeInfo.getDirector().getMiddle_name(), "")) {
+                        fullName += " " + dcl.DeclinePatronymicGenitive(employeeInfo.getDirector().getMiddle_name(),
+                                null, isFeminine, false);
                     }
                 } catch (Exception e) {
                     logger.error(e);
@@ -125,7 +125,7 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.1. Работник принимается на должность _____________________________________________.", ordFont));
+                paragraph.add(new Phrase("1.1. Работник принимается на должность " + employeeInfo.getEmployeePosition() + ".", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -329,7 +329,8 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("3.1. Работнику устанавливается ежемесячный оклад (заработная плата) в размере _________________ сом.", ordFont));
+                paragraph.add(new Phrase("3.1. Работнику устанавливается ежемесячный оклад (заработная плата) в размере "
+                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) + " сом.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(30);
@@ -640,7 +641,9 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("9.8. Договор действует в течение с «___» ___________ 20__ г. по «___» ____________ 20_ г.", ordFont));
+                paragraph.add(new Phrase("9.8. Договор действует в течение с "
+                        + Settings.dateRu.format(employeeInfo.getContract().getFromDate()) + " по "
+                        + Settings.dateRu.format(employeeInfo.getContract().getFromDate()), ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -665,7 +668,7 @@ public class ContractTechnicalStuffPdf {
                 table_info.addCell(new Phrase("Работник:", ordBoldFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 Paragraph text10 = new Paragraph();
-                text10.add(new Phrase("Лицей: " + this.employeeInfo.getSchool().getName_ru(), ordFont));
+                text10.add(new Phrase(this.employeeInfo.getSchool().getName_ru(), ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Подпись.: ________________________", ordFont));

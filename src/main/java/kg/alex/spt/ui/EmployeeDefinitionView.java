@@ -1113,6 +1113,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             contractsTable.setContainerDataSource(dbCon.execSQL(myUI, employeeID, this));
             dbCon.close();
             contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
+            contractsTable.setColumnWidth(Settings.button, 90);
             contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.AgreementType), 1);
         } catch (Exception ex) {
             logger.error(ex);
@@ -3065,8 +3066,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
             EmployeeInfoPdf employeeInfo = new EmployeeInfoPdf();
-            employeeInfo.setContractCreationDate(((DateField) contractsTable.getContainerProperty(source.getData(),
+            employeeInfo.setContract(new EmployeeContract());
+            employeeInfo.getContract().setCreationDate(((DateField) contractsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.CreationDate)).getValue()).getValue());
+            employeeInfo.getContract().setFromDate(((DateField) contractsTable.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.Start)).getValue()).getValue());
+            employeeInfo.getContract().setTillDate(((DateField) contractsTable.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.End)).getValue()).getValue());
+            employeeInfo.getContract().setSalary(
+                    ((Double) ((TextField) contractsTable.getItem(source.getData()).getItemProperty(
+                            myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getPropertyDataSource().getValue()));
+            employeeInfo.setEmployeeName(nameTF.getValue());
+            employeeInfo.setEmployeeSurname(surnameTF.getValue());
+            employeeInfo.setEmployeeMiddleName(middleNameTF.getValue());
+            employeeInfo.setEmployeePosition(employeesDataTable.getContainerProperty(employeeID,
+                    myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
+            employeeInfo.setEmployeeBranch(employeesDataTable.getContainerProperty(employeeID,
+                    myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
             try {
                 DbEmployee dbEmployee = new DbEmployee();
                 dbEmployee.connect();
@@ -3097,6 +3113,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     new ServiceAgreementTechnicalStuffPdf(myUI, employeeInfo);
                     break;
             }
+
         } else if (source == plusOrdersButton) {
             Object last_id = ((IndexedContainer) ordersTable.getContainerDataSource()).lastItemId();
             if (!(ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
@@ -3314,6 +3331,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             myUI.getMessage(SptMessages.Start)).getValue()).getValue());
                     ec.setTillDate(((DateField) contractsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.End)).getValue()).getValue());
+                    ec.setCreationDate(((DateField) contractsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.CreationDate)).getValue()).getValue());
                     ec.setContract_type_id(((Integer) ((ComboBox) contractsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue()));
                     if (contractsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()

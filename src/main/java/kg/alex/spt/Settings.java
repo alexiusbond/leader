@@ -344,7 +344,7 @@ public class Settings implements Serializable {
     public static final String KGS = "KGS";
     public static final String USD = "USD";
     public static final SimpleDateFormat dateRu = new SimpleDateFormat(
-            "«dd» MMMMM yyyy год", new DateFormatSymbols() {
+            "«dd» MMMMM yyyy г.", new DateFormatSymbols() {
         @Override
         public String[] getMonths() {
             return new String[]{"января", "февраля", "марта", "апреля", "мая", "июня",

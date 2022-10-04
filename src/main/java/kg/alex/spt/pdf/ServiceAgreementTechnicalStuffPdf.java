@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 public class ServiceAgreementTechnicalStuffPdf {
 
@@ -68,7 +69,7 @@ public class ServiceAgreementTechnicalStuffPdf {
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 table_date.addCell(new Phrase("г. " + this.employeeInfo.getSchool().getCity(), ordBoldFont));
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                table_date.addCell(new Phrase(Settings.dateRu.format(this.employeeInfo.getContractCreationDate()), ordBoldFont));
+                table_date.addCell(new Phrase(Settings.dateRu.format(this.employeeInfo.getContract().getCreationDate()), ordBoldFont));
                 document.add(table_date);
                 document.add(new Paragraph(10, " "));
 
@@ -80,17 +81,16 @@ public class ServiceAgreementTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("Образовательное учреждение " + this.employeeInfo.getSchool().getName_ru()
+                paragraph.add(new Phrase(this.employeeInfo.getSchool().getName_ru()
                         + ", именуемый  в  дальнейшем  «Заказчик»,  в лице директора ", ordFont));
-                String fullName;
-                String[] temp = this.employeeInfo.getSchool().getDirector_f_name().split(" ");
-                fullName = temp[0];
+                String fullName = null;
                 try {
-                    if (temp.length > 1) {
-                        fullName = fullName + " " + dcl.DeclineNameGenitive(temp[1], false, false);
-                    }
-                    if (temp.length > 2) {
-                        fullName = fullName + " " + dcl.DeclinePatronymicGenitive(temp[2], null, false, false);
+                    boolean isFeminine = employeeInfo.getDirector().getGender_id() == 2;
+                    fullName = dcl.DeclineSurnameGenitive(employeeInfo.getDirector().getSurname(), isFeminine)
+                            + " " + dcl.DeclineNameGenitive(employeeInfo.getDirector().getName(), isFeminine, false);
+                    if (!Objects.equals(employeeInfo.getDirector().getMiddle_name(), "")) {
+                        fullName += " " + dcl.DeclinePatronymicGenitive(employeeInfo.getDirector().getMiddle_name(),
+                                null, isFeminine, false);
                     }
                 } catch (Exception e) {
                     logger.error(e);
@@ -122,7 +122,8 @@ public class ServiceAgreementTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.1. Исполнитель обязуется по заданию Заказчика оказать услуги в образовательном учреждении _________________________________________________, а Заказчик обязуется принять и оплатить эти услуги.", ordFont));
+                paragraph.add(new Phrase("1.1. Исполнитель обязуется по заданию Заказчика оказать услуги в образовательном учреждении "
+                        + employeeInfo.getSchool().getName_ru() + ", а Заказчик обязуется принять и оплатить эти услуги.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -140,7 +141,9 @@ public class ServiceAgreementTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.3. Исполнитель получает оплату за оказанные услуги, согласно акта выполненных работ _______________________ сом, с учетом всех налогов Кыргызской Республики.", ordFont));
+                paragraph.add(new Phrase("1.3. Исполнитель получает оплату за оказанные услуги, согласно акта выполненных работ "
+                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) +
+                        " сом, с учетом всех налогов Кыргызской Республики.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -167,7 +170,9 @@ public class ServiceAgreementTechnicalStuffPdf {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("2.1. Настоящий договор заключается на определенный срок и действует с “____”_________________20___ года по “____”_________________20___ года.", ordFont));
+                paragraph.add(new Phrase("2.1. Настоящий договор заключается на определенный срок и действует с "
+                        + Settings.dateRu.format(employeeInfo.getContract().getFromDate()) + " по "
+                        + Settings.dateRu.format(employeeInfo.getContract().getTillDate()), ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -565,6 +570,7 @@ public class ServiceAgreementTechnicalStuffPdf {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("5.1. Исполнитель, заключая настоящий договор, соглашается с тем, что любая интеллектуальная собственность (изобретения, патенты, технологии, “ноу-хау”, коммерческие секреты, авторские права, товарные знаки, фирменные наименования, программное обеспечение, шаблоны, образцы, технические данные, проекты, программы, формулы, гарантии качества, экспериментальные данные, а также любая иная информация, приобретенная в период действия настоящего договора), созданная Исполнителем в процессе оказания услуг Заказчику, является исключительной собственностью Заказчика. Исполнитель передает все права на такую собственность Заказчику.", ordFont));
+                document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
@@ -700,7 +706,7 @@ public class ServiceAgreementTechnicalStuffPdf {
                 table_info.addCell(new Phrase("Исполнитель:", ordBoldFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 Paragraph text10 = new Paragraph();
-                text10.add(new Phrase("Лицей: " + this.employeeInfo.getSchool().getName_ru(), ordFont));
+                text10.add(new Phrase(this.employeeInfo.getSchool().getName_ru(), ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Подпись.: ________________________", ordFont));

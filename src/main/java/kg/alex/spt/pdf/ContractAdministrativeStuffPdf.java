@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 public class ContractAdministrativeStuffPdf {
 
@@ -68,7 +69,7 @@ public class ContractAdministrativeStuffPdf {
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 table_date.addCell(new Phrase("г. " + this.employeeInfo.getSchool().getCity(), ordBoldFont));
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                table_date.addCell(new Phrase(Settings.dateRu.format(this.employeeInfo.getContractCreationDate()), ordBoldFont));
+                table_date.addCell(new Phrase(Settings.dateRu.format(this.employeeInfo.getContract().getCreationDate()), ordBoldFont));
                 document.add(table_date);
                 document.add(new Paragraph(10, " "));
 
@@ -80,17 +81,16 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("Образовательное учреждение " + this.employeeInfo.getSchool().getName_ru()
+                paragraph.add(new Phrase(this.employeeInfo.getSchool().getName_ru()
                         + ", именуемый в дальнейшем «Сторона 1», в лице директора ", ordFont));
-                String fullName;
-                String[] temp = this.employeeInfo.getSchool().getDirector_f_name().split(" ");
-                fullName = temp[0];
+                String fullName = null;
                 try {
-                    if (temp.length > 1) {
-                        fullName = fullName + " " + dcl.DeclineNameGenitive(temp[1], false, false);
-                    }
-                    if (temp.length > 2) {
-                        fullName = fullName + " " + dcl.DeclinePatronymicGenitive(temp[2], null, false, false);
+                    boolean isFeminine = employeeInfo.getDirector().getGender_id() == 2;
+                    fullName = dcl.DeclineSurnameGenitive(employeeInfo.getDirector().getSurname(), isFeminine)
+                            + " " + dcl.DeclineNameGenitive(employeeInfo.getDirector().getName(), isFeminine, false);
+                    if (!Objects.equals(employeeInfo.getDirector().getMiddle_name(), "")) {
+                        fullName += " " + dcl.DeclinePatronymicGenitive(employeeInfo.getDirector().getMiddle_name(),
+                                null, isFeminine, false);
                     }
                 } catch (Exception e) {
                     logger.error(e);
@@ -140,7 +140,8 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.3. Дата начала работы по настоящему трудовому договору: «___» _____________20__ г.", ordFont));
+                paragraph.add(new Phrase("1.3. Дата начала работы по настоящему трудовому договору: "
+                        + Settings.dateRu.format(employeeInfo.getContract().getFromDate()), ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -149,7 +150,8 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.4. Срок действия настоящего трудового договора истекает «___» ______________20__ г.", ordFont));
+                paragraph.add(new Phrase("1.4. Срок действия настоящего трудового договора истекает "
+                        + Settings.dateRu.format(employeeInfo.getContract().getTillDate()), ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -599,6 +601,7 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("5.1. Стороне 2 выплачиваются:", ordFont));
+                document.add(paragraph);
 
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(35);
@@ -606,7 +609,8 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("а) месячный должностной оклад в размере ____________________________________ сом.", ordFont));
+                paragraph.add(new Phrase("а) месячный должностной оклад в размере "
+                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) + " сом.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -897,7 +901,7 @@ public class ContractAdministrativeStuffPdf {
                 table_info.addCell(new Phrase("Сторона 2:", ordBoldFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 Paragraph text10 = new Paragraph();
-                text10.add(new Phrase("Лицей: " + this.employeeInfo.getSchool().getName_ru(), ordFont));
+                text10.add(new Phrase(this.employeeInfo.getSchool().getName_ru(), ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Подпись.: ________________________", ordFont));
