@@ -162,8 +162,6 @@ public class DbEmployeeOrder extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-
-
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(Settings.working_status_id, Integer.class, 0);
         container.addContainerProperty(Settings.visible_hr_orders, String.class, null);

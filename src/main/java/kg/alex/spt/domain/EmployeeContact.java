@@ -6,13 +6,41 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class EmployeeContact implements Serializable {
 
     private int employee_id;
     private String email;
     private String address;
+    private String passport;
+    private String passportGiven;
+    private Date passportDate;
     private String birth_place;
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
+    }
+
+    public String getPassportGiven() {
+        return passportGiven;
+    }
+
+    public void setPassportGiven(String passportGiven) {
+        this.passportGiven = passportGiven;
+    }
+
+    public Date getPassportDate() {
+        return passportDate;
+    }
+
+    public void setPassportDate(Date passportDate) {
+        this.passportDate = passportDate;
+    }
 
     public int getEmployee_id() {
         return employee_id;

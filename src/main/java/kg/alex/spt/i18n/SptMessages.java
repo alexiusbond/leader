@@ -130,6 +130,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ValuesCanNotBeCopied = generateId();
     public static final String ValuesCopied = generateId();
     public static final String Number = generateId();
+    public static final String ContractType = generateId();
+    public static final String AgreementType = generateId();
     public static final String DiscountDefinition = generateId();
     public static final String ContractDefinition = generateId();
     public static final String SchoolDefinition = generateId();
@@ -225,6 +227,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String IncomeOrder = generateId();
     public static final String End = generateId();
     public static final String Start = generateId();
+    public static final String CreationDate = generateId();
     public static final String Institution = generateId();
     public static final String BirthPlace = generateId();
     public static final String Date = generateId();
@@ -281,6 +284,8 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String WorkPlace = generateId();
     public static final String Sapat = generateId();
     public static final String Passport = generateId();
+    public static final String PassportGiven = generateId();
+    public static final String PassportDate = generateId();
     public static final String RelativeType = generateId();
     public static final String Relative = generateId();
     public static final String Responsible = generateId();
@@ -291,6 +296,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String FamilyInfo = generateId();
     public static final String Search = generateId();
     public static final String ContactInfo = generateId();
+    public static final String Contracts = generateId();
     public static final String Id = generateId();
     public static final String PreviousYearDebt = generateId();
     public static final String PreviousYearOverpay = generateId();
@@ -452,9 +458,9 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String CambridgeContrRu = generateId();
     public static final String CambridgeContrEn = generateId();
     public static final String CallsReport = generateId();
-    public static final String ContractType = generateId();
     public static final String ContractTypes = generateId();
     public static final String DiscountAmount = generateId();
+    public static final String SalaryAmount = generateId();
     public static final String CorrectionAmount = generateId();
     public static final String CambridgeOshContrRu = generateId();
     public static final String ExportToExcel = generateId();

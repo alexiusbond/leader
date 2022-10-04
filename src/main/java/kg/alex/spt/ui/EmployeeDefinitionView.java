@@ -12,10 +12,7 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.data.validator.*;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
@@ -31,6 +28,7 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.*;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.GenerateRandomString;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -44,11 +42,13 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
 
 import java.io.*;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
+import java.util.Calendar;
 
 /**
  * @author alex
@@ -66,10 +66,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private CheckBox canBeAdvisorCkb, noPhonesCkb, noBranchesCkb, noEducationCkb, noWorkPlacesCkb, noExamsCkb,
             noSeminarsCkb, noCertificatesCkb, noLanguagesCkb, noSpouseEducationCkb, noSpouseWorkPlacesCkb, noChildrenCkb;
     private TextField nameTF, loginTF, passwordTF, surnameTF, middleNameTF,
-            birth_placeTF, emailTF, spouseFullNameTF, spousePhoneTF,
-            spouseHealthNotesTF, hobbiesTF, fobbiesTF;
+            birthPlaceTF, emailTF, spouseFullNameTF, spousePhoneTF,
+            spouseHealthNotesTF, hobbiesTF, fobbiesTF, passportTF, passportGivenTf;
     private TextArea addressTA, healthNotesTA, shortNotesTA;
-    private DateField birthDateDF, gradSchoolStartDF, gradSchoolEndDF;
+    private DateField birthDateDF, gradSchoolStartDF, gradSchoolEndDF, passportDateDF;
     private ComboBox genderCB, nationalityCB, martialStatusCB, mainPositionCB, citizenshipCB,
             spouseHealthCB, healthCB, contractCategoryCB, gradSchoolCB;
     private FormLayout formLay;
@@ -87,6 +87,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
     private final String[] NATURAL_COL_ORDER;
     private String[] NATURAL_COL_ORDER_PHONES;
+    private String[] NATURAL_COL_ORDER_CONTRACTS;
     private String[] NATURAL_COL_ORDER_CHILDREN;
     private String[] NATURAL_COL_ORDER_EDU;
     private String[] NATURAL_COL_ORDER_WORK;
@@ -101,6 +102,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private VerticalLayout infoLay, documentsLay;
     private final GridLayout empSearchLay;
     private GridLayout contactInfoLay;
+    private VerticalLayout contractInfoLay, contractExtraInfoLay;
+    private Button printContractBtn;
     private GridLayout familyInfoLay;
     private GridLayout extraInfoLay;
     private GridLayout achievementsInfoLay;
@@ -117,17 +120,18 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private Embedded photoEmb;
     private IndexedContainer workingStatCont;
     private final Subject currentUser = SecurityUtils.getSubject();
-    private FormattedTable phonesTable, childrenTable, spouseEducationTable, spouseWorkPlacesTable, questioningTable,
+    private FormattedTable phonesTable, contractsTable, childrenTable, spouseEducationTable, spouseWorkPlacesTable, questioningTable,
             examsTable, seminarsTable, certificatesTable, languagesTable, educationTable, workPlacesTable, branchesTable, lessonsTable,
             supervisionTable, permissionTable, ordersTable;
-    private Button plusPhonesButton, plusChildButton, plusSpouseEducationButton, plusSpouseWorkPlacesButton,
+    private Button plusPhonesButton, plusContractButton, plusChildButton, plusSpouseEducationButton, plusSpouseWorkPlacesButton,
             plusExamButton, plusSeminarButton, plusCertificateButton, plusLanguageButton,
             plusEducationButton, plusWorkPlaceButton, plusBranchButton, plusLessonsButton, plusSupervisionButton, plusOrdersButton;
     private int r_table_counter = 1000;
-    private IndexedContainer phonesCont, childrenCont, spouseEducationCont, spouseWorkCont,
+    private IndexedContainer phonesCont, contractsCont, childrenCont, spouseEducationCont, spouseWorkCont,
             educationCont, workPlacesCont, examsCont, languagesCont, seminarsCont,
             certificatesCont, branchesCont, lessonsCont, supervisionCont, permissionCont, ordersCont;
     private final ArrayList<String> delPhoneIds = new ArrayList<>();
+    private final ArrayList<String> delContractIds = new ArrayList<>();
     private final ArrayList<String> delChildIds = new ArrayList<>();
     private final ArrayList<EmployeeEducation> delSpouseEducationIds = new ArrayList<>();
     private final ArrayList<String> delSpouseWorkIds = new ArrayList<>();
@@ -143,6 +147,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private final ArrayList<EmployeeOrder> delOrderIds = new ArrayList<>();
     private SimpleFileDownloader downloader = null;
     private final boolean isMyProfile;
+    private final Date today = new Date();
 
     public EmployeeDefinitionView(final MyVaadinUI myUI, boolean isMyProfile) {
         this.myUI = myUI;
@@ -234,6 +239,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         this.setFirstComponent(leftLay);
 
         buildContactsLayout();
+        buildContractsLayout();
+        buildContractExtraInfoLayout();
         buildFamilyLayout();
         buildExtraLayout();
         buildAchievementsLayout();
@@ -254,6 +261,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         tabs.addTab(contactInfoLay).setCaption(myUI.getMessage(SptMessages.ContactInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContacts) && !isMyProfile) {
             tabs.getTab(contactInfoLay).setVisible(false);
+        }
+        tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(SptMessages.Contracts));
+        if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContracts)) {
+            tabs.getTab(contractInfoLay).setVisible(false);
         }
         tabs.addTab(profInfoLay).setCaption(myUI.getMessage(SptMessages.ProfInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabProfInfo) && !isMyProfile) {
@@ -293,28 +304,25 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         tabs.addSelectedTabChangeListener(
                 (TabSheet.SelectedTabChangeListener) event -> {
                     prepareNormalMode();
-                    if (event.getTabSheet().getSelectedTab() == contactInfoLay
-                            && employeeID != 0) {
+                    if (event.getTabSheet().getSelectedTab() == contactInfoLay && employeeID != 0) {
                         setPhonesTable();
                         setContactFields();
-                    } else if (event.getTabSheet().getSelectedTab() == familyInfoLay
-                            && employeeID != 0) {
+                    } else if (event.getTabSheet().getSelectedTab() == contractInfoLay && employeeID != 0) {
+                        setContractsTable();
+                    } else if (event.getTabSheet().getSelectedTab() == familyInfoLay && employeeID != 0) {
                         setChildrenTable();
                         setEducationTable(spouseEducationTable, 2);
                         setWorkTable(spouseWorkPlacesTable, 2);
                         setSpouseFields();
-                    } else if (event.getTabSheet().getSelectedTab() == extraInfoLay
-                            && employeeID != 0) {
+                    } else if (event.getTabSheet().getSelectedTab() == extraInfoLay && employeeID != 0) {
                         setQuestioningTable();
                         setExtraInfoFields();
-                    } else if (event.getTabSheet().getSelectedTab() == achievementsInfoLay
-                            && employeeID != 0) {
+                    } else if (event.getTabSheet().getSelectedTab() == achievementsInfoLay && employeeID != 0) {
                         setLanguagesTable();
                         setCertificatesTable();
                         setSeminarsTable();
                         setExamsTable();
-                    } else if (event.getTabSheet().getSelectedTab() == profInfoLay
-                            && employeeID != 0) {
+                    } else if (event.getTabSheet().getSelectedTab() == profInfoLay && employeeID != 0) {
                         setEducationTable(educationTable, 1);
                         setWorkTable(workPlacesTable, 1);
                         setBranchesTable();
@@ -354,6 +362,40 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         employeesDataTable.setValue(employeeID);
     }
 
+    private void buildContractsLayout() {
+
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setWidth(Settings.PERCENTS100);
+
+        Label caption = new Label();
+        caption.setSizeFull();
+        caption.setContentMode(ContentMode.HTML);
+        caption.setValue(myUI.getMessage(SptMessages.Contracts));
+        caption.setStyleName("tableCpt");
+
+        plusContractButton = new Button(myUI.getMessage(SptMessages.AddRecord));
+        plusContractButton.setStyleName(ValoTheme.BUTTON_SMALL);
+        plusContractButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        plusContractButton.setIcon(FontAwesome.PLUS_SQUARE);
+        plusContractButton.addClickListener(this);
+
+        hl.addComponent(caption);
+        hl.setSpacing(true);
+        hl.addComponent(plusContractButton);
+        hl.setExpandRatio(caption, 1);
+
+        contractsTable = new FormattedTable(myUI);
+        contractsTable.setSizeFull();
+        contractsTable.setStyleName(ValoTheme.TABLE_SMALL);
+        contractInfoLay = new VerticalLayout();
+        contractInfoLay.setSizeFull();
+        contractInfoLay.setSpacing(true);
+        contractInfoLay.setMargin(true);
+        contractInfoLay.addComponent(hl);
+        contractInfoLay.addComponent(contractsTable);
+        contractInfoLay.setExpandRatio(contractsTable, 1);
+    }
+
     private void buildContactsLayout() {
 
         FormLayout fieldsLayContacts = new FormLayout();
@@ -361,10 +403,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         fieldsLayContacts.setSpacing(false);
         fieldsLayContacts.setMargin(false);
 
-        birth_placeTF = createTextField(null, null, new StringLengthValidator(
+        birthPlaceTF = createTextField(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotificationWrongValue), 1, 250, false), true);
-        birth_placeTF.setCaption(myUI.getMessage(SptMessages.BirthPlace));
-        fieldsLayContacts.addComponent(birth_placeTF);
+        birthPlaceTF.setCaption(myUI.getMessage(SptMessages.BirthPlace));
+        fieldsLayContacts.addComponent(birthPlaceTF);
 
         emailTF = createTextField(null, null, new EmailValidator(myUI.getMessage(SptMessages.NotificationWrongValue)), true);
         emailTF.setCaption(Settings.email);
@@ -379,6 +421,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         addressTA.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotificationWrongValue), 1, 400, false));
         fieldsLayContacts.addComponent(addressTA);
+
+        passportTF = createTextField(null, null, new StringLengthValidator(
+                myUI.getMessage(SptMessages.NotificationWrongValue), null, 20, true), false);
+        passportTF.setNullRepresentation("");
+        passportTF.setCaption(myUI.getMessage(SptMessages.Passport));
+        fieldsLayContacts.addComponent(passportTF);
+
+        passportGivenTf = createTextField(null, null, new StringLengthValidator(
+                myUI.getMessage(SptMessages.NotificationWrongValue), null, 45, true), false);
+        passportGivenTf.setNullRepresentation("");
+        passportGivenTf.setCaption(myUI.getMessage(SptMessages.PassportGiven));
+        fieldsLayContacts.addComponent(passportGivenTf);
+
+        passportDateDF = createDateField(null, null, myUI.getMessage(SptMessages.PassportDate),
+                false, Settings.datePattern, Resolution.DAY);
+        passportDateDF.setRangeEnd(today);
+        fieldsLayContacts.addComponent(passportDateDF);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth(Settings.PERCENTS100);
@@ -1039,6 +1098,28 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
     }
 
+    private void setContractsTable() {
+        contractsTable.setEnabled(true);
+        plusContractButton.setEnabled(true);
+        try {
+            NATURAL_COL_ORDER_CONTRACTS = new String[]{Settings.button,
+                    myUI.getMessage(SptMessages.AgreementType),
+                    myUI.getMessage(SptMessages.SalaryAmount),
+                    myUI.getMessage(SptMessages.CreationDate),
+                    myUI.getMessage(SptMessages.Start),
+                    myUI.getMessage(SptMessages.End)};
+            DbEmployeeContract dbCon = new DbEmployeeContract();
+            dbCon.connect();
+            contractsTable.setContainerDataSource(dbCon.execSQL(myUI, employeeID, this));
+            dbCon.close();
+            contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
+            contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.AgreementType), 1);
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+    }
+
     private void setPhonesTable() {
         phonesTable.setEnabled(true);
         plusPhonesButton.setEnabled(true);
@@ -1519,7 +1600,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             dbec.close();
             if (ec != null) {
                 addressTA.setValue(ec.getAddress());
-                birth_placeTF.setValue(ec.getBirth_place());
+                birthPlaceTF.setValue(ec.getBirth_place());
+                passportTF.setValue(ec.getPassport());
+                passportGivenTf.setValue(ec.getPassportGiven());
+                passportDateDF.setValue(ec.getPassportDate());
                 emailTF.setValue(ec.getEmail());
             } else {
                 clearContactFields();
@@ -1623,6 +1707,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         optionGroup.setEnabled(false);
         employeesDataTable.setEnabled(false);
         contactInfoLay.setEnabled(true);
+        contractInfoLay.setEnabled(true);
         familyInfoLay.setEnabled(true);
         extraInfoLay.setEnabled(true);
         formLay.setEnabled(true);
@@ -1668,6 +1753,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         employeesDataTable.setEnabled(true);
         optionGroup.setEnabled(true);
         contactInfoLay.setEnabled(false);
+        contractInfoLay.setEnabled(false);
         familyInfoLay.setEnabled(false);
         extraInfoLay.setEnabled(false);
         formLay.setEnabled(false);
@@ -1683,6 +1769,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             if (tab.getComponent() == empSearchLay) {
                 tab.setEnabled(true);
             } else if (tab.getComponent() == contactInfoLay) {
+                tab.setEnabled(true);
+            } else if (tab.getComponent() == contractInfoLay) {
                 tab.setEnabled(true);
             } else if (tab.getComponent() == familyInfoLay) {
                 tab.setEnabled(true);
@@ -1889,7 +1977,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         middleNameTF.setCaption(myUI.getMessage(SptMessages.MiddleName));
         formLay.addComponent(middleNameTF);
 
-        birthDateDF = createDateField(new Date(), null, myUI.getMessage(SptMessages.DateOfBirth),
+        birthDateDF = createDateField(today, null, myUI.getMessage(SptMessages.DateOfBirth),
                 true, Settings.datePattern, Resolution.DAY);
         formLay.addComponent(birthDateDF);
 
@@ -2357,7 +2445,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         noPhonesCkb.setEnabled(true);
         addressTA.setValue("");
         emailTF.setValue("");
-        birth_placeTF.setValue("");
+        birthPlaceTF.setValue("");
+        passportTF.setValue("");
+        passportGivenTf.setValue("");
+        passportDateDF.setValue(null);
     }
 
     private void clearSpouseFields() {
@@ -2467,6 +2558,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()) {
             setPhonesTable();
             setContactFields();
+        } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
+            setContractsTable();
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()) {
             setChildrenTable();
             setEducationTable(spouseEducationTable, 2);
@@ -2609,6 +2702,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
             prepareNormalMode();
             delPhoneIds.clear();
+            delContractIds.clear();
             delChildIds.clear();
             delSpouseEducationIds.clear();
             delSpouseWorkIds.clear();
@@ -2628,6 +2722,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 if (validate(leftLay, false)) {
                     if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()
                             && (!validateTable(phonesTable, noPhonesCkb.getValue(), false) || !validate(contactInfoLay, false))) {
+                        Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                                Notification.Type.WARNING_MESSAGE);
+                    } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()
+                            && (!validateTable(contractsTable, true, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()
@@ -2681,7 +2779,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 eo.setSchool_id(myUI.getUser().getSchool().getId());
                                 eo.setPosition_id((Integer) mainPositionCB.getValue());
                                 eo.setM_employee_id(myUI.getUser().getId());
-                                eo.setFrom_date(new Date());
+                                eo.setFrom_date(today);
                                 eo.setCan_not_delete(1);
                                 insertEmployeeOrder(eo);
                                 String roleName = loginTF.getValue();
@@ -2771,6 +2869,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     insertEmployeeContact(getEmployeeContact(employeeID));
                                     setPhonesTable();
                                     setContactFields();
+                                } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
+                                    insertContracts(employeeID);
+                                    setContractsTable();
                                 } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()) {
                                     insertChildren(employeeID);
                                     insertEducation(employeeID, 2, spouseEducationTable, delSpouseEducationIds);
@@ -2934,6 +3035,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             passwordTF.setValue(newPass);
         } else if (source == plusPhonesButton) {
             addPhonesItem();
+        } else if (source == plusContractButton) {
+            addContractItem();
         } else if (source == plusChildButton) {
             addChildItem();
         } else if (source == plusSpouseEducationButton) {
@@ -2958,6 +3061,42 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             addLessonItem();
         } else if (source == plusSupervisionButton) {
             addSupervisionItem();
+        } else if (source == printContractBtn) {
+            int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
+            EmployeeInfoPdf employeeInfo = new EmployeeInfoPdf();
+            employeeInfo.setContractCreationDate(((DateField) contractsTable.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.CreationDate)).getValue()).getValue());
+            try {
+                DbEmployee dbEmployee = new DbEmployee();
+                dbEmployee.connect();
+                employeeInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                dbEmployee.close();
+                DbSchool dbSchool = new DbSchool();
+                dbSchool.connect();
+                employeeInfo.setSchool(dbSchool.execSchool(myUI.getUser().getSchool().getId()));
+                dbSchool.close();
+            } catch (Exception ex) {
+                logger.error(ex);
+                logger.catching(ex);
+            }
+            switch (type_id) {
+                case 1:
+                    new ContractTechnicalStuffPdf(myUI, employeeInfo);
+                    break;
+                case 2:
+                    new ContractAdministrativeStuffPdf(myUI, employeeInfo);
+                    break;
+                case 3:
+                    new ContractAcademicStuffPdf(myUI, employeeInfo);
+                    break;
+                case 4:
+                    new ServiceAgreementAcademicStuffPdf(myUI, employeeInfo);
+                    break;
+                case 5:
+                    new ServiceAgreementTechnicalStuffPdf(myUI, employeeInfo);
+                    break;
+            }
         } else if (source == plusOrdersButton) {
             Object last_id = ((IndexedContainer) ordersTable.getContainerDataSource()).lastItemId();
             if (!(ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
@@ -2974,6 +3113,51 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             phonesTable.removeItem(event.getButton().getData().toString());
             if (phonesTable.size() == 0) {
                 noPhonesCkb.setEnabled(true);
+            }
+        } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
+            if (source.getDescription().equals(myUI.getMessage(SptMessages.DeleteButton))) {
+                delContractIds.add(source.getData().toString());
+                contractsTable.removeItem(event.getButton().getData().toString());
+            } else if (source.getDescription().equals(myUI.getMessage(SptMessages.Print))) {
+                printContractBtn.setData(source.getData());
+                /*contractPositionTF.setValue("");
+                contractBasedOnTF.setValue("");
+                landingPointTF.setValue("");
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.HOUR_OF_DAY, 8);
+                c.set(Calendar.MINUTE, 0);
+                landingTimeDF.setValue(c.getTime());
+                if ((Integer) cb.getContainerProperty(cb.getValue(), Settings.type_id).getValue() == 1) {
+                    contractPositionTF.setVisible(false);
+                    contractBasedOnTF.setVisible(false);
+                    landingPointTF.setVisible(true);
+                    landingTimeDF.setVisible(true);
+                    if (servicesTable.getContainerProperty(source.getId(),
+                            myUI.getMessage(AkbarsMessages.LandingTime)).getValue() != null) {
+                        landingTimeDF.setValue((Date) servicesTable.getContainerProperty(source.getId(),
+                                myUI.getMessage(AkbarsMessages.LandingTime)).getValue());
+                    }
+                    if (servicesTable.getContainerProperty(source.getId(),
+                            myUI.getMessage(AkbarsMessages.LandingPoint)).getValue() != null) {
+                        landingPointTF.setValue(servicesTable.getContainerProperty(source.getId(),
+                                myUI.getMessage(AkbarsMessages.LandingPoint)).getValue().toString());
+                    }
+                } else {
+                    contractPositionTF.setVisible(true);
+                    contractBasedOnTF.setVisible(true);
+                    if (servicesTable.getContainerProperty(source.getId(),
+                            myUI.getMessage(AkbarsMessages.ContractPosition)).getValue() != null) {
+                        contractPositionTF.setValue(servicesTable.getContainerProperty(source.getId(),
+                                myUI.getMessage(AkbarsMessages.ContractPosition)).getValue().toString());
+                    }
+                    if (servicesTable.getContainerProperty(source.getId(),
+                            myUI.getMessage(AkbarsMessages.ContractBasedOn)).getValue() != null) {
+                        contractBasedOnTF.setValue(servicesTable.getContainerProperty(source.getId(),
+                                myUI.getMessage(AkbarsMessages.ContractBasedOn)).getValue().toString());
+                    }
+                    landingPointTF.setVisible(false);
+                    landingTimeDF.setVisible(false);
+                }*/
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeChildren)) {
             delChildIds.add(source.getData().toString());
@@ -3107,6 +3291,48 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         };
         return new StreamResource(source, inputFile.getName());
+    }
+
+    private void insertContracts(int employee_id) {
+        try {
+            DbEmployeeContract dbCon = new DbEmployeeContract();
+            dbCon.connect();
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            if (delContractIds.size() > 0) {
+                for (String contractId : delContractIds) {
+                    dbd.exec_delete(contractId, Settings.dbEmployeeContract);
+                }
+            }
+            if (contractsTable.getContainerDataSource().size() > 0) {
+                for (Object next : contractsTable.getItemIds()) {
+                    EmployeeContract ec = new EmployeeContract();
+                    ec.setEmployee_id(employee_id);
+                    ec.setSalary((Double) ((TextField) contractsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getPropertyDataSource().getValue());
+                    ec.setFromDate(((DateField) contractsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.Start)).getValue()).getValue());
+                    ec.setTillDate(((DateField) contractsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.End)).getValue()).getValue());
+                    ec.setContract_type_id(((Integer) ((ComboBox) contractsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue()));
+                    if (contractsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                            .equals(myUI.getMessage(SptMessages.Update))) {
+                        ec.setId(Integer.parseInt(next.toString()));
+                        dbCon.exec_update(ec);
+                    } else if (contractsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
+                            .equals(myUI.getMessage(SptMessages.Insert))) {
+                        dbCon.exec_insert(ec);
+                    }
+                }
+            }
+            delContractIds.clear();
+            dbCon.close();
+            dbd.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
     }
 
     private void insertPhones(int employee_id) {
@@ -3916,6 +4142,45 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
     }
 
+    private void addContractItem() {
+        NATURAL_COL_ORDER_CONTRACTS = new String[]{Settings.button,
+                myUI.getMessage(SptMessages.AgreementType),
+                myUI.getMessage(SptMessages.SalaryAmount),
+                myUI.getMessage(SptMessages.CreationDate),
+                myUI.getMessage(SptMessages.Start),
+                myUI.getMessage(SptMessages.End)};
+        String id = Settings.FreshItem + (--r_table_counter);
+        if (contractsTable.getContainerDataSource().size() == 0) {
+            contractsTable.setContainerDataSource(prepareContractsContainer());
+        }
+        Item item;
+        item = ((IndexedContainer) contractsTable.getContainerDataSource()).addItemAt(
+                contractsTable.getContainerDataSource().size(), id);
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setSpacing(true);
+        hl.addComponent(createButton(myUI.getMessage(SptMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
+        item.getItemProperty(Settings.button).setValue(hl);
+        item.getItemProperty(myUI.getMessage(SptMessages.AgreementType)).setValue(
+                createCombobox(0, myUI.getMessage(SptMessages.AgreementType), Settings.dbContractType, true));
+        item.getItemProperty(myUI.getMessage(SptMessages.SalaryAmount)).setValue(
+                createTextFieldWithProperty(null, myUI.getMessage(SptMessages.SalaryAmount),
+                        new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
+                                0.01, null), new ObjectProperty<>(0.0),
+                        Settings.getStringToDoubleConverter(2)));
+        item.getItemProperty(myUI.getMessage(SptMessages.CreationDate)).setValue(
+                createDateField(today, myUI.getMessage(SptMessages.CreationDate), null, true,
+                        Settings.datePattern, Resolution.DAY));
+        item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(
+                createDateField(null, myUI.getMessage(SptMessages.Start), null, true,
+                        Settings.datePattern, Resolution.DAY));
+        item.getItemProperty(myUI.getMessage(SptMessages.End)).setValue(
+                createDateField(null, myUI.getMessage(SptMessages.End), null, true,
+                        Settings.datePattern, Resolution.DAY));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.AgreementType), 1);
+        contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
+    }
+
     private void addPhonesItem() {
         noPhonesCkb.setEnabled(false);
         NATURAL_COL_ORDER_PHONES = new String[]{Settings.button,
@@ -4408,9 +4673,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             logger.error(ex);
             logger.catching(ex);
         }
-        DateField df = createDateField(new Date(), myUI.getMessage(SptMessages.FromDate), null, true,
+        DateField df = createDateField(today, myUI.getMessage(SptMessages.FromDate), null, true,
                 Settings.datePattern, Resolution.DAY);
-        df.setRangeEnd(new Date());
+        df.setRangeEnd(today);
         item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
         df = createDateField(null, myUI.getMessage(SptMessages.TillDate), null,
                 false, Settings.datePattern, Resolution.DAY);
@@ -4459,10 +4724,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         cb.setVisible(false);
         cb.setRequired(false);
         item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(cb);
-        DateField df = createDateField(new Date(),
-                myUI.getMessage(SptMessages.FromDate), null, true,
+        DateField df = createDateField(today, myUI.getMessage(SptMessages.FromDate), null, true,
                 Settings.datePattern, Resolution.DAY);
-        df.setRangeEnd(new Date());
+        df.setRangeEnd(today);
         item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
         df = createDateField(null, myUI.getMessage(SptMessages.TillDate), null,
                 false, Settings.datePattern, Resolution.DAY);
@@ -4587,6 +4851,22 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         btn.addClickListener(this);
 
         return btn;
+    }
+
+    public IndexedContainer prepareContractsContainer() {
+        if (contractsCont == null) {
+            contractsCont = new IndexedContainer();
+            contractsCont.addContainerProperty(Settings.button, HorizontalLayout.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.AgreementType), ComboBox.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.SalaryAmount), TextField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.CreationDate), DateField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.Start), DateField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.End), DateField.class, null);
+            contractsCont.addContainerProperty(Settings.crud_status, String.class, null);
+        } else {
+            contractsCont.removeAllItems();
+        }
+        return contractsCont;
     }
 
     public IndexedContainer preparePhonesContainer() {
@@ -4982,7 +5262,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         ec.setEmployee_id(employee_id);
         ec.setEmail(emailTF.getValue());
         ec.setAddress(addressTA.getValue());
-        ec.setBirth_place(birth_placeTF.getValue());
+        ec.setBirth_place(birthPlaceTF.getValue());
+        ec.setPassport(passportTF.getValue());
+        ec.setPassportGiven(passportGivenTf.getValue());
+        ec.setPassportDate(passportDateDF.getValue());
         return ec;
     }
 
@@ -5292,5 +5575,24 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 }
             }
         }
+    }
+
+    private void buildContractExtraInfoLayout() {
+        contractExtraInfoLay = new VerticalLayout();
+        contractExtraInfoLay.setSpacing(true);
+        contractExtraInfoLay.setMargin(true);
+
+        printContractBtn = new Button(myUI.getMessage(SptMessages.Print));
+        printContractBtn.setStyleName(ValoTheme.BUTTON_SMALL);
+        printContractBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        printContractBtn.setIcon(FontAwesome.PRINT);
+        printContractBtn.addClickListener(this);
+        contractExtraInfoLay.addComponent(printContractBtn);
+        contractExtraInfoLay.setComponentAlignment(printContractBtn, Alignment.BOTTOM_RIGHT);
+
+    }
+
+    public VerticalLayout getContractExtraInfoLay() {
+        return contractExtraInfoLay;
     }
 }

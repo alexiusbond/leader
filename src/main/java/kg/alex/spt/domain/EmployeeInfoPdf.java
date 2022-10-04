@@ -13,9 +13,18 @@ public class EmployeeInfoPdf implements Serializable {
     private String employeeSurname;
     private String employeeMiddleName;
     private School school;
+    private Employee director;
     private boolean isEmployeeFemininity;
     private int contractNumber;
     private Date contractCreationDate;
+
+    public Employee getDirector() {
+        return director;
+    }
+
+    public void setDirector(Employee director) {
+        this.director = director;
+    }
 
     public String getEmployeeName() {
         return employeeName;

@@ -865,4 +865,29 @@ public class DbEmployee extends BaseDb {
         }
         return 0;
     }
+
+    public Employee exec_by_position_id(int position_id, int school_id) throws SQLException {
+        Employee employee = null;
+        String sql = "SELECT e.id, e.name, e.surname, e.middle_name, e.gender_id " +
+                "FROM hr_employee_order AS eo " +
+                "LEFT JOIN employee AS e ON eo.employee_id = e.id " +
+                "LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id " +
+                "LEFT JOIN position AS pos ON p.id = pos.hr_position_id " +
+                "WHERE eo.hr_orders_id IN (1, 2) AND " +
+                "(eo.to_date IS NULL OR eo.to_date >= NOW()) AND pos.id = ? and eo.school_id = ? LIMIT 1";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, position_id);
+        stat.setInt(2, school_id);
+        System.out.println(stat);
+        ResultSet result = stat.executeQuery();
+        while (result.next()) {
+            employee = new Employee();
+            employee.setId(result.getInt("e.id"));
+            employee.setGender_id(result.getInt("e.gender_id"));
+            employee.setSurname(result.getString("e.surname"));
+            employee.setName(result.getString("e.name"));
+            employee.setMiddle_name(result.getString("e.middle_name"));
+        }
+        return employee;
+    }
 }
