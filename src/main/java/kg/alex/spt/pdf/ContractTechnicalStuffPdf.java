@@ -125,7 +125,8 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.1. Работник принимается на должность " + employeeInfo.getEmployeePosition() + ".", ordFont));
+                paragraph.add(new Phrase("1.1. Работник принимается на должность "
+                        + employeeInfo.getEmployeePosition() + ".", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -134,7 +135,8 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.2. Работнику устанавливается испытательный срок на ________________месяца.", ordFont));
+                paragraph.add(new Phrase("1.2. Работнику устанавливается испытательный срок на "
+                        + employeeInfo.getContract().getProbationaryPeriod() + " месяца(ев).", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -338,7 +340,8 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.2 Заработная плата выплачивается один раз в месяц не позднее ________ числа каждого месяца.", ordFont));
+                paragraph.add(new Phrase("3.2 Заработная плата выплачивается один раз в месяц не позднее "
+                        + employeeInfo.getContract().getSalaryDay() + " числа каждого месяца.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -357,7 +360,10 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("4.1. Работнику устанавливается: ___ - дневная ____ - часовая рабочая неделя.", ordFont));
+                paragraph.add(new Phrase("4.1. Работнику устанавливается: "
+                        + employeeInfo.getContract().getWorkingDays()
+                        + "-дневная " + employeeInfo.getContract().getWorkingHours()
+                        + "-часовая рабочая неделя.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -514,7 +520,8 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("8.2. За Работником закрепляется следующее оборудование___________ _____________________________________________________________________________.", ordFont));
+                paragraph.add(new Phrase("8.2. За Работником закрепляется следующее оборудование "
+                        + employeeInfo.getContract().getEquipment() + ".", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 

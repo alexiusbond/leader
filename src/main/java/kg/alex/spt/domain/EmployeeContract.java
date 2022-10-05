@@ -17,6 +17,15 @@ public class EmployeeContract implements Serializable {
     private Date fromDate;
     private Date tillDate;
     private Date creationDate;
+    private int salaryDay;
+    private int yearId;
+    private String year;
+    private int probationaryPeriod;
+    private int workingDays;
+    private int workingHours;
+    private String patent;
+    private String equipment;
+    private Date patentDate;
 
     public Date getCreationDate() {
         return creationDate;
@@ -24,6 +33,14 @@ public class EmployeeContract implements Serializable {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public int getId() {
@@ -72,5 +89,69 @@ public class EmployeeContract implements Serializable {
 
     public void setTillDate(Date tillDate) {
         this.tillDate = tillDate;
+    }
+
+    public int getSalaryDay() {
+        return salaryDay;
+    }
+
+    public void setSalaryDay(int salaryDay) {
+        this.salaryDay = salaryDay;
+    }
+
+    public int getYearId() {
+        return yearId;
+    }
+
+    public void setYearId(int yearId) {
+        this.yearId = yearId;
+    }
+
+    public int getProbationaryPeriod() {
+        return probationaryPeriod;
+    }
+
+    public void setProbationaryPeriod(int probationaryPeriod) {
+        this.probationaryPeriod = probationaryPeriod;
+    }
+
+    public int getWorkingDays() {
+        return workingDays;
+    }
+
+    public void setWorkingDays(int workingDays) {
+        this.workingDays = workingDays;
+    }
+
+    public int getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(int workingHours) {
+        this.workingHours = workingHours;
+    }
+
+    public String getPatent() {
+        return patent;
+    }
+
+    public void setPatent(String patent) {
+        this.patent = patent;
+    }
+
+    public String getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.equipment = equipment;
+    }
+
+    public Date getPatentDate() {
+        return patentDate;
+    }
+
+    public void setPatentDate(Date patentDate) {
+        this.patentDate = patentDate;
     }
 }

@@ -59,6 +59,13 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Confirm = generateId();
     public static final String Permissions = generateId();
     public static final String Year = generateId();
+    public static final String ProbationaryPeriod = generateId();
+    public static final String SalaryDay = generateId();
+    public static final String WorkingDays = generateId();
+    public static final String WorkingHours = generateId();
+    public static final String Patent = generateId();
+    public static final String PatentDate = generateId();
+    public static final String Equipment = generateId();
     public static final String LessonsYear = generateId();
     public static final String AcademicYear = generateId();
     public static final String Hours = generateId();
@@ -557,6 +564,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Achievements = generateId();
     public static final String ProfInfo = generateId();
     public static final String CannotInsertOrder = generateId();
+    public static final String NotificationNoPassportInfo = generateId();
     public static final String ShortTermDebtsDefinition = generateId();
     public static final String ReturnableAssetsDefinition = generateId();
     public static final String ShortTermDebts = generateId();

@@ -6,26 +6,17 @@
 package kg.alex.spt.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class EmployeeInfoPdf implements Serializable {
     private String employeeName;
     private String employeeSurname;
     private String employeeMiddleName;
-    private String employeePosition;
-    private String employeeBranch;
+    private String employeeBranch;private String employeePosition;
+    private EmployeeContact contact;
     private boolean isEmployeeFemininity;
     private School school;
     private Employee director;
     private EmployeeContract contract;
-
-    public String getEmployeeBranch() {
-        return employeeBranch;
-    }
-
-    public void setEmployeeBranch(String employeeBranch) {
-        this.employeeBranch = employeeBranch;
-    }
 
     public String getEmployeePosition() {
         return employeePosition;
@@ -33,6 +24,22 @@ public class EmployeeInfoPdf implements Serializable {
 
     public void setEmployeePosition(String employeePosition) {
         this.employeePosition = employeePosition;
+    }
+
+    public EmployeeContact getContact() {
+        return contact;
+    }
+
+    public void setContact(EmployeeContact contact) {
+        this.contact = contact;
+    }
+
+    public String getEmployeeBranch() {
+        return employeeBranch;
+    }
+
+    public void setEmployeeBranch(String employeeBranch) {
+        this.employeeBranch = employeeBranch;
     }
 
     public Employee getDirector() {

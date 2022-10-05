@@ -122,7 +122,8 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.1. По настоящему трудовому договору Сторона 2 обязуется выполнять обязанности по должности: _______________________________________________________________________  а Сторона 1 обеспечивать ему необходимые условия труда.", ordFont));
+                paragraph.add(new Phrase("1.1. По настоящему трудовому договору Сторона 2 обязуется выполнять обязанности по должности: "
+                        + employeeInfo.getEmployeePosition() + "  а Сторона 1 обеспечивать ему необходимые условия труда.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -131,7 +132,9 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.2. Местом работы по данному трудовому договору является Учреждение_____________________________________________________________________ , с испытательным сроком на _________________ месяцев.", ordFont));
+                paragraph.add(new Phrase("1.2. Местом работы по данному трудовому договору является Учреждение "
+                        + employeeInfo.getSchool().getName_ru() + ", с испытательным сроком на "
+                        + employeeInfo.getContract().getProbationaryPeriod() + " месяцев.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -392,7 +395,7 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.20. Сторона 2 обязано воздержаться от прямого или косвенного участия в любой коммерческой или профессиональной деятельности, которая может спровоцировать конфликт интересов в отношении обязанностей Стороны 2 по настоящему договору на протяжении периода его/ее найма.", ordFont));
+                paragraph.add(new Phrase("2.2.11. Сторона 2 обязано воздержаться от прямого или косвенного участия в любой коммерческой или профессиональной деятельности, которая может спровоцировать конфликт интересов в отношении обязанностей Стороны 2 по настоящему договору на протяжении периода его/ее найма.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -401,7 +404,7 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("2.2.21. При заключении трудового договора Сторона 2 должна предоставить все необходимые документы:", ordFont));
+                paragraph.add(new Phrase("2.2.12. При заключении трудового договора Сторона 2 должна предоставить все необходимые документы:", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -572,7 +575,9 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("4.2. Особенности рабочего времени Стороны 2: ___-дневная ____-часовая рабочая неделя.", ordFont));
+                paragraph.add(new Phrase("4.2. Особенности рабочего времени Стороны 2: "
+                        + employeeInfo.getContract().getWorkingDays() + "-дневная "
+                        + employeeInfo.getContract().getWorkingHours() + "-часовая рабочая неделя.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();

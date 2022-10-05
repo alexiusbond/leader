@@ -42,13 +42,11 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
-import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
 
 import java.io.*;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
-import java.util.Calendar;
 
 /**
  * @author alex
@@ -102,7 +100,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private VerticalLayout infoLay, documentsLay;
     private final GridLayout empSearchLay;
     private GridLayout contactInfoLay;
-    private VerticalLayout contractInfoLay, contractExtraInfoLay;
+    private VerticalLayout contractInfoLay;
+    private final VerticalLayout contractExtraInfoLay = new VerticalLayout();
     private Button printContractBtn;
     private GridLayout familyInfoLay;
     private GridLayout extraInfoLay;
@@ -240,7 +239,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
 
         buildContactsLayout();
         buildContractsLayout();
-        buildContractExtraInfoLayout();
         buildFamilyLayout();
         buildExtraLayout();
         buildAchievementsLayout();
@@ -1113,7 +1111,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             contractsTable.setContainerDataSource(dbCon.execSQL(myUI, employeeID, this));
             dbCon.close();
             contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
-            contractsTable.setColumnWidth(Settings.button, 90);
+            contractsTable.setColumnWidth(Settings.button, 60);
             contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.AgreementType), 1);
         } catch (Exception ex) {
             logger.error(ex);
@@ -3063,57 +3061,73 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         } else if (source == plusSupervisionButton) {
             addSupervisionItem();
         } else if (source == printContractBtn) {
-            int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
-                    myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
             EmployeeInfoPdf employeeInfo = new EmployeeInfoPdf();
-            employeeInfo.setContract(new EmployeeContract());
-            employeeInfo.getContract().setCreationDate(((DateField) contractsTable.getContainerProperty(source.getData(),
-                    myUI.getMessage(SptMessages.CreationDate)).getValue()).getValue());
-            employeeInfo.getContract().setFromDate(((DateField) contractsTable.getContainerProperty(source.getData(),
-                    myUI.getMessage(SptMessages.Start)).getValue()).getValue());
-            employeeInfo.getContract().setTillDate(((DateField) contractsTable.getContainerProperty(source.getData(),
-                    myUI.getMessage(SptMessages.End)).getValue()).getValue());
-            employeeInfo.getContract().setSalary(
-                    ((Double) ((TextField) contractsTable.getItem(source.getData()).getItemProperty(
-                            myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getPropertyDataSource().getValue()));
-            employeeInfo.setEmployeeName(nameTF.getValue());
-            employeeInfo.setEmployeeSurname(surnameTF.getValue());
-            employeeInfo.setEmployeeMiddleName(middleNameTF.getValue());
-            employeeInfo.setEmployeePosition(employeesDataTable.getContainerProperty(employeeID,
-                    myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
-            employeeInfo.setEmployeeBranch(employeesDataTable.getContainerProperty(employeeID,
-                    myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
             try {
-                DbEmployee dbEmployee = new DbEmployee();
-                dbEmployee.connect();
-                employeeInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
-                dbEmployee.close();
-                DbSchool dbSchool = new DbSchool();
-                dbSchool.connect();
-                employeeInfo.setSchool(dbSchool.execSchool(myUI.getUser().getSchool().getId()));
-                dbSchool.close();
+                DbEmployeeContact dbec = new DbEmployeeContact();
+                dbec.connect();
+                employeeInfo.setContact(dbec.execSQL(employeeID));
+                dbec.close();
             } catch (Exception ex) {
                 logger.error(ex);
                 logger.catching(ex);
             }
-            switch (type_id) {
-                case 1:
-                    new ContractTechnicalStuffPdf(myUI, employeeInfo);
-                    break;
-                case 2:
-                    new ContractAdministrativeStuffPdf(myUI, employeeInfo);
-                    break;
-                case 3:
-                    new ContractAcademicStuffPdf(myUI, employeeInfo);
-                    break;
-                case 4:
-                    new ServiceAgreementAcademicStuffPdf(myUI, employeeInfo);
-                    break;
-                case 5:
-                    new ServiceAgreementTechnicalStuffPdf(myUI, employeeInfo);
-                    break;
+            if (employeeInfo.getContact().getPassport() == null || employeeInfo.getContact().getPassportGiven() == null ||
+                    employeeInfo.getContact().getPassportDate() == null) {
+                Notification.show(myUI.getMessage(SptMessages.NotificationNoPassportInfo),
+                        Notification.Type.WARNING_MESSAGE);
+            } else if (!validate(contractExtraInfoLay, false)) {
+                Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                        Notification.Type.WARNING_MESSAGE);
+            } else {
+                int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
+                        myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
+                employeeInfo.setContract(saveContractExtraInfo(source.getData(), new EmployeeContract()));
+                employeeInfo.getContract().setCreationDate(((DateField) contractsTable.getContainerProperty(source.getData(),
+                        myUI.getMessage(SptMessages.CreationDate)).getValue()).getValue());
+                employeeInfo.getContract().setFromDate(((DateField) contractsTable.getContainerProperty(source.getData(),
+                        myUI.getMessage(SptMessages.Start)).getValue()).getValue());
+                employeeInfo.getContract().setTillDate(((DateField) contractsTable.getContainerProperty(source.getData(),
+                        myUI.getMessage(SptMessages.End)).getValue()).getValue());
+                employeeInfo.getContract().setSalary(((Double) ((TextField) contractsTable.getItem(source.getData()).getItemProperty(
+                        myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getPropertyDataSource().getValue()));
+                employeeInfo.setEmployeeName(nameTF.getValue());
+                employeeInfo.setEmployeeSurname(surnameTF.getValue());
+                employeeInfo.setEmployeeMiddleName(middleNameTF.getValue());
+                employeeInfo.setEmployeePosition(employeesDataTable.getContainerProperty(employeeID,
+                        myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
+                employeeInfo.setEmployeeBranch(employeesDataTable.getContainerProperty(employeeID,
+                        myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
+                try {
+                    DbEmployee dbEmployee = new DbEmployee();
+                    dbEmployee.connect();
+                    employeeInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                    dbEmployee.close();
+                    DbSchool dbSchool = new DbSchool();
+                    dbSchool.connect();
+                    employeeInfo.setSchool(dbSchool.execSchool(myUI.getUser().getSchool().getId()));
+                    dbSchool.close();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
+                }
+                switch (type_id) {
+                    case 1:
+                        new ContractTechnicalStuffPdf(myUI, employeeInfo);
+                        break;
+                    case 2:
+                        new ContractAdministrativeStuffPdf(myUI, employeeInfo);
+                        break;
+                    case 3:
+                        new ContractAcademicStuffPdf(myUI, employeeInfo);
+                        break;
+                    case 4:
+                        new ServiceAgreementAcademicStuffPdf(myUI, employeeInfo);
+                        break;
+                    case 5:
+                        new ServiceAgreementTechnicalStuffPdf(myUI, employeeInfo);
+                        break;
+                }
             }
-
         } else if (source == plusOrdersButton) {
             Object last_id = ((IndexedContainer) ordersTable.getContainerDataSource()).lastItemId();
             if (!(ordersTable.getContainerDataSource()).getItem(last_id).getItemProperty(
@@ -3135,46 +3149,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             if (source.getDescription().equals(myUI.getMessage(SptMessages.DeleteButton))) {
                 delContractIds.add(source.getData().toString());
                 contractsTable.removeItem(event.getButton().getData().toString());
-            } else if (source.getDescription().equals(myUI.getMessage(SptMessages.Print))) {
+            } else if (source.getDescription().equals(myUI.getMessage(SptMessages.Print)) &&
+                    (printContractBtn == null || !Objects.equals(source.getData(), printContractBtn.getData()))) {
+                buildContractExtraInfoLayout(source.getData(),
+                        (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
+                                myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue());
                 printContractBtn.setData(source.getData());
-                /*contractPositionTF.setValue("");
-                contractBasedOnTF.setValue("");
-                landingPointTF.setValue("");
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.HOUR_OF_DAY, 8);
-                c.set(Calendar.MINUTE, 0);
-                landingTimeDF.setValue(c.getTime());
-                if ((Integer) cb.getContainerProperty(cb.getValue(), Settings.type_id).getValue() == 1) {
-                    contractPositionTF.setVisible(false);
-                    contractBasedOnTF.setVisible(false);
-                    landingPointTF.setVisible(true);
-                    landingTimeDF.setVisible(true);
-                    if (servicesTable.getContainerProperty(source.getId(),
-                            myUI.getMessage(AkbarsMessages.LandingTime)).getValue() != null) {
-                        landingTimeDF.setValue((Date) servicesTable.getContainerProperty(source.getId(),
-                                myUI.getMessage(AkbarsMessages.LandingTime)).getValue());
-                    }
-                    if (servicesTable.getContainerProperty(source.getId(),
-                            myUI.getMessage(AkbarsMessages.LandingPoint)).getValue() != null) {
-                        landingPointTF.setValue(servicesTable.getContainerProperty(source.getId(),
-                                myUI.getMessage(AkbarsMessages.LandingPoint)).getValue().toString());
-                    }
-                } else {
-                    contractPositionTF.setVisible(true);
-                    contractBasedOnTF.setVisible(true);
-                    if (servicesTable.getContainerProperty(source.getId(),
-                            myUI.getMessage(AkbarsMessages.ContractPosition)).getValue() != null) {
-                        contractPositionTF.setValue(servicesTable.getContainerProperty(source.getId(),
-                                myUI.getMessage(AkbarsMessages.ContractPosition)).getValue().toString());
-                    }
-                    if (servicesTable.getContainerProperty(source.getId(),
-                            myUI.getMessage(AkbarsMessages.ContractBasedOn)).getValue() != null) {
-                        contractBasedOnTF.setValue(servicesTable.getContainerProperty(source.getId(),
-                                myUI.getMessage(AkbarsMessages.ContractBasedOn)).getValue().toString());
-                    }
-                    landingPointTF.setVisible(false);
-                    landingTimeDF.setVisible(false);
-                }*/
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeChildren)) {
             delChildIds.add(source.getData().toString());
@@ -4881,6 +4861,15 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             contractsCont.addContainerProperty(myUI.getMessage(SptMessages.CreationDate), DateField.class, null);
             contractsCont.addContainerProperty(myUI.getMessage(SptMessages.Start), DateField.class, null);
             contractsCont.addContainerProperty(myUI.getMessage(SptMessages.End), DateField.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.AcademicYear), Integer.class, 0);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.Year), String.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.ProbationaryPeriod), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.WorkingDays), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.SalaryDay), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.WorkingHours), Integer.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.Patent), String.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.Equipment), String.class, null);
+            contractsCont.addContainerProperty(myUI.getMessage(SptMessages.PatentDate), Date.class, null);
             contractsCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             contractsCont.removeAllItems();
@@ -5596,19 +5585,154 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
     }
 
-    private void buildContractExtraInfoLayout() {
-        contractExtraInfoLay = new VerticalLayout();
+    private void buildContractExtraInfoLayout(Object contract_id, int type_id) {
+        System.out.println("Build new layout");
+        contractExtraInfoLay.removeAllComponents();
         contractExtraInfoLay.setSpacing(true);
         contractExtraInfoLay.setMargin(true);
 
-        printContractBtn = new Button(myUI.getMessage(SptMessages.Print));
-        printContractBtn.setStyleName(ValoTheme.BUTTON_SMALL);
-        printContractBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        printContractBtn.setIcon(FontAwesome.PRINT);
-        printContractBtn.addClickListener(this);
+        TextField tf;
+        if (type_id == 1 || type_id == 2) {
+            if (type_id == 1) {
+                tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
+                                contract_id, myUI.getMessage(SptMessages.ProbationaryPeriod)).getValue(), null,
+                        new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 12),
+                        new ObjectProperty(0), Settings.getStringToIntegerConverter());
+                tf.setCaption(myUI.getMessage(SptMessages.ProbationaryPeriod));
+                contractExtraInfoLay.addComponent(tf);
+                tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
+                                contract_id, myUI.getMessage(SptMessages.SalaryDay)).getValue(), null,
+                        new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 31),
+                        new ObjectProperty(0), Settings.getStringToIntegerConverter());
+                tf.setCaption(myUI.getMessage(SptMessages.SalaryDay));
+                contractExtraInfoLay.addComponent(tf);
+            }
+            tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
+                            contract_id, myUI.getMessage(SptMessages.WorkingDays)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 31),
+                    new ObjectProperty(0), Settings.getStringToIntegerConverter());
+            tf.setCaption(myUI.getMessage(SptMessages.WorkingDays));
+            contractExtraInfoLay.addComponent(tf);
+            tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
+                            contract_id, myUI.getMessage(SptMessages.WorkingHours)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 31),
+                    new ObjectProperty(0), Settings.getStringToIntegerConverter());
+            tf.setCaption(myUI.getMessage(SptMessages.WorkingHours));
+            contractExtraInfoLay.addComponent(tf);
+            if (type_id == 1) {
+                tf = createTextField(contractsTable.getContainerProperty(
+                        contract_id, myUI.getMessage(SptMessages.Equipment)).getValue() == null ? "" :
+                        contractsTable.getContainerProperty(contract_id, myUI.getMessage(SptMessages.Equipment))
+                                .getValue().toString(), null, new StringLengthValidator(
+                        myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false), true);
+                tf.setCaption(myUI.getMessage(SptMessages.Equipment));
+                contractExtraInfoLay.addComponent(tf);
+            }
+        } else {
+            if (type_id == 4) {
+                ComboBox cb = createCombobox(0, null, null, true);
+                cb.setCaption(myUI.getMessage(SptMessages.AcademicYear));
+                cb.setData(myUI.getMessage(SptMessages.Year));
+                try {
+                    DbDefinition dbd = new DbDefinition();
+                    dbd.connect();
+                    cb.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
+                    dbd.close();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    logger.catching(ex);
+                }
+                cb.setValue(contractsTable.getContainerProperty(contract_id,
+                        myUI.getMessage(SptMessages.AcademicYear)).getValue());
+                contractExtraInfoLay.addComponent(cb);
+            }
+            tf = createTextField(contractsTable.getContainerProperty(
+                    contract_id, myUI.getMessage(SptMessages.Patent)).getValue() == null ? "" :
+                    contractsTable.getContainerProperty(contract_id, myUI.getMessage(SptMessages.Patent))
+                            .getValue().toString(), null, new StringLengthValidator(
+                    myUI.getMessage(SptMessages.NotificationWrongValue), 1, 200, false), true);
+            tf.setCaption(myUI.getMessage(SptMessages.Patent));
+            contractExtraInfoLay.addComponent(tf);
+            contractExtraInfoLay.addComponent(createDateField((Date) contractsTable.getContainerProperty(
+                            contract_id, myUI.getMessage(SptMessages.PatentDate)).getValue(), null,
+                    myUI.getMessage(SptMessages.PatentDate), true, Settings.datePattern, Resolution.DAY));
+        }
+        if (printContractBtn == null) {
+            printContractBtn = new Button(myUI.getMessage(SptMessages.Print));
+            printContractBtn.setStyleName(ValoTheme.BUTTON_SMALL);
+            printContractBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+            printContractBtn.setIcon(FontAwesome.PRINT);
+            printContractBtn.addClickListener(this);
+        }
         contractExtraInfoLay.addComponent(printContractBtn);
         contractExtraInfoLay.setComponentAlignment(printContractBtn, Alignment.BOTTOM_RIGHT);
+    }
 
+    private EmployeeContract saveContractExtraInfo(Object id, EmployeeContract employeeContract) {
+        for (int i = 0; i < contractExtraInfoLay.getComponentCount(); i++) {
+            Component component = contractExtraInfoLay.getComponent(i);
+            if (component instanceof TextField) {
+                contractsTable.getContainerProperty(id, component.getCaption()).setValue(
+                        ((TextField) component).getConvertedValue());
+            } else if (component instanceof DateField) {
+                contractsTable.getContainerProperty(id, component.getCaption()).setValue(((DateField) component).getValue());
+            } else if (component instanceof ComboBox) {
+                ComboBox cb = (ComboBox) component;
+                contractsTable.getContainerProperty(id, cb.getCaption()).setValue(cb.getValue());
+                contractsTable.getContainerProperty(id, cb.getData()).setValue(cb.getItemCaption(cb.getValue()));
+            }
+        }
+        if ((Integer) contractsTable.getContainerProperty(id, myUI.getMessage(SptMessages.AcademicYear)).getValue() != 0) {
+            employeeContract.setYearId((Integer) contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.AcademicYear)).getValue());
+            employeeContract.setYear(contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.Year)).getValue().toString());
+        }
+        if (contractsTable.getContainerProperty(id,
+                myUI.getMessage(SptMessages.ProbationaryPeriod)).getValue() != null) {
+            employeeContract.setProbationaryPeriod((Integer) contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.ProbationaryPeriod)).getValue());
+        }
+        if (contractsTable.getContainerProperty(id,
+                myUI.getMessage(SptMessages.SalaryDay)).getValue() != null) {
+            employeeContract.setSalaryDay((Integer) contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.SalaryDay)).getValue());
+        }
+        if (contractsTable.getContainerProperty(id,
+                myUI.getMessage(SptMessages.WorkingDays)).getValue() != null) {
+            employeeContract.setWorkingDays((Integer) contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.WorkingDays)).getValue());
+        }
+        if (contractsTable.getContainerProperty(id,
+                myUI.getMessage(SptMessages.WorkingHours)).getValue() != null) {
+            employeeContract.setWorkingHours((Integer) contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.WorkingHours)).getValue());
+        }
+        if (contractsTable.getContainerProperty(id,
+                myUI.getMessage(SptMessages.Patent)).getValue() != null) {
+            employeeContract.setPatent(contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.Patent)).getValue().toString());
+        }
+        if (contractsTable.getContainerProperty(id,
+                myUI.getMessage(SptMessages.Equipment)).getValue() != null) {
+            employeeContract.setEquipment(contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.Equipment)).getValue().toString());
+        }
+        if (contractsTable.getContainerProperty(id,
+                myUI.getMessage(SptMessages.PatentDate)).getValue() != null) {
+            employeeContract.setPatentDate((Date) contractsTable.getContainerProperty(id,
+                    myUI.getMessage(SptMessages.PatentDate)).getValue());
+        }
+        try {
+            DbEmployeeContract dbCon = new DbEmployeeContract();
+            dbCon.connect();
+            dbCon.exec_update(employeeContract, Integer.parseInt(id.toString()));
+            dbCon.close();
+        } catch (Exception ex) {
+            logger.error(ex);
+            logger.catching(ex);
+        }
+        return employeeContract;
     }
 
     public VerticalLayout getContractExtraInfoLay() {

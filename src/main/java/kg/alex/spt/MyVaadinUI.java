@@ -106,11 +106,9 @@ public class MyVaadinUI extends UI {
                 getLocale());
     }
 
-
     public String getMessage(String key) {
         return i18nBundle.getString(key);
     }
-
 
     public void workingDetails(Subject currentUser) {
         try {

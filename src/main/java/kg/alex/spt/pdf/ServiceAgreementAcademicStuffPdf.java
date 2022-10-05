@@ -56,7 +56,8 @@ public class ServiceAgreementAcademicStuffPdf {
                 Paragraph spr = new Paragraph();
                 spr.add(new Phrase("Договор", font_header));
                 spr.add(Chunk.NEWLINE);
-                spr.add(new Phrase("на оказание образовательных и организационных услуг на 2022-2023 учебный год", font_header));
+                spr.add(new Phrase("на оказание образовательных и организационных услуг на "
+                        + employeeInfo.getContract().getYear() + " учебный год", font_header));
 
                 spr.setAlignment(Element.ALIGN_CENTER);
                 document.add(spr);
@@ -104,7 +105,12 @@ public class ServiceAgreementAcademicStuffPdf {
                 }
                 paragraph.add(new Phrase(", действующего на основании Устава, с одной стороны, и и гражданин/ка ", ordFont));
                 paragraph.add(new Phrase(fullName + ", ", ordBoldFont));
-                paragraph.add(new Phrase("паспорт № ______________, выданный _________________ от ________________________, действующий на основании патента №__________________________________ от ______________, именуемый/ая в дальнейшем “Исполнитель”, с другой стороны,  заключили настоящий договор о нижеследующем:", ordFont));
+                paragraph.add(new Phrase("паспорт № " + employeeInfo.getContact().getPassport() +
+                        ", выданный " + employeeInfo.getContact().getPassportGiven() +
+                        " от " + Settings.df.format(employeeInfo.getContact().getPassportDate()) +
+                        ", действующий на основании патента №" + employeeInfo.getContract().getPatent()
+                        + " от " + Settings.df.format(employeeInfo.getContract().getPatentDate()) +
+                        ", именуемый/ая в дальнейшем “Исполнитель”, с другой стороны,  заключили настоящий договор о нижеследующем:", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -639,8 +645,8 @@ public class ServiceAgreementAcademicStuffPdf {
 
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(30);
-                paragraph.setIndentationLeft(35);
-                paragraph.setIndentationRight(35);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("6.3. Заказчик вправе расторгнуть настоящий договор ", ordFont));
@@ -650,8 +656,8 @@ public class ServiceAgreementAcademicStuffPdf {
 
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(30);
-                paragraph.setIndentationLeft(35);
-                paragraph.setIndentationRight(35);
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("6.4. Заказчик вправе расторгнуть настоящий договор, предварительно письменно уведомив об этом Исполнителя за 2 (две) недели до даты расторжения, в случае, если Исполнитель систематически нарушает свои обязательства и права Заказчика;", ordFont));
