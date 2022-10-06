@@ -878,7 +878,6 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, position_id);
         stat.setInt(2, school_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
             employee = new Employee();

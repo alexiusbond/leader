@@ -42,10 +42,10 @@ public class ServiceAgreementAcademicStuffPdf {
 
                 BaseFont baseFont = BaseFont.createFont(FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                Font ordFont = new Font(baseFont, 10);
-                Font ordBoldFont = new Font(baseFontBold, 10);
-                Font boldFont = new Font(baseFontBold, 11);
-                Font font_header = new Font(baseFontBold, 11);
+                Font ordFont = new Font(baseFont, 9.5f);
+                Font ordBoldFont = new Font(baseFontBold, 9.5f);
+                Font boldFont = new Font(baseFontBold, 10);
+                Font font_header = new Font(baseFontBold, 10.5f);
 
                 document.open();
 
@@ -78,7 +78,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 Decliner dcl = new Decliner();
 
                 Paragraph paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -115,7 +115,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -124,7 +124,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -134,7 +134,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -143,7 +143,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -154,7 +154,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -164,7 +164,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -173,7 +173,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -184,7 +184,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -193,16 +193,16 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("Исполнитель обязан:", boldFont));
+                paragraph.add(new Phrase("Исполнитель обязан:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -211,7 +211,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -220,7 +220,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -229,7 +229,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -238,7 +238,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -247,7 +247,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -256,7 +256,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -265,7 +265,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -274,7 +274,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -283,7 +283,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -292,7 +292,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -301,7 +301,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -310,7 +310,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -319,7 +319,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -328,7 +328,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -337,7 +337,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -346,7 +346,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -355,7 +355,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -364,7 +364,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -373,7 +373,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -382,7 +382,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -472,7 +472,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -554,7 +554,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -562,7 +562,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.add(new Phrase("4. Конфиденциальность", boldFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -570,7 +570,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -579,7 +579,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -588,7 +588,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -598,7 +598,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -607,7 +607,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -617,7 +617,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -626,7 +626,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -635,7 +635,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -644,18 +644,18 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("6.3. Заказчик вправе расторгнуть настоящий договор ", ordFont));
-                paragraph.add(new Phrase("незамедлительно ", boldFont));
+                paragraph.add(new Phrase("незамедлительно ", ordBoldFont));
                 paragraph.add(new Phrase("предварительно  письменно уведомив об этом Исполниетеля  при наступлении “События Грубого Нарушения;", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -664,7 +664,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -674,7 +674,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -683,7 +683,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -692,7 +692,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -701,7 +701,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -710,7 +710,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -719,7 +719,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -730,7 +730,7 @@ public class ServiceAgreementAcademicStuffPdf {
 
                 //document.newPage();
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -739,34 +739,59 @@ public class ServiceAgreementAcademicStuffPdf {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
+
                 float[] table_info_colsWidth = {1f, 1f};
                 PdfPTable table_info = new PdfPTable(2);
                 table_info.getDefaultCell().setBorder(0);
+                table_info.getDefaultCell().setPaddingRight(10);
                 table_info.setWidthPercentage(90f);
                 table_info.setWidths(table_info_colsWidth);
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                table_info.addCell(new Phrase("Заказчик:", ordBoldFont));
-                table_info.addCell(new Phrase("Исполнитель:", ordBoldFont));
+                table_info.addCell(new Phrase("Работодатель:", boldFont));
+                table_info.addCell(new Phrase("Работник:", boldFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 Paragraph text10 = new Paragraph();
                 text10.add(new Phrase(this.employeeInfo.getSchool().getName_ru(), ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Подпись.: ________________________", ordFont));
+                text10.add(new Phrase("Адрес: ", ordBoldFont));
+                text10.add(new Phrase(this.employeeInfo.getSchool().getAddress(), ordFont));
+                text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
+                text10.add(new Phrase("Директор: ", ordBoldFont));
+                text10.add(new Phrase(this.employeeInfo.getDirector().getSurname() + " "
+                        + employeeInfo.getDirector().getName() + " " +
+                        (employeeInfo.getDirector().getMiddle_name() == null ?
+                                "" : employeeInfo.getDirector().getMiddle_name()), ordFont));
+                text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
                 table_info.addCell(text10);
 
                 Paragraph text11 = new Paragraph();
-                text11.add(new Phrase("Ф.И.О._________________________ ", ordFont));
+                text11.add(new Phrase("Ф.И.О. ", ordBoldFont));
+                text11.add(new Phrase(fullName, ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Паспорт: серия __________________ № _______________ выдан _________", ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Место жительства: ________________________________", ordFont));
+                text11.add(new Phrase("Паспорт: № ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getPassport(), ordFont));
+                text11.add(new Phrase(" выдан ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getPassportGiven(), ordFont));
+                text11.add(new Phrase(" от ", ordBoldFont));
+                text11.add(new Phrase(Settings.df.format(employeeInfo.getContact().getPassportDate()), ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Тел.: ________________", ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Подпись.: ________________________", ordFont));
+                text11.add(new Phrase("Место жительства: ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getAddress(), ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("Тел.: ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getPhoneNumbers(), ordFont));
+                text11.add(Chunk.NEWLINE);
                 text11.add(Chunk.NEWLINE);
                 table_info.addCell(text11);
+
+                table_info.addCell(new Phrase("Подпись.: ________________________", ordBoldFont));
+                table_info.addCell(new Phrase("Подпись.: ________________________", ordBoldFont));
                 document.add(table_info);
             } catch (Exception e) {
                 logger.error(e);

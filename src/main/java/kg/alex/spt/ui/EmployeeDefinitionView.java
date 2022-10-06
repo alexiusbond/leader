@@ -5586,7 +5586,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     }
 
     private void buildContractExtraInfoLayout(Object contract_id, int type_id) {
-        System.out.println("Build new layout");
         contractExtraInfoLay.removeAllComponents();
         contractExtraInfoLay.setSpacing(true);
         contractExtraInfoLay.setMargin(true);

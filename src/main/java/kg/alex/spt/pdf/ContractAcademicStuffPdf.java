@@ -42,10 +42,10 @@ public class ContractAcademicStuffPdf {
 
                 BaseFont baseFont = BaseFont.createFont(FONT_LOCATION, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
                 BaseFont baseFontBold = BaseFont.createFont(FONT_LOCATION2, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                Font ordFont = new Font(baseFont, 10);
-                Font ordBoldFont = new Font(baseFontBold, 10);
-                Font boldFont = new Font(baseFontBold, 11);
-                Font font_header = new Font(baseFontBold, 11);
+                Font ordFont = new Font(baseFont, 9.5f);
+                Font ordBoldFont = new Font(baseFontBold, 9.5f);
+                Font boldFont = new Font(baseFontBold, 10);
+                Font font_header = new Font(baseFontBold, 10.5f);
 
                 document.open();
 
@@ -76,7 +76,7 @@ public class ContractAcademicStuffPdf {
                 Decliner dcl = new Decliner();
 
                 Paragraph paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -108,7 +108,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -117,7 +117,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -128,7 +128,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -137,7 +137,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -147,7 +147,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -158,7 +158,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -166,15 +166,15 @@ public class ContractAcademicStuffPdf {
                 paragraph.setAlignment(Element.ALIGN_CENTER);
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("2.1. Сторона 2 имеет право:", boldFont));
+                paragraph.add(new Phrase("2.1. Сторона 2 имеет право:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -183,7 +183,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -192,7 +192,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -201,7 +201,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -210,7 +210,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -219,7 +219,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -228,7 +228,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -237,15 +237,15 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("2.2 Сторона 2 обязана:", boldFont));
+                paragraph.add(new Phrase("2.2 Сторона 2 обязана:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -254,7 +254,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -263,7 +263,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -272,7 +272,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -281,7 +281,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -290,7 +290,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -299,7 +299,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -308,7 +308,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -317,7 +317,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -326,7 +326,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -335,7 +335,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -344,7 +344,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -353,7 +353,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -362,7 +362,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -371,7 +371,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -380,7 +380,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -389,7 +389,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -398,7 +398,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -407,7 +407,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -497,7 +497,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -579,7 +579,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -587,7 +587,7 @@ public class ContractAcademicStuffPdf {
                 paragraph.add(new Phrase("3. Права и обязанности Стороны 1", boldFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -595,16 +595,16 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.2 Сторона 1 обязана:", boldFont));
+                paragraph.add(new Phrase("3.2 Сторона 1 обязана:", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -613,7 +613,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -622,7 +622,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -632,7 +632,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -641,7 +641,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -650,7 +650,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -659,7 +659,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -668,7 +668,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -678,7 +678,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -687,7 +687,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -706,7 +706,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -715,7 +715,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -725,7 +725,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -734,7 +734,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -743,7 +743,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -752,7 +752,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(35);
                 paragraph.setIndentationRight(35);
                 paragraph.setLeading(15);
@@ -761,7 +761,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(35);
                 paragraph.setIndentationRight(35);
                 paragraph.setLeading(15);
@@ -770,7 +770,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -779,7 +779,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -789,7 +789,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -798,7 +798,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -807,7 +807,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -816,7 +816,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -825,7 +825,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -835,7 +835,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -844,7 +844,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -854,7 +854,7 @@ public class ContractAcademicStuffPdf {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -863,7 +863,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -872,7 +872,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -881,7 +881,7 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -890,9 +890,9 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
-                //document.newPage();
+                document.newPage();
                 paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -901,34 +901,59 @@ public class ContractAcademicStuffPdf {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
+
                 float[] table_info_colsWidth = {1f, 1f};
                 PdfPTable table_info = new PdfPTable(2);
                 table_info.getDefaultCell().setBorder(0);
+                table_info.getDefaultCell().setPaddingRight(10);
                 table_info.setWidthPercentage(90f);
                 table_info.setWidths(table_info_colsWidth);
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                table_info.addCell(new Phrase("Сторона 1:", ordBoldFont));
-                table_info.addCell(new Phrase("Сторона 2:", ordBoldFont));
+                table_info.addCell(new Phrase("Сторона 1:", boldFont));
+                table_info.addCell(new Phrase("Сторона 2:", boldFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 Paragraph text10 = new Paragraph();
                 text10.add(new Phrase(this.employeeInfo.getSchool().getName_ru(), ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Подпись.: ________________________", ordFont));
+                text10.add(new Phrase("Адрес: ", ordBoldFont));
+                text10.add(new Phrase(this.employeeInfo.getSchool().getAddress(), ordFont));
+                text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
+                text10.add(new Phrase("Директор: ", ordBoldFont));
+                text10.add(new Phrase(this.employeeInfo.getDirector().getSurname() + " "
+                        + employeeInfo.getDirector().getName() + " " +
+                        (employeeInfo.getDirector().getMiddle_name() == null ?
+                                "" : employeeInfo.getDirector().getMiddle_name()), ordFont));
+                text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
                 table_info.addCell(text10);
 
                 Paragraph text11 = new Paragraph();
-                text11.add(new Phrase("Ф.И.О._________________________ ", ordFont));
+                text11.add(new Phrase("Ф.И.О. ", ordBoldFont));
+                text11.add(new Phrase(fullName, ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Паспорт: серия __________________ № _______________ выдан _________", ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Место жительства: ________________________________", ordFont));
+                text11.add(new Phrase("Паспорт: № ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getPassport(), ordFont));
+                text11.add(new Phrase(" выдан ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getPassportGiven(), ordFont));
+                text11.add(new Phrase(" от ", ordBoldFont));
+                text11.add(new Phrase(Settings.df.format(employeeInfo.getContact().getPassportDate()), ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Тел.: ________________", ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Подпись.: ________________________", ordFont));
+                text11.add(new Phrase("Место жительства: ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getAddress(), ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("Тел.: ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getPhoneNumbers(), ordFont));
+                text11.add(Chunk.NEWLINE);
                 text11.add(Chunk.NEWLINE);
                 table_info.addCell(text11);
+
+                table_info.addCell(new Phrase("Подпись.: ________________________", ordBoldFont));
+                table_info.addCell(new Phrase("Подпись.: ________________________", ordBoldFont));
                 document.add(table_info);
             } catch (Exception e) {
                 logger.error(e);

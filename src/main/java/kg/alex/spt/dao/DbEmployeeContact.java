@@ -75,7 +75,10 @@ public class DbEmployeeContact extends BaseDb {
     }
 
     public EmployeeContact execSQL(int employee_id) throws SQLException {
-        String sql = "SELECT * FROM hr_employee_contacts AS ec WHERE ec.employee_id = ?;";
+        String sql = "SELECT ec.*, IFNULL(GROUP_CONCAT(ph.number SEPARATOR ', '), '') AS phones " +
+                "FROM hr_employee_contacts AS ec " +
+                "left join hr_employee_phone_number as ph on ph.employee_id = ec.employee_id " +
+                "WHERE ec.employee_id = ? group by ec.employee_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
@@ -88,6 +91,7 @@ public class DbEmployeeContact extends BaseDb {
             ec.setPassportDate(result.getDate("ec.passport_date"));
             ec.setBirth_place(result.getString("ec.birth_place"));
             ec.setEmail(result.getString("ec.email"));
+            ec.setPhoneNumbers(result.getString("phones"));
         }
         return ec;
     }

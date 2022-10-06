@@ -313,7 +313,6 @@ public class DbDefinition extends BaseDb {
         String sql = "DELETE FROM " + dbTableName + " WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
-        System.out.println(stat);
         return stat.executeUpdate();
     }
 

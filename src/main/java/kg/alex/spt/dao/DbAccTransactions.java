@@ -672,7 +672,6 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, acc_category_id);
         stat.setDate(5, new java.sql.Date(till.getTime()));
         stat.setInt(6, school_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
 
         while (result.next()) {

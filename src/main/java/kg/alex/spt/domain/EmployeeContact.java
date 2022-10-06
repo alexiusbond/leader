@@ -17,6 +17,15 @@ public class EmployeeContact implements Serializable {
     private String passportGiven;
     private Date passportDate;
     private String birth_place;
+    private String phoneNumbers;
+
+    public String getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public void setPhoneNumbers(String phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
 
     public String getPassport() {
         return passport;
