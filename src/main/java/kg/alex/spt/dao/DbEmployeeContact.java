@@ -18,8 +18,8 @@ public class DbEmployeeContact extends BaseDb {
 
     public int exec_insert(EmployeeContact ec) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_contacts " +
-                "(employee_id, birth_place, address, email, passport, passport_given, passport_date) " +
-                "VALUES(?,?,?,?,?,?,?);";
+                "(employee_id, birth_place, address, email, passport, passport_given, passport_date, inn) " +
+                "VALUES(?,?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         stat.setString(2, ec.getBirth_place());
@@ -40,6 +40,11 @@ public class DbEmployeeContact extends BaseDb {
         } else {
             stat.setNull(7, Types.DATE);
         }
+        if (!Objects.equals(ec.getInn(), "")) {
+            stat.setString(8, ec.getInn());
+        } else {
+            stat.setNull(8, Types.VARCHAR);
+        }
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -50,7 +55,7 @@ public class DbEmployeeContact extends BaseDb {
 
     public int exec_update(EmployeeContact ec) throws SQLException {
         String sql = "update hr_employee_contacts set birth_place = ?, address = ?, email = ?, " +
-                "passport = ?, passport_given = ?, passport_date = ? WHERE employee_id = ?;";
+                "passport = ?, passport_given = ?, passport_date = ?, inn = ? WHERE employee_id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ec.getBirth_place());
         stat.setString(2, ec.getAddress());
@@ -70,7 +75,12 @@ public class DbEmployeeContact extends BaseDb {
         } else {
             stat.setNull(6, Types.DATE);
         }
-        stat.setInt(7, ec.getEmployee_id());
+        if (!Objects.equals(ec.getInn(), "")) {
+            stat.setString(7, ec.getInn());
+        } else {
+            stat.setNull(7, Types.VARCHAR);
+        }
+        stat.setInt(8, ec.getEmployee_id());
         return stat.executeUpdate();
     }
 
@@ -87,6 +97,7 @@ public class DbEmployeeContact extends BaseDb {
             ec = new EmployeeContact();
             ec.setAddress(result.getString("ec.address"));
             ec.setPassport(result.getString("ec.passport"));
+            ec.setInn(result.getString("ec.inn"));
             ec.setPassportGiven(result.getString("ec.passport_given"));
             ec.setPassportDate(result.getDate("ec.passport_date"));
             ec.setBirth_place(result.getString("ec.birth_place"));

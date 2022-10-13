@@ -65,7 +65,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             noSeminarsCkb, noCertificatesCkb, noLanguagesCkb, noSpouseEducationCkb, noSpouseWorkPlacesCkb, noChildrenCkb;
     private TextField nameTF, loginTF, passwordTF, surnameTF, middleNameTF,
             birthPlaceTF, emailTF, spouseFullNameTF, spousePhoneTF,
-            spouseHealthNotesTF, hobbiesTF, fobbiesTF, passportTF, passportGivenTf;
+            spouseHealthNotesTF, hobbiesTF, fobbiesTF, passportTF, innTF, passportGivenTf;
     private TextArea addressTA, healthNotesTA, shortNotesTA;
     private DateField birthDateDF, gradSchoolStartDF, gradSchoolEndDF, passportDateDF;
     private ComboBox genderCB, nationalityCB, martialStatusCB, mainPositionCB, citizenshipCB,
@@ -262,7 +262,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
         tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(SptMessages.Contracts));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContracts)) {
-            tabs.getTab(contractInfoLay).setVisible(false);
+        tabs.getTab(contractInfoLay).setVisible(false);
         }
         tabs.addTab(profInfoLay).setCaption(myUI.getMessage(SptMessages.ProfInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabProfInfo) && !isMyProfile) {
@@ -436,6 +436,12 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 false, Settings.datePattern, Resolution.DAY);
         passportDateDF.setRangeEnd(today);
         fieldsLayContacts.addComponent(passportDateDF);
+
+        innTF = createTextField(null, null, new RegexpValidator("[0-9]*",
+                myUI.getMessage(SptMessages.NotificationWrongValue)), false);
+        innTF.setNullRepresentation("");
+        innTF.setCaption(myUI.getMessage(SptMessages.INN));
+        fieldsLayContacts.addComponent(innTF);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth(Settings.PERCENTS100);
@@ -1601,6 +1607,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 addressTA.setValue(ec.getAddress());
                 birthPlaceTF.setValue(ec.getBirth_place());
                 passportTF.setValue(ec.getPassport());
+                innTF.setValue(ec.getInn());
                 passportGivenTf.setValue(ec.getPassportGiven());
                 passportDateDF.setValue(ec.getPassportDate());
                 emailTF.setValue(ec.getEmail());
@@ -2446,6 +2453,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         emailTF.setValue("");
         birthPlaceTF.setValue("");
         passportTF.setValue("");
+        innTF.setValue("");
         passportGivenTf.setValue("");
         passportDateDF.setValue(null);
     }
@@ -5272,6 +5280,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         ec.setAddress(addressTA.getValue());
         ec.setBirth_place(birthPlaceTF.getValue());
         ec.setPassport(passportTF.getValue());
+        ec.setInn(innTF.getValue());
         ec.setPassportGiven(passportGivenTf.getValue());
         ec.setPassportDate(passportDateDF.getValue());
         return ec;
@@ -5645,16 +5654,18 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         myUI.getMessage(SptMessages.AcademicYear)).getValue());
                 contractExtraInfoLay.addComponent(cb);
             }
-            tf = createTextField(contractsTable.getContainerProperty(
-                    contract_id, myUI.getMessage(SptMessages.Patent)).getValue() == null ? "" :
-                    contractsTable.getContainerProperty(contract_id, myUI.getMessage(SptMessages.Patent))
-                            .getValue().toString(), null, new StringLengthValidator(
-                    myUI.getMessage(SptMessages.NotificationWrongValue), 1, 200, false), true);
-            tf.setCaption(myUI.getMessage(SptMessages.Patent));
-            contractExtraInfoLay.addComponent(tf);
-            contractExtraInfoLay.addComponent(createDateField((Date) contractsTable.getContainerProperty(
-                            contract_id, myUI.getMessage(SptMessages.PatentDate)).getValue(), null,
-                    myUI.getMessage(SptMessages.PatentDate), true, Settings.datePattern, Resolution.DAY));
+            if (type_id != 3) {
+                tf = createTextField(contractsTable.getContainerProperty(
+                        contract_id, myUI.getMessage(SptMessages.Patent)).getValue() == null ? "" :
+                        contractsTable.getContainerProperty(contract_id, myUI.getMessage(SptMessages.Patent))
+                                .getValue().toString(), null, new StringLengthValidator(
+                        myUI.getMessage(SptMessages.NotificationWrongValue), 1, 200, false), true);
+                tf.setCaption(myUI.getMessage(SptMessages.Patent));
+                contractExtraInfoLay.addComponent(tf);
+                contractExtraInfoLay.addComponent(createDateField((Date) contractsTable.getContainerProperty(
+                                contract_id, myUI.getMessage(SptMessages.PatentDate)).getValue(), null,
+                        myUI.getMessage(SptMessages.PatentDate), true, Settings.datePattern, Resolution.DAY));
+            }
         }
         if (printContractBtn == null) {
             printContractBtn = new Button(myUI.getMessage(SptMessages.Print));

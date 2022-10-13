@@ -14,10 +14,19 @@ public class EmployeeContact implements Serializable {
     private String email;
     private String address;
     private String passport;
+    private String inn;
     private String passportGiven;
     private Date passportDate;
     private String birth_place;
     private String phoneNumbers;
+
+    public String getInn() {
+        return inn;
+    }
+
+    public void setInn(String inn) {
+        this.inn = inn;
+    }
 
     public String getPhoneNumbers() {
         return phoneNumbers;

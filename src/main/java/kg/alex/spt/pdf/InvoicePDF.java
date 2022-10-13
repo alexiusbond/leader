@@ -159,9 +159,7 @@ public class InvoicePDF {
                 cell.setBorder(0);
                 orderTable.addCell(cell);
 
-                WritableSummRu convertToLetters;
-
-                convertToLetters = new WritableSummRuSOM();
+                WritableSummRu convertToLetters = new WritableSummRuSOM();
 
                 Paragraph sumLetterPar = new Paragraph();
                 sumLetterPar.add(new Chunk("Сумма прописью: ", bold_font));
