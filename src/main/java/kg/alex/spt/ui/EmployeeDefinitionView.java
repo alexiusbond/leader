@@ -42,6 +42,7 @@ import org.apache.shiro.subject.Subject;
 import org.tepi.filtertable.FilterTable;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.simplefiledownloader.SimpleFileDownloader;
 
 import java.io.*;
@@ -262,7 +263,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
         tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(SptMessages.Contracts));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContracts)) {
-        tabs.getTab(contractInfoLay).setVisible(false);
+            tabs.getTab(contractInfoLay).setVisible(false);
         }
         tabs.addTab(profInfoLay).setCaption(myUI.getMessage(SptMessages.ProfInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabProfInfo) && !isMyProfile) {
@@ -3159,10 +3160,14 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 contractsTable.removeItem(event.getButton().getData().toString());
             } else if (source.getDescription().equals(myUI.getMessage(SptMessages.Print)) &&
                     (printContractBtn == null || !Objects.equals(source.getData(), printContractBtn.getData()))) {
-                buildContractExtraInfoLayout(source.getData(),
-                        (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
-                                myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue());
+                int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
+                        myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
+                buildContractExtraInfoLayout(source.getData(), type_id);
                 printContractBtn.setData(source.getData());
+                if (type_id == 2 || type_id == 3) {
+                    printContractBtn.click();
+                    ((PopupButton) source).setPopupVisible(false);
+                }
             }
         } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeChildren)) {
             delChildIds.add(source.getData().toString());
@@ -5600,30 +5605,28 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         contractExtraInfoLay.setMargin(true);
 
         TextField tf;
-        if (type_id == 1 || type_id == 2) {
-            if (type_id == 1) {
-                tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
-                                contract_id, myUI.getMessage(SptMessages.ProbationaryPeriod)).getValue(), null,
-                        new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 12),
-                        new ObjectProperty(0), Settings.getStringToIntegerConverter());
-                tf.setCaption(myUI.getMessage(SptMessages.ProbationaryPeriod));
-                contractExtraInfoLay.addComponent(tf);
-                tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
-                                contract_id, myUI.getMessage(SptMessages.SalaryDay)).getValue(), null,
-                        new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 31),
-                        new ObjectProperty(0), Settings.getStringToIntegerConverter());
-                tf.setCaption(myUI.getMessage(SptMessages.SalaryDay));
-                contractExtraInfoLay.addComponent(tf);
-            }
+        if (type_id == 1) {
+            tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
+                            contract_id, myUI.getMessage(SptMessages.ProbationaryPeriod)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 12),
+                    new ObjectProperty(0), Settings.getStringToIntegerConverter());
+            tf.setCaption(myUI.getMessage(SptMessages.ProbationaryPeriod));
+            contractExtraInfoLay.addComponent(tf);
+            tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
+                            contract_id, myUI.getMessage(SptMessages.SalaryDay)).getValue(), null,
+                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 31),
+                    new ObjectProperty(0), Settings.getStringToIntegerConverter());
+            tf.setCaption(myUI.getMessage(SptMessages.SalaryDay));
+            contractExtraInfoLay.addComponent(tf);
             tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
                             contract_id, myUI.getMessage(SptMessages.WorkingDays)).getValue(), null,
-                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 31),
+                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 7),
                     new ObjectProperty(0), Settings.getStringToIntegerConverter());
             tf.setCaption(myUI.getMessage(SptMessages.WorkingDays));
             contractExtraInfoLay.addComponent(tf);
             tf = createTextFieldWithProperty(contractsTable.getContainerProperty(
                             contract_id, myUI.getMessage(SptMessages.WorkingHours)).getValue(), null,
-                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 31),
+                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 24),
                     new ObjectProperty(0), Settings.getStringToIntegerConverter());
             tf.setCaption(myUI.getMessage(SptMessages.WorkingHours));
             contractExtraInfoLay.addComponent(tf);
@@ -5654,7 +5657,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         myUI.getMessage(SptMessages.AcademicYear)).getValue());
                 contractExtraInfoLay.addComponent(cb);
             }
-            if (type_id != 3) {
+            if (type_id != 3 && type_id != 2) {
                 tf = createTextField(contractsTable.getContainerProperty(
                         contract_id, myUI.getMessage(SptMessages.Patent)).getValue() == null ? "" :
                         contractsTable.getContainerProperty(contract_id, myUI.getMessage(SptMessages.Patent))

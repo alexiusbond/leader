@@ -84,7 +84,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase(this.employeeInfo.getSchool().getName_ru()
-                        + ", именуемый  в  дальнейшем  «Заказчик»,  в лице директора ", ordFont));
+                        + ", именуемый в дальнейшем «Заказчик», в лице директора ", ordFont));
                 String fullName = null;
                 try {
                     boolean isFeminine = employeeInfo.getDirector().getGender_id() == 2;
@@ -103,14 +103,14 @@ public class ServiceAgreementAcademicStuffPdf {
                 if (employeeInfo.getEmployeeMiddleName() != null) {
                     fullName += employeeInfo.getEmployeeMiddleName();
                 }
-                paragraph.add(new Phrase(", действующего на основании Устава, с одной стороны, и и гражданин/ка ", ordFont));
+                paragraph.add(new Phrase(", действующего на основании Устава, с одной стороны, и гражданин/ка ", ordFont));
                 paragraph.add(new Phrase(fullName + ", ", ordBoldFont));
                 paragraph.add(new Phrase("паспорт № " + employeeInfo.getContact().getPassport() +
                         ", выданный " + employeeInfo.getContact().getPassportGiven() +
                         " от " + Settings.df.format(employeeInfo.getContact().getPassportDate()) +
                         ", действующий на основании патента №" + employeeInfo.getContract().getPatent()
                         + " от " + Settings.df.format(employeeInfo.getContract().getPatentDate()) +
-                        ", именуемый/ая в дальнейшем “Исполнитель”, с другой стороны,  заключили настоящий договор о нижеследующем:", ordFont));
+                        ", именуемый/ая в дальнейшем “Исполнитель”, с другой стороны, заключили настоящий договор о нижеследующем:", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -129,7 +129,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("1.1. Исполнитель обязуется по заданию Заказчика оказать образовательную услуги в образовательном Учреждении " +
+                paragraph.add(new Phrase("1.1. Исполнитель обязуется по заданию Заказчика оказать образовательные услуги в образовательном Учреждении " +
                         employeeInfo.getSchool().getName_ru() + ", а Заказчик обязуется принять и оплатить эти услуги.", ordFont));
                 document.add(paragraph);
 
@@ -149,8 +149,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("1.3. Исполнитель получает оплату за оказанные услуги, согласно акта выполненных работ "
-                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) +
-                        " сом, с учетом всех налогов Кыргызской Республики.", ordFont));
+                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) + " сом.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -207,7 +206,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.1. обросовестно, своевременно и эффективно исполнять все обязательства по настоящему договору, соблюдать действующее законодательство Кыргызской Республики, Устав Учреждения и правила по охране труда и технике безопасности;", ordFont));
+                paragraph.add(new Phrase("3.1. добросовестно, своевременно и эффективно исполнять все обязательства по настоящему договору, соблюдать действующее законодательство Кыргызской Республики, Устав Учреждения и правила по охране труда и технике безопасности;", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -288,7 +287,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.10. бережно относиться к имуществу Заказчика, а также к любому чужому имуществу, возмещать причиненный ущерб, причиненный Заказчику, при необходимости заключать договор о полной материальной ответственности;", ordFont));
+                paragraph.add(new Phrase("3.10. бережно относиться к имуществу Заказчика, а также к любому чужому имуществу, возмещать ущерб, причиненный Заказчику, при необходимости заключать договор о полной материальной ответственности;", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -387,7 +386,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.21. в случае, если Исполнитель допускает однократную грубое нарушение своих обязанностей или условий настоящего Договора (каждое “События Грубого Нарушения”), Заказчик, согласно статье 6, имеет право прекратить действие настоящего Договора. Исполнитель считается виновным в “Событии Грубого Нарушения”, если он/она:", ordFont));
+                paragraph.add(new Phrase("3.21. в случае, если Исполнитель допускает однократное грубое нарушение своих обязанностей или условий настоящего Договора (совершение “Грубого Нарушения”), Заказчик, согласно статье 6, имеет право прекратить действие настоящего Договора. Исполнитель считается виновным в совершении “Грубого Нарушения”, если он/она:", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -414,7 +413,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("(в) совершает умышленную порчу или хищение имущества Сторона 1;", ordFont));
+                paragraph.add(new Phrase("(в) совершает умышленную порчу или хищение имущества Заказчика;", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -423,7 +422,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("(г) раглашает коммерческую тайну Стороны 1 или любую конфиденциальную информацию без надлежащих полномочий;", ordFont));
+                paragraph.add(new Phrase("(г) разглашает коммерческую тайну Заказчика или любую конфиденциальную информацию без надлежащих полномочий;", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -441,7 +440,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("(е) совершает дейстия, противоречащие миссии, а также наносящие ущерб интересам Стороны 1.", ordFont));
+                paragraph.add(new Phrase("(е) совершает дейстия, противоречащие миссии, а также наносящие ущерб интересам Заказчика.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -450,7 +449,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("(ж) применяет, в том числе однократно, методы воспитания, связанные с физическим и (или) психическим насилием над личностью обущающегося;", ordFont));
+                paragraph.add(new Phrase("(ж) применяет, в том числе однократно, методы воспитания, связанные с физическим и(или) психическим насилием над личностью обучающегося, воспитанника;", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -459,7 +458,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("(з) передает третьим лицам контактные данные учащихся и их законных представителей без согласования со Стороной 1.", ordFont));
+                paragraph.add(new Phrase("(з) передает третьим лицам контактные данные учащихся и их законных представителей без согласования с Заказчиком.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -478,15 +477,6 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("3.22. при заключении Договора Исполнитель должен предоставить  необходимые документы:", ordFont));
-                document.add(paragraph);
-
-                paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(35);
-                paragraph.setIndentationLeft(35);
-                paragraph.setIndentationRight(30);
-                paragraph.setLeading(15);
-                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("- трудовую книжку,", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -522,7 +512,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("- фотографию 3x4, 2 шт.,", ordFont));
+                paragraph.add(new Phrase("- фотографию 3на 4, 2 шт.,", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -540,7 +530,16 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("- санитарную книжку, подтверждающую отсутствие у Стороны 2 опасных инфекционных и других заболеваний", ordFont));
+                paragraph.add(new Phrase("- санитарную книжку, подтверждающий отсутствие у Работника опасных инфекционных и других заболеваний,", ordFont));
+                document.add(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setFirstLineIndent(35);
+                paragraph.setIndentationLeft(35);
+                paragraph.setIndentationRight(30);
+                paragraph.setLeading(15);
+                paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+                paragraph.add(new Phrase("- справку с центра психиатрии и наркологии,", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -566,7 +565,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
-                paragraph.add(new Phrase("4.1. Под “конфиденциальной информацией” подразумевается вся информация, касающаяся Заказчика, включая, без ограничения, закрытую  нформацию по деятельности и финансовому положению Заказчика, о клиентах и поставщиках, коммерческую тайну Заказчика, “ноу-хау” технологиях, а также размера вознаграждения, выплачеваемого исполнителю во время действия настоящего договора.", ordFont));
+                paragraph.add(new Phrase("4.1. Под “конфиденциальной информацией” подразумевается вся информация, касающаяся Заказчика, включая, без ограничения, закрытую  информацию по деятельности и финансовому положению Заказчика, о клиентах и поставщиках, коммерческую тайну Заказчика, “ноу-хау” технологиях, а также размерах вознаграждения, выплачеваемого исполнителю во время действия настоящего договора.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -575,7 +574,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("4.2. Исполнитель не имеет права разглашать, сообщать и/или намеренно позволять любому лицу получить конфиденциальную информацию на протяжении срока действия настоящего договора и двенадцати (12) месцев после прекращения действия настоящего договора, если иное не предусмотрено действующим законодательством КР.", ordFont));
+                paragraph.add(new Phrase("4.2. Исполнитель не имеет права разглашать, сообщать и/или намеренно позволять любому лицу получить конфиденциальную информацию на протяжении срока действия настоящего договора и двенадцати (12) месяцев после прекращения действия настоящего договора, если иное не предусмотрено действующим законодательством КР.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -584,7 +583,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("4.3 Если исполнитель полагает, но не уверен в том, что определенная информация конфиденциальная, он обязан спросить у Заказчика разрешения, прежде чем разглашать такую информацию.", ordFont));
+                paragraph.add(new Phrase("4.3 Если Исполнитель полагает, но не уверен в том, что определенная информация конфиденциальная, он обязан спросить у Заказчика разрешения, прежде чем разглашать такую информацию.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -651,7 +650,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("6.3. Заказчик вправе расторгнуть настоящий договор ", ordFont));
                 paragraph.add(new Phrase("незамедлительно ", ordBoldFont));
-                paragraph.add(new Phrase("предварительно  письменно уведомив об этом Исполниетеля  при наступлении “События Грубого Нарушения;", ordFont));
+                paragraph.add(new Phrase("предварительно  письменно уведомив об этом Исполниетеля  при наступлении “Грубого Нарушения”.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -660,7 +659,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("6.4. Заказчик вправе расторгнуть настоящий договор, предварительно письменно уведомив об этом Исполнителя за 2 (две) недели до даты расторжения, в случае, если Исполнитель систематически нарушает свои обязательства и права Заказчика;", ordFont));
+                paragraph.add(new Phrase("6.4. Заказчик вправе расторгнуть настоящий договор предварительно писменно уведомив об этом Исполнителя за 2 (две) недели до даты расторжения, в случае если Исполнитель систематически нарушает свои обязательства и права Заказчика.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -669,7 +668,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("6.5. Исполнитель вправе расторгнуть настоящий договор досрочно, предварительно письменно уведомив об этом Заказчика за одну (1) четверть до даты расторжения.", ordFont));
+                paragraph.add(new Phrase("6.5. Исполнитель вправе расторгнуть настоящий договор досрочно, предварительно письменно уведомив об этом Заказчика за 1 (одну) четверть учебного года до даты расторжения.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
@@ -697,7 +696,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("7.2. Стороны не несут ответственности при невозможности или сложности выполнения своих обязательств по настоящему договору при наступлении обстоятельств непреодолимой силы, т,е. форс-мажорных обстоятельств. При введении в одностороннем порядке ограничительных мер на деятельность Заказчика со стороны государственных или других органов, в том числе и стихийных бедствий, объявления властями Кыргызской Республики о закрытии или переводе учащихся на дистанционный вид обучения, Заказчик имеет право пересмотреть условия настоящего договора: вплоть до досрочного приостановления/прекращения действия настоящего договора.", ordFont));
+                paragraph.add(new Phrase("7.2. Стороны не несут ответственности при невозможности или сложности выполнения своих обязательств по настоящему договору при наступлении обстоятельств непреодолимой силы, т.е. форс-мажорных обстоятельств. При введении в одностороннем порядке ограничительных мер на деятельность Заказчика со стороны государственных или других органов, в том числе и стихийных бедствий, объявления властями Кыргызской Республики о закрытии или переводе учащихся на дистанционный вид обучения, Заказчик имеет право пересмотреть условия настоящего договора: вплоть до досрочного приостановления/прекращения действия настоящего договора.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -706,7 +705,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("7.3. Любые споры или несогласия вытекающие из данного договора, должны быть разрешены путем переговоров.", ordFont));
+                paragraph.add(new Phrase("7.3. Любые споры или несогласия вытекающие из данного договора , должны быть разрешены путем переговоров.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -747,8 +746,8 @@ public class ServiceAgreementAcademicStuffPdf {
                 table_info.setWidthPercentage(90f);
                 table_info.setWidths(table_info_colsWidth);
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                table_info.addCell(new Phrase("Работодатель:", boldFont));
-                table_info.addCell(new Phrase("Работник:", boldFont));
+                table_info.addCell(new Phrase("Заказчик:", boldFont));
+                table_info.addCell(new Phrase("Исполнитель:", boldFont));
                 table_info.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 Paragraph text10 = new Paragraph();
                 text10.add(new Phrase(this.employeeInfo.getSchool().getName_ru(), ordFont));
@@ -782,6 +781,10 @@ public class ServiceAgreementAcademicStuffPdf {
                 text11.add(Chunk.NEWLINE);
                 text11.add(new Phrase("Место жительства: ", ordBoldFont));
                 text11.add(new Phrase(employeeInfo.getContact().getAddress(), ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("ИНН: ", ordBoldFont));
+                text11.add(new Phrase(employeeInfo.getContact().getInn(), ordFont));
                 text11.add(Chunk.NEWLINE);
                 text11.add(Chunk.NEWLINE);
                 text11.add(new Phrase("Тел.: ", ordBoldFont));
