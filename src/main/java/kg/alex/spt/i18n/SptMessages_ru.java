@@ -229,6 +229,7 @@ public class SptMessages_ru extends SptMessages {
             {Equipment, "Закрепленное оборудование"},
             {CreationDate, "Дата составления"},
             {NotificationNoPassportInfo, "Пасспортные данные сотрудника отсутствуют"},
+            {NotificationNoBranchInfo, "Незадана основная область преподавания"},
             {Date, "Дата"},
             {OrderType, "Тип приказа"},
             {Photo, "Фото"},

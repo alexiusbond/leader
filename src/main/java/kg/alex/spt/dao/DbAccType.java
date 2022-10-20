@@ -31,7 +31,7 @@ public class DbAccType extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         while (result.next()) {
-            Item item = container.addItem(result.getInt("t.id"));
+            Item item = container.addItem(result.getInt("c.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("c.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
         }

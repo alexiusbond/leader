@@ -565,6 +565,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String ProfInfo = generateId();
     public static final String CannotInsertOrder = generateId();
     public static final String NotificationNoPassportInfo = generateId();
+    public static final String NotificationNoBranchInfo = generateId();
     public static final String ShortTermDebtsDefinition = generateId();
     public static final String ReturnableAssetsDefinition = generateId();
     public static final String ShortTermDebts = generateId();

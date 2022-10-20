@@ -922,7 +922,7 @@ public class DbAccTransactions extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Accountant), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(
@@ -939,7 +939,7 @@ public class DbAccTransactions extends BaseDb {
                     result.getDouble("t.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                     result.getString("t.note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
+            item.getItemProperty(myUI.getMessage(SptMessages.Accountant)).setValue(
                     result.getString("fullname"));
         }
         return container;

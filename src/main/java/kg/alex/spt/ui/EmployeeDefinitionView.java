@@ -3080,16 +3080,23 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 logger.error(ex);
                 logger.catching(ex);
             }
-            if (employeeInfo.getContact().getPassport() == null || employeeInfo.getContact().getPassportGiven() == null ||
+            int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
+                    myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
+            System.out.println(employeeInfo);
+            System.out.println(employeeInfo.getContact());
+            if (employeeInfo.getContact() == null || employeeInfo.getContact().getPassport() == null ||
+                    employeeInfo.getContact().getPassportGiven() == null ||
                     employeeInfo.getContact().getPassportDate() == null) {
                 Notification.show(myUI.getMessage(SptMessages.NotificationNoPassportInfo),
                         Notification.Type.WARNING_MESSAGE);
             } else if (!validate(contractExtraInfoLay, false)) {
                 Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
+            } else if (type_id == 3 && employeesDataTable.getContainerProperty(employeeID,
+                    myUI.getMessage(SptMessages.MainBranch)).getValue() == null) {
+                Notification.show(myUI.getMessage(SptMessages.NotificationNoBranchInfo),
+                        Notification.Type.WARNING_MESSAGE);
             } else {
-                int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
-                        myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
                 employeeInfo.setContract(saveContractExtraInfo(source.getData(), new EmployeeContract()));
                 employeeInfo.getContract().setCreationDate(((DateField) contractsTable.getContainerProperty(source.getData(),
                         myUI.getMessage(SptMessages.CreationDate)).getValue()).getValue());
@@ -3104,8 +3111,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 employeeInfo.setEmployeeMiddleName(middleNameTF.getValue());
                 employeeInfo.setEmployeePosition(employeesDataTable.getContainerProperty(employeeID,
                         myUI.getMessage(SptMessages.MainPosition)).getValue().toString());
-                employeeInfo.setEmployeeBranch(employeesDataTable.getContainerProperty(employeeID,
-                        myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
+                if (type_id == 3) {
+                    employeeInfo.setEmployeeBranch(employeesDataTable.getContainerProperty(employeeID,
+                            myUI.getMessage(SptMessages.MainBranch)).getValue().toString());
+                }
                 try {
                     DbEmployee dbEmployee = new DbEmployee();
                     dbEmployee.connect();

@@ -7,6 +7,7 @@ package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
@@ -19,6 +20,7 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.pdf.AccountingByDatesPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -40,7 +42,7 @@ public class DateReport implements Button.ClickListener,
     static final Logger logger = LogManager.getLogger(DateReport.class);
     private final MyVaadinUI myUI;
     private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn,
-            selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn;
+            selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn, pdfBtn;
     private final HorizontalSplitPanel splitPanel;
     private DateField fromDateDF, tillDateDF;
     public FormattedTable incomesDataTable, outcomesDataTable;
@@ -144,6 +146,14 @@ public class DateReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
+        pdfBtn = new Button();
+        pdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        pdfBtn.setWidth(Settings.PERCENTS100);
+        pdfBtn.setEnabled(false);
+        pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
+        pdfBtn.addClickListener(this);
+
         fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
@@ -170,7 +180,8 @@ public class DateReport implements Button.ClickListener,
         leftGrid.addComponent(selectAllOutcomesBtn, 0, 3, 1, 3);
         leftGrid.addComponent(deselectAllOutcomesBtn, 2, 3, 3, 3);
         leftGrid.addComponent(outcomeCategoriesTable, 0, 4, 3, 4);
-        leftGrid.addComponent(generateBtn, 0, 5, 2, 5);
+        leftGrid.addComponent(generateBtn, 0, 5, 1, 5);
+        leftGrid.addComponent(pdfBtn, 2, 5);
         leftGrid.addComponent(excelBtn, 3, 5);
         leftGrid.setRowExpandRatio(2, 1);
         leftGrid.setRowExpandRatio(4, 1);
@@ -267,12 +278,15 @@ public class DateReport implements Button.ClickListener,
                             incomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
                             if (incomesDataTable.getContainerDataSource().size() != 0) {
                                 excelBtn.setEnabled(true);
+                                pdfBtn.setEnabled(true);
                             }
                             dbsc.close();
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
                         }
+                    } else {
+                        incomesDataTable.setContainerDataSource(null);
                     }
                     if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
@@ -290,17 +304,19 @@ public class DateReport implements Button.ClickListener,
                             outcomesDataTable.setContainerDataSource(dbsc.exec_report_by_date(myUI, 2,
                                     myUI.getUser().getSchool().getId(), fromDateDF.getValue(), tillDateDF.getValue(),
                                     outcomeCategoriesTable));
-
                             outcomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
                             outcomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
                             if (outcomesDataTable.getContainerDataSource().size() != 0) {
                                 excelBtn.setEnabled(true);
+                                pdfBtn.setEnabled(true);
                             }
                             dbsc.close();
                         } catch (Exception e) {
                             logger.error(e);
                             logger.catching(e);
                         }
+                    } else {
+                        outcomesDataTable.setContainerDataSource(null);
                     }
                     try {
                         DbAccTransactions dbtr = new DbAccTransactions();
@@ -381,7 +397,7 @@ public class DateReport implements Button.ClickListener,
                                     excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getFirstCellNum()).setCellValue(
                                             myUI.getMessage(SptMessages.IncomesTotal) + ": " + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$\t "
                                                     + myUI.getMessage(SptMessages.ExpensesTotal) + ": " + Settings.dFormat2.format(
-                                                            schoolAcc.getTotal_outcome()) + "$\t "
+                                                    schoolAcc.getTotal_outcome()) + "$\t "
                                                     + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime())
                                                     + "): " + Settings.dFormat2.format(schoolAcc.getPrevious_balance()) + "$\t "
                                                     + myUI.getMessage(SptMessages.CashBox) + ": " + Settings.dFormat2.format(
@@ -405,6 +421,32 @@ public class DateReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
+        } else if (source == pdfBtn) {
+            StudentInfoPdf st;
+            try {
+                DbSchool dbsc = new DbSchool();
+                dbsc.connect();
+                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                dbsc.close();
+                if (st.getScl_accountant_full_name() != null) {
+                    if (st.getScl_address() != null && st.getScl_phone() != null
+                            && st.getScl_name_ru() != null) {
+                        new AccountingByDatesPdf(myUI, st, (IndexedContainer) incomesDataTable.getContainerDataSource(),
+                                (IndexedContainer) outcomesDataTable.getContainerDataSource(),
+                                myUI.getMessage(SptMessages.From) + " " + Settings.df.format(fromDateDF.getValue())
+                                        + " " + myUI.getMessage(SptMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                    } else {
+                        Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
+                                Notification.Type.WARNING_MESSAGE);
+                    }
+                } else {
+                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
+                            Notification.Type.WARNING_MESSAGE);
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         } else if (source == selectAllIncomesBtn) {
             incomeCategoriesTable.setValue(incomeCategoriesTable.getContainerDataSource().getItemIds());
         } else if (source == deselectAllIncomesBtn) {
@@ -423,6 +465,7 @@ public class DateReport implements Button.ClickListener,
             if (property == incomeCategoriesTable || property == outcomeCategoriesTable
                     || property == tillDateDF || property == fromDateDF) {
                 excelBtn.setEnabled(false);
+                pdfBtn.setEnabled(false);
                 rightLayout.removeAllComponents();
             }
         }
