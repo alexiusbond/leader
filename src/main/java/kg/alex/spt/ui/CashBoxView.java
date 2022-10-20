@@ -458,7 +458,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     } else if (grid == incomesGrid && pid.equals(myUI.getMessage(SptMessages.Category))) {
                         DbAccTransactions dbac = new DbAccTransactions();
                         dbac.connect();
-                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), 0));
+                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 1, myUI.getUser().getSchool().getId(), 0));
                         dbac.close();
                     } else if (pid.equals(myUI.getMessage(SptMessages.ToEmployee))) {
                         DbEmployee dbCon = new DbEmployee();

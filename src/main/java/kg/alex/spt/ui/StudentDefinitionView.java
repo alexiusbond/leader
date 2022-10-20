@@ -2297,7 +2297,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else if (setDefPayCatType) {
             cb.setValue(2);
         } else if (setDefPayType) {
-            cb.setValue(1);
+            cb.setValue(3);
         } else {
             cb.setValue(value);
         }
