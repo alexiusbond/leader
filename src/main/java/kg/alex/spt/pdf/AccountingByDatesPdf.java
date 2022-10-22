@@ -47,10 +47,10 @@ public class AccountingByDatesPdf {
 
                 try {
 
-                    document = new Document(PageSize.A4.rotate(), 10, 10, 70, 35);
+                    document = new Document(PageSize.A4, 10, 10, 60, 35);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterLandscape event = new HeaderFooterLandscape(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -79,8 +79,8 @@ public class AccountingByDatesPdf {
                         spr.setFirstLineIndent(40);
                         document.add(spr);
                         document.add(new Paragraph(10, " "));
-                        float[] table_payments_colsWidth = {0.7f, 1.7f, 1.6f, 4.5f, 1.1f, 1.2f, 1.5f, 4.3f, 3.5f};
-                        PdfPTable table_payments = new PdfPTable(9);
+                        float[] table_payments_colsWidth = {0.7f, 1.8f, 1.5f, 4.2f, 0.75f, 1.3f, 1.9f, 4.0f};
+                        PdfPTable table_payments = new PdfPTable(8);
                         table_payments.setWidthPercentage(90f);
                         table_payments.setWidths(table_payments_colsWidth);
                         table_payments.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
@@ -92,7 +92,6 @@ public class AccountingByDatesPdf {
                         table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Rate), ordFontBold));
                         table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
                         table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Note), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
 
                         int i = 0;
                         Iterator<?> iterator = incomesContainer.getItemIds().iterator();
@@ -115,8 +114,6 @@ public class AccountingByDatesPdf {
                             table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Note)).getValue().toString(), tableFont));
-                            table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Accountant)).getValue().toString(), tableFont));
                         }
                         document.add(table_payments);
                     }
@@ -126,8 +123,8 @@ public class AccountingByDatesPdf {
                         spr.setFirstLineIndent(40);
                         document.add(spr);
                         document.add(new Paragraph(10, " "));
-                        float[] table_payments_colsWidth = {0.7f, 1.7f, 1.6f, 4.5f, 1.1f, 1.2f, 1.5f, 4.3f, 3.5f};
-                        PdfPTable table_payments = new PdfPTable(9);
+                        float[] table_payments_colsWidth = {0.7f, 1.8f, 1.5f, 4.2f, 0.75f, 1.3f, 1.9f, 4.0f};
+                        PdfPTable table_payments = new PdfPTable(8);
                         table_payments.setWidthPercentage(90f);
                         table_payments.setWidths(table_payments_colsWidth);
                         table_payments.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
@@ -139,7 +136,6 @@ public class AccountingByDatesPdf {
                         table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Rate), ordFontBold));
                         table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
                         table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Note), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
 
                         int i = 0;
                         Iterator<?> iterator = expensesContainer.getItemIds().iterator();
@@ -162,8 +158,6 @@ public class AccountingByDatesPdf {
                             table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             table_payments.addCell(new Phrase(expensesContainer.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Note)).getValue().toString(), tableFont));
-                            table_payments.addCell(new Phrase(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Accountant)).getValue().toString(), tableFont));
                         }
                         document.add(table_payments);
                     }

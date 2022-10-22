@@ -25,14 +25,16 @@ public class DbInvoice extends BaseDb {
         super();
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id, String viewName, Property.ValueChangeListener listener) throws SQLException {
+    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int invoice_type_id, String viewName,
+                                    Property.ValueChangeListener listener) throws SQLException {
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
                 + "sum(if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount)) as amount, inv.note, inv.note2 "
                 + "FROM acc_invoice AS inv "
                 + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = inv.id "
-                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? group by inv.id ORDER BY inv.invoice_number DESC;";
+                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? "
+                + "group by inv.id ORDER BY inv.invoice_number DESC;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, invoice_type_id);
@@ -63,6 +65,50 @@ public class DbInvoice extends BaseDb {
                 cb.setValue(true);
             }
             if (!currentUser.isPermitted(viewName + ":" + Settings.prmConfirmationControl)) {
+                cb.setEnabled(false);
+            }
+            cb.addValueChangeListener(listener);
+            item.getItemProperty(Settings.button).setValue(cb);
+        }
+        return container;
+    }
+
+    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, Property.ValueChangeListener listener) throws SQLException {
+
+        Subject currentUser = SecurityUtils.getSubject();
+        String sql = "SELECT inv.id, LPAD(inv.invoice_number, 7, 0) as inv_num, inv.creation_date, inv.is_confirmed, "
+                + "sum(if(cat.acc_type_id = 3, if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount),"
+                + "-if(acr.acc_currency_id != 2, acr.amount/acr.currency_rate, acr.amount))) as amount, inv.note, inv.note2 "
+                + "FROM acc_invoice AS inv "
+                + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = inv.id "
+                + "LEFT JOIN acc_category AS cat ON acr.acc_category_id = cat.id "
+                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = 5 "
+                + "group by inv.id ORDER BY inv.invoice_number DESC";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, scl_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(SptMessages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Note) + " 2", String.class, null);
+        container.addContainerProperty(Settings.button, CheckBox.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("inv.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.ymdf.format(result.getTimestamp("inv.creation_date")));
+            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("inv.note"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Note) + " 2").setValue(result.getString("inv.note2"));
+            CheckBox cb = new CheckBox();
+            cb.setStyleName(ValoTheme.CHECKBOX_SMALL);
+            cb.setData(result.getInt("inv.id"));
+            if (result.getInt("inv.is_confirmed") == 1) {
+                cb.setValue(true);
+            }
+            if (!currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmConfirmationControl)) {
                 cb.setEnabled(false);
             }
             cb.addValueChangeListener(listener);
@@ -152,7 +198,7 @@ public class DbInvoice extends BaseDb {
     }
 
     public int execSQL_max_invoice_number(int school_id, int acc_invoice_type_id) throws SQLException {
-        String sql = "SELECT max(invoice_number) as inv_num FROM acc_invoice WHERE school_id = ? and acc_invoice_type_id = ?;";
+        String sql = "SELECT max(invoice_number) as inv_num FROM acc_invoice WHERE school_id = ? and acc_invoice_type_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, acc_invoice_type_id);

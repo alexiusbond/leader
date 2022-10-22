@@ -230,6 +230,13 @@
     padding: 1px 16px 1px 32px;
   }
 
+  .v-label-border {
+    background: #F0F9E7;
+    border: 1px solid #2c9720;
+    border-radius: 0px;
+    padding: 1px 16px 1px 32px;
+  }
+
   .v-label-success:before, .v-label-failure:before {
     margin-left: -25px;
   }

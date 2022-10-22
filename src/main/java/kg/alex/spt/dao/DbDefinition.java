@@ -9,6 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
+import kg.alex.spt.domain.AccBalanceSettings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.i18n.SptMessages;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
@@ -16,6 +17,7 @@ import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -429,6 +431,34 @@ public class DbDefinition extends BaseDb {
             }
         }
         return container;
+    }
+
+    public List<AccBalanceSettings> exec_balance_settings(int acc_type_id) throws SQLException {
+        String sql = "SELECT bs.id, cat.id, cat.name, CASE WHEN bs.year_preferences = 1 THEN " +
+                "CONCAT((SELECT t.name FROM year AS t WHERE t.is_last = 1), ' ', bs.prefix) " +
+                "WHEN bs.year_preferences = - 1 THEN " +
+                "CONCAT((SELECT t.name FROM year AS t WHERE t.id = " +
+                "(SELECT t.id - 1 FROM year AS t WHERE t.is_last = 1)), ' ', bs.prefix) " +
+                "ELSE bs.prefix END AS prefix, bs.postfix, bs.text_field_preferences " +
+                "FROM acc_balance_settings AS bs " +
+                "LEFT JOIN acc_category AS cat ON cat.id = bs.acc_cactegory_id " +
+                "WHERE cat.acc_type_id = ? AND bs.activity_status_id = 2";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, acc_type_id);
+        ResultSet result = stat.executeQuery();
+        List<AccBalanceSettings> list = new ArrayList<>();
+        while (result.next()) {
+            AccBalanceSettings balanceSettings = new AccBalanceSettings();
+            balanceSettings.setId(result.getInt("bs.id"));
+            balanceSettings.setAccCategoryId(result.getInt("cat.id"));
+            balanceSettings.setAccCategory(result.getString("cat.name"));
+            balanceSettings.setPrefix(result.getString("prefix"));
+            balanceSettings.setPostfix(result.getString("bs.postfix"));
+            balanceSettings.setWithTextField(result.getBoolean("bs.text_field_preferences"));
+            list.add(balanceSettings);
+        }
+        return list;
     }
 
     public int search_id(String table, String column, String value) throws SQLException {

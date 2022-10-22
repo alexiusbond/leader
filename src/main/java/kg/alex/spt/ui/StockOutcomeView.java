@@ -349,7 +349,7 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
                     });
         } else if (source == saveBtn) {
             try {
-                if (validate(settingsLay) && validateTable(movementsTable)) {
+                if (Settings.validate(settingsLay) && Settings.validateTable(myUI, movementsTable)) {
                     DbStockInvoice dbCon = new DbStockInvoice();
                     dbCon.connect();
                     if (isNew) {
@@ -950,54 +950,6 @@ public class StockOutcomeView extends HorizontalSplitPanel implements Button.Cli
             logger.error(e);
             logger.catching(e);
         }
-    }
-
-    private boolean validate(ComponentContainer layout) {
-        boolean result = true;
-        for (Component c : layout) {
-            if (c instanceof AbstractField) {
-                try {
-                    ((AbstractField<?>) c).validate();
-                } catch (Exception e) {
-                    //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
-                    result = false;
-                }
-            } else if (c instanceof AbstractComponentContainer) {
-                if (!validate((AbstractComponentContainer) c)) {
-                    result = false;
-                }
-            }
-        }
-        return result;
-    }
-
-    private boolean validateTable(Table t) {
-        if (t.size() == 0) {
-            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
-                    Notification.Type.WARNING_MESSAGE);
-            return false;
-        } else {
-            for (Object next : ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds()) {
-                for (Object next1 : (t.getContainerDataSource()).getContainerPropertyIds()) {
-                    Object c = t.getItem(next).getItemProperty(
-                            next1).getValue();
-                    if (c instanceof AbstractField) {
-                        try {
-                            ((AbstractField<?>) c).validate();
-                        } catch (Exception e) {
-                            //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
-                            return false;
-                        }
-                    } else if (c instanceof AbstractComponentContainer) {
-                        if (!validate((AbstractComponentContainer) c)) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     public ComboBox createCombobox(int value, String description, String db_table, boolean isRequired) {

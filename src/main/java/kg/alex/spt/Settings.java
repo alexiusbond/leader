@@ -11,6 +11,8 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.ui.*;
+import kg.alex.spt.i18n.SptMessages;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -237,6 +239,7 @@ public class Settings implements Serializable {
     public static final String cnAccrualsView = "AccrualsView";
     public static final String cnShortTermDebtsView = "ShortTermDebtsView";
     public static final String cnReturnableAssetsView = "ReturnableAssetsView";
+    public static final String cnBalanceAccountsView = "BalanceAccountsView";
     public static final String cnPayoutsView = "PayoutsView";
     public static final String cnSchoolDefinitionView = "SchoolDefinitionView";
     public static final String cnEmployeeDefinitionView = "EmployeeDefinitionView";
@@ -507,5 +510,54 @@ public class Settings implements Serializable {
             }
         }
         return cont;
+    }
+
+    public static boolean validate(ComponentContainer layout) {
+        boolean result = true;
+        for (Component c : layout) {
+            if (c instanceof AbstractField) {
+                try {
+                    ((AbstractField<?>) c).validate();
+                } catch (Exception e) {
+                    //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
+                    result = false;
+                }
+            } else if (c instanceof AbstractComponentContainer) {
+                if (!validate((AbstractComponentContainer) c)) {
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static boolean validateTable(MyVaadinUI myUI, Table t) {
+        if (t.size() == 0) {
+            Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.Type.WARNING_MESSAGE);
+            return false;
+        } else {
+            for (Object next : ((IndexedContainer) t
+                    .getContainerDataSource()).getItemIds()) {
+                for (Object next1 : t
+                        .getContainerDataSource().getContainerPropertyIds()) {
+                    Object c = t.getItem(next).getItemProperty(
+                            next1).getValue();
+                    if (c instanceof AbstractField) {
+                        try {
+                            ((AbstractField<?>) c).validate();
+                        } catch (Exception e) {
+                            //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
+                            return false;
+                        }
+                    } else if (c instanceof AbstractComponentContainer) {
+                        if (!validate((AbstractComponentContainer) c)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

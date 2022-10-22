@@ -575,6 +575,7 @@ public class SptMessages_ru extends SptMessages {
             {ShortTermDebtsDefinition, "Определение краткосрочных задолженностей"},
             {ReturnableAssetsDefinition, "Определение возвращаемых активов"},
             {ShortTermDebts, "Балансовые краткосрочные задолженности"},
+            {BalanceAccounts, "Балансовые счета"},
             {ReturnableAssets, "Балансовые возвращаемые активы"},
             {ExistsNotification, "Запись данной категории уже сущестует!"},
             {ExistsInvoiceNotification, "Накладная с выбранной датой уже существует!"},

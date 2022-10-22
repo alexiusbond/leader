@@ -231,7 +231,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             prepareModificationMode();
         } else if (source == saveBtn) {
             try {
-                if (validate(this)) {
+                if (Settings.validate(this)) {
                     DbSchool dbScl = new DbSchool();
                     dbScl.connect();
                     School sch = getSchool(school_id);
@@ -399,25 +399,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         s.setYear_id(myUI.getUser().getCurrent_year().getId());
         s.setPhoto(photoName);
         return s;
-    }
-
-    private boolean validate(ComponentContainer layout) {
-        boolean result = true;
-        for (Component c : layout) {
-            if (c instanceof AbstractField) {
-                try {
-                    ((AbstractField<?>) c).validate();
-                } catch (Exception e) {
-                    //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
-                    result = false;
-                }
-            } else if (c instanceof AbstractComponentContainer) {
-                if (!validate((AbstractComponentContainer) c)) {
-                    result = false;
-                }
-            }
-        }
-        return result;
     }
 
     public class MyReceiver implements Upload.Receiver {

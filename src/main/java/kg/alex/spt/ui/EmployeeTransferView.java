@@ -338,7 +338,7 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == saveBtn) {
-            if (!validateTable(data1Table) || !validateTable(data2Table)) {
+            if (!Settings.validateTable(myUI, data1Table) || !Settings.validateTable(myUI, data2Table)) {
                 Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                         Notification.Type.WARNING_MESSAGE);
             } else {
@@ -423,34 +423,6 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
         t.setColumnExpandRatio(myUI.getMessage(SptMessages.Note), 1);
     }
 
-    private boolean validateTable(Table t) {
-        if (t.size() == 0) {
-            return false;
-        } else {
-            for (Object next : ((IndexedContainer) t
-                    .getContainerDataSource()).getItemIds()) {
-                for (Object next1 : t
-                        .getContainerDataSource().getContainerPropertyIds()) {
-                    Object c = t.getItem(next).getItemProperty(
-                            next1).getValue();
-                    if (c instanceof AbstractField) {
-                        try {
-                            ((AbstractField<?>) c).validate();
-                        } catch (Exception e) {
-                            //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
-                            return false;
-                        }
-                    } else if (c instanceof AbstractComponentContainer) {
-                        if (!validate((AbstractComponentContainer) c)) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
     private int insertTableValuesToDb(Table t) {
         int st = 0;
         try {
@@ -500,25 +472,6 @@ public class EmployeeTransferView extends VerticalSplitPanel implements Button.C
             logger.catching(e);
         }
         return st;
-    }
-
-    private boolean validate(ComponentContainer layout) {
-        boolean result = true;
-        for (Component c : layout) {
-            if (c instanceof AbstractField) {
-                try {
-                    ((AbstractField<?>) c).validate();
-                } catch (Exception e) {
-                    //((AbstractComponent) c).setComponentError(new UserError(e.getMessage()));
-                    result = false;
-                }
-            } else if (c instanceof AbstractComponentContainer) {
-                if (!validate((AbstractComponentContainer) c)) {
-                    result = false;
-                }
-            }
-        }
-        return result;
     }
 
     @Override
