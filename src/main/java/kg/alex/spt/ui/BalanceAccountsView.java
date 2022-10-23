@@ -32,11 +32,11 @@ import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.hene.popupbutton.PopupButton;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class BalanceAccountsView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
@@ -70,9 +70,8 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
                 myUI.getMessage(SptMessages.Note), myUI.getMessage(SptMessages.Note) + " 2"};
 
-
-        buildSettingsLayout();
         buildRightLayout();
+        buildSettingsLayout();
         this.setSplitPosition(24, Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
@@ -279,7 +278,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                 TextField tf = createTextField(new StringLengthValidator(
                                 myUI.getMessage(SptMessages.NotificationWrongValue),
                                 null, 100, true), false, null,
-                        null, null, null, null);
+                        myUI.getMessage(SptMessages.Note), null, null, null);
                 hl.addComponent(tf);
                 hl.setExpandRatio(tf, 1);
                 if (balanceSettings.getPostfix() != null) {
@@ -415,8 +414,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                         if (isNew) {
                             if (!dbCon.isExists(myUI.getUser().getSchool().getId(), 5, dateDF.getValue(), 0)) {
                                 Invoice inv = getInvoice(0);
-                                int id = 0;
-                                id = dbCon.exec_insert(inv);
+                                int id = dbCon.exec_insert(inv);
                                 if (id != 0) {
                                     insertTransfers(id, 3);
                                     insertTransfers(id, 4);
@@ -440,8 +438,10 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                                     logger.catching(e);
                                 }
                                 if (status != 0) {
-                                    insertTransfers(invID, 0);
+                                    insertTransfers(invID, 3);
+                                    insertTransfers(invID, 4);
                                     updateDataContainer();
+                                    setTransfers();
                                     Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                     prepareNormalMode();
                                 } else {
@@ -465,6 +465,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         } else if (source == cancelBtn) {
             if (invoicesTable.getValue() != null) {
                 fillFields();
+                setTransfers();
             }
             prepareNormalMode();
         } else if (source == confirmBtn) {
@@ -507,6 +508,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             invoiceNumberTF.removeValueChangeListener(this);
             if (invoicesTable.getItem(invoicesTable.getValue()) != null) {
                 invID = (Integer) invoicesTable.getValue();
+                setTransfers();
                 fillFields();
             }
             invoiceNumberTF.addValueChangeListener(this);
@@ -662,8 +664,75 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         for (Component c : layout) {
             if (c instanceof AbstractField) {
                 ((AbstractField<?>) c).setValue(null);
+                c.setId(null);
+                if (((AbstractField<?>) c).getData() != null &&
+                        ((AbstractField<?>) c).getData().equals(myUI.getMessage(SptMessages.Note))) {
+                    ((TextField) c).setRequired(false);
+                    ((TextField) c).setRequiredError(null);
+                    ((TextField) c).setNullSettingAllowed(true);
+                    ((TextField) c).removeAllValidators();
+                    ((TextField) c).addValidator(new StringLengthValidator(
+                            myUI.getMessage(SptMessages.NotificationWrongValue),
+                            null, 100, true));
+                }
             } else if (c instanceof AbstractComponentContainer) {
                 clearAll((AbstractComponentContainer) c);
+            }
+        }
+    }
+
+    private void setTransfers() {
+        clearAll(rightLay);
+        try {
+            DbTransfers dbCon = new DbTransfers();
+            dbCon.connect();
+            Map<Integer, Transfer> transfersMap = dbCon.execSQL(invID);
+            dbCon.close();
+            for (int i = 0; i < rightLay.getRows(); i++) {
+                int column = 1;
+                setTransfers(transfersMap, i, column);
+                column = 4;
+                setTransfers(transfersMap, i, column);
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        recalculateTotals(1);
+        recalculateTotals(4);
+    }
+
+    private void setTransfers(Map<Integer, Transfer> transfersMap, int i, int column) {
+        if (rightLay.getComponent(column, i) instanceof TextField) {
+            TextField tf = (TextField) rightLay.getComponent(column, i);
+            AccBalanceSettings balanceSettings = (AccBalanceSettings) tf.getData();
+            Transfer tr = transfersMap.get(balanceSettings.getId());
+            if (tr != null) {
+                tf.removeValueChangeListener(this);
+                tf.getPropertyDataSource().setValue(tr.getAmount());
+                tf.addValueChangeListener(this);
+                tf.setId(Integer.toString(tr.getId()));
+                if (balanceSettings.isWithTextField()) {
+                    Component component = rightLay.getComponent(column - 1, i);
+                    if (component instanceof HorizontalLayout) {
+                        String value = tr.getNote().replace(balanceSettings.getPrefix(), "");
+                        if (balanceSettings.getPostfix() != null) {
+                            value = value.replace(balanceSettings.getPostfix(), "");
+                        }
+                        for (int j = 0; j < ((HorizontalLayout) component).getComponentCount(); j++) {
+                            Component c = ((HorizontalLayout) component).getComponent(j);
+                            if (c instanceof TextField) {
+                                ((TextField) c).setValue(value.trim());
+                                ((TextField) c).setRequired(true);
+                                ((TextField) c).setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+                                ((TextField) c).setNullSettingAllowed(false);
+                                ((TextField) c).removeAllValidators();
+                                ((TextField) c).addValidator(new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
+                                        1, 100, false));
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -672,8 +741,9 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Date)).setValue(
                 df.format(dateDF.getValue()));
         try {
-            /*invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat2.parse(transfersTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());*/
+            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
+                    Settings.dFormat2.parse(((Label) rightLay.getComponent(4, rightLay.getRows() - 1))
+                            .getValue()).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -777,6 +847,8 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
         try {
             DbTransfers dbCon = new DbTransfers();
             dbCon.connect();
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
             for (int i = 0; i < rightLay.getRows(); i++) {
                 if (rightLay.getComponent(column, i) instanceof TextField) {
                     TextField tf = (TextField) rightLay.getComponent(column, i);
@@ -804,11 +876,19 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
                             }
                             tr.setNote(value.trim());
                         }
-                        dbCon.exec_insert(tr);
+                        if (tf.getId() != null) {
+                            tr.setId(Integer.parseInt(tf.getId()));
+                            dbCon.exec_update(tr);
+                        } else {
+                            dbCon.exec_insert(tr);
+                        }
+                    } else if (tf.getId() != null) {
+                        dbd.exec_delete(tf.getId(), Settings.dbTransfers);
                     }
                 }
             }
             dbCon.close();
+            dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

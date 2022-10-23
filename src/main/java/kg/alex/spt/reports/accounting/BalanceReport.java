@@ -265,7 +265,7 @@ public class BalanceReport implements Button.ClickListener,
                             try {
                                 DbTransfers dbCon = new DbTransfers();
                                 dbCon.connect();
-                                dbCon.exec_report_by_date(myUI, 3, myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
+                                dbCon.exec_report_by_date(myUI, "3,5", myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
                                         assertsDataTable, Settings.convertCollectionToStr(catIds));
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
@@ -294,7 +294,7 @@ public class BalanceReport implements Button.ClickListener,
                             try {
                                 DbTransfers dbsc = new DbTransfers();
                                 dbsc.connect();
-                                dbsc.exec_report_by_date(myUI, 4, myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
+                                dbsc.exec_report_by_date(myUI, "4,5", myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
                                         debtsDataTable, Settings.convertCollectionToStr(catIds));
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
                                 debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);

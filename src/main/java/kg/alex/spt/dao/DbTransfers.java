@@ -15,6 +15,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
+import kg.alex.spt.domain.AccBalanceSettings;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.domain.Transfer;
 import kg.alex.spt.i18n.SptMessages;
@@ -30,6 +31,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DbTransfers extends BaseDb {
 
@@ -105,7 +108,26 @@ public class DbTransfers extends BaseDb {
         return container;
     }
 
-    public void exec_report_by_date(MyVaadinUI myUI, int type_id, int school_id, Date from_date, Date till_date,
+    public Map<Integer, Transfer> execSQL(int invoice_id)
+            throws SQLException {
+        String sql = "SELECT t.id, t.amount, t.acc_balance_settings_id, t.note "
+                + "FROM acc_transfers as t where t.invoice_id = ? order by t.id;";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, invoice_id);
+        ResultSet result = stat.executeQuery();
+        Map<Integer, Transfer> map = new HashMap<>();
+        while (result.next()) {
+            Transfer transfer = new Transfer();
+            transfer.setId(result.getInt("t.id"));
+            transfer.setAmount(result.getDouble("t.amount"));
+            transfer.setNote(result.getString("t.note"));
+            map.put(result.getInt("t.acc_balance_settings_id"), transfer);
+        }
+        return map;
+    }
+
+    public void exec_report_by_date(MyVaadinUI myUI, String type_ids, int school_id, Date from_date, Date till_date,
                                     FormattedTreeTable t, String selectedCategoryIds) throws SQLException {
         String sql = "SELECT ac.id, concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as category, " +
                 "acu.name, t.acc_currency_id, t.currency_rate, t.amount, t.note, concat(e.name, ' ', e.surname) as fullname " +
@@ -115,14 +137,13 @@ public class DbTransfers extends BaseDb {
                 "left join acc_currency as acu on acu.id = t.acc_currency_id " +
                 "left join employee as e on e.id = inv.employee_id " +
                 "where inv.school_id = ? and date(inv.creation_date) >= ? and date(inv.creation_date) <= ? " +
-                "and inv.acc_invoice_type_id = ? and t.acc_category_id in ( " +
+                "and ac.acc_type_id in(" + type_ids + ") and t.acc_category_id in ( " +
                 selectedCategoryIds + ") and inv.is_confirmed = 1 " +
                 "order by inv.creation_date asc, ac.id;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(from_date.getTime()));
         stat.setDate(3, new java.sql.Date(till_date.getTime()));
-        stat.setInt(4, type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
@@ -208,7 +229,7 @@ public class DbTransfers extends BaseDb {
 
     public int exec_insert(Transfer acr) throws SQLException {
         String sql = "INSERT INTO acc_transfers (invoice_id,acc_category_id,"
-                + "acc_currency_id,amount,currency_rate,note) VALUES(?,?,?,?,?,?);";
+                + "acc_currency_id,amount,currency_rate,note,acc_balance_settings_id) VALUES(?,?,?,?,?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acr.getInvoice_id());
         stat.setInt(2, acr.getAcc_category_id());
@@ -219,6 +240,11 @@ public class DbTransfers extends BaseDb {
             stat.setString(6, acr.getNote());
         } else {
             stat.setNull(6, Types.VARCHAR);
+        }
+        if (acr.getAcc_balance_settings_id() != 0) {
+            stat.setInt(7, acr.getAcc_balance_settings_id());
+        } else {
+            stat.setNull(7, Types.INTEGER);
         }
         int st = stat.executeUpdate();
         if (st != 0) {
