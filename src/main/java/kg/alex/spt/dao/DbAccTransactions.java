@@ -13,7 +13,6 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.*;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.domain.AccBalanceSettings;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
@@ -777,25 +776,67 @@ public class DbAccTransactions extends BaseDb {
     }
 
     public void exec_account_remains(MyVaadinUI myUI, FilterTreeTable categoriesTable, int currency_id, int school_id,
-                                     FormattedTreeTable t) throws SQLException {
+                                     Date from, Date till, FormattedTreeTable t) throws SQLException {
 
         Set<Integer> selectedCategoryIds = Settings.getChild_ids(
                 (HierarchicalContainer) categoriesTable.getContainerDataSource(),
                 (Set<?>) categoriesTable.getValue());
-        logger.info(">> cat ids = " + Settings.convertCollectionToStr(selectedCategoryIds));
-        String sql = " SELECT cat.id, IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code) AS code, cat.name AS name, "
-                + "IFNULL(acr.amount_som, 0.0) - IFNULL(tr.amount_som, 0.0) AS remain_som, "
-                + "IFNULL(acr.amount_usd, 0.0) - IFNULL(tr.amount_usd, 0.0) AS remain_usd, "
-                + "IFNULL(IF((aacr.acc_currency_id <> 2), (aacr.amount / aacr.currency_rate), aacr.amount), 0.0) AS salary_usd, "
-                + "IFNULL(IF((aacr.acc_currency_id <> 1), (aacr.amount * aacr.currency_rate), aacr.amount), 0.0) AS salary_som "
-                + "FROM acc_category AS cat "
-                + "LEFT JOIN view_accurals AS acr ON acr.acc_category_id = cat.id AND acr.school_id = ? "
-                + "LEFT JOIN view_total_transactions AS tr ON tr.acc_category_id = cat.id AND tr.school_id = ? "
-                + "LEFT JOIN acc_transfers AS aacr ON aacr.invoice_id = acr.invoice_id AND aacr.acc_category_id = cat.id "
-                + "WHERE cat.id IN (" + Settings.convertCollectionToStr(selectedCategoryIds) + ")";
+        String sql = " SELECT cat.id, IFNULL(CONCAT(cat.parent_code, '.', cat.code), cat.code) AS code, cat.name AS name, " +
+                "IFNULL(acr.amount_som, 0.0) - IFNULL(tr.amount_som, 0.0) AS remain_som, " +
+                "IFNULL(acr.amount_usd, 0.0) - IFNULL(tr.amount_usd, 0.0) AS remain_usd, " +
+                "IFNULL(IF((aacr.acc_currency_id <> 2), (aacr.amount / aacr.currency_rate), aacr.amount), 0.0) AS salary_usd, " +
+                "IFNULL(IF((aacr.acc_currency_id <> 1), (aacr.amount * aacr.currency_rate), aacr.amount), 0.0) AS salary_som " +
+                "FROM acc_category AS cat " +
+                "LEFT JOIN " +
+                "(SELECT inv.school_id AS school_id, acr.acc_category_id AS acc_category_id, " +
+                "IFNULL(SUM(IF((acr.acc_currency_id <> 2), (acr.amount / acr.currency_rate), acr.amount)), 0.0) AS amount_usd, " +
+                "IFNULL(SUM(IF((acr.acc_currency_id <> 1), (acr.amount * acr.currency_rate), acr.amount)), 0.0) AS amount_som, " +
+                "MAX(inv.id) AS invoice_id FROM acc_transfers acr " +
+                "LEFT JOIN acc_invoice inv ON inv.id = acr.invoice_id AND inv.acc_invoice_type_id = 1 AND " +
+                "inv.school_id = ? ";
+        if (from != null && till != null) {
+            sql += "AND inv.creation_date >= ? AND inv.creation_date <= ? ";
+        } else if (from != null) {
+            sql += "AND inv.creation_date >= ? ";
+        } else if (till != null) {
+            sql += "AND inv.creation_date <= ? ";
+        }
+        sql += "GROUP BY inv.school_id , acr.acc_category_id) AS acr ON acr.acc_category_id = cat.id " +
+                "LEFT JOIN " +
+                "(SELECT tr.school_id AS school_id, tr.acc_category_id AS acc_category_id, IFNULL(SUM(IF((tr.acc_currency_id <> 2), " +
+                "(tr.amount / tr.currency_rate), tr.amount)), 0.0) AS amount_usd, IFNULL(SUM(IF((tr.acc_currency_id <> 1), " +
+                "(tr.amount * tr.currency_rate), tr.amount)), 0.0) AS amount_som FROM acc_transactions tr " +
+                "WHERE tr.school_id = ? ";
+        if (from != null && till != null) {
+            sql += "AND tr.date_time >= ? AND tr.date_time <= ? ";
+        } else if (from != null) {
+            sql += "AND tr.date_time >= ? ";
+        } else if (till != null) {
+            sql += "AND tr.date_time <= ? ";
+        }
+        sql += "GROUP BY tr.school_id , tr.acc_category_id) AS tr ON tr.acc_category_id = cat.id " +
+                "LEFT JOIN acc_transfers AS aacr ON aacr.invoice_id = acr.invoice_id AND aacr.acc_category_id = cat.id " +
+                "WHERE cat.id IN (" + Settings.convertCollectionToStr(selectedCategoryIds) + ")";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, school_id);
-        stat.setInt(2, school_id);
+        int counter = 0;
+        stat.setInt(++counter, school_id);
+        if (from != null && till != null) {
+            stat.setDate(++counter, new java.sql.Date(from.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till.getTime()));
+        } else if (from != null) {
+            stat.setDate(++counter, new java.sql.Date(from.getTime()));
+        } else if (till != null) {
+            stat.setDate(++counter, new java.sql.Date(till.getTime()));
+        }
+        stat.setInt(++counter, school_id);
+        if (from != null && till != null) {
+            stat.setDate(++counter, new java.sql.Date(from.getTime()));
+            stat.setDate(++counter, new java.sql.Date(till.getTime()));
+        } else if (from != null) {
+            stat.setDate(++counter, new java.sql.Date(from.getTime()));
+        } else if (till != null) {
+            stat.setDate(++counter, new java.sql.Date(till.getTime()));
+        }
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
@@ -836,50 +877,52 @@ public class DbAccTransactions extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
-            logger.info(">>>> result.getInt(cat.id) -> " + result.getInt("cat.id"));
-            if (currency_id == 1) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_som"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_som"));
-                total_remains += result.getDouble("remain_som");
-                total_salaries += result.getDouble("salary_som");
-                if (result.getDouble("salary_som") != 0.0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_som") / result.getDouble("salary_som"));
-                }
-                Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
-                while (parent_id != null) {
-                    item = container.getItem(parent_id);
-                    item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue() + result.getDouble("remain_som"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() + result.getDouble("salary_som"));
-                    if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() != 0.0) {
-                        item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
-                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue()
-                                        / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue());
+            if (item != null) {
+                if (currency_id == 1) {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_som"));
+                    item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_som"));
+                    total_remains += result.getDouble("remain_som");
+                    total_salaries += result.getDouble("salary_som");
+                    if (result.getDouble("salary_som") != 0.0) {
+                        item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_som") / result.getDouble("salary_som"));
                     }
-                    parent_id = (Integer) container.getParent(parent_id);
-                }
-            } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_usd"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_usd"));
-                total_remains += result.getDouble("remain_usd");
-                total_salaries += result.getDouble("salary_usd");
-                if (result.getDouble("salary_usd") != 0.0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_usd") / result.getDouble("salary_usd"));
-                }
-                Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
-                while (parent_id != null) {
-                    item = container.getItem(parent_id);
-                    item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue() + result.getDouble("remain_usd"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() + result.getDouble("salary_usd"));
-                    if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() != 0.0) {
-                        item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
-                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue()
-                                        / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue());
+                    Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
+                    while (parent_id != null) {
+                        item = container.getItem(parent_id);
+                        item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue() + result.getDouble("remain_som"));
+                        item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() + result.getDouble("salary_som"));
+                        if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() != 0.0) {
+                            item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
+                                    (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue()
+                                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue());
+                        }
+                        parent_id = (Integer) container.getParent(parent_id);
                     }
-                    parent_id = (Integer) container.getParent(parent_id);
+                } else {
+                    item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_usd"));
+                    item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_usd"));
+                    total_remains += result.getDouble("remain_usd");
+                    total_salaries += result.getDouble("salary_usd");
+                    if (result.getDouble("salary_usd") != 0.0) {
+                        item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
+                                result.getDouble("remain_usd") / result.getDouble("salary_usd"));
+                    }
+                    Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
+                    while (parent_id != null) {
+                        item = container.getItem(parent_id);
+                        item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue() + result.getDouble("remain_usd"));
+                        item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() + result.getDouble("salary_usd"));
+                        if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() != 0.0) {
+                            item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
+                                    (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue()
+                                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue());
+                        }
+                        parent_id = (Integer) container.getParent(parent_id);
+                    }
                 }
             }
         }

@@ -142,8 +142,8 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         leftGrid.addComponent(currencySelect, 0, 1, 3, 1);
         leftGrid.addComponent(employeeCategoriesTable, 0, 2, 3, 2);
         leftGrid.addComponent(generateBtn, 0, 3, 1, 3);
-        leftGrid.addComponent(excelBtn, 2, 3);
-        leftGrid.addComponent(pdfBtn, 3, 3);
+        leftGrid.addComponent(pdfBtn, 2, 3);
+        leftGrid.addComponent(excelBtn, 3, 3);
         leftGrid.setRowExpandRatio(2, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
@@ -178,7 +178,6 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Accrual), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Payout), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
-
                     if (dataTable.getContainerDataSource().size() != 0) {
                         pdfBtn.setEnabled(true);
                         excelBtn.setEnabled(true);

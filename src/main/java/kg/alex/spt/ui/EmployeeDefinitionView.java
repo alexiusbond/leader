@@ -407,10 +407,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         birthPlaceTF.setCaption(myUI.getMessage(SptMessages.BirthPlace));
         fieldsLayContacts.addComponent(birthPlaceTF);
 
-        emailTF = createTextField(null, null, new EmailValidator(myUI.getMessage(SptMessages.NotificationWrongValue)), true);
-        emailTF.setCaption(Settings.email);
-        fieldsLayContacts.addComponent(emailTF);
-
         addressTA = new TextArea(myUI.getMessage(SptMessages.Address));
         addressTA.setRequired(true);
         addressTA.setStyleName(ValoTheme.TEXTFIELD_TINY);
@@ -420,6 +416,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         addressTA.addValidator(new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotificationWrongValue), 1, 400, false));
         fieldsLayContacts.addComponent(addressTA);
+
+        emailTF = createTextField(null, null, new EmailValidator(myUI.getMessage(SptMessages.NotificationWrongValue)), false);
+        emailTF.setNullRepresentation("");
+        emailTF.setCaption(Settings.email);
+        fieldsLayContacts.addComponent(emailTF);
 
         passportTF = createTextField(null, null, new StringLengthValidator(
                 myUI.getMessage(SptMessages.NotificationWrongValue), null, 20, true), false);

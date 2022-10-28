@@ -281,6 +281,7 @@ public class Settings implements Serializable {
     public static final String actImport = "импорт";
     public static final String actPdf = "pdf";
     public static final String prmContractInfo = "информация о контракте";
+    public static final String prmFinancialHistoryInfo = "информация о финансовой истории";
     public static final String prmContractInfoLeftDebt = "информация о задолженностях";
     public static final String prmMenu = "показ в меню";
     public static final String prmIncomesExpensesDefinition = "определение двусторонних категорий";

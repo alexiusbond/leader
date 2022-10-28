@@ -9,6 +9,7 @@ import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
@@ -24,6 +25,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTreeTable;
 
+import java.util.Date;
+
 public class PayoutsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
@@ -32,6 +35,7 @@ public class PayoutsReport implements Button.ClickListener,
     private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private final HorizontalSplitPanel splitPanel;
     private ComboBox currencySelect;
+    private PopupDateField fromDateDF, tillDateDF;
     public FormattedTreeTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
 
@@ -44,7 +48,7 @@ public class PayoutsReport implements Button.ClickListener,
 
     private void buildLeftPanel() {
 
-        GridLayout leftGrid = new GridLayout(4, 4);
+        GridLayout leftGrid = new GridLayout(4, 5);
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
@@ -88,6 +92,22 @@ public class PayoutsReport implements Button.ClickListener,
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
+        fromDateDF = new PopupDateField(myUI.getMessage(SptMessages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        fromDateDF.setWidth(Settings.PERCENTS100);
+        fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        fromDateDF.setDateFormat(Settings.datePattern);
+        fromDateDF.setResolution(Resolution.DAY);
+        fromDateDF.addValueChangeListener(this);
+
+        tillDateDF = new PopupDateField(myUI.getMessage(SptMessages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        tillDateDF.setWidth(Settings.PERCENTS100);
+        tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
+        tillDateDF.setDateFormat(Settings.datePattern);
+        tillDateDF.setResolution(Resolution.DAY);
+        tillDateDF.addValueChangeListener(this);
+
         currencySelect = new ComboBox(myUI.getMessage(SptMessages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
@@ -120,13 +140,15 @@ public class PayoutsReport implements Button.ClickListener,
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);
 
-        leftGrid.addComponent(currencySelect, 0, 0, 3, 0);
-        leftGrid.addComponent(selectAllBtn, 0, 1, 1, 1);
-        leftGrid.addComponent(deselectAllBtn, 2, 1, 3, 1);
-        leftGrid.addComponent(employeeCategoriesTable, 0, 2, 3, 2);
-        leftGrid.addComponent(generateBtn, 0, 3, 2, 3);
-        leftGrid.addComponent(excelBtn, 3, 3);
-        leftGrid.setRowExpandRatio(2, 1);
+        leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
+        leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
+        leftGrid.addComponent(currencySelect, 0, 1, 3, 1);
+        leftGrid.addComponent(selectAllBtn, 0, 2, 1, 2);
+        leftGrid.addComponent(deselectAllBtn, 2, 2, 3, 2);
+        leftGrid.addComponent(employeeCategoriesTable, 0, 3, 3, 3);
+        leftGrid.addComponent(generateBtn, 0, 4, 2, 4);
+        leftGrid.addComponent(excelBtn, 3, 4);
+        leftGrid.setRowExpandRatio(3, 1);
         ((GridLayout) splitPanel.getFirstComponent()).addComponent(leftGrid, 0, 1);
         ((GridLayout) splitPanel.getFirstComponent()).setRowExpandRatio(1, 1);
     }
@@ -149,12 +171,12 @@ public class PayoutsReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            if (employeeCategoriesTable.getValue() != null && currencySelect.isValid()) {
+            if (employeeCategoriesTable.getValue() != null && currencySelect.isValid() && fromDateDF.isValid() && tillDateDF.isValid()) {
                 try {
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
-                    dbat.exec_account_remains(myUI, employeeCategoriesTable,
-                            (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId(), dataTable);
+                    dbat.exec_account_remains(myUI, employeeCategoriesTable, (Integer) currencySelect.getValue(),
+                            myUI.getUser().getSchool().getId(), fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Salary), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Ratio), Table.Align.RIGHT);
@@ -173,7 +195,9 @@ public class PayoutsReport implements Button.ClickListener,
                 EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.SalariesReport) + " ("
-                        + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
+                        + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
+                        + myUI.getMessage(SptMessages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
+                        + myUI.getMessage(SptMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellFormula(null);
@@ -195,7 +219,7 @@ public class PayoutsReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (excelBtn.isEnabled()) {
-            if (property == employeeCategoriesTable || property == currencySelect) {
+            if (property == employeeCategoriesTable || property == currencySelect || property == fromDateDF || property == currencySelect) {
                 excelBtn.setEnabled(false);
                 dataTable.getContainerDataSource().removeAllItems();
             }

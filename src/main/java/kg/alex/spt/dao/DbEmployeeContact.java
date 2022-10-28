@@ -24,7 +24,11 @@ public class DbEmployeeContact extends BaseDb {
         stat.setInt(1, ec.getEmployee_id());
         stat.setString(2, ec.getBirth_place());
         stat.setString(3, ec.getAddress());
-        stat.setString(4, ec.getEmail());
+        if (!Objects.equals(ec.getEmail(), "")) {
+            stat.setString(4, ec.getEmail());
+        } else {
+            stat.setNull(4, Types.VARCHAR);
+        }
         if (!Objects.equals(ec.getPassport(), "")) {
             stat.setString(5, ec.getPassport());
         } else {
@@ -59,7 +63,11 @@ public class DbEmployeeContact extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ec.getBirth_place());
         stat.setString(2, ec.getAddress());
-        stat.setString(3, ec.getEmail());
+        if (!Objects.equals(ec.getEmail(), "")) {
+            stat.setString(3, ec.getEmail());
+        } else {
+            stat.setNull(3, Types.VARCHAR);
+        }
         if (!Objects.equals(ec.getPassport(), "")) {
             stat.setString(4, ec.getPassport());
         } else {
