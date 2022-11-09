@@ -19,7 +19,6 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
 
     private final MyVaadinUI myUI;
     private ComboBox repTypeSelect;
-
     private GridLayout leftGrid, rightGrid;
     private final Subject currentUser = SecurityUtils.getSubject();
 
@@ -69,6 +68,9 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmCurrentAccountStatement)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.CurrentAccountStatementReport));
         }
+        if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmIncomeExpenseAccountStatement)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.IncomeExpenseAccountStatementReport));
+        }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmSalariesReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.SalariesReport));
         }
@@ -94,6 +96,8 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
                 new GeneralReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.CurrentAccountStatementReport))) {
                 new CurrentAccountStatementReport(myUI, this);
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.IncomeExpenseAccountStatementReport))) {
+                new IncomeExpenseAccountStatementReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SalariesReport))) {
                 new PayoutsReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.AccountingBalanceReport))) {

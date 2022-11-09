@@ -448,6 +448,7 @@ public class SptMessages_ru extends SptMessages {
             {SchoolAccountingReport, "Отчет по бухгалтерии школ"},
             {GeneralAccountingReport, "Общий отчет по бухгалтерии"},
             {CurrentAccountStatementReport, "Выписка по текущему счету"},
+            {IncomeExpenseAccountStatementReport, "Выписка по двустороннему счету"},
             {SalariesReport, "Отчет по выплатам"},
             {HRLessonHoursReport, "Отчет по кол-ву преподаваемых часов"},
             {HRGeneralReport, "Общий отчет по кадрам"},

@@ -644,8 +644,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                             Settings.year_id).getValue());
                     myUI.getUser().getCurrent_year().setId((Integer) yearSelect.getValue());
                     myUI.getUser().getCurrent_year().setName(yearSelect.getContainerDataSource()
-                            .getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Title))
-                            .getValue().toString());
+                            .getContainerProperty(yearSelect.getValue(), Settings.titleShort).getValue().toString());
                     updatePage();
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),

@@ -645,7 +645,29 @@ public class DbAccTransactions extends BaseDb {
         sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.CashBox),
                 Settings.dFormat2.format(ttlInc - ttlExp));
     }
+    public double exec_income_expense_balance(int school_id, int acc_category_id, int currency_id, Date till) throws SQLException {
 
+        String sql = "SELECT ";
+        if (currency_id == 2) {
+            sql += "IFNULL(SUM(IF(tr.acc_type_id = 1, IF(tr.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount), " +
+                    "-IF(tr.acc_currency_id != 2, tr.amount / tr.currency_rate, tr.amount))), 0.0) AS balance ";
+        } else {
+            sql += "IFNULL(SUM(IF(tr.acc_type_id = 1, IF(tr.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount), " +
+                    "-IF(tr.acc_currency_id != 1, tr.amount * tr.currency_rate, tr.amount))), 0.0) AS balance ";
+        }
+        sql += "FROM acc_transactions AS tr WHERE tr.acc_category_id = ? AND date(tr.date_time) < ? and tr.school_id = ?";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, acc_category_id);
+        stat.setDate(2, new java.sql.Date(till.getTime()));
+        stat.setInt(3, school_id);
+        ResultSet result = stat.executeQuery();
+
+        while (result.next()) {
+            return result.getDouble("balance");
+        }
+        return 0.0;
+    }
     public double exec_salary_balance(int school_id, int acc_category_id, int currency_id, Date till) throws SQLException {
 
         String sql = "SELECT ";
@@ -681,9 +703,8 @@ public class DbAccTransactions extends BaseDb {
         return 0.0;
     }
 
-    public void exec_current_account_state(MyVaadinUI myUI, int acc_category_id, Date from, Date till, Table t,
-                                           int currency_id, int school_id) throws SQLException {
-
+    public void exec_current_account_statement(MyVaadinUI myUI, int acc_category_id, Date from, Date till, Table t,
+                                               int currency_id, int school_id) throws SQLException {
         String sign = "/";
         if (currency_id == 1) {
             sign = "*";
@@ -775,6 +796,87 @@ public class DbAccTransactions extends BaseDb {
         t.setContainerDataSource(container);
     }
 
+    public void exec_income_expense_account_statement(MyVaadinUI myUI, int acc_category_id, Date from, Date till, Table t,
+                                                      int currency_id, int school_id) throws SQLException {
+        String sign = "/";
+        if (currency_id == 1) {
+            sign = "*";
+        }
+        String sql = "SELECT t.date_time AS creation_date, "
+                + "IF(t.acc_currency_id != ?, t.amount " + sign + " t.currency_rate, t.amount) AS amount, "
+                + "t.currency_rate as rate, t.note as note, if(t.acc_type_id = 1, ?, ?) as type "
+                + "FROM acc_transactions AS t "
+                + "WHERE t.acc_category_id = ? AND (date(t.date_time) BETWEEN ? AND ?) AND t.school_id = ?  "
+                + "ORDER BY t.date_time";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, currency_id);
+        stat.setString(2, myUI.getMessage(SptMessages.Debt));
+        stat.setString(3, myUI.getMessage(SptMessages.Payout));
+        stat.setInt(4, acc_category_id);
+        stat.setDate(5, new java.sql.Date(from.getTime()));
+        stat.setDate(6, new java.sql.Date(till.getTime()));
+        stat.setInt(7, school_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Payout), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
+        int i = 0;
+        double currentBalance = exec_income_expense_balance(school_id, acc_category_id, currency_id, from), totalDebts = 0.0;
+        double prevBalance = currentBalance;
+        Item item;
+
+        while (result.next()) {
+            item = container.addItem(++i);
+            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("creation_date")));
+            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("type"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("rate"));
+            if (result.getString("type").equals(myUI.getMessage(SptMessages.Payout))) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(result.getDouble("amount"));
+                currentBalance -= result.getDouble("amount");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("amount"));
+                currentBalance += result.getDouble("amount");
+                totalDebts += result.getDouble("amount");
+            }
+            if (currentBalance < 0) {
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(currentBalance * -1))
+                        + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
+                        + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
+            }
+            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
+                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
+        }
+        if (container.size() > 0) {
+            item = container.addItemAt(0, 0);
+
+            String type = myUI.getMessage(SptMessages.Debt);
+            if (prevBalance < 0) {
+                type = myUI.getMessage(SptMessages.Payout);
+                item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(prevBalance * -1);
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(prevBalance * -1))
+                        + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
+            } else {
+                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(prevBalance);
+                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(prevBalance)
+                        + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
+                totalDebts += prevBalance;
+            }
+            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(type);
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(myUI.getMessage(SptMessages.PreviousBalance));
+        }
+        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(totalDebts));
+        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), Settings.dFormat2.format(totalDebts - currentBalance));
+        t.setContainerDataSource(container);
+    }
+
     public void exec_account_remains(MyVaadinUI myUI, FilterTreeTable categoriesTable, int currency_id, int school_id,
                                      Date from, Date till, FormattedTreeTable t) throws SQLException {
 
@@ -801,7 +903,7 @@ public class DbAccTransactions extends BaseDb {
         } else if (till != null) {
             sql += "AND inv.creation_date <= ? ";
         }
-        sql += "GROUP BY inv.school_id , acr.acc_category_id) AS acr ON acr.acc_category_id = cat.id " +
+        sql += "GROUP BY acr.acc_category_id) AS acr ON acr.acc_category_id = cat.id " +
                 "LEFT JOIN " +
                 "(SELECT tr.school_id AS school_id, tr.acc_category_id AS acc_category_id, IFNULL(SUM(IF((tr.acc_currency_id <> 2), " +
                 "(tr.amount / tr.currency_rate), tr.amount)), 0.0) AS amount_usd, IFNULL(SUM(IF((tr.acc_currency_id <> 1), " +
@@ -814,7 +916,7 @@ public class DbAccTransactions extends BaseDb {
         } else if (till != null) {
             sql += "AND tr.date_time <= ? ";
         }
-        sql += "GROUP BY tr.school_id , tr.acc_category_id) AS tr ON tr.acc_category_id = cat.id " +
+        sql += "GROUP BY tr.acc_category_id) AS tr ON tr.acc_category_id = cat.id " +
                 "LEFT JOIN acc_transfers AS aacr ON aacr.invoice_id = acr.invoice_id AND aacr.acc_category_id = cat.id " +
                 "WHERE cat.id IN (" + Settings.convertCollectionToStr(selectedCategoryIds) + ")";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -837,6 +939,7 @@ public class DbAccTransactions extends BaseDb {
         } else if (till != null) {
             stat.setDate(++counter, new java.sql.Date(till.getTime()));
         }
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);

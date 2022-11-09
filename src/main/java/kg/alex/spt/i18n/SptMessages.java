@@ -443,6 +443,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String SchoolAccountingReport = generateId();
     public static final String GeneralAccountingReport = generateId();
     public static final String CurrentAccountStatementReport = generateId();
+    public static final String IncomeExpenseAccountStatementReport = generateId();
     public static final String SalariesReport = generateId();
     public static final String HRLessonHoursReport = generateId();
     public static final String HRGeneralReport = generateId();

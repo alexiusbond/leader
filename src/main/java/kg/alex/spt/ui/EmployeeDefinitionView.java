@@ -3083,8 +3083,6 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             }
             int type_id = (Integer) ((ComboBox) contractsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(SptMessages.AgreementType)).getValue()).getValue();
-            System.out.println(employeeInfo);
-            System.out.println(employeeInfo.getContact());
             if (employeeInfo.getContact() == null || employeeInfo.getContact().getPassport() == null ||
                     employeeInfo.getContact().getPassportGiven() == null ||
                     employeeInfo.getContact().getPassportDate() == null) {

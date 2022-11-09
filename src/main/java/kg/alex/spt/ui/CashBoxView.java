@@ -550,14 +550,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 }
             }
             tr.setId(source.getId());
-            System.out.println(categoryCb);
-            System.out.println(item.getItemProperty(myUI.getMessage(SptMessages.Category)).getValue());
-            System.out.println(categoryCb.getContainerProperty(
-                    item.getItemProperty(myUI.getMessage(SptMessages.Category)).getValue(),
-                    myUI.getMessage(SptMessages.Title)));
-            System.out.println(categoryCb.getContainerProperty(
-                    item.getItemProperty(myUI.getMessage(SptMessages.Category)).getValue(),
-                    myUI.getMessage(SptMessages.Title)).getValue());
             tr.setCategory(categoryCb.getContainerProperty(
                     item.getItemProperty(myUI.getMessage(SptMessages.Category)).getValue(),
                     myUI.getMessage(SptMessages.Title)).getValue().toString());

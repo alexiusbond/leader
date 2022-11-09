@@ -18,7 +18,7 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.pdf.CurrentAccountStatementPdf;
+import kg.alex.spt.pdf.IncomeExpenseAccountStatementPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -28,19 +28,19 @@ import org.tepi.filtertable.FilterTreeTable;
 
 import java.util.Date;
 
-public class CurrentAccountStatementReport implements Button.ClickListener,
+public class IncomeExpenseAccountStatementReport implements Button.ClickListener,
         Property.ValueChangeListener {
 
-    static final Logger logger = LogManager.getLogger(CurrentAccountStatementReport.class);
+    static final Logger logger = LogManager.getLogger(IncomeExpenseAccountStatementReport.class);
     private final MyVaadinUI myUI;
     private Button generateBtn, pdfBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
     private ComboBox currencySelect;
     private DateField fromDateDF, tillDateDF;
     public FormattedTable dataTable;
-    public FilterTreeTable employeeCategoriesTable;
+    public FilterTreeTable categoriesTable;
 
-    public CurrentAccountStatementReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
+    public IncomeExpenseAccountStatementReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
         this.splitPanel = splitPanel;
         buildLeftPanel();
@@ -53,29 +53,29 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        employeeCategoriesTable = new FilterTreeTable();
-        employeeCategoriesTable.setFilterDecorator(new MyFilterDecorator(myUI));
-        employeeCategoriesTable.setStyleName(ValoTheme.TABLE_SMALL);
-        employeeCategoriesTable.setSizeFull();
-        employeeCategoriesTable.setNullSelectionAllowed(false);
-        employeeCategoriesTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
-        employeeCategoriesTable.setFilterBarVisible(true);
-        employeeCategoriesTable.setFooterVisible(false);
-        employeeCategoriesTable.setSelectable(true);
-        employeeCategoriesTable.setNullSelectionAllowed(false);
-        employeeCategoriesTable.addValueChangeListener(this);
+        categoriesTable = new FilterTreeTable();
+        categoriesTable.setFilterDecorator(new MyFilterDecorator(myUI));
+        categoriesTable.setStyleName(ValoTheme.TABLE_SMALL);
+        categoriesTable.setSizeFull();
+        categoriesTable.setNullSelectionAllowed(false);
+        categoriesTable.setColumnHeaderMode(CustomTable.ColumnHeaderMode.HIDDEN);
+        categoriesTable.setFilterBarVisible(true);
+        categoriesTable.setFooterVisible(false);
+        categoriesTable.setSelectable(true);
+        categoriesTable.setNullSelectionAllowed(false);
+        categoriesTable.addValueChangeListener(this);
 
         try {
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
-            dbac.execSQL_for_select_as_tree(myUI, "2", employeeCategoriesTable,
+            dbac.execSQL_for_select_as_tree(myUI, "5", categoriesTable,
                     Integer.toString(myUI.getUser().getSchool().getId()), false);
             dbac.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+        categoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
 
         generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
@@ -140,7 +140,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         leftGrid.addComponent(fromDateDF, 0, 0, 1, 0);
         leftGrid.addComponent(tillDateDF, 2, 0, 3, 0);
         leftGrid.addComponent(currencySelect, 0, 1, 3, 1);
-        leftGrid.addComponent(employeeCategoriesTable, 0, 2, 3, 2);
+        leftGrid.addComponent(categoriesTable, 0, 2, 3, 2);
         leftGrid.addComponent(generateBtn, 0, 3, 1, 3);
         leftGrid.addComponent(pdfBtn, 2, 3);
         leftGrid.addComponent(excelBtn, 3, 3);
@@ -167,15 +167,16 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
     public void buttonClick(Button.ClickEvent event) {
         final Button source = event.getButton();
         if (source == generateBtn) {
-            if (employeeCategoriesTable.getValue() != null && currencySelect.isValid() && fromDateDF.isValid() && tillDateDF.isValid()) {
+            if (categoriesTable.getValue() != null && currencySelect.isValid() && fromDateDF.isValid() && tillDateDF.isValid()) {
                 try {
                     DbAccTransactions dbat = new DbAccTransactions();
                     dbat.connect();
-                    dbat.exec_current_account_statement(myUI, (Integer) employeeCategoriesTable.getValue(), fromDateDF.getValue(),
-                            tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
+                    dbat.exec_income_expense_account_statement(myUI, (Integer) categoriesTable.getValue(),
+                            fromDateDF.getValue(), tillDateDF.getValue(), dataTable,
+                            (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
 
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Accrual), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Payout), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
                     if (dataTable.getContainerDataSource().size() != 0) {
@@ -197,7 +198,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 dbsc.close();
                 if (st.getScl_address() != null && st.getScl_phone() != null
                         && st.getScl_name_ru() != null) {
-                    new CurrentAccountStatementPdf(myUI, dataTable, employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
+                    new IncomeExpenseAccountStatementPdf(myUI, dataTable, categoriesTable.getContainerProperty(categoriesTable.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue().toString(),
                             currencySelect.getItemCaption(currencySelect.getValue()), fromDateDF.getValue(), tillDateDF.getValue(), st);
                 } else {
@@ -212,7 +213,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setReportTitle(employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
+                    excelReport.setReportTitle(categoriesTable.getContainerProperty(categoriesTable.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue()
                             + "( " + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
                             + myUI.getMessage(SptMessages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
@@ -235,7 +236,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
     public void valueChange(Property.ValueChangeEvent event) {
         Property property = event.getProperty();
         if (pdfBtn.isEnabled()) {
-            if (property == employeeCategoriesTable || property == tillDateDF || property == fromDateDF || property == currencySelect) {
+            if (property == categoriesTable || property == tillDateDF || property == fromDateDF || property == currencySelect) {
                 pdfBtn.setEnabled(false);
                 excelBtn.setEnabled(false);
                 dataTable.setContainerDataSource(null);

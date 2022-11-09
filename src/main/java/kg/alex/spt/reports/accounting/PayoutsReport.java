@@ -195,9 +195,7 @@ public class PayoutsReport implements Button.ClickListener,
                 EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
                 excelReport.setReportTitle(myUI.getMessage(SptMessages.SalariesReport) + " ("
-                        + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
-                        + myUI.getMessage(SptMessages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
-                        + myUI.getMessage(SptMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                        + currencySelect.getItemCaption(currencySelect.getValue()) + ") ");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellFormula(null);
