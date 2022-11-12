@@ -444,6 +444,7 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String GeneralAccountingReport = generateId();
     public static final String CurrentAccountStatementReport = generateId();
     public static final String IncomeExpenseAccountStatementReport = generateId();
+    public static final String IncomesExpensesReport = generateId();
     public static final String SalariesReport = generateId();
     public static final String HRLessonHoursReport = generateId();
     public static final String HRGeneralReport = generateId();
@@ -528,7 +529,9 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String Accrual = generateId();
     public static final String Payout = generateId();
     public static final String Incomes = generateId();
+    public static final String Income = generateId();
     public static final String Expenses = generateId();
+    public static final String Expense = generateId();
     public static final String ValueDeleted = generateId();
     public static final String IncomesTotal = generateId();
     public static final String ExpensesTotal = generateId();

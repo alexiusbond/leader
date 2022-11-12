@@ -97,8 +97,8 @@ public class IncomeExpenseAccountStatementPdf {
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Type), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Note), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Debt), ordFontBold));
-                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Payout), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Income), ordFontBold));
+                    dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Expense), ordFontBold));
                     dataTable.addCell(new Phrase(myUI.getMessage(SptMessages.Balance), ordFontBold));
 
                     Iterator<?> iter = t.getItemIds().iterator();
@@ -120,15 +120,15 @@ public class IncomeExpenseAccountStatementPdf {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
                         dataTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Debt)).getValue() != null) {
+                        if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Income)).getValue() != null) {
                             dataTable.addCell(new Phrase(Settings.dFormat2.format(t.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Debt)).getValue()), tableFont));
+                                    myUI.getMessage(SptMessages.Income)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
-                        if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Payout)).getValue() != null) {
+                        if (t.getContainerProperty(next, myUI.getMessage(SptMessages.Expense)).getValue() != null) {
                             dataTable.addCell(new Phrase(Settings.dFormat2.format(t.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Payout)).getValue()), tableFont));
+                                    myUI.getMessage(SptMessages.Expense)).getValue()), tableFont));
                         } else {
                             dataTable.addCell(new Phrase("", tableFont));
                         }
@@ -139,8 +139,8 @@ public class IncomeExpenseAccountStatementPdf {
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
                     dataTable.addCell(new Phrase(" ", tableFontBold));
-                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Debt)), tableFontBold));
-                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Payout)), tableFontBold));
+                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Income)), tableFontBold));
+                    dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Expense)), tableFontBold));
                     dataTable.addCell(new Phrase(t.getColumnFooter(myUI.getMessage(SptMessages.Balance)), tableFontBold));
 
                     document.add(dataTable);

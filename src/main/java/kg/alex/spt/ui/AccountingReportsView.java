@@ -74,6 +74,9 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmSalariesReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.SalariesReport));
         }
+        if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmIncomesExpensesReport)) {
+            repTypeSelect.addItem(myUI.getMessage(SptMessages.IncomesExpensesReport));
+        }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmAccountingBalanceReport)) {
             repTypeSelect.addItem(myUI.getMessage(SptMessages.AccountingBalanceReport));
         }
@@ -100,6 +103,8 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
                 new IncomeExpenseAccountStatementReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SalariesReport))) {
                 new PayoutsReport(myUI, this);
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.IncomesExpensesReport))) {
+                new IncomesExpensesReport(myUI, this);
             } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.AccountingBalanceReport))) {
                 new BalanceReport(myUI, this);
             }

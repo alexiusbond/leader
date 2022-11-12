@@ -309,6 +309,7 @@ public class Settings implements Serializable {
     public static final String prmGeneralReport = "общий отчет по бухгалтерии";
     public static final String prmCurrentAccountStatement = "выписка по текущему счету";
     public static final String prmIncomeExpenseAccountStatement = "выписка по двустороннему счету";
+    public static final String prmIncomesExpensesReport = "отчет по двусторонним счетам";
     public static final String prmSalariesReport = "отчет по выплатам";
     public static final String prmLessonHoursReport = "отчет по количеству преподаваемых часов";
     public static final String prmHrGeneralReport = "общий отчет по кадрам";

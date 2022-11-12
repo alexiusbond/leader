@@ -176,8 +176,8 @@ public class IncomeExpenseAccountStatementReport implements Button.ClickListener
                             (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
 
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Payout), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Income), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Expense), Table.Align.RIGHT);
                     dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
                     if (dataTable.getContainerDataSource().size() != 0) {
                         pdfBtn.setEnabled(true);
