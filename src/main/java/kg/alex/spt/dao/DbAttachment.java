@@ -27,8 +27,7 @@ public class DbAttachment extends BaseDb {
     }
 
     public int exec_insert(Attachment a) throws SQLException {
-        String sql = "INSERT INTO attachments (name,extension,unique_name) "
-                + "VALUES(?,?,?);";
+        String sql = "INSERT INTO attachments (name,extension,unique_name) VALUES(?,?,?);";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, a.getName());
         stat.setString(2, a.getExtension());
@@ -42,7 +41,6 @@ public class DbAttachment extends BaseDb {
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int employee_id, EmployeeDefinitionView edv) throws SQLException {
-        
 
         String sql = "SELECT a.id, a.name, a.unique_name, concat(c.name, ' - ', ec.given_by) as details, 'Сертификат' as type " +
                 "FROM hr_employee_certificate AS ec " +

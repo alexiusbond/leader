@@ -10,6 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.DoubleRangeValidator;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -34,7 +35,7 @@ public class DbEmployeeContract extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         stat.setInt(2, ec.getContract_type_id());
-        stat.setDouble(3, ec.getSalary());
+        stat.setString(3, ec.getSalary());
         stat.setDate(4, new Date(ec.getFromDate().getTime()));
         stat.setDate(5, new Date(ec.getTillDate().getTime()));
         stat.setDate(6, new Date(ec.getCreationDate().getTime()));
@@ -51,7 +52,7 @@ public class DbEmployeeContract extends BaseDb {
                 + "contract_type_id = ?, salary = ?, from_date = ?, till_date = ?, creation_date = ? WHERE id = ?;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getContract_type_id());
-        stat.setDouble(2, ec.getSalary());
+        stat.setString(2, ec.getSalary());
         stat.setDate(3, new Date(ec.getFromDate().getTime()));
         stat.setDate(4, new Date(ec.getTillDate().getTime()));
         stat.setDate(5, new Date(ec.getCreationDate().getTime()));
@@ -140,11 +141,10 @@ public class DbEmployeeContract extends BaseDb {
                     edv.createCombobox(result.getInt("ec.contract_type_id"),
                             myUI.getMessage(SptMessages.AgreementType), Settings.dbContractType, true));
             item.getItemProperty(myUI.getMessage(SptMessages.SalaryAmount)).setValue(
-                    edv.createTextFieldWithProperty(result.getDouble("ec.salary"),
+                    edv.createTextField(result.getString("ec.salary"),
                             myUI.getMessage(SptMessages.SalaryAmount),
-                            new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
-                                    0.01, null), new ObjectProperty<>(0.0),
-                            Settings.getStringToDoubleConverter(2)));
+                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
+                                    1, 250, false), true));
             item.getItemProperty(myUI.getMessage(SptMessages.Start)).setValue(edv.createDateField(result.getDate("ec.from_date"),
                     myUI.getMessage(SptMessages.Start), null, true, Settings.datePattern, Resolution.DAY));
             item.getItemProperty(myUI.getMessage(SptMessages.CreationDate)).setValue(edv.createDateField(result.getDate("ec.creation_date"),

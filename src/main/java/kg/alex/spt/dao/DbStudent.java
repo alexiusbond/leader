@@ -480,6 +480,7 @@ public class DbStudent extends BaseDb {
         IndexedContainer container = cv.prepareContainer();
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(result.getString("st.login"));
             item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(result.getString("st.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(result.getString("st.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(

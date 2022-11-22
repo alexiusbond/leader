@@ -1,3 +1,0 @@
-INSERT INTO `spt`.`permissions` (`java_class_name`, `caption`, `permissions`) VALUES ('ShortTermDebtsView', 'Балансовые краткосрочные задолженности', 'показ в меню,добавление,изменение,удаление,копирование');
-INSERT INTO `spt`.`permissions` (`java_class_name`, `caption`, `permissions`) VALUES ('ReturnableAssetsView', 'Балансовые возвращаемые активы', 'показ в меню,добавление,изменение,удаление,копирование');
-UPDATE `spt`.`user_permission` SET `permissions` = 'ShortTermDebtsDefinitionView:показ в меню,добавление,изменение,удаление,контроль подтверждений' WHERE (`role_name` = 'admin') and (`permissions` = 'ShortTermDebtsDefinitionView:показ в меню,добавление,изменение,удаление');

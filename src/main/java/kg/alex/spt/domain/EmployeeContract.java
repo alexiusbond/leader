@@ -13,7 +13,7 @@ public class EmployeeContract implements Serializable {
     private int id;
     private int employee_id;
     private int contract_type_id;
-    private double salary;
+    private String salary;
     private Date fromDate;
     private Date tillDate;
     private Date creationDate;
@@ -67,11 +67,11 @@ public class EmployeeContract implements Serializable {
         this.contract_type_id = contract_type_id;
     }
 
-    public double getSalary() {
+    public String getSalary() {
         return salary;
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(String salary) {
         this.salary = salary;
     }
 

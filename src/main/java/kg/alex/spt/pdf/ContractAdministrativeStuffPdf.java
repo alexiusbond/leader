@@ -606,7 +606,7 @@ public class ContractAdministrativeStuffPdf {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("а) месячный должностной оклад в размере "
-                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) + " сом.", ordFont));
+                        + employeeInfo.getContract().getSalary() + " сом.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();

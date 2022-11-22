@@ -2034,11 +2034,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     attachment.setName(fileName);
                     DbAttachment dbCon = new DbAttachment();
                     dbCon.connect();
+                    logger.info(">>> BEFORE INSERT " + attachment);
                     int id = dbCon.exec_insert(attachment);
+                    logger.info(">>> ATTACHMENT ID " + id);
                     if (id != 0) {
                         attachment.setId(id);
                         b.setData(attachment);
                     }
+                    logger.info(">>> AFTER INSERT " + attachment);
                     dbCon.close();
                 } catch (Exception ex) {
                     logger.error(">>> ATTACHMENT");
@@ -3771,6 +3774,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(SptMessages.Document)).getValue()).getComponent(0);
         if (b.getData() != null) {
             d.setAttachment_id(((Attachment) b.getData()).getId());
+            logger.info(">>> ATTACHMENT ID FROM BUTTON " + d.getAttachment_id());
         }
         if (contractCB.getValue() != null) {
             discountAmount = (Double) (((TextField) discountsTable.getContainerProperty(disc_id,

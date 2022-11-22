@@ -74,7 +74,8 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             }
             dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
                     + Settings.dFormat2.format(total));
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 300);
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 220);
+            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Id), 80);
             dataTable.setColumnWidth(myUI.getMessage(SptMessages.FirstName), 100);
             dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastName), 120);
             dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 100);
@@ -278,6 +279,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     public IndexedContainer prepareContainer() {
         IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);

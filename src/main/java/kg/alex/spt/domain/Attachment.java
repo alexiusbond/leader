@@ -46,4 +46,14 @@ public class Attachment implements Serializable {
     public void setUnique_name(String unique_name) {
         this.unique_name = unique_name;
     }
+
+    @Override
+    public String toString() {
+        return "Attachment{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", extension='" + extension + '\'' +
+                ", unique_name='" + unique_name + '\'' +
+                '}';
+    }
 }

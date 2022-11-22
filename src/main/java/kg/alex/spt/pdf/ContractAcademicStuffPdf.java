@@ -731,9 +731,7 @@ public class ContractAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("а) месячный должностной оклад в размере "
-                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) + " сом ("
-                        + convertToLetters.numberToString(employeeInfo.getContract().getSalary()).trim() + ")", ordFont));
+                paragraph.add(new Phrase("а) месячный должностной оклад " + employeeInfo.getContract().getSalary() + ".", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();

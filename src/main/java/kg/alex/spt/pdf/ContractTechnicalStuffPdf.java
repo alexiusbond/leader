@@ -368,7 +368,7 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.add(new Phrase("3.1. Работнику устанавливается ежемесячный оклад (заработная плата) в размере "
-                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) + " сом.", ordFont));
+                        + employeeInfo.getContract().getSalary() + " сом.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(15);
@@ -686,7 +686,7 @@ public class ContractTechnicalStuffPdf {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("9.8. Договор действует в течение с "
                         + Settings.dateRu.format(employeeInfo.getContract().getFromDate()) + " по "
-                        + Settings.dateRu.format(employeeInfo.getContract().getFromDate()), ordFont));
+                        + Settings.dateRu.format(employeeInfo.getContract().getTillDate()), ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 

@@ -1121,6 +1121,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
             contractsTable.setColumnWidth(Settings.button, 60);
             contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.AgreementType), 1);
+            contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.SalaryAmount), 1);
         } catch (Exception ex) {
             logger.error(ex);
             logger.catching(ex);
@@ -2992,7 +2993,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                 try {
                                     DbDefinition dbCon = new DbDefinition();
                                     dbCon.connect();
-                                    dbCon.exec_delete_not_referenced(Settings.dbAttachmentsTable);
+                                    // dbCon.exec_delete_not_referenced(Settings.dbAttachmentsTable);
                                     dbCon.close();
                                     if (isMyProfile || myUI.getUser().getId() == employeeID) {
                                         DbEmployeeCompleteness dbc = new DbEmployeeCompleteness();
@@ -3103,8 +3104,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         myUI.getMessage(SptMessages.Start)).getValue()).getValue());
                 employeeInfo.getContract().setTillDate(((DateField) contractsTable.getContainerProperty(source.getData(),
                         myUI.getMessage(SptMessages.End)).getValue()).getValue());
-                employeeInfo.getContract().setSalary(((Double) ((TextField) contractsTable.getItem(source.getData()).getItemProperty(
-                        myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getPropertyDataSource().getValue()));
+                employeeInfo.getContract().setSalary((((TextField) contractsTable.getItem(source.getData()).getItemProperty(
+                        myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getValue()));
                 employeeInfo.setEmployeeName(nameTF.getValue());
                 employeeInfo.setEmployeeSurname(surnameTF.getValue());
                 employeeInfo.setEmployeeMiddleName(middleNameTF.getValue());
@@ -3326,8 +3327,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 for (Object next : contractsTable.getItemIds()) {
                     EmployeeContract ec = new EmployeeContract();
                     ec.setEmployee_id(employee_id);
-                    ec.setSalary((Double) ((TextField) contractsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getPropertyDataSource().getValue());
+                    ec.setSalary(((TextField) contractsTable.getItem(next).getItemProperty(
+                            myUI.getMessage(SptMessages.SalaryAmount)).getValue()).getValue());
                     ec.setFromDate(((DateField) contractsTable.getItem(next).getItemProperty(
                             myUI.getMessage(SptMessages.Start)).getValue()).getValue());
                     ec.setTillDate(((DateField) contractsTable.getItem(next).getItemProperty(
@@ -4183,10 +4184,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(myUI.getMessage(SptMessages.AgreementType)).setValue(
                 createCombobox(0, myUI.getMessage(SptMessages.AgreementType), Settings.dbContractType, true));
         item.getItemProperty(myUI.getMessage(SptMessages.SalaryAmount)).setValue(
-                createTextFieldWithProperty(null, myUI.getMessage(SptMessages.SalaryAmount),
-                        new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
-                                0.01, null), new ObjectProperty<>(0.0),
-                        Settings.getStringToDoubleConverter(2)));
+                createTextField(null, myUI.getMessage(SptMessages.SalaryAmount),
+                        new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
+                                1, 250, false), true));
         item.getItemProperty(myUI.getMessage(SptMessages.CreationDate)).setValue(
                 createDateField(today, myUI.getMessage(SptMessages.CreationDate), null, true,
                         Settings.datePattern, Resolution.DAY));
@@ -4198,6 +4198,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                         Settings.datePattern, Resolution.DAY));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
         contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.AgreementType), 1);
+        contractsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.SalaryAmount), 1);
         contractsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_CONTRACTS);
     }
 

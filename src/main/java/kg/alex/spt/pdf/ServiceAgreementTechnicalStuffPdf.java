@@ -149,7 +149,7 @@ public class ServiceAgreementTechnicalStuffPdf {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("1.3. Исполнитель получает оплату за оказанные услуги, согласно акта выполненных работ "
-                        + Settings.dFormat2.format(employeeInfo.getContract().getSalary()) +
+                        + employeeInfo.getContract().getSalary() +
                         " сом, с учетом всех налогов Кыргызской Республики.", ordFont));
                 document.add(paragraph);
 
