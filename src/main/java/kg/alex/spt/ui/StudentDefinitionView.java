@@ -1146,7 +1146,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 fillFields();
                 recount();
                 printButton.setEnabled(true);
-                financialHistoryButton.setEnabled(true);
                 if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmChangeId)) {
                     changeIdButton.setEnabled(true);
                 }
