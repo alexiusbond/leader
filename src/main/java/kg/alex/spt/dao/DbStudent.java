@@ -20,9 +20,7 @@ import kg.alex.spt.ui.CallsView;
 import kg.alex.spt.ui.IssueOrderView;
 import kg.alex.spt.ui.StudentDefinitionView;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -289,9 +287,13 @@ public class DbStudent extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getPassword());
-        stat.setString(3, s.getName());
-        stat.setString(4, s.getSurname());
-        stat.setString(5, s.getMiddle_name());
+        stat.setString(3, s.getName().trim());
+        stat.setString(4, s.getSurname().trim());
+        if (s.getMiddle_name() != null && !s.getMiddle_name().equals("")) {
+            stat.setString(5, s.getMiddle_name());
+        } else {
+            stat.setNull(5, Types.VARCHAR);
+        }
         stat.setDate(6, new java.sql.Date(s.getBirth_date().getTime()));
         stat.setString(7, s.getPhoto());
         stat.setInt(8, s.getSchool_id());
@@ -317,9 +319,13 @@ public class DbStudent extends BaseDb {
                 + "WHERE id=?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
-        stat.setString(2, s.getName());
-        stat.setString(3, s.getSurname());
-        stat.setString(4, s.getMiddle_name());
+        stat.setString(2, s.getName().trim());
+        stat.setString(3, s.getSurname().trim());
+        if (s.getMiddle_name() != null && !s.getMiddle_name().equals("")) {
+            stat.setString(4, s.getMiddle_name());
+        } else {
+            stat.setNull(4, Types.VARCHAR);
+        }
         stat.setDate(5, new java.sql.Date(s.getBirth_date().getTime()));
         stat.setString(6, s.getPhoto());
         stat.setInt(7, s.getGender_id());
@@ -442,7 +448,8 @@ public class DbStudent extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public IndexedContainer execSQLCalls(MyVaadinUI myUi, int year_id, String class_ids, CallsView cv) throws SQLException {
+    public IndexedContainer execSQLCalls(MyVaadinUI myUi, int year_id, String class_ids,
+                                         String edu_statuses_ids, CallsView cv) throws SQLException {
 
         String sql = "select st.id, st.login, st.name, st.surname,concat(cnu.name, ' - ' , cna.name) as class_name, "
                 + "concat(sr.phone,' (',sr.fullname,')') "
@@ -470,8 +477,8 @@ public class DbStudent extends BaseDb {
                 + "ELSE stud_o.to_class_name_id END "
                 + "left join class_number as cnu on cnu.id = cna.class_number_id "
                 + "where sr.is_main = 1 and sc.year_id = ? "
-                + "and cna.id in(" + class_ids + ") group by st.id having plan_debt > 0 "
-                + "order by class_name, st.name, st.surname;";
+                + "and cna.id in(" + class_ids + ") AND edu.id IN (" + edu_statuses_ids + ") "
+                + "group by st.id having plan_debt > 0 order by class_name, st.name, st.surname;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);

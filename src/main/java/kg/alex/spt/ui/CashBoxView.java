@@ -69,7 +69,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     private Label prev_balanceLab;
     public SchoolAccounting schoolAcc;
     private DateField fromDateDF, tillDateDF;
-
     private final Grid expensesGrid, incomesGrid;
     private GeneratedPropertyContainer incomesCont = null, expensesCont = null;
     private int r_table_counter = 1000;
@@ -299,7 +298,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         grid.getColumn(Settings.from_employee_id).setHidden(true);
         grid.getColumn(Settings.is_disabled).setHidden(true);
-        grid.getColumn(Settings.order_number).setHidden(true);
         grid.getColumn(Settings.acc_currency_id).setHidden(true);
         if (grid == expensesGrid) {
             if (expensesCategoryCb == null) {
@@ -357,12 +355,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false),
                 null, null, null));
 
-        grid.getColumn(Settings.hashTags).setSortable(false);
         grid.getColumn(Settings.hashTags).setEditable(false);
         grid.getColumn(Settings.acc_currency_id).setEditable(false);
         grid.getColumn(Settings.button).setEditable(false);
         grid.getColumn(Settings.from_employee_id).setEditable(false);
-        grid.getColumn(Settings.order_number).setEditable(false);
         grid.getColumn(Settings.is_disabled).setEditable(false);
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setEditable(
                 currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
@@ -406,20 +402,22 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) incomesCategoryCb.getContainerDataSource(),
                             myUI.getMessage(SptMessages.Category), myUI));
         }
-        RowIndexRenderer rir = new RowIndexRenderer();
-        rir.setOffset(1);
-        grid.getColumn(Settings.hashTags).setRenderer(rir);
         grid.getColumn(Settings.button).setRenderer(new ComponentRenderer());
 
         grid.getColumn(Settings.button).setWidth(52);
+        grid.getColumn(Settings.hashTags).setWidth(60);
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(120);
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(100);
         grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setWidth(105);
         grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setWidth(105);
-        grid.getColumn(myUI.getMessage(SptMessages.Category)).setWidth(350);
+        grid.getColumn(myUI.getMessage(SptMessages.Category)).setMinimumWidth(300);
+        grid.getColumn(myUI.getMessage(SptMessages.Category)).setExpandRatio(1);
         if (grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)) != null) {
-            grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setWidth(230);
+            grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setMinimumWidth(230);
+            grid.getColumn(myUI.getMessage(SptMessages.ToEmployee)).setExpandRatio(1);
         }
+        grid.getColumn(myUI.getMessage(SptMessages.Note)).setMinimumWidth(300);
+        grid.getColumn(myUI.getMessage(SptMessages.Note)).setMaximumWidth(400);
         grid.getColumn(myUI.getMessage(SptMessages.Note)).setExpandRatio(1);
         grid.getEditorFieldGroup().addCommitHandler(this);
 
@@ -564,7 +562,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     logger.catching(e);
                 }
             }
-            item.getItemProperty(Settings.order_number).setValue(tr.getOrder_number());
+            item.getItemProperty(Settings.hashTags).setValue(String.format("%07d", tr.getOrder_number()));
             new TransactionInvoicePDF(myUI, tr, myUI.getUser().getSchool().getName_ru(), myUI.getUser().getSchool().getPhoto(), orderName);
         } else if (source.getData().equals(myUI.getMessage(SptMessages.DeleteButton))) {
             if (source.getId().contains(Settings.FreshItem)) {
@@ -944,7 +942,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         container.addContainerProperty(myUI.getMessage(SptMessages.AmountKGS), Double.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
         container.addContainerProperty(Settings.from_employee_id, String.class, null);
-        container.addContainerProperty(Settings.order_number, Integer.class, 0);
         container.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
         container.addContainerProperty(Settings.is_disabled, Boolean.class, false);
         return container;
@@ -1061,7 +1058,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         if (item.getItemProperty(Settings.from_employee_id).getValue() != null) {
             t.setEmployee(item.getItemProperty(Settings.from_employee_id).getValue().toString());
         }
-        t.setOrder_number((Integer) item.getItemProperty(Settings.order_number).getValue());
+        if (item.getItemProperty(Settings.hashTags).getValue() != null) {
+            t.setOrder_number(Integer.parseInt(item.getItemProperty(Settings.hashTags).getValue().toString()));
+        }
         t.setEmployee_id(myUI.getUser().getId());
         t.setSchool_id(myUI.getUser().getSchool().getId());
         return t;

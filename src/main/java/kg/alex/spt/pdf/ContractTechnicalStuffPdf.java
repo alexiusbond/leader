@@ -102,7 +102,7 @@ public class ContractTechnicalStuffPdf {
                 paragraph.add(new Phrase(fullName, ordBoldFont));
                 fullName = employeeInfo.getEmployeeSurname() + " " + employeeInfo.getEmployeeName();
                 if (employeeInfo.getEmployeeMiddleName() != null) {
-                    fullName += employeeInfo.getEmployeeMiddleName();
+                    fullName += " " + employeeInfo.getEmployeeMiddleName();
                 }
                 paragraph.add(new Phrase(", действующего на основании   Устава, с одной стороны, и ", ordFont));
                 paragraph.add(new Phrase(fullName + ", ", ordBoldFont));

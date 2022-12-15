@@ -11,14 +11,12 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.dao.DbClassName;
-import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudent;
-import kg.alex.spt.dao.DbStudentCalls;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.CallsPdf;
@@ -28,6 +26,7 @@ import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTable;
+import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.util.Set;
 
@@ -38,6 +37,8 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
     private final MyVaadinUI myUI;
     private GridLayout leftLay;
     private FormattedTable dataTable;
+    private ComboBox yearSelect;
+    private ComboBoxMultiselect educationStatusMCB;
     private FilterTable classTable;
     private Button generateBtn, excelBtn, makePdfBtn, selectAllBtn, deselectAllBtn;
 
@@ -65,8 +66,9 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                 dbst.connect();
                 dataTable.clear();
                 total = 0;
-                dataTable.setContainerDataSource(dbst.execSQLCalls(myUI, myUI.getUser().getCurrent_year().getId(),
-                        Settings.convertCollectionToStr((Set<?>) classTable.getValue()), this));
+                dataTable.setContainerDataSource(dbst.execSQLCalls(myUI, (Integer) yearSelect.getValue(),
+                        Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
+                        Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this));
                 dbst.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -161,17 +163,53 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        if (event.getProperty() == classTable) {
+        if (event.getProperty() == classTable || event.getProperty() == yearSelect || event.getProperty() == educationStatusMCB) {
             excelBtn.setEnabled(false);
             makePdfBtn.setEnabled(false);
         }
     }
 
     private void buildLeftPanel() {
-        leftLay = new GridLayout(4, 3);
+        leftLay = new GridLayout(4, 5);
         leftLay.setMargin(new MarginInfo(true, false, true, true));
         leftLay.setSpacing(true);
         leftLay.setSizeFull();
+
+        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
+        yearSelect.setNullSelectionAllowed(false);
+        yearSelect.setRequired(true);
+        yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setWidth(Settings.PERCENTS100);
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB.setRequired(true);
+        educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        educationStatusMCB.setWidth(Settings.PERCENTS100);
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        try {
+            DbDefinition dbd = new DbDefinition();
+            dbd.connect();
+            yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
+            educationStatusMCB.setContainerDataSource(
+                    dbd.exec_for_select(myUI, Settings.dbEducationStatus, true));
+            dbd.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        educationStatusMCB.setValue(Settings.convertToSet(educationStatusMCB.getContainerDataSource().getItemIds()));
+        educationStatusMCB.addValueChangeListener(this);
+
+        yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
+        yearSelect.addValueChangeListener(this);
 
         classTable = new FilterTable();
         classTable.setSizeFull();
@@ -231,13 +269,15 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         makePdfBtn.setIcon(FontAwesome.FILE_PDF_O);
         makePdfBtn.addClickListener(this);
 
-        leftLay.addComponent(selectAllBtn, 0, 0, 1, 0);
-        leftLay.addComponent(deselectAllBtn, 2, 0, 3, 0);
-        leftLay.addComponent(classTable, 0, 1, 3, 1);
-        leftLay.addComponent(generateBtn, 0, 2, 1, 2);
-        leftLay.addComponent(makePdfBtn, 2, 2);
-        leftLay.addComponent(excelBtn, 3, 2);
-        leftLay.setRowExpandRatio(1, 1);
+        leftLay.addComponent(yearSelect, 0, 0, 3, 0);
+        leftLay.addComponent(educationStatusMCB, 0, 1, 3, 1);
+        leftLay.addComponent(selectAllBtn, 0, 2, 1, 2);
+        leftLay.addComponent(deselectAllBtn, 2, 2, 3, 2);
+        leftLay.addComponent(classTable, 0, 3, 3, 3);
+        leftLay.addComponent(generateBtn, 0, 4, 1, 4);
+        leftLay.addComponent(makePdfBtn, 2, 4);
+        leftLay.addComponent(excelBtn, 3, 4);
+        leftLay.setRowExpandRatio(3, 1);
     }
 
     private void buildRightPanel() {

@@ -154,7 +154,10 @@ public class DbAccTransactions extends BaseDb {
             }
             item.getItemProperty(Settings.is_disabled).setValue(isDisabled);
             item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
-            item.getItemProperty(Settings.order_number).setValue(result.getInt("t.order_number"));
+            if (result.getInt("t.order_number") != 0) {
+                item.getItemProperty(Settings.hashTags).setValue(
+                        String.format("%07d", result.getInt("t.order_number")));
+            }
         }
         container.addGeneratedProperty(Settings.button, new PropertyValueGenerator<Component>() {
             @Override

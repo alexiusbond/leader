@@ -230,8 +230,11 @@ public class ClassListReport implements Button.ClickListener,
                             myUI.getMessage(SptMessages.Active) + activeStudents);
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
                             Settings.dFormat2.format(contracts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
-                            Settings.dFormat2.format(discounts));
+                    if (contracts != 0) {
+                        dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
+                                Settings.dFormat2.format(discounts) + " (" +
+                                        Settings.dFormat2.format(discounts * 100 / contracts) + "%)");
+                    }
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
                             Settings.dFormat2.format(corrections));
                     dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
@@ -248,7 +251,8 @@ public class ClassListReport implements Button.ClickListener,
                             Settings.dFormat2.format(overPays));
                     if (dataCont.size() != 0) {
                         dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
-                                + discountedStudents + " (" + discountedStudents * 100 / dataCont.size() + "%)");
+                                + discountedStudents + " " + myUI.getMessage(SptMessages.StudentsPossessive) + " ("
+                                + discountedStudents * 100 / dataCont.size() + "%)");
                         makePdfBtn.setEnabled(true);
                         excelBtn.setEnabled(true);
                     }

@@ -515,10 +515,10 @@ public class DbEmployee extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, employee.getLogin());
         stat.setString(2, employee.getPassword());
-        stat.setString(3, employee.getName());
-        stat.setString(4, employee.getSurname());
+        stat.setString(3, employee.getName().trim());
+        stat.setString(4, employee.getSurname().trim());
         if (employee.getMiddle_name() != null) {
-            stat.setString(5, employee.getMiddle_name());
+            stat.setString(5, employee.getMiddle_name().trim());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
@@ -557,10 +557,10 @@ public class DbEmployee extends BaseDb {
                 "photo = ?, modification_date = NOW(), hr_country_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, e.getLogin());
-        stat.setString(2, e.getName());
-        stat.setString(3, e.getSurname());
+        stat.setString(2, e.getName().trim());
+        stat.setString(3, e.getSurname().trim());
         if (e.getMiddle_name() != null) {
-            stat.setString(4, e.getMiddle_name());
+            stat.setString(4, e.getMiddle_name().trim());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
