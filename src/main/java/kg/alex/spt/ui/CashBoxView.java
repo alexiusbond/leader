@@ -607,7 +607,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     amountKGSTf.setValue(null);
                     amountKGSTf.setRequired(false);
                     amountKGSTf.addValueChangeListener(this);
-                } else if ((property == amountUSDTf || property == amountKGSTf) && amountUSDTf.getValue() == null && amountKGSTf.getValue() == null) {
+                } else if ((property == amountUSDTf || property == amountKGSTf) && amountUSDTf.getValue() == null
+                        && amountKGSTf.getValue() == null) {
                     if ((Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1) {
                         amountKGSTf.setRequired(true);
                     } else {

@@ -10,7 +10,10 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyValueGenerator;
+import com.vaadin.data.validator.DoubleRangeValidator;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -60,7 +63,7 @@ public class HRGeneralReport implements Button.ClickListener,
     private ComboBoxMultiselect languageMCB;
     private ComboBox yearSelect;
     private Grid.FooterRow footer;
-    private TextField nameTF, surnameTF;
+    private TextField nameTF, surnameTF, fromAge, toAge;
 
     private final Subject currentUser = SecurityUtils.getSubject();
     public Grid dataGrid;
@@ -128,6 +131,33 @@ public class HRGeneralReport implements Button.ClickListener,
         surnameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         surnameTF.setWidth(Settings.PERCENTS100);
         leftLay.addComponent(surnameTF);
+
+        fromAge = new TextField(myUI.getMessage(SptMessages.FromAge), new ObjectProperty<>(0));
+        fromAge.setInputPrompt(myUI.getMessage(SptMessages.Any));
+        fromAge.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        fromAge.setNullRepresentation("");
+        fromAge.setConverter(Settings.getStringToIntegerConverter());
+        fromAge.setWidth(Settings.PERCENTS100);
+        fromAge.addValidator(new IntegerRangeValidator(
+                myUI.getMessage(SptMessages.NotificationWrongValue), 0, null));
+        fromAge.setValue(null);
+
+        toAge = new TextField(myUI.getMessage(SptMessages.ToAge), new ObjectProperty<>(0));
+        toAge.setInputPrompt(myUI.getMessage(SptMessages.Any));
+        toAge.setStyleName(ValoTheme.TEXTFIELD_SMALL);
+        toAge.setNullRepresentation("");
+        toAge.setConverter(Settings.getStringToIntegerConverter());
+        toAge.setWidth(Settings.PERCENTS100);
+        toAge.addValidator(new IntegerRangeValidator(
+                myUI.getMessage(SptMessages.NotificationWrongValue), 0, null));
+        toAge.setValue(null);
+
+        hl = new HorizontalLayout();
+        hl.setSpacing(true);
+        hl.setWidth(Settings.PERCENTS100);
+        hl.addComponent(fromAge);
+        hl.addComponent(toAge);
+        leftLay.addComponent(hl);
 
         positionsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Positions));
         positionsMCB.setInputPrompt(myUI.getMessage(SptMessages.All));
@@ -443,6 +473,8 @@ public class HRGeneralReport implements Button.ClickListener,
                     insertParameter(params, myUI.getMessage(SptMessages.ExtraPositions), extraPositionsMCB);
                     params.put(myUI.getMessage(SptMessages.FirstName), nameTF.getValue());
                     params.put(myUI.getMessage(SptMessages.LastName), surnameTF.getValue());
+                    params.put(myUI.getMessage(SptMessages.FromAge), fromAge.getValue());
+                    params.put(myUI.getMessage(SptMessages.ToAge), toAge.getValue());
 
                     DbEmployee dbEmployee = new DbEmployee();
                     dbEmployee.connect();

@@ -215,7 +215,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             rightLay.setColumnExpandRatio(3, 4f);
             rightLay.setColumnExpandRatio(4, 1f);
 
-            Label l = createLabel("DÖNEN VARLIKLAR", ValoTheme.LABEL_H2);
+            Label l = createLabel("DÖNEN VARLIKLAR (USD)", ValoTheme.LABEL_H2);
             l.addStyleName("border");
             rightLay.addComponent(l, 0, 0);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);
@@ -223,7 +223,7 @@ public class BalanceAccountsView extends HorizontalSplitPanel implements Button.
             rightLay.addComponent(l, 1, 0);
             rightLay.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
 
-            l = createLabel("KISA VADELİ BORÇLAR", ValoTheme.LABEL_H2);
+            l = createLabel("KISA VADELİ BORÇLAR (USD)", ValoTheme.LABEL_H2);
             l.addStyleName("border");
             rightLay.addComponent(l, 3, 0);
             l = createLabel(Settings.dFormat2.format(0), ValoTheme.LABEL_H2);

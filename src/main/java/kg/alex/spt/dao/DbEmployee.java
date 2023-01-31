@@ -638,7 +638,8 @@ public class DbEmployee extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, Map<String, String> params) throws SQLException {
 
-        String sql = "SELECT e.id, e.login, e.photo, e.name, e.surname, e.middle_name, e.date_of_birth, e.can_advisor, g.name, n.name, " +
+        String sql = "SELECT e.id, e.login, e.photo, e.name, e.surname, e.middle_name, e.date_of_birth, " +
+                "year(NOW()) - year(e.date_of_birth) as age, e.can_advisor, g.name, n.name, " +
                 "m.name, ws.name, p.name, GROUP_CONCAT(DISTINCT p2.name ORDER BY eo2.id ASC SEPARATOR ', ') AS extra_positions, " +
                 "GROUP_CONCAT(DISTINCT ph.number ORDER BY ph.id ASC SEPARATOR ', ') AS phones, mbr.name  AS main_branch, " +
                 "GROUP_CONCAT(DISTINCT ebr.name ORDER BY eeb.id ASC SEPARATOR ', ') AS extra_branches, " +
@@ -769,6 +770,14 @@ public class DbEmployee extends BaseDb {
                 && !params.get(myUI.getMessage(SptMessages.LastName)).equals("")) {
             sql += "AND e.surname LIKE  '%" + params.get(myUI.getMessage(SptMessages.LastName)) + "%' ";
         }
+        if (params.get(myUI.getMessage(SptMessages.FromAge)) != null
+                && !params.get(myUI.getMessage(SptMessages.FromAge)).equals("0")) {
+            sql += "AND year(NOW()) - year(e.date_of_birth) >= " + params.get(myUI.getMessage(SptMessages.FromAge)) + " ";
+        }
+        if (params.get(myUI.getMessage(SptMessages.ToAge)) != null
+                && !params.get(myUI.getMessage(SptMessages.ToAge)).equals("0")) {
+            sql += "AND year(NOW()) - year(e.date_of_birth) <= " + params.get(myUI.getMessage(SptMessages.ToAge)) + " ";
+        }
         sql += "GROUP BY e.id ORDER BY sch.id, e.surname, e.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
@@ -783,6 +792,7 @@ public class DbEmployee extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.MiddleName), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.DateOfBirth), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Age), Integer.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.ContractType), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.MainPosition), String.class, null);
@@ -819,6 +829,7 @@ public class DbEmployee extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("e.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("e.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.MiddleName)).setValue(result.getString("e.middle_name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Age)).setValue(result.getInt("age"));
             item.getItemProperty(myUI.getMessage(SptMessages.DateOfBirth)).setValue(Settings.df.format(
                     result.getDate("e.date_of_birth")));
             item.getItemProperty(myUI.getMessage(SptMessages.ContractType)).setValue(result.getString("sal.name"));

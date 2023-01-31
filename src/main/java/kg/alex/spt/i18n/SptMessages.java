@@ -395,7 +395,9 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String FromDate = generateId();
     public static final String TillDate = generateId();
     public static final String From = generateId();
+    public static final String FromAge = generateId();
     public static final String To = generateId();
+    public static final String ToAge = generateId();
     public static final String Director = generateId();
     public static final String SapatExam = generateId();
     public static final String AllClasses = generateId();
