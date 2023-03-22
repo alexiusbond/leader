@@ -3325,7 +3325,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             DateField df = createDateField(currDate.getValue(), myUI.getMessage(SptMessages.Date),
                     id, false, true);
-            df.setRangeEnd(new Date(Settings.INSTALLMENT_DATE_LIMIT));
+            df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     createTextFieldDouble(null, 2, myUI.getMessage(SptMessages.Amount), id));
@@ -3349,7 +3349,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             for (int i = 0; i < Integer.parseInt(divideTF.getValue()); i++) {
                 double divSum = left / Integer.parseInt(divideTF.getValue());
                 Calendar dateLimit = Calendar.getInstance();
-                dateLimit.setTimeInMillis(Settings.INSTALLMENT_DATE_LIMIT);
+                dateLimit.setTimeInMillis(myUI.getUser().getCurrent_year().getInstallment_date_limit());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(currDate.getValue());
                 cal.add(Calendar.MONTH, i + 1);
@@ -3365,14 +3365,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
                     DateField df = createDateField(cal.getTime(), myUI.getMessage(SptMessages.Date), id,
                             false, true);
-                    df.setRangeEnd(new Date(Settings.INSTALLMENT_DATE_LIMIT));
+                    df.setRangeEnd(new Date(myUI.getUser().getCurrent_year().getInstallment_date_limit()));
                     item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
                     item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                             createTextFieldDouble(Settings.round(divSum, 2), 2, myUI.getMessage(SptMessages.Amount), id));
                     item.getItemProperty(Settings.status_id).setValue(1);
                 } else {
                     String id = Settings.FreshItem + r_table_counter;
-                    Item item = installmentTable.getContainerDataSource().getItem(id);
+                    Item item = installmentTable.getContainerDataSource().addItem(id);
                     TextField tf = (TextField) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
                     tf.getPropertyDataSource().setValue(Settings.round(divSum * (Integer.parseInt(divideTF.getValue()) - i + 1), 2));
                     break;

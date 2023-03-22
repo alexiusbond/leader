@@ -19,7 +19,7 @@ public class UserDetails implements Serializable {
     private int position_id;
     private String fullName;
     private int branch_id;
-    private Definition current_year;
+    private Year current_year;
     private Date transactions_start_date;
     private boolean isUnreadMessages;
     private School school;
@@ -88,11 +88,11 @@ public class UserDetails implements Serializable {
         this.fullName = fullName;
     }
 
-    public Definition getCurrent_year() {
+    public Year getCurrent_year() {
         return current_year;
     }
 
-    public void setCurrent_year(Definition current_year) {
+    public void setCurrent_year(Year current_year) {
         this.current_year = current_year;
     }
 

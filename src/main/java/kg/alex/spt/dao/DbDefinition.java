@@ -231,7 +231,7 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer exec_years_for_select(MyVaadinUI myUi, int current_year_id) throws SQLException {
-        String sql = "select t.id, t.name, t.start_date, t.end_date, t.is_last from year as t " +
+        String sql = "select t.id, t.name, t.start_date, t.end_date, t.is_last, t.installment_date_limit from year as t " +
                 "where t.id between ? and ? order by t.id desc;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, current_year_id - 1);
@@ -240,6 +240,7 @@ public class DbDefinition extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(Settings.titleShort, String.class, null);
+        container.addContainerProperty(Settings.installmentDateLimit, Long.class, 0L);
         container.addContainerProperty(Settings.is_last, Boolean.class, false);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
@@ -247,6 +248,7 @@ public class DbDefinition extends BaseDb {
                     myUi.getMessage(SptMessages.From) + " " + Settings.df.format(result.getDate("t.start_date")) + " " +
                     myUi.getMessage(SptMessages.To) + " " + Settings.df.format(result.getDate("t.end_date")) + ")");
             item.getItemProperty(Settings.titleShort).setValue(result.getString("t.name"));
+            item.getItemProperty(Settings.installmentDateLimit).setValue(result.getLong("t.installment_date_limit"));
             item.getItemProperty(Settings.is_last).setValue(result.getBoolean("t.is_last"));
         }
         return container;

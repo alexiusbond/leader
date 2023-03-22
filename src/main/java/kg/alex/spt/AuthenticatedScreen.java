@@ -605,6 +605,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                                             yearSelect.getValue(), Settings.titleShort).getValue().toString());
                                     myUI.getUser().getCurrent_year().setLast((Boolean) yearSelect.getContainerProperty(
                                             yearSelect.getValue(), Settings.is_last).getValue());
+                                    myUI.getUser().getCurrent_year().setInstallment_date_limit((Long) yearSelect.getContainerProperty(
+                                            yearSelect.getValue(), Settings.installmentDateLimit).getValue());
                                     Notification.show(myUI.getMessage(SptMessages.ValueSaved),
                                             Notification.Type.HUMANIZED_MESSAGE);
                                     if (currentDbYear != (Integer) yearSelect.getValue()) {
@@ -645,6 +647,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     myUI.getUser().getCurrent_year().setId((Integer) yearSelect.getValue());
                     myUI.getUser().getCurrent_year().setName(yearSelect.getContainerDataSource()
                             .getContainerProperty(yearSelect.getValue(), Settings.titleShort).getValue().toString());
+                    myUI.getUser().getCurrent_year().setLast((Boolean) yearSelect.getContainerProperty(
+                            yearSelect.getValue(), Settings.is_last).getValue());
+                    myUI.getUser().getCurrent_year().setInstallment_date_limit((Long) yearSelect.getContainerProperty(
+                            yearSelect.getValue(), Settings.installmentDateLimit).getValue());
                     updatePage();
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),

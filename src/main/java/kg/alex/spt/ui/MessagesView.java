@@ -28,8 +28,7 @@ public class MessagesView extends VerticalLayout {
         setSizeFull();
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Date),
                 myUI.getMessage(SptMessages.OrderNumber), myUI.getMessage(SptMessages.Student),
-                myUI.getMessage(SptMessages.Message), myUI.getMessage(SptMessages.Status),
-                Settings.button};
+                myUI.getMessage(SptMessages.Status), Settings.button};
         buildBody();
     }
 

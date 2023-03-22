@@ -16,8 +16,17 @@ public class Year implements Serializable {
     private String period_kg;
     private Date start_date;
     private Date end_date;
+    private Long installment_date_limit;
+    private boolean last;
 
     public Year() {
+    }
+
+    public Year(int id, String name, long installment_date_limit, boolean last) {
+        this.id = id;
+        this.name = name;
+        this.last = last;
+        this.installment_date_limit = installment_date_limit;
     }
 
     public int getId() {
@@ -68,4 +77,19 @@ public class Year implements Serializable {
         this.end_date = end_date;
     }
 
+    public Long getInstallment_date_limit() {
+        return installment_date_limit;
+    }
+
+    public void setInstallment_date_limit(Long installment_date_limit) {
+        this.installment_date_limit = installment_date_limit;
+    }
+
+    public boolean isLast() {
+        return last;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
+    }
 }

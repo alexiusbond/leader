@@ -41,7 +41,6 @@ public class Settings implements Serializable {
     public static final SimpleDateFormat dtmf = new SimpleDateFormat(dateTimeMinPattern);
     public static final SimpleDateFormat ymdf = new SimpleDateFormat(yearMonthPattern);
     public static final SimpleDateFormat ydf = new SimpleDateFormat(yearPattern);
-    public static final long INSTALLMENT_DATE_LIMIT = 1680220800000L;
     public static final String id = "id";
     public static final String count = "count";
     public static final String email = "E-mail";
@@ -61,6 +60,7 @@ public class Settings implements Serializable {
     public static final String is_main = "is_main";
     public static final String is_last = "is_last";
     public static final String titleShort = "TitleShort";
+    public static final String installmentDateLimit = "installmentDateLimit";
     public static final String year_id = "year_id";
     public static final String school_id = "school_id";
     public static final String discount_type_id = "discount_type_id";

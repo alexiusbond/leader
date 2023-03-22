@@ -9,6 +9,7 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.UserDetails;
+import kg.alex.spt.domain.Year;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -29,7 +30,7 @@ public class DbUserDetails extends BaseDb {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "select e.id, ord.working_status_id, eb.hr_branch_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
                 + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, pos.id, "
-                + "y.id, y.name, y2.id, y2.name, y.is_last, sch.transactions_start_date "
+                + "y.id, y.name, y2.id, y2.name, y.is_last, y.installment_date_limit, sch.transactions_start_date "
                 + "from employee as e "
                 + "left join hr_employee_branch as eb on eb.employee_id = e.id and eb.hr_importance_id = 1 "
                 + "left join hr_employee_order as eo on eo.employee_id = e.id and eo.to_date IS NULL "
@@ -57,10 +58,11 @@ public class DbUserDetails extends BaseDb {
             user.setBranch_id(result.getInt("eb.hr_branch_id"));
             user.setPosition_id(result.getInt("pos.id"));
             if (currentUser.hasRole(Settings.rnSapatSecretary)) {
-                user.setCurrent_year(new Definition(result.getInt("y2.id"), result.getString("y2.name"), true));
+                user.setCurrent_year(new Year(result.getInt("y2.id"),
+                        result.getString("y2.name"), 0L, true));
             } else {
-                user.setCurrent_year(new Definition(result.getInt("y.id"), result.getString("y.name"),
-                        result.getBoolean("y.is_last")));
+                user.setCurrent_year(new Year(result.getInt("y.id"), result.getString("y.name"),
+                        result.getLong("y.installment_date_limit"), result.getBoolean("y.is_last")));
             }
             user.setTransactions_start_date(result.getDate("sch.transactions_start_date"));
         }

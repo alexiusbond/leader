@@ -78,7 +78,6 @@ public class DbEmployeeMessage extends BaseDb {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.OrderNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Message), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Student), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
@@ -89,7 +88,6 @@ public class DbEmployeeMessage extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.df.format(
                     result.getDate("om.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Message)).setValue(result.getString("om.message"));
             item.getItemProperty(myUi.getMessage(SptMessages.OrderNumber)).setValue(result.getString("om.order_number"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(result.getString("mst.name"));
             item.getItemProperty(Settings.status_id).setValue(result.getInt("mst.id"));
@@ -138,7 +136,7 @@ public class DbEmployeeMessage extends BaseDb {
         t.setColumnFooter(Settings.status_id, unread + "");
         t.setColumnFooter(myUi.getMessage(SptMessages.Status),
                 myUi.getMessage(SptMessages.UnRead) + ": " + unread);
-        t.setColumnFooter(myUi.getMessage(SptMessages.Message),
+        t.setColumnFooter(myUi.getMessage(SptMessages.Student),
                 myUi.getMessage(SptMessages.Total) + ": " + container.size());
     }
 

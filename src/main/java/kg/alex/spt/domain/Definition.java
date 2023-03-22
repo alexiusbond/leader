@@ -14,28 +14,13 @@ public class Definition implements Serializable {
     private int id;
     private String name;
     private int activity_status_id;
-    private boolean last;
 
     public Definition() {
-    }
-
-    public Definition(int id, String name, boolean last) {
-        this.id = id;
-        this.name = name;
-        this.last = last;
     }
 
     public Definition(int id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public boolean isLast() {
-        return last;
-    }
-
-    public void setLast(boolean last) {
-        this.last = last;
     }
 
     public int getId() {
