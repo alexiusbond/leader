@@ -3372,9 +3372,14 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     item.getItemProperty(Settings.status_id).setValue(1);
                 } else {
                     String id = Settings.FreshItem + r_table_counter;
-                    Item item = installmentTable.getContainerDataSource().addItem(id);
-                    TextField tf = (TextField) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
-                    tf.getPropertyDataSource().setValue(Settings.round(divSum * (Integer.parseInt(divideTF.getValue()) - i + 1), 2));
+                    Item item = installmentTable.getContainerDataSource().getItem(id);
+                    if (item != null) {
+                        TextField tf = (TextField) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue();
+                        tf.getPropertyDataSource().setValue(Settings.round(divSum * (Integer.parseInt(divideTF.getValue()) - i + 1), 2));
+                    } else {
+                        currDate.setValue(dateLimit.getTime());
+                        plusInstButton.click();
+                    }
                     break;
                 }
             }
