@@ -1,3 +1,4 @@
-ALTER TABLE `spt`.`year` 
-ADD COLUMN `installment_date_limit` DECIMAL(15) NOT NULL DEFAULT '1680220800000' AFTER `is_last`;
-UPDATE `spt`.`year` SET `installment_date_limit` = '1711843200000' WHERE (`id` = '9');
+INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('sapat_secretary', 'ChangeSchool:изменение');
+INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('sapat_secretary', 'CV_Window:информация о кураторстве,информация о контракте');
+INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('sapat_secretary', 'EmployeeDefinitionView:показ в меню,вкладка разрешений,вкладка образовательной деятельности,вкладка приказов,вкладка контактной информации,вкладка профессиональной информации,вкладка образовательной деятельности,вкладка достижений,вкладка информации о семье,вкладка доп. информации,вкладка документов,вкладка договоров,вкладка поиска,видимость контракта,организация уроков,назначение кураторства,видимость всех сотрудников');
+INSERT INTO `spt`.`user_permission` (`role_name`, `permissions`) VALUES ('sapat_secretary', 'HRReportsView:показ в меню,отчет по количеству преподаваемых часов,общий отчет по кадрам');

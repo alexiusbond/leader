@@ -42,7 +42,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private double debt, amount, plan_debt, ttl_payment, to_pay, ttl_left;
     private StringBuilder discounts;
     private String corrections;
-    private StudentInfoPdf st;
+    private StudentInfoPdf studInfo;
     private FormattedTable installmentTable, paymentsTable;
     private FilterTable studentsTable, classTable;
     private ComboBox yearSelect;
@@ -182,26 +182,34 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
         if (source == generateBtn) {
             if (studentsTable.getValue() != null) {
                 try {
-                    DbStudent dbs = new DbStudent();
+                    DbStudentInfoPdf dbs = new DbStudentInfoPdf();
                     dbs.connect();
-                    st = dbs.execStudInfo_pdf((Integer) studentsTable.getValue(),
-                            (Integer) yearSelect.getValue());
+                    studInfo = dbs.execSQL((Integer) yearSelect.getValue(), (Integer) studentsTable.getValue());
                     dbs.close();
+                    DbEmployee dbEmployee = new DbEmployee();
+                    dbEmployee.connect();
+                    studInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                    studInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                    dbEmployee.close();
+                    DbSchool dbSchool = new DbSchool();
+                    dbSchool.connect();
+                    studInfo.setSchool(dbSchool.execSchool(myUI.getUser().getSchool().getId()));
+                    dbSchool.close();
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
                 }
-                if (st.getScl_accountant_full_name() != null) {
+                if (studInfo.getAccountant() != null) {
                     buildRightPanel();
-                    st.setCtr_contract_sum(amount);
-                    st.setCtr_debt(debt);
-                    st.setCtr_installment_plan_debt(plan_debt - ttl_payment);
-                    st.setCtr_discountStr(discounts.toString());
-                    st.setCtr_Correction(corrections);
-                    st.setCtr_to_pay(to_pay);
-                    st.setCtr_ttl_left_sum(ttl_left);
-                    st.setCtr_paid(ttl_payment);
-                    st.setYear(yearSelect.getContainerProperty(yearSelect.getValue(),
+                    studInfo.getContractInfo().setContract(amount);
+                    studInfo.getContractInfo().setDebt(debt);
+                    studInfo.getContractInfo().setInstallmentPlanDebt(plan_debt - ttl_payment);
+                    studInfo.getContractInfo().setDiscountStr(discounts.toString());
+                    studInfo.getContractInfo().setCorrectionStr(corrections);
+                    studInfo.getContractInfo().setNet(to_pay);
+                    studInfo.getContractInfo().setLeft(ttl_left);
+                    studInfo.getContractInfo().setPaid(ttl_payment);
+                    studInfo.setYear(yearSelect.getContainerProperty(yearSelect.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue().toString());
                     makePdfBtn.setEnabled(true);
                     excelBtn.setEnabled(true);
@@ -211,10 +219,9 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 }
             }
         } else if (source == makePdfBtn) {
-            if (st.getScl_accountant_full_name() != null) {
-                if (st.getScl_address() != null && st.getScl_phone() != null
-                        && st.getScl_name_ru() != null) {
-                    new InstallmentPlanPaymentsPdf(myUI, st, installmentCont, paymentsCont, total_inst,
+            if (studInfo.getAccountant() != null) {
+                if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
+                    new InstallmentPlanPaymentsPdf(myUI, studInfo, installmentCont, paymentsCont, total_inst,
                             total_pay);
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
@@ -415,8 +422,8 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private void buildStudInfo() {
         if (studentsTable.getValue() != null) {
             Embedded photoEmb = new Embedded();
-            if (st.getStud_photo() != null && !st.getStud_photo().equals("")) {
-                photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + st.getStud_photo())));
+            if (studInfo.getStudent().getPhoto() != null && !studInfo.getStudent().getPhoto().equals("")) {
+                photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + studInfo.getStudent().getPhoto())));
             } else {
                 photoEmb.setSource(new FileResource(new File(Settings.PATH_TO_UPLOADS + "no_photo.jpg")));
             }
@@ -427,25 +434,25 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
             Label loginLab = new Label();
             loginLab.setSizeFull();
             loginLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            loginLab.setValue(myUI.getMessage(SptMessages.Id) + ": " + st.getStud_login());
+            loginLab.setValue(myUI.getMessage(SptMessages.Id) + ": " + studInfo.getStudent().getLogin());
             rightGrid.addComponent(loginLab, 1, 0, 2, 0);
 
             Label nameLab = new Label();
             nameLab.setSizeFull();
             nameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            nameLab.setValue(myUI.getMessage(SptMessages.FirstName) + ": " + st.getStud_name());
+            nameLab.setValue(myUI.getMessage(SptMessages.FirstName) + ": " + studInfo.getStudent().getName());
             rightGrid.addComponent(nameLab, 1, 1, 2, 1);
 
             Label surnameLab = new Label();
             surnameLab.setSizeFull();
             surnameLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            surnameLab.setValue(myUI.getMessage(SptMessages.LastName) + ": " + st.getStud_sur_name());
+            surnameLab.setValue(myUI.getMessage(SptMessages.LastName) + ": " + studInfo.getStudent().getSurname());
             rightGrid.addComponent(surnameLab, 1, 2, 2, 2);
 
             Label classLab = new Label();
             classLab.setSizeFull();
             classLab.setStyleName(ValoTheme.LABEL_SUCCESS);
-            classLab.setValue(myUI.getMessage(SptMessages.ClassName) + ": " + st.getStud_class_name());
+            classLab.setValue(myUI.getMessage(SptMessages.ClassName) + ": " + studInfo.getStudent().getClass_name());
             rightGrid.addComponent(classLab, 1, 3, 2, 3);
         }
     }
@@ -490,7 +497,7 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
                 discounts.append(Settings.dFormat2.format(discCont.getContainerProperty(next,
                         myUI.getMessage(SptMessages.Amount)).getValue())).append("%");
                 if (iter.hasNext()) {
-                    discounts.append( ", ");
+                    discounts.append(", ");
                 }
             } else if ((Integer) discCont.getContainerProperty(next,
                     Settings.discount_type_id).getValue() == 2) {

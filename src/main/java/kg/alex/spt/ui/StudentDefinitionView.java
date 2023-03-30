@@ -24,7 +24,8 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.pdf.*;
+import kg.alex.spt.pdf.InvoicePDF;
+import kg.alex.spt.pdf.contracts.*;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import kg.alex.spt.utils.MyFilterGenerator;
@@ -1305,17 +1306,27 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     try {
                         DbStudentInfoPdf dbs = new DbStudentInfoPdf();
                         dbs.connect();
-                        studInfo = dbs.execSQL((Integer) studDataTable.getValue());
+                        studInfo = dbs.execSQL(myUI.getUser().getCurrent_year().getId(),
+                                (Integer) studDataTable.getValue());
                         dbs.close();
+                        DbEmployee dbEmployee = new DbEmployee();
+                        dbEmployee.connect();
+                        studInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                        studInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                        dbEmployee.close();
+                        DbSchool dbSchool = new DbSchool();
+                        dbSchool.connect();
+                        studInfo.setSchool(dbSchool.execSchool(myUI.getUser().getSchool().getId()));
+                        dbSchool.close();
                     } catch (Exception e) {
                         logger.error(e);
                         logger.catching(e);
                     }
                     if (contractCB.getValue() != null) {
-                        studInfo.setCtr_contract_sum((Double) (contractCB.getContainerProperty(contractCB.getValue(),
+                        studInfo.getContractInfo().setContract((Double) (contractCB.getContainerProperty(contractCB.getValue(),
                                 myUI.getMessage(SptMessages.Amount)).getValue()));
                     }
-                    studInfo.setCtr_debt(debt);
+                    studInfo.getContractInfo().setDebt(debt);
                     if (discountsTable.size() > 0) {
                         Iterator<?> iter = discountsTable.getItemIds().iterator();
                         StringBuilder allDisc = new StringBuilder();
@@ -1342,7 +1353,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 allDisc.append(" - ").append(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue().toString()).append("% (").append(Settings.dFormat2.format(count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue()) / 100)).append("$)");
+                                        .getPropertyDataSource().getValue()) / 100)).append(" долларов США)");
                                 count_amount -= count_amount
                                         * ((Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue()) / 100;
@@ -1355,7 +1366,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                                     .getContainerProperty(next, myUI.getMessage(SptMessages.Title)).getValue()).getValue(),
                                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 4)) {
                                 allDisc.append("(").append(Settings.dFormat2.format(((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                        .getPropertyDataSource().getValue())).append("$)");
+                                        .getPropertyDataSource().getValue())).append(" долларов США)");
                                 count_amount -= (Double) ((TextField) discountsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
                                         .getPropertyDataSource().getValue();
                             }
@@ -1364,8 +1375,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 allDisc.append(", ");
                             }
                         }
-                        studInfo.setCtr_discountStr(allDisc.toString());
-                        studInfo.setCtr_discount_percentage(discountsStr.toString());
+                        studInfo.getContractInfo().setDiscountStr(allDisc.toString());
+                        studInfo.getContractInfo().setDiscountPercentage(discountsStr.toString());
                     }
                     if (correctionsTable.size() > 0) {
                         Iterator<?> iter = correctionsTable.getItemIds().iterator();
@@ -1378,43 +1389,48 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                             myUI.getMessage(SptMessages.Title)).getValue().toString()));
                             allCorrections.append(dis);
                             allCorrections.append(" (").append(Settings.dFormat2.format(((TextField) correctionsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Amount)).getValue())
-                                    .getPropertyDataSource().getValue())).append("$)");
+                                    .getPropertyDataSource().getValue())).append(" долларов США)");
                             if (iter.hasNext()) {
                                 allCorrections.append(", ");
                             }
                         }
-                        studInfo.setCtr_Correction(allCorrections.toString());
+                        studInfo.getContractInfo().setCorrectionStr(allCorrections.toString());
                     }
-                    studInfo.setCtr_init_payment(instFirstPay);
-                    studInfo.setCtr_to_pay(toPay);
-                    studInfo.setCtr_ttl_left_sum(ttl_left);
-                    if (studInfo.getRel_full_name() != null && studInfo.getRel_name() != null
-                            && studInfo.getRel_name_dec() != null) {
-                        if (studInfo.getScl_address() != null && studInfo.getScl_bank() != null
-                                && studInfo.getScl_bank_account() != null && studInfo.getScl_city() != null
-                                && studInfo.getScl_dir_f_name() != null && studInfo.getScl_inn() != null
-                                && studInfo.getScl_name_ru() != null && studInfo.getScl_phone() != null) {
+                    studInfo.getContractInfo().setInitialPayment(instFirstPay);
+                    studInfo.getContractInfo().setNet(toPay);
+                    studInfo.getContractInfo().setLeft(ttl_left);
+                    if (studInfo.getRelative() != null && studInfo.getRelative().getFullName() != null) {
+                        if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null
+                                && studInfo.getDirector() != null) {
                             saveBtn.click();
                             if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrRu))) {
-                                new ContractLisePdfRu(myUI, studInfo, instPlanCont);
+                                if (myUI.getUser().getCurrent_year().getId() == 9) {
+                                    new ContractLisePdf_2024_ru(myUI, studInfo, instPlanCont);
+                                } else {
+                                    new ContractLisePdf_2023_ru(myUI, studInfo, instPlanCont);
+                                }
                                 contLangOG.setValue(null);
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrKg))) {
-                                new ContractLisePdfKg(myUI, studInfo, instPlanCont);
+                                new ContractLisePdf_kg(myUI, studInfo, instPlanCont);
                                 contLangOG.setValue(null);
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrRu))) {
-                                new ContractSchoolPdfRu(myUI, studInfo, instPlanCont);
+                                if (myUI.getUser().getCurrent_year().getId() == 9) {
+                                    new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
+                                } else {
+                                    new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
+                                }
                                 contLangOG.setValue(null);
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrKg))) {
-                                new ContractSchoolPdfKg(myUI, studInfo, instPlanCont);
+                                new ContractSchoolPdf_kg(myUI, studInfo, instPlanCont);
                                 contLangOG.setValue(null);
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeOshContrRu))) {
-                                new ContractCambridgeOshPdfRu(myUI, studInfo, instPlanCont);
+                                new ContractCambridgeOshPdf_ru(myUI, studInfo, instPlanCont);
                                 contLangOG.setValue(null);
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrRu))) {
-                                new ContractCambridgePdfRu(myUI, studInfo, instPlanCont);
+                                new ContractCambridgePdf_ru(myUI, studInfo, instPlanCont);
                                 contLangOG.setValue(null);
                             } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrEn))) {
-                                new ContractCambridgePdfEn(myUI, studInfo, instPlanCont);
+                                new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
                                 contLangOG.setValue(null);
                             }
 
@@ -2786,7 +2802,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         } else {
             rel.setIs_main(0);
         }
-        rel.setRelatives_id((Integer) ((ComboBox) item.getItemProperty(
+        rel.setRelative_id((Integer) ((ComboBox) item.getItemProperty(
                 myUI.getMessage(SptMessages.RelativeType)).getValue()).getValue());
 
         rel.setId(id);

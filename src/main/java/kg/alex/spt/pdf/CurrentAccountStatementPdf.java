@@ -13,7 +13,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Table;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,8 +33,8 @@ public class CurrentAccountStatementPdf {
     private final Date aDate = new Date(System.currentTimeMillis());
 
 
-    public CurrentAccountStatementPdf(final MyVaadinUI myUI, final Table t,
-                                      final String acc_category, final String currency, final Date from, final Date to, final StudentInfoPdf st) {
+    public CurrentAccountStatementPdf(final MyVaadinUI myUI, final Table t, final String acc_category, final String currency,
+                                      final Date from, final Date to, final School school) {
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             private static final long serialVersionUID = 1L;
@@ -51,7 +51,8 @@ public class CurrentAccountStatementPdf {
                     document = new Document(PageSize.A4, 10, 10, 70, 40);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, school.getName_ru(),
+                            school.getAddress(), school.getPhone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,

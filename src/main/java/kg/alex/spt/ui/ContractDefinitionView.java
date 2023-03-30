@@ -168,8 +168,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         valueTF.setNullRepresentation("");
         valueTF.setConverter(Settings.getStringToDoubleConverter(2));
         valueTF.setWidth(Settings.PERCENTS100);
-        valueTF.addValidator(new DoubleRangeValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
+        valueTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
         settingsLay.addComponent(valueTF);
 
         statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));

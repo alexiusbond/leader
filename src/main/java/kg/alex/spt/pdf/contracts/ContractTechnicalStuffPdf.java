@@ -1,4 +1,4 @@
-package kg.alex.spt.pdf;
+package kg.alex.spt.pdf.contracts;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;

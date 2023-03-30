@@ -8,9 +8,9 @@ import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.domain.ContractTotal;
+import kg.alex.spt.domain.ContractInfo;
+import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.SchoolAccounting;
-import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
@@ -44,10 +44,10 @@ public class AccountingGeneralReportPdf {
     private final SchoolAccounting sclAccInfo;
     private final FormattedTable accTransactionsTable;
     private final FormattedTable paymentsTable;
-    private final ContractTotal contrTtl;
+    private final ContractInfo contrTtl;
 
     public AccountingGeneralReportPdf(final MyVaadinUI myUI, String svgPms, String svgPaid, String svgDisc,
-                                      SchoolAccounting schoolAcc, FormattedTable transactionsTable, ContractTotal contractTtl,
+                                      SchoolAccounting schoolAcc, FormattedTable transactionsTable, ContractInfo contractTtl,
                                       FormattedTable pTable, final int scl_id, final String year, final String prevDay) {
         svgStrPayments = svgPms;
         svgStrDiscounts = svgDisc;
@@ -66,17 +66,18 @@ public class AccountingGeneralReportPdf {
 
                 document = new Document(PageSize.A4, 10, 10, 10, 10);
                 writer = PdfWriter.getInstance(document, buffer);
-                StudentInfoPdf st = new StudentInfoPdf();
+                School school = null;
                 try {
                     DbSchool dbs = new DbSchool();
                     dbs.connect();
-                    st = dbs.execGetSchoolPdf(scl_id);
+                    school = dbs.execSchool(scl_id);
                     dbs.close();
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
                 }
-                HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, school.getName_ru(),
+                        school.getAddress(), school.getPhone());
                 writer.setPageEvent(event);
 
                 final String FONT_LOCATION = "/home/logo/PT_Sans-Web-Regular.ttf";
@@ -207,21 +208,21 @@ public class AccountingGeneralReportPdf {
                 ttlContrTable.setWidths(ttlContr_colsWidth);
                 ttlContrTable.getDefaultCell().setBorder(0);
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.Students) + ":", normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_students() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getStudents() + "", normal_font));
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalContract), normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_contract() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getContract() + "", normal_font));
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalDebt), normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_debt() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getDebt() + "", normal_font));
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalDiscount), normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_disc() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getDiscount() + "", normal_font));
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalCorrection), normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_correction() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getCorrection() + "", normal_font));
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.Net), normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_net() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getNet() + "", normal_font));
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalPayment), normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_payments() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getPaid() + "", normal_font));
                 ttlContrTable.addCell(new Phrase(myUI.getMessage(SptMessages.TotalLeft), normal_bold_font));
-                ttlContrTable.addCell(new Phrase(contrTtl.getTtl_left() + "", normal_font));
+                ttlContrTable.addCell(new Phrase(contrTtl.getLeft() + "", normal_font));
 
                 float[] ttl_colsWidth = {0.5f, 0.95f, 1.05f};
                 PdfPTable ttlTable = new PdfPTable(3);

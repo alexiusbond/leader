@@ -47,7 +47,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
-import org.vaadin.grid.cellrenderers.view.RowIndexRenderer;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;

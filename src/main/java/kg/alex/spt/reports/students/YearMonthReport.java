@@ -16,6 +16,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbDefinition;
+import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.StudentInfoPdf;
@@ -381,21 +382,25 @@ public class YearMonthReport implements Button.ClickListener,
                 }
             }
         } else if (source == makePdfBtn) {
-            StudentInfoPdf st;
+            StudentInfoPdf studentInfo = new StudentInfoPdf();
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
                 dbsc.close();
-                if (st.getScl_accountant_full_name() != null) {
-                    if (st.getScl_address() != null && st.getScl_phone() != null
-                            && st.getScl_name_ru() != null) {
+                DbEmployee dbEmployee = new DbEmployee();
+                dbEmployee.connect();
+                studentInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                studentInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                dbEmployee.close();
+                if (studentInfo.getAccountant() != null) {
+                    if (studentInfo.getSchool().getAddress() != null) {
                         if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Yearly))) {
-                            new YearReportPdf(myUI, rightLay, st);
+                            new YearReportPdf(myUI, rightLay, studentInfo);
                         } else if (type.getValue().toString().equals(myUI.getMessage(SptMessages.Monthly))) {
-                            new MonthsReportPdf(myUI, rightLay, st);
+                            new MonthsReportPdf(myUI, rightLay, studentInfo);
                         } else {
-                            new SummaryReportPdf(myUI, rightLay, st);
+                            new SummaryReportPdf(myUI, rightLay, studentInfo);
                         }
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),

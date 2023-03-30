@@ -1,4 +1,4 @@
-package kg.alex.spt.pdf;
+package kg.alex.spt.pdf.contracts;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
@@ -950,7 +950,7 @@ public class ContractAcademicStuffPdf {
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Директор: ", ordBoldFont));
-                text10.add(new Phrase(this.employeeInfo.getDirector().getSurname() + " "
+                text10.add(new Phrase( employeeInfo.getDirector().getSurname() + " "
                         + employeeInfo.getDirector().getName() + " " +
                         (employeeInfo.getDirector().getMiddle_name() == null ?
                                 "" : employeeInfo.getDirector().getMiddle_name()), ordFont));

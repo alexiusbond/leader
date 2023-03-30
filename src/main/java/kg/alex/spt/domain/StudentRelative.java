@@ -17,7 +17,25 @@ public class StudentRelative implements Serializable {
     private String address;
     private String passport;
     private int is_main;
-    private int relatives_id;
+    private int relative_id;
+    private String relativeDeclarative;
+    private String relativeTitle;
+
+    public String getRelativeTitle() {
+        return relativeTitle;
+    }
+
+    public void setRelativeTitle(String relativeTitle) {
+        this.relativeTitle = relativeTitle;
+    }
+
+    public String getRelativeDeclarative() {
+        return relativeDeclarative;
+    }
+
+    public void setRelativeDeclarative(String relativeDeclarative) {
+        this.relativeDeclarative = relativeDeclarative;
+    }
 
     public int getId() {
         return id;
@@ -83,12 +101,12 @@ public class StudentRelative implements Serializable {
         this.is_main = is_main;
     }
 
-    public int getRelatives_id() {
-        return relatives_id;
+    public int getRelative_id() {
+        return relative_id;
     }
 
-    public void setRelatives_id(int relatives_id) {
-        this.relatives_id = relatives_id;
+    public void setRelative_id(int relative_id) {
+        this.relative_id = relative_id;
     }
 
 }

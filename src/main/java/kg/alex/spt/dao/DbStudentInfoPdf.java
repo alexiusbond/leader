@@ -5,7 +5,10 @@
  */
 package kg.alex.spt.dao;
 
+import kg.alex.spt.domain.ContractInfo;
+import kg.alex.spt.domain.Student;
 import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.domain.StudentRelative;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,60 +20,58 @@ public class DbStudentInfoPdf extends BaseDb {
         super();
     }
 
-    public StudentInfoPdf execSQL(int stud_id) throws SQLException {
+    public StudentInfoPdf execSQL(int year_id, int student_id) throws SQLException {
         StudentInfoPdf sti = new StudentInfoPdf();
-        String sql = "SELECT s.id, s.login, s.surname, s.name, s.middle_name, scl.city, scl.name_ru, scl.name_kg, scl.name_en, s.gender_id, "
-                + "scl.director_fullname, scl.address, scl.inn, scl.bank, scl.bank_account, "
-                + "scl.school_type_id, scl.phone, sr.fullname, sr.phone, sr.passport, sr.address, r.name_ru, r.name_ru_dec, "
+        String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.middle_name, s.gender_id, sr.fullname, "
+                + "sr.phone, sr.passport, sr.address, r.name_ru, r.name_ru_dec, "
                 + "y.period, y.period_kg, y.name, sc.contract_number, sc.creation_date, "
-                + "concat(cnum.name, ' - ',cn.name) as class_name "
+                + "CONCAT(cnu.name, ' - ', cna.name) AS class_name "
                 + "FROM student as s "
-                + "left join school as scl on scl.id = s.school_id "
+                + "LEFT JOIN (SELECT so.to_class_name_id AS tcl, so.student_id as stid "
+                + "FROM student_orders AS so WHERE so.year_id = ? AND so.student_id = ? AND so.is_valid = 1 "
+                + "ORDER BY id DESC LIMIT 1) AS o_temp on o_temp.stid = s.id "
+                + "LEFT JOIN school AS scl ON scl.id = s.school_id "
+                + "LEFT JOIN class_name AS cna ON cna.id = CASE WHEN o_temp.tcl IS NULL THEN s.class_name_id "
+                + "ELSE o_temp.tcl END "
+                + "LEFT JOIN class_number AS cnu ON cna.class_number_id = cnu.id "
                 + "left join student_relatives as sr on sr.student_id = s.id "
                 + "left join relatives as r on r.id = sr.relatives_id "
-                + "left join class_name as cn on cn.id = s.class_name_id "
-                + "left join class_number as cnum on cn.class_number_id = cnum.id "
                 + "left join year as y on scl.year_id = y.id "
                 + "left join student_contract as sc on sc.student_id = s.id and sc.year_id = y.id "
                 + "where s.id = ? and sr.is_main = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, stud_id);
+        stat.setInt(1, year_id);
+        stat.setInt(2, student_id);
+        stat.setInt(3, student_id);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
-            sti.setStud_id(result.getInt("s.id"));
-            sti.setStud_login(result.getString("s.login"));
-            sti.setStud_name(result.getString("s.name"));
-            sti.setStud_surname(result.getString("s.surname"));
+            sti.setStudent(new Student());
+            sti.setContractInfo(new ContractInfo());
+            sti.setRelative(new StudentRelative());
+            sti.getStudent().setId(result.getInt("s.id"));
+            sti.getStudent().setLogin(result.getString("s.login"));
+            sti.getStudent().setPhoto(result.getString("s.photo"));
+            sti.getStudent().setName(result.getString("s.name"));
+            sti.getStudent().setSurname(result.getString("s.surname"));
             if (result.getString("s.middle_name") == null
                     || result.getString("s.middle_name").equals("")) {
-                sti.setStud_middle_name("");
+                sti.getStudent().setMiddle_name("");
             } else {
-                sti.setStud_middle_name(result.getString("s.middle_name"));
+                sti.getStudent().setMiddle_name(result.getString("s.middle_name"));
             }
-            if (result.getInt("s.gender_id") == 2) {
-                sti.setIsStudentFemininity(true);
-            }
-            sti.setScl_city(result.getString("scl.city"));
-            sti.setScl_name_ru(result.getString("scl.name_ru"));
-            sti.setScl_name_kg(result.getString("scl.name_kg"));
-            sti.setScl_dir_f_name(result.getString("scl.director_fullname"));
-            sti.setScl_address(result.getString("scl.address"));
-            sti.setScl_inn(result.getString("scl.inn"));
-            sti.setScl_bank(result.getString("scl.bank"));
-            sti.setScl_bank_account(result.getString("scl.bank_account"));
-            sti.setScl_phone(result.getString("scl.phone"));
-            sti.setScl_year_name(result.getString("y.name"));
-            sti.setRel_full_name(result.getString("sr.fullname"));
-            sti.setRel_phone(result.getString("sr.phone"));
-            sti.setRel_address(result.getString("sr.address"));
-            sti.setRel_passport(result.getString("sr.passport"));
-            sti.setRel_name(result.getString("r.name_ru"));
-            sti.setRel_name_dec(result.getString("r.name_ru_dec"));
+            sti.getStudent().setGender_id(result.getInt("s.gender_id"));
+            sti.getStudent().setClass_name(result.getString("class_name"));
+            sti.getRelative().setFullName(result.getString("sr.fullname"));
+            sti.getRelative().setPhone(result.getString("sr.phone"));
+            sti.getRelative().setAddress(result.getString("sr.address"));
+            sti.getRelative().setPassport(result.getString("sr.passport"));
+            sti.getRelative().setRelativeTitle(result.getString("r.name_ru"));
+            sti.getRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));
             sti.setPeriod(result.getString("y.period"));
             sti.setPeriod_kg(result.getString("y.period_kg"));
-            sti.setClass_name(result.getString("class_name"));
-            sti.setContractNumber(result.getInt("sc.contract_number"));
-            sti.setContractCreationDate(result.getDate("sc.creation_date"));
+            sti.setYear(result.getString("y.name"));
+            sti.getContractInfo().setContractNumber(result.getInt("sc.contract_number"));
+            sti.getContractInfo().setCreationDate(result.getDate("sc.creation_date"));
         }
         return sti;
     }

@@ -25,8 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tepi.filtertable.FilterTreeTable;
 
-import java.util.Date;
-
 public class PayoutsReport implements Button.ClickListener,
         Property.ValueChangeListener {
 

@@ -11,7 +11,8 @@ public class EmployeeInfoPdf implements Serializable {
     private String employeeName;
     private String employeeSurname;
     private String employeeMiddleName;
-    private String employeeBranch;private String employeePosition;
+    private String employeeBranch;
+    private String employeePosition;
     private EmployeeContact contact;
     private boolean isEmployeeFemininity;
     private School school;

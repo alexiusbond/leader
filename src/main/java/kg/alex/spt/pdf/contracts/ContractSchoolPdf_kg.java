@@ -1,4 +1,4 @@
-package kg.alex.spt.pdf;
+package kg.alex.spt.pdf.contracts;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
@@ -17,23 +17,24 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
+import java.util.Objects;
 
-public class ContractSchoolPdfKg {
+public class ContractSchoolPdf_kg {
 
-    static final Logger logger = LogManager.getLogger(ContractSchoolPdfKg.class);
+    static final Logger logger = LogManager.getLogger(ContractSchoolPdf_kg.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
     private final MyVaadinUI myUI;
-    private final StudentInfoPdf student;
+    private final StudentInfoPdf studentInfo;
 
 
     private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
-    public ContractSchoolPdfKg(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractSchoolPdf_kg(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
-        this.student = st_info;
+        this.studentInfo = st_info;
 
         StreamResource.StreamSource source1 = () -> {
 
@@ -64,7 +65,7 @@ public class ContractSchoolPdfKg {
                 spr.add(new Phrase("Акылуу билим берүү кызматын көрсөтүү боюнча ", font_header));
                 spr.add(Chunk.NEWLINE);
                 spr.add(new Phrase("КЕЛИШИМ № "
-                        + String.format("%07d", student.getContractNumber()), font_header));
+                        + String.format("%07d", studentInfo.getContractInfo().getContractNumber()), font_header));
                 spr.add(Chunk.NEWLINE);
 
                 spr.setAlignment(Element.ALIGN_CENTER);
@@ -77,9 +78,9 @@ public class ContractSchoolPdfKg {
                 table_date.setWidths(table_date_colsWidth);
                 table_date.getDefaultCell().setBorder(0);
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                table_date.addCell(new Phrase(student.getScl_city() + " ш.", ordBoldFont));
+                table_date.addCell(new Phrase(studentInfo.getSchool().getCity() + " ш.", ordBoldFont));
                 table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                table_date.addCell(new Phrase(Settings.df.format(student.getContractCreationDate()), ordBoldFont));
+                table_date.addCell(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
                 document.add(table_date);
                 document.add(new Paragraph(10, " "));
 
@@ -90,15 +91,20 @@ public class ContractSchoolPdfKg {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("Кыргыз Республикасынын “Билим берүү жөнүндө” Мыйзамынын 10-беренесине ылайык бекитилген Уставдын негизинде ишмердүүлүгүн  жүргүзгөн ", ordFont));
-                paragraph.add(new Phrase(student.getScl_name_kg() + "”", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getSchool().getName_kg() + "”", ordBoldFont));
                 paragraph.add(new Phrase(" билим берүү мекемесинин (мындан ары “Мектеп” деп белгиленет) атынан директору ", ordFont));
-                paragraph.add(new Phrase(student.getScl_dir_f_name(), ordBoldFont));
+
+                String fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
+                if (!Objects.equals(studentInfo.getDirector().getMiddle_name(), "")) {
+                    fullName += " " + studentInfo.getDirector().getMiddle_name();
+                }
+                paragraph.add(new Phrase(fullName, ordBoldFont));
                 paragraph.add(new Phrase(" биринчи тараптан жана ", ordFont));
-                paragraph.add(new Phrase(student.getRel_full_name(), ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getRelative().getFullName(), ordBoldFont));
                 paragraph.add(new Phrase(" окуучунун ата-энеси (мындан ары“Ата-эне” деп белгиленет) экинчи тараптан ", ordFont));
-                String fullName = student.getStud_sur_name() + " " + student.getStud_name();
-                if (!student.getStud_middle_name().equals("")) {
-                    fullName = fullName + " " + student.getStud_middle_name();
+                fullName = studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName();
+                if (!studentInfo.getStudent().getMiddle_name().equals("")) {
+                    fullName = fullName + " " + studentInfo.getStudent().getMiddle_name();
                 }
                 paragraph.add(new Phrase(fullName, ordBoldFont));
                 paragraph.add(new Phrase(" окуучунун кызыкчылыгы үчүн Кыргыз Республикасынын “Билим берүү жөнүндө” мыйзамынын 4-беренесине ылайык төмөндөгү келишимди түзүштү:", ordFont));
@@ -121,7 +127,7 @@ public class ContractSchoolPdfKg {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("1.1. ", ordFont));
-                paragraph.add(new Phrase(student.getPeriod_kg(), ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getPeriod_kg(), ordBoldFont));
                 paragraph.add(new Phrase(" карата мектеп тарабынын мамлекеттик билим берүү стандартынын жана тиешелүү билим берүү программасынын алкагында көрсөткөн билим берүү ишмердүулүгү Келишимдин предмети болуп саналат.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
@@ -443,7 +449,7 @@ public class ContractSchoolPdfKg {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("3.2.2. Окуучунун билим берүү кызматтары  үчүн төлөм (Ата-энелердин төгүмү) ", ordFont));
-                paragraph.add(new Phrase(student.getCtr_to_pay() + "", ordBoldFont));
+                paragraph.add(new Phrase(studentInfo.getContractInfo().getContract() + "", ordBoldFont));
                 paragraph.add(new Phrase(" АКШ долларын түзөт, төлөмдөр төлөм жүргүзүлүүчү күнгө карата КР УБ курсу менен сом түрүндө төлөнөт.", ordFont));
                 document.add(paragraph);
 
@@ -571,23 +577,26 @@ public class ContractSchoolPdfKg {
                 table_info.setWidthPercentage(90f);
                 table_info.setWidths(table_info_colsWidth);
                 Paragraph text10 = new Paragraph();
-                text10.add(new Phrase("Мектеп: " + student.getScl_name_kg(), ordFont));
+                text10.add(new Phrase("Мектеп: " + studentInfo.getSchool().getName_kg(), ordFont));
                 text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Дареги: " + student.getScl_address(), ordFont));
+                text10.add(new Phrase("Дареги: " + studentInfo.getSchool().getAddress(), ordFont));
                 text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("ИНН: " + student.getScl_inn(), ordFont));
+                text10.add(new Phrase("ИНН: " + studentInfo.getSchool().getInn(), ordFont));
                 text10.add(Chunk.NEWLINE);
-                String[] banks = student.getScl_bank().split("<br>");
-                String[] bankAccounts = student.getScl_bank_account().split("<br>");
+                String[] banks = studentInfo.getSchool().getBank().split("<br>");
+                String[] bankAccounts = studentInfo.getSchool().getBank_account().split("<br>");
                 for (int i = 0; i < banks.length; i++) {
                     text10.add(new Phrase("ОКПО: " + banks[i], ordFont));
                     text10.add(Chunk.NEWLINE);
                     text10.add(new Phrase("Эсеп: " + bankAccounts[i], ordFont));
                     text10.add(Chunk.NEWLINE);
                 }
-                text10.add(new Phrase("Тел.: " + student.getScl_phone(), ordFont));
+                text10.add(new Phrase("Тел.: " + studentInfo.getSchool().getPhone(), ordFont));
                 text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("Мектептин мүдүрү: " + student.getScl_dir_f_name(), ordFont));
+                text10.add(new Phrase("Мектептин мүдүрү: " + studentInfo.getDirector().getSurname() + " "
+                        + studentInfo.getDirector().getName() + " " +
+                        (studentInfo.getDirector().getMiddle_name() == null ?
+                                "" : studentInfo.getDirector().getMiddle_name()), ordFont));
                 text10.add(Chunk.NEWLINE);
 
                 IndexedContainer relativeCont = null;
@@ -595,7 +604,7 @@ public class ContractSchoolPdfKg {
                 try {
                     DbRelative dbr = new DbRelative();
                     dbr.connect();
-                    relativeCont = dbr.execSQL(myUI, student.getStud_id());
+                    relativeCont = dbr.execSQL(myUI, studentInfo.getStudent().getId());
                     dbr.close();
                 } catch (Exception e) {
                     logger.error(e);
@@ -646,8 +655,8 @@ public class ContractSchoolPdfKg {
                 text11.add(new Phrase("Апасынын аты, жөнү: " + m_name, ordFont));
                 text11.add(Chunk.NEWLINE);
                 text11.add(new Phrase("Окуучунун аты, жөнү: ", ordFont));
-                text11.add(new Phrase(student.getStud_sur_name() + " "
-                        + student.getStud_name() + " " + student.getStud_middle_name(), ordFont));
+                text11.add(new Phrase(studentInfo.getStudent().getSurname() + " "
+                        + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordFont));
                 text11.add(Chunk.NEWLINE);
                 text11.add(new Phrase("Атасынын иштеген жери: " + f_work_place, ordFont));
                 text11.add(Chunk.NEWLINE);
@@ -668,45 +677,45 @@ public class ContractSchoolPdfKg {
                 text15.add(new Phrase("Төлөө графиги", boldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Окуучунун ID: ", ordFont));
-                text15.add(new Phrase(student.getStud_login(), ordBoldFont));
+                text15.add(new Phrase(studentInfo.getStudent().getLogin(), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Окуучунун аты, жөнү: ", ordFont));
-                text15.add(new Phrase(student.getStud_sur_name() + " "
-                        + student.getStud_name() + " " + student.getStud_middle_name(), ordBoldFont));
+                text15.add(new Phrase(studentInfo.getStudent().getSurname() + " "
+                        + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Классы: ", ordFont));
-                text15.add(new Phrase(student.getClass_name(), ordBoldFont));
+                text15.add(new Phrase(studentInfo.getStudent().getClass_name(), ordBoldFont));
                 text15.add(new Phrase(". Каттоо Датасы: ", ordFont));
-                text15.add(new Phrase(Settings.df.format(student.getContractCreationDate()), ordBoldFont));
+                text15.add(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Төлөмдүн көлөмү: ", ordFont));
-                text15.add(new Phrase((Settings.dFormat2.format(student.getCtr_contract_sum()) + ""), ordBoldFont));
+                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + ""), ordBoldFont));
                 text15.add(new Phrase(" АКШ доллары.", ordFont));
                 text15.add(Chunk.NEWLINE);
-                if (student.getCtr_debt() >= 0) {
+                if (studentInfo.getContractInfo().getDebt() >= 0) {
                     text15.add(new Phrase("Мурунку жылдагы карыз: ", ordFont));
                 } else {
                     text15.add(new Phrase("Мурунку жылдагы ашыкча төлөө: ", ordFont));
                 }
-                text15.add(new Phrase((Settings.dFormat2.format(student.getCtr_debt()) + ""), ordBoldFont));
+                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt()) + ""), ordBoldFont));
                 text15.add(new Phrase(" АКШ доллары.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Жеңилдик: ", ordFont));
-                if (student.getCtr_discount_percentage() != null) {
-                    text15.add(new Phrase(student.getCtr_discountStr(), ordBoldFont));
+                if (studentInfo.getContractInfo().getDiscountStr() != null) {
+                    text15.add(new Phrase(studentInfo.getContractInfo().getDiscountStr(), ordBoldFont));
                 }
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Тууралоо: ", ordFont));
-                if (student.getCtr_Correction() != null) {
-                    text15.add(new Phrase(student.getCtr_Correction(), ordBoldFont));
+                if (studentInfo.getContractInfo().getCorrectionStr() != null) {
+                    text15.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr(), ordBoldFont));
                 }
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Алдын ала төлөм: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat2.format(student.getCtr_init_payment()) + "", ordBoldFont));
+                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
                 text15.add(new Phrase(" АКШ доллары.", ordFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Калган төлөм: ", ordFont));
-                text15.add(new Phrase(Settings.dFormat2.format(student.getCtr_ttl_left_sum()) + "", ordBoldFont));
+                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + "", ordBoldFont));
                 text15.add(new Phrase(" АКШ доллары.", ordFont));
                 document.add(text15);
                 document.add(new Paragraph(10, " "));
@@ -741,7 +750,7 @@ public class ContractSchoolPdfKg {
                 }
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("ЖАЛПЫ:", ordBoldFont));
-                TContract.addCell(new Phrase(Settings.dFormat2.format(student.getCtr_to_pay()) + "", ordBoldFont));
+                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + "", ordBoldFont));
                 TContract.addCell(new Phrase("", ordFont));
                 TContract.addCell(new Phrase("", ordFont));
 

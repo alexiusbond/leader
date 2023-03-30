@@ -18,7 +18,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
-import kg.alex.spt.domain.ContractTotal;
+import kg.alex.spt.domain.ContractInfo;
 import kg.alex.spt.domain.EducationStatus;
 import kg.alex.spt.domain.EmployeesCount;
 import kg.alex.spt.i18n.SptMessages;
@@ -38,7 +38,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
     private Table logTable;
     private Label logTableCaption;
     private ComboBox logsTypeSelect;
-    private ContractTotal tc;
+    private ContractInfo tc;
 
     public HomePageView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -88,15 +88,15 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         dataLabels.setFormatter("'<b>'+ this.point.name +'</b>'+ this.percentage.toFixed(2) +'%'");
         plotOptions.setDataLabels(dataLabels);
         conf.setPlotOptions(plotOptions);
-        double total = tc.getTtl_contract() + tc.getTtl_debt();
+        double total = tc.getContract() + tc.getDebt();
 
         if (total != 0.0) {
             final DataSeries series = new DataSeries();
-            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(tc.getTtl_payments() * 100 / total, 2));
+            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(tc.getPaid() * 100 / total, 2));
             payments.setSliced(true);
             series.add(payments);
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(tc.getTtl_left() * 100 / total, 2)));
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(tc.getTtl_disc() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(tc.getLeft() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(tc.getDiscount() * 100 / total, 2)));
             conf.setSeries(series);
         }
 
@@ -423,17 +423,17 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         }
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_contract()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getContract()) + "$"));
         layout.addComponent(ttlDiscLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_disc()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDiscount()) + "$"));
         layout.addComponent(ttlCorrectionLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_correction()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getCorrection()) + "$"));
         layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_debt()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + "$"));
         layout.addComponent(ttlPaymentLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_payments()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getPaid()) + "$"));
         layout.addComponent(ttlLeftLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getTtl_left()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getLeft()) + "$"));
         return layout;
     }
 

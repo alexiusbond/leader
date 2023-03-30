@@ -321,16 +321,21 @@ public class StockIncomeView extends HorizontalSplitPanel implements Button.Clic
             stInv.setAcc_category(productCategorySelect.getItemCaption(productCategorySelect.getValue()));
             stInv.setFrom_employee(fromEmployeeSelect.getItemCaption(fromEmployeeSelect.getValue()));
             stInv.setTo_employee(toEmployeeSelect.getItemCaption(toEmployeeSelect.getValue()));
+            StudentInfoPdf studentInfo = new StudentInfoPdf();
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
                 dbsc.close();
-                if (st.getScl_accountant_full_name() != null) {
-                    if (st.getScl_address() != null && st.getScl_phone() != null
-                            && st.getScl_name_ru() != null) {
-                        new StockMovementsPdf(myUI, myUI.getMessage(SptMessages.StockIncome), stInv, movementsCont, st,
-                                movementsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
+                DbEmployee dbEmployee = new DbEmployee();
+                dbEmployee.connect();
+                studentInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                studentInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                dbEmployee.close();
+                if (studentInfo.getAccountant() != null) {
+                    if (studentInfo.getSchool().getAddress() != null) {
+                        new StockMovementsPdf(myUI, myUI.getMessage(SptMessages.StockIncome), stInv, movementsCont,
+                                studentInfo, movementsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
                     }
                 }
             } catch (Exception e) {

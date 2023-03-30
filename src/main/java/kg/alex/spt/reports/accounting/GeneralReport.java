@@ -24,7 +24,7 @@ import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentContract;
-import kg.alex.spt.domain.ContractTotal;
+import kg.alex.spt.domain.ContractInfo;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.AccountingGeneralReportPdf;
@@ -61,7 +61,7 @@ public class GeneralReport implements Button.ClickListener,
     private String[] NATURAL_COL_ORDER_PAYMENTS;
     private Label outcomeLastDateLbl, outcomeTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
     private SchoolAccounting schoolAcc;
-    private ContractTotal contractTtl;
+    private ContractInfo contractTtl;
     private final Calendar prevDayCal;
 
     public GeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
@@ -528,7 +528,7 @@ public class GeneralReport implements Button.ClickListener,
         }
     }
 
-    private void setTotalContract(ContractTotal contractTtl) {
+    private void setTotalContract(ContractInfo contractTtl) {
         if (totalsGrid.getComponent(1, 1) != null) {
             totalsGrid.removeComponent(1, 1);
             totalsGrid.removeComponent(1, 2);
@@ -540,34 +540,34 @@ public class GeneralReport implements Button.ClickListener,
             totalsGrid.removeComponent(1, 8);
         }
         if (contractTtl != null) {
-            totalsGrid.addComponent(new Label(contractTtl.getTtl_students() + ""), 1, 1);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_contract()) + "$"), 1, 2);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_debt()) + "$"), 1, 3);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_disc()) + "$"), 1, 4);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_correction()) + "$"), 1, 5);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_net()) + "$"), 1, 6);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_payments()) + "$"), 1, 7);
-            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getTtl_left()) + "$"), 1, 8);
+            totalsGrid.addComponent(new Label(contractTtl.getStudents() + ""), 1, 1);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getContract()) + "$"), 1, 2);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getDebt()) + "$"), 1, 3);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getDiscount()) + "$"), 1, 4);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getCorrection()) + "$"), 1, 5);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getNet()) + "$"), 1, 6);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getPaid()) + "$"), 1, 7);
+            totalsGrid.addComponent(new Label(Settings.dFormat2.format(contractTtl.getLeft()) + "$"), 1, 8);
             //draw discounts chart
-            double totalDisc = contractTtl.getTtl_net() + contractTtl.getTtl_disc();
+            double totalDisc = contractTtl.getNet() + contractTtl.getDiscount();
             if (totalDisc != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(contractTtl.getTtl_disc() * 100 / totalDisc, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(contractTtl.getDiscount() * 100 / totalDisc, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.Net) + ": ", Settings.round(contractTtl.getTtl_net() * 100 / totalDisc, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.Net) + ": ", Settings.round(contractTtl.getNet() * 100 / totalDisc, 2)));
                 confDisc.setSeries(series);
             }
 
             chartDisc.drawChart(confDisc);
             //draw Payments chart
-            double totalPay = contractTtl.getTtl_left() + contractTtl.getTtl_payments();
+            double totalPay = contractTtl.getLeft() + contractTtl.getPaid();
             if (totalPay != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(contractTtl.getTtl_left() * 100 / totalPay, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(contractTtl.getLeft() * 100 / totalPay, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(contractTtl.getTtl_payments() * 100 / totalPay, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(contractTtl.getPaid() * 100 / totalPay, 2)));
                 confPaid.setSeries(series);
             }
             chartPaid.drawChart(confPaid);

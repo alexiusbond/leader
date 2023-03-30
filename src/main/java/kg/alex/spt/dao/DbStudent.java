@@ -20,7 +20,10 @@ import kg.alex.spt.ui.CallsView;
 import kg.alex.spt.ui.IssueOrderView;
 import kg.alex.spt.ui.StudentDefinitionView;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -395,41 +398,6 @@ public class DbStudent extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(fullname);
         }
         return container;
-    }
-
-    public StudentInfoPdf execStudInfo_pdf(int student_id, int year_id)
-            throws SQLException {
-        String sql = "SELECT st.login, st.photo, st.name, st.surname, sc.name_ru, sc.address, sc.phone, sc.director_fullname, "
-                + "CONCAT(cnu.name, ' - ', cna.name) AS class_name, concat(e.name, ' ', e.surname) as fullname FROM student AS st "
-                + "LEFT JOIN (SELECT so.to_class_name_id AS tcl, so.student_id as stid "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.student_id = ? AND so.is_valid = 1 "
-                + "ORDER BY id DESC LIMIT 1) AS o_temp on o_temp.stid=st.id LEFT JOIN school AS sc ON sc.id = st.school_id "
-                + "LEFT JOIN class_name AS cna ON cna.id = CASE WHEN o_temp.tcl IS NULL THEN st.class_name_id ELSE o_temp.tcl END "
-                + "LEFT JOIN class_number AS cnu ON cna.class_number_id = cnu.id "
-                + "LEFT JOIN hr_employee_order AS eo ON st.school_id = eo.school_id and eo.to_date IS NULL "
-                + "left join hr_orders as ord on ord.id=eo.hr_orders_id LEFT JOIN employee AS e ON eo.employee_id = e.id "
-                + "LEFT JOIN hr_position AS hrp ON eo.hr_position_id = hrp.id "
-                + "LEFT JOIN position AS p ON hrp.id = p.hr_position_id "
-                + "WHERE st.id = ? AND p.id = 2 AND ord.working_status_id=2 LIMIT 1;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, student_id);
-        stat.setInt(3, student_id);
-        ResultSet result = stat.executeQuery();
-        StudentInfoPdf st = new StudentInfoPdf();
-        while (result.next()) {
-            st.setStud_login(result.getString("st.login"));
-            st.setStud_photo(result.getString("st.photo"));
-            st.setStud_name(result.getString("st.name"));
-            st.setStud_surname(result.getString("st.surname"));
-            st.setStud_class_name(result.getString("class_name"));
-            st.setScl_name_ru(result.getString("sc.name_ru"));
-            st.setScl_address(result.getString("sc.address"));
-            st.setScl_phone(result.getString("sc.phone"));
-            st.setScl_accountant_full_name(result.getString("fullname"));
-            st.setScl_dir_f_name(result.getString("sc.director_fullname"));
-        }
-        return st;
     }
 
     public int exec_delete(int id) throws SQLException {

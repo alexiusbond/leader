@@ -16,6 +16,7 @@ import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
+import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.CurrentAccountStatementPdf;
@@ -193,13 +194,14 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                School school = dbsc.execSchool(myUI.getUser().getSchool().getId());
                 dbsc.close();
-                if (st.getScl_address() != null && st.getScl_phone() != null
-                        && st.getScl_name_ru() != null) {
-                    new CurrentAccountStatementPdf(myUI, dataTable, employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
+                if (school != null && school.getAddress() != null) {
+                    new CurrentAccountStatementPdf(myUI, dataTable,
+                            employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
                             myUI.getMessage(SptMessages.Title)).getValue().toString(),
-                            currencySelect.getItemCaption(currencySelect.getValue()), fromDateDF.getValue(), tillDateDF.getValue(), st);
+                            currencySelect.getItemCaption(currencySelect.getValue()),
+                            fromDateDF.getValue(), tillDateDF.getValue(), school);
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                             Notification.Type.WARNING_MESSAGE);

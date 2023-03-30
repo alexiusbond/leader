@@ -31,12 +31,12 @@ public class InstallmentPlanPaymentsPdf {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
     private final Date aDate = new Date(System.currentTimeMillis());
-    private final StudentInfoPdf st;
+    private final StudentInfoPdf studentInfo;
 
 
     public InstallmentPlanPaymentsPdf(final MyVaadinUI myUI, StudentInfoPdf s, final IndexedContainer planCont,
                                       final IndexedContainer paymentsCont, final double ttl_inst, final double ttl_pay) {
-        this.st = s;
+        this.studentInfo = s;
 
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
@@ -54,7 +54,8 @@ public class InstallmentPlanPaymentsPdf {
                     document = new Document(PageSize.A4, 10, 10, 60, 30);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, studentInfo.getSchool().getName_ru(),
+                            studentInfo.getSchool().getAddress(), studentInfo.getSchool().getPhone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -79,7 +80,7 @@ public class InstallmentPlanPaymentsPdf {
                     document.add(table_date);
 
                     Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.InstallmentPLanPaymentsReport)
-                            + " (" + st.getYear() + ")", fontBold);
+                            + " (" + studentInfo.getYear() + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(24, " "));
                     document.add(spr);
@@ -95,30 +96,31 @@ public class InstallmentPlanPaymentsPdf {
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Contract), ordFontBold));
                     Thead.addCell(new Phrase(" ", ordFontBold));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Id)
-                            + ": " + st.getStud_login(), ordFont));
+                            + ": " + studentInfo.getStudent().getLogin(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Contract)
-                            + ": " + st.getCtr_contract_sum() + "$", ordFont));
+                            + ": " + studentInfo.getContractInfo().getContract() + "$", ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Net)
-                            + ": " + st.getCtr_to_pay() + "$", ordFont));
+                            + ": " + studentInfo.getContractInfo().getNet() + "$", ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName)
-                            + ": " + st.getStud_name(), ordFont));
+                            + ": " + studentInfo.getStudent().getName(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Discount)
-                            + ": " + st.getCtr_discountStr(), ordFont));
+                            + ": " + studentInfo.getContractInfo().getDiscountStr(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Paid)
-                            + ": " + st.getCtr_paid() + "$", ordFont));
+                            + ": " + studentInfo.getContractInfo().getPaid() + "$", ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.LastName)
-                            + ": " + st.getStud_sur_name(), ordFont));
+                            + ": " + studentInfo.getStudent().getSurname(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Correction)
-                            + ": " + st.getCtr_Correction(), ordFont));
+                            + ": " + studentInfo.getContractInfo().getCorrectionStr(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.Left)
-                            + ": " + Settings.dFormat2.format(st.getCtr_ttl_left_sum()) + "$", ordFont));
+                            + ": " + Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + "$", ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName)
-                            + ": " + st.getStud_class_name(), ordFont));
+                            + ": " + studentInfo.getStudent().getClass_name(), ordFont));
                     Thead.addCell(new Phrase(myUI.getMessage(SptMessages.PreviousYearDebt)
-                            + ": " + st.getCtr_debt() + "$", ordFont));
-                    if (st.getCtr_installment_plan_debt() > 0) {
+                            + ": " + studentInfo.getContractInfo().getDebt() + "$", ordFont));
+                    if (studentInfo.getContractInfo().getInstallmentPlanDebt() > 0) {
                         Thead.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt)
-                                + ": " + Settings.dFormat2.format(st.getCtr_installment_plan_debt()) + "$", ordFont));
+                                + ": " + Settings.dFormat2.format(studentInfo.getContractInfo()
+                                .getInstallmentPlanDebt()) + "$", ordFont));
                     } else {
                         Thead.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt)
                                 + ": 0.00$", ordFont));
@@ -317,8 +319,14 @@ public class InstallmentPlanPaymentsPdf {
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
-                    T2.addCell(new Phrase(st.getScl_accountant_full_name(), ordFont));
-                    T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));
+                    T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
+                            + studentInfo.getAccountant().getName() + " " +
+                            (studentInfo.getAccountant().getMiddle_name() == null ?
+                                    "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
+                    T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
+                            + studentInfo.getDirector().getName() + " " +
+                            (studentInfo.getDirector().getMiddle_name() == null ?
+                                    "" : studentInfo.getDirector().getMiddle_name()), ordFont));
                     document.add(T2);
 
                 } catch (Exception e) {

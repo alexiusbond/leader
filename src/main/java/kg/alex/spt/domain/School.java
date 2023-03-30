@@ -14,7 +14,6 @@ public class School implements Serializable {
     private String name_kg;
     private String name_en;
     private String name_ru;
-    private String director_f_name;
     private String address;
     private String inn;
     private String bank;
@@ -83,14 +82,6 @@ public class School implements Serializable {
 
     public void setName_kg(String name_kg) {
         this.name_kg = name_kg;
-    }
-
-    public String getDirector_f_name() {
-        return director_f_name;
-    }
-
-    public void setDirector_f_name(String director_f_name) {
-        this.director_f_name = director_f_name;
     }
 
     public String getAddress() {

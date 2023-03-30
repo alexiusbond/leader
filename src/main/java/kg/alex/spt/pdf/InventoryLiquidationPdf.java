@@ -15,7 +15,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.domain.InventoryInvoice;
-import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +37,7 @@ public class InventoryLiquidationPdf {
 
     public InventoryLiquidationPdf(final MyVaadinUI myUI, final String title, final InventoryInvoice invoice,
                                    final IndexedContainer inventoriesCont, final String totalQuantity,
-                                   final StudentInfoPdf schoolInfo) {
+                                   final School schoolInfo) {
 
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
@@ -55,8 +55,8 @@ public class InventoryLiquidationPdf {
                     document = new Document(PageSize.A4, 10, 10, 60, 30);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI,
-                            schoolInfo.getScl_name_ru(), schoolInfo.getScl_address(), schoolInfo.getScl_phone());
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, schoolInfo.getName_ru(),
+                            schoolInfo.getAddress(), schoolInfo.getPhone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,

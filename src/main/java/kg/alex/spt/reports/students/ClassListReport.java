@@ -15,10 +15,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.dao.DbClassName;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudentContract;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.ClassListPdf;
@@ -266,16 +263,20 @@ public class ClassListReport implements Button.ClickListener,
                         Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == makePdfBtn) {
-            StudentInfoPdf st;
+            StudentInfoPdf studentInfo = new StudentInfoPdf();
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
                 dbsc.close();
-                if (st.getScl_accountant_full_name() != null) {
-                    if (st.getScl_address() != null && st.getScl_phone() != null
-                            && st.getScl_name_ru() != null) {
-                        new ClassListPdf(myUI, dataCont, st, this);
+                DbEmployee dbEmployee = new DbEmployee();
+                dbEmployee.connect();
+                studentInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                studentInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                dbEmployee.close();
+                if (studentInfo.getAccountant() != null) {
+                    if (studentInfo.getSchool().getAddress() != null) {
+                        new ClassListPdf(myUI, dataCont, studentInfo, this);
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);

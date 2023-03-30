@@ -920,7 +920,6 @@ public class DbAccTransactions extends BaseDb {
         } else if (till != null) {
             stat.setDate(++counter, new java.sql.Date(till.getTime()));
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
@@ -1052,7 +1051,6 @@ public class DbAccTransactions extends BaseDb {
         } else if (till != null) {
             stat.setDate(++counter, new java.sql.Date(till.getTime()));
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);

@@ -18,6 +18,7 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.domain.InventoryLiquidation;
+import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InventoryLiquidationPdf;
@@ -299,12 +300,11 @@ public class InventoryLiquidationView extends HorizontalSplitPanel implements Bu
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                School school = dbsc.execSchool(myUI.getUser().getSchool().getId());
                 dbsc.close();
-                if (st.getScl_address() != null && st.getScl_phone() != null
-                        && st.getScl_name_ru() != null) {
+                if (school != null && school.getAddress() != null) {
                     new InventoryLiquidationPdf(myUI, myUI.getMessage(SptMessages.InventoryLiquidation), inv, inventoriesCont,
-                            inventoriesTable.getColumnFooter(myUI.getMessage(SptMessages.Quantity)), st);
+                            inventoriesTable.getColumnFooter(myUI.getMessage(SptMessages.Quantity)), school);
                 }
             } catch (Exception e) {
                 logger.error(e);

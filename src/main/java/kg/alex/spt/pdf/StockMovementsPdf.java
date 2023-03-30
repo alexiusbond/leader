@@ -31,14 +31,14 @@ public class StockMovementsPdf {
 
     static final Logger logger = LogManager.getLogger(StockMovementsPdf.class);
     private byte[] b = null;
-    private   ByteArrayOutputStream buffer = null;
+    private ByteArrayOutputStream buffer = null;
     private final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
     private Document document = null;
-    
 
 
     public StockMovementsPdf(final MyVaadinUI myUI, final String title, final StockInvoice stockInvoice,
-                             final IndexedContainer stockMovementsCont, final StudentInfoPdf schoolInfo, final String total) {
+                             final IndexedContainer stockMovementsCont, final StudentInfoPdf schoolInfo,
+                             final String total) {
 
 
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
@@ -57,8 +57,8 @@ public class StockMovementsPdf {
                     document = new Document(PageSize.A4, 10, 10, 60, 30);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI,
-                            schoolInfo.getScl_name_ru(), schoolInfo.getScl_address(), schoolInfo.getScl_phone());
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, schoolInfo.getSchool().getName_ru(),
+                            schoolInfo.getSchool().getAddress(), schoolInfo.getSchool().getPhone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -138,17 +138,17 @@ public class StockMovementsPdf {
                         table.addCell(new Phrase(tf.getValue(), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Quantity)).getValue();
-                        table.addCell(new Phrase(Settings.dFormat2.format( tf.getPropertyDataSource().getValue()), tableFont));
+                        table.addCell(new Phrase(Settings.dFormat2.format(tf.getPropertyDataSource().getValue()), tableFont));
                         if (title.equals(myUI.getMessage(SptMessages.StockIncome))) {
                             tf = (TextField) stockMovementsCont.getContainerProperty(next, myUI.getMessage(SptMessages.Price)).getValue();
-                            table.addCell(new Phrase(Settings.dFormat2.format( tf.getPropertyDataSource().getValue()), tableFont));
+                            table.addCell(new Phrase(Settings.dFormat2.format(tf.getPropertyDataSource().getValue()), tableFont));
                         } else {
-                            table.addCell(new Phrase(Settings.dFormat2.format( stockMovementsCont.getContainerProperty(next,
+                            table.addCell(new Phrase(Settings.dFormat2.format(stockMovementsCont.getContainerProperty(next,
                                     myUI.getMessage(SptMessages.Price)).getValue()), tableFont));
                         }
-                        table.addCell(new Phrase(Settings.dFormat2.format( stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat2.format(stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Rate)).getValue()), tableFont));
-                        table.addCell(new Phrase(Settings.dFormat2.format( stockMovementsCont.getContainerProperty(next,
+                        table.addCell(new Phrase(Settings.dFormat2.format(stockMovementsCont.getContainerProperty(next,
                                 myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         y++;
@@ -186,11 +186,17 @@ public class StockMovementsPdf {
                     T2.addCell(new Phrase(" ", ordFont));
                     p = new Paragraph();
                     p.add(new Phrase(myUI.getMessage(SptMessages.Director) + ": ", ordFontBold));
-                    p.add(new Phrase(schoolInfo.getScl_dir_f_name(), ordFont));
+                    p.add(new Phrase(schoolInfo.getDirector().getSurname() + " "
+                            + schoolInfo.getDirector().getName() + " " +
+                            (schoolInfo.getDirector().getMiddle_name() == null ?
+                                    "" : schoolInfo.getDirector().getMiddle_name()), ordFont));
                     T2.addCell(p);
                     p = new Paragraph();
                     p.add(new Phrase(myUI.getMessage(SptMessages.Accountant) + ": ", ordFontBold));
-                    p.add(new Phrase(schoolInfo.getScl_accountant_full_name(), ordFont));
+                    p.add(new Phrase(schoolInfo.getAccountant().getSurname() + " "
+                            + schoolInfo.getAccountant().getName() + " " +
+                            (schoolInfo.getAccountant().getMiddle_name() == null ?
+                                    "" : schoolInfo.getAccountant().getMiddle_name()), ordFont));
                     T2.addCell(p);
                     document.add(T2);
 

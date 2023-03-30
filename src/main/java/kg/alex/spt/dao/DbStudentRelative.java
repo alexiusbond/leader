@@ -103,7 +103,7 @@ public class DbStudentRelative extends BaseDb {
         stat.setString(5, r.getAddress());
         stat.setString(6, r.getPassport());
         stat.setInt(7, r.getIs_main());
-        stat.setInt(8, r.getRelatives_id());
+        stat.setInt(8, r.getRelative_id());
         return stat.executeUpdate();
     }
 
@@ -126,7 +126,7 @@ public class DbStudentRelative extends BaseDb {
         stat.setString(5, sr.getAddress());
         stat.setString(6, sr.getPassport());
         stat.setInt(7, sr.getIs_main());
-        stat.setInt(8, sr.getRelatives_id());
+        stat.setInt(8, sr.getRelative_id());
         stat.setInt(9, sr.getId());
         return stat.executeUpdate();
     }

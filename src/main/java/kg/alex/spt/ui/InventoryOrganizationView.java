@@ -20,7 +20,7 @@ import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.domain.InventoryOrganization;
-import kg.alex.spt.domain.StudentInfoPdf;
+import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InventoryOrganizationPdf;
 import kg.alex.spt.utils.FormattedFilterTable;
@@ -283,13 +283,12 @@ public class InventoryOrganizationView extends HorizontalSplitPanel implements B
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                StudentInfoPdf st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                School school = dbsc.execSchool(myUI.getUser().getSchool().getId());
                 dbsc.close();
-                if (st.getScl_address() != null && st.getScl_phone() != null
-                        && st.getScl_name_ru() != null) {
+                if (school != null && school.getAddress() != null) {
                     new InventoryOrganizationPdf(myUI, myUI.getMessage(SptMessages.InventoryOrganization), inv, inventoriesCont,
                             inventoriesTable.getColumnFooter(myUI.getMessage(SptMessages.Quantity)),
-                            inventoriesTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)), st);
+                            inventoriesTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)), school);
                 }
             } catch (Exception e) {
                 logger.error(e);

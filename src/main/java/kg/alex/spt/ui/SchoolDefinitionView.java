@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 
 public class SchoolDefinitionView extends HorizontalSplitPanel implements Button.ClickListener,
         Property.ValueChangeListener {
@@ -37,8 +36,8 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect, typeSelect;
     private final Table dataTable;
-    private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
-            innTF, bankTF, bankAccountTF, phoneTF, cityTF;
+    private TextField nameKgTF, nameEnTF, codeTF, nameRuTF, addressTF, innTF, bankTF,
+            bankAccountTF, phoneTF, cityTF;
     private boolean isNew;
 
     private Upload photoUpl;
@@ -58,9 +57,8 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 myUI.getMessage(SptMessages.TitleRu), myUI.getMessage(SptMessages.TitleKg),
                 myUI.getMessage(SptMessages.TitleEn), myUI.getMessage(SptMessages.Year),
                 myUI.getMessage(SptMessages.SchoolType), myUI.getMessage(SptMessages.Status),
-                myUI.getMessage(SptMessages.DirectorFullName), myUI.getMessage(SptMessages.Bank),
-                myUI.getMessage(SptMessages.BankAccount), myUI.getMessage(SptMessages.Address),
-                myUI.getMessage(SptMessages.Phone)};
+                myUI.getMessage(SptMessages.Bank), myUI.getMessage(SptMessages.BankAccount),
+                myUI.getMessage(SptMessages.Address), myUI.getMessage(SptMessages.Phone)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -83,7 +81,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         dataTable.setColumnCollapsingAllowed(true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.TitleKg), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.TitleEn), true);
-        dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.DirectorFullName), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Bank), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.BankAccount), true);
         dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Address), true);
@@ -107,11 +104,11 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
     private void buildSettingsLayout() {
 
-        settingsLay = new GridLayout(2, 8);
+        settingsLay = new GridLayout(2, 7);
         settingsLay.setMargin(new MarginInfo(true, false, true, true));
         settingsLay.setSpacing(true);
         settingsLay.setSizeFull();
-        settingsLay.setRowExpandRatio(7, 1);
+        settingsLay.setRowExpandRatio(6, 1);
 
         HorizontalLayout buttonsLay = new HorizontalLayout();
         buttonsLay.setSpacing(true);
@@ -184,12 +181,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameEnTF.setWidth(Settings.PERCENTS100);
         settingsLay.addComponent(nameEnTF);
-
-        directorFullNameTF = new TextField(myUI.getMessage(SptMessages.DirectorFullName) + " (Ru/Kg)");
-        directorFullNameTF.setRequired(false);
-        directorFullNameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        directorFullNameTF.setWidth(Settings.PERCENTS100);
-        settingsLay.addComponent(directorFullNameTF);
 
         cityTF = new TextField(myUI.getMessage(SptMessages.City) + " (Ru/Kg)");
         cityTF.setRequired(false);
@@ -446,7 +437,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         codeTF.setEnabled(true);
         nameRuTF.setEnabled(true);
         nameEnTF.setEnabled(true);
-        directorFullNameTF.setEnabled(true);
         cityTF.setEnabled(true);
         innTF.setEnabled(true);
         addressTF.setEnabled(true);
@@ -475,7 +465,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(false);
         nameEnTF.setEnabled(false);
-        directorFullNameTF.setEnabled(false);
         cityTF.setEnabled(false);
         innTF.setEnabled(false);
         addressTF.setEnabled(false);
@@ -504,11 +493,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 myUI.getMessage(SptMessages.TitleEn)).getValue() != null) {
             nameEnTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                     myUI.getMessage(SptMessages.TitleEn)).getValue().toString());
-        }
-        if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.DirectorFullName)).getValue() != null) {
-            directorFullNameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.DirectorFullName)).getValue().toString());
         }
         if (dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.City)).getValue() != null) {
@@ -558,7 +542,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         nameKgTF.setValue("");
         nameRuTF.setValue("");
         nameEnTF.setValue("");
-        directorFullNameTF.setValue("");
         cityTF.setValue("");
         addressTF.setValue("");
         innTF.setValue("");
@@ -580,8 +563,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 myUI.getMessage(SptMessages.TitleRu)).setValue(nameRuTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.TitleEn)).setValue(nameEnTF.getValue());
-        dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.DirectorFullName)).setValue(directorFullNameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.City)).setValue(cityTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
@@ -619,7 +600,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         item.getItemProperty(myUI.getMessage(SptMessages.TitleKg)).setValue(nameKgTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.TitleRu)).setValue(nameRuTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.TitleEn)).setValue(nameEnTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.DirectorFullName)).setValue(directorFullNameTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.City)).setValue(cityTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.Address)).setValue(addressTF.getValue());
         item.getItemProperty(myUI.getMessage(SptMessages.INN)).setValue(innTF.getValue());
@@ -649,7 +629,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
         school.setName_kg(nameKgTF.getValue());
         school.setName_ru(nameRuTF.getValue());
         school.setName_en(nameEnTF.getValue());
-        school.setDirector_f_name(directorFullNameTF.getValue());
         school.setCity(cityTF.getValue());
         school.setAddress(addressTF.getValue());
         school.setInn(innTF.getValue());

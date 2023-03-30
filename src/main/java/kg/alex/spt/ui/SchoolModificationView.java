@@ -31,8 +31,8 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
     private final Button saveBtn;
     private final Button cancelBtn;
     private final ComboBox statusSelect, typeSelect;
-    private final TextField nameKgTF, nameEnTF, codeTF, nameRuTF, directorFullNameTF, addressTF,
-            innTF, bankTF, bankAccountTF, phoneTF, cityTF;
+    private final TextField nameKgTF, nameEnTF, codeTF, nameRuTF, addressTF, innTF, bankTF,
+            bankAccountTF, phoneTF, cityTF;
 
     private final int school_id;
     private Upload photoUpl;
@@ -119,12 +119,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameEnTF.setWidth(Settings.PERCENTS100);
 
-        directorFullNameTF = new TextField(myUI.getMessage(SptMessages.DirectorFullName) + " (Ru/Kg)");
-        directorFullNameTF.setRequired(false);
-        directorFullNameTF.setNullRepresentation("");
-        directorFullNameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        directorFullNameTF.setWidth(Settings.PERCENTS100);
-
         cityTF = new TextField(myUI.getMessage(SptMessages.City) + " (Ru/Kg)");
         cityTF.setRequired(false);
         cityTF.setNullRepresentation("");
@@ -204,10 +198,9 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         this.addComponent(nameRuTF, 1, 1);
         this.addComponent(nameKgTF, 0, 2);
         this.addComponent(nameEnTF, 1, 2);
-        this.addComponent(directorFullNameTF, 0, 3);
-        this.addComponent(cityTF, 1, 3);
-        this.addComponent(addressTF, 0, 4);
-        this.addComponent(phoneTF, 1, 4);
+        this.addComponent(cityTF, 0, 3);
+        this.addComponent(phoneTF, 1, 3);
+        this.addComponent(addressTF, 0, 4, 1, 4);
         this.addComponent(bankTF, 0, 5);
         this.addComponent(bankAccountTF, 1, 5);
         this.addComponent(innTF, 0, 6);
@@ -307,7 +300,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         typeSelect.setEnabled(true);
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(true);
-        directorFullNameTF.setEnabled(true);
         cityTF.setEnabled(true);
         innTF.setEnabled(true);
         addressTF.setEnabled(true);
@@ -335,7 +327,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         typeSelect.setEnabled(false);
         codeTF.setEnabled(false);
         nameRuTF.setEnabled(false);
-        directorFullNameTF.setEnabled(false);
         cityTF.setEnabled(false);
         innTF.setEnabled(false);
         addressTF.setEnabled(false);
@@ -361,7 +352,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         nameKgTF.setValue(school.getName_kg());
         nameEnTF.setValue(school.getName_en());
         nameRuTF.setValue(school.getName_ru());
-        directorFullNameTF.setValue(school.getDirector_f_name());
         cityTF.setValue(school.getCity());
         addressTF.setValue(school.getAddress());
         innTF.setValue(school.getInn());
@@ -386,7 +376,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         s.setName_kg(nameKgTF.getValue());
         s.setName_en(nameEnTF.getValue());
         s.setName_ru(nameRuTF.getValue());
-        s.setDirector_f_name(directorFullNameTF.getValue());
         s.setCity(cityTF.getValue());
         s.setAddress(addressTF.getValue());
         s.setInn(innTF.getValue());

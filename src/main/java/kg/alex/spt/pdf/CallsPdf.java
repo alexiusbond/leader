@@ -32,7 +32,7 @@ public class CallsPdf {
     private Document document = null;
     private final Date aDate = new Date(System.currentTimeMillis());
 
-    public CallsPdf(final MyVaadinUI myUI, final Table dataTable, final StudentInfoPdf st) {
+    public CallsPdf(final MyVaadinUI myUI, final Table dataTable, final StudentInfoPdf studentInfo) {
 
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
@@ -50,7 +50,8 @@ public class CallsPdf {
                     document = new Document(PageSize.A4.rotate(), 10, 10, 70, 40);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterLandscape event = new HeaderFooterLandscape(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterLandscape event = new HeaderFooterLandscape(myUI, studentInfo.getSchool().getName_ru(),
+                            studentInfo.getSchool().getAddress(), studentInfo.getSchool().getPhone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -166,8 +167,14 @@ public class CallsPdf {
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
-                    T2.addCell(new Phrase(st.getScl_accountant_full_name(), ordFont));
-                    T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));
+                    T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
+                            + studentInfo.getAccountant().getName() + " " +
+                            (studentInfo.getAccountant().getMiddle_name() == null ?
+                                    "" : studentInfo.getAccountant().getMiddle_name()), ordFont));
+                    T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
+                            + studentInfo.getDirector().getName() + " " +
+                            (studentInfo.getDirector().getMiddle_name() == null ?
+                                    "" : studentInfo.getDirector().getMiddle_name()), ordFont));
                     document.add(T2);
 
                 } catch (Exception e) {

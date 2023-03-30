@@ -6,7 +6,6 @@
 package kg.alex.spt.dao;
 
 import kg.alex.spt.Settings;
-import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.UserDetails;
 import kg.alex.spt.domain.Year;

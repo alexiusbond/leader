@@ -92,16 +92,20 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                 makePdfBtn.setEnabled(true);
             }
         } else if (source == makePdfBtn) {
-            StudentInfoPdf st;
+            StudentInfoPdf studentInfo = new StudentInfoPdf();
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
                 dbsc.close();
-                if (st.getScl_accountant_full_name() != null) {
-                    if (st.getScl_address() != null && st.getScl_phone() != null
-                            && st.getScl_name_ru() != null) {
-                        new CallsPdf(myUI, dataTable, st);
+                DbEmployee dbEmployee = new DbEmployee();
+                dbEmployee.connect();
+                studentInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                studentInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                dbEmployee.close();
+                if (studentInfo.getAccountant() != null) {
+                    if (studentInfo.getSchool().getAddress() != null) {
+                        new CallsPdf(myUI, dataTable, studentInfo);
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);

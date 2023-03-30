@@ -1,7 +1,5 @@
 package kg.alex.spt.utils.money;
 
-import kg.alex.spt.utils.money.AbstractWritableSumm;
-
 public abstract class WritableSummRu extends AbstractWritableSumm {
     final String[][] str1 = {
             {"ноль", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"},

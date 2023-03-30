@@ -36,7 +36,7 @@ public class ClassCallsPdf {
 
 
     public ClassCallsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
-                         final Date fDate, final Date tDate, final StudentInfoPdf st, final int total) {
+                         final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final int total) {
         this.fromDate = fDate;
         this.tillDate = tDate;
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
@@ -55,7 +55,8 @@ public class ClassCallsPdf {
                     document = new Document(PageSize.A4, 10, 10, 70, 40);
                     PdfWriter writer = PdfWriter.getInstance(document, buffer);
 
-                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI, st.getScl_name_ru(), st.getScl_address(), st.getScl_phone());
+                    HeaderFooterPortrait event = new HeaderFooterPortrait(myUI,
+                            studentInfo.getSchool().getName_ru(), studentInfo.getSchool().getAddress(), studentInfo.getSchool().getPhone());
                     writer.setPageEvent(event);
 
                     BaseFont baseFont = BaseFont.createFont(FONT_LOCATION,
@@ -144,7 +145,10 @@ public class ClassCallsPdf {
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
                     T2.addCell("");
-                    T2.addCell(new Phrase(st.getScl_dir_f_name(), ordFont));
+                    T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
+                            + studentInfo.getDirector().getName() + " " +
+                            (studentInfo.getDirector().getMiddle_name() == null ?
+                                    "" : studentInfo.getDirector().getMiddle_name()), ordFont));
                     T2.addCell("");
                     document.add(T2);
 

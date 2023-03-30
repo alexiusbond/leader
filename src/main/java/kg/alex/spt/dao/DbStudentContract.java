@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Table;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.domain.ContractTotal;
+import kg.alex.spt.domain.ContractInfo;
 import kg.alex.spt.domain.StudentContract;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassListReport;
@@ -1645,7 +1645,7 @@ public class DbStudentContract extends BaseDb {
         return i;
     }
 
-    public ContractTotal execSQLTotals(int scl_id, int year_id)
+    public ContractInfo execSQLTotals(int scl_id, int year_id)
             throws SQLException {
         String sql = "SELECT sum(c.amount) as contract, sum(sc.debt) as debt, "
                 + "(sum(c.amount)-sum(sc.contr_with_disc)) as disc, sum(vc.amount) as correction, "
@@ -1659,14 +1659,14 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(1, scl_id);
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
-        ContractTotal ct = new ContractTotal();
+        ContractInfo ct = new ContractInfo();
         while (result.next()) {
-            ct.setTtl_contract(result.getDouble("contract"));
-            ct.setTtl_debt(result.getDouble("debt"));
-            ct.setTtl_disc(result.getDouble("disc"));
-            ct.setTtl_correction(result.getDouble("correction"));
-            ct.setTtl_payments(result.getDouble("payment"));
-            ct.setTtl_left(result.getDouble("debt") + result.getDouble("contract")
+            ct.setContract(result.getDouble("contract"));
+            ct.setDebt(result.getDouble("debt"));
+            ct.setDiscount(result.getDouble("disc"));
+            ct.setCorrection(result.getDouble("correction"));
+            ct.setPaid(result.getDouble("payment"));
+            ct.setLeft(result.getDouble("debt") + result.getDouble("contract")
                     - result.getDouble("disc") - result.getDouble("payment")
                     + result.getDouble("correction"));
         }
@@ -1746,8 +1746,8 @@ public class DbStudentContract extends BaseDb {
         return container;
     }
 
-    public ContractTotal execSQL_totalsByScl(MyVaadinUI myUI, int year_id, String edu_statuses_ids,
-                                             int school_id) throws SQLException {
+    public ContractInfo execSQL_totalsByScl(MyVaadinUI myUI, int year_id, String edu_statuses_ids,
+                                            int school_id) throws SQLException {
         String sql = "SELECT count(st.id) as ttl_students, "
                 + "SUM(c.amount) AS contract, SUM(sc.debt) AS debt, "
                 + "(SUM(c.amount) - SUM(sc.contr_with_disc)) AS disc,  "
@@ -1775,16 +1775,16 @@ public class DbStudentContract extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Total), Double.class, 0.0);
-        ContractTotal ct = new ContractTotal();
+        ContractInfo ct = new ContractInfo();
         while (result.next()) {
-            ct.setTtl_students(result.getInt("ttl_students"));
-            ct.setTtl_contract(result.getDouble("contract"));
-            ct.setTtl_debt(result.getDouble("debt"));
-            ct.setTtl_disc(result.getDouble("disc"));
-            ct.setTtl_correction(result.getDouble("correction"));
-            ct.setTtl_payments(result.getDouble("payment"));
-            ct.setTtl_net(result.getDouble("net"));
-            ct.setTtl_left(result.getDouble("net") - result.getDouble("payment"));
+            ct.setStudents(result.getInt("ttl_students"));
+            ct.setContract(result.getDouble("contract"));
+            ct.setDebt(result.getDouble("debt"));
+            ct.setDiscount(result.getDouble("disc"));
+            ct.setCorrection(result.getDouble("correction"));
+            ct.setPaid(result.getDouble("payment"));
+            ct.setNet(result.getDouble("net"));
+            ct.setLeft(result.getDouble("net") - result.getDouble("payment"));
         }
         return ct;
     }

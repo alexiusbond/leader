@@ -16,6 +16,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
+import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.domain.StudentInfoPdf;
@@ -343,18 +344,22 @@ public class DateReport implements Button.ClickListener,
                 }
             }
         } else if (source == excelBtn) {
-            StudentInfoPdf st;
+            StudentInfoPdf studentInfo = new StudentInfoPdf();
             try {
                 Calendar c = Calendar.getInstance();
                 c.setTime(fromDateDF.getValue());
                 c.add(Calendar.DAY_OF_MONTH, -1);
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
                 dbsc.close();
-                if (st.getScl_accountant_full_name() != null) {
-                    if (st.getScl_address() != null && st.getScl_phone() != null
-                            && st.getScl_name_ru() != null) {
+                DbEmployee dbEmployee = new DbEmployee();
+                dbEmployee.connect();
+                studentInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                studentInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                dbEmployee.close();
+                if (studentInfo.getAccountant() != null) {
+                    if (studentInfo.getSchool().getAddress() != null) {
                         if (rightLayout.getComponentCount() != 0) {
                             int table_count = rightLayout.getComponentCount();
                             for (int i = 0; i < table_count && rightLayout.getComponent(i) instanceof Table; i++) {
@@ -388,8 +393,14 @@ public class DateReport implements Button.ClickListener,
                                     cell.setCellValue(myUI.getMessage(SptMessages.Director));
                                     cell.setCellStyle(style);
                                     row = excelReport.getWorkbook().getSheet(sheet).createRow(++rowNum);
-                                    row.createCell(1).setCellValue(st.getScl_accountant_full_name());
-                                    row.createCell(5).setCellValue(st.getScl_dir_f_name());
+                                    row.createCell(1).setCellValue(studentInfo.getAccountant().getSurname() + " "
+                                            + studentInfo.getAccountant().getName() + " " +
+                                            (studentInfo.getAccountant().getMiddle_name() == null ?
+                                                    "" : studentInfo.getAccountant().getMiddle_name()));
+                                    row.createCell(5).setCellValue(studentInfo.getDirector().getSurname() + " "
+                                            + studentInfo.getDirector().getName() + " " +
+                                            (studentInfo.getDirector().getMiddle_name() == null ?
+                                                    "" : studentInfo.getDirector().getMiddle_name()));
 
                                     excelReport.getWorkbook().getSheet(sheet).addMergedRegion(
                                             new CellRangeAddress(excelReport.getTotalsRow().getRowNum(), excelReport.getTotalsRow().getRowNum(),
@@ -422,16 +433,20 @@ public class DateReport implements Button.ClickListener,
                 logger.catching(e);
             }
         } else if (source == pdfBtn) {
-            StudentInfoPdf st;
+            StudentInfoPdf studentInfo = new StudentInfoPdf();
             try {
                 DbSchool dbsc = new DbSchool();
                 dbsc.connect();
-                st = dbsc.execGetSchoolPdf(myUI.getUser().getSchool().getId());
+                studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
                 dbsc.close();
-                if (st.getScl_accountant_full_name() != null) {
-                    if (st.getScl_address() != null && st.getScl_phone() != null
-                            && st.getScl_name_ru() != null) {
-                        new AccountingByDatesPdf(myUI, st, (IndexedContainer) incomesDataTable.getContainerDataSource(),
+                DbEmployee dbEmployee = new DbEmployee();
+                dbEmployee.connect();
+                studentInfo.setDirector(dbEmployee.exec_by_position_id(1, myUI.getUser().getSchool().getId()));
+                studentInfo.setAccountant(dbEmployee.exec_by_position_id(2, myUI.getUser().getSchool().getId()));
+                dbEmployee.close();
+                if (studentInfo.getAccountant() != null) {
+                    if (studentInfo.getSchool().getAddress() != null) {
+                        new AccountingByDatesPdf(myUI, studentInfo, (IndexedContainer) incomesDataTable.getContainerDataSource(),
                                 (IndexedContainer) outcomesDataTable.getContainerDataSource(),
                                 myUI.getMessage(SptMessages.From) + " " + Settings.df.format(fromDateDF.getValue())
                                         + " " + myUI.getMessage(SptMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
