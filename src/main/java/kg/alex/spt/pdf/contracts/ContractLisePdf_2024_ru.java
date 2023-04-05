@@ -65,10 +65,11 @@ public class ContractLisePdf_2024_ru {
                 PdfContentByte punder = writer.getDirectContentUnder();
 
                 Paragraph spr = new Paragraph();
-                spr.add(new Phrase("ДОГОВОР", font_header));
+                spr.add(new Phrase("ДОГОВОР № "
+                        + String.format("%07d", studentInfo.getContractInfo().getContractNumber()), font_header));
                 spr.add(Chunk.NEWLINE);
 
-                spr.add(new Phrase("об оказании платных образовательных услуг", font_header));
+                spr.add(new Phrase("Об оказании платных образовательных услуг", font_header));
                 spr.add(Chunk.NEWLINE);
 
                 spr.setAlignment(Element.ALIGN_CENTER);
@@ -90,7 +91,7 @@ public class ContractLisePdf_2024_ru {
                 Decliner dcl = new Decliner();
 
                 Paragraph paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -138,7 +139,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -147,7 +148,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -158,7 +159,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -166,7 +167,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.setAlignment(Element.ALIGN_CENTER);
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -174,7 +175,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -183,7 +184,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -192,7 +193,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -201,7 +202,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -210,7 +211,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -219,7 +220,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -228,7 +229,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -237,7 +238,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -246,7 +247,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -255,7 +256,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -264,7 +265,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -273,7 +274,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -282,7 +283,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -291,7 +292,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -300,7 +301,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -309,7 +310,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -317,7 +318,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -326,18 +327,20 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("2.2.2. Самостоятельно устанавливать и изменять размер родительских взносов согласно годовой смете расходов. Лицей имеет право ежегодно изменять размер предоставленной скидки в оплате, при этом предоставленные скидки действуют только в течении данного учебного года. Установленные скидки (за успеваемость, призер олимпиады, скидка за высший балл при поступлении, в том числе скидки, предоставленные Генеральной дирекцией МОУ «Сапат» и др.) ", ordFont));
                 paragraph.add(new Phrase("аннулируются ", ordBoldFont));
-                paragraph.add(new Phrase("без предупреждения, в случае наличия у учащегося дисциплинарного взыскания.", ordFont));
+                paragraph.add(new Phrase("без предупреждения, в случае наличия у учащегося дисциплинарного взыскания. А также в случае нарушения графика оплаты Родителем 3 раза, все ранее предоставленные скидки ", ordFont));
+                paragraph.add(new Phrase("аннулируются ", ordBoldFont));
+                paragraph.add(new Phrase("без предупреждения.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -346,7 +349,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -355,7 +358,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -364,7 +367,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -373,7 +376,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -382,7 +385,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -391,7 +394,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -400,7 +403,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -409,7 +412,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -418,7 +421,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -427,7 +430,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -436,7 +439,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -448,7 +451,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -457,7 +460,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -466,7 +469,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -475,7 +478,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -483,7 +486,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -492,7 +495,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -503,7 +506,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -514,7 +517,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -523,7 +526,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -532,7 +535,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -541,7 +544,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -550,7 +553,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -559,7 +562,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -568,7 +571,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -577,7 +580,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -586,7 +589,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -595,7 +598,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -604,7 +607,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -613,7 +616,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -622,7 +625,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -631,7 +634,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -639,7 +642,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -648,7 +651,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -658,7 +661,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -666,14 +669,14 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("3. УСЛОВИЯ ОПЛАТЫ", boldFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.add(new Phrase("3.1. Администрацией Лицея установлены следующие сроки оплаты:", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -683,7 +686,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase(", подписанному обеими сторонами, являющегося неотъемлемой частью настоящего договора. При этом последний взнос должен быть внесен не позднее 28го февраля, следующего года. Размер родительского взноса не изменяется даже при условии перехода на дистанционную форму обучения.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -693,7 +696,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("Лицея родителями или лицами, их заменяющими, не позднее 3 календарных дней с даты, указанной в официальном счете/invoice.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -705,7 +708,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -713,7 +716,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("4. ФОРС-МАЖОР", boldFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -723,7 +726,7 @@ public class ContractLisePdf_2024_ru {
                 document.add(new Paragraph(10, " "));
 
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -731,7 +734,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("5. СРОК ДЕЙСТВИЯ ДОГОВОРА, ПОРЯДОК ИЗМЕНЕНИЯ, ДОПОЛНЕНИЯ И РАСТОРЖЕНИЯ", boldFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -739,7 +742,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("5.1. Настоящий Договор вступает в силу с момента его подписания обеими сторонами.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -747,7 +750,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("5.2. Настоящий Договор может быть расторгнут досрочно, согласно п.2.2.3. и 2.4.2.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -755,7 +758,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("5.3. Любые дополнения и изменения к настоящему Договору действительны лишь при условии, что они совершены в письменной форме и подписаны обеими сторонами.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -763,7 +766,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("5.4. Все разногласия по данному Договору решаются сторонами в порядке переговоров. В случае невозможности разрешения спора путем переговоров, они решаются в порядке, установленном законодательством Кыргызской Республики.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -771,7 +774,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.add(new Phrase("5.5. Стороны договорились, что деловая корреспонденция и иные документы, касающиеся настоящего Договора, отправленные и полученные посредством факсимильной, электронной связи или иным способом, позволяющим достоверно установить, что документ исходит от стороны по Договору, признаются имеющими юридическую силу.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -782,7 +785,7 @@ public class ContractLisePdf_2024_ru {
 
                 //document.newPage();
                 paragraph = new Paragraph();
-                paragraph. setFirstLineIndent(25);
+                paragraph.setFirstLineIndent(25);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);

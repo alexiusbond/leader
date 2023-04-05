@@ -56,7 +56,6 @@ import java.util.Map;
 
 public class CashBoxView extends GridLayout implements Button.ClickListener,
         Property.ValueChangeListener, FieldGroup.CommitHandler {
-
     static final Logger logger = LogManager.getLogger(CashBoxView.class);
     private final MyVaadinUI myUI;
     private Button addButton, saveButton, searchButton;

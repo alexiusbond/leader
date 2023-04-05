@@ -109,20 +109,33 @@ public class DbAccTransactions extends BaseDb {
                         Grid grid, CashBoxView cbv, Date from, Date till) throws SQLException {
 
         Subject currentUser = SecurityUtils.getSubject();
-        String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, "
-                + "t.currency_rate, t.amount, t.note, if(t.student_payments_id is not null or t.dp_invoice_id is not null "
-                + "or t.acc_invoice_id is not null,true, false) as isDisabled, "
-                + "if(t.date_time > DATE_SUB(NOW(), INTERVAL 24 HOUR), true, false) as isNotOld, "
-                + "t.from_to_employee_id, concat(e.surname, ' ', e.name) as fullname "
-                + "FROM acc_transactions as t "
-                + "left join employee as e on t.employee_id = e.id "
-                + "where (t.acc_type_id = ? OR t.acc_type_id = 5) AND t.school_id = ? "
-                + "AND DATE(t.date_time) >= ? AND DATE(t.date_time) <= ? order by t.date_time desc;";
+        String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, t.currency_rate, " +
+                "t.amount, IF(t.student_payments_id IS NULL, t.note, CONCAT(cnu.name, ' - ', cna.name, ' ', " +
+                "st.login, ' ', st.name, ' ', st.surname)) AS note, " +
+                "IF(t.student_payments_id IS NOT NULL OR t.dp_invoice_id IS NOT NULL " +
+                "OR t.acc_invoice_id IS NOT NULL, TRUE, FALSE) AS isDisabled, " +
+                "IF(t.date_time > DATE_SUB(NOW(), INTERVAL 24 HOUR), TRUE, FALSE) AS isNotOld, t.from_to_employee_id, " +
+                "CONCAT(e.surname, ' ', e.name) AS fullname " +
+                "FROM acc_transactions AS t " +
+                "LEFT JOIN employee AS e ON t.employee_id = e.id " +
+                "LEFT JOIN student_payments AS sp ON t.student_payments_id = sp.id " +
+                "LEFT JOIN student AS st ON sp.student_id = st.id " +
+                "LEFT JOIN " +
+                "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id, so.year_id AS year_id " +
+                "FROM student_orders AS so WHERE so.is_valid = 1 GROUP BY so.student_id , so.year_id) " +
+                "AS o_temp ON st.id = o_temp.stud_id AND sp.year_id = o_temp.year_id " +
+                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
+                "LEFT JOIN class_name AS cna ON cna.id = CASE " +
+                "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id ELSE stud_o.to_class_name_id END " +
+                "LEFT JOIN class_number AS cnu ON cnu.id = cna.class_number_id " +
+                "where (t.acc_type_id = ? OR t.acc_type_id = 5) AND t.school_id = ? " +
+                "AND DATE(t.date_time) >= ? AND DATE(t.date_time) <= ? order by t.date_time desc;";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, incOrOut);
         stat.setInt(2, school_id);
         stat.setDate(3, new java.sql.Date(from.getTime()));
         stat.setDate(4, new java.sql.Date(till.getTime()));
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         GeneratedPropertyContainer container;
         if (incOrOut == 1) {
@@ -141,7 +154,7 @@ public class DbAccTransactions extends BaseDb {
             } else {
                 item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).setValue(result.getDouble("t.amount"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("note"));
             item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             if (incOrOut == 2) {
