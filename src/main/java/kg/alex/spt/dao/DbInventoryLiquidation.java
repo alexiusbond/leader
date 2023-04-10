@@ -39,7 +39,7 @@ public class DbInventoryLiquidation extends BaseDb {
                 "left join dm_inventory_organization as io on io.id = t.inventory_id " +
                 "left join view_inventory_remains as r on io.id = r.inventory_id " +
                 "left join dm_invoice as i on i.id = io.invoice_id " +
-                "where t.invoice_id = ? order by t.id;";
+                "where t.invoice_id = ? order by t.id";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
@@ -93,7 +93,7 @@ public class DbInventoryLiquidation extends BaseDb {
 
     public int exec_insert(InventoryLiquidation inventoryLiquidation) throws SQLException {
         String sql = "INSERT INTO dm_inventory_liquidation (invoice_id,quantity," +
-                "inventory_id,creation_date) VALUES(?,?,?,NOW());";
+                "inventory_id,creation_date) VALUES(?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inventoryLiquidation.getInvoice_id());
         stat.setInt(2, inventoryLiquidation.getQuantity());
@@ -108,7 +108,7 @@ public class DbInventoryLiquidation extends BaseDb {
 
     public int exec_update(InventoryLiquidation inventoryLiquidation) throws SQLException {
         String sql = "update dm_inventory_liquidation set "
-                + "quantity = ?, inventory_id = ? WHERE id= ?;";
+                + "quantity = ?, inventory_id = ? WHERE id= ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inventoryLiquidation.getQuantity());
         stat.setInt(2, inventoryLiquidation.getInventory_id());

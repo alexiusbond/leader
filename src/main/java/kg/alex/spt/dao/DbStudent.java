@@ -34,28 +34,26 @@ public class DbStudent extends BaseDb {
         super();
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, StudentDefinitionView sdv, String edu_sts)
-            throws SQLException {
-
+    public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int year_id,
+                                    StudentDefinitionView sdv, String edu_sts) throws SQLException {
 
         if (edu_sts.equals("")) {
             edu_sts = "-1";
         }
         String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, s.entering_year_id, "
-                + "s.date_of_birth, s.photo, s.gender_id, s.education_status_id, es.name, y.name, "
-                + "s.class_name_id, concat(cnu.name,' - ',cn.name) as cl_name, sr.fullname, sr.phone, rel.name "
+                + "s.date_of_birth, s.photo, s.gender_id, vcs.education_status_id, vcs.education_status, y.name, "
+                + "vcs.class_name_id, vcs.class_name, sr.fullname, sr.phone, rel.name "
                 + "FROM student as s "
                 + "LEFT JOIN student_relatives AS sr ON s.id = sr.student_id AND sr.is_main = 1 "
                 + "LEFT JOIN relatives AS rel ON sr.relatives_id = rel.id "
-                + "left join education_status as es on s.education_status_id = es.id "
-                + "left join class_name as cn on s.class_name_id = cn.id "
-                + "left join class_number as cnu on cn.class_number_id = cnu.id "
+                + "left join view_student_class_status as vcs on s.id = vcs.student_id and vcs.year_id = ? "
                 + "left join year as y on s.entering_year_id = y.id "
-                + "WHERE s.school_id = ? and s.entering_year_id<=? and s.education_status_id in (" + edu_sts + ") "
-                + "GROUP BY s.id ORDER BY s.education_status_id, s.name, s.surname;";
+                + "WHERE s.school_id = ? and s.entering_year_id <= ? and vcs.education_status_id in (" + edu_sts + ") "
+                + "GROUP BY s.id ORDER BY vcs.education_status_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl_id);
-        stat.setInt(2, myUi.getUser().getCurrent_year().getId());
+        stat.setInt(1, year_id);
+        stat.setInt(2, scl_id);
+        stat.setInt(3, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
@@ -100,16 +98,16 @@ public class DbStudent extends BaseDb {
                     result.getDate("s.date_of_birth"));
             item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(result.getString("s.photo"));
             item.getItemProperty(Settings.gender_id).setValue(result.getInt("s.gender_id"));
-            item.getItemProperty(Settings.education_status_id).setValue(result.getInt("s.education_status_id"));
-            sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), Settings.count)
-                    .setValue(((Integer) sdv.eduStatCont.getContainerProperty(result.getInt("s.education_status_id"), Settings.count)
-                            .getValue()) + 1);
+            item.getItemProperty(Settings.education_status_id).setValue(result.getInt("vcs.education_status_id"));
+            sdv.eduStatCont.getContainerProperty(result.getInt("vcs.education_status_id"), Settings.count)
+                    .setValue(((Integer) sdv.eduStatCont.getContainerProperty(
+                            result.getInt("vcs.education_status_id"), Settings.count).getValue()) + 1);
             item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
-                    result.getString("es.name"));
+                    result.getString("vcs.education_status"));
             item.getItemProperty(Settings.class_name_id).setValue(
-                    result.getInt("s.class_name_id"));
+                    result.getInt("vcs.class_name_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("cl_name"));
+                    result.getString("vcs.class_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.EnteringYear)).setValue(
                     result.getString("y.name"));
             item.getItemProperty(Settings.entering_year_id).setValue(
@@ -120,17 +118,17 @@ public class DbStudent extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, int scl_id, String edu_sts)
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int scl_id, int year_id, String edu_sts)
             throws SQLException {
 
-        String sql = "SELECT s.id, s.name, s.surname, cnu.name, concat(cnu.name,' - ',cn.name) as cl_name "
+        String sql = "SELECT s.id, s.name, s.surname, vcs.class_number, vcs.class_name "
                 + "FROM student as s "
-                + "left join class_name as cn on s.class_name_id = cn.id "
-                + "left join class_number as cnu on cn.class_number_id = cnu.id "
-                + "WHERE s.school_id = ? and s.education_status_id in (" + edu_sts + ") "
-                + "ORDER BY cnu.id, cn.id, s.name, s.surname;";
+                + "left join view_student_class_status as vcs on vcs.student_id = s.id and vcs.year_id = ? "
+                + "WHERE s.school_id = ? and vcs.education_status_id in (" + edu_sts + ") "
+                + "ORDER BY vcs.class_number_id, vcs.class_name_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl_id);
+        stat.setInt(1, year_id);
+        stat.setInt(2, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
@@ -143,30 +141,28 @@ public class DbStudent extends BaseDb {
                     result.getString("s.name")
                             + " " + result.getString("s.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassNumber)).setValue(
-                    result.getString("cnu.name"));
+                    result.getString("vcs.class_number"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("s.name") + " " +
                             result.getString("s.surname") + " - " +
-                            result.getString("cl_name"));
+                            result.getString("vcs.class_name"));
         }
         return container;
     }
 
-    public IndexedContainer execSQL_for_orders(MyVaadinUI myUi, int scl_id,
+    public IndexedContainer execSQL_for_orders(MyVaadinUI myUi, int scl_id, int year_id,
                                                IssueOrderView iv) throws SQLException {
 
-
-        String sql = "SELECT s.id, s.login, s.name, s.surname, es.name, s.entering_year_id, "
-                + "concat(cnu.name,' - ',cn.name) as cl_name, s.class_name_id, "
-                + "s.education_status_id FROM student as s "
-                + "left join education_status as es on s.education_status_id = es.id "
-                + "left join class_name as cn on s.class_name_id = cn.id "
-                + "left join class_number as cnu on cn.class_number_id = cnu.id "
-                + "WHERE s.school_id = ? and s.entering_year_id<=? "
-                + "ORDER BY s.education_status_id, s.name, s.surname;";
+        String sql = "SELECT s.id, s.login, s.name, s.surname, vcs.education_status, s.entering_year_id, "
+                + "vcs.class_name, vcs.class_name_id, vcs.education_status_id "
+                + "FROM student as s "
+                + "left join view_student_class_status as vcs on s.id = vcs.student_id and vcs.year_id = ? "
+                + "WHERE s.school_id = ? and s.entering_year_id <= ? "
+                + "ORDER BY vcs.education_status_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl_id);
-        stat.setInt(2, myUi.getUser().getCurrent_year().getId());
+        stat.setInt(1, year_id);
+        stat.setInt(2, scl_id);
+        stat.setInt(3, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(Settings.button, Button.class, null);
@@ -192,13 +188,13 @@ public class DbStudent extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("s.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
-                    result.getString("es.name"));
+                    result.getString("vcs.education_status"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("cl_name"));
+                    result.getString("vcs.class_name"));
             item.getItemProperty(Settings.class_id).setValue(
-                    result.getInt("s.class_name_id"));
+                    result.getInt("vcs.class_name_id"));
             item.getItemProperty(Settings.education_status_id).setValue(
-                    result.getInt("s.education_status_id"));
+                    result.getInt("vcs.education_status_id"));
             item.getItemProperty(Settings.entering_year_id).setValue(
                     result.getInt("s.entering_year_id"));
         }
@@ -208,16 +204,15 @@ public class DbStudent extends BaseDb {
     public int exec_insert(Student s) throws SQLException {
         String sql = "INSERT ignore INTO student (login, password, name, "
                 + "surname, middle_name, date_of_birth, photo, school_id, gender_id, "
-                + "education_status_id,entering_year_id,class_name_id,employee_id, "
-                + "modification_date) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,NOW());";
+                + "entering_year_id, employee_id, modification_date) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getPassword());
         stat.setString(3, s.getName().trim());
         stat.setString(4, s.getSurname().trim());
         if (s.getMiddle_name() != null && !s.getMiddle_name().equals("")) {
-            stat.setString(5, s.getMiddle_name());
+            stat.setString(5, s.getMiddle_name().trim());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
@@ -225,10 +220,8 @@ public class DbStudent extends BaseDb {
         stat.setString(7, s.getPhoto());
         stat.setInt(8, s.getSchool_id());
         stat.setInt(9, s.getGender_id());
-        stat.setInt(10, s.getEdu_status_id());
-        stat.setInt(11, s.getEntering_year_id());
-        stat.setInt(12, s.getClass_name_id());
-        stat.setInt(13, s.getEmployee_id());
+        stat.setInt(10, s.getEntering_year_id());
+        stat.setInt(11, s.getEmployee_id());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -239,27 +232,23 @@ public class DbStudent extends BaseDb {
     }
 
     public int exec_update(Student s) throws SQLException {
-        String sql = "UPDATE student SET login=?, name=?, surname=?, "
-                + "middle_name=?, date_of_birth=?, photo=?, gender_id=?, "
-                + "education_status_id=?, class_name_id=?,employee_id=?,"
-                + "modification_date=NOW() "
-                + "WHERE id=?";
+        String sql = "UPDATE student SET login = ?, name = ?, surname = ?, middle_name = ?, " +
+                "date_of_birth = ?, photo = ?, gender_id = ?, employee_id = ?, modification_date = NOW() " +
+                "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getName().trim());
         stat.setString(3, s.getSurname().trim());
         if (s.getMiddle_name() != null && !s.getMiddle_name().equals("")) {
-            stat.setString(4, s.getMiddle_name());
+            stat.setString(4, s.getMiddle_name().trim());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
         stat.setDate(5, new java.sql.Date(s.getBirth_date().getTime()));
         stat.setString(6, s.getPhoto());
         stat.setInt(7, s.getGender_id());
-        stat.setInt(8, s.getEdu_status_id());
-        stat.setInt(9, s.getClass_name_id());
-        stat.setInt(10, s.getEmployee_id());
-        stat.setInt(11, s.getId());
+        stat.setInt(8, s.getEmployee_id());
+        stat.setInt(9, s.getId());
         return stat.executeUpdate();
     }
 
@@ -271,41 +260,12 @@ public class DbStudent extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_update(int student_id, int education_status_id, int class_id,
-                           int employee_id) throws SQLException {
-        String sql = "UPDATE student SET education_status_id=?, class_name_id=?, employee_id=?,"
-                + "modification_date=NOW() WHERE id=?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, education_status_id);
-        stat.setInt(2, class_id);
-        stat.setInt(3, employee_id);
-        stat.setInt(4, student_id);
-        return stat.executeUpdate();
-    }
-
-    public int exec_update(int student_id, int education_status_id,
-                           int employee_id) throws SQLException {
-        String sql = "UPDATE student SET education_status_id=?, employee_id=?,"
-                + "modification_date=NOW() WHERE id=?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, education_status_id);
-        stat.setInt(2, employee_id);
-        stat.setInt(3, student_id);
-        return stat.executeUpdate();
-    }
-
     public IndexedContainer execStud_sel(MyVaadinUI myUi, int cl_id, int year_id)
             throws SQLException {
         String sql = "SELECT st.id, st.name, st.surname, st.middle_name "
                 + "FROM student AS st "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN class_name AS cln ON cln.id = "
-                + "CASE WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
-                + "ELSE stud_o.to_class_name_id END "
-                + "WHERE cln.id = ?  and st.entering_year_id <= ? ORDER BY st.name, st.surname;";
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "WHERE vcs.class_name_id = ?  and st.entering_year_id <= ? ORDER BY st.name, st.surname";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
@@ -334,7 +294,7 @@ public class DbStudent extends BaseDb {
                 + "left join student_accessories as sa on sa.student_id = st.id "
                 + "left join student_orders as so on so.student_id = st.id "
                 + "left join student_calls as sca on sca.student_id = st.id "
-                + "where st.id = ?;";
+                + "where st.id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         return stat.executeUpdate();
@@ -343,7 +303,7 @@ public class DbStudent extends BaseDb {
     public IndexedContainer execSQLCalls(MyVaadinUI myUi, int year_id, String class_ids,
                                          String edu_statuses_ids, CallsView cv) throws SQLException {
 
-        String sql = "select st.id, st.login, st.name, st.surname,concat(cnu.name, ' - ' , cna.name) as class_name, "
+        String sql = "select st.id, st.login, st.name, st.surname, vcs.class_name, "
                 + "concat(sr.phone,' (',sr.fullname,')') "
                 + "as is_main, MAX(IF(ip.is_visible = 1, ip.date_of_payment, NULL)) AS plan_debt_date, "
                 + "ifnull((sum(ip.amount) - sc.net_payments),0.0) as plan_debt, "
@@ -358,19 +318,10 @@ public class DbStudent extends BaseDb {
                 + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "left join student_installement_plan as ip on st.id = ip.student_id "
                 + "and sc.year_id = ip.year_id AND ip.date_of_payment <= NOW() "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so "
-                + "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = "
-                + "CASE WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
-                + "ELSE stud_o.to_education_status_id END "
-                + "LEFT JOIN class_name AS cna ON cna.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
-                + "ELSE stud_o.to_class_name_id END "
-                + "left join class_number as cnu on cnu.id = cna.class_number_id "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "where sr.is_main = 1 and sc.year_id = ? "
-                + "and cna.id in(" + class_ids + ") AND edu.id IN (" + edu_statuses_ids + ") "
-                + "group by st.id having plan_debt > 0 order by class_name, st.name, st.surname;";
+                + "and vcs.class_name_id in(" + class_ids + ") AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
+                + "group by st.id having plan_debt > 0 order by vcs.class_number_id, vcs.class_name_id, st.name, st.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -383,7 +334,7 @@ public class DbStudent extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(result.getString("st.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(result.getString("st.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("class_name"));
+                    result.getString("vcs.class_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
                     result.getString("is_main"));
             if (result.getDate("plan_debt_date") != null) {
@@ -407,34 +358,21 @@ public class DbStudent extends BaseDb {
         return container;
     }
 
-    public int exec_ChangeYear(int year_id, int school_id) throws SQLException {
-        String sql = "update student as st inner join (select max(so.id) as max_id, "
-                + "so.student_id as student_id from student_orders as so "
-                + "left join student as st1 on so.student_id = st1.id where "
-                + "so.year_id = ? and st1.school_id = ? and so.is_valid=1 group by so.student_id) "
-                + "as it on st.id = it.student_id set st.class_name_id = (select "
-                + "so2.to_class_name_id from student_orders as so2 where so2.id = it.max_id), "
-                + "st.education_status_id = (select so3.to_education_status_id "
-                + "from student_orders as so3 where so3.id = it.max_id);";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, school_id);
-        return stat.executeUpdate();
-
-    }
-
     public EducationStatus execEduCount(int scl_id, int year_id)
             throws SQLException {
-        String sql = "SELECT count(*) as ttl, count(if(st.education_status_id = 1, "
-                + "st.education_status_id, null)) as prereg, "
-                + "count(if(st.education_status_id = 2, st.education_status_id, null)) as active, "
-                + "count(if(st.education_status_id = 3, st.education_status_id, null)) as notcon, "
-                + "count(if(st.education_status_id = 4, st.education_status_id, null)) as outof, "
-                + "count(if(st.education_status_id = 5, st.education_status_id, null)) as graduated "
-                + "FROM student as st where st.school_id = ? and st.entering_year_id <= ?;";
+        String sql = "SELECT count(*) as ttl, "
+                + "count(if(vcs.education_status_id = 1, vcs.education_status_id, null)) as prereg, "
+                + "count(if(vcs.education_status_id = 2, vcs.education_status_id, null)) as active, "
+                + "count(if(vcs.education_status_id = 3, vcs.education_status_id, null)) as notcon, "
+                + "count(if(vcs.education_status_id = 4, vcs.education_status_id, null)) as outof, "
+                + "count(if(vcs.education_status_id = 5, vcs.education_status_id, null)) as graduated "
+                + "FROM student as st "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "where st.school_id = ? and st.entering_year_id <= ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl_id);
-        stat.setInt(2, year_id);
+        stat.setInt(1, year_id);
+        stat.setInt(2, scl_id);
+        stat.setInt(3, year_id);
         ResultSet result = stat.executeQuery();
         EducationStatus e = new EducationStatus();
         while (result.next()) {
@@ -451,11 +389,10 @@ public class DbStudent extends BaseDb {
     public void execSQL_Statuses_by_classes(MyVaadinUI myUI, int year_id,
                                             StatusesReport sr) throws SQLException {
 
-
-        StringBuilder sql = new StringBuilder("SELECT sch.id, sch.name_ru, COUNT(IF(st.entering_year_id<="
-                + year_id + " AND cna.class_number_id IN ("
+        StringBuilder sql = new StringBuilder("SELECT sch.id, sch.name_ru, COUNT(IF(st.entering_year_id <= "
+                + year_id + " AND vcs.class_number_id IN ("
                 + Settings.convertCollectionToStr(((Set<?>) sr.classTable.getValue())) + ") "
-                + "AND edu.id IN ("
+                + "AND vcs.education_status_id IN ("
                 + Settings.convertCollectionToStr(((Set<?>) sr.statusMS.getValue())) + "),1,NULL)) AS quantity");
         Iterator<?> class_iter = ((Set<?>) sr.classTable.getValue()).iterator();
         Iterator<?> status_iter;
@@ -464,10 +401,19 @@ public class DbStudent extends BaseDb {
             status_iter = ((Set<?>) sr.statusMS.getValue()).iterator();
             while (status_iter.hasNext()) {
                 Object nextStatus = status_iter.next();
-                sql.append(", COUNT(IF(st.entering_year_id<=").append(year_id).append(" and cna.class_number_id = ").append(nextClass).append(" and edu.id= ").append(nextStatus).append(", 1, NULL)) AS quantity").append(nextClass).append("_").append(nextStatus).append(" ");
+                sql.append(", COUNT(IF(st.entering_year_id <= ")
+                        .append(year_id).append(" and vcs.class_number_id = ")
+                        .append(nextClass).append(" and vcs.education_status_id = ")
+                        .append(nextStatus).append(", 1, NULL)) AS quantity")
+                        .append(nextClass).append("_").append(nextStatus).append(" ");
             }
         }
-        sql.append(" FROM school as sch " + "LEFT JOIN student AS st on st.school_id=sch.id " + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 " + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN class_name AS cna ON cna.id = CASE " + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id " + "ELSE stud_o.to_class_name_id END " + "LEFT JOIN education_status AS edu ON edu.id = CASE " + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id " + "ELSE stud_o.to_education_status_id END " + "WHERE sch.id IN (").append(Settings.convertCollectionToStr(((Set<?>) sr.schoolsTable.getValue()))).append(") ").append("GROUP BY sch.id;");
+        sql.append(" FROM school as sch "
+                        + "LEFT JOIN student AS st on st.school_id = sch.id "
+                        + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                        + "WHERE sch.id IN (")
+                .append(Settings.convertCollectionToStr(((Set<?>) sr.schoolsTable.getValue()))).append(") ")
+                .append("GROUP BY sch.id");
         PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         stat.setInt(1, year_id);
         ResultSet result = stat.executeQuery();
@@ -554,7 +500,8 @@ public class DbStudent extends BaseDb {
                              int min, int max, String school_level) throws SQLException {
         String sql = "SELECT IFNULL(MAX(CAST(RIGHT(st.login, 3) AS UNSIGNED)), ?) + ? AS num " +
                 "FROM student AS st " +
-                "LEFT JOIN class_name AS cn ON cn.id = st.class_name_id " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? " +
+                "LEFT JOIN class_name AS cn ON cn.id = vcs.class_name_id " +
                 "LEFT JOIN class_number AS cnu ON cnu.id = cn.class_number_id " +
                 "WHERE st.entering_year_id = ? AND st.school_id = ? AND cn.class_type_id = ? " +
                 "AND LENGTH(st.login) = 8 AND CAST(RIGHT(st.login, 3) AS UNSIGNED) BETWEEN ? AND ? ";
@@ -565,12 +512,13 @@ public class DbStudent extends BaseDb {
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, min);
-        stat.setInt(2, order_num);
-        stat.setInt(3, year_id);
-        stat.setInt(4, school_id);
-        stat.setInt(5, class_type_id);
-        stat.setInt(6, min);
-        stat.setInt(7, max - 1);
+        stat.setInt(2, year_id);
+        stat.setInt(3, order_num);
+        stat.setInt(4, year_id);
+        stat.setInt(5, school_id);
+        stat.setInt(6, class_type_id);
+        stat.setInt(7, min);
+        stat.setInt(8, max - 1);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             return result.getInt("num");

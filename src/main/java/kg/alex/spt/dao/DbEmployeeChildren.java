@@ -27,7 +27,7 @@ public class DbEmployeeChildren extends BaseDb {
     public int exec_insert(EmployeeChildren ech) throws SQLException {
         String sql = "INSERT INTO hr_employee_children (employee_id,fullname,"
                 + "date_of_birth,institution,hr_education_status_id,hr_health_status_id) "
-                + "VALUES(?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ech.getEmployee_id());
         stat.setString(2, ech.getFullName());
@@ -53,7 +53,7 @@ public class DbEmployeeChildren extends BaseDb {
 
     public int exec_update(EmployeeChildren ech) throws SQLException {
         String sql = "update hr_employee_children set "
-                + "fullname=?, date_of_birth=?, institution=?, hr_education_status_id=?, hr_health_status_id=? WHERE id=?;";
+                + "fullname = ?, date_of_birth = ?, institution = ?, hr_education_status_id = ?, hr_health_status_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ech.getFullName());
         stat.setDate(2, new Date(ech.getDate_of_birth().getTime()));
@@ -77,7 +77,7 @@ public class DbEmployeeChildren extends BaseDb {
 
         String sql = "SELECT ech.id, ech.fullname, ech.date_of_birth, ech.institution, " +
                 "ech.hr_education_status_id, ech.hr_health_status_id " +
-                "FROM hr_employee_children as ech where ech.employee_id = ? ;";
+                "FROM hr_employee_children as ech where ech.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

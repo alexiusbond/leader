@@ -28,7 +28,7 @@ public class DbBlock extends BaseDb {
         String sql = "SELECT b.id, b.name, b.school_id, b.activity_status_id, ac.name " +
                 "FROM dm_block as b " +
                 "left join activity_status as ac on ac.id = b.activity_status_id " +
-                "where b.school_id = ? order by b.name, b.activity_status_id;";
+                "where b.school_id = ? order by b.name, b.activity_status_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -56,7 +56,7 @@ public class DbBlock extends BaseDb {
 
     public int exec_insert(Block block) throws SQLException {
         String sql = "INSERT IGNORE INTO dm_block (name, school_id, activity_status_id) "
-                + "VALUES(?,?,?);";
+                + "VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, block.getName());
         stat.setInt(2, block.getSchool_id());

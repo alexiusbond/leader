@@ -27,7 +27,7 @@ public class DbAttachment extends BaseDb {
     }
 
     public int exec_insert(Attachment a) throws SQLException {
-        String sql = "INSERT INTO attachments (name,extension,unique_name) VALUES(?,?,?);";
+        String sql = "INSERT INTO attachments (name,extension,unique_name) VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, a.getName());
         stat.setString(2, a.getExtension());

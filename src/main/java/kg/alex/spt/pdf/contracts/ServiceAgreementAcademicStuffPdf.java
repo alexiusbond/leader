@@ -705,7 +705,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("7.3. Любые споры или несогласия вытекающие из данного договора , должны быть разрешены путем переговоров.", ordFont));
+                paragraph.add(new Phrase("7.3. Любые споры или несогласия вытекающие из данного договора, должны быть разрешены путем переговоров.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();

@@ -23,7 +23,7 @@ public class DbExam extends BaseDb {
     }
 
     public int exec_main_exam() throws SQLException {
-        String sql = "select t.id from hr_exam as t where t.is_main=1;";
+        String sql = "select t.id from hr_exam as t where t.is_main = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
@@ -33,10 +33,10 @@ public class DbExam extends BaseDb {
     }
 
     public int exec_update(int id) throws SQLException {
-        String sql = "update hr_exam set is_main = 0;";
+        String sql = "update hr_exam set is_main = 0";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.executeUpdate();
-        sql = "update hr_exam set is_main = 1 where id = ?;";
+        sql = "update hr_exam set is_main = 1 where id = ?";
         stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         return stat.executeUpdate();
@@ -75,7 +75,7 @@ public class DbExam extends BaseDb {
 
     public int exec_insert(Exam exam) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_exam (name,validity,activity_status_id) "
-                + "VALUES(?,?,?);";
+                + "VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, exam.getName());
         stat.setInt(2, exam.getValidity());

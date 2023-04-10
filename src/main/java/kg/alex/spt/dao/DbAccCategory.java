@@ -29,7 +29,7 @@ public class DbAccCategory extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type) throws SQLException {
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code "
                 + "from acc_category as c where c.acc_type_id = ? and c.school_id is null "
-                + "order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+                + "order by ifnull(concat(c.parent_code,'.',c.code),c.code)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
         ResultSet result = stat.executeQuery();
@@ -52,7 +52,7 @@ public class DbAccCategory extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id) throws SQLException {
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code "
                 + "from acc_category as c where c.acc_type_id = ? and c.school_id = ? "
-                + "order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+                + "order by ifnull(concat(c.parent_code,'.',c.code),c.code)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
         stat.setInt(2, school_id);
@@ -84,7 +84,7 @@ public class DbAccCategory extends BaseDb {
         if (!withParents) {
             sql += "and c.parent_id is not null ";
         }
-        sql += "order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+        sql += "order by ifnull(concat(c.parent_code,'.',c.code),c.code)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
         stat.setInt(2, school_id);
@@ -111,7 +111,7 @@ public class DbAccCategory extends BaseDb {
 
     public IndexedContainer exec_for_select(MyVaadinUI myUI, String parent_ids) throws SQLException {
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code),c.code) as code from acc_category as c "
-                + "where c.parent_id in (" + parent_ids + ") order by ifnull(concat(c.parent_code,'.',c.code),c.code);";
+                + "where c.parent_id in (" + parent_ids + ") order by ifnull(concat(c.parent_code,'.',c.code),c.code)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -145,7 +145,7 @@ public class DbAccCategory extends BaseDb {
         if (exceptMainParent) {
             sql += "and c.parent_id != (select acc_category_id from acc_type where id = 5) ";
         }
-        sql += "group by c.id order by ifnull(concat(c.parent_code,'.',c.code),c.code), c.activity_status_id;";
+        sql += "group by c.id order by ifnull(concat(c.parent_code,'.',c.code),c.code), c.activity_status_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, type);
         if (schoolId != 0) {
@@ -199,7 +199,7 @@ public class DbAccCategory extends BaseDb {
         }
         sql += "and (c.school_id IS NULL or c.school_id in (" + school_ids + ")) "
                 + "and (c.parent_id not in (select acc_category_id from dp_product_category) or c.parent_id is NULL) "
-                + "group by c.id order by c.parent_code, CAST(code AS UNSIGNED);";
+                + "group by c.id order by c.parent_code, CAST(code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
@@ -224,7 +224,7 @@ public class DbAccCategory extends BaseDb {
     public void execSQL_for_select_as_tree(MyVaadinUI myUI, FilterTreeTable t, String parent_ids)
             throws SQLException {
         String sql = "SELECT c.id, concat(ifnull(concat(c.parent_code,'.',c.code),c.code), ' - ', c.name) as name, c.parent_id from acc_category as c "
-                + "where c.parent_id in (" + parent_ids + ") or c.id in (" + parent_ids + ") order by c.parent_code, CAST(code AS UNSIGNED);";
+                + "where c.parent_id in (" + parent_ids + ") or c.id in (" + parent_ids + ") order by c.parent_code, CAST(code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
@@ -245,7 +245,7 @@ public class DbAccCategory extends BaseDb {
     public int exec_insert(AccCategory ac) throws SQLException {
         String sql = "INSERT IGNORE INTO acc_category (name, code, parent_id, acc_type_id, "
                 + "activity_status_id, note, parent_code,school_id,employee_id,modified_employee_id) "
-                + "values(?,?,?,?,?,?,?,?,?,?);";
+                + "values(?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ac.getName());
         stat.setString(2, ac.getCode());
@@ -310,7 +310,7 @@ public class DbAccCategory extends BaseDb {
     }
 
     private int exec_update_parent_code(int id, String code) throws SQLException {
-        String sql = "update acc_category set parent_code=? where id=?";
+        String sql = "update acc_category set parent_code = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, code);
         stat.setInt(2, id);
@@ -331,7 +331,7 @@ public class DbAccCategory extends BaseDb {
     }
 
     public int exec_id(int parent_id, int school_id) throws SQLException {
-        String sql = "SELECT c.id from acc_category as c where c.parent_id = ? and school_id = ?;";
+        String sql = "SELECT c.id from acc_category as c where c.parent_id = ? and school_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, parent_id);
         stat.setInt(2, school_id);
@@ -347,7 +347,7 @@ public class DbAccCategory extends BaseDb {
                 + "from acc_category ac "
                 + "left join acc_category ac2 on ac.parent_id = ac2.id "
                 + "left join acc_category ac3 on ac2.parent_code = ac3.parent_code and ac3.school_id = ? "
-                + "where ac.school_id = ? and ac.employee_id = ?;";
+                + "where ac.school_id = ? and ac.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, to_school_id);
         stat.setInt(2, from_school_id);

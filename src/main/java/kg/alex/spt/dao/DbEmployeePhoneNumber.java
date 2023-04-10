@@ -27,7 +27,7 @@ public class DbEmployeePhoneNumber extends BaseDb {
 
     public int exec_insert(EmployeePhoneNumber epn) throws SQLException {
         String sql = "INSERT INTO hr_employee_phone_number (employee_id,hr_phone_type_id,"
-                + "number) VALUES(?,?,?);";
+                + "number) VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, epn.getEmployee_id());
         stat.setInt(2, epn.getPhone_type_id());
@@ -42,7 +42,7 @@ public class DbEmployeePhoneNumber extends BaseDb {
 
     public int exec_update(EmployeePhoneNumber epn) throws SQLException {
         String sql = "update hr_employee_phone_number set "
-                + "hr_phone_type_id=?, number=? WHERE id=?;";
+                + "hr_phone_type_id = ?, number = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, epn.getPhone_type_id());
         stat.setString(2, epn.getNumber().trim());
@@ -55,7 +55,7 @@ public class DbEmployeePhoneNumber extends BaseDb {
         
 
         String sql = "SELECT epn.id, epn.hr_phone_type_id, epn.number "
-                + "FROM hr_employee_phone_number as epn where epn.employee_id = ? ;";
+                + "FROM hr_employee_phone_number as epn where epn.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

@@ -28,7 +28,7 @@ public class DbStudentCalls extends BaseDb {
     public int exec_insert(int st_id, int year_id, int emp_id, String note)
             throws SQLException {
         String sql = "INSERT INTO student_calls (student_id,year_id,employee_id,"
-                + "note, modification_date) VALUES(?,?,?,?,NOW());";
+                + "note, modification_date) VALUES(?,?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
@@ -38,12 +38,12 @@ public class DbStudentCalls extends BaseDb {
     }
 
     public IndexedContainer execSQL_St_Calls(MyVaadinUI myUI, int stud_id, int year_id,
-            StudentDefinitionView dw) throws SQLException {
-        
+                                             StudentDefinitionView dw) throws SQLException {
+
 
         String sql = "SELECT sc.id, sc.note, concat(e.name, ' ', e.surname) as fullname, sc.modification_date FROM student_calls as sc "
                 + "left join employee as e on sc.employee_id = e.id "
-                + "where sc.student_id = ? and sc.year_id = ?;";
+                + "where sc.student_id = ? and sc.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -76,7 +76,7 @@ public class DbStudentCalls extends BaseDb {
     }
 
     public int exec_update(String note, int id) throws SQLException {
-        String sql = "Update student_calls set note=? WHERE id=?;";
+        String sql = "update student_calls set note = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, note);
         stat.setInt(2, id);
@@ -84,29 +84,19 @@ public class DbStudentCalls extends BaseDb {
     }
 
     public IndexedContainer execSQL_getCallsReport(MyVaadinUI myUI, Date from,
-            Date till, int year_id, String class_ids, String edu_statuses_ids,
-            CallsReport cr) throws SQLException {
-        
+                                                   Date till, int year_id, String class_ids, String edu_statuses_ids,
+                                                   CallsReport cr) throws SQLException {
 
         String sql = "SELECT sc.id, st.name, st.surname, DATE(sc.modification_date) AS date, "
-                + "CONCAT(cnu.name, ' - ', cna.name) AS class_name, sc.note, concat(e.name, ' ', e.surname) as fullname "
-                + "FROM student_calls AS sc LEFT JOIN student AS st ON sc.student_id = st.id "
-                + "LEFT JOIN employee AS e ON sc.employee_id = e.id LEFT JOIN "
-                + "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so "
-                + "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) "
-                + "AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN class_name AS cna ON cna.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
-                + "ELSE stud_o.to_class_name_id END "
-                + "LEFT JOIN class_number AS cnu ON cna.class_number_id = cnu.id "
-                + "LEFT JOIN education_status AS edu ON edu.id = "
-                + "CASE WHEN stud_o.to_education_status_id IS NULL "
-                + "THEN st.education_status_id ELSE stud_o.to_education_status_id END "
-                + "WHERE cna.id IN (" + class_ids + ") AND DATE(sc.modification_date) >= ? "
+                + "vcs.class_name, sc.note, concat(e.name, ' ', e.surname) as fullname "
+                + "FROM student_calls AS sc "
+                + "LEFT JOIN student AS st ON sc.student_id = st.id "
+                + "LEFT JOIN employee AS e ON sc.employee_id = e.id "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "WHERE vcs.class_name_id IN (" + class_ids + ") AND DATE(sc.modification_date) >= ? "
                 + "AND DATE(sc.modification_date) <= ? AND sc.year_id = ? "
-                + "AND edu.id IN (" + edu_statuses_ids + ") "
-                + "ORDER BY cnu.id, cna.id, st.name, st.surname, sc.modification_date;";
+                + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
+                + "ORDER BY vcs.class_number_id, vcs.class_name_id, st.name, st.surname, sc.modification_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setDate(2, new java.sql.Date(from.getTime()));
@@ -127,7 +117,7 @@ public class DbStudentCalls extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("class_name"));
+                    result.getString("vcs.class_name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
                     result.getString("sc.note"));
             item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
@@ -142,7 +132,7 @@ public class DbStudentCalls extends BaseDb {
     public String exec_getLastCall(int st_id) throws SQLException {
         String sql = "SELECT CONCAT(DATE(modification_date), IF((note IS NOT NULL AND note != ''), CONCAT(' (', note, ')'), '')) as last_call "
                 + "FROM student_calls "
-                + "WHERE student_id = ? order by id desc limit 1;";
+                + "WHERE student_id = ? order by id desc limit 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         ResultSet result = stat.executeQuery();

@@ -809,11 +809,11 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             if (in_out == 1) {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), incomesGrid, this, fromDateDF.getValue(),
-                        tillDateDF.getValue());
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(),
+                        incomesGrid, this, fromDateDF.getValue(), tillDateDF.getValue());
             } else {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), expensesGrid, this, fromDateDF.getValue(),
-                        tillDateDF.getValue());
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(),
+                        expensesGrid, this, fromDateDF.getValue(), tillDateDF.getValue());
             }
             dbCon.close();
         } catch (Exception e) {

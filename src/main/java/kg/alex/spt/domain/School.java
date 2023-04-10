@@ -22,7 +22,6 @@ public class School implements Serializable {
     private String city;
     private int status_id;
     private int school_type_id;
-    private int year_id;
     private String photo;
 
     public String getName_en() {
@@ -130,14 +129,6 @@ public class School implements Serializable {
 
     public void setStatus_id(int status_id) {
         this.status_id = status_id;
-    }
-
-    public int getYear_id() {
-        return year_id;
-    }
-
-    public void setYear_id(int year_id) {
-        this.year_id = year_id;
     }
 
     public String getName_ru() {

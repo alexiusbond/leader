@@ -29,7 +29,7 @@ public class DbUserDetails extends BaseDb {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "select e.id, ord.working_status_id, eb.hr_branch_id, e.login, concat(e.surname, ' ', e.name) as fullname, "
                 + "eo.school_id, sch.name_ru, sch.school_type_id, sch.photo, sch.code, pos.id, "
-                + "y.id, y.name, y2.id, y2.name, y.is_last, y.installment_date_limit, sch.transactions_start_date "
+                + "y.id, y.name, y.is_last, y.installment_date_limit, sch.transactions_start_date "
                 + "from employee as e "
                 + "left join hr_employee_branch as eb on eb.employee_id = e.id and eb.hr_importance_id = 1 "
                 + "left join hr_employee_order as eo on eo.employee_id = e.id and eo.to_date IS NULL "
@@ -37,8 +37,7 @@ public class DbUserDetails extends BaseDb {
                 + "LEFT JOIN position AS pos ON p.id = pos.hr_position_id "
                 + "left join hr_orders as ord on ord.id = eo.hr_orders_id "
                 + "left join school as sch on eo.school_id = sch.id "
-                + "left join year as y on sch.year_id = y.id "
-                + "left join year as y2 on e.year_id = y2.id "
+                + "left join year as y on e.year_id = y.id "
                 + "where e.login = ? and ord.working_status_id IS NOT NULL";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -56,20 +55,15 @@ public class DbUserDetails extends BaseDb {
             user.getSchool().setPhoto(result.getString("sch.photo"));
             user.setBranch_id(result.getInt("eb.hr_branch_id"));
             user.setPosition_id(result.getInt("pos.id"));
-            if (currentUser.hasRole(Settings.rnSapatSecretary)) {
-                user.setCurrent_year(new Year(result.getInt("y2.id"),
-                        result.getString("y2.name"), 0L, true));
-            } else {
-                user.setCurrent_year(new Year(result.getInt("y.id"), result.getString("y.name"),
-                        result.getLong("y.installment_date_limit"), result.getBoolean("y.is_last")));
-            }
+            user.setCurrent_year(new Year(result.getInt("y.id"), result.getString("y.name"),
+                    result.getLong("y.installment_date_limit"), result.getBoolean("y.is_last")));
             user.setTransactions_start_date(result.getDate("sch.transactions_start_date"));
         }
         return user;
     }
 
     public String execSQL_pass(String u_id) throws SQLException {
-        String sql = "select  u.password from employee as u where u.login = ?;";
+        String sql = "select  u.password from employee as u where u.login = ?";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, u_id);
@@ -81,7 +75,7 @@ public class DbUserDetails extends BaseDb {
     }
 
     public int editPass(String u_name, String pass) throws SQLException {
-        String sql = "update employee set password=? where login=?;";
+        String sql = "update employee set password = ? where login = ?";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, pass);

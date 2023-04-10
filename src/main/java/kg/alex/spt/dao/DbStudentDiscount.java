@@ -42,7 +42,7 @@ public class DbStudentDiscount extends BaseDb {
     public int exec_insert_st_discount(StudentDiscount d) throws SQLException {
         String sql = "INSERT INTO student_discount (free_entry_amount,discount_id,"
                 + "student_id,year_id,employee_id,modification_date,note,"
-                + "discount_value,attachment_id,creation_date) VALUES(?,?,?,?,?,NOW(),?,?,?,NOW());";
+                + "discount_value,attachment_id,creation_date) VALUES(?,?,?,?,?,NOW(),?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (d.getFree_entry_amount() == 0.0) {
             stat.setNull(1, Types.VARCHAR);
@@ -71,10 +71,10 @@ public class DbStudentDiscount extends BaseDb {
     }
 
     public int exec_update(StudentDiscount sd) throws SQLException {
-        String sql = "update student_discount set free_entry_amount=?, "
-                + "discount_id=?, student_id=?, year_id=?, employee_id=?, "
-                + "modification_date=NOW(), note=?, discount_value=?, attachment_id=? "
-                + "WHERE id=?;";
+        String sql = "update student_discount set free_entry_amount = ?, "
+                + "discount_id = ?, student_id = ?, year_id = ?, employee_id = ?, "
+                + "modification_date=NOW(), note = ?, discount_value = ?, attachment_id = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDouble(1, sd.getFree_entry_amount());
         stat.setDouble(2, sd.getDiscount_id());
@@ -98,7 +98,7 @@ public class DbStudentDiscount extends BaseDb {
         String sql = "SELECT sd.id, d.discount_type_id, d.amount, sd.free_entry_amount "
                 + "FROM student_discount as sd "
                 + "left join discount as d on sd.discount_id = d.id "
-                + "where sd.student_id = ? and sd.year_id = ?;";
+                + "where sd.student_id = ? and sd.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -127,7 +127,7 @@ public class DbStudentDiscount extends BaseDb {
                 + "FROM student_discount as sd "
                 + "left join discount as d on d.id = sd.discount_id "
                 + "left join attachments as a on a.id = sd.attachment_id "
-                + "where sd.student_id = ? and sd.year_id = ?;";
+                + "where sd.student_id = ? and sd.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -208,9 +208,25 @@ public class DbStudentDiscount extends BaseDb {
         Iterator<?> class_iter = ((Set<?>) cdr.classTable.getValue()).iterator();
         while (class_iter.hasNext()) {
             Object next = class_iter.next();
-            sql.append(", COUNT(IF(cna.id = ").append(next).append(", 1, NULL)) AS disc_quantity").append(next).append(", ").append("SUM(IF(cna.id = ").append(next).append(", sd.discount_value, 0)) AS disc_amount").append(next).append(", ").append("SUM(IF(cna.id = ").append(next).append(", c.amount, 0)) AS contr_amount").append(next).append(" ");
+            sql.append(", COUNT(IF(vcs.class_name_id = ")
+                    .append(next).append(", 1, NULL)) AS disc_quantity")
+                    .append(next).append(", ").append("SUM(IF(vcs.class_name_id = ")
+                    .append(next).append(", sd.discount_value, 0)) AS disc_amount")
+                    .append(next).append(", ").append("SUM(IF(vcs.class_name_id = ")
+                    .append(next).append(", c.amount, 0)) AS contr_amount").append(next).append(" ");
         }
-        sql.append(" FROM student_discount AS sd " + "LEFT JOIN student AS st ON sd.student_id = st.id " + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id " + "AND sd.year_id = sc.year_id " + "LEFT JOIN contract AS c ON c.id = sc.contract_id " + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 " + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN class_name AS cna ON cna.id = CASE " + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id " + "ELSE stud_o.to_class_name_id END " + "LEFT JOIN education_status AS edu ON edu.id = " + "CASE WHEN stud_o.to_education_status_id IS NULL " + "THEN st.education_status_id ELSE stud_o.to_education_status_id END " + "WHERE sd.year_id = ? AND cna.id IN (").append(Settings.convertCollectionToStr(((Set<?>) cdr.classTable.getValue()))).append(") ").append("AND sd.discount_id IN (").append(Settings.convertCollectionToStr(((Set<?>) cdr.discountsTable.getValue()))).append(") ").append("AND edu.id IN (").append(edu_statuses_ids).append(") ").append("GROUP BY sd.discount_id;");
+        sql.append(" FROM student_discount AS sd "
+                        + "LEFT JOIN student AS st ON sd.student_id = st.id "
+                        + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id AND sd.year_id = sc.year_id "
+                        + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
+                        + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                        + "WHERE sd.year_id = ? AND vcs.class_name_id IN (")
+                .append(Settings.convertCollectionToStr(((Set<?>) cdr.classTable.getValue())))
+                .append(") ").append("AND sd.discount_id IN (")
+                .append(Settings.convertCollectionToStr(((Set<?>) cdr.discountsTable.getValue())))
+                .append(") ").append("AND vcs.education_status_id IN (")
+                .append(edu_statuses_ids).append(") ")
+                .append("GROUP BY sd.discount_id");
         PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -402,16 +418,30 @@ public class DbStudentDiscount extends BaseDb {
     public void execSQL_Discounts_by_schools(MyVaadinUI myUI, int year_id,
                                              String edu_statuses_ids, SchoolDiscountsReport sdr) throws SQLException {
 
-
-        StringBuilder sql = new StringBuilder("SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
+        StringBuilder sql = new StringBuilder(
+                "SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
                 + "SUM(sd.discount_value) AS disc_amount, "
                 + "SUM(c.amount) AS contr_amount");
         Iterator<?> school_iter = ((Set<?>) sdr.schoolTable.getValue()).iterator();
         while (school_iter.hasNext()) {
             Object next = school_iter.next();
-            sql.append(", COUNT(IF(st.school_id = ").append(next).append(", 1, NULL)) AS disc_quantity").append(next).append(", ").append("SUM(IF(st.school_id = ").append(next).append(", sd.discount_value, 0)) AS disc_amount").append(next).append(", ").append("SUM(IF(st.school_id = ").append(next).append(", c.amount, 0)) AS contr_amount").append(next).append(" ");
+            sql.append(", COUNT(IF(st.school_id = ").append(next).append(", 1, NULL)) AS disc_quantity")
+                    .append(next).append(", ").append("SUM(IF(st.school_id = ").append(next)
+                    .append(", sd.discount_value, 0)) AS disc_amount").append(next).append(", ")
+                    .append("SUM(IF(st.school_id = ").append(next).append(", c.amount, 0)) AS contr_amount")
+                    .append(next).append(" ");
         }
-        sql.append(" FROM student_discount AS sd " + "LEFT JOIN student AS st ON sd.student_id = st.id " + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id " + "AND sd.year_id = sc.year_id " + "LEFT JOIN contract AS c ON c.id = sc.contract_id " + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id " + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 " + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " + "LEFT JOIN education_status AS edu ON edu.id = " + "CASE WHEN stud_o.to_education_status_id IS NULL " + "THEN st.education_status_id ELSE stud_o.to_education_status_id END " + "WHERE sd.year_id = ? AND st.school_id IN (").append(Settings.convertCollectionToStr(((Set<?>) sdr.schoolTable.getValue()))).append(") ").append("AND sd.discount_id IN (").append(Settings.convertCollectionToStr(((Set<?>) sdr.discountsTable.getValue()))).append(") ").append("AND edu.id IN (").append(edu_statuses_ids).append(") ").append("GROUP BY sd.discount_id;");
+        sql.append(" FROM student_discount AS sd "
+                + "LEFT JOIN student AS st ON sd.student_id = st.id "
+                + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id AND sd.year_id = sc.year_id "
+                + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "WHERE sd.year_id = ? AND st.school_id IN (")
+                .append(Settings.convertCollectionToStr(((Set<?>) sdr.schoolTable.getValue())))
+                .append(") ").append("AND sd.discount_id IN (")
+                .append(Settings.convertCollectionToStr(((Set<?>) sdr.discountsTable.getValue()))).append(") ")
+                .append("AND vcs.education_status_id IN (").append(edu_statuses_ids).append(") ")
+                .append("GROUP BY sd.discount_id");
         PreparedStatement stat = dbCon.prepareStatement(sql.toString());
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -604,7 +634,7 @@ public class DbStudentDiscount extends BaseDb {
 
     public int exec_disc_count(int id) throws SQLException {
         String sql = "SELECT count(discount_id) FROM student_discount "
-                + "where discount_id = ?;";
+                + "where discount_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         int i = 0;
@@ -616,7 +646,7 @@ public class DbStudentDiscount extends BaseDb {
     }
 
     public int exec_update_emp_id(int emp_id, String id) throws SQLException {
-        String sql = "UPDATE student_discount SET employee_id=? WHERE id=?";
+        String sql = "UPDATE student_discount SET employee_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setString(2, id);

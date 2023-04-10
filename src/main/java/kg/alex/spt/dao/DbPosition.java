@@ -30,7 +30,7 @@ public class DbPosition extends BaseDb {
                 + "LEFT JOIN activity_status AS st ON p.activity_status_id = st.id "
                 + "LEFT JOIN hr_position_category AS pc ON p.hr_position_category_id = pc.id "
                 + "LEFT JOIN position AS pos ON pos.hr_position_id = p.id "
-                + "order by p.id desc;";
+                + "order by p.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -70,7 +70,7 @@ public class DbPosition extends BaseDb {
     public int exec_insert(Position p) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_position (name, "
                 + "hr_position_category_id,activity_status_id, default_permissions) "
-                + "VALUES(?,?,?,?);";
+                + "VALUES(?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, p.getName());
         stat.setInt(2, p.getPosition_category_id());
@@ -90,9 +90,9 @@ public class DbPosition extends BaseDb {
     }
 
     public int exec_update(Position p) throws SQLException {
-        String sql = "UPDATE hr_position SET name=?, hr_position_category_id=?,"
-                + "activity_status_id=?, default_permissions = ? "
-                + "WHERE id=?";
+        String sql = "UPDATE hr_position SET name = ?, hr_position_category_id = ?,"
+                + "activity_status_id = ?, default_permissions = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, p.getName());
         stat.setInt(2, p.getPosition_category_id());
@@ -106,7 +106,7 @@ public class DbPosition extends BaseDb {
         return stat.executeUpdate();
     }
     public int exec_update(int position_id, int id) throws SQLException {
-        String sql = "update position set hr_position_id = ? where id = ?;";
+        String sql = "update position set hr_position_id = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, position_id);
         stat.setInt(2, id);

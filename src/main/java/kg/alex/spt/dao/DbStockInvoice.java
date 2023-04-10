@@ -35,7 +35,7 @@ public class DbStockInvoice extends BaseDb {
                 + "LEFT JOIN employee AS from_e ON from_e.id = t.from_employee_id "
                 + "LEFT JOIN employee AS to_e ON to_e.id = t.to_employee_id "
                 + "LEFT JOIN dp_stock_movements AS mov ON mov.invoice_id = t.id "
-                + "WHERE t.school_id = ? and t.service_type_id = ? group by t.id ORDER BY t.invoice_number DESC;";
+                + "WHERE t.school_id = ? and t.service_type_id = ? group by t.id ORDER BY t.invoice_number DESC";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, service_type_id);
@@ -71,7 +71,7 @@ public class DbStockInvoice extends BaseDb {
     }
 
     public String execSQL_invoice_number(int id) throws SQLException {
-        String sql = "SELECT LPAD(invoice_number, 7, 0) as inv_num FROM dp_invoice WHERE id = ?;";
+        String sql = "SELECT LPAD(invoice_number, 7, 0) as inv_num FROM dp_invoice WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
@@ -82,7 +82,7 @@ public class DbStockInvoice extends BaseDb {
     }
 
     public int execSQL_max_invoice_number(int school_id, int service_type_id) throws SQLException {
-        String sql = "SELECT max(invoice_number) as inv_num FROM dp_invoice WHERE school_id = ? and service_type_id = ?;";
+        String sql = "SELECT max(invoice_number) as inv_num FROM dp_invoice WHERE school_id = ? and service_type_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, service_type_id);
@@ -96,7 +96,7 @@ public class DbStockInvoice extends BaseDb {
     public int exec_insert(StockInvoice inv) throws SQLException {
         String sql = "INSERT IGNORE INTO dp_invoice (invoice_number,creation_date,"
                 + "note,to_stock_id,from_stock_id,from_employee_id,to_employee_id,service_type_id,school_id,employee_id,"
-                + "modification_date,acc_category_id) VALUES(?,?,?,?,?,?,?,?,?,?,NOW(),?);";
+                + "modification_date,acc_category_id) VALUES(?,?,?,?,?,?,?,?,?,?,NOW(),?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inv.getInvoice_number());
         stat.setTimestamp(2, new java.sql.Timestamp(inv.getCreation_date().getTime()));
@@ -130,7 +130,7 @@ public class DbStockInvoice extends BaseDb {
     public int exec_update(StockInvoice inv) throws SQLException {
         String sql = "UPDATE dp_invoice SET creation_date = ?,"
                 + "note = ?,to_stock_id = ?,from_stock_id = ?,from_employee_id = ?,to_employee_id = ?,service_type_id = ?,employee_id = ?, "
-                + "acc_category_id = ? WHERE id=?";
+                + "acc_category_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setTimestamp(1, new java.sql.Timestamp(inv.getCreation_date().getTime()));
         if (inv.getNote() != null) {

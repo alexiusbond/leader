@@ -26,7 +26,7 @@ public class DbEmployeeLanguage extends BaseDb {
 
     public int exec_insert(EmployeeLanguage el) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_language (employee_id,hr_language_id,hr_language_level_id) "
-                + "VALUES(?,?,?);";
+                + "VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, el.getEmployee_id());
         stat.setInt(2, el.getLanguage_id());
@@ -41,7 +41,7 @@ public class DbEmployeeLanguage extends BaseDb {
 
     public int exec_update(EmployeeLanguage el) throws SQLException {
         String sql = "update hr_employee_language set "
-                + "hr_language_id=?, hr_language_level_id=? WHERE id=?;";
+                + "hr_language_id = ?, hr_language_level_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, el.getLanguage_id());
         stat.setInt(2, el.getLevel_id());
@@ -54,7 +54,7 @@ public class DbEmployeeLanguage extends BaseDb {
         
 
         String sql = "SELECT el.id, el.hr_language_id, el.hr_language_level_id FROM hr_employee_language as el "
-                + "where el.employee_id = ?;";
+                + "where el.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

@@ -34,7 +34,7 @@ public class DbEmployeeWork extends BaseDb {
     public int exec_insert(EmployeeWork ew) throws SQLException {
         String sql = "INSERT INTO hr_employee_work (employee_id, hr_own_id, hr_work_place_id, position_id, "
                 + "start_date, end_date, working_status_id, is_sapat) "
-                + "VALUES(?,?,?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ew.getEmployee_id());
         stat.setInt(2, ew.getOwn_id());
@@ -57,7 +57,7 @@ public class DbEmployeeWork extends BaseDb {
     }
 
     public void exec_insert_extra_position(int employee_work_id, int position_id) throws SQLException {
-        String sql = "INSERT INTO hr_employee_work_extra_positions (hr_employee_work_id, position_id) VALUES(?,?);";
+        String sql = "INSERT INTO hr_employee_work_extra_positions (hr_employee_work_id, position_id) VALUES(?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_work_id);
         stat.setInt(2, position_id);
@@ -66,8 +66,8 @@ public class DbEmployeeWork extends BaseDb {
 
     public int exec_update(EmployeeWork ew) throws SQLException {
         String sql = "update hr_employee_work set "
-                + "hr_work_place_id=?, position_id=?, start_date=?, end_date=?, "
-                + "working_status_id = ?, is_sapat = ? WHERE id=?;";
+                + "hr_work_place_id = ?, position_id = ?, start_date = ?, end_date = ?, "
+                + "working_status_id = ?, is_sapat = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ew.getWork_place_id());
         stat.setInt(2, ew.getMain_position_id());

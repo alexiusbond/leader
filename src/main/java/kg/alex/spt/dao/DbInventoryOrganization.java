@@ -49,7 +49,7 @@ public class DbInventoryOrganization extends BaseDb {
                 "LEFT JOIN dm_brand AS brand ON io.brand_id = brand.id " +
                 "LEFT JOIN dm_inventory_category AS category ON io.inventory_category_id = category.id " +
                 "WHERE t.room_id = ? and t.activity_status_id = 2 " +
-                "ORDER BY io.inventory_category_id, brand.id, title.name;";
+                "ORDER BY io.inventory_category_id, brand.id, title.name";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
@@ -82,7 +82,7 @@ public class DbInventoryOrganization extends BaseDb {
                 + "t.brand_id, r.remain, t.code, t.purchase_date, t.life_time "
                 + "FROM dm_inventory_organization as t "
                 + "left join view_inventory_remains as r on r.inventory_id = t.id "
-                + "where t.invoice_id = ? order by t.id;";
+                + "where t.invoice_id = ? order by t.id";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
@@ -196,7 +196,7 @@ public class DbInventoryOrganization extends BaseDb {
     public int exec_insert(InventoryOrganization inventoryOrganization) throws SQLException {
         String sql = "INSERT INTO dm_inventory_organization (invoice_id,inventory_category_id, "
                 + "title_id,brand_id,quantity,price,code,purchase_date,life_time," +
-                "creation_date) VALUES(?,?,?,?,?,?,?,?,?,NOW());";
+                "creation_date) VALUES(?,?,?,?,?,?,?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inventoryOrganization.getInvoice_id());
         stat.setInt(2, inventoryOrganization.getInventory_category_id());
@@ -220,7 +220,7 @@ public class DbInventoryOrganization extends BaseDb {
         String sql = "update dm_inventory_organization set "
                 + "inventory_category_id = ?, title_id = ?, brand_id = ?, "
                 + "quantity = ?, price = ?, code = ?, purchase_date = ?, life_time = ? "
-                + "WHERE id=?;";
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inventoryOrganization.getInventory_category_id());
         stat.setInt(2, inventoryOrganization.getTitle_id());

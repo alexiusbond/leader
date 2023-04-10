@@ -34,7 +34,7 @@ public class DbEmployeeMessage extends BaseDb {
     public int exec_insert(EmployeeMessage em) throws SQLException {
         String sql = "INSERT INTO employee_message (order_messages_id, employee_id, " +
                 "message_status_id, modification_date) "
-                + "VALUES(?,?,?,NOW());";
+                + "VALUES(?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, em.getOrder_message_id());
         stat.setInt(2, em.getEmployee_id());
@@ -147,7 +147,7 @@ public class DbEmployeeMessage extends BaseDb {
                 "(SELECT eo.employee_id FROM hr_employee_order AS eo " +
                 "WHERE eo.school_id = ? AND eo.hr_orders_id = 1 AND " +
                 "(eo.to_date IS NULL OR DATE(eo.to_date) >= DATE(om.creation_date) " +
-                "OR eo.to_date >= NOW()))) and message_status_id = 2;";
+                "OR eo.to_date >= NOW()))) and message_status_id = 2";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);

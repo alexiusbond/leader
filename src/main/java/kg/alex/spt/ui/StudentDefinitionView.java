@@ -1299,6 +1299,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 tfKGS.getPropertyDataSource().setValue(0.0);
             }
         } else if (property == contLangOG && contLangOG.getValue() != null) {
+            tabs.setSelectedTab(contractTabLay);
             if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                     && studDataTable.getValue() != null) {
                 if (contractCB.getValue() != null) {
@@ -3936,15 +3937,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     }
 
     private void updateStudEduStatus() {
-        try {
-            DbStudent dbs = new DbStudent();
-            dbs.connect();
-            dbs.exec_update((Integer) studDataTable.getValue(), 2, myUI.getUser().getId());
-            dbs.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
         int eduStatusActive = 2;
         statusCB.setValue(eduStatusActive);
         eduStatCont.getContainerProperty(studDataTable
@@ -3964,7 +3956,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(SptMessages.EducationStatus)).setValue(statusCB
                 .getContainerProperty(statusCB.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
-
     }
 
     private void addRowIfTableEmpty() {
@@ -4627,8 +4618,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbStudent dbs = new DbStudent();
             dbs.connect();
-            studDataTable.setContainerDataSource(
-                    dbs.execSQL(myUI, myUI.getUser().getSchool().getId(), this, edu_st_ids));
+            studDataTable.setContainerDataSource(dbs.execSQL(myUI,
+                    myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(), this, edu_st_ids));
             dbs.close();
         } catch (Exception e) {
             logger.error(e);

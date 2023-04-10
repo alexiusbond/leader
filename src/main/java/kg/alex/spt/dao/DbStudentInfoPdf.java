@@ -25,23 +25,17 @@ public class DbStudentInfoPdf extends BaseDb {
         String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.middle_name, s.gender_id, sr.fullname, "
                 + "sr.phone, sr.passport, sr.address, r.name_ru, r.name_ru_dec, "
                 + "y.period, y.period_kg, y.name, sc.contract_number, sc.creation_date, "
-                + "CONCAT(cnu.name, ' - ', cna.name) AS class_name "
+                + "vcs.class_name "
                 + "FROM student as s "
-                + "LEFT JOIN (SELECT so.to_class_name_id AS tcl, so.student_id as stid "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.student_id = ? AND so.is_valid = 1 "
-                + "ORDER BY id DESC LIMIT 1) AS o_temp on o_temp.stid = s.id "
-                + "LEFT JOIN school AS scl ON scl.id = s.school_id "
-                + "LEFT JOIN class_name AS cna ON cna.id = CASE WHEN o_temp.tcl IS NULL THEN s.class_name_id "
-                + "ELSE o_temp.tcl END "
-                + "LEFT JOIN class_number AS cnu ON cna.class_number_id = cnu.id "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = s.id and vcs.year_id = ? "
                 + "left join student_relatives as sr on sr.student_id = s.id "
                 + "left join relatives as r on r.id = sr.relatives_id "
-                + "left join year as y on scl.year_id = y.id "
+                + "left join year as y on y.id = ? "
                 + "left join student_contract as sc on sc.student_id = s.id and sc.year_id = y.id "
                 + "where s.id = ? and sr.is_main = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
-        stat.setInt(2, student_id);
+        stat.setInt(2, year_id);
         stat.setInt(3, student_id);
         ResultSet result = stat.executeQuery();
         while (result.next()) {
@@ -60,7 +54,7 @@ public class DbStudentInfoPdf extends BaseDb {
                 sti.getStudent().setMiddle_name(result.getString("s.middle_name"));
             }
             sti.getStudent().setGender_id(result.getInt("s.gender_id"));
-            sti.getStudent().setClass_name(result.getString("class_name"));
+            sti.getStudent().setClass_name(result.getString("vcs.class_name"));
             sti.getRelative().setFullName(result.getString("sr.fullname"));
             sti.getRelative().setPhone(result.getString("sr.phone"));
             sti.getRelative().setAddress(result.getString("sr.address"));

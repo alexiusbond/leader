@@ -39,7 +39,7 @@ public class DbLog extends BaseDb {
         if (days_interval != 0) {
             sql += "AND dl.datetime >= (CURDATE() - INTERVAL ? DAY) and ord.working_status_id IS NOT NULL ";
         }
-        sql += "group by dl.id order by dl.datetime desc;";
+        sql += "group by dl.id order by dl.datetime desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         if (days_interval != 0) {

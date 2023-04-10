@@ -34,7 +34,7 @@ public class DbEmployeeCertificate extends BaseDb {
     public int exec_insert(EmployeeCertificate ec) throws SQLException {
         String sql = "INSERT INTO hr_employee_certificate "
                 + "(employee_id,note,given_by,date_of_issue,certificate_id,attachment_id) "
-                + "VALUES(?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         if (ec.getNote() != null) {
@@ -56,7 +56,7 @@ public class DbEmployeeCertificate extends BaseDb {
 
     public int exec_update(EmployeeCertificate ec) throws SQLException {
         String sql = "update hr_employee_certificate set "
-                + "note=?, given_by=?, date_of_issue=?, certificate_id=?, attachment_id=? WHERE id=?;";
+                + "note = ?, given_by = ?, date_of_issue = ?, certificate_id = ?, attachment_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (ec.getNote() != null) {
             stat.setString(1, ec.getNote());
@@ -77,7 +77,7 @@ public class DbEmployeeCertificate extends BaseDb {
         String sql = "SELECT ec.id, ec.note, ec.given_by, ec.date_of_issue, ec.certificate_id, " +
                 "a.id, a.name, a.extension, a.unique_name " +
                 "FROM hr_employee_certificate as ec " +
-                "left join attachments as a on a.id = ec.attachment_id where ec.employee_id = ?;";
+                "left join attachments as a on a.id = ec.attachment_id where ec.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

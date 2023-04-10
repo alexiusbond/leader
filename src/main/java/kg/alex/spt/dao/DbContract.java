@@ -30,13 +30,13 @@ public class DbContract extends BaseDb {
             throws SQLException {
         
 
-        String sql = "SELECT c.id, c.name,c.amount,c.year_id,y.name,c.school_id,"
-                + "sc.name_ru,sc.name_ru, c.activity_status_id, ac.name "
+        String sql = "SELECT c.id, c.name, c.amount, c.year_id, y.name, c.school_id, "
+                + "sc.name_ru, sc.name_ru, c.activity_status_id, ac.name "
                 + "FROM contract as c "
-                + "left join year as y on y.id=c.year_id "
+                + "left join year as y on y.id = c.year_id "
                 + "left join school as sc on sc.id = c.school_id "
-                + "left join activity_status as ac on ac.id=c.activity_status_id "
-                + "where c.school_id = ? order by y.id DESC, c.id DESC;";
+                + "left join activity_status as ac on ac.id = c.activity_status_id "
+                + "where c.school_id = ? order by y.id DESC, c.id DESC";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
@@ -78,7 +78,7 @@ public class DbContract extends BaseDb {
     public int exec_insert(Contract c) throws SQLException {
         String sql = "INSERT IGNORE INTO contract (name,amount,"
                 + "year_id,school_id,activity_status_id,employee_id) "
-                + "VALUES(?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, c.getName());
         stat.setDouble(2, c.getValue());
@@ -95,8 +95,8 @@ public class DbContract extends BaseDb {
     }
 
     public int exec_update(Contract c) throws SQLException {
-        String sql = "UPDATE contract SET name=?, amount=?,activity_status_id=?, employee_id=? "
-                + "WHERE id=?";
+        String sql = "UPDATE contract SET name = ?, amount = ?,activity_status_id = ?, employee_id = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, c.getName());
         stat.setDouble(2, c.getValue());
@@ -110,7 +110,7 @@ public class DbContract extends BaseDb {
             int scl_id) throws SQLException {
         String sql = "SELECT distinct(d.year_id), y.name "
                 + "FROM contract as d left join year as y on y.id = d.year_id "
-                + "where d.year_id!=? and d.school_id = ?;";
+                + "where d.year_id != ? and d.school_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cur_year);
         stat.setInt(2, scl_id);
@@ -142,8 +142,8 @@ public class DbContract extends BaseDb {
             throws SQLException {
         String sql = "select t.id, t.name, t.amount, y.name from contract as t "
                 + "left join year as y on t.year_id = y.id "
-                + "where t.year_id = ? and t.school_id=? "
-                + "and (t.activity_status_id = 2 or t.id = ?) order by t.name, t.amount;";
+                + "where t.year_id = ? and t.school_id = ? "
+                + "and (t.activity_status_id = 2 or t.id = ?) order by t.name, t.amount";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, school_id);

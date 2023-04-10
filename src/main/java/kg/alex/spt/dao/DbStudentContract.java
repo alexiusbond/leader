@@ -35,7 +35,7 @@ public class DbStudentContract extends BaseDb {
     public int exec_insert_st_contract(MyVaadinUI myUi, StudentContract c) throws SQLException {
         String sql = "INSERT INTO student_contract (student_id, year_id, contract_id, debt, employee_id, " +
                 "modification_date, activity_status_id, contr_with_disc, contract_number, creation_date) "
-                + "VALUES(?,?,?,?,?,NOW(),?,?,?,NOW());";
+                + "VALUES(?,?,?,?,?,NOW(),?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, c.getStudent_id());
         stat.setInt(2, c.getYear_id());
@@ -56,9 +56,9 @@ public class DbStudentContract extends BaseDb {
 
     public int exec_update_st_contract(StudentContract c)
             throws SQLException {
-        String sql = "UPDATE student_contract SET contract_id=?,debt=?,employee_id=?,"
-                + "modification_date=NOW(),activity_status_id=?,contr_with_disc=? "
-                + "where student_id=? and year_id = ?";
+        String sql = "UPDATE student_contract SET contract_id = ?,debt = ?,employee_id = ?,"
+                + "modification_date=NOW(),activity_status_id = ?,contr_with_disc = ? "
+                + "where student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, c.getContract_id());
         stat.setDouble(2, c.getDebt());
@@ -71,7 +71,7 @@ public class DbStudentContract extends BaseDb {
     }
 
     public int exec_delete(int stud_id, int year_id) throws SQLException {
-        String sql = "DELETE FROM student_contract WHERE student_id=? and year_id=?";
+        String sql = "DELETE FROM student_contract WHERE student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -85,7 +85,7 @@ public class DbStudentContract extends BaseDb {
                 + "LEFT JOIN view_corrections as vc on vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN student_installement_plan as ip on sc.student_id = ip.student_id "
                 + "and sc.year_id = ip.year_id AND ((ip.is_visible=1 and ip.date_of_payment <= now()) or ip.is_visible=0) "
-                + "where sc.student_id = ? and sc.year_id = ? ;";
+                + "where sc.student_id = ? and sc.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -106,8 +106,8 @@ public class DbStudentContract extends BaseDb {
 
     public int exec_update_status(int student_id, int activity_status, int employee_id)
             throws SQLException {
-        String sql = "UPDATE student_contract SET activity_status_id=?,"
-                + "employee_id=?, modification_date=NOW() WHERE student_id=?";
+        String sql = "UPDATE student_contract SET activity_status_id = ?,"
+                + "employee_id = ?, modification_date = NOW() WHERE student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, activity_status);
         stat.setInt(2, employee_id);
@@ -117,8 +117,8 @@ public class DbStudentContract extends BaseDb {
 
     public int exec_update_status_by_id(int student_id, int activity_status, int employee_id)
             throws SQLException {
-        String sql = "UPDATE student_contract SET activity_status_id=?,"
-                + "employee_id=?, modification_date=NOW() WHERE id=?";
+        String sql = "UPDATE student_contract SET activity_status_id = ?,"
+                + "employee_id = ?, modification_date=NOW() WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, activity_status);
         stat.setInt(2, employee_id);
@@ -128,7 +128,7 @@ public class DbStudentContract extends BaseDb {
 
     public int exec_last_by_student_id(int student_id) throws SQLException {
         int id = 0;
-        String sql = "SELECT max(id) from student_contract where student_id=?;";
+        String sql = "SELECT max(id) from student_contract where student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, student_id);
         ResultSet result = stat.executeQuery();
@@ -142,7 +142,7 @@ public class DbStudentContract extends BaseDb {
 
     public int execSQL_get_st_contract(int st_id, int year_id) throws SQLException {
         String sql = "SELECT sc.contract_id FROM student_contract as sc "
-                + "where sc.student_id = ? and sc.year_id = ?;";
+                + "where sc.student_id = ? and sc.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
@@ -183,7 +183,7 @@ public class DbStudentContract extends BaseDb {
     public int execUpdateNetPayments(double ttl_pay, int stud_id, int year_id)
             throws SQLException {
         String sql = "update student_contract set net_payments = ? "
-                + "where student_id = ? and year_id = ?;";
+                + "where student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDouble(1, ttl_pay);
         stat.setInt(2, stud_id);
@@ -270,8 +270,8 @@ public class DbStudentContract extends BaseDb {
             sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
                     "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
         } else {
-            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) ";
         }
         sql += "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
                 "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
@@ -483,34 +483,25 @@ public class DbStudentContract extends BaseDb {
         dr.discounts = 0;
         dr.corrections = 0;
         dr.lefts = 0;
-        String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, c.amount, sc.debt, vc.amount, vc.full_details, "
-                + "sc.contr_with_disc, sc.net_payments, edu.id, GROUP_CONCAT(DISTINCT "
+        String sql = "SELECT st.id, st.login, st.name, st.surname, vcs.education_status, c.amount, sc.debt, "
+                + "vc.amount, vc.full_details, sc.contr_with_disc, sc.net_payments, vcs.education_status_id, "
+                + "GROUP_CONCAT(DISTINCT "
                 + "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') "
                 + "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') "
                 + "WHEN 3 THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') "
                 + "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$') END "
-                + "ORDER BY sd.id SEPARATOR '; ') AS disc, "
-                + "CONCAT(cl.name, ' - ', cln.name) AS class "
-                + "FROM student AS st LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
-                + "ELSE stud_o.to_education_status_id END "
-                + "LEFT JOIN class_name AS cln ON cln.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL THEN st.class_name_id "
-                + "ELSE stud_o.to_class_name_id END "
-                + "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id "
+                + "ORDER BY sd.id SEPARATOR '; ') AS disc, vcs.class_name "
+                + "FROM student AS st "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? "
                 + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
                 + "LEFT JOIN student_discount AS sd ON sd.student_id = st.id AND sd.year_id = ? "
                 + "LEFT JOIN discount AS d ON d.id = sd.discount_id "
-                + "WHERE cln.id IN (" + class_ids + ") and st.entering_year_id <= ? "
-                + "AND edu.id IN (" + edu_statuses_ids + ") "
+                + "WHERE vcs.class_name_id IN (" + class_ids + ") and st.entering_year_id <= ? "
+                + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                 + "AND d.id IN (" + discounts_ids + ") "
-                + "GROUP BY st.id ORDER BY disc, cl.id, cln.id, st.name, st.surname;";
+                + "GROUP BY st.id ORDER BY disc, vcs.class_number_id, vcs.class_name_id, st.name, st.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -535,7 +526,7 @@ public class DbStudentContract extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
-                    result.getString("edu.name"));
+                    result.getString("vcs.education_status"));
             item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
                     result.getString("st.login"));
             item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
@@ -543,7 +534,7 @@ public class DbStudentContract extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("class"));
+                    result.getString("vcs.class_name"));
             if (result.getDouble("c.amount") != 0.0) {
                 item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
                         result.getDouble("c.amount"));
@@ -569,7 +560,8 @@ public class DbStudentContract extends BaseDb {
                 dr.debts += (Double) item.getItemProperty(
                         myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
-                        result.getDouble("sc.contr_with_disc") + result.getDouble("sc.debt") + result.getDouble("vc.amount"));
+                        result.getDouble("sc.contr_with_disc") + result.getDouble("sc.debt")
+                                + result.getDouble("vc.amount"));
                 dr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
                 item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
                         result.getDouble("sc.net_payments"));
@@ -581,7 +573,7 @@ public class DbStudentContract extends BaseDb {
                 dr.lefts += (Double) item.getItemProperty(
                         myUI.getMessage(SptMessages.Left)).getValue();
             }
-            if (result.getInt("edu.id") == 2) {
+            if (result.getInt("vcs.education_status_id") == 2) {
                 dr.activeStudents++;
             }
         }
@@ -660,8 +652,8 @@ public class DbStudentContract extends BaseDb {
             sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
                     "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
         } else {
-            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) ";
         }
         sql += "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
                 "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
@@ -913,25 +905,20 @@ public class DbStudentContract extends BaseDb {
                 + "CROSS JOIN school AS s_temp LEFT JOIN "
                 + "(SELECT sch.id AS s_id, sch.name_ru AS s_name, SUM(inst.amount) AS amn, MONTH(inst.date_of_payment) AS mnth "
                 + "FROM student_installement_plan AS inst LEFT JOIN student AS st ON st.id = inst.student_id "
-                + "LEFT JOIN school AS sch ON sch.id = st.school_id LEFT JOIN (SELECT MAX(so.id) AS oid, "
-                + "so.student_id AS stud_id FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
-                + "ELSE stud_o.to_education_status_id END WHERE inst.year_id = ? "
-                + "AND edu.id IN (" + edu_statuses_ids + ") GROUP BY sch.id , MONTH(inst.date_of_payment)) AS i_temp "
+                + "LEFT JOIN school AS sch ON sch.id = st.school_id "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? "
+                + "WHERE inst.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") GROUP BY sch.id, "
+                + "MONTH(inst.date_of_payment)) AS i_temp "
                 + "ON i_temp.mnth = months.id AND s_temp.id = i_temp.s_id "
                 + "LEFT JOIN (SELECT sch.id AS s_id, SUM(IF(pay.payment_category_id = 3, - pay.amount, pay.amount)) AS amn, "
                 + "MONTH(pay.modification_date) AS mnth FROM student_payments AS pay "
-                + "LEFT JOIN student AS st ON st.id = pay.student_id LEFT JOIN school AS sch ON sch.id = st.school_id "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so "
-                + "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid LEFT JOIN education_status AS edu "
-                + "ON edu.id = CASE WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
-                + "ELSE stud_o.to_education_status_id END WHERE pay.year_id = ? AND edu.id IN (" + edu_statuses_ids + ") "
-                + "GROUP BY sch.id , MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
-                + "AND s_temp.id = p_temp.s_id WHERE s_temp.id IN (" + school_ids + ") ORDER BY  CAST(s_temp.code AS UNSIGNED), months.order_num;";
+                + "LEFT JOIN student AS st ON st.id = pay.student_id "
+                + "LEFT JOIN school AS sch ON sch.id = st.school_id "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? "
+                + "WHERE pay.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
+                + "GROUP BY sch.id, MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
+                + "AND s_temp.id = p_temp.s_id WHERE s_temp.id IN (" + school_ids + ") ORDER BY "
+                + "CAST(s_temp.code AS UNSIGNED), months.order_num";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -1081,8 +1068,8 @@ public class DbStudentContract extends BaseDb {
             sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
                     "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
         } else {
-            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) ";
         }
         sql += "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
                 "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
@@ -1335,8 +1322,8 @@ public class DbStudentContract extends BaseDb {
             sql += "LEFT JOIN education_status AS edu ON edu.id = stud_o.to_education_status_id " +
                     "LEFT JOIN class_name AS cln ON cln.id = stud_o.to_class_name_id ";
         } else {
-            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) ";
+            sql += "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, 1) " +
+                    "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, 200) ";
         }
         sql += "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = ? " +
                 "LEFT JOIN contract AS c ON c.id = sc.contract_id " +
@@ -1540,36 +1527,22 @@ public class DbStudentContract extends BaseDb {
                 + "left join ("
                 + "select sum(inst.amount) as amn, month(inst.date_of_payment) as mnth "
                 + "from student_installement_plan as inst "
-                + "left join student as st on st.id=inst.student_id "
-                + "left join school as sch on sch.id=st.school_id "
-                + "LEFT JOIN "
-                + "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = "
-                + "CASE WHEN stud_o.to_education_status_id IS NULL "
-                + "THEN st.education_status_id ELSE stud_o.to_education_status_id END "
-                + "where inst.year_id=? and sch.id in (" + school_ids + ") "
-                + "AND edu.id IN (" + edu_statuses_ids + ") "
-                + "group by month(inst.date_of_payment)) as i_temp on i_temp.mnth=months.id "
+                + "left join student as st on st.id = inst.student_id "
+                + "left join school as sch on sch.id = st.school_id "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "where inst.year_id = ? and sch.id in (" + school_ids + ") "
+                + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
+                + "group by month(inst.date_of_payment)) as i_temp on i_temp.mnth = months.id "
                 + "left join ("
                 + "select sum(if(pay.payment_category_id=3,-pay.amount,pay.amount)) as amn, "
                 + "month(pay.modification_date) as mnth from student_payments as pay "
                 + "left join student as st on st.id=pay.student_id "
                 + "left join school as sch on sch.id=st.school_id "
-                + "LEFT JOIN "
-                + "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = "
-                + "CASE WHEN stud_o.to_education_status_id IS NULL "
-                + "THEN st.education_status_id ELSE stud_o.to_education_status_id END "
-                + "where pay.year_id=? and sch.id in (" + school_ids + ") "
-                + "AND edu.id IN (" + edu_statuses_ids + ") "
-                + "group by month(pay.modification_date)) as p_temp on p_temp.mnth=months.id "
-                + "order by months.order_num;";
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "where pay.year_id = ? and sch.id in (" + school_ids + ") "
+                + "AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
+                + "group by month(pay.modification_date)) as p_temp on p_temp.mnth = months.id "
+                + "order by months.order_num";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -1654,7 +1627,7 @@ public class DbStudentContract extends BaseDb {
                 + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "left join student as st on st.id = sc.student_id "
                 + "left join contract as c on sc.contract_id = c.id "
-                + "where st.school_id = ? and sc.year_id = ?;";
+                + "where st.school_id = ? and sc.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, year_id);
@@ -1676,38 +1649,25 @@ public class DbStudentContract extends BaseDb {
     public IndexedContainer execSQL_DebtsByClass(MyVaadinUI myUI, Date from,
                                                  Date till, int year_id, String class_ids, String edu_statuses_ids,
                                                  DebtReport dr) throws SQLException {
-        String sql = "SELECT st.id, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
-                + "st.name, st.surname, ip_temp.amount AS inst_plan, sp_temp.amount AS paid "
+        String sql = "SELECT st.id, vcs.class_name, st.name, st.surname, ip_temp.amount AS inst_plan, sp_temp.amount AS paid "
                 + "FROM student AS st LEFT JOIN "
                 + "(SELECT ip.student_id AS stud_id, SUM(ip.amount) AS amount "
                 + "FROM student_installement_plan AS ip "
-                + "WHERE DATE(ip.date_of_payment) >=? AND DATE(ip.date_of_payment) <=? "
+                + "WHERE DATE(ip.date_of_payment) >= ? AND DATE(ip.date_of_payment) <= ? "
                 + "AND ip.year_id = ? GROUP BY ip.student_id) AS ip_temp "
                 + "ON st.id = ip_temp.stud_id "
                 + "LEFT JOIN "
                 + "(SELECT sp.student_id AS stud_id, "
                 + "(SUM(IF(sp.payment_category_id != 3, sp.amount, 0)) - "
                 + "SUM(IF(sp.payment_category_id = 3, sp.amount, 0))) AS amount "
-                + "FROM student_payments AS sp WHERE DATE(sp.modification_date) >=? "
-                + "AND DATE(sp.modification_date) <=? AND sp.year_id = ? "
+                + "FROM student_payments AS sp WHERE DATE(sp.modification_date) >= ? "
+                + "AND DATE(sp.modification_date) <= ? AND sp.year_id = ? "
                 + "GROUP BY sp.student_id) AS sp_temp "
                 + "ON st.id = sp_temp.stud_id "
-                + "LEFT JOIN "
-                + "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? "
-                + "AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp "
-                + "ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN class_name AS cna ON cna.id = CASE "
-                + "WHEN stud_o.to_class_name_id IS NULL "
-                + "THEN st.class_name_id ELSE stud_o.to_class_name_id END "
-                + "LEFT JOIN class_number AS cnu ON cna.class_number_id = cnu.id "
-                + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL "
-                + "THEN st.education_status_id ELSE stud_o.to_education_status_id END "
-                + "WHERE cna.id IN (" + class_ids + ") AND edu.id IN (" + edu_statuses_ids + ") "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "WHERE vcs.class_name_id IN (" + class_ids + ") AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                 + "and st.entering_year_id <= ? "
-                + "ORDER BY cnu.id, cna.id, st.name , st.surname;";
+                + "ORDER BY vcs.class_number_id, vcs.class_name_id, st.name, st.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(from.getTime()));
         stat.setDate(2, new java.sql.Date(till.getTime()));
@@ -1757,16 +1717,8 @@ public class DbStudentContract extends BaseDb {
                 + "LEFT JOIN student_contract AS sc ON st.id = sc.student_id and sc.year_id = ? "
                 + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "LEFT JOIN contract AS c ON sc.contract_id = c.id "
-                + "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so "
-                + "WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN education_status AS edu ON edu.id = CASE "
-                + "WHEN stud_o.to_education_status_id IS NULL THEN st.education_status_id "
-                + "ELSE stud_o.to_education_status_id "
-                + "END "
-                + "WHERE st.school_id = ? AND edu.id IN (" + edu_statuses_ids + ") and st.entering_year_id <= ?;";
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                + "WHERE st.school_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") and st.entering_year_id <= ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, year_id);
@@ -1791,7 +1743,7 @@ public class DbStudentContract extends BaseDb {
 
     public int exec_next_contract_number(int school_id, int year_id) throws SQLException {
         String sql = "SELECT (ifnull(max(tr.contract_number), 0) + 1) as num FROM student_contract tr "
-                + "LEFT JOIN student st ON st.id = tr.student_id where st.school_id = ? and tr.year_id = ?;";
+                + "LEFT JOIN student st ON st.id = tr.student_id where st.school_id = ? and tr.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, year_id);
@@ -1809,7 +1761,7 @@ public class DbStudentContract extends BaseDb {
                 "'Контракт' AS type, c.name AS note, c.amount AS amount FROM student_contract AS sc " +
                 "LEFT JOIN year AS y ON sc.year_id = y.id " +
                 "LEFT JOIN contract AS c ON sc.contract_id = c.id WHERE sc.student_id = ? " +
-                "ORDER BY sc.year_id , sc.creation_date) " +
+                "ORDER BY sc.year_id, sc.creation_date) " +
                 "UNION " +
                 "(SELECT concat('sd', sd.id) as  id, y.name AS academic_year, sd.creation_date AS creation_date, " +
                 "'Скидка' AS type, " +
@@ -1820,14 +1772,14 @@ public class DbStudentContract extends BaseDb {
                 "sd.discount_value AS amount FROM student_discount AS sd " +
                 "LEFT JOIN year AS y ON sd.year_id = y.id " +
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
-                "WHERE sd.student_id = ? ORDER BY sd.year_id , sd.creation_date) " +
+                "WHERE sd.student_id = ? ORDER BY sd.year_id, sd.creation_date) " +
                 "UNION " +
                 "(SELECT concat('scc', scc.id) as  id, y.name AS academic_year, scc.creation_date AS creation_date, " +
                 "'Корректировка' AS type, CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, " +
                 "IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` " +
                 "FROM student_correction AS scc LEFT JOIN year AS y ON scc.year_id = y.id " +
                 "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
-                "WHERE scc.student_id = ? ORDER BY scc.year_id , scc.creation_date) " +
+                "WHERE scc.student_id = ? ORDER BY scc.year_id, scc.creation_date) " +
                 "UNION " +
                 "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
                 "'Оплата' AS type, CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
@@ -1835,8 +1787,8 @@ public class DbStudentContract extends BaseDb {
                 "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
                 "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                 "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
-                "WHERE sp.student_id = ? ORDER BY sp.year_id , DATE(sp.modification_date))) AS t " +
-                "ORDER BY t.academic_year , t.creation_date";
+                "WHERE sp.student_id = ? ORDER BY sp.year_id, DATE(sp.modification_date))) AS t " +
+                "ORDER BY t.academic_year, t.creation_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, studentId);
         stat.setInt(2, studentId);
@@ -1898,22 +1850,17 @@ public class DbStudentContract extends BaseDb {
                                        Date fromDate, Date tillDate, Table t) throws SQLException {
 
         String sql = " SELECT * FROM (" +
-                "(SELECT concat('sc', sc.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, " +
-                "edu.name AS education_status, st.login AS login, " +
+                "(SELECT concat('sc', sc.id) as  id, vcs.class_name AS class, " +
+                "vcs.education_status AS education_status, st.login AS login, " +
                 "CONCAT(st.name, ' ', st.surname) AS fullname, sc.creation_date AS creation_date, 'Контракт' AS type, " +
                 "c.name AS note, c.amount AS amount FROM student_contract AS sc " +
                 "LEFT JOIN student AS st ON st.id = sc.student_id LEFT JOIN year AS y ON sc.year_id = y.id " +
                 "LEFT JOIN contract AS c ON sc.contract_id = c.id " +
-                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
-                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
-                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
-                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
-                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
-                "WHERE sc.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
+                "WHERE sc.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_i IN (" + educationStatusIds + ") " +
                 "ORDER BY sc.creation_date) UNION " +
-                "(SELECT concat('sd', sd.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, " +
-                "edu.name AS education_status, st.login AS login, " +
+                "(SELECT concat('sd', sd.id) as  id, vcs.class_name AS class, " +
+                "vcs.education_status AS education_status, st.login AS login, " +
                 "CONCAT(st.name, ' ', st.surname) AS fullname, sd.creation_date AS creation_date, 'Скидка' AS type, " +
                 "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') " +
                 "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') " +
@@ -1922,43 +1869,28 @@ public class DbStudentContract extends BaseDb {
                 "FROM student_discount AS sd " +
                 "LEFT JOIN student AS st ON st.id = sd.student_id LEFT JOIN year AS y ON sd.year_id = y.id " +
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
-                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
-                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
-                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
-                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
-                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
-                "WHERE sd.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
+                "WHERE sd.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY sd.creation_date) UNION (" +
-                "SELECT concat('scc', scc.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, " +
-                "edu.name AS education_status, st.login AS login, " +
+                "SELECT concat('scc', scc.id) as  id, vcs.class_name AS class, " +
+                "vcs.education_status AS education_status, st.login AS login, " +
                 "CONCAT(st.name, ' ', st.surname) AS fullname, scc.creation_date AS creation_date, 'Корректировка' AS type, " +
                 "CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, " +
                 "IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` FROM student_correction AS scc " +
                 "LEFT JOIN student AS st ON st.id = scc.student_id LEFT JOIN year AS y ON scc.year_id = y.id " +
                 "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
-                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
-                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
-                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
-                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
-                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
-                "WHERE scc.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
+                "WHERE scc.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY scc.creation_date) UNION " +
-                "(SELECT concat('sp', sp.id) as  id, CONCAT(cl.name, ' - ', cln.name) AS class, edu.name AS education_status, st.login AS login, " +
+                "(SELECT concat('sp', sp.id) as  id, vcs.class_name AS class, vcs.education_status AS education_status, st.login AS login, " +
                 "CONCAT(st.name, ' ', st.surname) AS fullname, DATE(sp.modification_date) AS creation_date, 'Оплата' AS type, " +
                 "CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
                 "IF(sp.acc_currency_id = 2, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
                 "FROM student_payments AS sp LEFT JOIN student AS st ON st.id = sp.student_id " +
                 "LEFT JOIN year AS y ON sp.year_id = y.id LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                 "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
-                "LEFT JOIN (SELECT MAX(so.id) AS oid, so.student_id AS stud_id FROM student_orders AS so " +
-                "WHERE so.year_id = ? AND so.is_valid = 1 GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id " +
-                "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid " +
-                "LEFT JOIN education_status AS edu ON edu.id = IFNULL(stud_o.to_education_status_id, st.education_status_id) " +
-                "LEFT JOIN class_name AS cln ON cln.id = IFNULL(stud_o.to_class_name_id, st.class_name_id) " +
-                "LEFT JOIN class_number AS cl ON cl.id = cln.class_number_id " +
-                "WHERE sp.year_id = ? AND cln.id IN (" + classIds + ") AND edu.id IN (" + educationStatusIds + ") " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
+                "WHERE sp.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY DATE(sp.modification_date))) AS t WHERE 1 ";
         if (fromDate != null) {
             sql += "AND t.creation_date >= ? ";

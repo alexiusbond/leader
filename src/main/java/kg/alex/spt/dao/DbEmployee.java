@@ -391,8 +391,8 @@ public class DbEmployee extends BaseDb {
                 + " GROUP_CONCAT(DISTINCT t1.lessons SEPARATOR ', ') AS lessons FROM (SELECT CONCAT(br.name, ' - ', "
                 + "SUM(el.hours), ' (', SUM(el.extra_hours), ')') AS lessons, el.employee_id AS e_id, el.year_id AS y_id, el.school_id "
                 + "AS sch_id, SUM(el.hours) AS hours, SUM(el.extra_hours) AS extra FROM hr_employee_branch_hours AS el "
-                + "LEFT JOIN hr_branch AS br ON br.id = el.hr_branch_id GROUP BY el.employee_id , el.hr_branch_id , el.year_id , el.school_id) AS t1 "
-                + "GROUP BY t1.e_id , t1.y_id , t1.sch_id) AS ebh ON ebh.e_id = e.id AND ebh.y_id = ? AND ebh.sch_id = ? "
+                + "LEFT JOIN hr_branch AS br ON br.id = el.hr_branch_id GROUP BY el.employee_id, el.hr_branch_id, el.year_id, el.school_id) AS t1 "
+                + "GROUP BY t1.e_id, t1.y_id, t1.sch_id) AS ebh ON ebh.e_id = e.id AND ebh.y_id = ? AND ebh.sch_id = ? "
                 + "LEFT JOIN hr_employee_spouse AS es ON es.employee_id = e.id "
                 + "LEFT JOIN hr_employee_work AS ew ON ew.employee_id = e.id AND ew.hr_own_id = 2 AND ew.working_status_id = 2 "
                 + "LEFT JOIN hr_work_place AS wp ON ew.hr_work_place_id = wp.id "
@@ -400,7 +400,7 @@ public class DbEmployee extends BaseDb {
                 + "LEFT JOIN hr_employee_children AS ech ON ech.employee_id = e.id "
                 + "LEFT JOIN acc_category as cat ON cat.employee_id = e.id and cat.school_id = eo.school_id "
                 + "WHERE eo.school_id = ? "
-                + "AND ord.working_status_id IS NOT NULL AND ws.id = 2 GROUP BY e.id ORDER BY eo.id;";
+                + "AND ord.working_status_id IS NOT NULL AND ws.id = 2 GROUP BY e.id ORDER BY eo.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, myUi.getUser().getCurrent_year().getId());
         stat.setInt(2, school_id);
@@ -511,7 +511,7 @@ public class DbEmployee extends BaseDb {
         String sql = "INSERT ignore INTO employee (login, password, name, "
                 + "surname, middle_name, date_of_birth, photo, gender_id, "
                 + "hr_martial_status_id,nationality_id,employee_id,modification_date,hr_country_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW(),?);";
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW(),?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, employee.getLogin());
         stat.setString(2, employee.getPassword());
@@ -549,7 +549,7 @@ public class DbEmployee extends BaseDb {
     }
 
     public int exec_update(Employee e, String pass) throws SQLException {
-        String sql = "UPDATE employee SET login=?, name=?, surname=?, middle_name=?, ";
+        String sql = "UPDATE employee SET login = ?, name = ?, surname = ?, middle_name = ?, ";
         if (pass != null && !pass.equals("")) {
             sql += ("password='" + pass + "',");
         }
@@ -584,14 +584,14 @@ public class DbEmployee extends BaseDb {
     }
 
     public int exec_delete_perm(String role_name) throws SQLException {
-        String sql = "DELETE FROM user_permission WHERE role_name=?";
+        String sql = "DELETE FROM user_permission WHERE role_name = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, role_name);
         return stat.executeUpdate();
     }
 
     public int exec_delete_role(String login) throws SQLException {
-        String sql = "DELETE FROM user_roles WHERE login=?";
+        String sql = "DELETE FROM user_roles WHERE login = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, login);
         return stat.executeUpdate();
@@ -599,7 +599,7 @@ public class DbEmployee extends BaseDb {
 
     public int exec_insert_perm(String login, String perm) throws SQLException {
         String sql = "INSERT IGNORE INTO user_permission (role_name,permissions) "
-                + "VALUES(?,?);";
+                + "VALUES(?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, login);
         stat.setString(2, perm);
@@ -608,7 +608,7 @@ public class DbEmployee extends BaseDb {
 
     public int exec_insert_role(String loginRName, String roleName) throws SQLException {
         String sql = "INSERT IGNORE INTO user_roles (login,role_name) "
-                + "VALUES(?,?);";
+                + "VALUES(?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, loginRName);
         stat.setString(2, roleName);
@@ -617,8 +617,7 @@ public class DbEmployee extends BaseDb {
 
     public int exec_update_role(String oldLogin, String newLogin, String roleName)
             throws SQLException {
-        String sql = "UPDATE user_roles SET login=?, role_name=? "
-                + "WHERE login = ? ";
+        String sql = "UPDATE user_roles SET login = ?, role_name = ? WHERE login = ? ";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, newLogin);
         stat.setString(2, roleName);
@@ -628,12 +627,20 @@ public class DbEmployee extends BaseDb {
 
     public int exec_update_perm(String oldroleName, String newroleName)
             throws SQLException {
-        String sql = "UPDATE user_permission SET role_name=? "
-                + "WHERE role_name = ? ";
+        String sql = "UPDATE user_permission SET role_name = ? WHERE role_name = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, newroleName);
         stat.setString(2, oldroleName);
         return stat.executeUpdate();
+    }
+
+    public int execUpdateYear(int year_id, int id) throws SQLException {
+        String sql = "UPDATE employee SET year_id = ? where id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, year_id);
+        stat.setInt(2, id);
+        int st = stat.executeUpdate();
+        return st;
     }
 
     public IndexedContainer execSQL(MyVaadinUI myUI, int year_id, Map<String, String> params) throws SQLException {
@@ -681,7 +688,7 @@ public class DbEmployee extends BaseDb {
                 "LEFT JOIN hr_orders AS ord ON ord.id = eo.hr_orders_id " +
                 "LEFT JOIN working_status AS ws ON ord.working_status_id = ws.id " +
                 "LEFT JOIN (SELECT SUM(hours) AS hours, SUM(extra_hours) AS extra, employee_id AS e_id, year_id AS y_id, " +
-                "school_id AS sch_id FROM hr_employee_branch_hours GROUP BY employee_id , year_id , school_id) AS ebh " +
+                "school_id AS sch_id FROM hr_employee_branch_hours GROUP BY employee_id, year_id, school_id) AS ebh " +
                 "ON ebh.e_id = e.id AND ebh.y_id = ? AND ebh.sch_id = eo.school_id " +
                 "LEFT JOIN school AS sch ON sch.id = eo.school_id " +
                 "LEFT JOIN acc_category AS cat ON e.id = cat.employee_id and cat.school_id = eo.school_id " +

@@ -19,7 +19,7 @@ public class DbEmployeeContact extends BaseDb {
     public int exec_insert(EmployeeContact ec) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_contacts " +
                 "(employee_id, birth_place, address, email, passport, passport_given, passport_date, inn) " +
-                "VALUES(?,?,?,?,?,?,?,?);";
+                "VALUES(?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         stat.setString(2, ec.getBirth_place());
@@ -59,7 +59,7 @@ public class DbEmployeeContact extends BaseDb {
 
     public int exec_update(EmployeeContact ec) throws SQLException {
         String sql = "update hr_employee_contacts set birth_place = ?, address = ?, email = ?, " +
-                "passport = ?, passport_given = ?, passport_date = ?, inn = ? WHERE employee_id = ?;";
+                "passport = ?, passport_given = ?, passport_date = ?, inn = ? WHERE employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ec.getBirth_place());
         stat.setString(2, ec.getAddress());

@@ -29,7 +29,7 @@ public class DbEmployeeSeminar extends BaseDb {
 
     public int exec_insert(EmployeeSeminar es) throws SQLException {
         String sql = "INSERT INTO hr_employee_seminar (employee_id,name,subject,note,date_of_issue) "
-                + "VALUES(?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, es.getEmployee_id());
         stat.setString(2, es.getName());
@@ -46,7 +46,7 @@ public class DbEmployeeSeminar extends BaseDb {
 
     public int exec_update(EmployeeSeminar es) throws SQLException {
         String sql = "update hr_employee_seminar set "
-                + "name=?, subject=?, note=?, date_of_issue=? WHERE id=?;";
+                + "name = ?, subject = ?, note = ?, date_of_issue = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, es.getName());
         stat.setString(2, es.getSubject());
@@ -60,7 +60,7 @@ public class DbEmployeeSeminar extends BaseDb {
                                     EmployeeDefinitionView edv) throws SQLException {
 
         String sql = "SELECT es.id, es.name, es.subject, es.note, es.date_of_issue FROM hr_employee_seminar as es "
-                + "where es.employee_id = ?;";
+                + "where es.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
@@ -94,7 +94,7 @@ public class DbEmployeeSeminar extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id) throws SQLException {
 
         String sql = "SELECT es.id, es.name, es.subject, es.note, es.date_of_issue FROM hr_employee_seminar as es "
-                + "where es.employee_id = ?;";
+                + "where es.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

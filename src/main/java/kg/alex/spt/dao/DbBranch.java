@@ -51,7 +51,7 @@ public class DbBranch extends BaseDb {
     }
 
     public int exec_insert(Branch branch) throws SQLException {
-        String sql = "INSERT IGNORE INTO hr_branch (name,code,activity_status_id) VALUES(?,?,?);";
+        String sql = "INSERT IGNORE INTO hr_branch (name,code,activity_status_id) VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, branch.getName());
         stat.setString(2, branch.getCode());

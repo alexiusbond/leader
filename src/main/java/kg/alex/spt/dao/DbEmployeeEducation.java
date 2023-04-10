@@ -39,7 +39,7 @@ public class DbEmployeeEducation extends BaseDb {
         String sql = "INSERT INTO hr_employee_education "
                 + "(employee_id, hr_university_id, hr_own_id, department, start_date, "
                 + "end_date, country_id, education_level_id,attachment_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ed.getEmployee_id());
         stat.setInt(2, ed.getUniversity_id());
@@ -64,7 +64,7 @@ public class DbEmployeeEducation extends BaseDb {
 
     public int exec_update(EmployeeEducation ed) throws SQLException {
         String sql = "update hr_employee_education set "
-                + "hr_university_id=?, department=?, start_date=?, end_date=?, country_id=?, education_level_id=?, attachment_id=? WHERE id=?;";
+                + "hr_university_id = ?, department = ?, start_date = ?, end_date = ?, country_id = ?, education_level_id = ?, attachment_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ed.getUniversity_id());
         stat.setString(2, ed.getDepartment());
@@ -87,7 +87,7 @@ public class DbEmployeeEducation extends BaseDb {
         String sql = "SELECT ed.id, ed.hr_university_id, ed.department, ed.start_date, ed.end_date, ed.country_id, "
                 + "ed.education_level_id, a.id, a.name, a.extension, a.unique_name FROM hr_employee_education as ed "
                 + "left join attachments as a on a.id = ed.attachment_id "
-                + "where ed.employee_id = ? and ed.hr_own_id = ?;";
+                + "where ed.employee_id = ? and ed.hr_own_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, own_id);

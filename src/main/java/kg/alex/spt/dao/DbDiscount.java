@@ -34,7 +34,7 @@ public class DbDiscount extends BaseDb {
                 + "left join discount_type as dt on dt.id=d.discount_type_id "
                 + "left join year as y on y.id=d.year_id "
                 + "left join activity_status as ac on ac.id=d.activity_status_id "
-                + "order by y.id DESC, d.id DESC;";
+                + "order by y.id DESC, d.id DESC";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -75,7 +75,7 @@ public class DbDiscount extends BaseDb {
     public int exec_insert(Discount d) throws SQLException {
         String sql = "INSERT IGNORE INTO discount (name,amount,"
                 + "activity_status_id,discount_type_id,year_id) "
-                + "VALUES(?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, d.getName());
         stat.setDouble(2, d.getAmount());
@@ -91,8 +91,8 @@ public class DbDiscount extends BaseDb {
     }
 
     public int exec_update(Discount d) throws SQLException {
-        String sql = "UPDATE discount SET name=?, amount=?,activity_status_id=?,"
-                + "discount_type_id=? WHERE id=?";
+        String sql = "UPDATE discount SET name = ?, amount = ?,activity_status_id = ?,"
+                + "discount_type_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, d.getName());
         stat.setDouble(2, d.getAmount());
@@ -105,7 +105,7 @@ public class DbDiscount extends BaseDb {
     public IndexedContainer execSQL_for_year_sel(MyVaadinUI myUi, int cur_year) throws SQLException {
         String sql = "SELECT  distinct(d.year_id), y.name "
                 + "FROM discount as d left join year as y on y.id = d.year_id "
-                + "where d.year_id!=?;";
+                + "where d.year_id != ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cur_year);
         ResultSet result = stat.executeQuery();
@@ -123,7 +123,7 @@ public class DbDiscount extends BaseDb {
         String sql = "insert ignore into discount (name, amount, "
                 + "discount_type_id, year_id, activity_status_id) select name, "
                 + "amount,discount_type_id, ? as year_id, activity_status_id "
-                + "from discount where year_id = ?;";
+                + "from discount where year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, curr_year);
         stat.setInt(2, selected_year);
@@ -136,7 +136,7 @@ public class DbDiscount extends BaseDb {
         String sql = "select t.id, t.name, t.amount, t.discount_type_id "
                 + "from discount as t "
                 + "where t.year_id = ? and t.activity_status_id = 2 "
-                + "order by t.name, t.amount;";
+                + "order by t.name, t.amount";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         ResultSet result = stat.executeQuery();
@@ -171,7 +171,7 @@ public class DbDiscount extends BaseDb {
             throws SQLException {
         String sql = "SELECT d.id, d.name, d.amount, d.discount_type_id "
                 + "FROM discount as d "
-                + "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?);";
+                + "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, dis_id);

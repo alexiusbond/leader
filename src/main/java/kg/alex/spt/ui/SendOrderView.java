@@ -236,7 +236,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         discountTF.setConverter(Settings.getStringToIntegerConverter());
         discountTF.setWidth(Settings.PERCENTS100);
         discountTF.addValidator(new IntegerRangeValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 100));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, null));
         discountTF.addValueChangeListener(this);
         settingsLay.addComponent(discountTF, 3, 3);
 
@@ -269,8 +269,6 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         sendBtn = new Button();
         sendBtn.setWidth(Settings.PERCENTS100);
         sendBtn.setCaption(myUI.getMessage(SptMessages.Send));
-        /*sendBtn.setStyleName(ValoTheme.BUTTON_LARGE);
-        sendBtn.setIcon(FontAwesome.SHARE_SQUARE_O);*/
         sendBtn.addClickListener(this);
         settingsLay.addComponent(sendBtn, 3, 6);
         settingsLay.setComponentAlignment(sendBtn, Alignment.BOTTOM_RIGHT);
@@ -377,8 +375,8 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                         + "НИН ДИРЕКТОРУНА");
                 DbStudent dbSt = new DbStudent();
                 dbSt.connect();
-                studentSelect.setContainerDataSource(dbSt.exec_for_select(
-                        myUI, (Integer) schoolSelect.getValue(), "1,2,3"));
+                studentSelect.setContainerDataSource(dbSt.exec_for_select(myUI,
+                        (Integer) schoolSelect.getValue(), myUI.getUser().getCurrent_year().getId(), "1,2,3"));
                 Item item = ((IndexedContainer) studentSelect.getContainerDataSource()).addItemAt(0, 0);
                 item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                         myUI.getMessage(SptMessages.Other));
@@ -409,10 +407,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             contentRTA.setValue("Лицейдин "
                     + class_name + "-классынын окуучусу " + student
                     + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
-                    "Жобосунун 3-пунктунун  негизинде "
+                    "Жобосунун 3-пунктунун негизинде "
                     + yearSelect.getItemCaption(yearSelect.getValue())
-                    + "-окуу жылынын окуу төлөмүндө " +
-                    discountTF.getPropertyDataSource().getValue() + "% жеңилдик берилсин.");
+                    + "-окуу жылынын окуу төлөмүндө УБ КР курсу менен " +
+                    discountTF.getPropertyDataSource().getValue() + " АКШ доллар жеңилдик берилсин.");
         }
         if (property == studentSelect) {
             if (studentSelect.getValue() != null && (Integer) studentSelect.getValue() == 0) {

@@ -10,11 +10,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbSchool;
-import kg.alex.spt.dao.DbStudent;
-import kg.alex.spt.dao.DbStudentOrder;
-import kg.alex.spt.domain.School;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.BankPaymentsByDateReport;
 import kg.alex.spt.ui.*;
@@ -35,9 +31,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     public ComboBox yearSelect, schoolSelect;
     private final Label header = new Label();
     private Label infoLabel;
-
-    School scl = new School();
-    int st = 0;
 
     public AuthenticatedScreen(MyVaadinUI myUi) {
 
@@ -141,6 +134,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 + myUI.getMessage(SptMessages.School) + ": </b>");
 
         schoolSelect = new ComboBox();
+        schoolSelect.setWidth(Settings.PERCENTS100);
         schoolSelect.setImmediate(true);
         schoolSelect.setEnabled(currentUser.isPermitted(Settings.prmChangeSchool + ":" + Settings.actModify) ||
                 myUI.getUser().getPosition_id() == 116);
@@ -153,8 +147,11 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         schoolSelect.addValueChangeListener(this);
 
         HorizontalLayout schHl = new HorizontalLayout();
+        schHl.setWidth(Settings.PERCENTS100);
+        schHl.setSpacing(true);
         schHl.addComponent(schoolLabel);
         schHl.addComponent(schoolSelect);
+        schHl.setExpandRatio(schoolSelect, 1);
 
         Label yearLabel = new Label();
         yearLabel.setSizeUndefined();
@@ -164,6 +161,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 + myUI.getMessage(SptMessages.Year) + ": </b>");
 
         yearSelect = new ComboBox();
+        yearSelect.setWidth("65%");
         yearSelect.setEnabled(currentUser.isPermitted(Settings.prmChangeYear + ":" + Settings.actModify));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
@@ -171,12 +169,16 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         setYearSel(myUI.getUser().getCurrent_year().getId());
 
         HorizontalLayout yearHl = new HorizontalLayout();
+        yearHl.setSpacing(true);
+        yearHl.setWidth(Settings.PERCENTS100);
         yearHl.addComponent(yearLabel);
         yearHl.addComponent(yearSelect);
+        yearHl.setExpandRatio(yearSelect, 1);
 
         HorizontalLayout hl = new HorizontalLayout();
+        hl.setSpacing(true);
         hl.setWidth(Settings.PERCENTS100);
-        hl.setMargin(new MarginInfo(false, false, false, true));
+        hl.setMargin(new MarginInfo(false, true, false, true));
         hl.setStyleName("loginLayout");
         hl.addComponent(infoLabel);
         hl.addComponent(yearHl);
@@ -582,45 +584,29 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         myUI.getMessage(SptMessages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
-                                int currentDbYear = 0;
                                 try {
-                                    scl.setYear_id((Integer) yearSelect.getValue());
-                                    scl.setId(myUI.getUser().getSchool().getId());
-                                    DbSchool dbd = new DbSchool();
-                                    dbd.connect();
-                                    currentDbYear = dbd.execGetCurrentDbSchoolYear(myUI.getUser().getSchool().getId());
-                                    if (currentDbYear != (Integer) yearSelect.getValue()) {
-                                        st = dbd.execUpdateYear(scl);
-                                    } else {
-                                        st = 1;
-                                    }
-                                    dbd.close();
+                                    DbEmployee dbCon = new DbEmployee();
+                                    dbCon.connect();
+                                    dbCon.execUpdateYear((Integer) yearSelect.getValue(), myUI.getUser().getId());
+                                    dbCon.close();
                                 } catch (Exception e) {
                                     logger.error(e);
                                     logger.catching(e);
                                 }
-                                if (st != 0) {
-                                    myUI.getUser().getCurrent_year().setId(scl.getYear_id());
-                                    myUI.getUser().getCurrent_year().setName(yearSelect.getContainerProperty(
-                                            yearSelect.getValue(), Settings.titleShort).getValue().toString());
-                                    myUI.getUser().getCurrent_year().setLast((Boolean) yearSelect.getContainerProperty(
-                                            yearSelect.getValue(), Settings.is_last).getValue());
-                                    myUI.getUser().getCurrent_year().setInstallment_date_limit((Long) yearSelect.getContainerProperty(
-                                            yearSelect.getValue(), Settings.installmentDateLimit).getValue());
-                                    Notification.show(myUI.getMessage(SptMessages.ValueSaved),
-                                            Notification.Type.HUMANIZED_MESSAGE);
-                                    if (currentDbYear != (Integer) yearSelect.getValue()) {
-                                        insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
-                                                myUI.getUser().getId());
-                                    }
-                                    changeYear((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue());
-                                    yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
-                                    setYearSel(myUI.getUser().getCurrent_year().getId());
-                                    updatePage();
-                                } else {
-                                    Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
-                                            Notification.Type.WARNING_MESSAGE);
-                                }
+                                myUI.getUser().getCurrent_year().setId((Integer) yearSelect.getValue());
+                                myUI.getUser().getCurrent_year().setName(yearSelect.getContainerProperty(
+                                        yearSelect.getValue(), Settings.titleShort).getValue().toString());
+                                myUI.getUser().getCurrent_year().setLast((Boolean) yearSelect.getContainerProperty(
+                                        yearSelect.getValue(), Settings.is_last).getValue());
+                                myUI.getUser().getCurrent_year().setInstallment_date_limit((Long) yearSelect.getContainerProperty(
+                                        yearSelect.getValue(), Settings.installmentDateLimit).getValue());
+                                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                        Notification.Type.HUMANIZED_MESSAGE);
+                                insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
+                                        myUI.getUser().getId());
+                                yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
+                                setYearSel(myUI.getUser().getCurrent_year().getId());
+                                updatePage();
                             } else {
                                 yearSelect.removeValueChangeListener(AuthenticatedScreen.this);
                                 yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
@@ -641,16 +627,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         myUI.getUser().getSchool().setPhoto(schoolSelect.getContainerProperty(schoolSelect.getValue(),
                                 myUI.getMessage(SptMessages.Logo)).getValue().toString());
                     }
-                    yearSelect.removeValueChangeListener(this);
-                    setYearSel((Integer) schoolSelect.getContainerProperty(schoolSelect.getValue(),
-                            Settings.year_id).getValue());
-                    myUI.getUser().getCurrent_year().setId((Integer) yearSelect.getValue());
-                    myUI.getUser().getCurrent_year().setName(yearSelect.getContainerDataSource()
-                            .getContainerProperty(yearSelect.getValue(), Settings.titleShort).getValue().toString());
-                    myUI.getUser().getCurrent_year().setLast((Boolean) yearSelect.getContainerProperty(
-                            yearSelect.getValue(), Settings.is_last).getValue());
-                    myUI.getUser().getCurrent_year().setInstallment_date_limit((Long) yearSelect.getContainerProperty(
-                            yearSelect.getValue(), Settings.installmentDateLimit).getValue());
                     updatePage();
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
@@ -785,18 +761,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             yearSelect.setValue(year_id);
             yearSelect.addValueChangeListener(this);
             dbd.close();
-        } catch (Exception e) {
-            logger.error(e);
-            logger.catching(e);
-        }
-    }
-
-    private void changeYear(int year_id, int school_id) {
-        try {
-            DbStudent dbst = new DbStudent();
-            dbst.connect();
-            dbst.exec_ChangeYear(year_id, school_id);
-            dbst.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);

@@ -26,7 +26,7 @@ public class DbEmployeeBranch extends BaseDb {
 
     public int exec_insert(EmployeeBranch eb) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_branch (employee_id,hr_branch_id,hr_importance_id) "
-                + "VALUES(?,?,?);";
+                + "VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eb.getEmployee_id());
         stat.setInt(2, eb.getBranch_id());
@@ -45,7 +45,7 @@ public class DbEmployeeBranch extends BaseDb {
 
     public int exec_update(EmployeeBranch eb) throws SQLException {
         String sql = "update hr_employee_branch set "
-                + "hr_branch_id=?, hr_importance_id=? WHERE id=?;";
+                + "hr_branch_id = ?, hr_importance_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eb.getBranch_id());
         if (eb.isMain()) {
@@ -61,7 +61,7 @@ public class DbEmployeeBranch extends BaseDb {
                                     EmployeeDefinitionView edv) throws SQLException {
 
         String sql = "SELECT ex.id, ex.hr_branch_id, ex.hr_importance_id FROM hr_employee_branch as ex "
-                + "where ex.employee_id = ?;";
+                + "where ex.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

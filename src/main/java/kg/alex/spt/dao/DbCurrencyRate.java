@@ -19,7 +19,7 @@ public class DbCurrencyRate extends BaseDb {
 
     public double execSQL_last_rate(int school_id) throws SQLException {
         String sql = "SELECT value, is_mannual FROM currency_rates " +
-                "WHERE school_id = ? or school_id is null order by modification_date DESC limit 1;";
+                "WHERE school_id = ? or school_id is null order by modification_date DESC limit 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
@@ -33,7 +33,7 @@ public class DbCurrencyRate extends BaseDb {
 
     public int exec_insert(CurrencyRate r) throws SQLException {
         String sql = "INSERT INTO currency_rates (value, school_id, modification_date, employee_id, is_mannual) "
-                + "VALUES(?,?,NOW(),?,?);";
+                + "VALUES(?,?,NOW(),?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDouble(1, r.getValue());
         stat.setInt(2, r.getSchool_id());

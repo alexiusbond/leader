@@ -22,7 +22,7 @@ public class DbProductCategories extends BaseDb {
 
     public IndexedContainer execSQL_for_select(MyVaadinUI myUI) throws SQLException {
         String sql = "SELECT id, name, acc_category_id "
-                + "FROM dp_product_category order by id;";
+                + "FROM dp_product_category order by id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -35,7 +35,7 @@ public class DbProductCategories extends BaseDb {
     }
 
     public int exec_update(int cat_id, int id) throws SQLException {
-        String sql = "update dp_product_category set acc_category_id = ? where id = ?;";
+        String sql = "update dp_product_category set acc_category_id = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cat_id);
         stat.setInt(2, id);

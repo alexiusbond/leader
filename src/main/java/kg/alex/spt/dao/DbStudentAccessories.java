@@ -30,7 +30,7 @@ public class DbStudentAccessories extends BaseDb {
     public int exec_insert(StudentAccessories a) throws SQLException {
         String sql = "INSERT INTO student_accessories (student_id, year_id, "
                 + "accessories_id, employee_id, modification_date) "
-                + "VALUES(?,?,?,?,NOW());";
+                + "VALUES(?,?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, a.getStudent_id());
         stat.setInt(2, a.getYear_id());
@@ -57,7 +57,7 @@ public class DbStudentAccessories extends BaseDb {
         String sql = "DELETE sa from student_accessories as sa "
                 + "left join accessories as a on a.id = sa.accessories_id "
                 + "left join accessories_category as ac on a.accessories_category_id = ac.id "
-                + "WHERE student_id=? and year_id = ? and  ac.id = ?;";
+                + "WHERE student_id = ? and year_id = ? and  ac.id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -73,7 +73,7 @@ public class DbStudentAccessories extends BaseDb {
                 + "group_concat(sa.accessories_id separator ',') as accessories, sa.employee_id, "
                 + "sa.modification_date FROM student_accessories as sa "
                 + "left join accessories as a on a.id = sa.accessories_id "
-                + "where sa.student_id = ? and a.accessories_category_id = ? group by sa.year_id;";
+                + "where sa.student_id = ? and a.accessories_category_id = ? group by sa.year_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, cat_id);

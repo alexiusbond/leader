@@ -41,7 +41,7 @@ public class DbDefinition extends BaseDb {
         if (withActivityStatus) {
             sql += " left join activity_status as st on st.id=t.activity_status_id ";
         }
-        sql += "order by t.id desc;";
+        sql += "order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -143,7 +143,7 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer exec_for_select_general_working_statuses(MyVaadinUI myUi) throws SQLException {
-        String sql = "select t.id, t.name from working_status as t where t.is_general = 1 order by t.id;";
+        String sql = "select t.id, t.name from working_status as t where t.is_general = 1 order by t.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -159,8 +159,8 @@ public class DbDefinition extends BaseDb {
     public IndexedContainer exec_order_for_sel(MyVaadinUI myUi) throws SQLException {
 
         String sql = "select o.id, o.name, o.education_status_id, es.name from orders as o "
-                + "left join education_status as es on o.education_status_id=es.id "
-                + "where o.id<4;";
+                + "left join education_status as es on o.education_status_id = es.id "
+                + "where o.id < 4";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -183,15 +183,15 @@ public class DbDefinition extends BaseDb {
             MyVaadinUI myUi, boolean withAdmin, boolean withHR) throws SQLException {
 
         String sql = "select t.id, t.name, t.default_permissions, p.id from hr_position as t "
-                + "left join position as p on p.hr_position_id=t.id "
-                + "where t.activity_status_id=2 ";
+                + "left join position as p on p.hr_position_id = t.id "
+                + "where t.activity_status_id = 2 ";
         if (!withAdmin) {
-            sql += "and t.id!=5 ";
+            sql += "and t.id != 5 ";
         }
         if (!withHR && !withAdmin) {
-            sql += "and t.id!=25 ";
+            sql += "and t.id != 25 ";
         }
-        sql += "order by t.id desc;";
+        sql += "order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -211,7 +211,7 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer exec_years_with_dates(MyVaadinUI myUi) throws SQLException {
-        String sql = "select t.id, t.name, t.start_date, t.end_date from year as t order by t.id desc;";
+        String sql = "select t.id, t.name, t.start_date, t.end_date from year as t order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -232,7 +232,7 @@ public class DbDefinition extends BaseDb {
 
     public IndexedContainer exec_years_for_select(MyVaadinUI myUi, int current_year_id) throws SQLException {
         String sql = "select t.id, t.name, t.start_date, t.end_date, t.is_last, t.installment_date_limit from year as t " +
-                "where t.id between ? and ? order by t.id desc;";
+                "where t.id between ? and ? order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, current_year_id - 1);
         stat.setInt(2, current_year_id + 1);
@@ -263,7 +263,7 @@ public class DbDefinition extends BaseDb {
         if (withActivityStatus) {
             sql += ",?";
         }
-        sql += ");";
+        sql += ")";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, def.getName());
         if (withActivityStatus) {
@@ -279,11 +279,11 @@ public class DbDefinition extends BaseDb {
     }
 
     public int exec_update(Definition def, String dbTableName, boolean withActivityStatus) throws SQLException {
-        String sql = "UPDATE " + dbTableName + " SET name=? ";
+        String sql = "UPDATE " + dbTableName + " SET name = ? ";
         if (withActivityStatus) {
-            sql += " ,activity_status_id=? ";
+            sql += ",activity_status_id = ? ";
         }
-        sql += "WHERE id=?";
+        sql += "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, def.getName());
         if (withActivityStatus) {
@@ -305,8 +305,8 @@ public class DbDefinition extends BaseDb {
     }
 
     public int exec_update_emp_id(int id, int emp_id, String dbTableName) throws SQLException {
-        String sql = "UPDATE " + dbTableName + " SET employee_id=? "
-                + "WHERE id=?";
+        String sql = "UPDATE " + dbTableName + " SET employee_id = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setInt(2, id);
@@ -314,7 +314,7 @@ public class DbDefinition extends BaseDb {
     }
 
     public int exec_delete(int id, String dbTableName) throws SQLException {
-        String sql = "DELETE FROM " + dbTableName + " WHERE id=?";
+        String sql = "DELETE FROM " + dbTableName + " WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         return stat.executeUpdate();
@@ -327,14 +327,14 @@ public class DbDefinition extends BaseDb {
     }
 
     public int exec_delete(String id, String dbTableName) throws SQLException {
-        String sql = "DELETE FROM " + dbTableName + " WHERE id=?";
+        String sql = "DELETE FROM " + dbTableName + " WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, id);
         return stat.executeUpdate();
     }
 
     public int exec_delete(String id, String dbTableName, String dbColumnName) throws SQLException {
-        String sql = "DELETE FROM " + dbTableName + " WHERE " + dbColumnName + "=?";
+        String sql = "DELETE FROM " + dbTableName + " WHERE " + dbColumnName + " = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, id);
         return stat.executeUpdate();
@@ -406,7 +406,7 @@ public class DbDefinition extends BaseDb {
 
     public int execSQL_login() throws SQLException {
         String sql = "SELECT l.login FROM logins AS l LEFT JOIN employee AS e ON l.login = e.login " +
-                "WHERE e.login IS NULL LIMIT 1;";
+                "WHERE e.login IS NULL LIMIT 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         if (result.next()) {

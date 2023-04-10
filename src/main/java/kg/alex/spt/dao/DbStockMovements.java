@@ -48,7 +48,7 @@ public class DbStockMovements extends BaseDb {
                 + "FROM dp_stock_movements as t "
                 + "left join dp_invoice as inv on inv.id = t.invoice_id "
                 + "left join view_stock_remains as rmn on rmn.acc_category_id = t.acc_category_id and rmn.stock_id = inv.to_stock_id and rmn.dp_measurement_id = t.dp_measurement_id "
-                + "where t.invoice_id = ? order by t.id;";
+                + "where t.invoice_id = ? order by t.id";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
@@ -135,7 +135,7 @@ public class DbStockMovements extends BaseDb {
         if (measurement_id != null) {
             sql += "and t.dp_measurement_id = " + measurement_id + " ";
         }
-        sql += "order by t.id;";
+        sql += "order by t.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
         ResultSet result = stat.executeQuery();
@@ -222,7 +222,7 @@ public class DbStockMovements extends BaseDb {
     }
 
     public int exec_delete(int invoice_id) throws SQLException {
-        String sql = "DELETE FROM dp_stock_movements WHERE invoice_id=?";
+        String sql = "DELETE FROM dp_stock_movements WHERE invoice_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
         return stat.executeUpdate();
@@ -230,7 +230,7 @@ public class DbStockMovements extends BaseDb {
 
     public int exec_insert(StockMovement smv) throws SQLException {
         String sql = "INSERT INTO dp_stock_movements (invoice_id,acc_category_id,"
-                + "dp_measurement_id,amount,price,note,currency_rate,remain,dp_stock_movements_id,order_number) VALUES(?,?,?,?,?,?,?,?,?,?);";
+                + "dp_measurement_id,amount,price,note,currency_rate,remain,dp_stock_movements_id,order_number) VALUES(?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, smv.getInvoice_id());
         stat.setInt(2, smv.getAcc_category_id());
@@ -262,7 +262,7 @@ public class DbStockMovements extends BaseDb {
     public int exec_update(StockMovement smv) throws SQLException {
         String sql = "update dp_stock_movements set "
                 + "acc_category_id = ?,dp_measurement_id = ?, remain = remain - amount + ?, amount = ?,price = ?, note = ?, dp_stock_movements_id = ? "
-                + "WHERE id=?;";
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, smv.getAcc_category_id());
         stat.setInt(2, smv.getMeasurement_id());
@@ -280,7 +280,7 @@ public class DbStockMovements extends BaseDb {
     }
 
     public int exec_update_remain(int id, double amount) throws SQLException {
-        String sql = "update dp_stock_movements set remain = remain + ? WHERE id = ?;";
+        String sql = "update dp_stock_movements set remain = remain + ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDouble(1, amount);
         stat.setInt(2, id);
@@ -288,7 +288,7 @@ public class DbStockMovements extends BaseDb {
     }
 
     public double execSQL_remain(int acc_category_id, int measurement_id, int stock_id) throws SQLException {
-        String sql = "SELECT remain FROM view_stock_remains where acc_category_id = ? and dp_measurement_id = ? and stock_id = ?;";
+        String sql = "SELECT remain FROM view_stock_remains where acc_category_id = ? and dp_measurement_id = ? and stock_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_category_id);
         stat.setDouble(2, measurement_id);
@@ -363,7 +363,7 @@ public class DbStockMovements extends BaseDb {
         String sql = "SELECT sm.id, remain, price, currency_rate, sm.acc_category_id, dp_measurement_id "
                 + "FROM dp_stock_movements AS sm LEFT JOIN dp_invoice AS inv ON inv.id = sm.invoice_id "
                 + "WHERE sm.remain > 0 AND inv.service_type_id = 1 AND sm.acc_category_id = ? AND sm.dp_measurement_id = ? "
-                + "AND inv.to_stock_id = ? ORDER BY inv.creation_date;";
+                + "AND inv.to_stock_id = ? ORDER BY inv.creation_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acc_category_id);
         stat.setInt(2, measurement_id);
@@ -651,7 +651,7 @@ public class DbStockMovements extends BaseDb {
 
     public int exec_delete(StockMovement sm) throws SQLException {
         exec_update_remain(sm.getStock_movement_id(), sm.getQuantity());
-        String sql = "DELETE FROM dp_stock_movements WHERE id=?";
+        String sql = "DELETE FROM dp_stock_movements WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sm.getId());
         return stat.executeUpdate();

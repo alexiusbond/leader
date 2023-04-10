@@ -38,7 +38,7 @@ public class DbEmployeeExam extends BaseDb {
 
     public int exec_insert(EmployeeExam ex) throws SQLException {
         String sql = "INSERT INTO hr_employee_exam (employee_id,hr_exam_id,score,date_of_issue,attachment_id) "
-                + "VALUES(?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ex.getEmployee_id());
         stat.setInt(2, ex.getExam_id());
@@ -55,7 +55,7 @@ public class DbEmployeeExam extends BaseDb {
 
     public int exec_update(EmployeeExam ex) throws SQLException {
         String sql = "update hr_employee_exam set "
-                + "hr_exam_id=?, score=?, date_of_issue=?, attachment_id=? WHERE id=?;";
+                + "hr_exam_id = ?, score = ?, date_of_issue = ?, attachment_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ex.getExam_id());
         stat.setString(2, ex.getScore());
@@ -70,7 +70,7 @@ public class DbEmployeeExam extends BaseDb {
         String sql = "SELECT ex.id, ex.hr_exam_id, ex.score, ex.date_of_issue, ex.attachment_id, " +
                 "a.id, a.name, a.extension, a.unique_name " +
                 "FROM hr_employee_exam as ex " +
-                "left join attachments as a on a.id = ex.attachment_id where ex.employee_id = ?;";
+                "left join attachments as a on a.id = ex.attachment_id where ex.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
@@ -124,7 +124,7 @@ public class DbEmployeeExam extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id) throws SQLException {
 
         String sql = "SELECT ex.id, e.name, ex.score, ex.date_of_issue FROM hr_employee_exam AS ex " +
-                "LEFT JOIN hr_exam AS e ON e.id = ex.hr_exam_id WHERE ex.employee_id = ?;";
+                "LEFT JOIN hr_exam AS e ON e.id = ex.hr_exam_id WHERE ex.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

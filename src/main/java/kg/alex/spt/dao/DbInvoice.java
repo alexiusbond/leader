@@ -34,7 +34,7 @@ public class DbInvoice extends BaseDb {
                 + "FROM acc_invoice AS inv "
                 + "LEFT JOIN acc_transfers AS acr ON acr.invoice_id = inv.id "
                 + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? "
-                + "group by inv.id ORDER BY inv.invoice_number DESC;";
+                + "group by inv.id ORDER BY inv.invoice_number DESC";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, invoice_type_id);
@@ -120,7 +120,7 @@ public class DbInvoice extends BaseDb {
     public boolean isExists(int school_id, int invoice_type_id, java.util.Date date, int id) throws SQLException {
         String sql = "SELECT inv.id FROM acc_invoice AS inv "
                 + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? "
-                + "and YEAR(inv.creation_date) = YEAR(?) and MONTH(inv.creation_date) = MONTH(?) and inv.id != ?;";
+                + "and YEAR(inv.creation_date) = YEAR(?) and MONTH(inv.creation_date) = MONTH(?) and inv.id != ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, invoice_type_id);
@@ -140,7 +140,7 @@ public class DbInvoice extends BaseDb {
                 + "sum(if(tr.acc_currency_id != 2, tr.amount/tr.currency_rate, tr.amount)) as amount, inv.note "
                 + "FROM acc_invoice AS inv "
                 + "LEFT JOIN acc_transactions AS tr ON tr.acc_invoice_id = inv.id "
-                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? group by inv.id ORDER BY inv.invoice_number DESC;";
+                + "WHERE inv.school_id = ? and inv.acc_invoice_type_id = ? group by inv.id ORDER BY inv.invoice_number DESC";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, invoice_type_id);
@@ -174,7 +174,7 @@ public class DbInvoice extends BaseDb {
     }
 
     public String execSQL_invoice_number(int id) throws SQLException {
-        String sql = "SELECT LPAD(invoice_number, 7, 0) as inv_num FROM acc_invoice WHERE id = ?;";
+        String sql = "SELECT LPAD(invoice_number, 7, 0) as inv_num FROM acc_invoice WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
@@ -185,7 +185,7 @@ public class DbInvoice extends BaseDb {
     }
 
     public String execSQL_Note2(int school_id, int acc_invoice_type_id, Date date) throws SQLException {
-        String sql = "SELECT note2 FROM acc_invoice WHERE school_id = ? and acc_invoice_type_id = ? and creation_date = ?;";
+        String sql = "SELECT note2 FROM acc_invoice WHERE school_id = ? and acc_invoice_type_id = ? and creation_date = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, acc_invoice_type_id);
@@ -212,7 +212,7 @@ public class DbInvoice extends BaseDb {
     public int exec_insert(Invoice inv) throws SQLException {
         String sql = "INSERT IGNORE INTO acc_invoice (invoice_number,creation_date,note,school_id,employee_id,"
                 + "modification_date,acc_invoice_type_id,note2) "
-                + "VALUES(?,?,?,?,?,NOW(),?,?);";
+                + "VALUES(?,?,?,?,?,NOW(),?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inv.getInvoice_number());
         stat.setTimestamp(2, new java.sql.Timestamp(inv.getCreation_date().getTime()));
@@ -240,7 +240,7 @@ public class DbInvoice extends BaseDb {
 
     public int exec_update(Invoice inv) throws SQLException {
         String sql = "UPDATE acc_invoice SET creation_date = ?,"
-                + "note = ?,note2 = ?,employee_id = ? WHERE id=?";
+                + "note = ?,note2 = ?,employee_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setTimestamp(1, new java.sql.Timestamp(inv.getCreation_date().getTime()));
         if (inv.getNote() != null) {
@@ -259,7 +259,7 @@ public class DbInvoice extends BaseDb {
     }
 
     public int exec_update(int id, int is_confirmed) throws SQLException {
-        String sql = "UPDATE acc_invoice SET is_confirmed = ? WHERE id=?";
+        String sql = "UPDATE acc_invoice SET is_confirmed = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, is_confirmed);
         stat.setInt(2, id);

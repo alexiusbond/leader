@@ -385,7 +385,6 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         s.setStatus_id((Integer) statusSelect.getValue());
         s.setSchool_type_id((Integer) typeSelect.getValue());
         s.setSchool_type_id(1);
-        s.setYear_id(myUI.getUser().getCurrent_year().getId());
         s.setPhoto(photoName);
         return s;
     }

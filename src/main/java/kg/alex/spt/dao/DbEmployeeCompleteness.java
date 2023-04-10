@@ -16,7 +16,7 @@ public class DbEmployeeCompleteness extends BaseDb {
     }
 
     public int exec_insert(int employee_id) throws SQLException {
-        String sql = "INSERT IGNORE INTO hr_employee_completeness (employee_id) VALUES(?);";
+        String sql = "INSERT IGNORE INTO hr_employee_completeness (employee_id) VALUES(?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
 

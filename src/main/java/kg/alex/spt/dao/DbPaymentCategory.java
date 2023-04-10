@@ -25,10 +25,10 @@ public class DbPaymentCategory extends BaseDb {
         String sql;
         if (withInitPay) {
             sql = "select t.id, t.name, t.acc_category_id, t.acc_type_id from payment_category as t "
-                    + "order by t.id asc;";
+                    + "order by t.id asc";
         } else {
             sql = "select t.id, t.name, t.acc_category_id, t.acc_type_id from payment_category as t where t.id != 1 "
-                    + "order by t.id asc;";
+                    + "order by t.id asc";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -49,7 +49,7 @@ public class DbPaymentCategory extends BaseDb {
     }
 
     public int exec_update(int cat_id, int id) throws SQLException {
-        String sql = "update payment_category set acc_category_id = ? where id = ?;";
+        String sql = "update payment_category set acc_category_id = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cat_id);
         stat.setInt(2, id);

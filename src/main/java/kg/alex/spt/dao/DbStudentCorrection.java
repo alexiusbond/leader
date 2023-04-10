@@ -98,7 +98,7 @@ public class DbStudentCorrection extends BaseDb {
 
     public int exec_update(StudentCorrection cc) throws SQLException {
         String sql = "update student_correction set correction_type_id = ?, amount = ?, note = ?, " +
-                "modification_date = NOW() WHERE id=?";
+                "modification_date = NOW() WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cc.getCorrection_type_id());
         stat.setDouble(2, cc.getAmount());

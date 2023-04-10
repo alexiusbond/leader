@@ -20,7 +20,7 @@ public class DbEmployeeGraduationSchool extends BaseDb {
     }
 
     public int exec_insert(EmployeeGraduationSchool egs) throws SQLException {
-        String sql = "INSERT IGNORE INTO hr_employee_grad_school (employee_id, school_id, start_date, end_date) VALUES(?,?,?,?);";
+        String sql = "INSERT IGNORE INTO hr_employee_grad_school (employee_id, school_id, start_date, end_date) VALUES(?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, egs.getEmployee_id());
         if (egs.getSchool_id() != 0) {
@@ -40,7 +40,7 @@ public class DbEmployeeGraduationSchool extends BaseDb {
 
     public int exec_update(EmployeeGraduationSchool egs) throws SQLException {
         String sql = "update hr_employee_grad_school set "
-                + "school_id=?, start_date=?, end_date=? WHERE employee_id=?;";
+                + "school_id = ?, start_date = ?, end_date = ? WHERE employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (egs.getSchool_id() != 0) {
             stat.setInt(1, egs.getSchool_id());
@@ -54,7 +54,7 @@ public class DbEmployeeGraduationSchool extends BaseDb {
     }
 
     public EmployeeGraduationSchool execSQL(int employee_id) throws SQLException {
-        String sql = "SELECT * FROM hr_employee_grad_school AS egs WHERE egs.employee_id = ?;";
+        String sql = "SELECT * FROM hr_employee_grad_school AS egs WHERE egs.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

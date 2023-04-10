@@ -38,7 +38,7 @@ public class DbStudentPayment extends BaseDb {
         String sql = "SELECT sum(if (sp.payment_category_id!=3,sp.amount,0.0)) - "
                 + "sum(if (sp.payment_category_id=3,sp.amount,0.0)) as ttl_payment, "
                 + "sum(if(sp.payment_category_id = 1, sp.amount, 0.0)) as init_payment "
-                + "FROM student_payments as sp where sp.student_id = ? and year_id = ?;";
+                + "FROM student_payments as sp where sp.student_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -58,7 +58,7 @@ public class DbStudentPayment extends BaseDb {
         String sql = "SELECT sp.id, sp.amount, sp.dollar_rate, sp.payment_type_id, sp.payment_category_id, "
                 + "sp.who_paid, sp.note, sp.modification_date, bank_transaction_id, "
                 + "if(sp.modification_date <= DATE_SUB(NOW(), INTERVAL 24 HOUR) or bank_transaction_id is not null,true, false) as isDisabled "
-                + "FROM student_payments as sp where sp.student_id=? and sp.year_id=?";
+                + "FROM student_payments as sp where sp.student_id = ? and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -140,9 +140,9 @@ public class DbStudentPayment extends BaseDb {
     }
 
     public int exec_update(StudentPayment sp) throws SQLException {
-        String sql = "update student_payments set year_id=?, "
-                + "amount=?, payment_type_id=?, payment_category_id=?, employee_id=?, "
-                + "who_paid=?, note=?, modification_date=?, dollar_rate=? WHERE id=?;";
+        String sql = "update student_payments set year_id = ?, "
+                + "amount = ?, payment_type_id = ?, payment_category_id = ?, employee_id = ?, "
+                + "who_paid = ?, note = ?, modification_date = ?, dollar_rate = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sp.getYear_id());
         stat.setDouble(2, sp.getAmount());
@@ -161,7 +161,7 @@ public class DbStudentPayment extends BaseDb {
         String sql = "INSERT INTO student_payments (student_id, year_id, "
                 + "amount, payment_type_id, payment_category_id, employee_id, "
                 + "who_paid, order_number, note, modification_date, dollar_rate) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sp.getStudent_id());
         stat.setInt(2, sp.getYear_id());
@@ -182,7 +182,7 @@ public class DbStudentPayment extends BaseDb {
         StudentPayment sp = null;
         String sql = "SELECT sp.id, sp.amount, sp.modification_date, sp.dollar_rate, sp.student_id, sp.year_id, sp.payment_type_id," +
                 "sp.payment_category_id, sp.who_paid, sp.note FROM student_payments as sp "
-                + "where sp.student_id = ? and sp.year_id = ? and sp.payment_category_id = 1;";
+                + "where sp.student_id = ? and sp.year_id = ? and sp.payment_category_id = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
@@ -215,7 +215,7 @@ public class DbStudentPayment extends BaseDb {
         String sql = "select (max(sp.order_number)+1) as max_plus1 "
                 + "from student_payments as sp "
                 + "left join student as s on s.id = sp.student_id where "
-                + "s.school_id = (SELECT school_id FROM student where id=?)";
+                + "s.school_id = (SELECT school_id FROM student where id = ?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
@@ -229,9 +229,7 @@ public class DbStudentPayment extends BaseDb {
 
     public String getOrderNum(String id) throws SQLException {
         String orderNum;
-        String sql = "select order_number "
-                + "from student_payments "
-                + "where id = ?;";
+        String sql = "select order_number from student_payments where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, id);
         ResultSet result = stat.executeQuery();
@@ -250,7 +248,7 @@ public class DbStudentPayment extends BaseDb {
         String sql = "SELECT sp.id, sp.amount, sp.who_paid, sp.modification_date, "
                 + "pc.id, pc.name FROM student_payments as sp "
                 + "left join payment_category as pc on sp.payment_category_id = pc.id "
-                + "where sp.student_id=? and sp.year_id=?";
+                + "where sp.student_id = ? and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         stat.setInt(2, year_id);
@@ -286,28 +284,16 @@ public class DbStudentPayment extends BaseDb {
                                                     Date till, int year_id, String class_ids, String edu_statuses_ids,
                                                     ClassPaymentsReport cpr) throws SQLException {
 
-
-        String sql = "SELECT sp.id, sp.modification_date, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
+        String sql = "SELECT sp.id, sp.modification_date, vcs.class_name, "
                 + "st.name, st.surname, sp.amount, pc.name, sp.who_paid, sp.payment_category_id "
                 + "FROM student_payments AS sp "
                 + "LEFT JOIN student AS st ON st.id = sp.student_id "
-                + "LEFT JOIN "
-                + "(SELECT MAX(so.id) AS oid, so.student_id AS stud_id "
-                + "FROM student_orders AS so WHERE so.year_id = ? AND so.is_valid = 1 "
-                + "GROUP BY so.student_id) AS o_temp ON st.id = o_temp.stud_id "
-                + "LEFT JOIN student_orders AS stud_o ON stud_o.id = o_temp.oid "
-                + "LEFT JOIN class_name AS cna ON cna.id = "
-                + "CASE WHEN stud_o.to_class_name_id IS NULL "
-                + "THEN st.class_name_id ELSE stud_o.to_class_name_id END "
-                + "LEFT JOIN class_number AS cnu ON cna.class_number_id = cnu.id "
-                + "LEFT JOIN education_status AS edu ON edu.id = "
-                + "CASE WHEN stud_o.to_education_status_id IS NULL "
-                + "THEN st.education_status_id ELSE stud_o.to_education_status_id END "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id "
-                + "WHERE cna.id IN (" + class_ids + ") "
+                + "WHERE vcs.class_name_id IN (" + class_ids + ") "
                 + "AND DATE(sp.modification_date) >= ? AND DATE(sp.modification_date) <= ? "
-                + "AND sp.year_id = ? AND edu.id IN (" + edu_statuses_ids + ") "
-                + "ORDER BY cnu.id, cna.id, st.name, st.surname, sp.modification_date;";
+                + "AND sp.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
+                + "ORDER BY vcs.class_number_id, vcs.class_name_id, st.name, st.surname, sp.modification_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setDate(2, new java.sql.Date(from.getTime()));
@@ -330,7 +316,7 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
                     result.getString("st.surname"));
             item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("class_name"));
+                    result.getString("vcs.class_name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("sp.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
@@ -354,7 +340,7 @@ public class DbStudentPayment extends BaseDb {
         double ip = 0;
         String sql = "SELECT ifnull(sum(if(sp.payment_category_id != 3,sp.amount, 0.0)) - "
                 + "sum(if(sp.payment_category_id = 3,sp.amount, 0.0)),0.0)  as total "
-                + "FROM student_payments as sp where sp.student_id = ? and sp.year_id = ?;";
+                + "FROM student_payments as sp where sp.student_id = ? and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, st_id);
         stat.setInt(2, year_id);
@@ -371,7 +357,7 @@ public class DbStudentPayment extends BaseDb {
                 + "ifnull(sum(if(sp.payment_category_id = 3, -sp.amount, sp.amount)),0.00) as week_paid FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "
-                + "yearweek(date(sp.modification_date), 1) = YEARWEEK(curdate(),1);";
+                + "yearweek(date(sp.modification_date), 1) = YEARWEEK(curdate(),1)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, year_id);
@@ -390,7 +376,7 @@ public class DbStudentPayment extends BaseDb {
                 + "ifnull(sum(if(sp.payment_category_id = 3, -sp.amount, sp.amount)),0.00) as month_paid FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "
-                + "MONTH(sp.modification_date) = MONTH(CURRENT_DATE());";
+                + "MONTH(sp.modification_date) = MONTH(CURRENT_DATE())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, year_id);
@@ -403,8 +389,8 @@ public class DbStudentPayment extends BaseDb {
     }
 
     public int exec_update_emp_id(int emp_id, String id) throws SQLException {
-        String sql = "UPDATE student_payments SET employee_id=? "
-                + "WHERE id=?";
+        String sql = "UPDATE student_payments SET employee_id = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, emp_id);
         stat.setString(2, id);

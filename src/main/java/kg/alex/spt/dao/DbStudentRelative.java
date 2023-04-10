@@ -34,7 +34,7 @@ public class DbStudentRelative extends BaseDb {
 
         String sql = "SELECT sr.id, sr.student_id, sr.fullname, sr.work_place, "
                 + "sr.phone, sr.address, sr.passport, sr.is_main, sr.relatives_id "
-                + "FROM student_relatives as sr where sr.student_id = ?;";
+                + "FROM student_relatives as sr where sr.student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         ResultSet result = stat.executeQuery();
@@ -94,7 +94,7 @@ public class DbStudentRelative extends BaseDb {
     public int exec_insert(StudentRelative r) throws SQLException {
         String sql = "INSERT INTO student_relatives (student_id, fullname, "
                 + "work_place, phone, address, passport, is_main, relatives_id) "
-                + "VALUES(?,?,?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, r.getStudent_id());
         stat.setString(2, r.getFullName());
@@ -108,16 +108,16 @@ public class DbStudentRelative extends BaseDb {
     }
 
     public int exec_delete(String id) throws SQLException {
-        String sql = "DELETE FROM student_relatives WHERE id=?";
+        String sql = "DELETE FROM student_relatives WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, id);
         return stat.executeUpdate();
     }
     
     public int exec_update(StudentRelative sr) throws SQLException {
-        String sql = "Update student_relatives set student_id=?, "
-                + "fullname=?, work_place=?, phone=?, address=?, "
-                + "passport=?, is_main=?, relatives_id=? WHERE id=?;";
+        String sql = "Update student_relatives set student_id = ?, "
+                + "fullname = ?, work_place = ?, phone = ?, address = ?, "
+                + "passport = ?, is_main = ?, relatives_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sr.getStudent_id());
         stat.setString(2, sr.getFullName());
@@ -132,8 +132,7 @@ public class DbStudentRelative extends BaseDb {
     }
 
     public String exec_get_who_paid(int stud_id) throws SQLException {
-        String sql = "SELECT fullname FROM student_relatives "
-                + "where student_id = ? and is_main = 1;";
+        String sql = "SELECT fullname FROM student_relatives where student_id = ? and is_main = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, stud_id);
         ResultSet result = stat.executeQuery();

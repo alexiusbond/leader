@@ -28,7 +28,7 @@ public class DbAccessories extends BaseDb {
         String sql = "SELECT ac.id, ac.name, ac.activity_status_id, a.name, "
                 + "ac.accessories_category_id, c.name FROM accessories as ac "
                 + "left join activity_status as a on a.id = ac.activity_status_id "
-                + "left join accessories_category as c on c.id = ac.accessories_category_id ;";
+                + "left join accessories_category as c on c.id = ac.accessories_category_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -58,7 +58,7 @@ public class DbAccessories extends BaseDb {
 
     public int exec_insert(Accessories acc) throws SQLException {
         String sql = "INSERT IGNORE INTO accessories (name,activity_status_id,accessories_category_id) "
-                + "VALUES(?,?,?);";
+                + "VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, acc.getName());
         stat.setInt(2, acc.getStatus_id());
@@ -72,8 +72,8 @@ public class DbAccessories extends BaseDb {
     }
 
     public int exec_update(Accessories acc) throws SQLException {
-        String sql = "UPDATE accessories SET name=?, activity_status_id=?, "
-                + "accessories_category_id=? WHERE id=?";
+        String sql = "UPDATE accessories SET name = ?, activity_status_id = ?, "
+                + "accessories_category_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, acc.getName());
         stat.setInt(2, acc.getStatus_id());
@@ -85,7 +85,7 @@ public class DbAccessories extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUi, int cat_id) throws SQLException {
         String sql = "select t.id, t.name from accessories as t "
                 + "where activity_status_id = 2 and accessories_category_id = ? "
-                + "order by t.id desc;";
+                + "order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cat_id);
         ResultSet result = stat.executeQuery();

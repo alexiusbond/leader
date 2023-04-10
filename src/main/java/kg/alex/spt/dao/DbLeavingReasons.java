@@ -28,7 +28,7 @@ public class DbLeavingReasons extends BaseDb {
 
         String sql = "SELECT lr.id, lr.name, lr.activity_status_id, ac.name FROM order_reason as lr "
                 + "left join activity_status as ac on ac.id = lr.activity_status_id "
-                + "order by lr.id asc, lr.activity_status_id desc;";
+                + "order by lr.id asc, lr.activity_status_id desc";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -53,8 +53,7 @@ public class DbLeavingReasons extends BaseDb {
     }
 
     public int exec_insert(LeavingReason c) throws SQLException {
-        String sql = "INSERT INTO order_reason (name,activity_status_id) "
-                + "VALUES(?,?);";
+        String sql = "INSERT INTO order_reason (name,activity_status_id) VALUES(?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, c.getName());
         stat.setInt(2, c.getStatus_id());
@@ -67,8 +66,8 @@ public class DbLeavingReasons extends BaseDb {
     }
 
     public int exec_update(LeavingReason c) throws SQLException {
-        String sql = "UPDATE order_reason SET name=?, activity_status_id=? "
-                + "WHERE id=?";
+        String sql = "UPDATE order_reason SET name = ?, activity_status_id = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, c.getName());
         stat.setInt(2, c.getStatus_id());
@@ -81,7 +80,7 @@ public class DbLeavingReasons extends BaseDb {
         if (!all) {
             sql += "where t.activity_status_id = 2 ";
         }
-        sql += "order by t.id;";
+        sql += "order by t.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();

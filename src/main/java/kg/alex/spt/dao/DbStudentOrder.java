@@ -30,9 +30,7 @@ public class DbStudentOrder extends BaseDb {
         super();
     }
 
-    public IndexedContainer execSQL(MyVaadinUI myUi, int student_id, IssueOrderView iv)
-            throws SQLException {
-
+    public IndexedContainer execSQL(MyVaadinUI myUi, int student_id, IssueOrderView iv) throws SQLException {
 
         String sql = "SELECT so.id, so.orders_id, date(so.modification_date) as creation_date, o.name, "
                 + "from_edu.name, from_edu.id, to_edu.name, y.name, "
@@ -40,17 +38,17 @@ public class DbStudentOrder extends BaseDb {
                 + "concat(to_class_number.name,' - ', to_class_name.name) as to_class, "
                 + "from_class_name.id, to_class_name.id, o.id, so.student_id, so.reason "
                 + "FROM student_orders as so "
-                + "left join orders as o on o.id=so.orders_id "
-                + "left join class_name as from_class_name on from_class_name.id=so.from_class_name_id "
+                + "left join orders as o on o.id = so.orders_id "
+                + "left join class_name as from_class_name on from_class_name.id = so.from_class_name_id "
                 + "left join class_number as from_class_number "
-                + "on from_class_number.id=from_class_name.class_number_id "
-                + "left join class_name as to_class_name on to_class_name.id=so.to_class_name_id "
+                + "on from_class_number.id = from_class_name.class_number_id "
+                + "left join class_name as to_class_name on to_class_name.id = so.to_class_name_id "
                 + "left join class_number as to_class_number "
-                + "on to_class_number.id=to_class_name.class_number_id "
-                + "left join education_status as from_edu on from_edu.id=so.from_education_status_id "
-                + "left join education_status as to_edu on to_edu.id=so.to_education_status_id "
-                + "left join year as y on y.id=so.year_id "
-                + "where so.student_id = ? and so.is_valid = 1 order by so.id DESC;";
+                + "on to_class_number.id = to_class_name.class_number_id "
+                + "left join education_status as from_edu on from_edu.id = so.from_education_status_id "
+                + "left join education_status as to_edu on to_edu.id = so.to_education_status_id "
+                + "left join year as y on y.id = so.year_id "
+                + "where so.student_id = ? and so.is_valid = 1 order by so.id DESC";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, student_id);
@@ -111,7 +109,7 @@ public class DbStudentOrder extends BaseDb {
 
     public int exec_order_id(StudentOrder so) throws SQLException {
         String sql = "SELECT id from student_orders "
-                + "where orders_id=3 and year_id=? and student_id=?";
+                + "where orders_id=3 and year_id = ? and student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, so.getYear_id());
         stat.setInt(2, so.getStudent_id());
@@ -126,7 +124,7 @@ public class DbStudentOrder extends BaseDb {
         String sql = "INSERT INTO student_orders (student_id, orders_id,"
                 + "year_id, from_class_name_id, to_class_name_id, from_education_status_id, "
                 + "to_education_status_id, modification_date, employee_id, reason) "
-                + "VALUES(?,?,?,?,?,?,?,NOW(),?,?);";
+                + "VALUES(?,?,?,?,?,?,?,NOW(),?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, so.getStudent_id());
         stat.setInt(2, so.getOrder_id());
@@ -149,9 +147,9 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public int exec_update_existed_to_class(StudentOrder so, int id) throws SQLException {
-        String sql = "UPDATE student_orders set to_class_name_id=?, "
-                + "modification_date=NOW(), employee_id=? "
-                + "where id=?";
+        String sql = "UPDATE student_orders set to_class_name_id = ?, "
+                + "modification_date=NOW(), employee_id = ? "
+                + "where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (so.getTo_class_id() != 0) {
             stat.setInt(1, so.getTo_class_id());
@@ -165,8 +163,8 @@ public class DbStudentOrder extends BaseDb {
 
     public int exec_update_from_class(StudentOrder so, int old_class_name_id,
                                       int order_id) throws SQLException {
-        String sql = "UPDATE student_orders set from_class_name_id=? "
-                + "where from_class_name_id=? and year_id=? and student_id=? and id>=?";
+        String sql = "UPDATE student_orders set from_class_name_id = ? "
+                + "where from_class_name_id = ? and year_id = ? and student_id = ? and id>= ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (so.getTo_class_id() != 0) {
             stat.setInt(1, so.getTo_class_id());
@@ -181,8 +179,8 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public int exec_update_from_class(StudentOrder so, int old_class_name_id) throws SQLException {
-        String sql = "UPDATE student_orders set from_class_name_id=? "
-                + "where from_class_name_id=? and year_id=? and student_id=?";
+        String sql = "UPDATE student_orders set from_class_name_id = ? "
+                + "where from_class_name_id = ? and year_id = ? and student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (so.getTo_class_id() != 0) {
             stat.setInt(1, so.getTo_class_id());
@@ -197,8 +195,8 @@ public class DbStudentOrder extends BaseDb {
 
     public int exec_update_to_class(StudentOrder so, int old_class_name_id,
                                     int order_id) throws SQLException {
-        String sql = "UPDATE student_orders set to_class_name_id=? "
-                + "where to_class_name_id=? and year_id=? and student_id=? and id>=?";
+        String sql = "UPDATE student_orders set to_class_name_id = ? "
+                + "where to_class_name_id = ? and year_id = ? and student_id = ? and id>= ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (so.getTo_class_id() != 0) {
             stat.setInt(1, so.getTo_class_id());
@@ -213,8 +211,8 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public int exec_update_to_class(StudentOrder so, int old_class_name_id) throws SQLException {
-        String sql = "UPDATE student_orders set to_class_name_id=? "
-                + "where to_class_name_id=? and year_id=? and student_id=?";
+        String sql = "UPDATE student_orders set to_class_name_id = ? "
+                + "where to_class_name_id = ? and year_id = ? and student_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (so.getTo_class_id() != 0) {
             stat.setInt(1, so.getTo_class_id());
@@ -228,8 +226,8 @@ public class DbStudentOrder extends BaseDb {
     }
 
     public int exec_update_future_orders(int year_id, int is_valid, int student_id) throws SQLException {
-        String sql = "UPDATE student_orders set is_valid=? "
-                + "where student_id=? and year_id>?";
+        String sql = "UPDATE student_orders set is_valid = ? "
+                + "where student_id = ? and year_id>?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
 
         stat.setInt(1, is_valid);
@@ -267,18 +265,15 @@ public class DbStudentOrder extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int insertPre_regChange_year(int next_year_id, int school_id, int emp_id)
-            throws SQLException {
+    public int insertPre_regChange_year(int next_year_id, int school_id, int emp_id) throws SQLException {
         String sql = "insert ignore into student_orders (student_id, orders_id, from_class_name_id, "
                 + "to_class_name_id, from_education_status_id, to_education_status_id, "
                 + "year_id, reason, modification_date, employee_id) "
-                + "select st.id, 4, st.class_name_id, st.class_name_id, 2, 1, ?, "
+                + "select st.id, 4, vcs.class_name_id, vcs.class_name_id, 2, 1, ?, "
                 + "NULL, now(), ? from student as st "
-                + "left join ("
-                + "select so.student_id as stud_id from student_orders as so "
-                + "where so.year_id=? group by so.student_id) as so_temp on so_temp.stud_id=st.id "
-                + "where st.education_status_id = 2 and st.entering_year_id <= ? "
-                + "and st.school_id = ? and so_temp.stud_id IS NULL;";
+                + "left join view_student_class_status as vcs on  st.id = vcs.student_id and vcs.year_id = ? "
+                + "where vcs.education_status_id = 2 and st.entering_year_id <= ? "
+                + "and st.school_id = ? and vcs.student_id IS NULL";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, next_year_id);
         stat.setInt(2, emp_id);
@@ -306,14 +301,12 @@ public class DbStudentOrder extends BaseDb {
                 + "LEFT JOIN student_contract AS sc ON sc.student_id = st.id AND sc.year_id = so.year_id "
                 + "LEFT JOIN view_corrections AS vc ON vc.student_id = sc.student_id and vc.year_id = sc.year_id "
                 + "WHERE so.year_id IN (" + year_ids + ") "
-                + "	AND so.from_class_name_id IN (" + from_class_ids + ") ";
+                + "AND so.from_class_name_id IN (" + from_class_ids + ") ";
         if (reasons != null) {
-            sql += "    and (so.reason REGEXP '" + reasons + "') ";
+            sql += "and (so.reason REGEXP '" + reasons + "') ";
         }
-        sql += "    AND so.is_valid = 1 "
-                + "    AND so.orders_id = 1 "
-                + "    AND st.school_id = ? "
-                + "order by so.year_id, from_cl.id, from_cln.id, st.name, st.surname;";
+        sql += "AND so.is_valid = 1 AND so.orders_id = 1 AND st.school_id = ? "
+                + "order by so.year_id, from_cl.id, from_cln.id, st.name, st.surname";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, "%" + reasons + "%");

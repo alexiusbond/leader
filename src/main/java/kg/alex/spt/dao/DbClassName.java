@@ -31,7 +31,7 @@ public class DbClassName extends BaseDb {
                 + "left join school as sc on sc.id = cn.school_id "
                 + "left join activity_status as ac on ac.id=cn.activity_status_id "
                 + "where sc.id = ? "
-                + "order by cn.class_number_id and cn.name;";
+                + "order by cn.class_number_id and cn.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -76,7 +76,7 @@ public class DbClassName extends BaseDb {
     public int exec_insert(ClassName def) throws SQLException {
         String sql = "INSERT IGNORE INTO class_name (name,school_id,"
                 + "class_number_id,activity_status_id,class_type_id) "
-                + "VALUES(?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, def.getName());
         stat.setInt(2, def.getSchool_id());
@@ -93,8 +93,8 @@ public class DbClassName extends BaseDb {
     }
 
     public int exec_update(ClassName cl) throws SQLException {
-        String sql = "UPDATE class_name SET name=?, school_id=?,class_number_id=?, "
-                + "activity_status_id=?, class_type_id=? WHERE id=?";
+        String sql = "UPDATE class_name SET name = ?, school_id = ?,class_number_id = ?, "
+                + "activity_status_id = ?, class_type_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, cl.getName());
         stat.setInt(2, cl.getSchool_id());
@@ -110,7 +110,7 @@ public class DbClassName extends BaseDb {
                 + "concat(cnu.name,' - ',cn.name) as cl_name from class_name as cn "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
                 + "left join class_type as el on cn.class_type_id = el.id "
-                + "where cn.school_id = ? order by cnu.name, cn.name;";
+                + "where cn.school_id = ? order by cnu.name, cn.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -145,7 +145,7 @@ public class DbClassName extends BaseDb {
         String sql = "select cn.id, concat(cnu.name,' - ',cn.name) as cl_name "
                 + "from class_name as cn "
                 + "left join class_number as cnu on cn.class_number_id = cnu.id "
-                + "where cn.school_id = ? order by cnu.name, cn.name;";
+                + "where cn.school_id = ? order by cnu.name, cn.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();

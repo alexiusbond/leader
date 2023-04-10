@@ -27,7 +27,7 @@ public class DbEmployeeQuestion extends BaseDb {
 
     public int exec_insert(EmployeeQuestioning eq) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_question (employee_id,question_id,answer) "
-                + "VALUES(?,?,?);";
+                + "VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eq.getEmployee_id());
         stat.setInt(2, eq.getQuestion_id());
@@ -42,7 +42,7 @@ public class DbEmployeeQuestion extends BaseDb {
 
     public int exec_update(EmployeeQuestioning eq) throws SQLException {
         String sql = "update hr_employee_question set "
-                + " answer=? WHERE question_id=? and employee_id=?;";
+                + " answer = ? WHERE question_id = ? and employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, eq.getAnswer());
         stat.setInt(2, eq.getQuestion_id());
@@ -55,7 +55,7 @@ public class DbEmployeeQuestion extends BaseDb {
         
 
         String sql = "SELECT q.id, eq.id, q.name, eq.answer FROM hr_question as q "
-                + "left join hr_employee_question as eq on eq.question_id = q.id and eq.employee_id = ?;";
+                + "left join hr_employee_question as eq on eq.question_id = q.id and eq.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

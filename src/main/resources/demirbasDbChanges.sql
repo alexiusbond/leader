@@ -152,7 +152,7 @@ ALTER TABLE `spt`.`dm_block`
 DROP FOREIGN KEY `fk_dm_block_school1`;
 ALTER TABLE `spt`.`dm_block` 
 ADD COLUMN `activity_status_id` INT NOT NULL DEFAULT '2' AFTER `school_id`,
-CHANGE COLUMN `school_id` `school_id` INT NOT NULL ,
+CHANGE COLUMN `school_id` `school_id` INT NOT NULL,
 ADD INDEX `fk_dm_block_status1_idx` (`activity_status_id` ASC);
 ;
 ALTER TABLE `spt`.`dm_block` 
@@ -221,10 +221,10 @@ VIEW `view_stock_remains` AS
         LEFT JOIN `dp_invoice` `inv` ON ((`inv`.`id` = `mv`.`invoice_id`)))
     WHERE
         (`inv`.`service_type_id` = 1)
-    GROUP BY `inv`.`to_stock_id` , `mv`.`acc_category_id` , `mv`.`dp_measurement_id`;
+    GROUP BY `inv`.`to_stock_id`, `mv`.`acc_category_id`, `mv`.`dp_measurement_id`;
 ALTER TABLE `spt`.`dm_inventory_movements` 
 ADD COLUMN `inventory_movement_id` INT NULL DEFAULT NULL AFTER `life_time`,
-DROP INDEX `index8` ,
+DROP INDEX `index8`,
 ADD INDEX `index8` (`inventory_movement_id` ASC);
 ;
 ALTER TABLE `spt`.`dm_inventory_movements` 

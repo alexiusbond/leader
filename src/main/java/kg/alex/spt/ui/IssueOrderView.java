@@ -72,8 +72,8 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         try {
             DbStudent dbs = new DbStudent();
             dbs.connect();
-            studentsTable.setContainerDataSource(
-                    dbs.execSQL_for_orders(myUI, myUI.getUser().getSchool().getId(), this));
+            studentsTable.setContainerDataSource(dbs.execSQL_for_orders(myUI,
+                    myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(), this));
             dbs.close();
         } catch (Exception e) {
             logger.error(e);
@@ -189,8 +189,6 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         dbso.connect();
                         DbStudentContract dbsc = new DbStudentContract();
                         dbsc.connect();
-                        DbStudent dbs = new DbStudent();
-                        dbs.connect();
                         Iterator<?> iter = ((Set<?>) studentsTable.getValue()).iterator();
                         StudentOrder so = new StudentOrder();
                         so.setEmployee_id(myUI.getUser().getId());
@@ -298,9 +296,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                                             myUI.getMessage(SptMessages.EducationStatus)).getValue());
                                         }
                                     }
-                                    dbs.exec_update(so.getStudent_id(), so.getTo_education_status_id(),
-                                            so.getTo_class_id(), myUI.getUser().getId());
-                                    dbsc.exec_update_status(so.getStudent_id(), 1, myUI.getUser().getId());
+                                   dbsc.exec_update_status(so.getStudent_id(), 1, myUI.getUser().getId());
                                     counter++;
                                 }
                             }
@@ -312,7 +308,6 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         }
                         dbso.close();
                         dbsc.close();
-                        dbs.close();
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
@@ -395,12 +390,6 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 dbso.close();
                 DbStudent dbs = new DbStudent();
                 dbs.connect();
-                dbs.exec_update(selected_student_id,
-                        (Integer) historyTable.getContainerProperty(
-                                id, Settings.from_education_status_id).getValue(),
-                        (Integer) historyTable.getContainerProperty(
-                                id, Settings.from_class_id).getValue(), myUI.getUser().getId());
-                dbs.close();
                 DbStudentContract dbsc = new DbStudentContract();
                 dbsc.connect();
                 dbsc.exec_update_status_by_id(selected_student_id, 2, myUI.getUser().getId());

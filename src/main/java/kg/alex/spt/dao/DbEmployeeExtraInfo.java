@@ -20,7 +20,7 @@ public class DbEmployeeExtraInfo extends BaseDb {
 
     public int exec_insert(EmployeeExtraInfo eei) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_extra_info (employee_id,hr_health_status_id,"
-                + "hobbies,fobbies,health_notes,info) VALUES(?,?,?,?,?,?);";
+                + "hobbies,fobbies,health_notes,info) VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eei.getEmployee_id());
         stat.setInt(2, eei.getHealth_status_id());
@@ -54,7 +54,7 @@ public class DbEmployeeExtraInfo extends BaseDb {
 
     public int exec_update(EmployeeExtraInfo eei) throws SQLException {
         String sql = "update hr_employee_extra_info set "
-                + "hr_health_status_id=?, hobbies=?, fobbies=?, health_notes=?, info=? WHERE employee_id=?;";
+                + "hr_health_status_id = ?, hobbies = ?, fobbies = ?, health_notes = ?, info = ? WHERE employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eei.getHealth_status_id());
         if (!eei.getHobbies().equals("") && eei.getHobbies() != null) {
@@ -83,7 +83,7 @@ public class DbEmployeeExtraInfo extends BaseDb {
 
     public EmployeeExtraInfo execSQL(int employee_id) throws SQLException {
         String sql = "SELECT * FROM hr_employee_extra_info AS eei " +
-                "LEFT JOIN hr_health_status AS hs ON hs.id = eei.hr_health_status_id WHERE eei.employee_id = ?;";
+                "LEFT JOIN hr_health_status AS hs ON hs.id = eei.hr_health_status_id WHERE eei.employee_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

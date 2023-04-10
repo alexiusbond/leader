@@ -477,7 +477,7 @@ public class ContractCambridgeOshPdf_ru {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("3.3.  Оплата родителями или лицами их заменяющими, родительского взноса ", ordFont));
                 paragraph.add(new Phrase("производится в сомах на банковский счет ", ordBoldFont));
-                paragraph.add(new Phrase("Школы , не позднее 3 календарных дней с даты, указанной в официальном счете/ invoice.", ordFont));
+                paragraph.add(new Phrase("Школы, не позднее 3 календарных дней с даты, указанной в официальном счете/ invoice.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();
                 paragraph.setFirstLineIndent(30);

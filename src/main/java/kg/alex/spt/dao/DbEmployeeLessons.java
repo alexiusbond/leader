@@ -37,7 +37,7 @@ public class DbEmployeeLessons extends BaseDb {
     public int exec_insert(EmployeeLessons el) throws SQLException {
         String sql = "INSERT IGNORE INTO hr_employee_branch_hours "
                 + "(employee_id,hr_branch_id,year_id,hours,extra_hours,school_id,class_number_id) "
-                + "VALUES(?,?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, el.getEmployee_id());
         stat.setInt(2, el.getBranch_id());
@@ -56,7 +56,7 @@ public class DbEmployeeLessons extends BaseDb {
 
     public int exec_update(EmployeeLessons el) throws SQLException {
         String sql = "update hr_employee_branch_hours set "
-                + "hr_branch_id=?, year_id=?, hours=?, extra_hours=?, class_number_id = ? WHERE id=?;";
+                + "hr_branch_id = ?, year_id = ?, hours = ?, extra_hours = ?, class_number_id = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, el.getBranch_id());
         stat.setInt(2, el.getYear_id());
@@ -70,7 +70,7 @@ public class DbEmployeeLessons extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUI, int employee_id, int school_id,
                                     EmployeeDefinitionView edv) throws SQLException {
         String sql = "SELECT ex.id, ex.hr_branch_id, ex.year_id, ex.hours, ex.extra_hours, ex.class_number_id FROM hr_employee_branch_hours as ex "
-                + "where ex.employee_id = ? and school_id = ?;";
+                + "where ex.employee_id = ? and school_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);
@@ -114,7 +114,7 @@ public class DbEmployeeLessons extends BaseDb {
                 "LEFT JOIN employee AS e ON e.id = bh.employee_id " +
                 "LEFT JOIN hr_branch AS b ON b.id = bh.hr_branch_id " +
                 "LEFT JOIN class_number AS cn ON cn.id = bh.class_number_id " +
-                "WHERE bh.school_id = ? AND bh.year_id = ? order by e.surname, e.name;";
+                "WHERE bh.school_id = ? AND bh.year_id = ? order by e.surname, e.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, year_id);
@@ -139,7 +139,7 @@ public class DbEmployeeLessons extends BaseDb {
 
     public String execSQLTotalHours(MyVaadinUI myUI, int employee_id, int school_id) throws SQLException {
         String sql = "select sum(hours) as hours, sum(extra_hours) as extra, employee_id as e_id, year_id as y_id, school_id as sch_id "
-                + "from hr_employee_branch_hours where employee_id = ? and school_id = ? and year_id = ?;";
+                + "from hr_employee_branch_hours where employee_id = ? and school_id = ? and year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);
@@ -156,7 +156,7 @@ public class DbEmployeeLessons extends BaseDb {
 
         String sql = "SELECT br.id, br.name, ebr.hours, ebr.extra_hours, ebr.id FROM hr_branch AS br "
                 + "LEFT JOIN hr_employee_branch_hours AS ebr ON ebr.hr_branch_id = br.id AND ebr.year_id = ? AND ebr.employee_id = ? "
-                + "AND ebr.class_number_id = ? and ebr.school_id = ? WHERE br.activity_status_id = 2 order by br.id desc;";
+                + "AND ebr.class_number_id = ? and ebr.school_id = ? WHERE br.activity_status_id = 2 order by br.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, myUI.getUser().getCurrent_year().getId());
         stat.setInt(2, employee_id);
@@ -245,8 +245,8 @@ public class DbEmployeeLessons extends BaseDb {
         if (extraPositionIds != null) {
             sql += "AND p2.id IN (" + extraPositionIds + ") ";
         }
-        sql += "GROUP BY brh.hr_branch_id , e.id) AS empl_t ON empl_t.br_id = br.id "
-                + "WHERE br.id IN (" + branchIds + ") order by br.id desc;";
+        sql += "GROUP BY brh.hr_branch_id, e.id) AS empl_t ON empl_t.br_id = br.id "
+                + "WHERE br.id IN (" + branchIds + ") order by br.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, school_id);
@@ -348,7 +348,7 @@ public class DbEmployeeLessons extends BaseDb {
     }
 
     public int exec_delete(int employee_id, int branch_id, int school_id, int class_number_id, int year_id) throws SQLException {
-        String sql = "DELETE FROM hr_employee_branch_hours WHERE employee_id=? and hr_branch_id=? and year_id=? and school_id=? and class_number_id=?";
+        String sql = "DELETE FROM hr_employee_branch_hours WHERE employee_id = ? and hr_branch_id = ? and year_id = ? and school_id = ? and class_number_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, branch_id);
@@ -359,7 +359,7 @@ public class DbEmployeeLessons extends BaseDb {
     }
 
     public int exec_delete(int school_id, int year_id) throws SQLException {
-        String sql = "DELETE FROM hr_employee_branch_hours WHERE year_id=? and school_id=?";
+        String sql = "DELETE FROM hr_employee_branch_hours WHERE year_id = ? and school_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, school_id);

@@ -29,7 +29,7 @@ public class DbEmployeeContract extends BaseDb {
 
     public int exec_insert(EmployeeContract ec) throws SQLException {
         String sql = "INSERT INTO hr_employee_contract (employee_id, contract_type_id, salary, from_date, " +
-                "till_date, creation_date) VALUES(?,?,?,?,?,?);";
+                "till_date, creation_date) VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getEmployee_id());
         stat.setInt(2, ec.getContract_type_id());
@@ -47,7 +47,7 @@ public class DbEmployeeContract extends BaseDb {
 
     public int exec_update(EmployeeContract ec) throws SQLException {
         String sql = "update hr_employee_contract set "
-                + "contract_type_id = ?, salary = ?, from_date = ?, till_date = ?, creation_date = ? WHERE id = ?;";
+                + "contract_type_id = ?, salary = ?, from_date = ?, till_date = ?, creation_date = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, ec.getContract_type_id());
         stat.setString(2, ec.getSalary());
@@ -61,7 +61,7 @@ public class DbEmployeeContract extends BaseDb {
     public int exec_update(EmployeeContract ec, int id) throws SQLException {
         String sql = "update hr_employee_contract set " +
                 "year_id = ?, probationary_period = ?, working_days = ?, working_hours = ?, " +
-                "salary_day = ?, patent_date = ?, patent = ?, equipment = ? WHERE id = ?;";
+                "salary_day = ?, patent_date = ?, patent = ?, equipment = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (ec.getYearId() != 0) {
             stat.setInt(1, ec.getYearId());

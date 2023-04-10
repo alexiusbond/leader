@@ -25,10 +25,9 @@ public class DbSchool extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
-        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id, y.name, t.name, "
+        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, y.name, t.name, "
                 + "s.activity_status_id, ac.name, s.city, s.address, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
-                + "left join year as y on y.id = s.year_id "
                 + "left join activity_status as ac on ac.id = s.activity_status_id "
                 + "left join school_type as t on t.id = s.school_type_id "
                 + "order by CAST(s.code AS UNSIGNED)";
@@ -42,9 +41,7 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.SchoolType), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
-        container.addContainerProperty(Settings.year_id, Integer.class, 0);
         container.addContainerProperty(Settings.school_type_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.City), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Address), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.INN), String.class, null);
@@ -70,12 +67,8 @@ public class DbSchool extends BaseDb {
                     result.getString("t.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("s.activity_status_id"));
-            item.getItemProperty(Settings.year_id).setValue(
-                    result.getInt("s.year_id"));
             item.getItemProperty(Settings.school_type_id).setValue(
                     result.getInt("s.school_type_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
-                    result.getString("y.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.City)).setValue(
                     result.getString("s.city"));
             item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
@@ -156,9 +149,9 @@ public class DbSchool extends BaseDb {
 
     public int exec_insert(School scl) throws SQLException {
         String sql = "INSERT IGNORE INTO school (code, name_ru, name_kg, name_en, "
-                + "year_id, activity_status_id, city, address, inn, bank, "
+                + "activity_status_id, city, address, inn, bank, "
                 + "bank_account, phone, photo, school_type_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());
         stat.setString(2, scl.getName_ru());
@@ -172,44 +165,43 @@ public class DbSchool extends BaseDb {
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        stat.setInt(5, scl.getYear_id());
-        stat.setInt(6, scl.getStatus_id());
+        stat.setInt(5, scl.getStatus_id());
         if (scl.getCity() != null && !scl.getCity().equals("")) {
-            stat.setString(7, scl.getCity());
+            stat.setString(6, scl.getCity());
+        } else {
+            stat.setNull(6, Types.VARCHAR);
+        }
+        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
+            stat.setString(7, scl.getAddress());
         } else {
             stat.setNull(7, Types.VARCHAR);
         }
-        if (scl.getAddress() != null && !scl.getAddress().equals("")) {
-            stat.setString(8, scl.getAddress());
+        if (scl.getInn() != null && !scl.getInn().equals("")) {
+            stat.setString(8, scl.getInn());
         } else {
             stat.setNull(8, Types.VARCHAR);
         }
-        if (scl.getInn() != null && !scl.getInn().equals("")) {
-            stat.setString(9, scl.getInn());
+        if (scl.getBank() != null && !scl.getBank().equals("")) {
+            stat.setString(9, scl.getBank());
         } else {
             stat.setNull(9, Types.VARCHAR);
         }
-        if (scl.getBank() != null && !scl.getBank().equals("")) {
-            stat.setString(10, scl.getBank());
+        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
+            stat.setString(10, scl.getBank_account());
         } else {
             stat.setNull(10, Types.VARCHAR);
         }
-        if (scl.getBank_account() != null && !scl.getBank_account().equals("")) {
-            stat.setString(11, scl.getBank_account());
+        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
+            stat.setString(11, scl.getPhone());
         } else {
             stat.setNull(11, Types.VARCHAR);
         }
-        if (scl.getPhone() != null && !scl.getPhone().equals("")) {
-            stat.setString(12, scl.getPhone());
+        if (scl.getPhoto() != null && scl.getPhoto().equals("")) {
+            stat.setString(12, scl.getPhoto());
         } else {
             stat.setNull(12, Types.VARCHAR);
         }
-        if (scl.getPhoto() != null && scl.getPhoto().equals("")) {
-            stat.setString(13, scl.getPhoto());
-        } else {
-            stat.setNull(13, Types.VARCHAR);
-        }
-        stat.setInt(14, scl.getSchool_type_id());
+        stat.setInt(13, scl.getSchool_type_id());
 
         int st = stat.executeUpdate();
         if (st != 0) {
@@ -221,11 +213,8 @@ public class DbSchool extends BaseDb {
 
     public School execSchool(int scl_id) throws SQLException {
         School scl = new School();
-        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.year_id,y.name, "
-                + "s.activity_status_id, ac.name, s.city, s.address, "
+        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.activity_status_id, s.city, s.address, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
-                + "left join year as y on y.id = s.year_id "
-                + "left join activity_status as ac on ac.id = s.activity_status_id "
                 + "where s.id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
@@ -248,19 +237,10 @@ public class DbSchool extends BaseDb {
         return scl;
     }
 
-    public int execUpdateYear(School scl) throws SQLException {
-        String sql = "update school set year_id = ? where id = ?;";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl.getYear_id());
-        stat.setInt(2, scl.getId());
-        int st = stat.executeUpdate();
-        return st;
-    }
-
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, int except_id) throws SQLException {
         String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
-                "s.year_id, s.photo, s.code, s.primary_code, s.secondary_code from school as s " +
-                "where s.id!=? order by CAST(s.code AS UNSIGNED)";
+                "s.photo, s.code, s.primary_code, s.secondary_code from school as s " +
+                "where s.id != ? order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, except_id);
         ResultSet result = stat.executeQuery();
@@ -272,7 +252,6 @@ public class DbSchool extends BaseDb {
         container.addContainerProperty(myUI.getMessage(SptMessages.PrimaryCode), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.SecondaryCode), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Logo), String.class, null);
-        container.addContainerProperty(Settings.year_id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
@@ -282,13 +261,12 @@ public class DbSchool extends BaseDb {
             item.getItemProperty(myUI.getMessage(SptMessages.PrimaryCode)).setValue(result.getString("s.primary_code"));
             item.getItemProperty(myUI.getMessage(SptMessages.SecondaryCode)).setValue(result.getString("s.secondary_code"));
             item.getItemProperty(myUI.getMessage(SptMessages.Logo)).setValue(result.getString("s.photo"));
-            item.getItemProperty(Settings.year_id).setValue(result.getInt("s.year_id"));
         }
         return container;
     }
 
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, String school_type_ids) throws SQLException {
-        String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.year_id, s.photo, s.code from school as s " +
+        String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.code from school as s " +
                 "where s.school_type_id in (" + school_type_ids + ") order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
@@ -308,27 +286,14 @@ public class DbSchool extends BaseDb {
     public String execGet_logo(String st_login) throws SQLException {
         String sql = "SELECT sc.photo FROM school as sc "
                 + "left join student as st on st.school_id = sc.id "
-                + "where st.login = ?;";
+                + "where st.login = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, st_login);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         String logo = null;
         while (result.next()) {
             logo = result.getString("sc.photo");
         }
         return logo;
-    }
-
-    public int execGetCurrentDbSchoolYear(int scl_id) throws SQLException {
-        String sql = "SELECT year_id from school where id = ?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, scl_id);
-        ResultSet result = stat.executeQuery();
-        int i = 0;
-        while (result.next()) {
-            i = result.getInt("year_id");
-        }
-        return i;
     }
 }

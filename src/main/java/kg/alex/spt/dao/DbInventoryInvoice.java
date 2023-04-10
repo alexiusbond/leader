@@ -38,7 +38,7 @@ public class DbInventoryInvoice extends BaseDb {
                 "LEFT JOIN employee AS e ON e.id = t.employee_id " +
                 "LEFT JOIN dm_inventory_organization AS mov ON mov.invoice_id = t.id " +
                 "WHERE t.school_id = ? AND t.activity_status_id = ? " +
-                "GROUP BY t.id ORDER BY t.invoice_number DESC;";
+                "GROUP BY t.id ORDER BY t.invoice_number desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         stat.setInt(2, activity_status_id);
@@ -77,7 +77,7 @@ public class DbInventoryInvoice extends BaseDb {
     }
 
     public String execSQL_invoice_number(int id) throws SQLException {
-        String sql = "SELECT LPAD(invoice_number, 7, 0) as inv_num FROM dm_invoice WHERE id = ?;";
+        String sql = "SELECT LPAD(invoice_number, 7, 0) as inv_num FROM dm_invoice WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id);
         ResultSet result = stat.executeQuery();
@@ -89,7 +89,7 @@ public class DbInventoryInvoice extends BaseDb {
 
     public int execSQL_max_invoice_number(int school_id, int activity_status_id) throws SQLException {
         String sql = "SELECT max(invoice_number) as inv_num FROM dm_invoice " +
-                "WHERE school_id = ? and activity_status_id = ?;";
+                "WHERE school_id = ? and activity_status_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setInt(2, activity_status_id);
@@ -103,7 +103,7 @@ public class DbInventoryInvoice extends BaseDb {
     public int exec_insert(InventoryInvoice inv) throws SQLException {
         String sql = "INSERT IGNORE INTO dm_invoice (invoice_number,creation_date,"
                 + "note,room_id,activity_status_id,school_id,employee_id,"
-                + "modification_date) VALUES(?,?,?,?,?,?,?,NOW());";
+                + "modification_date) VALUES(?,?,?,?,?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, inv.getInvoice_number());
         stat.setTimestamp(2, new java.sql.Timestamp(inv.getCreation_date().getTime()));

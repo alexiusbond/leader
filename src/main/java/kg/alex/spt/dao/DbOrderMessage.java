@@ -29,7 +29,7 @@ public class DbOrderMessage extends BaseDb {
     public int exec_insert(OrderMessage orderMessage) throws SQLException {
         String sql = "INSERT INTO order_messages (message, order_number, order_title, order_content, student_id, " +
                 "creation_date, employee_id, discount, student, year_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (orderMessage.getMessage() != null) {
             stat.setString(1, orderMessage.getMessage());

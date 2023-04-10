@@ -22,7 +22,7 @@ public class DbSalaryCategories extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUI) throws SQLException {
         String sql = "SELECT c.id, ifnull(concat(c.parent_code,'.',c.code),c.code) as code, c.name FROM hr_salary_category sc "
-                + "left join acc_category as c on sc.acc_category_id = c.id;";
+                + "left join acc_category as c on sc.acc_category_id = c.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
 
@@ -40,7 +40,7 @@ public class DbSalaryCategories extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUI, int school_id) throws SQLException {
         String sql = "SELECT c.id, IFNULL(CONCAT(c.parent_code, '.', c.code), c.code) AS code, sc.name, sc.role_visibility " +
                 "FROM hr_salary_category sc " +
-                "LEFT JOIN acc_category AS c ON sc.acc_category_id = c.parent_id and school_id = ?;";
+                "LEFT JOIN acc_category AS c ON sc.acc_category_id = c.parent_id and school_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
@@ -57,7 +57,7 @@ public class DbSalaryCategories extends BaseDb {
     }
 
     public int exec_update(int cat_id, int id) throws SQLException {
-        String sql = "update hr_salary_category set acc_category_id = ? where id = ?;";
+        String sql = "update hr_salary_category set acc_category_id = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, cat_id);
         stat.setInt(2, id);

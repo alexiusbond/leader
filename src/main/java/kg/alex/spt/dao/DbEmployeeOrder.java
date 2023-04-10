@@ -44,7 +44,7 @@ public class DbEmployeeOrder extends BaseDb {
         String sql = "INSERT INTO hr_employee_order (hr_orders_id, employee_id,"
                 + "school_id, hr_position_id, class_name_id, "
                 + "to_date, note, modification_date, m_employee_id, from_date, from_to_school_id, can_not_delete) "
-                + "VALUES(?,?,?,?,?,?,?,NOW(),?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?,?,NOW(),?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eo.getOrder_id());
         stat.setInt(2, eo.getEmployee_id());
@@ -87,8 +87,8 @@ public class DbEmployeeOrder extends BaseDb {
     }
 
     public int exec_update(EmployeeOrder eo) throws SQLException {
-        String sql = "update hr_employee_order set school_id=?, hr_position_id=?, class_name_id=?,"
-                + "from_date=?, to_date=?, note=?, modification_date=NOW(), m_employee_id=? where id=?;";
+        String sql = "update hr_employee_order set school_id = ?, hr_position_id = ?, class_name_id = ?,"
+                + "from_date = ?, to_date = ?, note = ?, modification_date=NOW(), m_employee_id = ? where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         int counter = 0;
         stat.setInt(++counter, eo.getSchool_id());
@@ -124,8 +124,8 @@ public class DbEmployeeOrder extends BaseDb {
 
         String sql = "update hr_employee_order as eo "
                 + "left join hr_orders as o on o.id = eo.hr_orders_id "
-                + "set eo.effected_by_id=?, eo.to_date=? "
-                + "WHERE o.working_status_id IS NOT NULL and eo.id!=? and eo.to_date IS NULL and eo.employee_id=? and eo.school_id=?;";
+                + "set eo.effected_by_id = ?, eo.to_date = ? "
+                + "WHERE o.working_status_id IS NOT NULL and eo.id != ? and eo.to_date IS NULL and eo.employee_id = ? and eo.school_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, eo.getEffected_by_id());
         stat.setDate(2, new java.sql.Date(eo.getFrom_date().getTime()));
@@ -138,7 +138,7 @@ public class DbEmployeeOrder extends BaseDb {
     public int exec_update_after_update(int effected_by_id, Date to_date) throws SQLException {
 
 
-        String sql = "update hr_employee_order as eo set eo.to_date=? WHERE eo.effected_by_id=?;";
+        String sql = "update hr_employee_order as eo set eo.to_date = ? WHERE eo.effected_by_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(to_date.getTime()));
         stat.setInt(2, effected_by_id);
@@ -147,7 +147,7 @@ public class DbEmployeeOrder extends BaseDb {
 
     public int exec_update_before_delete(String effected_by_id) throws SQLException {
         String sql = "update hr_employee_order as eo set eo.to_date=NULL "
-                + "WHERE eo.effected_by_id=?;";
+                + "WHERE eo.effected_by_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, effected_by_id);
         return stat.executeUpdate();
@@ -188,7 +188,7 @@ public class DbEmployeeOrder extends BaseDb {
                 + "FROM hr_employee_order AS eo "
                 + "LEFT JOIN hr_orders AS o ON o.id = eo.hr_orders_id "
                 + "LEFT JOIN class_name AS cln ON cln.id = eo.class_name_id LEFT JOIN class_number AS cn ON cn.id = cln.class_number_id "
-                + "WHERE eo.employee_id = ? and eo.school_id = ? and o.id = 3 order by eo.id;";
+                + "WHERE eo.employee_id = ? and eo.school_id = ? and o.id = 3 order by eo.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);
@@ -252,7 +252,7 @@ public class DbEmployeeOrder extends BaseDb {
                 + "LEFT JOIN hr_orders AS o ON o.id = eo.hr_orders_id "
                 + "LEFT JOIN school AS sch ON sch.id = eo.from_to_school_id LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id "
                 + "LEFT JOIN class_name AS cln ON cln.id = eo.class_name_id LEFT JOIN class_number AS cn ON cn.id = cln.class_number_id "
-                + "WHERE eo.employee_id = ? and eo.school_id = ? and o.id != 3 order by eo.id;";
+                + "WHERE eo.employee_id = ? and eo.school_id = ? and o.id != 3 order by eo.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         stat.setInt(2, school_id);
@@ -356,7 +356,7 @@ public class DbEmployeeOrder extends BaseDb {
                 + "FROM hr_employee_order AS eo LEFT JOIN hr_orders AS o ON o.id = eo.hr_orders_id "
                 + "LEFT JOIN school AS sch ON sch.id = eo.from_to_school_id LEFT JOIN hr_position AS p ON p.id = eo.hr_position_id "
                 + "LEFT JOIN class_name AS cln ON cln.id = eo.class_name_id LEFT JOIN class_number AS cn ON cn.id = cln.class_number_id "
-                + "WHERE eo.employee_id = ? order by eo.id;";
+                + "WHERE eo.employee_id = ? order by eo.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();

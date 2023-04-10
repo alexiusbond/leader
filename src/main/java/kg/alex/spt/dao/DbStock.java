@@ -27,7 +27,7 @@ public class DbStock extends BaseDb {
 
         String sql = "SELECT t.id, t.name, t.school_id, t.activity_status_id, ac.name FROM dp_stock as t "
                 + "left join activity_status as ac on ac.id=t.activity_status_id "
-                + "where t.school_id = ? order by t.name;";
+                + "where t.school_id = ? order by t.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -55,7 +55,7 @@ public class DbStock extends BaseDb {
 
     public int exec_insert(Stock def) throws SQLException {
         String sql = "INSERT IGNORE INTO dp_stock (name,school_id,activity_status_id) "
-                + "VALUES(?,?,?);";
+                + "VALUES(?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, def.getName());
         stat.setInt(2, def.getSchool_id());
@@ -70,8 +70,8 @@ public class DbStock extends BaseDb {
     }
 
     public int exec_update(Stock cl) throws SQLException {
-        String sql = "UPDATE dp_stock SET name=?, school_id=?,activity_status_id=? "
-                + "WHERE id=?";
+        String sql = "UPDATE dp_stock SET name = ?, school_id = ?,activity_status_id = ? "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, cl.getName());
         stat.setInt(2, cl.getSchool_id());

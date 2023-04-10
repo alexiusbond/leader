@@ -65,7 +65,7 @@ public class DbYear extends BaseDb {
         int id = getMaxId();
         String sql = "INSERT IGNORE INTO year (id, name, period,"
                 + "period_kg, start_date, end_date) "
-                + "VALUES(?,?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, id + 1);
         stat.setString(2, y.getName());
@@ -83,9 +83,9 @@ public class DbYear extends BaseDb {
     }
 
     public int exec_update(Year y) throws SQLException {
-        String sql = "UPDATE year SET name=?, period=?, period_kg=?,"
-                + "start_date=?, end_date=?  "
-                + "WHERE id=?";
+        String sql = "UPDATE year SET name = ?, period = ?, period_kg = ?,"
+                + "start_date = ?, end_date = ?  "
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, y.getName());
         stat.setString(2, y.getPeriod());

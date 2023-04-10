@@ -31,7 +31,7 @@ public class DbRoom extends BaseDb {
                 "left join dm_floor as f on f.id = r.floor_id " +
                 "left join dm_block as b on b.id = r.block_id " +
                 "where b.school_id = ? " +
-                "order by r.block_id, r.floor_id, r.name, b.activity_status_id;";
+                "order by r.block_id, r.floor_id, r.name, b.activity_status_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -72,7 +72,7 @@ public class DbRoom extends BaseDb {
     public int exec_insert(Room room) throws SQLException {
         String sql = "INSERT IGNORE INTO dm_room (name, description, block_id, floor_id, " +
                 "activity_status_id) "
-                + "VALUES(?,?,?,?,?);";
+                + "VALUES(?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, room.getName());
         stat.setString(2, room.getDescription());
@@ -108,7 +108,7 @@ public class DbRoom extends BaseDb {
                 + "WHEN t.description IS NULL OR t.description = '-' THEN ''"
                 + "ELSE t.description END) AS room from dm_room as t where t.block_id = ? "
                 + "and t.floor_id = ? and t.activity_status_id = 2 "
-                + "order by t.block_id, t.floor_id, t.name;";
+                + "order by t.block_id, t.floor_id, t.name";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, block_id);
         stat.setInt(2, floor_id);

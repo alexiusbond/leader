@@ -46,7 +46,7 @@ public class DbTransfers extends BaseDb {
         Subject currentUser = SecurityUtils.getSubject();
 
         String sql = "SELECT t.id, t.amount, t.acc_category_id, t.acc_currency_id, t.currency_rate, t.note "
-                + "FROM acc_transfers as t where t.invoice_id = ? order by t.id;";
+                + "FROM acc_transfers as t where t.invoice_id = ? order by t.id";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
@@ -110,7 +110,7 @@ public class DbTransfers extends BaseDb {
     public Map<Integer, Transfer> execSQL(int invoice_id)
             throws SQLException {
         String sql = "SELECT t.id, t.amount, t.acc_balance_settings_id, t.note "
-                + "FROM acc_transfers as t where t.invoice_id = ? order by t.id;";
+                + "FROM acc_transfers as t where t.invoice_id = ? order by t.id";
 
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, invoice_id);
@@ -138,7 +138,7 @@ public class DbTransfers extends BaseDb {
                 "where inv.school_id = ? and date(inv.creation_date) >= ? and date(inv.creation_date) <= ? " +
                 "and ac.acc_type_id in(" + type_ids + ") and t.acc_category_id in ( " +
                 selectedCategoryIds + ") and inv.is_confirmed = 1 " +
-                "order by inv.creation_date asc, ac.id;";
+                "order by inv.creation_date asc, ac.id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, school_id);
         stat.setDate(2, new java.sql.Date(from_date.getTime()));
@@ -198,7 +198,7 @@ public class DbTransfers extends BaseDb {
     public SchoolAccounting exec_get_ttls(int scl_id, Date from, Date till, String cat_ids) throws SQLException {
         String sql = "SELECT "
                 + "SUM(IF(cat.acc_type_id = 3 AND DATE(inv.creation_date) >= ? AND DATE(inv.creation_date) <= ?, "
-                + "if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)) , 0.0)) AS assersTtl, "
+                + "if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)), 0.0)) AS assersTtl, "
                 + "SUM(IF(cat.acc_type_id = 4 AND DATE(inv.creation_date) >= ? AND DATE(inv.creation_date) <= ?, "
                 + "if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)), 0.0)) AS debtsTtl, "
                 + "SUM(IF(DATE(inv.creation_date) < ?, IF(cat.acc_type_id = 3, if(tr.acc_currency_id = 2, tr.amount, ROUND(tr.amount/tr.currency_rate,2)), "
@@ -228,7 +228,7 @@ public class DbTransfers extends BaseDb {
 
     public int exec_insert(Transfer acr) throws SQLException {
         String sql = "INSERT INTO acc_transfers (invoice_id,acc_category_id,"
-                + "acc_currency_id,amount,currency_rate,note,acc_balance_settings_id) VALUES(?,?,?,?,?,?,?);";
+                + "acc_currency_id,amount,currency_rate,note,acc_balance_settings_id) VALUES(?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acr.getInvoice_id());
         stat.setInt(2, acr.getAcc_category_id());
@@ -256,7 +256,7 @@ public class DbTransfers extends BaseDb {
     public int exec_update(Transfer acr) throws SQLException {
         String sql = "update acc_transfers set "
                 + "acc_category_id = ?, acc_currency_id = ?, amount = ?, currency_rate = ?, note = ? "
-                + "WHERE id=?;";
+                + "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, acr.getAcc_category_id());
         stat.setInt(2, acr.getCurrency_id());
