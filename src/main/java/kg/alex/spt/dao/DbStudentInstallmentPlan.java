@@ -121,8 +121,9 @@ public class DbStudentInstallmentPlan extends BaseDb {
                                                     Date till, int year_id, String class_ids, String edu_statuses_ids,
                                                     ClassInstPlanReport cip) throws SQLException {
 
-        String sql = "SELECT ip.id, ip.date_of_payment, CONCAT(cnu.name, ' - ', cna.name) AS class_name, "
-                + "st.name, st.surname, ip.amount, concat(sr.phone,' (',sr.fullname,')') as phone FROM student_installement_plan AS ip "
+        String sql = "SELECT ip.id, ip.date_of_payment, vcs.class_name, "
+                + "st.name, st.surname, ip.amount, concat(sr.phone,' (',sr.fullname,')') as phone "
+                + "FROM student_installement_plan AS ip "
                 + "LEFT JOIN student AS st ON st.id = ip.student_id "
                 + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ?  "
                 + "left join student_relatives as sr on st.id = sr.student_id and sr.is_main = 1 "
@@ -147,7 +148,7 @@ public class DbStudentInstallmentPlan extends BaseDb {
             Item item = container.addItem(result.getInt("ip.id"));
             item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("st.name"));
             item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(result.getString("class_name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(result.getString("vcs.class_name"));
             item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("ip.amount"));
             item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(result.getString("phone"));
             item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format((result.getDate("ip.date_of_payment"))));

@@ -906,7 +906,7 @@ public class DbStudentContract extends BaseDb {
                 + "(SELECT sch.id AS s_id, sch.name_ru AS s_name, SUM(inst.amount) AS amn, MONTH(inst.date_of_payment) AS mnth "
                 + "FROM student_installement_plan AS inst LEFT JOIN student AS st ON st.id = inst.student_id "
                 + "LEFT JOIN school AS sch ON sch.id = st.school_id "
-                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "WHERE inst.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") GROUP BY sch.id, "
                 + "MONTH(inst.date_of_payment)) AS i_temp "
                 + "ON i_temp.mnth = months.id AND s_temp.id = i_temp.s_id "
@@ -914,7 +914,7 @@ public class DbStudentContract extends BaseDb {
                 + "MONTH(pay.modification_date) AS mnth FROM student_payments AS pay "
                 + "LEFT JOIN student AS st ON st.id = pay.student_id "
                 + "LEFT JOIN school AS sch ON sch.id = st.school_id "
-                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? "
+                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "WHERE pay.year_id = ? AND vcs.education_status_id IN (" + edu_statuses_ids + ") "
                 + "GROUP BY sch.id, MONTH(pay.modification_date)) AS p_temp ON p_temp.mnth = months.id "
                 + "AND s_temp.id = p_temp.s_id WHERE s_temp.id IN (" + school_ids + ") ORDER BY "
@@ -1111,6 +1111,7 @@ public class DbStudentContract extends BaseDb {
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
             stat.setInt(++counter, year_id);
@@ -1132,6 +1133,7 @@ public class DbStudentContract extends BaseDb {
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
+            stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(from_date.getTime()));
@@ -1146,6 +1148,7 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
         } else if (till_date != null) {
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
+            stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
             stat.setDate(++counter, new java.sql.Date(till_date.getTime()));
@@ -1856,8 +1859,8 @@ public class DbStudentContract extends BaseDb {
                 "c.name AS note, c.amount AS amount FROM student_contract AS sc " +
                 "LEFT JOIN student AS st ON st.id = sc.student_id LEFT JOIN year AS y ON sc.year_id = y.id " +
                 "LEFT JOIN contract AS c ON sc.contract_id = c.id " +
-                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
-                "WHERE sc.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_i IN (" + educationStatusIds + ") " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? " +
+                "WHERE sc.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY sc.creation_date) UNION " +
                 "(SELECT concat('sd', sd.id) as  id, vcs.class_name AS class, " +
                 "vcs.education_status AS education_status, st.login AS login, " +
@@ -1869,7 +1872,7 @@ public class DbStudentContract extends BaseDb {
                 "FROM student_discount AS sd " +
                 "LEFT JOIN student AS st ON st.id = sd.student_id LEFT JOIN year AS y ON sd.year_id = y.id " +
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
-                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? " +
                 "WHERE sd.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY sd.creation_date) UNION (" +
                 "SELECT concat('scc', scc.id) as  id, vcs.class_name AS class, " +
@@ -1879,7 +1882,7 @@ public class DbStudentContract extends BaseDb {
                 "IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` FROM student_correction AS scc " +
                 "LEFT JOIN student AS st ON st.id = scc.student_id LEFT JOIN year AS y ON scc.year_id = y.id " +
                 "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
-                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? " +
                 "WHERE scc.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY scc.creation_date) UNION " +
                 "(SELECT concat('sp', sp.id) as  id, vcs.class_name AS class, vcs.education_status AS education_status, st.login AS login, " +
@@ -1889,7 +1892,7 @@ public class DbStudentContract extends BaseDb {
                 "FROM student_payments AS sp LEFT JOIN student AS st ON st.id = sp.student_id " +
                 "LEFT JOIN year AS y ON sp.year_id = y.id LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                 "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
-                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year = ? " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? " +
                 "WHERE sp.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY DATE(sp.modification_date))) AS t WHERE 1 ";
         if (fromDate != null) {

@@ -121,11 +121,14 @@ public class DbStudent extends BaseDb {
     public IndexedContainer exec_for_select(MyVaadinUI myUi, int scl_id, int year_id, String edu_sts)
             throws SQLException {
 
-        String sql = "SELECT s.id, s.name, s.surname, vcs.class_number, vcs.class_name "
-                + "FROM student as s "
-                + "left join view_student_class_status as vcs on vcs.student_id = s.id and vcs.year_id = ? "
-                + "WHERE s.school_id = ? and vcs.education_status_id in (" + edu_sts + ") "
-                + "ORDER BY vcs.class_number_id, vcs.class_name_id, s.name, s.surname";
+        String sql = "SELECT s.id, s.name, s.surname, " +
+                "IFNULL(vcs.class_number, vlcs.class_number) as class_number, " +
+                "IFNULL(vcs.class_name, vlcs.class_name) as class_name " +
+                "FROM student as s " +
+                "left join view_student_class_status as vcs on vcs.student_id = s.id and vcs.year_id = ? " +
+                "left join view_student_last_class_status as vlcs on vlcs.student_id = s.id " +
+                "WHERE s.school_id = ? and vcs.education_status_id in (" + edu_sts + ") " +
+                "ORDER BY vcs.class_number_id, vcs.class_name_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, scl_id);
@@ -141,27 +144,31 @@ public class DbStudent extends BaseDb {
                     result.getString("s.name")
                             + " " + result.getString("s.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassNumber)).setValue(
-                    result.getString("vcs.class_number"));
+                    result.getString("class_number"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("s.name") + " " +
                             result.getString("s.surname") + " - " +
-                            result.getString("vcs.class_name"));
+                            result.getString("class_name"));
         }
         return container;
     }
 
-    public IndexedContainer execSQL_for_orders(MyVaadinUI myUi, int scl_id, int year_id,
+    public IndexedContainer execSQL_for_orders(MyVaadinUI myUi, int school_id, int year_id,
                                                IssueOrderView iv) throws SQLException {
 
-        String sql = "SELECT s.id, s.login, s.name, s.surname, vcs.education_status, s.entering_year_id, "
-                + "vcs.class_name, vcs.class_name_id, vcs.education_status_id "
-                + "FROM student as s "
-                + "left join view_student_class_status as vcs on s.id = vcs.student_id and vcs.year_id = ? "
-                + "WHERE s.school_id = ? and s.entering_year_id <= ? "
-                + "ORDER BY vcs.education_status_id, s.name, s.surname";
+        String sql = "SELECT s.id, s.login, s.name, s.surname, s.entering_year_id, " +
+                "ifnull(vcs.education_status, vlcs.education_status) as education_status, " +
+                "ifnull(vcs.class_name, vlcs.class_name) as class_name, " +
+                "ifnull(vcs.class_name_id, vlcs.class_name_id) as class_name_id, " +
+                "ifnull(vcs.education_status_id, vlcs.education_status_id) as education_status_id " +
+                "FROM student as s " +
+                "left join view_student_class_status as vcs on s.id = vcs.student_id and vcs.year_id = ? " +
+                "left join view_student_last_class_status as vlcs on s.id = vlcs.student_id " +
+                "WHERE s.school_id = ? and s.entering_year_id <= ? " +
+                "ORDER BY vcs.education_status_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
-        stat.setInt(2, scl_id);
+        stat.setInt(2, school_id);
         stat.setInt(3, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
@@ -188,13 +195,13 @@ public class DbStudent extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
                     result.getString("s.surname"));
             item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
-                    result.getString("vcs.education_status"));
+                    result.getString("education_status"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("vcs.class_name"));
+                    result.getString("class_name"));
             item.getItemProperty(Settings.class_id).setValue(
-                    result.getInt("vcs.class_name_id"));
+                    result.getInt("class_name_id"));
             item.getItemProperty(Settings.education_status_id).setValue(
-                    result.getInt("vcs.education_status_id"));
+                    result.getInt("education_status_id"));
             item.getItemProperty(Settings.entering_year_id).setValue(
                     result.getInt("s.entering_year_id"));
         }
