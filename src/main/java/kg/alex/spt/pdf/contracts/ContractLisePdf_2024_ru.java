@@ -501,7 +501,7 @@ public class ContractLisePdf_2024_ru {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("2.3.2. Ежегодно с 1 апреля по 15 мая родители обязаны заключать контракт на следующий учебный год, с обязательным внесением ", ordFont));
-                paragraph.add(new Phrase("20% предоплаты ", ordBoldFont));
+                paragraph.add(new Phrase("30% предоплаты ", ordBoldFont));
                 paragraph.add(new Phrase("родительского взноса.", ordFont));
                 document.add(paragraph);
 

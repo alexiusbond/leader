@@ -25,7 +25,7 @@ public class DbSchool extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi) throws SQLException {
 
-        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, y.name, t.name, "
+        String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, t.name, "
                 + "s.activity_status_id, ac.name, s.city, s.address, "
                 + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
                 + "left join activity_status as ac on ac.id = s.activity_status_id "
@@ -90,7 +90,7 @@ public class DbSchool extends BaseDb {
 
     public int exec_update(School scl) throws SQLException {
         String sql = "UPDATE school SET code = ?, name_ru = ?, name_kg = ?, name_en = ?, activity_status_id = ?, " +
-                "address = ?, inn = ?,bank = ?, bank_account = ?,phone = ?, photo = ?,city = ?,school_type_id = ? " +
+                "address = ?, inn = ?, bank = ?, bank_account = ?, phone = ?, photo = ?, city = ?, school_type_id = ? " +
                 "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, scl.getCode());

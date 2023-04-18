@@ -271,15 +271,17 @@ public class DbStudentOrder extends BaseDb {
                 + "year_id, reason, modification_date, employee_id) "
                 + "select st.id, 4, vcs.class_name_id, vcs.class_name_id, 2, 1, ?, "
                 + "NULL, now(), ? from student as st "
-                + "left join view_student_class_status as vcs on  st.id = vcs.student_id and vcs.year_id = ? "
+                + "left join view_student_class_status as vcs on st.id = vcs.student_id and vcs.year_id = ? "
+                + "left join view_student_class_status as vccs on st.id = vccs.student_id and vccs.year_id = ? "
                 + "where vcs.education_status_id = 2 and st.entering_year_id <= ? "
-                + "and st.school_id = ? and vcs.student_id IS NULL";
+                + "and st.school_id = ? and vccs.student_id IS NULL";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, next_year_id);
         stat.setInt(2, emp_id);
-        stat.setInt(3, next_year_id);
+        stat.setInt(3, next_year_id - 1);
         stat.setInt(4, next_year_id);
-        stat.setInt(5, school_id);
+        stat.setInt(5, next_year_id);
+        stat.setInt(6, school_id);
         return stat.executeUpdate();
     }
 

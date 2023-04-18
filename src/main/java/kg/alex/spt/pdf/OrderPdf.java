@@ -71,14 +71,14 @@ public class OrderPdf {
                     ct.addElement(paragraph);
                     ct.addElement(new Paragraph(45, " "));
 
-                    Image img;
+                    /*Image img;
                     if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
                         img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.png");
                     } else {
                         img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.jpg");
                     }
                     img.setAlignment(Image.RIGHT);
-                    img.scaleAbsolute(250, 110);
+                    img.scaleAbsolute(250, 110);*/
                     float[] table_date_colsWidth = {1.0f, 1.0f, 1.0f};
                     PdfPTable table_date = new PdfPTable(3);
                     table_date.setWidthPercentage(90f);
@@ -86,7 +86,8 @@ public class OrderPdf {
                     table_date.getDefaultCell().setBorder(0);
                     table_date.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
                     table_date.addCell(new Phrase("президент", fontBold));
-                    table_date.addCell(img);
+                    //table_date.addCell(img);
+                    table_date.addCell(new Phrase(" "));
                     if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
                         table_date.addCell(new Phrase("Кудайбердиев Н.Ш.", fontBold));
                     } else {

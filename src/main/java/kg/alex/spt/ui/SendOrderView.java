@@ -409,8 +409,8 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                     + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
                     "Жобосунун 3-пунктунун негизинде "
                     + yearSelect.getItemCaption(yearSelect.getValue())
-                    + "-окуу жылынын окуу төлөмүндө УБ КР курсу менен " +
-                    discountTF.getPropertyDataSource().getValue() + " АКШ доллар жеңилдик берилсин.");
+                    + "-окуу жылынын окуу төлөмүндө " +
+                    discountTF.getPropertyDataSource().getValue() + " сом жеңилдик берилсин.");
         }
         if (property == studentSelect) {
             if (studentSelect.getValue() != null && (Integer) studentSelect.getValue() == 0) {

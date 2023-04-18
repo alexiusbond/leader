@@ -40,16 +40,21 @@ public class DbStudent extends BaseDb {
         if (edu_sts.equals("")) {
             edu_sts = "-1";
         }
-        String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, s.entering_year_id, "
-                + "s.date_of_birth, s.photo, s.gender_id, vcs.education_status_id, vcs.education_status, y.name, "
-                + "vcs.class_name_id, vcs.class_name, sr.fullname, sr.phone, rel.name "
-                + "FROM student as s "
-                + "LEFT JOIN student_relatives AS sr ON s.id = sr.student_id AND sr.is_main = 1 "
-                + "LEFT JOIN relatives AS rel ON sr.relatives_id = rel.id "
-                + "left join view_student_class_status as vcs on s.id = vcs.student_id and vcs.year_id = ? "
-                + "left join year as y on s.entering_year_id = y.id "
-                + "WHERE s.school_id = ? and s.entering_year_id <= ? and vcs.education_status_id in (" + edu_sts + ") "
-                + "GROUP BY s.id ORDER BY vcs.education_status_id, s.name, s.surname";
+        String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, s.entering_year_id, " +
+                "s.date_of_birth, s.photo, s.gender_id, y.name, sr.fullname, sr.phone, rel.name, " +
+                "ifnull(vcs.education_status, vlcs.education_status) as education_status, " +
+                "ifnull(vcs.class_name, vlcs.class_name) as class_name, " +
+                "ifnull(vcs.class_name_id, vlcs.class_name_id) as class_name_id, " +
+                "ifnull(vcs.education_status_id, vlcs.education_status_id) as education_status_id " +
+                "FROM student as s " +
+                "LEFT JOIN student_relatives AS sr ON s.id = sr.student_id AND sr.is_main = 1 " +
+                "LEFT JOIN relatives AS rel ON sr.relatives_id = rel.id " +
+                "left join view_student_class_status as vcs on s.id = vcs.student_id and vcs.year_id = ? " +
+                "left join view_student_last_class_status as vlcs on s.id = vlcs.student_id " +
+                "left join year as y on s.entering_year_id = y.id " +
+                "WHERE s.school_id = ? and s.entering_year_id <= ? and (vcs.education_status_id in (" + edu_sts + ") " +
+                "or vlcs.education_status_id in (" + edu_sts + ")) " +
+                "GROUP BY s.id ORDER BY vcs.education_status_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, scl_id);
@@ -98,16 +103,16 @@ public class DbStudent extends BaseDb {
                     result.getDate("s.date_of_birth"));
             item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(result.getString("s.photo"));
             item.getItemProperty(Settings.gender_id).setValue(result.getInt("s.gender_id"));
-            item.getItemProperty(Settings.education_status_id).setValue(result.getInt("vcs.education_status_id"));
-            sdv.eduStatCont.getContainerProperty(result.getInt("vcs.education_status_id"), Settings.count)
+            item.getItemProperty(Settings.education_status_id).setValue(result.getInt("education_status_id"));
+            sdv.eduStatCont.getContainerProperty(result.getInt("education_status_id"), Settings.count)
                     .setValue(((Integer) sdv.eduStatCont.getContainerProperty(
-                            result.getInt("vcs.education_status_id"), Settings.count).getValue()) + 1);
+                            result.getInt("education_status_id"), Settings.count).getValue()) + 1);
             item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
-                    result.getString("vcs.education_status"));
+                    result.getString("education_status"));
             item.getItemProperty(Settings.class_name_id).setValue(
-                    result.getInt("vcs.class_name_id"));
+                    result.getInt("class_name_id"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
-                    result.getString("vcs.class_name"));
+                    result.getString("class_name"));
             item.getItemProperty(myUi.getMessage(SptMessages.EnteringYear)).setValue(
                     result.getString("y.name"));
             item.getItemProperty(Settings.entering_year_id).setValue(

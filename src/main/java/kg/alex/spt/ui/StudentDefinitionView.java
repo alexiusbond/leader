@@ -26,6 +26,7 @@ import kg.alex.spt.domain.*;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InvoicePDF;
 import kg.alex.spt.pdf.contracts.*;
+import kg.alex.spt.utils.ExistsValidator;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import kg.alex.spt.utils.MyFilterGenerator;
@@ -1401,40 +1402,44 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     studInfo.getContractInfo().setNet(toPay);
                     studInfo.getContractInfo().setLeft(ttl_left);
                     if (studInfo.getRelative() != null && studInfo.getRelative().getFullName() != null) {
-                        if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null
-                                && studInfo.getDirector() != null) {
-                            saveBtn.click();
-                            if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrRu))) {
-                                if (myUI.getUser().getCurrent_year().getId() == 9) {
-                                    new ContractLisePdf_2024_ru(myUI, studInfo, instPlanCont);
-                                } else {
-                                    new ContractLisePdf_2023_ru(myUI, studInfo, instPlanCont);
+                        if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
+                            if (studInfo.getDirector() != null) {
+                                saveBtn.click();
+                                if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrRu))) {
+                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
+                                        new ContractLisePdf_2024_ru(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractLisePdf_2023_ru(myUI, studInfo, instPlanCont);
+                                    }
+                                    contLangOG.setValue(null);
+                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrKg))) {
+                                    new ContractLisePdf_kg(myUI, studInfo, instPlanCont);
+                                    contLangOG.setValue(null);
+                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrRu))) {
+                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
+                                        new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
+                                    }
+                                    contLangOG.setValue(null);
+                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrKg))) {
+                                    new ContractSchoolPdf_kg(myUI, studInfo, instPlanCont);
+                                    contLangOG.setValue(null);
+                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeOshContrRu))) {
+                                    new ContractCambridgeOshPdf_ru(myUI, studInfo, instPlanCont);
+                                    contLangOG.setValue(null);
+                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrRu))) {
+                                    new ContractCambridgePdf_ru(myUI, studInfo, instPlanCont);
+                                    contLangOG.setValue(null);
+                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrEn))) {
+                                    new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
+                                    contLangOG.setValue(null);
                                 }
-                                contLangOG.setValue(null);
-                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrKg))) {
-                                new ContractLisePdf_kg(myUI, studInfo, instPlanCont);
-                                contLangOG.setValue(null);
-                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrRu))) {
-                                if (myUI.getUser().getCurrent_year().getId() == 9) {
-                                    new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
-                                } else {
-                                    new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
-                                }
-                                contLangOG.setValue(null);
-                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrKg))) {
-                                new ContractSchoolPdf_kg(myUI, studInfo, instPlanCont);
-                                contLangOG.setValue(null);
-                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeOshContrRu))) {
-                                new ContractCambridgeOshPdf_ru(myUI, studInfo, instPlanCont);
-                                contLangOG.setValue(null);
-                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrRu))) {
-                                new ContractCambridgePdf_ru(myUI, studInfo, instPlanCont);
-                                contLangOG.setValue(null);
-                            } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrEn))) {
-                                new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
+                            } else {
+                                Notification.show(myUI.getMessage(SptMessages.NoDirectorAssigned),
+                                        Notification.Type.WARNING_MESSAGE);
                                 contLangOG.setValue(null);
                             }
-
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                                     Notification.Type.WARNING_MESSAGE);
@@ -2355,6 +2360,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     public ComboBox createComboboxDisc(int value, String description, String itemId) {
         ComboBox cb = new ComboBox();
+        cb.addValidator(new ExistsValidator(myUI, discountsTable.getContainerDataSource(),
+                cb, myUI.getMessage(SptMessages.Title)));
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth(Settings.PERCENTS100);
@@ -2365,7 +2372,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         try {
             DbDiscount dbd = new DbDiscount();
             dbd.connect();
-            cb.setContainerDataSource(dbd.exec_for_select(myUI, myUI.getUser().getCurrent_year().getId(), value));
+            cb.setContainerDataSource(dbd.exec_for_select(
+                    myUI, myUI.getUser().getCurrent_year().getId(), value, (Integer) studDataTable.getValue()));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
@@ -4209,7 +4217,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             myUI.getMessage(SptMessages.DiscountType)).getValue() == 4) {
                 ((TextField) discountsTable.getContainerProperty(((ComboBox) property).getData(),
                         myUI.getMessage(SptMessages.Amount)).getValue()).removeAllValidators();
-
                 ((TextField) discountsTable.getContainerProperty(((ComboBox) property).getData(),
                         myUI.getMessage(SptMessages.Amount)).getValue()).addValidator(new DoubleRangeValidator(
                         myUI.getMessage(SptMessages.NotificationWrongValue), 0.01,

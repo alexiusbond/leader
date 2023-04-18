@@ -48,6 +48,7 @@ public class Settings implements Serializable {
     public static final String transferred = " [переведен]";
     public static final String number_id = "number_id";
     public static final String status_id = "status_id";
+    public static final String is_order_discount = "is_order_discount";
     public static final String block_id = "block_id";
     public static final String room_id = "room_id";
     public static final String floor_id = "floor_id";

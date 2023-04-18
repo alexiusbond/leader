@@ -136,9 +136,8 @@ public class DbStudentDiscount extends BaseDb {
         while (result.next()) {
             String id = result.getString("sd.id");
             Item item = container.addItem(id);
-            Button b =
-                    dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
-                            Settings.dbStudentDiscount, FontAwesome.MINUS_SQUARE);
+            Button b = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                    Settings.dbStudentDiscount, FontAwesome.MINUS_SQUARE);
             if (!currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actDelete)) {
                 b.setEnabled(false);
             }
@@ -420,8 +419,8 @@ public class DbStudentDiscount extends BaseDb {
 
         StringBuilder sql = new StringBuilder(
                 "SELECT sd.discount_id, COUNT(sd.discount_id) AS disc_quantity, "
-                + "SUM(sd.discount_value) AS disc_amount, "
-                + "SUM(c.amount) AS contr_amount");
+                        + "SUM(sd.discount_value) AS disc_amount, "
+                        + "SUM(c.amount) AS contr_amount");
         Iterator<?> school_iter = ((Set<?>) sdr.schoolTable.getValue()).iterator();
         while (school_iter.hasNext()) {
             Object next = school_iter.next();
@@ -432,11 +431,11 @@ public class DbStudentDiscount extends BaseDb {
                     .append(next).append(" ");
         }
         sql.append(" FROM student_discount AS sd "
-                + "LEFT JOIN student AS st ON sd.student_id = st.id "
-                + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id AND sd.year_id = sc.year_id "
-                + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
-                + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
-                + "WHERE sd.year_id = ? AND st.school_id IN (")
+                        + "LEFT JOIN student AS st ON sd.student_id = st.id "
+                        + "LEFT JOIN student_contract AS sc ON sd.student_id = sc.student_id AND sd.year_id = sc.year_id "
+                        + "LEFT JOIN contract AS c ON c.id = sc.contract_id "
+                        + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
+                        + "WHERE sd.year_id = ? AND st.school_id IN (")
                 .append(Settings.convertCollectionToStr(((Set<?>) sdr.schoolTable.getValue())))
                 .append(") ").append("AND sd.discount_id IN (")
                 .append(Settings.convertCollectionToStr(((Set<?>) sdr.discountsTable.getValue()))).append(") ")

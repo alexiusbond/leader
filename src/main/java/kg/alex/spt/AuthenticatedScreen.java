@@ -627,6 +627,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                         myUI.getUser().getSchool().setPhoto(schoolSelect.getContainerProperty(schoolSelect.getValue(),
                                 myUI.getMessage(SptMessages.Logo)).getValue().toString());
                     }
+                    insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
+                            myUI.getUser().getId());
                     updatePage();
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),

@@ -11,15 +11,21 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Discount;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.ui.StudentDefinitionView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * @author alex
  */
 public class DbDiscount extends BaseDb {
+
+    static final Logger logger = LogManager.getLogger(DbDiscount.class);
 
     public DbDiscount() throws Exception {
         super();
@@ -132,7 +138,6 @@ public class DbDiscount extends BaseDb {
 
     public IndexedContainer exec_disc_select(MyVaadinUI myUi, int year_id) throws SQLException {
 
-
         String sql = "select t.id, t.name, t.amount, t.discount_type_id "
                 + "from discount as t "
                 + "where t.year_id = ? and t.activity_status_id = 2 "
@@ -167,42 +172,62 @@ public class DbDiscount extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int dis_id)
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int discount_id, int student_id)
             throws SQLException {
-        String sql = "SELECT d.id, d.name, d.amount, d.discount_type_id "
-                + "FROM discount as d "
-                + "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?)";
+        double orderDiscount = 0.0;
+        try {
+            DbOrderMessage dbCon = new DbOrderMessage();
+            dbCon.connect();
+            orderDiscount = dbCon.execSQL_discountAmount(year_id, student_id);
+            dbCon.close();
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
+        }
+        String sql = "SELECT d.id, d.name, " +
+                "(CASE WHEN d.is_order_discount AND ? IS NOT NULL THEN ? ELSE d.amount END) as amount, " +
+                "d.discount_type_id, d.is_order_discount FROM discount as d " +
+                "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, dis_id);
+        if (orderDiscount != 0.0) {
+            stat.setDouble(1, orderDiscount);
+        } else {
+            stat.setNull(1, Types.DOUBLE);
+        }
+        stat.setDouble(2, orderDiscount / myUi.getDb_currency_rate());
+        stat.setInt(3, year_id);
+        stat.setInt(4, discount_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
         container.addContainerProperty(myUi.getMessage(SptMessages.DiscountType), Integer.class, null);
+        container.addContainerProperty(Settings.is_order_discount, Boolean.class, false);
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.id"));
             if (result.getInt("d.discount_type_id") == 3) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - (max "
-                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "%)");
+                                + Settings.dFormat2.format(result.getDouble("amount")) + "%)");
             } else if (result.getInt("d.discount_type_id") == 4) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - (max "
-                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "$)");
+                                + Settings.dFormat2.format(result.getDouble("amount")) + "$)");
             } else if (result.getInt("d.discount_type_id") == 1) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - "
-                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "%");
+                                + Settings.dFormat2.format(result.getDouble("amount")) + "%");
             } else if (result.getInt("d.discount_type_id") == 2) {
                 item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                         result.getString("d.name") + " - "
-                                + Settings.dFormat2.format(result.getDouble("d.amount")) + "$");
+                                + Settings.dFormat2.format(result.getDouble("amount")) + "$");
             }
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
-                    result.getDouble("d.amount"));
+                    result.getDouble("amount"));
             item.getItemProperty(myUi.getMessage(SptMessages.DiscountType)).setValue(
                     result.getInt("d.discount_type_id"));
+            item.getItemProperty(Settings.is_order_discount).setValue(
+                    result.getBoolean("d.is_order_discount"));
         }
         return container;
     }

@@ -55,7 +55,7 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
 
         String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
                 myUI.getMessage(SptMessages.TitleRu), myUI.getMessage(SptMessages.TitleKg),
-                myUI.getMessage(SptMessages.TitleEn), myUI.getMessage(SptMessages.Year),
+                myUI.getMessage(SptMessages.TitleEn),
                 myUI.getMessage(SptMessages.SchoolType), myUI.getMessage(SptMessages.Status),
                 myUI.getMessage(SptMessages.Bank), myUI.getMessage(SptMessages.BankAccount),
                 myUI.getMessage(SptMessages.Address), myUI.getMessage(SptMessages.Phone)};
@@ -338,8 +338,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                             item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(codeTF.getValue());
                             item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
                                     codeTF.getValue() + " - " + nameRuTF.getValue());
-                            item.getItemProperty(Settings.year_id).setValue(
-                                    myUI.getUser().getCurrent_year().getId());
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
@@ -615,9 +613,6 @@ public class SchoolDefinitionView extends HorizontalSplitPanel implements Button
                 typeSelect.getContainerProperty(typeSelect.getValue(),
                         myUI.getMessage(SptMessages.Title)).getValue().toString());
         item.getItemProperty(Settings.school_type_id).setValue(typeSelect.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
-                myUI.getUser().getCurrent_year().getName());
-        item.getItemProperty(Settings.year_id).setValue(myUI.getUser().getCurrent_year().getId());
         item.getItemProperty(Settings.id).setValue(id);
         dataTable.setValue(id);
     }

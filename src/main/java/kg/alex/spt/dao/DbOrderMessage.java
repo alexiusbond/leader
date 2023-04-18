@@ -74,7 +74,7 @@ public class DbOrderMessage extends BaseDb {
         if (employee_id != 0) {
             sql += " WHERE om.employee_id = ? ";
         }
-        sql += "order by om.creation_date desc, CAST(substring(order_number, 9, 15) AS SIGNED) desc";
+        sql += "order by om.year_id DESC, om.creation_date DESC, CAST(substring(order_number, 9, 15) AS SIGNED) DESC";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (employee_id != 0) {
             stat.setInt(1, employee_id);
@@ -138,5 +138,20 @@ public class DbOrderMessage extends BaseDb {
                     myUi.getMessage(SptMessages.Total) + ": " + container.size());
         }
         return container;
+    }
+
+    public double execSQL_discountAmount(int year_id, int student_id) throws SQLException {
+        String sql = "SELECT discount FROM order_messages WHERE id = (SELECT MAX(id) FROM order_messages " +
+                "WHERE year_id = ? AND student_id = ?)";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+
+        stat.setInt(1, year_id);
+        stat.setInt(2, student_id);
+        ResultSet result = stat.executeQuery();
+        double discountAmount = 0.0;
+        if (result.next()) {
+            discountAmount = result.getDouble("discount");
+        }
+        return discountAmount;
     }
 }

@@ -135,7 +135,7 @@ public class ClassNameDefinitionView extends HorizontalSplitPanel implements But
         nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 15, false));
+                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 35, false));
         settingsLay.addComponent(nameTF);
 
         classNumberSelect = new ComboBox(myUI.getMessage(SptMessages.Number));
