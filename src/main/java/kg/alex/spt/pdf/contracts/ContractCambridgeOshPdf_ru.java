@@ -98,7 +98,7 @@ public class ContractCambridgeOshPdf_ru {
                     boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(studentInfo.getDirector().getSurname(), isFeminine)
                             + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
-                    if (!Objects.equals(studentInfo.getDirector().getMiddle_name(), "")) {
+                    if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(studentInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
                     }

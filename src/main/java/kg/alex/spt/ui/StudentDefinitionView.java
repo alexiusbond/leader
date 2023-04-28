@@ -54,11 +54,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private final MyVaadinUI myUI;
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, divideBtn;
     private final FilterTable studDataTable;
-    private final OptionGroup optionGroup;
+    private final OptionGroup statusesOG;
     private TextField nameTF, loginTF, surnameTF, middleNameTF, divideTF, initialPaymentTF;
     private DateField birthDate, currDate;
     private ComboBox genderCB, classCB, statusCB, contractCB;
-    private OptionGroup contLangOG;
+    private OptionGroup contractTypeOG;
     private FormLayout fieldsLay1, fieldsLay2;
     private int r_table_counter = 1000;
     private final int receive = 2;
@@ -195,19 +195,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             logger.error(e);
             logger.catching(e);
         }
-        optionGroup = new OptionGroup();
-        optionGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
-        optionGroup.setMultiSelect(true);
-        optionGroup.addItems(eduContainer.getItemIds());
+        statusesOG = new OptionGroup();
+        statusesOG.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
+        statusesOG.setMultiSelect(true);
+        statusesOG.addItems(eduContainer.getItemIds());
         for (Object o : eduContainer.getItemIds()) {
             Integer next = (Integer) o;
-            optionGroup.setItemCaption(next, eduContainer.getContainerProperty(next,
+            statusesOG.setItemCaption(next, eduContainer.getContainerProperty(next,
                     myUI.getMessage(SptMessages.Title)).getValue().toString());
             if (next <= 3) {
-                optionGroup.select(next);
+                statusesOG.select(next);
             }
         }
-        optionGroup.addValueChangeListener(this);
+        statusesOG.addValueChangeListener(this);
 
         studDataTable = new FilterTable();
         studDataTable.setFilterDecorator(new MyFilterDecorator(myUI));
@@ -218,7 +218,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.setSelectable(true);
         studDataTable.addValueChangeListener(this);
 
-        setStudDataTable(optionGroup.getValue().toString());
+        setStudDataTable(statusesOG.getValue().toString());
 
         HorizontalLayout studSearchLayFooter = new HorizontalLayout();
         studSearchLayFooter.setWidth(Settings.PERCENTS100);
@@ -247,12 +247,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studSearchLayFooter.setExpandRatio(eduStatTtlLab, 2);
 
         studSearchLay.addComponent(eduStatusLab, 0, 0);
-        studSearchLay.addComponent(optionGroup, 1, 0);
+        studSearchLay.addComponent(statusesOG, 1, 0);
         studSearchLay.addComponent(studDataTable, 0, 1, 1, 1);
         studSearchLay.addComponent(studSearchLayFooter, 0, 2, 1, 2);
         studSearchLay.setRowExpandRatio(1, 1);
         studSearchLay.setColumnExpandRatio(0, 1);
-        studSearchLay.setComponentAlignment(optionGroup, Alignment.MIDDLE_RIGHT);
+        studSearchLay.setComponentAlignment(statusesOG, Alignment.MIDDLE_RIGHT);
         studSearchLay.setComponentAlignment(eduStatusLab, Alignment.MIDDLE_RIGHT);
 
         this.setSplitPosition(37, Sizeable.Unit.PERCENTAGE);
@@ -501,16 +501,17 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             buttonsLay.addComponent(changeIdButton);
         }
 
-        contLangOG = new OptionGroup();
-        contLangOG.setNullSelectionAllowed(true);
-        contLangOG.addValueChangeListener(this);
-        contLangOG.addItem(myUI.getMessage(SptMessages.LiseContrRu));
-        contLangOG.addItem(myUI.getMessage(SptMessages.LiseContrKg));
-        contLangOG.addItem(myUI.getMessage(SptMessages.SchoolContrRu));
-        contLangOG.addItem(myUI.getMessage(SptMessages.SchoolContrKg));
-        contLangOG.addItem(myUI.getMessage(SptMessages.CambridgeOshContrRu));
-        contLangOG.addItem(myUI.getMessage(SptMessages.CambridgeContrRu));
-        contLangOG.addItem(myUI.getMessage(SptMessages.CambridgeContrEn));
+        contractTypeOG = new OptionGroup();
+        contractTypeOG.setNullSelectionAllowed(true);
+        contractTypeOG.addValueChangeListener(this);
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.LiseContrRu));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.LiseContrKg));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.SchoolContrRu));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.SchoolContrKg));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.CambridgeOshContrRu));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.CambridgeContrRu));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.CambridgeContrEn));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.UWIS_Contract));
 
         printButton = new PopupButton(myUI.getMessage(SptMessages.Print));
         printButton.setDescription(myUI.getMessage(SptMessages.Print));
@@ -518,7 +519,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         printButton.setImmediate(true);
         printButton.addClickListener(this);
         printButton.setEnabled(false);
-        printButton.setContent(contLangOG);
+        printButton.setContent(contractTypeOG);
         buttonsLay.addComponent(printButton);
         buttonsLay.setExpandRatio(printButton, 1);
     }
@@ -1220,7 +1221,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             if (initialPaymentTF.isValid()) {
                 recountInstPlanLabel();
             }
-        } else if (property == optionGroup) {
+        } else if (property == statusesOG) {
             setStudDataTable(property.getValue().toString());
             repaint();
         } else if (((AbstractField<?>) property).getId() != null
@@ -1299,7 +1300,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         (Double) tfRate.getPropertyDataSource().getValue());
                 tfKGS.getPropertyDataSource().setValue(0.0);
             }
-        } else if (property == contLangOG && contLangOG.getValue() != null) {
+        } else if (property == contractTypeOG && contractTypeOG.getValue() != null) {
             tabs.setSelectedTab(contractTabLay);
             if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()
                     && studDataTable.getValue() != null) {
@@ -1405,60 +1406,56 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
                                 saveBtn.click();
-                                if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrRu))) {
+                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrRu))) {
                                     if (myUI.getUser().getCurrent_year().getId() == 9) {
                                         new ContractLisePdf_2024_ru(myUI, studInfo, instPlanCont);
                                     } else {
                                         new ContractLisePdf_2023_ru(myUI, studInfo, instPlanCont);
                                     }
-                                    contLangOG.setValue(null);
-                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrKg))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrKg))) {
                                     new ContractLisePdf_kg(myUI, studInfo, instPlanCont);
-                                    contLangOG.setValue(null);
-                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrRu))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrRu))) {
                                     if (myUI.getUser().getCurrent_year().getId() == 9) {
                                         new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
                                     } else {
                                         new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
                                     }
-                                    contLangOG.setValue(null);
-                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrKg))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrKg))) {
                                     new ContractSchoolPdf_kg(myUI, studInfo, instPlanCont);
-                                    contLangOG.setValue(null);
-                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeOshContrRu))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeOshContrRu))) {
                                     new ContractCambridgeOshPdf_ru(myUI, studInfo, instPlanCont);
-                                    contLangOG.setValue(null);
-                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrRu))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrRu))) {
                                     new ContractCambridgePdf_ru(myUI, studInfo, instPlanCont);
-                                    contLangOG.setValue(null);
-                                } else if (contLangOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrEn))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrEn))) {
                                     new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
-                                    contLangOG.setValue(null);
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.UWIS_Contract))) {
+                                    new ContractUWIS_Pdf(myUI, studInfo, instPlanCont);
                                 }
+                                contractTypeOG.setValue(null);
                             } else {
                                 Notification.show(myUI.getMessage(SptMessages.NoDirectorAssigned),
                                         Notification.Type.WARNING_MESSAGE);
-                                contLangOG.setValue(null);
+                                contractTypeOG.setValue(null);
                             }
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                                     Notification.Type.WARNING_MESSAGE);
-                            contLangOG.setValue(null);
+                            contractTypeOG.setValue(null);
                         }
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.FillRelativeInfo),
                                 Notification.Type.WARNING_MESSAGE);
-                        contLangOG.setValue(null);
+                        contractTypeOG.setValue(null);
                     }
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.SelectContract),
                             Notification.Type.WARNING_MESSAGE);
-                    contLangOG.setValue(null);
+                    contractTypeOG.setValue(null);
                 }
             } else {
                 Notification.show(myUI.getMessage(SptMessages.SelectContractTab),
                         Notification.Type.WARNING_MESSAGE);
-                contLangOG.setValue(null);
+                contractTypeOG.setValue(null);
             }
 
         } else if (property instanceof TextField && property != nameTF && property != loginTF
@@ -2373,7 +2370,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             DbDiscount dbd = new DbDiscount();
             dbd.connect();
             cb.setContainerDataSource(dbd.exec_for_select(
-                    myUI, myUI.getUser().getCurrent_year().getId(), value, (Integer) studDataTable.getValue()));
+                    myUI, myUI.getUser().getCurrent_year().getId(), value,
+                    (Integer) studDataTable.getValue(),
+                    studDataTable.getContainerProperty(studDataTable.getValue(),
+                            myUI.getMessage(SptMessages.LastName)).getValue().toString().trim() + " "
+                            + studDataTable.getContainerProperty(studDataTable.getValue(),
+                            myUI.getMessage(SptMessages.FirstName)).getValue().toString().trim()));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);

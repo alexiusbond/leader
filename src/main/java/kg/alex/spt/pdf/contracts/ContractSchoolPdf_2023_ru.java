@@ -101,7 +101,7 @@ public class ContractSchoolPdf_2023_ru {
                     boolean isFeminine = studentInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(studentInfo.getDirector().getSurname(), isFeminine)
                             + " " + dcl.DeclineNameGenitive(studentInfo.getDirector().getName(), isFeminine, false);
-                    if (!Objects.equals(studentInfo.getDirector().getMiddle_name(), "")) {
+                    if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(studentInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
                     }
@@ -486,7 +486,7 @@ public class ContractSchoolPdf_2023_ru {
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.add(new Phrase("3.2.2. Общая стоимость платы за образовательные услуги Обучающегося (родительские взносы) составляет ", ordFont));
-                paragraph.add(new Phrase(studentInfo.getContractInfo().getContract() + "", ordBoldFont));
+                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract()), ordBoldFont));
                 paragraph.add(new Phrase(" долларов США, которая производится строго в сомах на день оплаты по курсы НБ КР.", ordFont));
                 document.add(paragraph);
                 paragraph = new Paragraph();

@@ -92,7 +92,7 @@ public class ContractLisePdf_kg {
                 paragraph.add(new Phrase("Уставдын негизинде ишмердүүлүгүн  жүргүзгөн “" + studentInfo.getSchool().getName_kg()
                         + "” билим берүү мекемесинин (мындан ары “Лицей” деп белгиленет) атынан директору ", ordFont));
                 String fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
-                if (!Objects.equals(studentInfo.getDirector().getMiddle_name(), "")) {
+                if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                     fullName += " " + studentInfo.getDirector().getMiddle_name();
                 }
                 paragraph.add(new Phrase(fullName, ordBoldFont));

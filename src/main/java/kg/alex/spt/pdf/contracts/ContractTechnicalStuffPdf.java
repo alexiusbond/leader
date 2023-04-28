@@ -91,7 +91,7 @@ public class ContractTechnicalStuffPdf {
                     boolean isFeminine = employeeInfo.getDirector().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(employeeInfo.getDirector().getSurname(), isFeminine)
                             + " " + dcl.DeclineNameGenitive(employeeInfo.getDirector().getName(), isFeminine, false);
-                    if (!Objects.equals(employeeInfo.getDirector().getMiddle_name(), "")) {
+                    if (employeeInfo.getDirector().getMiddle_name()!=null && !employeeInfo.getDirector().getMiddle_name().equals("")) {
                         fullName += " " + dcl.DeclinePatronymicGenitive(employeeInfo.getDirector().getMiddle_name(),
                                 null, isFeminine, false);
                     }

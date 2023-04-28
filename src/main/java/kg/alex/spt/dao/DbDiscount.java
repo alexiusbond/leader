@@ -172,31 +172,41 @@ public class DbDiscount extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int discount_id, int student_id)
-            throws SQLException {
-        double orderDiscount = 0.0;
+    public IndexedContainer exec_for_select(MyVaadinUI myUi, int year_id, int discount_id, int student_id,
+                                            String studentFullName) throws SQLException {
+        double orderAmountDiscount = 0.0, orderPercentDiscount = 0.0;
         try {
             DbOrderMessage dbCon = new DbOrderMessage();
             dbCon.connect();
-            orderDiscount = dbCon.execSQL_discountAmount(year_id, student_id);
+            orderAmountDiscount = dbCon.execSQL_discountAmount(
+                    year_id, student_id, studentFullName, myUi.getDb_currency_rate(), "2,3");
+            orderPercentDiscount = dbCon.execSQL_discountAmount(
+                    year_id, student_id, studentFullName, myUi.getDb_currency_rate(), "1");
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         String sql = "SELECT d.id, d.name, " +
-                "(CASE WHEN d.is_order_discount AND ? IS NOT NULL THEN ? ELSE d.amount END) as amount, " +
-                "d.discount_type_id, d.is_order_discount FROM discount as d " +
+                "(CASE WHEN d.discount_unit_id = 2 AND ? IS NOT NULL THEN ? " +
+                "WHEN d.discount_unit_id = 1 AND ? IS NOT NULL THEN ? ELSE d.amount END) as amount, " +
+                "d.discount_type_id, d.discount_unit_id FROM discount as d " +
                 "where d.year_id = ? and (d.activity_status_id = 2 or d.id = ?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        if (orderDiscount != 0.0) {
-            stat.setDouble(1, orderDiscount);
+        if (orderAmountDiscount != 0.0) {
+            stat.setDouble(1, orderAmountDiscount);
         } else {
             stat.setNull(1, Types.DOUBLE);
         }
-        stat.setDouble(2, orderDiscount / myUi.getDb_currency_rate());
-        stat.setInt(3, year_id);
-        stat.setInt(4, discount_id);
+        stat.setDouble(2, orderAmountDiscount);
+        if (orderPercentDiscount != 0.0) {
+            stat.setDouble(3, orderPercentDiscount);
+        } else {
+            stat.setNull(3, Types.DOUBLE);
+        }
+        stat.setDouble(4, orderPercentDiscount);
+        stat.setInt(5, year_id);
+        stat.setInt(6, discount_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
@@ -222,12 +232,12 @@ public class DbDiscount extends BaseDb {
                         result.getString("d.name") + " - "
                                 + Settings.dFormat2.format(result.getDouble("amount")) + "$");
             }
-            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
-                    result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(Settings.round(
+                    result.getDouble("amount"), 2));
             item.getItemProperty(myUi.getMessage(SptMessages.DiscountType)).setValue(
                     result.getInt("d.discount_type_id"));
             item.getItemProperty(Settings.is_order_discount).setValue(
-                    result.getBoolean("d.is_order_discount"));
+                    result.getInt("d.discount_unit_id") != 0);
         }
         return container;
     }

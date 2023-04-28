@@ -15,6 +15,15 @@ public class Discount implements Serializable {
     private double amount;
     private int year_id;
     private int status_id;
+    private int discount_unit_id;
+
+    public int getDiscount_unit_id() {
+        return discount_unit_id;
+    }
+
+    public void setDiscount_unit_id(int discount_unit_id) {
+        this.discount_unit_id = discount_unit_id;
+    }
 
     public int getId() {
         return id;

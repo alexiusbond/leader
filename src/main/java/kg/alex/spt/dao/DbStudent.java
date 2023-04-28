@@ -53,7 +53,7 @@ public class DbStudent extends BaseDb {
                 "left join view_student_last_class_status as vlcs on s.id = vlcs.student_id " +
                 "left join year as y on s.entering_year_id = y.id " +
                 "WHERE s.school_id = ? and s.entering_year_id <= ? and (vcs.education_status_id in (" + edu_sts + ") " +
-                "or vlcs.education_status_id in (" + edu_sts + ")) " +
+                "or vcs.education_status_id IS NULL and vlcs.education_status_id in (" + edu_sts + ")) " +
                 "GROUP BY s.id ORDER BY vcs.education_status_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
@@ -146,13 +146,13 @@ public class DbStudent extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
             item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
-                    result.getString("s.name")
-                            + " " + result.getString("s.surname"));
+                    result.getString("s.surname")
+                            + " " + result.getString("s.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.ClassNumber)).setValue(
                     result.getString("class_number"));
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
-                    result.getString("s.name") + " " +
-                            result.getString("s.surname") + " - " +
+                    result.getString("s.surname") + " " +
+                            result.getString("s.name") + " - " +
                             result.getString("class_name"));
         }
         return container;

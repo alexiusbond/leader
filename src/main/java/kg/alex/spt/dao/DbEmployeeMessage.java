@@ -59,11 +59,12 @@ public class DbEmployeeMessage extends BaseDb {
 
     public void execSQL(MyVaadinUI myUi, int employee_id, int school_id, FilterTable t) throws SQLException {
         String sql = "SELECT om.id, e.id, ifnull(CONCAT(st.name, ' ', st.surname), om.student) AS student, " +
-                "om.creation_date, om.order_number, om.message, om.order_content, om.order_title, " +
-                "mst.id, mst.name FROM employee_message AS em " +
+                "om.creation_date, om.order_number, om.message, om.order_content, om.discount, om.order_title, " +
+                "mst.id, mst.name, du.name FROM employee_message AS em " +
                 "left join employee as e on e.id = em.employee_id " +
                 "left join message_status as mst on mst.id = em.message_status_id " +
                 "left join order_messages as om on om.id = em.order_messages_id " +
+                "left join discount_unit as du on du.id = om.discount_unit_id " +
                 "left join student as st on st.id = om.student_id " +
                 "WHERE em.employee_id = ? OR em.employee_id IN " +
                 "(SELECT eo.employee_id FROM hr_employee_order AS eo " +
@@ -79,6 +80,7 @@ public class DbEmployeeMessage extends BaseDb {
         container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.OrderNumber), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Student), String.class, null);
+        container.addContainerProperty(myUi.getMessage(SptMessages.Discount), String.class, null);
         container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
@@ -88,6 +90,9 @@ public class DbEmployeeMessage extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.df.format(
                     result.getDate("om.creation_date")));
             item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
+            item.getItemProperty(myUi.getMessage(SptMessages.Discount)).setValue(
+                    Settings.round(result.getDouble("om.discount"), 2) + " "
+                            + result.getString("du.name"));
             item.getItemProperty(myUi.getMessage(SptMessages.OrderNumber)).setValue(result.getString("om.order_number"));
             item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(result.getString("mst.name"));
             item.getItemProperty(Settings.status_id).setValue(result.getInt("mst.id"));

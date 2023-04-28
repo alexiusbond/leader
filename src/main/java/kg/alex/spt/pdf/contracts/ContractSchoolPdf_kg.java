@@ -95,7 +95,7 @@ public class ContractSchoolPdf_kg {
                 paragraph.add(new Phrase(" билим берүү мекемесинин (мындан ары “Мектеп” деп белгиленет) атынан директору ", ordFont));
 
                 String fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
-                if (!Objects.equals(studentInfo.getDirector().getMiddle_name(), "")) {
+                if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                     fullName += " " + studentInfo.getDirector().getMiddle_name();
                 }
                 paragraph.add(new Phrase(fullName, ordBoldFont));

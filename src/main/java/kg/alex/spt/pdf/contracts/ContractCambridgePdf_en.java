@@ -94,7 +94,7 @@ public class ContractCambridgePdf_en {
                 paragraph.add(new Phrase(studentInfo.getSchool().getName_en(), ordBoldFont));
                 paragraph.add(new Phrase(", here in after referred to as the “School”, represented by Director ", ordFont));
                 String fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
-                if (!Objects.equals(studentInfo.getDirector().getMiddle_name(), "")) {
+                if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                     fullName += " " + studentInfo.getDirector().getMiddle_name();
                 }
             paragraph.add(new Phrase(Settings.transliterate(fullName), ordBoldFont));

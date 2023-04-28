@@ -141,19 +141,18 @@ public class DbStudentPayment extends BaseDb {
 
     public int exec_update(StudentPayment sp) throws SQLException {
         String sql = "update student_payments set year_id = ?, "
-                + "amount = ?, payment_type_id = ?, payment_category_id = ?, employee_id = ?, "
+                + "amount = ?, payment_type_id = ?, payment_category_id = ?, "
                 + "who_paid = ?, note = ?, modification_date = ?, dollar_rate = ? WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, sp.getYear_id());
         stat.setDouble(2, sp.getAmount());
         stat.setInt(3, sp.getPayment_type_id());
         stat.setInt(4, sp.getPayment_cat_type_id());
-        stat.setInt(5, sp.getEmployee_id());
-        stat.setString(6, sp.getWho_paid());
-        stat.setString(7, sp.getNote());
-        stat.setTimestamp(8, new java.sql.Timestamp(sp.getModification_date().getTime()));
-        stat.setDouble(9, sp.getRate());
-        stat.setInt(10, sp.getId());
+        stat.setString(5, sp.getWho_paid());
+        stat.setString(6, sp.getNote());
+        stat.setTimestamp(7, new java.sql.Timestamp(sp.getModification_date().getTime()));
+        stat.setDouble(8, sp.getRate());
+        stat.setInt(9, sp.getId());
         return stat.executeUpdate();
     }
 

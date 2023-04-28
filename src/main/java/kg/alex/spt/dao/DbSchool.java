@@ -214,8 +214,8 @@ public class DbSchool extends BaseDb {
     public School execSchool(int scl_id) throws SQLException {
         School scl = new School();
         String sql = "SELECT s.id, s.code, s.name_kg, s.name_ru, s.name_en, s.activity_status_id, s.city, s.address, "
-                + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id FROM school as s "
-                + "where s.id = ?";
+                + "s.inn, s.bank, s.bank_account, s.phone, s.photo, s.school_type_id, s.okpo, s.bik, s.swift " +
+                "FROM school as s where s.id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
@@ -226,6 +226,9 @@ public class DbSchool extends BaseDb {
             scl.setCode(result.getString("s.code"));
             scl.setCity(result.getString("s.city"));
             scl.setInn(result.getString("s.inn"));
+            scl.setOkpo(result.getString("s.okpo"));
+            scl.setBik(result.getString("s.bik"));
+            scl.setSwift(result.getString("s.swift"));
             scl.setName_kg(result.getString("s.name_kg"));
             scl.setName_en(result.getString("s.name_en"));
             scl.setName_ru(result.getString("s.name_ru"));

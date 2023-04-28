@@ -24,17 +24,17 @@ public class DbEmployeeContact extends BaseDb {
         stat.setInt(1, ec.getEmployee_id());
         stat.setString(2, ec.getBirth_place());
         stat.setString(3, ec.getAddress());
-        if (!Objects.equals(ec.getEmail(), "")) {
+        if (ec.getEmail() != null && !ec.getEmail().equals("")) {
             stat.setString(4, ec.getEmail());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        if (!Objects.equals(ec.getPassport(), "")) {
+        if (ec.getPassport() != null && !ec.getPassport().equals("")) {
             stat.setString(5, ec.getPassport());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
-        if (!Objects.equals(ec.getPassportGiven(), "")) {
+        if (ec.getPassportGiven() != null && !ec.getPassportGiven().equals("")) {
             stat.setString(6, ec.getPassportGiven());
         } else {
             stat.setNull(6, Types.VARCHAR);
@@ -44,7 +44,7 @@ public class DbEmployeeContact extends BaseDb {
         } else {
             stat.setNull(7, Types.DATE);
         }
-        if (!Objects.equals(ec.getInn(), "")) {
+        if (ec.getInn() != null && !ec.getInn().equals("")) {
             stat.setString(8, ec.getInn());
         } else {
             stat.setNull(8, Types.VARCHAR);
@@ -63,17 +63,17 @@ public class DbEmployeeContact extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, ec.getBirth_place());
         stat.setString(2, ec.getAddress());
-        if (!Objects.equals(ec.getEmail(), "")) {
+        if (ec.getEmail() != null && !ec.getEmail().equals("")) {
             stat.setString(3, ec.getEmail());
         } else {
             stat.setNull(3, Types.VARCHAR);
         }
-        if (!Objects.equals(ec.getPassport(), "")) {
+        if (ec.getPassport() != null && !ec.getPassport().equals("")) {
             stat.setString(4, ec.getPassport());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
-        if (!Objects.equals(ec.getPassportGiven(), "")) {
+        if (ec.getPassportGiven() != null && !ec.getPassportGiven().equals("")) {
             stat.setString(5, ec.getPassportGiven());
         } else {
             stat.setNull(5, Types.VARCHAR);
@@ -83,7 +83,7 @@ public class DbEmployeeContact extends BaseDb {
         } else {
             stat.setNull(6, Types.DATE);
         }
-        if (!Objects.equals(ec.getInn(), "")) {
+        if (ec.getInn() != null && !ec.getInn().equals("")) {
             stat.setString(7, ec.getInn());
         } else {
             stat.setNull(7, Types.VARCHAR);

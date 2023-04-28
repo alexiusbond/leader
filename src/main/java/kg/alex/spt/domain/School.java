@@ -16,6 +16,9 @@ public class School implements Serializable {
     private String name_ru;
     private String address;
     private String inn;
+    private String okpo;
+    private String bik;
+    private String swift;
     private String bank;
     private String bank_account;
     private String phone;
@@ -23,6 +26,30 @@ public class School implements Serializable {
     private int status_id;
     private int school_type_id;
     private String photo;
+
+    public String getOkpo() {
+        return okpo;
+    }
+
+    public void setOkpo(String okpo) {
+        this.okpo = okpo;
+    }
+
+    public String getBik() {
+        return bik;
+    }
+
+    public void setBik(String bik) {
+        this.bik = bik;
+    }
+
+    public String getSwift() {
+        return swift;
+    }
+
+    public void setSwift(String swift) {
+        this.swift = swift;
+    }
 
     public String getName_en() {
         return name_en;

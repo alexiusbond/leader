@@ -261,7 +261,7 @@ public class DbAccTransactions extends BaseDb {
     public int exec_update_new(AccTransaction t, String by_column_name, int by_column_value, Connection conn) throws SQLException {
 
         String sql = "update acc_transactions set date_time = ?, amount = ?, acc_currency_id = ?, currency_rate = ?, " +
-                "note = ?, acc_category_id = ?, acc_type_id = ?, employee_id = ?, modification_date = NOW() " +
+                "note = ?, acc_category_id = ?, acc_type_id = ?, modification_date = NOW() " +
                 "WHERE " + by_column_name + " = ?";
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setDate(1, new java.sql.Date(t.getDate().getTime()));
@@ -275,8 +275,7 @@ public class DbAccTransactions extends BaseDb {
         stat.setString(5, t.getNote());
         stat.setInt(6, t.getCategory_id());
         stat.setInt(7, t.getAccTypeId());
-        stat.setInt(8, t.getEmployee_id());
-        stat.setInt(9, by_column_value);
+        stat.setInt(8, by_column_value);
         return stat.executeUpdate();
     }
 

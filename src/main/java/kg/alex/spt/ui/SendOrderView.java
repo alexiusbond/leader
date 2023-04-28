@@ -42,7 +42,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
     private final MyVaadinUI myUI;
     private Button sendBtn;
     private final Button excelBtn;
-    private ComboBox schoolSelect, studentSelect, yearSelect;
+    private ComboBox schoolSelect, studentSelect, yearSelect, unitSelect;
     private ComboBoxMultiselect employeeMCB;
     private final FormattedFilterTable dataTable;
     private final Table tableForExport;
@@ -125,7 +125,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         vl.setComponentAlignment(excelBtn, Alignment.BOTTOM_RIGHT);
         vl.setExpandRatio(dataTable, 1);
 
-        this.setSplitPosition(30, Unit.PERCENTAGE);
+        this.setSplitPosition(31, Unit.PERCENTAGE);
         this.setSizeFull();
         this.setLocked(true);
         this.setFirstComponent(settingsLay);
@@ -216,29 +216,47 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+        settingsLay.addComponent(yearSelect, 2, 3);
+
+        unitSelect = new ComboBox(myUI.getMessage(SptMessages.Unit));
+        unitSelect.setNullSelectionAllowed(false);
+        unitSelect.setRequired(true);
+        unitSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
+        unitSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        unitSelect.setWidth(Settings.PERCENTS100);
+        unitSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        unitSelect.setFilteringMode(FilteringMode.CONTAINS);
+        unitSelect.addValueChangeListener(this);
+
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
             yearSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbYear, true));
+            unitSelect.setContainerDataSource(dbd.exec_for_select(myUI, Settings.dbDiscountUnit, false));
             dbd.close();
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        settingsLay.addComponent(yearSelect, 2, 3);
+        unitSelect.setValue(3);
 
         ObjectProperty<Integer> property = new ObjectProperty<>(0);
         discountTF = new TextField(myUI.getMessage(SptMessages.Discount), property);
         discountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         discountTF.setRequired(true);
         discountTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        discountTF.setWidth(Settings.PERCENTS100);
         discountTF.setNullRepresentation("");
         discountTF.setConverter(Settings.getStringToIntegerConverter());
-        discountTF.setWidth(Settings.PERCENTS100);
         discountTF.addValidator(new IntegerRangeValidator(
                 myUI.getMessage(SptMessages.NotificationWrongValue), 1, null));
         discountTF.addValueChangeListener(this);
-        settingsLay.addComponent(discountTF, 3, 3);
+
+        HorizontalLayout hl = new HorizontalLayout();
+        hl.setWidth(Settings.PERCENTS100);
+        hl.addComponent(discountTF);
+        hl.addComponent(unitSelect);
+        settingsLay.addComponent(hl, 3, 3);
 
         headlineTA = new TextArea(myUI.getMessage(SptMessages.Headline));
         headlineTA.setRows(2);
@@ -273,6 +291,10 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         settingsLay.addComponent(sendBtn, 3, 6);
         settingsLay.setComponentAlignment(sendBtn, Alignment.BOTTOM_RIGHT);
         settingsLay.setRowExpandRatio(5, 1);
+        settingsLay.setColumnExpandRatio(0, 0.9f);
+        settingsLay.setColumnExpandRatio(1, 0.8f);
+        settingsLay.setColumnExpandRatio(2, 0.85f);
+        settingsLay.setColumnExpandRatio(3, 1.15f);
     }
 
     @Override
@@ -390,12 +412,13 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if ((property == studentSelect || property == yearSelect || property == discountTF || property == studentTF)
+        } else if ((property == studentSelect || property == yearSelect || property == unitSelect
+                || property == discountTF || property == studentTF)
                 && discountTF != null && studentTF != null && studentSelect != null
                 && studentSelect.getValue() != null && yearSelect != null
-                && yearSelect.getValue() != null && discountTF.getValue() != null
+                && yearSelect.getValue() != null && unitSelect.getValue() != null && discountTF.getValue() != null
                 && studentTF.getValue() != null) {
-            String student, class_name = "";
+            String student, class_name = "", discount = "";
             if ((Integer) studentSelect.getValue() == 0) {
                 student = studentTF.getValue();
             } else {
@@ -404,13 +427,20 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 student = studentSelect.getContainerProperty(studentSelect.getValue(),
                         myUI.getMessage(SptMessages.FullName)).getValue().toString();
             }
+            if ((Integer) unitSelect.getValue() == 1) {
+                discount = discountTF.getPropertyDataSource().getValue() + "% жеңилдик берилсин.";
+            } else if ((Integer) unitSelect.getValue() == 2) {
+                discount = "УБ КР курсу менен " + discountTF.getPropertyDataSource().getValue()
+                        + " АКШ доллар жеңилдик берилсин.";
+            } else {
+                discount = discountTF.getPropertyDataSource().getValue() + " сом жеңилдик берилсин.";
+            }
             contentRTA.setValue("Лицейдин "
                     + class_name + "-классынын окуучусу " + student
                     + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
                     "Жобосунун 3-пунктунун негизинде "
                     + yearSelect.getItemCaption(yearSelect.getValue())
-                    + "-окуу жылынын окуу төлөмүндө " +
-                    discountTF.getPropertyDataSource().getValue() + " сом жеңилдик берилсин.");
+                    + "-окуу жылынын окуу төлөмүндө " + discount);
         }
         if (property == studentSelect) {
             if (studentSelect.getValue() != null && (Integer) studentSelect.getValue() == 0) {
@@ -435,6 +465,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         dateDF.setValue(new Date());
         studentSelect.setValue(null);
         yearSelect.setValue(null);
+        unitSelect.setValue(null);
         employeeMCB.setValue(null);
         studentTF.setValue("");
     }
@@ -489,6 +520,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         om.setContent(contentRTA.getValue());
         om.setStudent_id((Integer) studentSelect.getValue());
         om.setYear_id((Integer) yearSelect.getValue());
+        om.setDiscount_unit_id((Integer) unitSelect.getValue());
         if (om.getStudent_id() == 0) {
             om.setStudent(studentTF.getValue());
         }
