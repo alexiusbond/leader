@@ -480,6 +480,7 @@ public class SptMessages_ru extends SptMessages {
             {CambridgeContrRu, "Договор Кэмбридж(RU)"},
             {CambridgeContrEn, "Договор Кэмбридж(EN)"},
             {UWIS_Contract, "Договор UWIS"},
+            {STEM_Contract, "Договор STEM"},
             {CallsReport, "Отчет о вызовах"},
             {ContractType, "Тип контракта"},
             {AgreementType, "Тип договора"},
