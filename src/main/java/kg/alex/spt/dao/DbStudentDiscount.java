@@ -8,6 +8,7 @@ package kg.alex.spt.dao;
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
@@ -152,9 +153,11 @@ public class DbStudentDiscount extends BaseDb {
                                 myUI.getMessage(SptMessages.DiscountAmount), id, true));
             } else if (result.getString("d.discount_type_id").equals("3")
                     || result.getString("d.discount_type_id").equals("4")) {
+
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                         dw.createTextFieldDisc(result.getDouble("sd.free_entry_amount"),
-                                result.getDouble("d.amount"),
+                                (Double) cb.getContainerProperty(result.getInt("d.id"),
+                                        myUI.getMessage(SptMessages.Amount)).getValue(),
                                 myUI.getMessage(SptMessages.DiscountAmount), id,
                                 !currentUser.isPermitted(Settings.discountsTable + ":" + Settings.actModify)));
             }

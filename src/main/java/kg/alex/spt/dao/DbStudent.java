@@ -524,8 +524,8 @@ public class DbStudent extends BaseDb {
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, min);
-        stat.setInt(2, year_id);
-        stat.setInt(3, order_num);
+        stat.setInt(2, order_num);
+        stat.setInt(3, year_id);
         stat.setInt(4, year_id);
         stat.setInt(5, school_id);
         stat.setInt(6, class_type_id);

@@ -337,6 +337,7 @@ public class Settings implements Serializable {
     public static final String hashTags = "#";
     public static final String FreshItem = "fresh";
     public static final String cnBackupView = "BackupView";
+    public static final String cnTemplatesView = "TemplatesView";
     public static final String cnCallsView = "CallsView";
     public static final String cnSettingsView = "SettingsView";
     public static final String percentage = "%";

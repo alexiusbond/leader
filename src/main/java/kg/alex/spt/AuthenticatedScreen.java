@@ -270,6 +270,9 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (currentUser.isPermitted(Settings.cnSchoolModificationView + ":" + Settings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.SchoolModification), menuCommand);
         }
+        if (currentUser.isPermitted(Settings.cnTemplatesView + ":" + Settings.prmMenu)) {
+            mi.addItem(myUI.getMessage(SptMessages.Templates), menuCommand);
+        }
         if (currentUser.isPermitted(Settings.cnBackupView + ":" + Settings.prmMenu)) {
             mi.addItem(myUI.getMessage(SptMessages.Backup), menuCommand);
         }
@@ -504,6 +507,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new StockReportsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.HRReports))) {
                     verticalPanel.setSecondComponent(new HRReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Templates))) {
+                    verticalPanel.setSecondComponent(new TemplatesView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Backup))) {
                     verticalPanel.setSecondComponent(new BackupView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Calls))) {
@@ -706,6 +711,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.IssueStudentOrder)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new IssueOrderView(myUI));
+            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Templates)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new TemplatesView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Backup)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BackupView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(SptMessages.Calls)).toUpperCase())) {

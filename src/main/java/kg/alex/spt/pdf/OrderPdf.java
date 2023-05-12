@@ -13,6 +13,8 @@ import kg.alex.spt.Settings;
 import kg.alex.spt.domain.OrderMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +25,7 @@ public class OrderPdf {
     static final Logger logger = LogManager.getLogger(OrderPdf.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
+    private final Subject currentUser = SecurityUtils.getSubject();
 
     public OrderPdf(final MyVaadinUI myUI, final OrderMessage orderMessage) {
 
@@ -48,8 +51,7 @@ public class OrderPdf {
                     Font fontRegular = new Font(baseFont, 14);
                     Font dateFont = new Font(baseFont, 10);
 
-                    PdfReader pdfReader =
-                            new PdfReader("/home/logo/discount_order.pdf");
+                    PdfReader pdfReader = new PdfReader("/home/logo/discount_order.pdf");
 
                     pdfStamper = new PdfStamper(pdfReader, buffer);
 
@@ -69,34 +71,50 @@ public class OrderPdf {
                     paragraph.setAlignment(Element.ALIGN_LEFT);
                     ct.addElement(new Paragraph(45, " "));
                     ct.addElement(paragraph);
-                    ct.addElement(new Paragraph(45, " "));
+                    ct.addElement(new Paragraph(75, " "));
 
-                    /*Image img;
-                    if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
-                        img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.png");
-                    } else {
-                        img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.jpg");
+                    Image img = null;
+                    if (!currentUser.hasRole(Settings.rnSapatSecretary)) {
+                        if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
+                            img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.png");
+                        } else {
+                            img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.jpg");
+                        }
+                        img.setAlignment(Image.RIGHT);
+                        img.scaleAbsolute(250, 110);
                     }
-                    img.setAlignment(Image.RIGHT);
-                    img.scaleAbsolute(250, 110);*/
-                    float[] table_date_colsWidth = {1.0f, 1.0f, 1.0f};
+                    float[] table_date_colsWidth = {0.5f, 1f, 1.5f};
                     PdfPTable table_date = new PdfPTable(3);
                     table_date.setWidthPercentage(90f);
                     table_date.setWidths(table_date_colsWidth);
                     table_date.getDefaultCell().setBorder(0);
                     table_date.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     table_date.addCell(new Phrase("президент", fontBold));
-                    //table_date.addCell(img);
-                    table_date.addCell(new Phrase(" "));
+                    table_date.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table_date.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                    if (!currentUser.hasRole(Settings.rnSapatSecretary)) {
+                        table_date.addCell(img);
+                    } else {
+                        table_date.addCell(new Phrase(" "));
+                    }
                     if (orderMessage.getDate().after(Settings.df.parse("25-08-2021"))) {
                         table_date.addCell(new Phrase("Кудайбердиев Н.Ш.", fontBold));
                     } else {
                         table_date.addCell(new Phrase("Орхан Инанды", fontBold));
                     }
                     ct.addElement(table_date);
-
                     ct.go();
-
+                    if (!currentUser.hasRole(Settings.rnSapatSecretary)) {
+                        ct = new ColumnText(pageContentByte);
+                        ct.setSimpleColumn(-225, 362, 550, 50);
+                        Image stamp = Image.getInstance(Settings.PATH_TO_UPLOADS + "sapat_muhur.png");
+                        stamp.setAlignment(Image.MIDDLE);
+                        stamp.scaleAbsolute(100, 100);
+                        stamp.setAbsolutePosition(320, 100);
+                        ct.addElement(stamp);
+                        ct.go();
+                    }
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);

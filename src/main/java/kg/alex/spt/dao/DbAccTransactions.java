@@ -110,7 +110,7 @@ public class DbAccTransactions extends BaseDb {
 
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, t.currency_rate, " +
-                "t.amount, IF(t.student_payments_id IS NULL, t.note, CONCAT(vcs.class_name, ' ', " +
+                "t.amount, IF(t.student_payments_id IS NULL, t.note, CONCAT(IFNULL(vcs.class_name, vlcs.class_name), ' ', " +
                 "st.login, ' ', st.name, ' ', st.surname)) AS note, " +
                 "IF(t.student_payments_id IS NOT NULL OR t.dp_invoice_id IS NOT NULL " +
                 "OR t.acc_invoice_id IS NOT NULL, TRUE, FALSE) AS isDisabled, " +
@@ -121,6 +121,7 @@ public class DbAccTransactions extends BaseDb {
                 "LEFT JOIN student_payments AS sp ON t.student_payments_id = sp.id " +
                 "LEFT JOIN student AS st ON sp.student_id = st.id " +
                 "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? " +
+                "LEFT JOIN view_student_last_class_status AS vlcs ON vlcs.student_id = st.id " +
                 "where (t.acc_type_id = ? OR t.acc_type_id = 5) AND t.school_id = ? " +
                 "AND DATE(t.date_time) >= ? AND DATE(t.date_time) <= ? order by t.date_time desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);

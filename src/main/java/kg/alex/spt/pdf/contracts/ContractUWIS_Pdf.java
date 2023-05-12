@@ -1026,6 +1026,195 @@ public class ContractUWIS_Pdf {
                 paragraph.add(new Phrase("-----------------------", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
                 document.add(mainTable);
+
+
+                document.newPage();
+                PdfPTable planTable = new PdfPTable(2);
+                planTable.setWidthPercentage(97f);
+                planTable.setWidths(mainTableWidth);
+                planTable.getDefaultCell().setBorder(0);
+                planTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+
+                Paragraph text15 = new Paragraph();
+                text15.setIndentationLeft(30);
+                text15.setIndentationRight(30);
+                text15.add(new Phrase("График оплаты", boldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("ID ученика: ", ordFont));
+                text15.add(new Phrase(studentInfo.getStudent().getLogin(), ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Ф.И.О. Ученика: ", ordFont));
+                text15.add(new Phrase(studentInfo.getStudent().getSurname() + " "
+                        + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Кл.: ", ordFont));
+                text15.add(new Phrase(studentInfo.getStudent().getClass_name(), ordBoldFont));
+                text15.add(new Phrase(". Дата регистрации: ", ordFont));
+                text15.add(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("ИТОГО взноса: ", ordFont));
+                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + ""), ordBoldFont));
+                text15.add(new Phrase(" долларов США.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                if (studentInfo.getContractInfo().getDebt() >= 0) {
+                    text15.add(new Phrase("Долг с предыдущего года: ", ordFont));
+                } else {
+                    text15.add(new Phrase("Переплата с предыдущего года: ", ordFont));
+                }
+                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt()) + ""), ordBoldFont));
+                text15.add(new Phrase(" долларов США.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Скидка: ", ordFont));
+                if (studentInfo.getContractInfo().getDiscountStr() != null) {
+                    text15.add(new Phrase(studentInfo.getContractInfo().getDiscountStr(), ordBoldFont));
+                    text15.add(new Phrase(" (вид скидки прописью, %)", ordFont));
+                }
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Корректировка: ", ordFont));
+                if (studentInfo.getContractInfo().getCorrectionStr() != null) {
+                    text15.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr(), ordBoldFont));
+                }
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Предоплата: ", ordFont));
+                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
+                text15.add(new Phrase(" долларов США.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Остаток: ", ordFont));
+                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + "", ordBoldFont));
+                text15.add(new Phrase(" долларов США.", ordFont));
+                planTable.addCell(text15);
+
+                text15 = new Paragraph();
+                text15.setIndentationLeft(30);
+                text15.setIndentationRight(30);
+                text15.add(new Phrase("Payment Schedule", boldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Student's ID: ", ordFont));
+                text15.add(new Phrase(studentInfo.getStudent().getLogin(), ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Student's Fullname: ", ordFont));
+                text15.add(new Phrase(Settings.transliterate(studentInfo.getStudent().getSurname()) + " "
+                        + Settings.transliterate(studentInfo.getStudent().getName()) + " "
+                        + Settings.transliterate(studentInfo.getStudent().getMiddle_name() != null ?
+                        studentInfo.getStudent().getMiddle_name() : " "), ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Class.: ", ordFont));
+                text15.add(new Phrase(studentInfo.getStudent().getClass_name(), ordBoldFont));
+                text15.add(new Phrase(". Registration Date: ", ordFont));
+                text15.add(new Phrase(Settings.df.format(studentInfo.getContractInfo().getCreationDate()), ordBoldFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("TOTAL Fee: ", ordFont));
+                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getContract()) + ""), ordBoldFont));
+                text15.add(new Phrase(" US dollars.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                if (studentInfo.getContractInfo().getDebt() >= 0) {
+                    text15.add(new Phrase("Debt from previous year: ", ordFont));
+                } else {
+                    text15.add(new Phrase("Overpayment from previous year: ", ordFont));
+                }
+                text15.add(new Phrase((Settings.dFormat2.format(studentInfo.getContractInfo().getDebt()) + ""), ordBoldFont));
+                text15.add(new Phrase(" US dollars.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Discount: ", ordFont));
+                if (studentInfo.getContractInfo().getDiscountStr() != null) {
+                    text15.add(new Phrase(studentInfo.getContractInfo().getDiscountStr(), ordBoldFont));
+                    text15.add(new Phrase(" (Discount type in words, %)", ordFont));
+                }
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Correction: ", ordFont));
+                if (studentInfo.getContractInfo().getCorrectionStr() != null) {
+                    text15.add(new Phrase(studentInfo.getContractInfo().getCorrectionStr(), ordBoldFont));
+                }
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Prepayment: ", ordFont));
+                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getInitialPayment()) + "", ordBoldFont));
+                text15.add(new Phrase(" US dollars.", ordFont));
+                text15.add(Chunk.NEWLINE);
+                text15.add(new Phrase("Remain: ", ordFont));
+                text15.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getLeft()) + "", ordBoldFont));
+                text15.add(new Phrase(" US dollars.", ordFont));
+                planTable.addCell(text15);
+                document.add(planTable);
+                document.add(new Paragraph(10, " "));
+
+                Paragraph text16 = new Paragraph();
+                text16.setIndentationLeft(30);
+                text16.setIndentationRight(30);
+                text16.add(new Phrase("Таблица 1. / Table 1.", ordBoldFont));
+                document.add(text16);
+                document.add(new Paragraph(10, " "));
+                text16.add(Chunk.NEWLINE);
+
+                float[] TContract_colsWidth = {0.15f, 0.5f, 0.6f, 1f, 0.8f};
+                PdfPTable TContract = new PdfPTable(5);
+                TContract.setWidthPercentage(90f);
+                TContract.setWidths(TContract_colsWidth);
+                TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                TContract.addCell(new Phrase("№", ordBoldFont));
+                TContract.addCell(new Phrase("Дата оплаты \nPayment Date", ordBoldFont));
+                TContract.addCell(new Phrase("Сумма \nAmount", ordBoldFont));
+                TContract.addCell(new Phrase("Потверждающий документ \nConfirmation Document", ordBoldFont));
+                TContract.addCell(new Phrase("Подпись \nSignature", ordBoldFont));
+                TContract.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+                int n = 1;
+                for (Object obj : instPlanCont.getItemIds()) {
+                    TContract.addCell(new Phrase(n + "", ordFont));
+                    TContract.addCell(new Phrase(Settings.df.format(((DateField) instPlanCont.getContainerProperty(obj,
+                            myUI.getMessage(SptMessages.Date)).getValue()).getValue()), ordFont));
+                    TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
+                            myUI.getMessage(SptMessages.Amount)).getValue()).getValue(), ordFont));
+                    TContract.addCell(new Phrase("", ordFont));
+                    TContract.addCell(new Phrase("", ordFont));
+                    n += 1;
+                }
+                TContract.addCell(new Phrase("", ordFont));
+                TContract.addCell(new Phrase("Итого / Total:", ordBoldFont));
+                TContract.addCell(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getNet()) + "", ordBoldFont));
+                TContract.addCell(new Phrase("", ordFont));
+                TContract.addCell(new Phrase("", ordFont));
+
+                document.add(TContract);
+
+                PdfPTable signaturesTable = new PdfPTable(2);
+                signaturesTable.setWidthPercentage(97f);
+                signaturesTable.setWidths(mainTableWidth);
+                signaturesTable.getDefaultCell().setBorder(0);
+                signaturesTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Подпись Родителя: ", ordBoldFont));
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Директор: ", ordBoldFont));
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Гл. бухгалтер: ", ordBoldFont));
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Печать ", ordBoldFont));
+                signaturesTable.addCell(paragraph);
+
+                paragraph = new Paragraph();
+                paragraph.setIndentationLeft(30);
+                paragraph.setIndentationRight(30);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Parent's signature: ", ordBoldFont));
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Director: ", ordBoldFont));
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Head Accountant: ", ordBoldFont));
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(Chunk.NEWLINE);
+                paragraph.add(new Phrase("Stamp", ordBoldFont));
+                signaturesTable.addCell(paragraph);
+                document.add(signaturesTable);
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

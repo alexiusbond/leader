@@ -776,7 +776,7 @@ public class ContractLisePdf_kg {
                 String[] banks = studentInfo.getSchool().getBank().split("<br>");
                 String[] bankAccounts = studentInfo.getSchool().getBank_account().split("<br>");
                 for (int i = 0; i < banks.length; i++) {
-                    text10.add(new Phrase("ОКПО: " + banks[i], ordFont));
+                    text10.add(new Phrase("<Банк>: " + banks[i], ordFont));
                     text10.add(Chunk.NEWLINE);
                     text10.add(new Phrase("Эсеп: " + bankAccounts[i], ordFont));
                     text10.add(Chunk.NEWLINE);

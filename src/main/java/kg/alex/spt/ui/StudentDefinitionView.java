@@ -1431,7 +1431,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.UWIS_Contract))) {
                                     new ContractUWIS_Pdf(myUI, studInfo, instPlanCont);
-                                }else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.STEM_Contract))) {
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.STEM_Contract))) {
                                     new ContractSTEM_Pdf(myUI, studInfo, instPlanCont);
                                 }
                                 contractTypeOG.setValue(null);
@@ -2203,6 +2203,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
 
     public TextField createTextFieldDisc(Double value, Double maxValue, String description, String itemId,
                                          boolean isDisabled) {
+        System.out.println(maxValue);
         ObjectProperty<Double> property = new ObjectProperty<>(0.0);
         TextField tf = new TextField(property);
         tf.setDescription(description);

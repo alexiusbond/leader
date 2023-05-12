@@ -434,8 +434,10 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String NotificationWrongSumInstSum = generateId();
     public static final String CanNotModify = generateId();
     public static final String DownloadBackupButton = generateId();
+    public static final String DownloadButton = generateId();
     public static final String TakeBackupButton = generateId();
     public static final String Backup = generateId();
+    public static final String Templates = generateId();
     public static final String Students = generateId();
     public static final String Active = generateId();
     public static final String Discounted = generateId();
