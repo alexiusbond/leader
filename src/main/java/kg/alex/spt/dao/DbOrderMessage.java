@@ -28,8 +28,8 @@ public class DbOrderMessage extends BaseDb {
 
     public int exec_insert(OrderMessage orderMessage) throws SQLException {
         String sql = "INSERT INTO order_messages (message, order_number, order_title, order_content, student_id, " +
-                "creation_date, employee_id, discount, student, year_id, discount_unit_id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+                "creation_date, employee_id, discount, student, year_id, discount_unit_id, currency_rate) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         if (orderMessage.getMessage() != null) {
             stat.setString(1, orderMessage.getMessage());
@@ -54,6 +54,7 @@ public class DbOrderMessage extends BaseDb {
         }
         stat.setInt(10, orderMessage.getYear_id());
         stat.setInt(11, orderMessage.getDiscount_unit_id());
+        stat.setDouble(12, orderMessage.getCurrencyRate());
         int st = stat.executeUpdate();
         if (st != 0) {
             return getLastInsertedId();
@@ -142,8 +143,9 @@ public class DbOrderMessage extends BaseDb {
     }
 
     public double execSQL_discountAmount(int year_id, int student_id, String studentFullName,
-                                         double rate, String discount_unit_ids) throws SQLException {
-        String sql = "SELECT (CASE WHEN discount_unit_id = 3 and ? != 0.0 THEN discount / ? " +
+                                         String discount_unit_ids) throws SQLException {
+        String sql = "SELECT (CASE WHEN discount_unit_id = 3 and currency_rate != 0.0 " +
+                "THEN discount / currency_rate " +
                 "WHEN discount_unit_id in (1,2) THEN discount ELSE 10000.0 END) as discount " +
                 "FROM order_messages WHERE id = (SELECT MAX(id) FROM order_messages " +
                 "WHERE year_id = ? AND discount_unit_id in (" + discount_unit_ids + ") AND " +
@@ -152,11 +154,8 @@ public class DbOrderMessage extends BaseDb {
                 "OR transliterate_func(LOWER(SUBSTRING_INDEX(order_content, 'Сапаттын', 1))) LIKE '%"
                 + studentFullName.toLowerCase().replace(" ", "-") + "%')))";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-
-        stat.setDouble(1, rate);
-        stat.setDouble(2, rate);
-        stat.setInt(3, year_id);
-        stat.setInt(4, student_id);
+        stat.setInt(1, year_id);
+        stat.setInt(2, student_id);
         ResultSet result = stat.executeQuery();
         double discountAmount = 0.0;
         if (result.next()) {

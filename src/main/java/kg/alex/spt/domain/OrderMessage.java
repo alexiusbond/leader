@@ -24,6 +24,15 @@ public class OrderMessage implements Serializable {
     private int year_id;
     private int employee_id;
     private int discount;
+    private double currencyRate;
+
+    public double getCurrencyRate() {
+        return currencyRate;
+    }
+
+    public void setCurrencyRate(double currencyRate) {
+        this.currencyRate = currencyRate;
+    }
 
     public int getDiscount_unit_id() {
         return discount_unit_id;

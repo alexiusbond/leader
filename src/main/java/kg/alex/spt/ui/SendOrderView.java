@@ -418,7 +418,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
                 && studentSelect.getValue() != null && yearSelect != null
                 && yearSelect.getValue() != null && unitSelect.getValue() != null && discountTF.getValue() != null
                 && studentTF.getValue() != null) {
-            String student, class_name = "", discount = "";
+            String student, class_name = "", discount = "", school = "Лицейдин ";
             if ((Integer) studentSelect.getValue() == 0) {
                 student = studentTF.getValue();
             } else {
@@ -432,11 +432,11 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             } else if ((Integer) unitSelect.getValue() == 2) {
                 discount = "УБ КР курсу менен " + discountTF.getPropertyDataSource().getValue()
                         + " АКШ доллар жеңилдик берилсин.";
+                school = "Эл аралык мектептин ";
             } else {
                 discount = discountTF.getPropertyDataSource().getValue() + " сом жеңилдик берилсин.";
             }
-            contentRTA.setValue("Лицейдин "
-                    + class_name + "-классынын окуучусу " + student
+            contentRTA.setValue(school + class_name + "-классынын окуучусу " + student
                     + "га “Сапаттын” акылуу билим берүү кызмат көрсөтүүдөгү жеңилдиктер жөнүндөгү " +
                     "Жобосунун 3-пунктунун негизинде "
                     + yearSelect.getItemCaption(yearSelect.getValue())
@@ -521,6 +521,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         om.setStudent_id((Integer) studentSelect.getValue());
         om.setYear_id((Integer) yearSelect.getValue());
         om.setDiscount_unit_id((Integer) unitSelect.getValue());
+        om.setCurrencyRate(myUI.getDb_currency_rate());
         if (om.getStudent_id() == 0) {
             om.setStudent(studentTF.getValue());
         }

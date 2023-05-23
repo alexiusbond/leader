@@ -153,7 +153,6 @@ public class DbStudentDiscount extends BaseDb {
                                 myUI.getMessage(SptMessages.DiscountAmount), id, true));
             } else if (result.getString("d.discount_type_id").equals("3")
                     || result.getString("d.discount_type_id").equals("4")) {
-
                 item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
                         dw.createTextFieldDisc(result.getDouble("sd.free_entry_amount"),
                                 (Double) cb.getContainerProperty(result.getInt("d.id"),

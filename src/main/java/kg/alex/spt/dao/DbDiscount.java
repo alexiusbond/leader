@@ -179,9 +179,9 @@ public class DbDiscount extends BaseDb {
             DbOrderMessage dbCon = new DbOrderMessage();
             dbCon.connect();
             orderAmountDiscount = dbCon.execSQL_discountAmount(
-                    year_id, student_id, studentFullName, myUi.getDb_currency_rate(), "2,3");
+                    year_id, student_id, studentFullName, "2,3");
             orderPercentDiscount = dbCon.execSQL_discountAmount(
-                    year_id, student_id, studentFullName, myUi.getDb_currency_rate(), "1");
+                    year_id, student_id, studentFullName, "1");
             dbCon.close();
         } catch (Exception e) {
             logger.error(e);
