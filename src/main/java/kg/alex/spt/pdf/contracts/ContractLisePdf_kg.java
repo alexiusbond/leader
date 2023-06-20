@@ -17,11 +17,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
-import java.util.Objects;
 
 public class ContractLisePdf_kg {
 
-    static final Logger logger = LogManager.getLogger(ContractLisePdf_2023_ru.class);
+    static final Logger logger = LogManager.getLogger(ContractLisePdf_kg.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;

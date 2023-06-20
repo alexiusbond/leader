@@ -9,7 +9,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
-import kg.alex.spt.dao.DbRelative;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.Decliner;
@@ -18,8 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
-import java.util.Objects;
 
 public class ContractUWIS_Pdf {
 
@@ -196,7 +193,7 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("1.1. The subject of the Agreement is the organization of the student's learning process, his / her education according to the standards of \"Cambridge Assessment International Education\" and programs of the corresponding level of education according to the British curriculum, for the period ", ordFont));
+                paragraph.add(new Phrase("1.1. The subject of the Agreement is the organization of the student's learning process, his / her education according to the standards of \"MARSHALL CAVENDISH EDUCATION\" (Sıngapoure) and programs of the corresponding level of education according to the Cambridge Curriculum, for the period ", ordFont));
                 paragraph.add(new Phrase("from «29» August " + temp[0] + " to «9» June " + temp[1] + ".", ordBoldFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 

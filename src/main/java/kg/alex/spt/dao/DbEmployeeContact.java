@@ -8,7 +8,6 @@ package kg.alex.spt.dao;
 import kg.alex.spt.domain.EmployeeContact;
 
 import java.sql.*;
-import java.util.Objects;
 
 public class DbEmployeeContact extends BaseDb {
 

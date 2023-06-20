@@ -11,7 +11,6 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.Settings;
 import kg.alex.spt.domain.Discount;
 import kg.alex.spt.i18n.SptMessages;
-import kg.alex.spt.ui.StudentDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

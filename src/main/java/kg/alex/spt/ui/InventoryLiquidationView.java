@@ -19,7 +19,6 @@ import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.domain.InventoryLiquidation;
 import kg.alex.spt.domain.School;
-import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InventoryLiquidationPdf;
 import kg.alex.spt.utils.ExistsValidator;

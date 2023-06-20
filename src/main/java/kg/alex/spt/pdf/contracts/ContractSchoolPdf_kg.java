@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
-import java.util.Objects;
 
 public class ContractSchoolPdf_kg {
 

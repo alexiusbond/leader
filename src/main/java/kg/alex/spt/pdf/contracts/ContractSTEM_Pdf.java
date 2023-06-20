@@ -18,11 +18,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
-import java.util.Objects;
 
 public class ContractSTEM_Pdf {
 
-    static final Logger logger = LogManager.getLogger(ContractSchoolPdf_2024_ru.class);
+    static final Logger logger = LogManager.getLogger(ContractSTEM_Pdf.class);
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
