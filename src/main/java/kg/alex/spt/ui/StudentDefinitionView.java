@@ -513,6 +513,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG.addItem(myUI.getMessage(SptMessages.CambridgeContrEn));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.UWIS_Contract));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.STEM_Contract));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.AychurekContrRu));
 
         printButton = new PopupButton(myUI.getMessage(SptMessages.Print));
         printButton.setDescription(myUI.getMessage(SptMessages.Print));
@@ -1433,6 +1434,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     new ContractUWIS_Pdf(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.STEM_Contract))) {
                                     new ContractSTEM_Pdf(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.AychurekContrRu))) {
+                                    new ContractAychurekPdf_2023_ru(myUI, studInfo, instPlanCont);
                                 }
                                 contractTypeOG.setValue(null);
                             } else {

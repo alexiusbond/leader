@@ -89,7 +89,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         typeOG.addValueChangeListener(this);
         typeOG.addItem(myUI.getMessage(SptMessages.AggregatedReport));
         typeOG.addItem(myUI.getMessage(SptMessages.DetailedReport));
-        typeOG.setValue(myUI.getMessage(SptMessages.AggregatedReport));
+        typeOG.setValue(myUI.getMessage(SptMessages.DetailedReport));
 
         schoolSelect = new ComboBox(myUI.getMessage(SptMessages.School));
         schoolSelect.setNullSelectionAllowed(false);
@@ -132,7 +132,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
             logger.error(e);
             logger.catching(e);
         }
-        currencySelect.setValue(2);
+        currencySelect.setValue(1);
 
         leftGrid.addComponent(typeOG, 0, 0, 3, 0);
         leftGrid.addComponent(fromDateDF, 0, 1, 1, 1);

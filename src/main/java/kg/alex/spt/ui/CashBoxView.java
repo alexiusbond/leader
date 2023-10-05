@@ -172,7 +172,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         currencyHl = new HorizontalLayout();
         currencyHl.setWidth(Settings.PERCENTS100);
         currencyHl.setSpacing(true);
-        currencyHl.setEnabled(currentUser.hasRole(Settings.rnAdmin) && myUI.isManualRate());
+        currencyHl.setEnabled((currentUser.hasRole(Settings.rnAdmin) || myUI.getUser().getId() == 3294)
+                && myUI.isManualRate());
 
         Label currencyLab = new Label();
         currencyLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -198,7 +199,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         HorizontalLayout currencySettingsHl = new HorizontalLayout();
         currencySettingsHl.setWidth(Settings.PERCENTS100);
         currencySettingsHl.setSpacing(true);
-        currencySettingsHl.setEnabled(currentUser.hasRole(Settings.rnAdmin));
+        currencySettingsHl.setEnabled(currentUser.hasRole(Settings.rnAdmin) || myUI.getUser().getId() == 3294);
 
         currencySettingsOG = new OptionGroup();
         currencySettingsOG.setWidth(Settings.PERCENTS100);
