@@ -44,7 +44,6 @@ public class DbAccTransactions extends BaseDb {
             throws SQLException {
         Subject currentUser = SecurityUtils.getSubject();
 
-
         String sql = "SELECT t.id, t.amount, t.acc_category_id, t.acc_currency_id, t.currency_rate, t.note "
                 + "FROM acc_transactions as t where t.acc_invoice_id = ? order by t.id";
 
@@ -162,7 +161,7 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(Settings.is_disabled).setValue(isDisabled);
             item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
             if (result.getInt("t.order_number") != 0) {
-                item.getItemProperty(Settings.hashTags).setValue(
+                item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(
                         String.format("%07d", result.getInt("t.order_number")));
             }
         }

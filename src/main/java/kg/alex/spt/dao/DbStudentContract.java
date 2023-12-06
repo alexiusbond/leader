@@ -1886,7 +1886,8 @@ public class DbStudentContract extends BaseDb {
                 "WHERE scc.year_id = ? AND vcs.class_name_id IN (" + classIds + ") AND vcs.education_status_id IN (" + educationStatusIds + ") " +
                 "ORDER BY scc.creation_date) UNION " +
                 "(SELECT concat('sp', sp.id) as  id, vcs.class_name AS class, vcs.education_status AS education_status, st.login AS login, " +
-                "CONCAT(st.name, ' ', st.surname) AS fullname, DATE(sp.modification_date) AS creation_date, 'Оплата' AS type, " +
+                "CONCAT(st.name, ' ', st.surname) AS fullname, DATE(sp.modification_date) AS creation_date, " +
+                "IF(sp.payment_category_id = 3, 'Возврат', 'Оплата') AS type, " +
                 "CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
                 "IF(sp.acc_currency_id = 2, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
                 "FROM student_payments AS sp LEFT JOIN student AS st ON st.id = sp.student_id " +

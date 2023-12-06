@@ -47,6 +47,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.grid.cellrenderers.view.RowIndexRenderer;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Calendar;
@@ -354,9 +355,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false),
                 null, null, null));
 
-        grid.getColumn(Settings.hashTags).setEditable(false);
+        grid.getColumn(myUI.getMessage(SptMessages.InvoiceNumber)).setEditable(false);
         grid.getColumn(Settings.acc_currency_id).setEditable(false);
         grid.getColumn(Settings.button).setEditable(false);
+        grid.getColumn(Settings.hashTags).setEditable(false);
         grid.getColumn(Settings.from_employee_id).setEditable(false);
         grid.getColumn(Settings.is_disabled).setEditable(false);
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setEditable(
@@ -366,7 +368,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
         grid.setCellStyleGenerator((Grid.CellReference cellReference) -> {
             if (cellReference.getProperty().getType() == Double.class || cellReference.getProperty().getType() == Date.class
-                    || cellReference.getPropertyId().equals(Settings.hashTags)) {
+                    || cellReference.getPropertyId().equals(myUI.getMessage(SptMessages.InvoiceNumber))) {
                 return "align-right";
             } else {
                 return null;
@@ -401,10 +403,14 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     new HtmlRenderer(), new ValueFromContainerConverter((IndexedContainer) incomesCategoryCb.getContainerDataSource(),
                             myUI.getMessage(SptMessages.Category), myUI));
         }
+        RowIndexRenderer rir = new RowIndexRenderer();
+        rir.setOffset(1);
+        grid.getColumn(Settings.hashTags).setRenderer(rir);
         grid.getColumn(Settings.button).setRenderer(new ComponentRenderer());
 
         grid.getColumn(Settings.button).setWidth(52);
-        grid.getColumn(Settings.hashTags).setWidth(60);
+        grid.getColumn(Settings.hashTags).setWidth(40);
+        grid.getColumn(myUI.getMessage(SptMessages.InvoiceNumber)).setWidth(60);
         grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(120);
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(100);
         grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setWidth(105);
@@ -561,7 +567,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     logger.catching(e);
                 }
             }
-            item.getItemProperty(Settings.hashTags).setValue(String.format("%07d", tr.getOrder_number()));
+            item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(String.format("%07d", tr.getOrder_number()));
             new TransactionInvoicePDF(myUI, tr, myUI.getUser().getSchool().getName_ru(), myUI.getUser().getSchool().getPhoto(), orderName);
         } else if (source.getData().equals(myUI.getMessage(SptMessages.DeleteButton))) {
             if (source.getId().contains(Settings.FreshItem)) {
@@ -933,8 +939,9 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
     private IndexedContainer prepareContainerProperties() {
         IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(Settings.hashTags, Integer.class, null);
         container.addContainerProperty(Settings.button, HorizontalLayout.class, null);
-        container.addContainerProperty(Settings.hashTags, String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.InvoiceNumber), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Category), Integer.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
@@ -1058,8 +1065,8 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         if (item.getItemProperty(Settings.from_employee_id).getValue() != null) {
             t.setEmployee(item.getItemProperty(Settings.from_employee_id).getValue().toString());
         }
-        if (item.getItemProperty(Settings.hashTags).getValue() != null) {
-            t.setOrder_number(Integer.parseInt(item.getItemProperty(Settings.hashTags).getValue().toString()));
+        if (item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).getValue() != null) {
+            t.setOrder_number(Integer.parseInt(item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString()));
         }
         t.setEmployee_id(myUI.getUser().getId());
         t.setSchool_id(myUI.getUser().getSchool().getId());

@@ -242,7 +242,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         this.setFirstComponent(leftLay);
 
         buildContactsLayout();
-        buildContractsLayout();
+        //buildContractsLayout();
         buildFamilyLayout();
         buildExtraLayout();
         buildAchievementsLayout();
@@ -264,7 +264,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContacts) && !isMyProfile) {
             tabs.getTab(contactInfoLay).setVisible(false);
         }
-        tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(SptMessages.Contracts));
+        //tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(SptMessages.Contracts));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContracts)) {
             tabs.getTab(contractInfoLay).setVisible(false);
         }
