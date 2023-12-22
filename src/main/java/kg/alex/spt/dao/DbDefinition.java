@@ -231,7 +231,8 @@ public class DbDefinition extends BaseDb {
     }
 
     public IndexedContainer exec_years_for_select(MyVaadinUI myUi, int current_year_id) throws SQLException {
-        String sql = "select t.id, t.name, t.start_date, t.end_date, t.is_last, t.installment_date_limit from year as t " +
+        String sql = "select t.id, t.name, t.start_date, t.end_date, t.is_last, t.installment_date_limit " +
+                "from year as t " +
                 "where t.id between ? and ? order by t.id desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, current_year_id - 1);

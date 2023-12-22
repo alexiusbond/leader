@@ -104,7 +104,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
     private VerticalLayout infoLay, documentsLay;
     private final GridLayout empSearchLay;
     private GridLayout contactInfoLay;
-    private VerticalLayout contractInfoLay;
+    //private VerticalLayout contractInfoLay;
     private final VerticalLayout contractExtraInfoLay = new VerticalLayout();
     private Button printContractBtn;
     private GridLayout familyInfoLay;
@@ -264,10 +264,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContacts) && !isMyProfile) {
             tabs.getTab(contactInfoLay).setVisible(false);
         }
-        //tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(SptMessages.Contracts));
+        /*tabs.addTab(contractInfoLay).setCaption(myUI.getMessage(SptMessages.Contracts));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabContracts)) {
             tabs.getTab(contractInfoLay).setVisible(false);
-        }
+        }*/
         tabs.addTab(profInfoLay).setCaption(myUI.getMessage(SptMessages.ProfInfo));
         if (!currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmTabProfInfo) && !isMyProfile) {
             tabs.getTab(profInfoLay).setVisible(false);
@@ -309,9 +309,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     if (event.getTabSheet().getSelectedTab() == contactInfoLay && employeeID != 0) {
                         setPhonesTable();
                         setContactFields();
-                    } else if (event.getTabSheet().getSelectedTab() == contractInfoLay && employeeID != 0) {
+                    } /*else if (event.getTabSheet().getSelectedTab() == contractInfoLay && employeeID != 0) {
                         setContractsTable();
-                    } else if (event.getTabSheet().getSelectedTab() == familyInfoLay && employeeID != 0) {
+                    } */else if (event.getTabSheet().getSelectedTab() == familyInfoLay && employeeID != 0) {
                         setChildrenTable();
                         setEducationTable(spouseEducationTable, 2);
                         setWorkTable(spouseWorkPlacesTable, 2);
@@ -389,13 +389,13 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         contractsTable = new FormattedTable(myUI);
         contractsTable.setSizeFull();
         contractsTable.setStyleName(ValoTheme.TABLE_SMALL);
-        contractInfoLay = new VerticalLayout();
+        /*contractInfoLay = new VerticalLayout();
         contractInfoLay.setSizeFull();
         contractInfoLay.setSpacing(true);
         contractInfoLay.setMargin(true);
         contractInfoLay.addComponent(hl);
         contractInfoLay.addComponent(contractsTable);
-        contractInfoLay.setExpandRatio(contractsTable, 1);
+        contractInfoLay.setExpandRatio(contractsTable, 1);*/
     }
 
     private void buildContactsLayout() {
@@ -1719,7 +1719,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         optionGroup.setEnabled(false);
         employeesDataTable.setEnabled(false);
         contactInfoLay.setEnabled(true);
-        contractInfoLay.setEnabled(true);
+        //contractInfoLay.setEnabled(true);
         familyInfoLay.setEnabled(true);
         extraInfoLay.setEnabled(true);
         formLay.setEnabled(true);
@@ -1765,7 +1765,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         employeesDataTable.setEnabled(true);
         optionGroup.setEnabled(true);
         contactInfoLay.setEnabled(false);
-        contractInfoLay.setEnabled(false);
+        //contractInfoLay.setEnabled(false);
         familyInfoLay.setEnabled(false);
         extraInfoLay.setEnabled(false);
         formLay.setEnabled(false);
@@ -1782,9 +1782,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 tab.setEnabled(true);
             } else if (tab.getComponent() == contactInfoLay) {
                 tab.setEnabled(true);
-            } else if (tab.getComponent() == contractInfoLay) {
+            }/* else if (tab.getComponent() == contractInfoLay) {
                 tab.setEnabled(true);
-            } else if (tab.getComponent() == familyInfoLay) {
+            }*/ else if (tab.getComponent() == familyInfoLay) {
                 tab.setEnabled(true);
             } else if (tab.getComponent() == extraInfoLay) {
                 tab.setEnabled(true);
@@ -2571,9 +2571,9 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         if (tabs.getSelectedTab() == tabs.getTab(contactInfoLay).getComponent()) {
             setPhonesTable();
             setContactFields();
-        } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
+        } /*else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
             setContractsTable();
-        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()) {
+        }*/ else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()) {
             setChildrenTable();
             setEducationTable(spouseEducationTable, 2);
             setWorkTable(spouseWorkPlacesTable, 2);
@@ -2737,11 +2737,11 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                             && (!validateTable(phonesTable, noPhonesCkb.getValue(), false) || !validate(contactInfoLay, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
-                    } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()
+                    } /*else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()
                             && (!validateTable(contractsTable, true, false))) {
                         Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
-                    } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()
+                    }*/ else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()
                             && (!validateTable(childrenTable, noChildrenCkb.getValue(), false)
                             || !validateTable(spouseEducationTable, noSpouseEducationCkb.getValue(), false)
                             || !validateTable(spouseWorkPlacesTable, noSpouseWorkPlacesCkb.getValue(), false)
@@ -2882,10 +2882,10 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                                     insertEmployeeContact(getEmployeeContact(employeeID));
                                     setPhonesTable();
                                     setContactFields();
-                                } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
+                                } /*else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
                                     insertContracts(employeeID);
                                     setContractsTable();
-                                } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()) {
+                                }*/ else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent()) {
                                     insertChildren(employeeID);
                                     insertEducation(employeeID, 2, spouseEducationTable, delSpouseEducationIds);
                                     insertWorkPlaces(employeeID, 2, spouseWorkPlacesTable, delSpouseWorkIds);
@@ -3166,7 +3166,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             if (phonesTable.size() == 0) {
                 noPhonesCkb.setEnabled(true);
             }
-        } else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
+        } /*else if (tabs.getSelectedTab() == tabs.getTab(contractInfoLay).getComponent()) {
             if (source.getDescription().equals(myUI.getMessage(SptMessages.DeleteButton))) {
                 delContractIds.add(source.getData().toString());
                 contractsTable.removeItem(event.getButton().getData().toString());
@@ -3181,7 +3181,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     ((PopupButton) source).setPopupVisible(false);
                 }
             }
-        } else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeChildren)) {
+        }*/ else if (tabs.getSelectedTab() == tabs.getTab(familyInfoLay).getComponent() && source.getId().equals(Settings.dbEmployeeChildren)) {
             delChildIds.add(source.getData().toString());
             childrenTable.removeItem(event.getButton().getData().toString());
             if (childrenTable.size() == 0) {

@@ -319,7 +319,7 @@ public class DbStudent extends BaseDb {
                 + "as is_main, MAX(IF(ip.is_visible = 1, ip.date_of_payment, NULL)) AS plan_debt_date, "
                 + "ifnull((sum(ip.amount) - sc.net_payments),0.0) as plan_debt, "
                 + "sc.contr_with_disc + sc.debt + ifnull(vc.amount, 0.0) - sc.net_payments as remain, "
-                + "(SELECT concat(FORMAT(sp.amount, 2), ' (', date(sp.modification_date),')') FROM student_payments sp "
+                + "(SELECT concat(FORMAT(sp.amount, 2), ' (', DATE_FORMAT(date(sp.modification_date), '%d-%m-%Y'),')') FROM student_payments sp "
                 + "where sp.student_id = st.id and sp.year_id = ? and sp.payment_category_id != 3 order by sp.id desc limit 1) as last_payment, "
                 + "(SELECT CONCAT(DATE_FORMAT(modification_date, '%d-%m-%Y'), IF((note IS NOT NULL AND note != ''), CONCAT(' (', note, ')'), '')) "
                 + "FROM student_calls as sc WHERE student_id = st.id order by sc.id desc limit 1) AS last_call "
