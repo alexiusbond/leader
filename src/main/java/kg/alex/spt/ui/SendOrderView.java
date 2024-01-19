@@ -367,21 +367,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
             }
         } else if (source.getId() != null && source.getId().equals(Settings.actDelete)) {
             EmployeeMessage employeeMessage = (EmployeeMessage) source.getData();
-            if ((Integer) dataTable.getContainerProperty(employeeMessage.getId(),
-                    Settings.status_id).getValue() == 2) {
-                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                        myUI.getMessage(SptMessages.ConfirmDeletion),
-                        myUI.getMessage(SptMessages.Yes),
-                        myUI.getMessage(SptMessages.No),
-                        (ConfirmDialog.Listener) dialog -> {
-                            if (dialog.isConfirmed()) {
-                                execDelete(employeeMessage);
-                            }
-                        });
-            } else {
-                Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
-                        Notification.Type.WARNING_MESSAGE);
-            }
+            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
+                    myUI.getMessage(SptMessages.ConfirmDeletion),
+                    myUI.getMessage(SptMessages.Yes),
+                    myUI.getMessage(SptMessages.No),
+                    (ConfirmDialog.Listener) dialog -> {
+                        if (dialog.isConfirmed()) {
+                            execDelete(employeeMessage);
+                        }
+                    });
         } else {
             new OrderPdf(myUI, (OrderMessage) source.getData());
         }
@@ -538,19 +532,15 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         try {
             DbDefinition dbDef = new DbDefinition();
             dbDef.connect();
-            int st = dbDef.exec_delete(employeeMessage.getId(),
-                    Settings.dbEmployeeMessageTable);
-            if (st != 0) {
+            try {
+                dbDef.exec_delete(employeeMessage.getOrder_message_id(),
+                        Settings.orderMessagesTable);
                 dataTable.getContainerDataSource().removeItem(employeeMessage.getId());
-                try {
-                    dbDef.exec_delete(employeeMessage.getOrder_message_id(),
-                            Settings.orderMessagesTable);
-                } catch (Exception ignored) {
-                }
+            } catch (Exception ignored) {
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDeleteRead),
+            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
