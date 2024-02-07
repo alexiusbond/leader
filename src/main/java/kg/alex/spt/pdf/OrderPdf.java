@@ -57,7 +57,7 @@ public class OrderPdf {
 
                     PdfContentByte pageContentByte = pdfStamper.getOverContent(1);
                     ColumnText ct = new ColumnText(pageContentByte);
-                    ct.setSimpleColumn(50, 680, 550, 50);
+                    ct.setSimpleColumn(50, 700, 550, 50);
                     ct.addElement(new Phrase("№ " + orderMessage.getOrder_number() +
                             "  " + Settings.dateKg.format(orderMessage.getDate()), dateFont));
 
