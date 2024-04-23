@@ -1012,7 +1012,7 @@ public class DbAccTransactions extends BaseDb {
                 "IFNULL(SUM(IF((acr.acc_currency_id <> 1), (acr.amount * acr.currency_rate), acr.amount)), 0.0) AS amount_som, " +
                 "MAX(inv.id) AS invoice_id FROM acc_transfers acr " +
                 "LEFT JOIN acc_invoice inv ON inv.id = acr.invoice_id AND inv.acc_invoice_type_id = 1 AND " +
-                "inv.school_id = ? ";
+                "inv.school_id = ? WHERE 1 ";
         if (from != null && till != null) {
             sql += "AND inv.creation_date >= ? AND inv.creation_date <= ? ";
         } else if (from != null) {
@@ -1057,6 +1057,7 @@ public class DbAccTransactions extends BaseDb {
             stat.setDate(++counter, new java.sql.Date(till.getTime()));
         }
         ResultSet result = stat.executeQuery();
+        System.out.println(stat);
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);

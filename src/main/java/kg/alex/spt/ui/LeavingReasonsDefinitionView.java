@@ -31,22 +31,20 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
 
     static final Logger logger = LogManager.getLogger(LeavingReasonsDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final FormattedFilterTable dataTable;
+    private final String[] NATURAL_COL_ORDER;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect;
-    private final FormattedFilterTable dataTable;
     private TextField nameTF;
     private boolean isNew;
-
-    private final String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public LeavingReasonsDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
         NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
-            myUI.getMessage(SptMessages.Status)};
+                myUI.getMessage(SptMessages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();

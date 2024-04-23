@@ -34,17 +34,16 @@ public class CallsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(CallsReport.class);
     private final MyVaadinUI myUI;
+    private final HorizontalSplitPanel splitPanel;
+    public int total;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private final HorizontalSplitPanel splitPanel;
     private FilterTable classTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer callsCont;
-
-    public int total;
 
     public CallsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

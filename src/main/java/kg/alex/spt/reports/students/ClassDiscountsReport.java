@@ -34,13 +34,13 @@ public class ClassDiscountsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(ClassDiscountsReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
-            selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox yearSelect;
-    private ComboBoxMultiselect educationStatusMCB;
     public FormattedTable dataTable;
     public FilterTable classTable, discountsTable;
+    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
+            selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
+    private ComboBox yearSelect;
+    private ComboBoxMultiselect educationStatusMCB;
 
     public ClassDiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

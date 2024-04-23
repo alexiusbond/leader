@@ -34,12 +34,12 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(CurrentAccountStatementReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, pdfBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox currencySelect;
-    private DateField fromDateDF, tillDateDF;
     public FormattedTable dataTable;
     public FilterTreeTable employeeCategoriesTable;
+    private Button generateBtn, pdfBtn, excelBtn;
+    private ComboBox currencySelect;
+    private DateField fromDateDF, tillDateDF;
 
     public CurrentAccountStatementReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -199,7 +199,7 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 if (school != null && school.getAddress() != null) {
                     new CurrentAccountStatementPdf(myUI, dataTable,
                             employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
-                            myUI.getMessage(SptMessages.Title)).getValue().toString(),
+                                    myUI.getMessage(SptMessages.Title)).getValue().toString(),
                             currencySelect.getItemCaption(currencySelect.getValue()),
                             fromDateDF.getValue(), tillDateDF.getValue(), school);
                 } else {

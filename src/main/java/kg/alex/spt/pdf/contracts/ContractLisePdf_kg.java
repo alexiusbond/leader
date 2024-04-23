@@ -21,14 +21,13 @@ import java.util.Iterator;
 public class ContractLisePdf_kg {
 
     static final Logger logger = LogManager.getLogger(ContractLisePdf_kg.class);
+    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
+    private final MyVaadinUI myUI;
+    private final StudentInfoPdf studentInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final MyVaadinUI myUI;
-    private final StudentInfoPdf studentInfo;
-
-    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
     public ContractLisePdf_kg(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
@@ -91,7 +90,7 @@ public class ContractLisePdf_kg {
                 paragraph.add(new Phrase("Уставдын негизинде ишмердүүлүгүн  жүргүзгөн “" + studentInfo.getSchool().getName_kg()
                         + "” билим берүү мекемесинин (мындан ары “Лицей” деп белгиленет) атынан директору ", ordFont));
                 String fullName = studentInfo.getDirector().getSurname() + " " + studentInfo.getDirector().getName();
-                if (studentInfo.getDirector().getMiddle_name()!=null && !studentInfo.getDirector().getMiddle_name().equals("")) {
+                if (studentInfo.getDirector().getMiddle_name() != null && !studentInfo.getDirector().getMiddle_name().equals("")) {
                     fullName += " " + studentInfo.getDirector().getMiddle_name();
                 }
                 paragraph.add(new Phrase(fullName, ordBoldFont));

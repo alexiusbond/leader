@@ -34,17 +34,17 @@ public class DebtReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(DebtReport.class);
     private final MyVaadinUI myUI;
+    private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER;
+    public double inst_total, paid_total, debt_total;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private final HorizontalSplitPanel splitPanel;
     private FilterTable classTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer installmentCont;
-    private final String[] NATURAL_COL_ORDER;
-    public double inst_total, paid_total, debt_total;
 
     public DebtReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

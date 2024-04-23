@@ -34,17 +34,16 @@ public class DiscountsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(DiscountsReport.class);
     private final MyVaadinUI myUI;
+    private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER;
+    public int activeStudents, discountedStudents;
+    public double contracts, discounts, corrections, debts, nets, paid_amounts, lefts;
     private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
             selectAllDiscountsBtn, deselectAllDiscountsBtn, excelBtn;
-    private final HorizontalSplitPanel splitPanel;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private FormattedTable dataTable;
     private FilterTable classTable, discountsTable;
-
-    private final String[] NATURAL_COL_ORDER;
-    public int activeStudents, discountedStudents;
-    public double contracts, discounts, corrections, debts, nets, paid_amounts, lefts;
 
     public DiscountsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

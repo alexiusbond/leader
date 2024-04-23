@@ -36,17 +36,15 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
     static final Logger logger = LogManager.getLogger(ContractDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final FormattedFilterTable dataTable;
+    private final String[] NATURAL_COL_ORDER;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox statusSelect, yearSelect;
-    private final FormattedFilterTable dataTable;
     private PopupButton copyButton;
     private TextField nameTF, valueTF;
     private boolean isNew;
-
-    private final String[] NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;

@@ -41,18 +41,17 @@ public class HRLessonHoursReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(HRLessonHoursReport.class);
     private final MyVaadinUI myUI;
+    private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final VerticalLayout vl = new VerticalLayout();
     private Button generateBtn, excelBtn, selectAllSchoolsBtn, deselectAllSchoolsBtn,
             selectAllBranchesBtn, deselectAllBranchesBtn, selectAllPositionsBtn, deselectAllPositionsBtn,
             selectAllExtraPositionsBtn, deselectAllExtraPositionsBtn;
-    private final HorizontalSplitPanel splitPanel;
     private FilterTable schoolTable, branchTable, positionTable, extraPositionTable;
     private ComboBoxMultiselect workingStatusesMCB;
     private ComboBox yearSelect;
     private EnhancedFormatExcelExport excelReport;
-    private final String[] NATURAL_COL_ORDER;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
-    private final VerticalLayout vl = new VerticalLayout();
 
     public HRLessonHoursReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

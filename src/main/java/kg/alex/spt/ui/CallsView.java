@@ -35,14 +35,13 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     static final Logger logger = LogManager.getLogger(CallsView.class);
     private final MyVaadinUI myUI;
+    public double total;
     private GridLayout leftLay;
     private FormattedTable dataTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private FilterTable classTable;
     private Button generateBtn, excelBtn, makePdfBtn, selectAllBtn, deselectAllBtn;
-
-    public double total;
 
     public CallsView(MyVaadinUI myUI) {
         this.myUI = myUI;

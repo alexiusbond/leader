@@ -33,8 +33,8 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(DebtsAndRepaymentsReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private ComboBoxMultiselect educationStatusMCB;
     private ComboBox yearSelect;
     private FormattedTable dataTable;

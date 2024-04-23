@@ -5,6 +5,7 @@ import java.util.ListResourceBundle;
 
 public class SptMessages extends ListResourceBundle implements Serializable {
 
+    static int ids = 0;
     // Application
     public static final String AppTitle = generateId();
     //Login Form
@@ -509,7 +510,6 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String TotalDebt = generateId();
     public static final String TotalPayment = generateId();
     public static final String TotalLeft = generateId();
-
     public static final String SchoolInformation = generateId();
     public static final String StudentsInformation = generateId();
     public static final String IncomesDefinition = generateId();
@@ -603,14 +603,12 @@ public class SptMessages extends ListResourceBundle implements Serializable {
     public static final String TransactionsQuantity = generateId();
     public static final String TransactionNumber = generateId();
     public static final String StudentId = generateId();
-    public static final String StudentsPossessive  = generateId();
+    public static final String StudentsPossessive = generateId();
     public static final String Age = generateId();
 
     private static String generateId() {
         return Integer.toString(ids++);
     }
-
-    static int ids = 0;
 
     @Override
     protected Object[][] getContents() {

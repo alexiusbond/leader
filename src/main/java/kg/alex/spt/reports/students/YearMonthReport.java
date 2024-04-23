@@ -42,22 +42,21 @@ public class YearMonthReport implements Button.ClickListener,
     static final Logger logger = LogManager.getLogger(YearMonthReport.class);
     private final MyVaadinUI myUI;
     private final Subject currentUser = SecurityUtils.getSubject();
-    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER_YEAR;
+    private final String[] NATURAL_COL_ORDER_MONTH;
+    private final String[] NATURAL_COL_ORDER_SUMMARY;
+    public VerticalLayout rightLay;
+    public int totalStudents = 0, totalActive = 0;
+    public double contracts = 0.0, discounts = 0.0, prevYearDebts = 0.0, prevYearOverpays = 0.0, corrections = 0.0, nets = 0.0,
+            paid_amounts = 0.0, debts = 0.0, overpays = 0.0, inst_plans = 0.0;
+    private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private FilterTable schoolTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private EnhancedFormatExcelExport excelReport;
     private PopupDateField fromDateDF, tillDateDF;
-
-    private final String[] NATURAL_COL_ORDER_YEAR;
-    private final String[] NATURAL_COL_ORDER_MONTH;
-    private final String[] NATURAL_COL_ORDER_SUMMARY;
-    public VerticalLayout rightLay;
     private OptionGroup type;
-    public int totalStudents = 0, totalActive = 0;
-    public double contracts = 0.0, discounts = 0.0, prevYearDebts = 0.0, prevYearOverpays = 0.0, corrections = 0.0, nets = 0.0,
-            paid_amounts = 0.0, debts = 0.0, overpays = 0.0, inst_plans = 0.0;
 
     public YearMonthReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

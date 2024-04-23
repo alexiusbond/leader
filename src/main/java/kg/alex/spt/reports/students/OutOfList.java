@@ -35,14 +35,13 @@ public class OutOfList implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(OutOfList.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER;
+    public double nets, paid_amounts;
+    private Button generateBtn, selectAllBtn, deselectAllBtn, excelBtn;
     private ComboBoxMultiselect yearSelectMCB, reasonsMCB;
     private FormattedTable dataTable;
     private FilterTable fromClassTable;
-
-    private final String[] NATURAL_COL_ORDER;
-    public double nets, paid_amounts;
 
     public OutOfList(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

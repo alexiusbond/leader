@@ -27,8 +27,8 @@ public class StockGeneralReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(StockGeneralReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private final HorizontalSplitPanel splitPanel;
+    private Button generateBtn, excelBtn, selectAllBtn, deselectAllBtn;
     private ComboBox schoolSelect;
     private ComboBoxMultiselect stocksMSB;
     private OptionGroup operationOG;

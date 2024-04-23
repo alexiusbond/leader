@@ -36,8 +36,10 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(InstallmentPlanPaymentsReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, makePdfBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER;
+    public double total_inst, total_pay;
+    private Button generateBtn, makePdfBtn, excelBtn;
     private GridLayout rightGrid;
     private double debt, amount, plan_debt, ttl_payment, to_pay, ttl_left;
     private StringBuilder discounts;
@@ -56,9 +58,6 @@ public class InstallmentPlanPaymentsReport implements Button.ClickListener,
     private Label netLab;
     private Label paidLab;
     private Label leftLab;
-
-    private final String[] NATURAL_COL_ORDER;
-    public double total_inst, total_pay;
 
     public InstallmentPlanPaymentsReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

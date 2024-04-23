@@ -34,23 +34,22 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
 
     static final Logger logger = LogManager.getLogger(PositionDefinitionView.class);
     private final MyVaadinUI myUI;
+    private final Table dataTable;
+    private final String[] PERMISSION_NATURAL_COL_ORDER;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn;
     private ComboBox categorySelect, statusSelect;
-    private final Table dataTable;
     private Table permissionTable;
     private IndexedContainer permissionCont;
     private TextField nameTF;
     private boolean isNew;
-
-    private final String[] PERMISSION_NATURAL_COL_ORDER;
     private VerticalLayout settingsLay;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public PositionDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
         PERMISSION_NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.ClassCaption),
-            myUI.getMessage(SptMessages.Functions)};
+                myUI.getMessage(SptMessages.Functions)};
         String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
                 myUI.getMessage(SptMessages.Category),
                 myUI.getMessage(SptMessages.Status)};
@@ -339,7 +338,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.hr_position_category_id).setValue(categorySelect
-                        .getValue());
+                .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Category)).setValue(categorySelect
                 .getContainerProperty(categorySelect.getValue(),
@@ -348,7 +347,7 @@ public class PositionDefinitionView extends HorizontalSplitPanel implements Butt
                 myUI.getMessage(SptMessages.Permissions)).setValue(permJoinSingleStr());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.activity_status_id).setValue(statusSelect
-                        .getValue());
+                .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),

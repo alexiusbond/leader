@@ -8,7 +8,6 @@ package kg.alex.spt.domain;
 import java.io.Serializable;
 
 /**
- *
  * @author alex
  */
 public class StudentAccessories implements Serializable {

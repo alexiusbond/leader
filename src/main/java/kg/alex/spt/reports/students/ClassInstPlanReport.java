@@ -34,26 +34,26 @@ public class ClassInstPlanReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(ClassInstPlanReport.class);
     private final MyVaadinUI myUI;
+    private final HorizontalSplitPanel splitPanel;
+    private final String[] NATURAL_COL_ORDER;
+    public double total;
     private Button generateBtn, makePdfBtn, selectAllBtn, deselectAllBtn,
             excelBtn;
-    private final HorizontalSplitPanel splitPanel;
     private FilterTable classTable;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
     private DateField tillDateDF, fromDateDF;
     private FormattedTable dataTable;
     private IndexedContainer installmentCont;
-    private final String[] NATURAL_COL_ORDER;
-    public double total;
 
     public ClassInstPlanReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
         this.splitPanel = splitPanel;
         buildLeftPanel();
         NATURAL_COL_ORDER = new String[]{
-            myUI.getMessage(SptMessages.FirstName), myUI.getMessage(SptMessages.LastName),
-            myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.Phone),
-            myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount)};
+                myUI.getMessage(SptMessages.FirstName), myUI.getMessage(SptMessages.LastName),
+                myUI.getMessage(SptMessages.ClassName), myUI.getMessage(SptMessages.Phone),
+                myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount)};
     }
 
     private void buildLeftPanel() {

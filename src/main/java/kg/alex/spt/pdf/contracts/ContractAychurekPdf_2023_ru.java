@@ -22,15 +22,13 @@ import java.util.Iterator;
 public class ContractAychurekPdf_2023_ru {
 
     static final Logger logger = LogManager.getLogger(ContractAychurekPdf_2023_ru.class);
+    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
+    private final MyVaadinUI myUI;
+    private final StudentInfoPdf studentInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final MyVaadinUI myUI;
-    private final StudentInfoPdf studentInfo;
-
-
-    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
 
     public ContractAychurekPdf_2023_ru(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;

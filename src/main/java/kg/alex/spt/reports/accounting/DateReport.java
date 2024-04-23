@@ -42,12 +42,12 @@ public class DateReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(DateReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn,
-            selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn, pdfBtn;
     private final HorizontalSplitPanel splitPanel;
-    private DateField fromDateDF, tillDateDF;
     public FormattedTable incomesDataTable, outcomesDataTable;
     public FilterTreeTable incomeCategoriesTable, outcomeCategoriesTable;
+    private Button generateBtn, selectAllIncomesBtn, deselectAllIncomesBtn,
+            selectAllOutcomesBtn, deselectAllOutcomesBtn, excelBtn, pdfBtn;
+    private DateField fromDateDF, tillDateDF;
     private EnhancedFormatExcelExport excelReport;
 
     private VerticalLayout rightLayout;

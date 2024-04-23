@@ -45,8 +45,10 @@ public class GeneralReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(GeneralReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, PDFBtn;
     private final HorizontalSplitPanel splitPanel;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    private final Calendar prevDayCal;
+    private Button generateBtn, PDFBtn;
     private GridLayout totalsGrid;
     private VerticalLayout rightLay;
     private FormattedTable transactionsTable, paymentsTable;
@@ -55,14 +57,11 @@ public class GeneralReport implements Button.ClickListener,
     private Configuration confDisc, confPaid, confPayments;
     private ComboBox yearSelect;
     private ComboBoxMultiselect educationStatusMCB;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
     private String[] NATURAL_COL_ORDER_TRANSACTIONS;
     private String[] NATURAL_COL_ORDER_PAYMENTS;
     private Label outcomeLastDateLbl, outcomeTotalLbl, incTotalLbl, incLastDateLbl, prevBalanceLbl, totalLbl;
     private SchoolAccounting schoolAcc;
     private ContractInfo contractTtl;
-    private final Calendar prevDayCal;
 
     public GeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -227,7 +226,7 @@ public class GeneralReport implements Button.ClickListener,
     }
 
     @Override
-    public void valueChange(Property.ValueChangeEvent event) {        
+    public void valueChange(Property.ValueChangeEvent event) {
         if (PDFBtn.isEnabled()) {
             setSchoolAccounting(null);
             transactionsTable.setContainerDataSource(null);
@@ -429,9 +428,9 @@ public class GeneralReport implements Button.ClickListener,
     private void buildTransactionsTable() {
 
         NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(SptMessages.Month),
-            myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
-            myUI.getMessage(SptMessages.Incomes),
-            myUI.getMessage(SptMessages.Expenses), myUI.getMessage(SptMessages.Difference)};
+                myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
+                myUI.getMessage(SptMessages.Incomes),
+                myUI.getMessage(SptMessages.Expenses), myUI.getMessage(SptMessages.Difference)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
@@ -453,8 +452,8 @@ public class GeneralReport implements Button.ClickListener,
     private void buildPaymentsLayout() {
 
         NATURAL_COL_ORDER_PAYMENTS = new String[]{myUI.getMessage(SptMessages.Month),
-            myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
-            myUI.getMessage(SptMessages.Debt)};
+                myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
+                myUI.getMessage(SptMessages.Debt)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);

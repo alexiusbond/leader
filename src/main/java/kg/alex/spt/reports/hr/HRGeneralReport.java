@@ -40,8 +40,10 @@ public class HRGeneralReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(HRGeneralReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
+    private final Subject currentUser = SecurityUtils.getSubject();
+    public Grid dataGrid;
+    private Button generateBtn, excelBtn;
     private ComboBoxMultiselect schoolsMCB;
     private ComboBoxMultiselect positionsMCB;
     private ComboBoxMultiselect extraPositionsMCB;
@@ -63,9 +65,6 @@ public class HRGeneralReport implements Button.ClickListener,
     private ComboBox yearSelect;
     private Grid.FooterRow footer;
     private TextField nameTF, surnameTF, fromAge, toAge;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
-    public Grid dataGrid;
 
     public HRGeneralReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;

@@ -19,20 +19,18 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 
-public class ContractSTEM_Pdf {
+public class ContractSTEM_2025_Pdf {
 
-    static final Logger logger = LogManager.getLogger(ContractSTEM_Pdf.class);
+    static final Logger logger = LogManager.getLogger(ContractSTEM_2025_Pdf.class);
+    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
+    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
+    private final MyVaadinUI myUI;
+    private final StudentInfoPdf studentInfo;
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
-    private final MyVaadinUI myUI;
-    private final StudentInfoPdf studentInfo;
 
-
-    private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
-    private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
-
-    public ContractSTEM_Pdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractSTEM_2025_Pdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -563,7 +561,7 @@ public class ContractSTEM_Pdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.2. В части предоставления услуг образования, настоящий договор вступает в силу с 01 сентября 2023 г.", ordFont));
+                paragraph.add(new Phrase("5.2. Настоящий Договор может быть расторгнут досрочно, согласно п.2.2.2.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -572,7 +570,7 @@ public class ContractSTEM_Pdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.3. Настоящий Договор может быть расторгнут досрочно, согласно п.2.2.2.", ordFont));
+                paragraph.add(new Phrase("5.3. Любые дополнения и изменения к настоящему Договору действительны лишь при условии, что они совершены в письменной форме и подписаны обеими сторонами.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -581,7 +579,7 @@ public class ContractSTEM_Pdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.4. Любые дополнения и изменения к настоящему Договору действительны лишь при условии, что они совершены в письменной форме и подписаны обеими сторонами.", ordFont));
+                paragraph.add(new Phrase("5.4. 5.4. Все разногласия по данному Договору решаются сторонами в порядке переговоров. В случае невозможности разрешения спора путем переговоров, они решаются в судебном порядке, установленном законодательством Кыргызской Республики.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -590,7 +588,7 @@ public class ContractSTEM_Pdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.5. Все разногласия по данному Договору решаются сторонами в порядке переговоров. В случае невозможности разрешения спора путем переговоров, они решаются в судебном порядке, установленном законодательством Кыргызской Республики.", ordFont));
+                paragraph.add(new Phrase("5.5. Стороны договорились, что деловая корреспонденция и иные документы, касающиеся настоящего Договора, отправленные и полученные посредством факсимильной, электронной связи или иным способом, позволяющим достоверно установить, что документ исходит от стороны по Договору, признаются имеющими юридическую силу.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -599,7 +597,7 @@ public class ContractSTEM_Pdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.6. Стороны договорились, что деловая корреспонденция и иные документы, касающиеся настоящего Договора, отправленные и полученные посредством факсимильной, электронной связи или иным способом, позволяющим достоверно установить, что документ исходит от стороны по Договору, признаются имеющими юридическую силу.", ordFont));
+                paragraph.add(new Phrase("5.6. Настоящий Договор составлен в двух экземплярах на русском (кыргызском) языке и подписан обеими сторонами. Оба экземпляра идентичны и имеют одинаковую юридическую силу. У каждой из сторон находится один экземпляр настоящего Договора.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
@@ -608,7 +606,7 @@ public class ContractSTEM_Pdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("5.7. Настоящий Договор составлен в двух экземплярах на русском (кыргызском) языке и подписан обеими сторонами. Оба экземпляра идентичны и имеют одинаковую юридическую силу. У каждой из сторон находится один экземпляр настоящего Договора.", ordFont));
+                paragraph.add(new Phrase("5.7. Срок действия настоящего договора один учебный год.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();

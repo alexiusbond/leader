@@ -27,6 +27,9 @@ public class School implements Serializable {
     private int school_type_id;
     private String photo;
 
+    public School() {
+    }
+
     public String getOkpo() {
         return okpo;
     }
@@ -81,9 +84,6 @@ public class School implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public School() {
     }
 
     public int getId() {

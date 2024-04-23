@@ -17,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
  * @author alex
  */
 public class DbContract extends BaseDb {
@@ -28,7 +27,7 @@ public class DbContract extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int school_id)
             throws SQLException {
-        
+
 
         String sql = "SELECT c.id, c.name, c.amount, c.year_id, y.name, c.school_id, "
                 + "sc.name_ru, sc.name_ru, c.activity_status_id, ac.name "
@@ -107,7 +106,7 @@ public class DbContract extends BaseDb {
     }
 
     public IndexedContainer execSQL_for_year_sel(MyVaadinUI myUi, int cur_year,
-            int scl_id) throws SQLException {
+                                                 int scl_id) throws SQLException {
         String sql = "SELECT distinct(d.year_id), y.name "
                 + "FROM contract as d left join year as y on y.id = d.year_id "
                 + "where d.year_id != ? and d.school_id = ?";
@@ -138,7 +137,7 @@ public class DbContract extends BaseDb {
     }
 
     public IndexedContainer exec_contr_select(MyVaadinUI myUi, int year_id, int school_id,
-            int contr_id)
+                                              int contr_id)
             throws SQLException {
         String sql = "select t.id, t.name, t.amount, y.name from contract as t "
                 + "left join year as y on t.year_id = y.id "
@@ -157,7 +156,7 @@ public class DbContract extends BaseDb {
             item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
                     result.getString("t.name") + " - "
                             + Settings.dFormat2.format(result.getDouble("t.amount"))
-                    + "$ (" + result.getString("y.name") + ")");
+                            + "$ (" + result.getString("y.name") + ")");
             item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
                     result.getDouble("t.amount"));
         }

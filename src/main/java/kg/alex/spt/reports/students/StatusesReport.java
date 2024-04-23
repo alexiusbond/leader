@@ -36,15 +36,14 @@ public class StatusesReport implements Button.ClickListener,
 
     static final Logger logger = LogManager.getLogger(StatusesReport.class);
     private final MyVaadinUI myUI;
-    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
-            selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
     private final HorizontalSplitPanel splitPanel;
-    private ComboBox yearSelect;
+    private final Subject currentUser = SecurityUtils.getSubject();
     public ComboBoxMultiselect statusMS;
     public FormattedTable dataTable;
     public FilterTable classTable, schoolsTable;
-
-    private final Subject currentUser = SecurityUtils.getSubject();
+    private Button generateBtn, selectAllClassesBtn, deselectAllClassesBtn,
+            selectAllSchoolsBtn, deselectAllSchoolsBtn, excelBtn;
+    private ComboBox yearSelect;
 
     public StatusesReport(final MyVaadinUI ui, final HorizontalSplitPanel splitPanel) {
         this.myUI = ui;
@@ -233,9 +232,9 @@ public class StatusesReport implements Button.ClickListener,
                         while (status_iter.hasNext()) {
                             Object nextStatus = status_iter.next();
                             dataTable.setColumnAlignment(classTable.getContainerProperty(
-                                    nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
-                                    + myUI.getMessage(SptMessages.ClassName) + " "
-                                    + statusMS.getContainerProperty(
+                                            nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
+                                            + myUI.getMessage(SptMessages.ClassName) + " "
+                                            + statusMS.getContainerProperty(
                                             nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
                                     Table.Align.RIGHT);
                         }

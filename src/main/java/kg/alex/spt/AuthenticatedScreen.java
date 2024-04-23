@@ -30,8 +30,153 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private final Subject currentUser = SecurityUtils.getSubject();
     private final VerticalSplitPanel verticalPanel;
     private final Button changePassBtn;
-    public ComboBox yearSelect, schoolSelect;
     private final Label header = new Label();
+    private final Command menuCommand = new Command() {
+
+        @Override
+        public void menuSelected(MenuItem selectedItem) {
+            if (selectedItem != null) {
+                if (!currentUser.hasRole(Settings.rnBank)) {
+                    myUI.repaintMessagesButton();
+                }
+                String eventPressed = selectedItem.getText();
+                if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNumberDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.YearDefinition))) {
+                    verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LanguageDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbLanguageTable, null, null, false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExamDefinition))) {
+                    verticalPanel.setSecondComponent(new ExamDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.UniversityDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbUniversityTable, Settings.dbEmployeeEducation, Settings.dbColumnUniversityId,
+                            false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.CertificateDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbCertificateTable, Settings.dbEmployeeCertificate, Settings.dbColumnCertificateId,
+                            false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.WorkPlacesDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbWork_placeTable, Settings.dbEmployeeWork, Settings.dbColumnEmployeeWorkId, false, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.QuestionDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbQuestion, null, null, true, Settings.cnHRDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeTransfer))) {
+                    verticalPanel.setSecondComponent(new EmployeeTransferView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LessonAssessment))) {
+                    verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BranchDefinition))) {
+                    verticalPanel.setSecondComponent(new BranchDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryCategoryDefinition))) {
+                    verticalPanel.setSecondComponent(new DefinitionView(
+                            myUI, Settings.dbInventoryCategoryTable, null, null, false, Settings.cnInventoryDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNameDefinition))) {
+                    verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BlockDefinition))) {
+                    verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.RoomDefinition))) {
+                    verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.PositionDefinition))) {
+                    verticalPanel.setSecondComponent(new PositionDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.DiscountDefinition))) {
+                    verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccessoriesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LeavingReasonsDefinition))) {
+                    verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ContractDefinition))) {
+                    verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolDefinition))) {
+                    verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeDefinition))) {
+                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.MyInfo))) {
+                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolModification))) {
+                    verticalPanel.setSecondComponent(new SchoolModificationView(
+                            myUI, myUI.getUser().getSchool().getId()));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StudentDefinition))) {
+                    verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IssueStudentOrder))) {
+                    verticalPanel.setSecondComponent(new IssueOrderView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ImportBranchesFromExcel))) {
+                    verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendOrders))) {
+                    verticalPanel.setSecondComponent(new SendOrderView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Reports))) {
+                    if (currentUser.hasRole(Settings.rnBank)) {
+                        verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
+                    } else {
+                        verticalPanel.setSecondComponent(new StudentReportsView(myUI));
+                    }
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingReports))) {
+                    verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingBankReport))) {
+                    verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockReports))) {
+                    verticalPanel.setSecondComponent(new StockReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.HRReports))) {
+                    verticalPanel.setSecondComponent(new HRReportsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Templates))) {
+                    verticalPanel.setSecondComponent(new TemplatesView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Backup))) {
+                    verticalPanel.setSecondComponent(new BackupView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Calls))) {
+                    verticalPanel.setSecondComponent(new CallsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.HomePage))) {
+                    verticalPanel.setSecondComponent(new HomePageView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.CashBox))) {
+                    verticalPanel.setSecondComponent(new CashBoxView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Accruals))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
+                            Settings.cnAccrualsView, 2, 1));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebts))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
+                            Settings.cnShortTermDebtsView, 4, 4));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BalanceAccounts))) {
+                    verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssets))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
+                            Settings.cnReturnableAssetsView, 3, 3));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Payouts))) {
+                    verticalPanel.setSecondComponent(new PayoutsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StocksDefinition))) {
+                    verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockIncome))) {
+                    verticalPanel.setSecondComponent(new StockIncomeView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryOrganization))) {
+                    verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryLiquidation))) {
+                    verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockOutcome))) {
+                    verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Settings))) {
+                    verticalPanel.setSecondComponent(new SettingsView(myUI));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            1, Settings.cnIncomesDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExpensesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            2, Settings.cnExpensesDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesExpensesDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            5, Settings.cnIncomesExpensesDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssetsDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            3, Settings.cnReturnableAssetsDefinitionView));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebtsDefinition))) {
+                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
+                            4, Settings.cnShortTermDebtsDefinitionView));
+                }
+
+                header.setValue(eventPressed.toUpperCase());
+            }
+        }
+    };
+    public ComboBox yearSelect, schoolSelect;
     private Label infoLabel;
 
     public AuthenticatedScreen(MyVaadinUI myUi) {
@@ -419,152 +564,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         return menubar;
 
     }
-
-    private final Command menuCommand = new Command() {
-
-        @Override
-        public void menuSelected(MenuItem selectedItem) {
-            if (selectedItem != null) {
-                if (!currentUser.hasRole(Settings.rnBank)) {
-                    myUI.repaintMessagesButton();
-                }
-                String eventPressed = selectedItem.getText();
-                if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNumberDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.YearDefinition))) {
-                    verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LanguageDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbLanguageTable, null, null, false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExamDefinition))) {
-                    verticalPanel.setSecondComponent(new ExamDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.UniversityDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbUniversityTable, Settings.dbEmployeeEducation, Settings.dbColumnUniversityId,
-                            false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.CertificateDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbCertificateTable, Settings.dbEmployeeCertificate, Settings.dbColumnCertificateId,
-                            false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.WorkPlacesDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbWork_placeTable, Settings.dbEmployeeWork, Settings.dbColumnEmployeeWorkId, false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.QuestionDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbQuestion, null, null, true, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeTransfer))) {
-                    verticalPanel.setSecondComponent(new EmployeeTransferView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LessonAssessment))) {
-                    verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BranchDefinition))) {
-                    verticalPanel.setSecondComponent(new BranchDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryCategoryDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.dbInventoryCategoryTable, null, null, false, Settings.cnInventoryDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNameDefinition))) {
-                    verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BlockDefinition))) {
-                    verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.RoomDefinition))) {
-                    verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.PositionDefinition))) {
-                    verticalPanel.setSecondComponent(new PositionDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.DiscountDefinition))) {
-                    verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccessoriesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LeavingReasonsDefinition))) {
-                    verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ContractDefinition))) {
-                    verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolDefinition))) {
-                    verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeDefinition))) {
-                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.MyInfo))) {
-                    verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolModification))) {
-                    verticalPanel.setSecondComponent(new SchoolModificationView(
-                            myUI, myUI.getUser().getSchool().getId()));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StudentDefinition))) {
-                    verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IssueStudentOrder))) {
-                    verticalPanel.setSecondComponent(new IssueOrderView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ImportBranchesFromExcel))) {
-                    verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendOrders))) {
-                    verticalPanel.setSecondComponent(new SendOrderView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Reports))) {
-                    if (currentUser.hasRole(Settings.rnBank)) {
-                        verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
-                    } else {
-                        verticalPanel.setSecondComponent(new StudentReportsView(myUI));
-                    }
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingReports))) {
-                    verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingBankReport))) {
-                    verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockReports))) {
-                    verticalPanel.setSecondComponent(new StockReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.HRReports))) {
-                    verticalPanel.setSecondComponent(new HRReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Templates))) {
-                    verticalPanel.setSecondComponent(new TemplatesView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Backup))) {
-                    verticalPanel.setSecondComponent(new BackupView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Calls))) {
-                    verticalPanel.setSecondComponent(new CallsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.HomePage))) {
-                    verticalPanel.setSecondComponent(new HomePageView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.CashBox))) {
-                    verticalPanel.setSecondComponent(new CashBoxView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Accruals))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
-                            Settings.cnAccrualsView, 2, 1));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebts))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
-                            Settings.cnShortTermDebtsView, 4, 4));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BalanceAccounts))) {
-                    verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssets))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
-                            Settings.cnReturnableAssetsView, 3, 3));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Payouts))) {
-                    verticalPanel.setSecondComponent(new PayoutsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StocksDefinition))) {
-                    verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockIncome))) {
-                    verticalPanel.setSecondComponent(new StockIncomeView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryOrganization))) {
-                    verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryLiquidation))) {
-                    verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockOutcome))) {
-                    verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Settings))) {
-                    verticalPanel.setSecondComponent(new SettingsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            1, Settings.cnIncomesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExpensesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            2, Settings.cnExpensesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesExpensesDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            5, Settings.cnIncomesExpensesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssetsDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            3, Settings.cnReturnableAssetsDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebtsDefinition))) {
-                    verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
-                            4, Settings.cnShortTermDebtsDefinitionView));
-                }
-
-                header.setValue(eventPressed.toUpperCase());
-            }
-        }
-    };
 
     @Override
     public void buttonClick(Button.ClickEvent event) {

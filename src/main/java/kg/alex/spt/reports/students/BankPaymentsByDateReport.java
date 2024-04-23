@@ -26,12 +26,12 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
 
     static final Logger logger = LogManager.getLogger(BankPaymentsByDateReport.class);
     private final MyVaadinUI myUI;
+    private final Subject currentUser = SecurityUtils.getSubject();
     private Button generateBtn, excelBtn;
     private OptionGroup typeOG;
     private ComboBox schoolSelect, currencySelect;
     private DateField fromDateDF, tillDateDF;
     private FormattedTable dataTable;
-    private final Subject currentUser = SecurityUtils.getSubject();
 
     public BankPaymentsByDateReport(final MyVaadinUI ui) {
         this.myUI = ui;

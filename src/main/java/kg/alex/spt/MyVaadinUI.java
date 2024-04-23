@@ -45,19 +45,17 @@ import java.util.ResourceBundle;
 public class MyVaadinUI extends UI {
 
     static final Logger logger = LogManager.getLogger(MyVaadinUI.class);
+    public VaadinRequest r;
     private ResourceBundle i18nBundle;
     private UserDetails user;
-    public VaadinRequest r;
     private IndexedContainer schoolCont;
     private double nbkr_currency_rate;
     private Date nbkr_time = new Date();
     private boolean isManualRate;
     private Button messagesBtn;
 
-    @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
-    @VaadinServletConfiguration(productionMode = true,
-            ui = MyVaadinUI.class, widgetset = "kg.alex.spt.AppWidgetSet")
-    public static class Servlet extends VaadinServlet {
+    public static MyVaadinUI getInstance() {
+        return (MyVaadinUI) MyVaadinUI.getCurrent();
     }
 
     @Override
@@ -93,10 +91,6 @@ public class MyVaadinUI extends UI {
         token.setRememberMe(true);
         Subject currentUser = SecurityUtils.getSubject();
         currentUser.login(token);
-    }
-
-    public static MyVaadinUI getInstance() {
-        return (MyVaadinUI) MyVaadinUI.getCurrent();
     }
 
     @Override
@@ -156,21 +150,6 @@ public class MyVaadinUI extends UI {
      */
     public void setUser(UserDetails user) {
         this.user = user;
-    }
-
-    public static class LogoutListener implements Button.ClickListener {
-
-        private static final long serialVersionUID = 1L;
-        private MyVaadinUI myUI;
-
-        public LogoutListener(MyVaadinUI myUi) {
-            this.myUI = myUi;
-        }
-
-        @Override
-        public void buttonClick(ClickEvent event) {
-            this.myUI.logout();
-        }
     }
 
     public IndexedContainer getSchoolCont() {
@@ -269,5 +248,26 @@ public class MyVaadinUI extends UI {
 
     public void setMessagesBtn(Button messagesBtn) {
         this.messagesBtn = messagesBtn;
+    }
+
+    @WebServlet(value = {"/*", "/VAADIN/*"}, asyncSupported = true)
+    @VaadinServletConfiguration(productionMode = true,
+            ui = MyVaadinUI.class, widgetset = "kg.alex.spt.AppWidgetSet")
+    public static class Servlet extends VaadinServlet {
+    }
+
+    public static class LogoutListener implements Button.ClickListener {
+
+        private static final long serialVersionUID = 1L;
+        private MyVaadinUI myUI;
+
+        public LogoutListener(MyVaadinUI myUi) {
+            this.myUI = myUi;
+        }
+
+        @Override
+        public void buttonClick(ClickEvent event) {
+            this.myUI.logout();
+        }
     }
 }

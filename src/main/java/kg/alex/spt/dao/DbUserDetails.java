@@ -8,8 +8,6 @@ package kg.alex.spt.dao;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.UserDetails;
 import kg.alex.spt.domain.Year;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
