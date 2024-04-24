@@ -8,7 +8,6 @@ package kg.alex.spt.utils;
 import com.vaadin.data.Property;
 import com.vaadin.ui.TreeTable;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
 import kg.alex.spt.i18n.SptMessages;
 
 /**

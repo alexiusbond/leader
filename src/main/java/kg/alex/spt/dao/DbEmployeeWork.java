@@ -12,7 +12,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
+import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeWork;
 import kg.alex.spt.i18n.SptMessages;

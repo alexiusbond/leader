@@ -11,7 +11,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
+import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.domain.LeavingReason;
@@ -176,7 +176,7 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
                     });
         } else if (source == saveBtn) {
             try {
-                if (validate(settingsLay)) {
+                if (Settings.validate(settingsLay)) {
                     DbLeavingReasons dbDis = new DbLeavingReasons();
                     dbDis.connect();
                     if (isNew) {
@@ -339,24 +339,6 @@ public class LeavingReasonsDefinitionView extends HorizontalSplitPanel implement
             logger.error(e);
             logger.catching(e);
         }
-    }
-
-    private boolean validate(ComponentContainer layout) {
-        boolean result = true;
-        for (Component c : layout) {
-            if (c instanceof AbstractField) {
-                try {
-                    ((AbstractField<?>) c).validate();
-                } catch (Exception e) {
-                    result = false;
-                }
-            } else if (c instanceof AbstractComponentContainer) {
-                if (!validate((AbstractComponentContainer) c)) {
-                    result = false;
-                }
-            }
-        }
-        return result;
     }
 
     private void setTable_options() {

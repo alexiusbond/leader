@@ -13,7 +13,7 @@ import com.vaadin.data.validator.DoubleRangeValidator;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
+import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentPayment;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.ClassPaymentsReport;

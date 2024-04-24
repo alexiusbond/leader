@@ -16,6 +16,7 @@ import kg.alex.spt.dao.DbStudentOrder;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.BankPaymentsByDateReport;
 import kg.alex.spt.ui.*;
+import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -136,11 +137,11 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebts))) {
                     verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
                             Settings.cnShortTermDebtsView, 4, 4));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BalanceAccounts))) {
-                    verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssets))) {
                     verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
                             Settings.cnReturnableAssetsView, 3, 3));
+                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BalanceAccounts))) {
+                    verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.Payouts))) {
                     verticalPanel.setSecondComponent(new PayoutsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(SptMessages.StocksDefinition))) {

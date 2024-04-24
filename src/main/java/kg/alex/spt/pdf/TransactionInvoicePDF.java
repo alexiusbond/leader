@@ -7,7 +7,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
+import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.money.WritableSummRu;

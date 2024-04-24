@@ -3,6 +3,7 @@ package kg.alex.spt;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.Settings;
 
 public class LoginScreen extends VerticalLayout {
 

@@ -18,6 +18,7 @@ import kg.alex.spt.dao.DbUserDetails;
 import kg.alex.spt.domain.UserDetails;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.ViewManager;
+import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;

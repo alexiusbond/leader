@@ -13,7 +13,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Table;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
+import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeeExtraInfo;
 import kg.alex.spt.i18n.SptMessages;

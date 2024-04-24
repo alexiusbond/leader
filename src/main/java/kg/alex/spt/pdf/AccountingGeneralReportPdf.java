@@ -6,7 +6,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.Settings;
+import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.ContractInfo;
 import kg.alex.spt.domain.School;
