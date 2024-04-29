@@ -81,9 +81,9 @@ public class OrderPdf {
                             img = Image.getInstance(Settings.PATH_TO_UPLOADS + "signature.jpg");
                         }
                         img.setAlignment(Image.RIGHT);
-                        img.scaleAbsolute(250, 110);
+                        img.scalePercent(50, 25);
                     }
-                    float[] table_date_colsWidth = {0.5f, 1f, 1.5f};
+                    float[] table_date_colsWidth = {0.7f, 0.5f, 1.8f};
                     PdfPTable table_date = new PdfPTable(3);
                     table_date.setWidthPercentage(90f);
                     table_date.setWidths(table_date_colsWidth);
@@ -107,7 +107,7 @@ public class OrderPdf {
                     ct.go();
                     if (!currentUser.hasRole(Settings.rnSapatSecretary)) {
                         ct = new ColumnText(pageContentByte);
-                        ct.setSimpleColumn(-225, 362, 550, 50);
+                        ct.setSimpleColumn(-195, 380, 550, 50);
                         Image stamp = Image.getInstance(Settings.PATH_TO_UPLOADS + "sapat_muhur.png");
                         stamp.setAlignment(Image.MIDDLE);
                         stamp.scaleAbsolute(100, 100);

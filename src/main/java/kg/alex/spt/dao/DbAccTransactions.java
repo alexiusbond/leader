@@ -1057,7 +1057,6 @@ public class DbAccTransactions extends BaseDb {
             stat.setDate(++counter, new java.sql.Date(till.getTime()));
         }
         ResultSet result = stat.executeQuery();
-        System.out.println(stat);
         HierarchicalContainer container = new HierarchicalContainer();
         container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
         container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);

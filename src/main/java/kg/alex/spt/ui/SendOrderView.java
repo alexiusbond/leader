@@ -14,7 +14,6 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
@@ -23,6 +22,7 @@ import kg.alex.spt.pdf.OrderPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.MyFilterDecorator;
+import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -215,6 +215,7 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         yearSelect.setWidth(Settings.PERCENTS100);
         yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
+        yearSelect.addValueChangeListener(this);
         settingsLay.addComponent(yearSelect, 2, 3);
 
         unitSelect = new ComboBox(myUI.getMessage(SptMessages.Unit));
@@ -408,10 +409,9 @@ public class SendOrderView extends HorizontalSplitPanel implements Button.ClickL
         } else if ((property == studentSelect || property == yearSelect || property == unitSelect
                 || property == discountTF || property == studentTF)
                 && discountTF != null && studentTF != null && studentSelect != null
-                && studentSelect.getValue() != null && yearSelect != null
-                && yearSelect.getValue() != null && unitSelect.getValue() != null && discountTF.getValue() != null
-                && studentTF.getValue() != null) {
-            String student, class_name = "", discount = "", school = "Лицейдин ";
+                && (studentSelect.getValue() != null || studentTF.getValue() != null) && yearSelect != null
+                && yearSelect.getValue() != null && unitSelect.getValue() != null && discountTF.getValue() != null) {
+            String student, class_name = "", discount, school = "Лицейдин ";
             if ((Integer) studentSelect.getValue() == 0) {
                 student = studentTF.getValue();
             } else {
