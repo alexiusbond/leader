@@ -9,8 +9,8 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.OrderMessage;
+import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -19,6 +19,8 @@ import org.apache.shiro.subject.Subject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 
 public class OrderPdf {
 
@@ -26,6 +28,14 @@ public class OrderPdf {
     private final Subject currentUser = SecurityUtils.getSubject();
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
+    private final SimpleDateFormat dateKg = new SimpleDateFormat(
+            "dd-MMMMM yyyy-жыл", new DateFormatSymbols() {
+        @Override
+        public String[] getMonths() {
+            return new String[]{"январь", "февраль", "март", "апрель", "май", "июнь",
+                    "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"};
+        }
+    });
 
     public OrderPdf(final MyVaadinUI myUI, final OrderMessage orderMessage) {
 
@@ -59,7 +69,7 @@ public class OrderPdf {
                     ColumnText ct = new ColumnText(pageContentByte);
                     ct.setSimpleColumn(50, 700, 550, 50);
                     ct.addElement(new Phrase("№ " + orderMessage.getOrder_number() +
-                            "  " + Settings.dateKg.format(orderMessage.getDate()), dateFont));
+                            "  " + dateKg.format(orderMessage.getDate()), dateFont));
 
                     Paragraph spr = new Paragraph(orderMessage.getTitle(), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);

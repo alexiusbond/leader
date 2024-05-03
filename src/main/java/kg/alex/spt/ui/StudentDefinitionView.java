@@ -20,16 +20,12 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InvoicePDF;
 import kg.alex.spt.pdf.contracts.*;
-import kg.alex.spt.utils.ExistsValidator;
-import kg.alex.spt.utils.FormattedTable;
-import kg.alex.spt.utils.MyFilterDecorator;
-import kg.alex.spt.utils.MyFilterGenerator;
+import kg.alex.spt.utils.*;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -504,7 +500,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG.setNullSelectionAllowed(true);
         contractTypeOG.addValueChangeListener(this);
         contractTypeOG.addItem(myUI.getMessage(SptMessages.LiseContrRu));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.LiseContrWithOutDormitoryRu));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.LiseContrKg));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.LiseContrWithOutDormitoryKg));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.SchoolContrRu));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.SchoolContrKg));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.CambridgeOshContrRu));
@@ -1408,13 +1406,24 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             if (studInfo.getDirector() != null) {
                                 saveBtn.click();
                                 if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrRu))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
+                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
+                                        new ContractLisePdf_2025_ru(myUI, studInfo, instPlanCont);
+                                    } else if (myUI.getUser().getCurrent_year().getId() == 9) {
                                         new ContractLisePdf_2024_ru(myUI, studInfo, instPlanCont);
                                     } else {
                                         new ContractLisePdf_2023_ru(myUI, studInfo, instPlanCont);
                                     }
+                                }
+                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrWithOutDormitoryRu))) {
+                                    new ContractLiseWithOutDormitoryPdf_2025_ru(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrKg))) {
-                                    new ContractLisePdf_kg(myUI, studInfo, instPlanCont);
+                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
+                                        new ContractLisePdf_2025_kg(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractLisePdf_2024_kg(myUI, studInfo, instPlanCont);
+                                    }
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.LiseContrWithOutDormitoryKg))) {
+                                    new ContractLiseWithOutDormitoryPdf_2025_kg(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrRu))) {
                                     if (myUI.getUser().getCurrent_year().getId() == 9) {
                                         new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
@@ -1422,7 +1431,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                         new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
                                     }
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.SchoolContrKg))) {
-                                    new ContractSchoolPdf_kg(myUI, studInfo, instPlanCont);
+                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
+                                        new ContractSchoolPdf_2025_kg(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractSchoolPdf_2024_kg(myUI, studInfo, instPlanCont);
+                                    }
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeOshContrRu))) {
                                     new ContractCambridgeOshPdf_ru(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrRu))) {
@@ -1430,12 +1443,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.CambridgeContrEn))) {
                                     new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.UWIS_Contract))) {
-                                    new ContractUWIS_Pdf(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.STEM_Contract))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
-                                        new ContractSTEM_2024_Pdf(myUI, studInfo, instPlanCont);
+                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
+                                        new ContractUWIS_Pdf_2025(myUI, studInfo, instPlanCont);
                                     } else {
+                                        new ContractUWIS_Pdf_2024(myUI, studInfo, instPlanCont);
+                                    }
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.STEM_Contract))) {
+                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
                                         new ContractSTEM_2025_Pdf(myUI, studInfo, instPlanCont);
+                                    } else {
+                                        new ContractSTEM_2024_Pdf(myUI, studInfo, instPlanCont);
                                     }
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.AychurekContrRu))) {
                                     new ContractAychurekPdf_2023_ru(myUI, studInfo, instPlanCont);

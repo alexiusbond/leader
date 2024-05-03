@@ -362,7 +362,7 @@ public class Settings implements Serializable {
         }
     });
     public static final SimpleDateFormat dateKg = new SimpleDateFormat(
-            "dd-MMMMM yyyy-жыл", new DateFormatSymbols() {
+            "yyyy-ж. «dd» MMMMM", new DateFormatSymbols() {
         @Override
         public String[] getMonths() {
             return new String[]{"январь", "февраль", "март", "апрель", "май", "июнь",

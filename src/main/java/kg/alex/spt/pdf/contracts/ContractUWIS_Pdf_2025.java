@@ -8,19 +8,19 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.utils.Decliner;
+import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class ContractUWIS_Pdf {
+public class ContractUWIS_Pdf_2025 {
 
-    static final Logger logger = LogManager.getLogger(ContractUWIS_Pdf.class);
+    static final Logger logger = LogManager.getLogger(ContractUWIS_Pdf_2025.class);
     private final static String FONT_LOCATION = "/home/logo/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/logo/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
@@ -29,7 +29,7 @@ public class ContractUWIS_Pdf {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
-    public ContractUWIS_Pdf(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractUWIS_Pdf_2025(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 
@@ -58,7 +58,7 @@ public class ContractUWIS_Pdf {
 
                 PdfContentByte punder = writer.getDirectContentUnder();
 
-                float[] mainTableWidth = {1f, 1f};
+                float[] mainTableWidth = {1.08f, 0.92f};
                 PdfPTable mainTable = new PdfPTable(2);
                 mainTable.setWidthPercentage(97f);
                 mainTable.setWidths(mainTableWidth);
@@ -191,7 +191,7 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("1.1. The subject of the Agreement is the organization of the student's learning process, his / her education according to the standards of \"MARSHALL CAVENDISH EDUCATION\" (Sıngapoure) and programs of the corresponding level of education according to the Cambridge Curriculum, for the period ", ordFont));
+                paragraph.add(new Phrase("1.1. The subject of the Agreement is the organization of the student's learning process, his / her education according to the standards of \"Cambridge Assessment International Education\" and programs of the corresponding level of education according to the British curriculum, for the period ", ordFont));
                 paragraph.add(new Phrase("from «29» August " + temp[0] + " to «9» June " + temp[1] + ".", ordBoldFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
@@ -479,7 +479,7 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.3.1. Pay the student's tuition fee at the School in due time, in accordance with Clause 1.1. of this Contract, within the time frame specified in Clauses 3.1. – 3.4. of this Contract. Provide own child with all the necessary stationeries for his/her own use (notebooks, colored pencils, sharpeners, etc.).", ordFont));
+                paragraph.add(new Phrase("2.3.1. Pay the student's tuition fee at the School in due time, in accordance with Clause 1.1. of this Contract, within the time frame specified in Clauses 3.1. – 3.4. of this Contract.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -542,6 +542,7 @@ public class ContractUWIS_Pdf {
                 paragraph.add(new Phrase("2.3.6. Provide transportation of the Student to and from school.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
+
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
@@ -587,7 +588,7 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("a) a sudden serious illness of the Student, making it impossible for his/her further stay at the School, subject to provision of an official conclusion on the state of health of the Student by medical specialists of the Kyrgyz Republic,", ordFont));
+                paragraph.add(new Phrase("а) a sudden serious illness of the Student, making it impossible for his/her further stay at the School, subject to provision of an official conclusion on the state of health of the Student by medical specialists of the Kyrgyz Republic,", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
@@ -839,7 +840,7 @@ public class ContractUWIS_Pdf {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("5.7. Prospective students for Secondary should read UWIS Student Handbook before the contract is signed. ", ordFont));
+                paragraph.add(new Phrase("5.7. Prospective students for Secondary should read UWIS Student Handbook before the contract is signed.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
