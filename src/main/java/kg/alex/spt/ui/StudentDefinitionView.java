@@ -1457,17 +1457,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.AychurekContrRu))) {
                                     new ContractAychurekPdf_2023_ru(myUI, studInfo, instPlanCont);
                                 }
-                                contractTypeOG.setValue(null);
                             } else {
                                 Notification.show(myUI.getMessage(SptMessages.NoDirectorAssigned),
                                         Notification.Type.WARNING_MESSAGE);
-                                contractTypeOG.setValue(null);
                             }
                         } else {
                             Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                                     Notification.Type.WARNING_MESSAGE);
-                            contractTypeOG.setValue(null);
                         }
+                        contractTypeOG.setValue(null);
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.FillRelativeInfo),
                                 Notification.Type.WARNING_MESSAGE);

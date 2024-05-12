@@ -303,6 +303,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         if (counter != 0) {
                             Notification.show(myUI.getMessage(SptMessages.ValueSaved) + " " + counter,
                                     Notification.Type.WARNING_MESSAGE);
+                            studentsTable.setValue(null);
                             historyTable.setContainerDataSource(null);
                         }
                         dbso.close();
