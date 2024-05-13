@@ -24,6 +24,7 @@ import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.*;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.InvoicePDF;
+import kg.alex.spt.pdf.OutOfAgreementPdf;
 import kg.alex.spt.pdf.contracts.*;
 import kg.alex.spt.utils.*;
 import net.coobird.thumbnailator.Thumbnails;
@@ -511,6 +512,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG.addItem(myUI.getMessage(SptMessages.UWIS_Contract));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.STEM_Contract));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.AychurekContrRu));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.OutOfAgreement));
 
         printButton = new PopupButton(myUI.getMessage(SptMessages.Print));
         printButton.setDescription(myUI.getMessage(SptMessages.Print));
@@ -1399,8 +1401,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         studInfo.getContractInfo().setCorrectionStr(allCorrections.toString());
                     }
                     studInfo.getContractInfo().setInitialPayment(instFirstPay);
-                    studInfo.getContractInfo().setNet(toPay);
                     studInfo.getContractInfo().setLeft(ttl_left);
+                    studInfo.getContractInfo().setNet(toPay);
                     if (studInfo.getRelative() != null && studInfo.getRelative().getFullName() != null) {
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
@@ -1456,6 +1458,15 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     }
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.AychurekContrRu))) {
                                     new ContractAychurekPdf_2023_ru(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().toString().equals(
+                                        myUI.getMessage(SptMessages.OutOfAgreement))) {
+                                    if (studDataTable.getValue() != null && (Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
+                                            Settings.education_status_id).getValue() == 4) {
+                                        new OutOfAgreementPdf(myUI, studInfo);
+                                    } else {
+                                        Notification.show(myUI.getMessage(SptMessages.StudentIsNotOutOf),
+                                                Notification.Type.WARNING_MESSAGE);
+                                    }
                                 }
                             } else {
                                 Notification.show(myUI.getMessage(SptMessages.NoDirectorAssigned),
@@ -1465,23 +1476,19 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
                                     Notification.Type.WARNING_MESSAGE);
                         }
-                        contractTypeOG.setValue(null);
                     } else {
                         Notification.show(myUI.getMessage(SptMessages.FillRelativeInfo),
                                 Notification.Type.WARNING_MESSAGE);
-                        contractTypeOG.setValue(null);
                     }
                 } else {
                     Notification.show(myUI.getMessage(SptMessages.SelectContract),
                             Notification.Type.WARNING_MESSAGE);
-                    contractTypeOG.setValue(null);
                 }
             } else {
                 Notification.show(myUI.getMessage(SptMessages.SelectContractTab),
                         Notification.Type.WARNING_MESSAGE);
-                contractTypeOG.setValue(null);
             }
-
+            contractTypeOG.setValue(null);
         } else if (property instanceof TextField && property != nameTF && property != loginTF
                 && property != surnameTF && property != middleNameTF && property != divideTF
                 && property != initialPaymentTF && ((TextField) property).getDescription()

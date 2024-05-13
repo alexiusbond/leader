@@ -10,11 +10,11 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentOrder;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.reports.students.OutOfList;
 import kg.alex.spt.ui.IssueOrderView;
+import kg.alex.spt.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -118,6 +118,22 @@ public class DbStudentOrder extends BaseDb {
             return result.getInt("id");
         }
         return 0;
+    }
+
+    public StudentOrder execOrder(int student_id, int order_id) throws SQLException {
+        String sql = "SELECT modification_date, reason from student_orders "
+                + "where orders_id = ? and student_id = ?";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, order_id);
+        stat.setInt(2, student_id);
+        ResultSet result = stat.executeQuery();
+        if (result.next()) {
+            StudentOrder so = new StudentOrder();
+            so.setModification_date(result.getDate("modification_date"));
+            so.setReasons(result.getString("reason"));
+            return so;
+        }
+        return null;
     }
 
     public int exec_insert(StudentOrder so) throws SQLException {

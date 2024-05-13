@@ -481,6 +481,8 @@ public class SptMessages_ru extends SptMessages {
             {ToPlan, "К плану"},
             {SchoolContrRu, "Договор школа(RU)"},
             {AychurekContrRu, "Договор Айчурек(RU)"},
+            {OutOfAgreement, "Соглашение о расторжении"},
+            {StudentIsNotOutOf, "Отсутствует приказ о выбытии"},
             {SchoolContrKg, "Договор школа(KG)"},
             {CambridgeContrRu, "Договор Кэмбридж(RU)"},
             {CambridgeContrEn, "Договор Кэмбридж(EN)"},

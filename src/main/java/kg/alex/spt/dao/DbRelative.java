@@ -8,8 +8,9 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
+import kg.alex.spt.domain.StudentRelative;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,5 +58,23 @@ public class DbRelative extends BaseDb {
                     result.getInt("sr.is_main"));
         }
         return container;
+    }
+
+
+    public StudentRelative execMainSQL(int stud_id) throws SQLException {
+
+        String sql = "SELECT sr.fullname, sr.address, sr.passport " +
+                "FROM student_relatives as sr where sr.student_id = ? " +
+                "AND sr.is_main = 1";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, stud_id);
+        ResultSet result = stat.executeQuery();
+        StudentRelative studentRelative = new StudentRelative();
+        if (result.next()) {
+            studentRelative.setFullName(result.getString("sr.fullname"));
+            studentRelative.setAddress(result.getString("sr.address"));
+            studentRelative.setPassport(result.getString("sr.passport"));
+        }
+        return studentRelative;
     }
 }
