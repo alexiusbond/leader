@@ -411,7 +411,7 @@ public class ContractLiseWithOutDormitoryPdf_2025_kg {
                 document.add(paragraph);
 
                 paragraph.clear();
-                paragraph.add(new Phrase("5.6. Ушул Келишим орус тилинде эки нускада түзүлгөн жана эки тарап тең кол койгон. Эки нуска бирдей жана бирдей юридикалык күчкө ээ. Тараптардын ар биринде ушул Келишимдин бир нускасы бар.", ordFont));
+                paragraph.add(new Phrase("5.6. Ушул Келишим кыргыз тилинде эки нускада түзүлгөн жана эки тарап тең кол койгон. Эки нуска бирдей жана бирдей юридикалык күчкө ээ. Тараптардын ар биринде ушул Келишимдин бир нускасы бар.", ordFont));
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
