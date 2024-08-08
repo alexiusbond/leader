@@ -11,11 +11,11 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.CustomTable;
 import com.vaadin.ui.HorizontalLayout;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.ui.SendOrderView;
+import kg.alex.spt.utils.Settings;
 import org.tepi.filtertable.FilterTable;
 
 import java.sql.*;
@@ -144,7 +144,6 @@ public class DbOrderMessage extends BaseDb {
 
     public double execSQL_discountAmount(int year_id, int student_id, String studentFullName,
                                          String discount_unit_ids) throws SQLException {
-        System.out.println(studentFullName);
         String sql = "SELECT (CASE WHEN discount_unit_id = 3 and currency_rate != 0.0 " +
                 "THEN discount / currency_rate " +
                 "WHEN discount_unit_id in (1,2) THEN discount ELSE 10000.0 END) as discount " +
@@ -157,7 +156,6 @@ public class DbOrderMessage extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
         stat.setInt(2, student_id);
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         double discountAmount = 0.0;
         if (result.next()) {

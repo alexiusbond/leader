@@ -512,6 +512,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG.addItem(myUI.getMessage(SptMessages.UWIS_Contract));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.STEM_Contract));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.AychurekContrRu));
+        contractTypeOG.addItem(myUI.getMessage(SptMessages.KindergartenContrRu));
         contractTypeOG.addItem(myUI.getMessage(SptMessages.OutOfAgreement));
 
         printButton = new PopupButton(myUI.getMessage(SptMessages.Print));
@@ -1458,6 +1459,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                     }
                                 } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.AychurekContrRu))) {
                                     new ContractAychurekPdf_2023_ru(myUI, studInfo, instPlanCont);
+                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(SptMessages.KindergartenContrRu))) {
+                                    new ContractKindergartenPdf_2025_ru(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(
                                         myUI.getMessage(SptMessages.OutOfAgreement))) {
                                     if (studDataTable.getValue() != null && (Integer) studDataTable.getContainerProperty(studDataTable.getValue(),

@@ -334,6 +334,7 @@ public class SptMessages_ru extends SptMessages {
             {Print, "Распечатать"},
             {NotInserted, "Оставшиеся записи не могут быть сохранены!"},
             {LiseContrRu, "Договор лицей(RU)"},
+            {KindergartenContrRu, "Договор садик(RU)"},
             {LiseContrWithOutDormitoryRu, "Договор лицей без общежития(RU)"},
             {LiseContrWithOutDormitoryKg, "Договор лицей без общежития(KG)"},
             {LiseContrKg, "Договор лицей(KG)"},
