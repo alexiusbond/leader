@@ -329,7 +329,8 @@ public class ContractKindergartenPdf_2025_ru {
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
                 paragraph.clear();
                 paragraph.add(new Phrase("5.1. Размер ежемесячной оплаты детскому саду на содержание Воспитанника составляет ", ordFont));
-                paragraph.add(new Phrase("120 ДОЛЛАРОВ США.", ordBoldFont));
+                paragraph.add(new Phrase(Settings.dFormat2.format(studentInfo.getContractInfo().getContract() / 9.0)
+                        + " ДОЛЛАРОВ США.", ordBoldFont));
                 document.add(paragraph);
 
                 paragraph.clear();

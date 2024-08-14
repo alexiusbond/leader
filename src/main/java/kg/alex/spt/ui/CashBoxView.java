@@ -30,7 +30,6 @@ import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbCurrencyRate;
 import kg.alex.spt.dao.DbDefinition;
@@ -40,6 +39,7 @@ import kg.alex.spt.domain.CurrencyRate;
 import kg.alex.spt.domain.SchoolAccounting;
 import kg.alex.spt.i18n.SptMessages;
 import kg.alex.spt.pdf.TransactionInvoicePDF;
+import kg.alex.spt.utils.Settings;
 import kg.alex.spt.utils.ValueFromContainerConverter;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
@@ -816,10 +816,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             if (in_out == 1) {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(),
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(),
                         incomesGrid, this, fromDateDF.getValue(), tillDateDF.getValue());
             } else {
-                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(), myUI.getUser().getCurrent_year().getId(),
+                dbCon.execSQL(myUI, in_out, myUI.getUser().getSchool().getId(),
                         expensesGrid, this, fromDateDF.getValue(), tillDateDF.getValue());
             }
             dbCon.close();

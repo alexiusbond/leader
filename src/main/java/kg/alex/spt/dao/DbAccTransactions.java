@@ -104,7 +104,7 @@ public class DbAccTransactions extends BaseDb {
         return container;
     }
 
-    public void execSQL(MyVaadinUI myUI, int incOrOut, int school_id, int year_id,
+    public void execSQL(MyVaadinUI myUI, int incOrOut, int school_id,
                         Grid grid, CashBoxView cbv, Date from, Date till) throws SQLException {
 
         Subject currentUser = SecurityUtils.getSubject();
@@ -119,16 +119,15 @@ public class DbAccTransactions extends BaseDb {
                 "LEFT JOIN employee AS e ON t.employee_id = e.id " +
                 "LEFT JOIN student_payments AS sp ON t.student_payments_id = sp.id " +
                 "LEFT JOIN student AS st ON sp.student_id = st.id " +
-                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? " +
+                "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = sp.year_id " +
                 "LEFT JOIN view_student_last_class_status AS vlcs ON vlcs.student_id = st.id " +
                 "where (t.acc_type_id = ? OR t.acc_type_id = 5) AND t.school_id = ? " +
                 "AND DATE(t.date_time) >= ? AND DATE(t.date_time) <= ? order by t.date_time desc";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, year_id);
-        stat.setInt(2, incOrOut);
-        stat.setInt(3, school_id);
-        stat.setDate(4, new java.sql.Date(from.getTime()));
-        stat.setDate(5, new java.sql.Date(till.getTime()));
+        stat.setInt(1, incOrOut);
+        stat.setInt(2, school_id);
+        stat.setDate(3, new java.sql.Date(from.getTime()));
+        stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         GeneratedPropertyContainer container;
         if (incOrOut == 1) {
