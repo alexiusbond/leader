@@ -8,9 +8,9 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.utils.Settings;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -246,6 +246,39 @@ public class DbSchool extends BaseDb {
                 "where s.id != ? order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, except_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.TitleKg), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.PrimaryCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.SecondaryCode), String.class, null);
+        container.addContainerProperty(myUI.getMessage(SptMessages.Logo), String.class, null);
+
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("s.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUI.getMessage(SptMessages.TitleKg)).setValue(result.getString("s.name_kg"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("s.code"));
+            item.getItemProperty(myUI.getMessage(SptMessages.PrimaryCode)).setValue(result.getString("s.primary_code"));
+            item.getItemProperty(myUI.getMessage(SptMessages.SecondaryCode)).setValue(result.getString("s.secondary_code"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Logo)).setValue(result.getString("s.photo"));
+        }
+        return container;
+    }
+
+    public IndexedContainer execSchoolSel(MyVaadinUI myUI, int school_id, int employee_id) throws SQLException {
+        String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
+                "s.photo, s.code, s.primary_code, s.secondary_code from school as s ";
+        if (school_id != 0) {
+            sql += "where s.id = ? ";
+        } else {
+            sql += "where s.id not in (select school_id from employee_hide_school where employee_id = ?) ";
+        }
+        sql += " order by CAST(s.code AS UNSIGNED)";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, school_id != 0 ? school_id : employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
 

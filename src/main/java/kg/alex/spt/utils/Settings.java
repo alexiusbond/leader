@@ -330,7 +330,7 @@ public class Settings implements Serializable {
     public static final String prmTabExtraInfo = "вкладка доп. информации";
     public static final String prmTabDocuments = "вкладка документов";
     public static final String prmChangeYear = "ChangeYear";
-    public static final String prmChangeSchool = "ChangeSchool";
+    public static final String prmShowAllSchools = "ShowAllSchools";
     public static final String prmProductMovementsReport = "отчет по передвижениям товара";
     public static final String prmStockGeneralReport = "общий отчет по складам";
     public static final String prmConfirmationControl = "контроль подтверждений";

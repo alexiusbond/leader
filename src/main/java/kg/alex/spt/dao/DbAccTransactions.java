@@ -992,7 +992,6 @@ public class DbAccTransactions extends BaseDb {
         t.setColumnFooter(myUI.getMessage(SptMessages.Balance), Settings.dFormat2.format(total_incomes - total_expenses));
     }
 
-
     public void exec_account_remains(MyVaadinUI myUI, FilterTreeTable categoriesTable, int currency_id, int school_id,
                                      Date from, Date till, FormattedTreeTable t) throws SQLException {
 

@@ -32,6 +32,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private final VerticalSplitPanel verticalPanel;
     private final Button changePassBtn;
     private final Label header = new Label();
+    public ComboBox yearSelect, schoolSelect;
+    private Label infoLabel;
     private final Command menuCommand = new Command() {
 
         @Override
@@ -177,8 +179,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             }
         }
     };
-    public ComboBox yearSelect, schoolSelect;
-    private Label infoLabel;
 
     public AuthenticatedScreen(MyVaadinUI myUi) {
 
@@ -284,8 +284,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         schoolSelect = new ComboBox();
         schoolSelect.setWidth(Settings.PERCENTS100);
         schoolSelect.setImmediate(true);
-        schoolSelect.setEnabled(currentUser.isPermitted(Settings.prmChangeSchool + ":" + Settings.actModify) ||
-                myUI.getUser().getPosition_id() == 116);
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
