@@ -69,7 +69,8 @@ public class DbStudentPayment extends BaseDb {
             if (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
                 isDisabled = result.getBoolean("isDisabled");
             }
-            if (result.getInt("bank_transaction_id") != 0) {
+            result.getLong("bank_transaction_id");
+            if (!result.wasNull()) {
                 isDisabled = true;
             }
             String id = result.getString("sp.id");

@@ -158,7 +158,6 @@ public class ContractLisePdf_2025_ru {
                 document.add(paragraph);
 
                 paragraph.clear();
-
                 paragraph.add(new Phrase("2.1.1. Организовать и обеспечить надлежащее исполнение услуг, предусмотренных в п. 1.1. настоящего Договора.", ordFont));
                 document.add(paragraph);
 

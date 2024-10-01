@@ -6,23 +6,21 @@
 package kg.alex.spt.pdf;
 
 import com.itextpdf.text.Font;
-import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.domain.OrderMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestPdf {
 
@@ -30,7 +28,7 @@ public class TestPdf {
     private byte[] b = null;
     private ByteArrayOutputStream buffer = null;
 
-    public TestPdf(final MyVaadinUI myUI ) {
+    public TestPdf(final MyVaadinUI myUI) {
 
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
@@ -57,20 +55,29 @@ public class TestPdf {
                     PdfReader pdfReader = new PdfReader("/home/logo/contract_bachelor.pdf");
 
                     pdfStamper = new PdfStamper(pdfReader, buffer);
+// Get the PdfContentByte from the stamper
+                    PdfContentByte canvas;
+                    Map<String, String> replacements = new HashMap<>();
+                    replacements.put("{{full_name}}", "John Doe");
+                    replacements.put("{{department}}", "Computer Science");
+                    // Iterate over all the pages
+                    for (int i = 1; i <= pdfReader.getNumberOfPages(); i++) {
+                        canvas = pdfStamper.getOverContent(i);
 
-                    // Access the form fields (AcroForm) in the PDF
-                    AcroFields form = pdfStamper.getAcroFields();
-                    for (String key : form.getFields().keySet()) {
-                        System.out.println("Field: " + key);
+                        // Get the text from the page
+                        String pageText = PdfTextExtractor.getTextFromPage(pdfReader, i);
+
+                        // Replace placeholders with actual values
+                        for (Map.Entry<String, String> entry : replacements.entrySet()) {
+                            pageText = pageText.replace(entry.getKey(), entry.getValue());
+                        }
+
+                        // Clear existing text and add the new content
+                        canvas.beginText();
+                        canvas.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.EMBEDDED), 12);
+                        canvas.showText(pageText);
+                        canvas.endText();
                     }
-
-                    // Replace placeholders with dynamic data
-                    form.setField("full_name", "John Doe");
-                    form.setField("department", "Computer Engineering");
-
-                    // Flatten the form to make the fields static text
-                    pdfStamper.setFormFlattening(true);
-
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
