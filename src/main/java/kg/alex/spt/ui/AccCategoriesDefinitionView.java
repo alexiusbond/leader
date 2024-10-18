@@ -439,9 +439,9 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             DbAccCategory dbac = new DbAccCategory();
             dbac.connect();
             if (movement_type_id == 5) {
-                parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id, myUI.getUser().getSchool().getId()));
+                parentSelect.setContainerDataSource(dbac.exec_for_sel(myUI, movement_type_id, myUI.getUser().getSchool().getId()));
             } else {
-                parentSelect.setContainerDataSource(dbac.exec_for_select(myUI, movement_type_id));
+                parentSelect.setContainerDataSource(dbac.exec_for_sel(myUI, movement_type_id));
             }
             dbac.close();
         } catch (Exception e) {

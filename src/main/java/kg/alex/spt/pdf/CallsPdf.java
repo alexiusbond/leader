@@ -102,7 +102,7 @@ public class CallsPdf {
 
                     Iterator<?> iter = dataTable.getItemIds().iterator();
                     int i = 0;
-                    if (dataTable.size() > 0) {
+                    if (!dataTable.isEmpty()) {
                         i = 1;
                     }
                     while (iter.hasNext()) {

@@ -30,10 +30,7 @@ import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import de.datenhahn.vaadin.componentrenderer.ComponentRenderer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.dao.DbAccTransactions;
-import kg.alex.spt.dao.DbCurrencyRate;
-import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.dao.DbEmployee;
+import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.CurrencyRate;
 import kg.alex.spt.domain.SchoolAccounting;
@@ -76,7 +73,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     private int r_table_counter = 1000;
     private HorizontalLayout currencyHl;
     private ComboBox expensesCategoryCb, incomesCategoryCb, toEmployeesCb;
-    private Date today;
+    private final Date today = new Date();
 
     public CashBoxView(MyVaadinUI myUI) {
         this.myUI = myUI;
@@ -113,9 +110,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         hl.setWidth(Settings.PERCENTS100);
         hl.setSpacing(true);
 
-        if (today == null) {
-            today = new Date();
-        }
         fromDateDF = new DateField();
         fromDateDF.setDescription(myUI.getMessage(SptMessages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
@@ -268,9 +262,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                         dateDf.setRangeStart((Date) grid.getContainerDataSource().getContainerProperty(event.getItemId(),
                                 myUI.getMessage(SptMessages.Date)).getValue());
                     } else {
-                        if (today == null) {
-                            today = new Date();
-                        }
                         dateDf.setRangeStart(today);
                     }
                 } else {
@@ -303,10 +294,11 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             if (expensesCategoryCb == null) {
                 expensesCategoryCb = createCombobox(null, true, null);
                 try {
-                    DbAccTransactions dbac = new DbAccTransactions();
-                    dbac.connect();
-                    expensesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), 0));
-                    dbac.close();
+                    DbAccCategory dbCon = new DbAccCategory();
+                    dbCon.connect();
+                    expensesCategoryCb.setContainerDataSource(dbCon.exec_for_select(
+                            myUI, 2, myUI.getUser().getSchool().getId()));
+                    dbCon.close();
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);
@@ -330,9 +322,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             if (incomesCategoryCb == null) {
                 incomesCategoryCb = createCombobox(null, true, null);
                 try {
-                    DbAccTransactions dbac = new DbAccTransactions();
+                    DbAccCategory dbac = new DbAccCategory();
                     dbac.connect();
-                    incomesCategoryCb.setContainerDataSource(dbac.exec_for_select(myUI, 1, myUI.getUser().getSchool().getId(), 0));
+                    incomesCategoryCb.setContainerDataSource(dbac.exec_for_select(
+                            myUI, 1, myUI.getUser().getSchool().getId()));
                     dbac.close();
                 } catch (Exception e) {
                     logger.error(e);
@@ -454,14 +447,16 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 filterField.setInputPrompt(myUI.getMessage(SptMessages.Filter));
                 try {
                     if (grid == expensesGrid && pid.equals(myUI.getMessage(SptMessages.Category))) {
-                        DbAccTransactions dbac = new DbAccTransactions();
+                        DbAccCategory dbac = new DbAccCategory();
                         dbac.connect();
-                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 2, myUI.getUser().getSchool().getId(), 0));
+                        filterField.setContainerDataSource(dbac.exec_for_select(
+                                myUI, 2, myUI.getUser().getSchool().getId()));
                         dbac.close();
                     } else if (grid == incomesGrid && pid.equals(myUI.getMessage(SptMessages.Category))) {
-                        DbAccTransactions dbac = new DbAccTransactions();
+                        DbAccCategory dbac = new DbAccCategory();
                         dbac.connect();
-                        filterField.setContainerDataSource(dbac.exec_for_select(myUI, 1, myUI.getUser().getSchool().getId(), 0));
+                        filterField.setContainerDataSource(dbac.exec_for_select(
+                                myUI, 1, myUI.getUser().getSchool().getId()));
                         dbac.close();
                     } else if (pid.equals(myUI.getMessage(SptMessages.ToEmployee))) {
                         DbEmployee dbCon = new DbEmployee();
@@ -956,9 +951,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
     private void addGridItem() {
         String id = Settings.FreshItem + (--r_table_counter);
-        if (today == null) {
-            today = new Date();
-        }
         Item item;
         if (accordion.getSelectedTab() == incomesGrid) {
             item = incomesCont.addItemAt(0, id);

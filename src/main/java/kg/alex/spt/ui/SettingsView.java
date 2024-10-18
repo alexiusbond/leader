@@ -71,9 +71,9 @@ public class SettingsView extends GridLayout {
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            IndexedContainer expensesContainer = dbCon.exec_for_select(myUI, 2);
-            IndexedContainer incomesContainer = dbCon.exec_for_select(myUI, 1);
-            IndexedContainer incomesAndExpensesContainer = dbCon.exec_for_select(myUI, 5);
+            IndexedContainer expensesContainer = dbCon.exec_for_sel(myUI, 2);
+            IndexedContainer incomesContainer = dbCon.exec_for_sel(myUI, 1);
+            IndexedContainer incomesAndExpensesContainer = dbCon.exec_for_sel(myUI, 5);
             dbCon.close();
             List<?> itemIds = paymentsContainer.getItemIds();
             for (int i = 0; i < itemIds.size(); i++) {
@@ -203,7 +203,7 @@ public class SettingsView extends GridLayout {
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
-            IndexedContainer container = dbCon.exec_for_select(myUI, 2);
+            IndexedContainer container = dbCon.exec_for_sel(myUI, 2);
             dbCon.close();
             List<?> itemIds = productsContainer.getItemIds();
             for (int i = 0; i < itemIds.size(); i++) {

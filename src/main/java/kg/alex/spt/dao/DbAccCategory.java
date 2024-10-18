@@ -26,7 +26,7 @@ public class DbAccCategory extends BaseDb {
         super();
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type) throws SQLException {
+    public IndexedContainer exec_for_sel(MyVaadinUI myUI, int type) throws SQLException {
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code "
                 + "from acc_category as c where c.acc_type_id = ? and c.school_id is null "
                 + "order by ifnull(concat(c.parent_code,'.',c.code),c.code)";
@@ -49,7 +49,27 @@ public class DbAccCategory extends BaseDb {
         return container;
     }
 
-    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type, int school_id) throws SQLException {
+    public IndexedContainer exec_for_select(MyVaadinUI myUI, int type_id, int school_id) throws SQLException {
+        String sql = "select ac.id, concat(ifnull(concat(ac.parent_code,'.',ac.code), ac.code), ' - ', ac.name) as name "
+                + "from acc_category as ac where (ac.acc_type_id = ? or ac.acc_type_id = 5) "
+                + "and ac.parent_id is not null and (ac.school_id is null or ac.school_id = ?) "
+                + "and ac.parent_id not in (select acc_category_id from dp_product_category) "
+                + "order by ifnull(concat(ac.parent_code,'.',ac.code), ac.code) asc";
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        stat.setInt(1, type_id);
+        stat.setInt(2, school_id);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("ac.id"));
+            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+                    result.getString("name"));
+        }
+        return container;
+    }
+
+    public IndexedContainer exec_for_sel(MyVaadinUI myUI, int type, int school_id) throws SQLException {
         String sql = "SELECT c.id, c.name, ifnull(concat(c.parent_code,'.',c.code), c.code) as code "
                 + "from acc_category as c where c.acc_type_id = ? and c.school_id = ? "
                 + "order by ifnull(concat(c.parent_code,'.',c.code),c.code)";
@@ -405,6 +425,4 @@ public class DbAccCategory extends BaseDb {
         }
         return null;
     }
-
-
 }
