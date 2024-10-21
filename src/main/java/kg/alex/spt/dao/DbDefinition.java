@@ -11,7 +11,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.AccBalanceSettings;
 import kg.alex.spt.domain.Definition;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.vaadin.addons.comboboxmultiselect.ComboBoxMultiselect;
 
 import java.sql.PreparedStatement;
@@ -45,10 +45,10 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
         if (withActivityStatus) {
-            container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
+            container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
             container.addContainerProperty(Settings.activity_status_id, Integer.class, null);
         }
 
@@ -59,11 +59,11 @@ public class DbDefinition extends BaseDb {
             } else {
                 item = container.addItem(result.getInt("t.id"));
             }
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
             item.getItemProperty(Settings.id).setValue(result.getInt("t.id"));
             if (withActivityStatus) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                         result.getString("st.name"));
                 item.getItemProperty(Settings.activity_status_id).setValue(result.getInt("st.id"));
             }
@@ -79,10 +79,10 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
         }
         return container;
@@ -99,10 +99,10 @@ public class DbDefinition extends BaseDb {
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
         }
         return container;
@@ -127,13 +127,13 @@ public class DbDefinition extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         for (int i = 0; i < containerProperties.size(); i++) {
             container.addContainerProperty(containerProperties.get(i), Integer.class, null);
         }
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("t.name"));
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("t.name"));
             for (int i = 0; i < containerProperties.size(); i++) {
                 item.getItemProperty(containerProperties.get(i)).setValue(
                         result.getInt(containerProperties.get(i)));
@@ -147,10 +147,10 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
         }
         return container;
@@ -164,14 +164,14 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.EducationStatus), String.class, null);
         container.addContainerProperty(Settings.education_status_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("o.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("o.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.EducationStatus)).setValue(
                     result.getString("es.name"));
             item.getItemProperty(Settings.education_status_id).setValue(
                     result.getInt("o.education_status_id"));
@@ -195,14 +195,14 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.position_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Permissions), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Permissions)).setValue(
                     result.getString("t.default_permissions"));
             item.getItemProperty(Settings.position_id).setValue(
                     result.getInt("p.id"));
@@ -215,16 +215,16 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.StartDate), Date.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.TillDate), Date.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.StartDate), Date.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.TillDate), Date.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.StartDate)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.StartDate)).setValue(
                     result.getDate("t.start_date"));
-            item.getItemProperty(myUi.getMessage(SptMessages.TillDate)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.TillDate)).setValue(
                     result.getDate("t.end_date"));
         }
         return container;
@@ -239,15 +239,15 @@ public class DbDefinition extends BaseDb {
         stat.setInt(2, current_year_id + 1);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.titleShort, String.class, null);
         container.addContainerProperty(Settings.installmentDateLimit, Long.class, 0L);
         container.addContainerProperty(Settings.is_last, Boolean.class, false);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("t.name") + " (" +
-                    myUi.getMessage(SptMessages.From) + " " + Settings.df.format(result.getDate("t.start_date")) + " " +
-                    myUi.getMessage(SptMessages.To) + " " + Settings.df.format(result.getDate("t.end_date")) + ")");
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("t.name") + " (" +
+                    myUi.getMessage(Messages.From) + " " + Settings.df.format(result.getDate("t.start_date")) + " " +
+                    myUi.getMessage(Messages.To) + " " + Settings.df.format(result.getDate("t.end_date")) + ")");
             item.getItemProperty(Settings.titleShort).setValue(result.getString("t.name"));
             item.getItemProperty(Settings.installmentDateLimit).setValue(result.getLong("t.installment_date_limit"));
             item.getItemProperty(Settings.is_last).setValue(result.getBoolean("t.is_last"));
@@ -347,18 +347,18 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassCaption), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Value), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Functions), ComboBoxMultiselect.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ClassCaption), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Value), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Functions), ComboBoxMultiselect.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getString("p.java_class_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ClassName)).setValue(
                     result.getString("p.java_class_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassCaption)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ClassCaption)).setValue(
                     result.getString("p.caption"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Value)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Value)).setValue(
                     result.getString("p.permissions"));
 
         }
@@ -372,20 +372,20 @@ public class DbDefinition extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(Settings.id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.count, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
             item.getItemProperty(Settings.id).setValue(
                     result.getInt("id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("name"));
         }
         if (withTotal) {
             Item item = container.addItem(6);
             item.getItemProperty(Settings.id).setValue(6);
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(myUi.getMessage(SptMessages.Total));
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(myUi.getMessage(Messages.Total));
         }
 
         return container;
@@ -395,12 +395,12 @@ public class DbDefinition extends BaseDb {
     public IndexedContainer execSQL_yes_no(MyVaadinUI myUi) {
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
 
         Item item = container.addItem(1);
-        item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(myUi.getMessage(SptMessages.Yes));
+        item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(myUi.getMessage(Messages.Yes));
         item = container.addItem(0);
-        item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(myUi.getMessage(SptMessages.No));
+        item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(myUi.getMessage(Messages.No));
 
         return container;
     }
@@ -423,11 +423,11 @@ public class DbDefinition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.correction_type_id, Double.class, 1.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("name"));
             if (result.getString("t.type").equals("-")) {
                 item.getItemProperty(Settings.correction_type_id).setValue(-1.0);

@@ -15,7 +15,7 @@ import com.vaadin.ui.*;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentPayment;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.students.ClassPaymentsReport;
 import kg.alex.spt.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
@@ -75,45 +75,45 @@ public class DbStudentPayment extends BaseDb {
             }
             String id = result.getString("sp.id");
             Item item = container.addItem(id);
-            Button btn = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+            Button btn = dw.createButton(myUI.getMessage(Messages.DeleteButton), id,
                     Settings.dbStudentPayments, FontAwesome.MINUS_SQUARE);
             btn.setEnabled(!isDisabled);
             if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actDelete)) {
                 btn.setEnabled(false);
             }
             item.getItemProperty(Settings.button).setValue(btn);
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
             if (!currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.actModify)) {
                 isDisabled = true;
             }
             ComboBox cb = dw.createComboboxPayment(result.getInt("sp.payment_category_id"),
-                    myUI.getMessage(SptMessages.PaymentCategoryType), id, true, false);
-            cb.setId(myUI.getMessage(SptMessages.Payments));
+                    myUI.getMessage(Messages.PaymentCategoryType), id, true, false);
+            cb.setId(myUI.getMessage(Messages.Payments));
             cb.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(cb);
-            item.getItemProperty(myUI.getMessage(SptMessages.PaymentType)).setValue(
-                    dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(SptMessages.PaymentType), id,
+            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(cb);
+            item.getItemProperty(myUI.getMessage(Messages.PaymentType)).setValue(
+                    dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(Messages.PaymentType), id,
                             Settings.dbPaymentType, false, false, false, isDisabled));
-            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(SptMessages.Amount), id);
-            tf.setId(myUI.getMessage(SptMessages.Payments));
+            TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(Messages.Amount), id);
+            tf.setId(myUI.getMessage(Messages.Payments));
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(tf);
             tf = dw.createTextFieldDouble(null, 2, Settings.KGS, id);
             tf.setId(Settings.KGS);
             tf.setRequired(false);
             tf.removeAllValidators();
-            tf.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.0, null));
+            tf.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.0, null));
             tf.setEnabled(!isDisabled);
             item.getItemProperty(Settings.KGS).setValue(tf);
-            tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(SptMessages.Rate), id);
+            tf = dw.createTextFieldDouble(result.getDouble("sp.dollar_rate"), 4, myUI.getMessage(Messages.Rate), id);
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
-            tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(SptMessages.WhoPaid), id, false, false);
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(tf);
+            tf = dw.createTextField(result.getString("sp.who_paid"), myUI.getMessage(Messages.WhoPaid), id, false, false);
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(tf);
+            item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(tf);
             DateField df = dw.createDateField(result.getTimestamp("sp.modification_date"),
-                    myUI.getMessage(SptMessages.Date), id, false, false);
-            df.setId(myUI.getMessage(SptMessages.Payments));
+                    myUI.getMessage(Messages.Date), id, false, false);
+            df.setId(myUI.getMessage(Messages.Payments));
             df.setEnabled(!isDisabled);
             if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
                 df.setRangeStart(myUI.getUser().getTransactions_start_date());
@@ -121,18 +121,18 @@ public class DbStudentPayment extends BaseDb {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.MINUTE, -1441);
                 df.setRangeStart(calendar.getTime());
-                df.addValidator(new DateRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue),
+                df.addValidator(new DateRangeValidator(myUI.getMessage(Messages.NotificationWrongValue),
                         df.getRangeStart(), df.getRangeEnd(), Resolution.MINUTE));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(df);
-            tf = dw.createTextFieldNote(result.getString("sp.note"), myUI.getMessage(SptMessages.Note), id);
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(df);
+            tf = dw.createTextFieldNote(result.getString("sp.note"), myUI.getMessage(Messages.Note), id);
             tf.setEnabled(!isDisabled);
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
-            Button b = dw.createButton(myUI.getMessage(SptMessages.Print), id,
-                    myUI.getMessage(SptMessages.Invoice), FontAwesome.PRINT);
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(tf);
+            Button b = dw.createButton(myUI.getMessage(Messages.Print), id,
+                    myUI.getMessage(Messages.Invoice), FontAwesome.PRINT);
             b.setEnabled(currentUser.isPermitted(Settings.paymentsTab
                     + ":" + Settings.actPrint));
-            item.getItemProperty(myUI.getMessage(SptMessages.Print)).setValue(b);
+            item.getItemProperty(myUI.getMessage(Messages.Print)).setValue(b);
             item.getItemProperty(Settings.old_amount).setValue(result.getDouble("sp.amount"));
             item.getItemProperty(Settings.old_date).setValue(result.getDate("sp.modification_date"));
             item.getItemProperty(Settings.old_category).setValue(result.getInt("sp.payment_category_id"));
@@ -254,20 +254,20 @@ public class DbStudentPayment extends BaseDb {
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.WhoPaid), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PaymentCategoryType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.WhoPaid), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("sp.amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
-            item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
             item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("pc.id"));
@@ -301,31 +301,31 @@ public class DbStudentPayment extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PaymentCategoryType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.PaymentCategoryType), String.class, null);
         container.addContainerProperty(Settings.payment_category_id, Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.WhoPaid), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WhoPaid), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(
                     result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("vcs.class_name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("sp.amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(SptMessages.PaymentCategoryType)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(
                     result.getString("pc.name"));
             item.getItemProperty(Settings.payment_category_id).setValue(
                     result.getInt("sp.payment_category_id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.WhoPaid)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoPaid)).setValue(
                     result.getString("sp.who_paid"));
             if (result.getInt("sp.payment_category_id") != 3) {
                 cpr.total += result.getDouble("sp.amount");
@@ -414,29 +414,29 @@ public class DbStudentPayment extends BaseDb {
         stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.StudentId), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.TransactionNumber), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Status), String.class, "Успешно");
+        container.addContainerProperty(myUI.getMessage(Messages.StudentId), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.TransactionNumber), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Status), String.class, "Успешно");
         t.setContainerDataSource(container);
         double total = 0.0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("sp.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format((result.getTimestamp("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("sp.dollar_rate"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getString("c.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.TransactionNumber)).setValue(result.getString("sp.bank_transaction_id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.StudentId)).setValue(result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(result.getString("fullname"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.dtmf.format((result.getTimestamp("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(result.getDouble("sp.dollar_rate"));
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(Messages.TransactionNumber)).setValue(result.getString("sp.bank_transaction_id"));
+            item.getItemProperty(myUI.getMessage(Messages.StudentId)).setValue(result.getString("st.login"));
+            item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(result.getString("fullname"));
             total += result.getDouble("amount");
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total));
-        t.setColumnFooter(myUI.getMessage(SptMessages.TransactionNumber), container.size() + "");
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total));
+        t.setColumnFooter(myUI.getMessage(Messages.TransactionNumber), container.size() + "");
         return container;
     }
 
@@ -457,24 +457,24 @@ public class DbStudentPayment extends BaseDb {
         stat.setDate(4, new java.sql.Date(till.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.TransactionsQuantity), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.TransactionsQuantity), Integer.class, 0);
         t.setContainerDataSource(container);
         double totalAmount = 0.0;
         int totalQuantity = 0;
         while (result.next()) {
             Item item = container.addItem(Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format((result.getDate("sp.modification_date"))));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.TransactionsQuantity)).setValue(result.getInt("quantity"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format((result.getDate("sp.modification_date"))));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(Messages.TransactionsQuantity)).setValue(result.getInt("quantity"));
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(result.getString("c.name"));
             totalAmount += result.getDouble("amount");
             totalQuantity += result.getDouble("quantity");
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(totalAmount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.TransactionsQuantity), totalQuantity + "");
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(totalAmount));
+        t.setColumnFooter(myUI.getMessage(Messages.TransactionsQuantity), totalQuantity + "");
         return container;
     }
 }

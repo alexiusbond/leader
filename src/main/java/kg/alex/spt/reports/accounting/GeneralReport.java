@@ -26,7 +26,7 @@ import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.ContractInfo;
 import kg.alex.spt.domain.SchoolAccounting;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.pdf.AccountingGeneralReportPdf;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -77,25 +77,25 @@ public class GeneralReport implements Button.ClickListener,
         leftGrid.setWidth(Settings.PERCENTS100);
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -134,16 +134,16 @@ public class GeneralReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
+        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         PDFBtn = new Button();
-        PDFBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        PDFBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         PDFBtn.setWidth(Settings.PERCENTS100);
         PDFBtn.setEnabled(false);
         PDFBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -190,8 +190,8 @@ public class GeneralReport implements Button.ClickListener,
                     DbAccTransactions dbacc = new DbAccTransactions();
                     dbacc.connect();
                     schoolAcc = dbacc.exec_get_totals((Integer) schoolsTable.getValue(),
-                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()),
-                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()), null);
+                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.StartDate)).getValue()),
+                            ((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.TillDate)).getValue()), null);
                     dbacc.close();
                     setSchoolAccounting(schoolAcc);
                     DbStudentContract dbsc = new DbStudentContract();
@@ -216,7 +216,7 @@ public class GeneralReport implements Button.ClickListener,
                 String svgPaid = SVGGenerator.getInstance().withWidth(400).withHeight(100).generate(confPaid);
                 new AccountingGeneralReportPdf(myUI, svgPayments, svgPaid, svgDiscounts, schoolAcc,
                         transactionsTable, contractTtl, paymentsTable, (Integer) schoolsTable.getValue(),
-                        (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.Title)).getValue(),
+                        (String) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.Title)).getValue(),
                         Settings.df.format(prevDayCal.getTime()));
             } catch (Exception e) {
                 logger.error(e);
@@ -241,9 +241,9 @@ public class GeneralReport implements Button.ClickListener,
             PDFBtn.setEnabled(false);
         }
         if (event.getProperty() == yearSelect) {
-            prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue());
+            prevDayCal.setTime((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.StartDate)).getValue());
             prevDayCal.add(Calendar.DAY_OF_MONTH, -1);
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
         }
     }
 
@@ -256,67 +256,67 @@ public class GeneralReport implements Button.ClickListener,
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(SptMessages.Total));
+        caption.setValue(myUI.getMessage(Messages.Total));
 
         Label discountsCaption = new Label();
         discountsCaption.setWidth(Settings.PERCENTS100);
         discountsCaption.setContentMode(ContentMode.HTML);
         discountsCaption.setStyleName("tableCpt");
-        discountsCaption.setValue(myUI.getMessage(SptMessages.Discounts));
+        discountsCaption.setValue(myUI.getMessage(Messages.Discounts));
 
         Label paymentsCaption = new Label();
         paymentsCaption.setWidth(Settings.PERCENTS100);
         paymentsCaption.setContentMode(ContentMode.HTML);
         paymentsCaption.setStyleName("tableCpt");
-        paymentsCaption.setValue(myUI.getMessage(SptMessages.Payments));
+        paymentsCaption.setValue(myUI.getMessage(Messages.Payments));
 
         Label ttlStudentsLab = new Label();
         ttlStudentsLab.setWidth(Settings.PERCENTS100);
         ttlStudentsLab.setContentMode(ContentMode.HTML);
         ttlStudentsLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlStudentsLab.setValue("<b>" + myUI.getMessage(SptMessages.Students) + ":" + "</b>");
+        ttlStudentsLab.setValue("<b>" + myUI.getMessage(Messages.Students) + ":" + "</b>");
 
         Label ttlContractLab = new Label();
         ttlContractLab.setWidth(Settings.PERCENTS100);
         ttlContractLab.setContentMode(ContentMode.HTML);
         ttlContractLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlContractLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalContract) + "</b>");
+        ttlContractLab.setValue("<b>" + myUI.getMessage(Messages.TotalContract) + "</b>");
 
         Label ttlDebtLab = new Label();
         ttlDebtLab.setWidth(Settings.PERCENTS100);
         ttlDebtLab.setContentMode(ContentMode.HTML);
         ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDebtLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDebt) + "</b>");
+        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
 
         Label ttlDiscLab = new Label();
         ttlDiscLab.setWidth(Settings.PERCENTS100);
         ttlDiscLab.setContentMode(ContentMode.HTML);
         ttlDiscLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDiscLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDiscount) + "</b>");
+        ttlDiscLab.setValue("<b>" + myUI.getMessage(Messages.TotalDiscount) + "</b>");
 
         Label ttlCorrectionLab = new Label();
         ttlCorrectionLab.setWidth(Settings.PERCENTS100);
         ttlCorrectionLab.setContentMode(ContentMode.HTML);
         ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalCorrection) + "</b>");
+        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(Messages.TotalCorrection) + "</b>");
 
         Label ttlNetLab = new Label();
         ttlNetLab.setWidth(Settings.PERCENTS100);
         ttlNetLab.setContentMode(ContentMode.HTML);
         ttlNetLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlNetLab.setValue("<b>" + myUI.getMessage(SptMessages.Net) + ":" + "</b>");
+        ttlNetLab.setValue("<b>" + myUI.getMessage(Messages.Net) + ":" + "</b>");
 
         Label ttlPaymentLab = new Label();
         ttlPaymentLab.setWidth(Settings.PERCENTS100);
         ttlPaymentLab.setContentMode(ContentMode.HTML);
         ttlPaymentLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlPaymentLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalPayment) + "</b>");
+        ttlPaymentLab.setValue("<b>" + myUI.getMessage(Messages.TotalPayment) + "</b>");
 
         Label ttlLeftLab = new Label();
         ttlLeftLab.setWidth(Settings.PERCENTS100);
         ttlLeftLab.setContentMode(ContentMode.HTML);
         ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlLeftLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalLeft) + "</b>");
+        ttlLeftLab.setValue("<b>" + myUI.getMessage(Messages.TotalLeft) + "</b>");
 
         totalsGrid.addComponent(caption, 0, 0, 1, 0);
         totalsGrid.addComponent(ttlStudentsLab, 0, 1);
@@ -379,7 +379,7 @@ public class GeneralReport implements Button.ClickListener,
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(SptMessages.AccountingInformationCaption));
+        caption.setValue(myUI.getMessage(Messages.AccountingInformationCaption));
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth(Settings.PERCENTS100);
@@ -387,38 +387,38 @@ public class GeneralReport implements Button.ClickListener,
         incTotalLbl = new Label();
         incTotalLbl.setContentMode(ContentMode.HTML);
         incTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
+        incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": </b>");
         hl.addComponent(incTotalLbl);
 
         incLastDateLbl = new Label();
         incLastDateLbl.setContentMode(ContentMode.HTML);
         incLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
+        incLastDateLbl.setValue("<b>" + myUI.getMessage(Messages.LastIncomeDate) + ": </b>");
         hl.addComponent(incLastDateLbl);
 
         outcomeTotalLbl = new Label();
         outcomeTotalLbl.setContentMode(ContentMode.HTML);
         outcomeTotalLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
+        outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": </b>");
         hl.addComponent(outcomeTotalLbl);
 
         outcomeLastDateLbl = new Label();
         outcomeLastDateLbl.setContentMode(ContentMode.HTML);
         outcomeLastDateLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
+        outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(Messages.LastExpenseDate) + ": </b>");
         hl.addComponent(outcomeLastDateLbl);
 
         prevBalanceLbl = new Label();
         prevBalanceLbl.setContentMode(ContentMode.HTML);
         prevBalanceLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime())
+        prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime())
                 + "): </b>");
         hl.addComponent(prevBalanceLbl);
 
         totalLbl = new Label();
         totalLbl.setContentMode(ContentMode.HTML);
         totalLbl.setStyleName(ValoTheme.LABEL_SMALL);
-        totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": </b>");
+        totalLbl.setValue("<b>" + myUI.getMessage(Messages.Total) + ": </b>");
         hl.addComponent(totalLbl);
 
         rightLay.addComponent(caption);
@@ -427,16 +427,16 @@ public class GeneralReport implements Button.ClickListener,
 
     private void buildTransactionsTable() {
 
-        NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(SptMessages.Month),
-                myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
-                myUI.getMessage(SptMessages.Incomes),
-                myUI.getMessage(SptMessages.Expenses), myUI.getMessage(SptMessages.Difference)};
+        NATURAL_COL_ORDER_TRANSACTIONS = new String[]{myUI.getMessage(Messages.Month),
+                myUI.getMessage(Messages.InstallmentPlan), myUI.getMessage(Messages.Payments),
+                myUI.getMessage(Messages.Incomes),
+                myUI.getMessage(Messages.Expenses), myUI.getMessage(Messages.Difference)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(SptMessages.IncomeOutcomeMonthlyCaption));
+        caption.setValue(myUI.getMessage(Messages.IncomeOutcomeMonthlyCaption));
 
         transactionsTable = new FormattedTable(myUI);
         transactionsTable.setFooterVisible(true);
@@ -451,15 +451,15 @@ public class GeneralReport implements Button.ClickListener,
 
     private void buildPaymentsLayout() {
 
-        NATURAL_COL_ORDER_PAYMENTS = new String[]{myUI.getMessage(SptMessages.Month),
-                myUI.getMessage(SptMessages.InstallmentPlan), myUI.getMessage(SptMessages.Payments),
-                myUI.getMessage(SptMessages.Debt)};
+        NATURAL_COL_ORDER_PAYMENTS = new String[]{myUI.getMessage(Messages.Month),
+                myUI.getMessage(Messages.InstallmentPlan), myUI.getMessage(Messages.Payments),
+                myUI.getMessage(Messages.Debt)};
 
         Label caption = new Label();
         caption.setWidth(Settings.PERCENTS100);
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(SptMessages.PaymentsMonthlyCaption));
+        caption.setValue(myUI.getMessage(Messages.PaymentsMonthlyCaption));
         HorizontalLayout hl = new HorizontalLayout();
         hl.setWidth(Settings.PERCENTS100);
 
@@ -504,26 +504,26 @@ public class GeneralReport implements Button.ClickListener,
 
     private void setSchoolAccounting(SchoolAccounting schoolAcc) {
         if (schoolAcc != null) {
-            incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal)
+            incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$");
-            incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate)
+            incLastDateLbl.setValue("<b>" + myUI.getMessage(Messages.LastIncomeDate)
                     + ": </b>" + schoolAcc.getLast_income_date());
-            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal)
+            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$");
-            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate)
+            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(Messages.LastExpenseDate)
                     + ": </b>" + schoolAcc.getLast_outcome_date());
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance)
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance)
                     + " (" + Settings.df.format(prevDayCal.getTime())
                     + "): </b>" + schoolAcc.getPrevious_balance() + "$");
-            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.CashBox)
+            totalLbl.setValue("<b>" + myUI.getMessage(Messages.CashBox)
                     + ": </b>" + Settings.dFormat2.format(schoolAcc.getPrevious_balance() + schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome()) + "$");
         } else {
-            incTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.IncomesTotal) + ": </b>");
-            incLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastIncomeDate) + ": </b>");
-            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(SptMessages.ExpensesTotal) + ": </b>");
-            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(SptMessages.LastExpenseDate) + ": </b>");
-            prevBalanceLbl.setValue("<b>" + myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
-            totalLbl.setValue("<b>" + myUI.getMessage(SptMessages.CashBox) + ": </b>");
+            incTotalLbl.setValue("<b>" + myUI.getMessage(Messages.IncomesTotal) + ": </b>");
+            incLastDateLbl.setValue("<b>" + myUI.getMessage(Messages.LastIncomeDate) + ": </b>");
+            outcomeTotalLbl.setValue("<b>" + myUI.getMessage(Messages.ExpensesTotal) + ": </b>");
+            outcomeLastDateLbl.setValue("<b>" + myUI.getMessage(Messages.LastExpenseDate) + ": </b>");
+            prevBalanceLbl.setValue("<b>" + myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(prevDayCal.getTime()) + "): </b>");
+            totalLbl.setValue("<b>" + myUI.getMessage(Messages.CashBox) + ": </b>");
         }
     }
 
@@ -551,10 +551,10 @@ public class GeneralReport implements Button.ClickListener,
             double totalDisc = contractTtl.getNet() + contractTtl.getDiscount();
             if (totalDisc != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(contractTtl.getDiscount() * 100 / totalDisc, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(Messages.TotalDiscount), Settings.round(contractTtl.getDiscount() * 100 / totalDisc, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.Net) + ": ", Settings.round(contractTtl.getNet() * 100 / totalDisc, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(Messages.Net) + ": ", Settings.round(contractTtl.getNet() * 100 / totalDisc, 2)));
                 confDisc.setSeries(series);
             }
 
@@ -563,10 +563,10 @@ public class GeneralReport implements Button.ClickListener,
             double totalPay = contractTtl.getLeft() + contractTtl.getPaid();
             if (totalPay != 0.0) {
                 final DataSeries series = new DataSeries();
-                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(contractTtl.getLeft() * 100 / totalPay, 2));
+                DataSeriesItem discounts = new DataSeriesItem(myUI.getMessage(Messages.TotalLeft), Settings.round(contractTtl.getLeft() * 100 / totalPay, 2));
                 discounts.setSliced(true);
                 series.add(discounts);
-                series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(contractTtl.getPaid() * 100 / totalPay, 2)));
+                series.add(new DataSeriesItem(myUI.getMessage(Messages.TotalPayment), Settings.round(contractTtl.getPaid() * 100 / totalPay, 2)));
                 confPaid.setSeries(series);
             }
             chartPaid.drawChart(confPaid);
@@ -580,15 +580,15 @@ public class GeneralReport implements Button.ClickListener,
             dbsc.execSQL_Plan_Payments(myUI, (Integer) yearSelect.getValue(),
                     Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                     (Integer) schoolsTable.getValue(),
-                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.StartDate)).getValue()).getTime()),
-                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(SptMessages.TillDate)).getValue()).getTime()),
+                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.StartDate)).getValue()).getTime()),
+                    new Date(((Date) yearSelect.getContainerProperty(yearSelect.getValue(), myUI.getMessage(Messages.TillDate)).getValue()).getTime()),
                     transactionsTable);
             transactionsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_TRANSACTIONS);
-            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Payments), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Incomes), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Expenses), Table.Align.RIGHT);
-            transactionsTable.setColumnAlignment(myUI.getMessage(SptMessages.Difference), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.InstallmentPlan), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Payments), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Incomes), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Expenses), Table.Align.RIGHT);
+            transactionsTable.setColumnAlignment(myUI.getMessage(Messages.Difference), Table.Align.RIGHT);
             transactionsTable.setPageLength(transactionsTable.size());
             if (transactionsTable.getContainerDataSource().size() != 0) {
                 PDFBtn.setEnabled(true);
@@ -603,16 +603,16 @@ public class GeneralReport implements Button.ClickListener,
     private void setPaymentsTableOptions() {
         paymentsTable.setContainerDataSource(transactionsTable.getContainerDataSource());
         paymentsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PAYMENTS);
-        paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.InstallmentPlan), Table.Align.RIGHT);
-        paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Payments), Table.Align.RIGHT);
-        paymentsTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(Messages.InstallmentPlan), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(Messages.Payments), Table.Align.RIGHT);
+        paymentsTable.setColumnAlignment(myUI.getMessage(Messages.Debt), Table.Align.RIGHT);
         paymentsTable.setPageLength(paymentsTable.size());
-        paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan),
-                transactionsTable.getColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan)));
-        paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.Payments),
-                transactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Payments)));
-        paymentsTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
-                transactionsTable.getColumnFooter(myUI.getMessage(SptMessages.Debt)));
+        paymentsTable.setColumnFooter(myUI.getMessage(Messages.InstallmentPlan),
+                transactionsTable.getColumnFooter(myUI.getMessage(Messages.InstallmentPlan)));
+        paymentsTable.setColumnFooter(myUI.getMessage(Messages.Payments),
+                transactionsTable.getColumnFooter(myUI.getMessage(Messages.Payments)));
+        paymentsTable.setColumnFooter(myUI.getMessage(Messages.Debt),
+                transactionsTable.getColumnFooter(myUI.getMessage(Messages.Debt)));
         if (paymentsTable.getContainerDataSource().size() != 0) {
             PDFBtn.setEnabled(true);
         }
@@ -623,17 +623,17 @@ public class GeneralReport implements Button.ClickListener,
         List<Number> instList = new ArrayList<>();
         List<Number> paymentsList = new ArrayList<>();
         for (Object next : paymentsTable.getItemIds()) {
-            months.add(paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Month)).getValue().toString());
-            instList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.InstallmentPlan)).getValue());
-            paymentsList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Payments)).getValue());
+            months.add(paymentsTable.getContainerProperty(next, myUI.getMessage(Messages.Month)).getValue().toString());
+            instList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(Messages.InstallmentPlan)).getValue());
+            paymentsList.add((Number) paymentsTable.getContainerProperty(next, myUI.getMessage(Messages.Payments)).getValue());
         }
         confPayments.getxAxis().setCategories(months.toArray(new String[0]));
         ListSeries ls = new ListSeries();
-        ls.setName(myUI.getMessage(SptMessages.InstallmentPlan));
+        ls.setName(myUI.getMessage(Messages.InstallmentPlan));
         ls.setData(instList);
         confPayments.addSeries(ls);
         ls = new ListSeries();
-        ls.setName(myUI.getMessage(SptMessages.Payments));
+        ls.setName(myUI.getMessage(Messages.Payments));
         ls.setData(paymentsList);
         confPayments.addSeries(ls);
 

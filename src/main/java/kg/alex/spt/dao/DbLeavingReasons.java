@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.LeavingReason;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,18 +33,18 @@ public class DbLeavingReasons extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("lr.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("lr.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("lr.activity_status_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(Settings.id).setValue(
                     result.getInt("lr.id"));
@@ -84,10 +84,10 @@ public class DbLeavingReasons extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name"));
         }
         return container;

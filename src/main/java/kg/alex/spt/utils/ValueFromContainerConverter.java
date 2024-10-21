@@ -5,7 +5,7 @@ import com.vaadin.data.util.converter.Converter;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbEmployee;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,10 +30,10 @@ public class ValueFromContainerConverter implements Converter<String, Integer> {
 
     @Override
     public String convertToPresentation(Integer value, Class<? extends String> targetType, Locale locale) throws ConversionException {
-        if (container.getContainerProperty(value, myUi.getMessage(SptMessages.Title)) != null &&
-                container.getContainerProperty(value, myUi.getMessage(SptMessages.Title)).getValue() != null) {
-            return container.getContainerProperty(value, myUi.getMessage(SptMessages.Title)).getValue().toString();
-        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(SptMessages.Category))) {
+        if (container.getContainerProperty(value, myUi.getMessage(Messages.Title)) != null &&
+                container.getContainerProperty(value, myUi.getMessage(Messages.Title)).getValue() != null) {
+            return container.getContainerProperty(value, myUi.getMessage(Messages.Title)).getValue().toString();
+        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(Messages.Category))) {
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -46,7 +46,7 @@ public class ValueFromContainerConverter implements Converter<String, Integer> {
                 logger.error(e);
                 logger.catching(e);
             }
-        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(SptMessages.ToEmployee))) {
+        } else if (value != null && propertyId != null && propertyId.equals(myUi.getMessage(Messages.ToEmployee))) {
             try {
                 DbEmployee dbCon = new DbEmployee();
                 dbCon.connect();

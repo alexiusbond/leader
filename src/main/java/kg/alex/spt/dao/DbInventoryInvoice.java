@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.InventoryInvoice;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,34 +44,34 @@ public class DbInventoryInvoice extends BaseDb {
         stat.setInt(2, activity_status_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.InvoiceNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Block), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Floor), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Room), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Quantity), Integer.class, 0.0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Employee), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Block), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Floor), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Room), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Quantity), Integer.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Employee), String.class, null);
         container.addContainerProperty(Settings.block_id, Integer.class, 0);
         container.addContainerProperty(Settings.floor_id, Integer.class, 0);
         container.addContainerProperty(Settings.room_id, Integer.class, 0);
         container.addContainerProperty(Settings.employee_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Note), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("inv_num"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Block)).setValue(result.getString("block.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Floor)).setValue(result.getString("floor.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Room)).setValue(result.getString("room"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Employee)).setValue(result.getString("employee"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(result.getInt("quantity"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.dtmf.format(
+            item.getItemProperty(myUi.getMessage(Messages.InvoiceNumber)).setValue(result.getString("inv_num"));
+            item.getItemProperty(myUi.getMessage(Messages.Block)).setValue(result.getString("block.name"));
+            item.getItemProperty(myUi.getMessage(Messages.Floor)).setValue(result.getString("floor.name"));
+            item.getItemProperty(myUi.getMessage(Messages.Room)).setValue(result.getString("room"));
+            item.getItemProperty(myUi.getMessage(Messages.Employee)).setValue(result.getString("employee"));
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(result.getInt("quantity"));
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.dtmf.format(
                     result.getTimestamp("t.creation_date")));
             item.getItemProperty(Settings.block_id).setValue(result.getInt("block.id"));
             item.getItemProperty(Settings.floor_id).setValue(result.getInt("floor.id"));
             item.getItemProperty(Settings.room_id).setValue(result.getInt("room.id"));
             item.getItemProperty(Settings.employee_id).setValue(result.getInt("e.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(result.getString("t.note"));
         }
         return container;
     }

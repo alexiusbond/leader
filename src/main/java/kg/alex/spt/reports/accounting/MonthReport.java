@@ -17,7 +17,7 @@ import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.SchoolAccounting;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTreeTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -61,13 +61,13 @@ public class MonthReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        selectAllIncomesBtn = new Button(myUI.getMessage(SptMessages.AllIncomes));
+        selectAllIncomesBtn = new Button(myUI.getMessage(Messages.AllIncomes));
         selectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         selectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllIncomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllIncomesBtn.addClickListener(this);
 
-        deselectAllIncomesBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllIncomesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllIncomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllIncomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllIncomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -87,13 +87,13 @@ public class MonthReport implements Button.ClickListener,
         incomeCategoriesTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         incomeCategoriesTable.addValueChangeListener(this);
 
-        selectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.AllSchools));
+        selectAllSchoolsBtn = new Button(myUI.getMessage(Messages.AllSchools));
         selectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         selectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllSchoolsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllSchoolsBtn.addClickListener(this);
 
-        deselectAllSchoolsBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllSchoolsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllSchoolsBtn.setWidth(Settings.PERCENTS100);
         deselectAllSchoolsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllSchoolsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -113,13 +113,13 @@ public class MonthReport implements Button.ClickListener,
         schoolsTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         schoolsTable.addValueChangeListener(this);
 
-        selectAllOutcomesBtn = new Button(myUI.getMessage(SptMessages.AllOutcomes));
+        selectAllOutcomesBtn = new Button(myUI.getMessage(Messages.AllOutcomes));
         selectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         selectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllOutcomesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllOutcomesBtn.addClickListener(this);
 
-        deselectAllOutcomesBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllOutcomesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllOutcomesBtn.setWidth(Settings.PERCENTS100);
         deselectAllOutcomesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllOutcomesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -149,8 +149,8 @@ public class MonthReport implements Button.ClickListener,
                 logger.error(e);
                 logger.catching(e);
             }
-            outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
-            incomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+            outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
+            incomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
         }
         try {
             DbSchool dbs = new DbSchool();
@@ -161,36 +161,36 @@ public class MonthReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
+        schoolsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setRequired(true);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
-        fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setResolution(Resolution.MONTH);
         fromDateDF.setDateFormat(Settings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setRequired(true);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
-        tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setResolution(Resolution.MONTH);
         tillDateDF.setDateFormat(Settings.yearMonthPattern);
@@ -233,7 +233,7 @@ public class MonthReport implements Button.ClickListener,
         rightLayout.setImmediate(true);
 
         incomesDataTable = new FormattedTreeTable(myUI);
-        incomesDataTable.setCaption(myUI.getMessage(SptMessages.Incomes));
+        incomesDataTable.setCaption(myUI.getMessage(Messages.Incomes));
         incomesDataTable.setFooterVisible(true);
         incomesDataTable.setSizeFull();
         incomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -242,7 +242,7 @@ public class MonthReport implements Button.ClickListener,
         incomesDataTable.addStyleName("noWrapFooter");
 
         outcomesDataTable = new FormattedTreeTable(myUI);
-        outcomesDataTable.setCaption(myUI.getMessage(SptMessages.Expenses));
+        outcomesDataTable.setCaption(myUI.getMessage(Messages.Expenses));
         outcomesDataTable.setFooterVisible(true);
         outcomesDataTable.setSizeFull();
         outcomesDataTable.setRowHeaderMode(Table.RowHeaderMode.INDEX);
@@ -309,32 +309,32 @@ public class MonthReport implements Button.ClickListener,
                                     if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) outcomeCategoriesTable.getValue());
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
                                                         + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         outcomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
-                                                        + " - " + myUI.getMessage(SptMessages.Total),
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
+                                                        + " - " + myUI.getMessage(Messages.Total),
                                                 Table.Align.RIGHT);
                                     }
                                     if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                                         catIds.addAll((Set<Integer>) incomeCategoriesTable.getValue());
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
                                                         + " - " + Settings.ymdf.format(current.getTime()),
                                                 Table.Align.RIGHT);
                                         incomesDataTable.setColumnAlignment(schoolsTable.getContainerProperty(
-                                                        nextSchool, myUI.getMessage(SptMessages.Title)).getValue()
-                                                        + " - " + myUI.getMessage(SptMessages.Total),
+                                                        nextSchool, myUI.getMessage(Messages.Title)).getValue()
+                                                        + " - " + myUI.getMessage(Messages.Total),
                                                 Table.Align.RIGHT);
                                         SchoolAccounting scAcc = dbTr.exec_get_totals((Integer) nextSchool, current.getTime(),
                                                 tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                         incomesDataTable.setColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
-                                                + Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.PreviousBalance) + " ("
+                                                nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - "
+                                                + Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.PreviousBalance) + " ("
                                                 + Settings.df.format(prev_date.getTime()) + "): " + Settings.dFormat2.format(scAcc.getPrevious_balance())
-                                                + "; " + myUI.getMessage(SptMessages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
-                                                nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
+                                                + "; " + myUI.getMessage(Messages.Total) + ": " + incomesDataTable.getColumnFooter(schoolsTable.getContainerProperty(
+                                                nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - "
                                                 + Settings.ymdf.format(current.getTime())));
                                     }
                                 }
@@ -342,16 +342,16 @@ public class MonthReport implements Button.ClickListener,
                                     SchoolAccounting scAcc = dbTr.exec_get_totals(myUI.getUser().getSchool().getId(), current.getTime(),
                                             tillDate.getTime(), Settings.convertCollectionToStr(catIds));
                                     incomesDataTable.setColumnFooter(
-                                            Settings.ymdf.format(current.getTime()), myUI.getMessage(SptMessages.PreviousBalance) + " ("
+                                            Settings.ymdf.format(current.getTime()), myUI.getMessage(Messages.PreviousBalance) + " ("
                                                     + Settings.df.format(prev_date.getTime()) + ") - " + Settings.dFormat2.format(scAcc.getPrevious_balance())
-                                                    + "; " + myUI.getMessage(SptMessages.Total) + " - " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())));
+                                                    + "; " + myUI.getMessage(Messages.Total) + " - " + incomesDataTable.getColumnFooter(Settings.ymdf.format(current.getTime())));
                                     incomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
                                     outcomesDataTable.setColumnAlignment(Settings.ymdf.format(current.getTime()), Table.Align.RIGHT);
                                 }
                                 current.add(Calendar.MONTH, 1);
                             }
-                            incomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total) + "", Table.Align.RIGHT);
-                            outcomesDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Total) + "", Table.Align.RIGHT);
+                            incomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + "", Table.Align.RIGHT);
+                            outcomesDataTable.setColumnAlignment(myUI.getMessage(Messages.Total) + "", Table.Align.RIGHT);
                             dbTr.close();
                         } catch (Exception e) {
                             logger.error(e);
@@ -367,7 +367,7 @@ public class MonthReport implements Button.ClickListener,
                         && !((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0
                             && outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -381,7 +381,7 @@ public class MonthReport implements Button.ClickListener,
                             excelReport.getTotalsRow().getCell(i).setCellValue(incomesDataTable.getColumnFooter(next));
                             i++;
                         }
-                        excelReport.setNextTable(outcomesDataTable, myUI.getMessage(SptMessages.Expenses));
+                        excelReport.setNextTable(outcomesDataTable, myUI.getMessage(Messages.Expenses));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -398,7 +398,7 @@ public class MonthReport implements Button.ClickListener,
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() != 0
                             && outcomesDataTable.getContainerDataSource().size() == 0) {
-                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -415,7 +415,7 @@ public class MonthReport implements Button.ClickListener,
                         excelReport.sendConverted();
                     } else if (incomesDataTable.getContainerDataSource().size() == 0
                             && outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(SptMessages.Expenses));
+                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(Messages.Expenses));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -433,7 +433,7 @@ public class MonthReport implements Button.ClickListener,
                     }
                 } else if (!((Set<?>) outcomeCategoriesTable.getValue()).isEmpty()) {
                     if (outcomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(SptMessages.Expenses));
+                        excelReport = new EnhancedFormatExcelExport(outcomesDataTable, myUI.getMessage(Messages.Expenses));
                         excelReport.setReportTitle(outcomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -451,7 +451,7 @@ public class MonthReport implements Button.ClickListener,
                     }
                 } else if (!((Set<?>) incomeCategoriesTable.getValue()).isEmpty()) {
                     if (incomesDataTable.getContainerDataSource().size() != 0) {
-                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(SptMessages.Incomes));
+                        excelReport = new EnhancedFormatExcelExport(incomesDataTable, myUI.getMessage(Messages.Incomes));
                         excelReport.setReportTitle(incomesDataTable.getCaption());
                         excelReport.setDisplayTotals(true);
                         excelReport.convertTable();
@@ -502,8 +502,8 @@ public class MonthReport implements Button.ClickListener,
                     logger.error(e);
                     logger.catching(e);
                 }
-                outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
-                incomeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+                outcomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
+                incomeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
             } else {
                 outcomeCategoriesTable.getContainerDataSource().removeAllItems();
                 incomeCategoriesTable.getContainerDataSource().removeAllItems();

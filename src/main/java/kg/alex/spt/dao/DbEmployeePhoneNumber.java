@@ -12,7 +12,7 @@ import com.vaadin.data.validator.RegexpValidator;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.EmployeePhoneNumber;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -64,16 +64,16 @@ public class DbEmployeePhoneNumber extends BaseDb {
             String id = result.getString("epn.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, null, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(
                     edv.createCombobox(result.getInt("epn.hr_phone_type_id"),
-                            myUI.getMessage(SptMessages.Type), Settings.dbPhoneType, true));
-            item.getItemProperty(myUI.getMessage(SptMessages.Number)).setValue(
+                            myUI.getMessage(Messages.Type), Settings.dbPhoneType, true));
+            item.getItemProperty(myUI.getMessage(Messages.Number)).setValue(
                     edv.createTextField(result.getString("epn.number"),
-                            myUI.getMessage(SptMessages.Number),
+                            myUI.getMessage(Messages.Number),
                             new RegexpValidator("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s0-9]*$", true,
-                                    myUI.getMessage(SptMessages.NotificationWrongValue)), true));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+                                    myUI.getMessage(Messages.NotificationWrongValue)), true));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }

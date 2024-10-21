@@ -21,7 +21,7 @@ import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.ContractInfo;
 import kg.alex.spt.domain.EducationStatus;
 import kg.alex.spt.domain.EmployeesCount;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -92,11 +92,11 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
         if (total != 0.0) {
             final DataSeries series = new DataSeries();
-            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(SptMessages.TotalPayment), Settings.round(tc.getPaid() * 100 / total, 2));
+            DataSeriesItem payments = new DataSeriesItem(myUI.getMessage(Messages.TotalPayment), Settings.round(tc.getPaid() * 100 / total, 2));
             payments.setSliced(true);
             series.add(payments);
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalLeft), Settings.round(tc.getLeft() * 100 / total, 2)));
-            series.add(new DataSeriesItem(myUI.getMessage(SptMessages.TotalDiscount), Settings.round(tc.getDiscount() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(Messages.TotalLeft), Settings.round(tc.getLeft() * 100 / total, 2)));
+            series.add(new DataSeriesItem(myUI.getMessage(Messages.TotalDiscount), Settings.round(tc.getDiscount() * 100 / total, 2)));
             conf.setSeries(series);
         }
 
@@ -110,13 +110,13 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         final Button source = event.getButton();
         if (source == weekLogBtn) {
             setLogTable(6);
-            logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
+            logTableCaption.setValue(myUI.getMessage(Messages.Last7DaysLogs));
         } else if (source == monthLogBtn) {
             setLogTable(30);
-            logTableCaption.setValue(myUI.getMessage(SptMessages.Last30DaysLogs));
+            logTableCaption.setValue(myUI.getMessage(Messages.Last30DaysLogs));
         } else if (source == allLogBtn) {
             setLogTable(0);
-            logTableCaption.setValue(myUI.getMessage(SptMessages.ForAllTimeLogs));
+            logTableCaption.setValue(myUI.getMessage(Messages.ForAllTimeLogs));
         } else if (source == excelBtn) {
             if (logTable.size() > 0) {
                 try {
@@ -140,14 +140,14 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
-        caption.setValue(myUI.getMessage(SptMessages.SchoolInformation));
+        caption.setValue(myUI.getMessage(Messages.SchoolInformation));
         caption.setStyleName("tableCpt");
         layout.addComponent(caption, 0, 0, 1, 0);
 
         Label schoolLabCpt = new Label();
         schoolLabCpt.setContentMode(ContentMode.HTML);
         schoolLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
-        schoolLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.School) + ":</b> ");
+        schoolLabCpt.setValue("<b>" + myUI.getMessage(Messages.School) + ":</b> ");
         layout.addComponent(schoolLabCpt);
 
         Label schoolLab = new Label();
@@ -170,7 +170,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label directorLabCpt = new Label();
         directorLabCpt.setContentMode(ContentMode.HTML);
         directorLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
-        directorLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.Director) + ":</b> ");
+        directorLabCpt.setValue("<b>" + myUI.getMessage(Messages.Director) + ":</b> ");
         layout.addComponent(directorLabCpt);
 
         Label directorLab = new Label();
@@ -182,7 +182,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label accountantLabCpt = new Label();
         accountantLabCpt.setContentMode(ContentMode.HTML);
         accountantLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
-        accountantLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.Accountant) + ":</b> ");
+        accountantLabCpt.setValue("<b>" + myUI.getMessage(Messages.Accountant) + ":</b> ");
         layout.addComponent(accountantLabCpt);
 
         Label accountantLab = new Label();
@@ -194,7 +194,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label othersLabCpt = new Label();
         othersLabCpt.setContentMode(ContentMode.HTML);
         othersLabCpt.setStyleName(ValoTheme.LABEL_SMALL);
-        othersLabCpt.setValue("<b>" + myUI.getMessage(SptMessages.OtherUsers) + " (" + emp.getOthers_count()
+        othersLabCpt.setValue("<b>" + myUI.getMessage(Messages.OtherUsers) + " (" + emp.getOthers_count()
                 + "):</b> ");
         layout.addComponent(othersLabCpt);
 
@@ -218,7 +218,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
-        caption.setValue(myUI.getMessage(SptMessages.ForThisWeek));
+        caption.setValue(myUI.getMessage(Messages.ForThisWeek));
         caption.setStyleName("tableCpt");
         layout.addComponent(caption, 0, 0, 1, 0);
 
@@ -229,10 +229,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             DbStudentPayment dbsp = new DbStudentPayment();
             dbip.connect();
             dbsp.connect();
-            week_plan = dbip.execGetWeeklyPlan(myUI.getMessage(SptMessages.Students),
+            week_plan = dbip.execGetWeeklyPlan(myUI.getMessage(Messages.Students),
                     myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
-            week_paid = dbsp.execGetWeeklyPaid(myUI.getMessage(SptMessages.Students),
+            week_paid = dbsp.execGetWeeklyPaid(myUI.getMessage(Messages.Students),
                     myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             dbip.close();
@@ -245,12 +245,12 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label instPlanWeekLab = new Label();
         instPlanWeekLab.setContentMode(ContentMode.HTML);
         instPlanWeekLab.setStyleName(ValoTheme.LABEL_SMALL);
-        instPlanWeekLab.setValue("<b>" + myUI.getMessage(SptMessages.InstallmentPlan) + ":</b>");
+        instPlanWeekLab.setValue("<b>" + myUI.getMessage(Messages.InstallmentPlan) + ":</b>");
 
         Label paymentsWeekLab = new Label();
         paymentsWeekLab.setContentMode(ContentMode.HTML);
         paymentsWeekLab.setStyleName(ValoTheme.LABEL_SMALL);
-        paymentsWeekLab.setValue("<b>" + myUI.getMessage(SptMessages.Payments) + ":</b>");
+        paymentsWeekLab.setValue("<b>" + myUI.getMessage(Messages.Payments) + ":</b>");
 
         layout.addComponent(instPlanWeekLab);
         layout.addComponent(new Label(week_plan + "$"));
@@ -265,7 +265,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
-        caption.setValue(myUI.getMessage(SptMessages.ForThisMonth));
+        caption.setValue(myUI.getMessage(Messages.ForThisMonth));
         caption.setStyleName("tableCpt");
         layout.addComponent(caption, 0, 0, 1, 0);
 
@@ -276,10 +276,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
             DbStudentPayment dbsp = new DbStudentPayment();
             dbip.connect();
             dbsp.connect();
-            month_plan = dbip.execGetMonthlyPlan(myUI.getMessage(SptMessages.Students),
+            month_plan = dbip.execGetMonthlyPlan(myUI.getMessage(Messages.Students),
                     myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
-            month_paid = dbsp.execGetMonthlyPaid(myUI.getMessage(SptMessages.Students),
+            month_paid = dbsp.execGetMonthlyPaid(myUI.getMessage(Messages.Students),
                     myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             dbip.close();
@@ -292,12 +292,12 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label instPlanMonthLab = new Label();
         instPlanMonthLab.setContentMode(ContentMode.HTML);
         instPlanMonthLab.setStyleName(ValoTheme.LABEL_SMALL);
-        instPlanMonthLab.setValue("<b>" + myUI.getMessage(SptMessages.InstallmentPlan) + ":</b>");
+        instPlanMonthLab.setValue("<b>" + myUI.getMessage(Messages.InstallmentPlan) + ":</b>");
 
         Label paymentsMonthLab = new Label();
         paymentsMonthLab.setContentMode(ContentMode.HTML);
         paymentsMonthLab.setStyleName(ValoTheme.LABEL_SMALL);
-        paymentsMonthLab.setValue("<b>" + myUI.getMessage(SptMessages.Payments) + ":</b>");
+        paymentsMonthLab.setValue("<b>" + myUI.getMessage(Messages.Payments) + ":</b>");
 
         layout.addComponent(instPlanMonthLab);
         layout.addComponent(new Label(month_plan + "$"));
@@ -313,37 +313,37 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(SptMessages.StudentsInformation));
+        caption.setValue(myUI.getMessage(Messages.StudentsInformation));
 
         Label ttlStudLab = new Label();
         ttlStudLab.setContentMode(ContentMode.HTML);
         ttlStudLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlStudLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalStudents) + "</b>");
+        ttlStudLab.setValue("<b>" + myUI.getMessage(Messages.TotalStudents) + "</b>");
 
         Label activeLab = new Label();
         activeLab.setContentMode(ContentMode.HTML);
         activeLab.setStyleName(ValoTheme.LABEL_SMALL);
-        activeLab.setValue("<b>" + myUI.getMessage(SptMessages.Active) + "</b>");
+        activeLab.setValue("<b>" + myUI.getMessage(Messages.Active) + "</b>");
 
         Label preRegLab = new Label();
         preRegLab.setContentMode(ContentMode.HTML);
         preRegLab.setStyleName(ValoTheme.LABEL_SMALL);
-        preRegLab.setValue("<b>" + myUI.getMessage(SptMessages.PreRegistered) + "</b>");
+        preRegLab.setValue("<b>" + myUI.getMessage(Messages.PreRegistered) + "</b>");
 
         Label notConfLab = new Label();
         notConfLab.setContentMode(ContentMode.HTML);
         notConfLab.setStyleName(ValoTheme.LABEL_SMALL);
-        notConfLab.setValue("<b>" + myUI.getMessage(SptMessages.NotConfirmed) + "</b>");
+        notConfLab.setValue("<b>" + myUI.getMessage(Messages.NotConfirmed) + "</b>");
 
         Label outOfLab = new Label();
         outOfLab.setContentMode(ContentMode.HTML);
         outOfLab.setStyleName(ValoTheme.LABEL_SMALL);
-        outOfLab.setValue("<b>" + myUI.getMessage(SptMessages.OutOf) + "</b>");
+        outOfLab.setValue("<b>" + myUI.getMessage(Messages.OutOf) + "</b>");
 
         Label graduatedLab = new Label();
         graduatedLab.setContentMode(ContentMode.HTML);
         graduatedLab.setStyleName(ValoTheme.LABEL_SMALL);
-        graduatedLab.setValue("<b>" + myUI.getMessage(SptMessages.Graduated) + "</b>");
+        graduatedLab.setValue("<b>" + myUI.getMessage(Messages.Graduated) + "</b>");
 
         EducationStatus ed = new EducationStatus();
         try {
@@ -381,37 +381,37 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         Label caption = new Label();
         caption.setContentMode(ContentMode.HTML);
         caption.setStyleName("tableCpt");
-        caption.setValue(myUI.getMessage(SptMessages.TotalContractStudents));
+        caption.setValue(myUI.getMessage(Messages.TotalContractStudents));
 
         Label ttlContractLab = new Label();
         ttlContractLab.setContentMode(ContentMode.HTML);
         ttlContractLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlContractLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalContract) + "</b>");
+        ttlContractLab.setValue("<b>" + myUI.getMessage(Messages.TotalContract) + "</b>");
 
         Label ttlDiscLab = new Label();
         ttlDiscLab.setContentMode(ContentMode.HTML);
         ttlDiscLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDiscLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDiscount) + "</b>");
+        ttlDiscLab.setValue("<b>" + myUI.getMessage(Messages.TotalDiscount) + "</b>");
 
         Label ttlCorrectionLab = new Label();
         ttlCorrectionLab.setContentMode(ContentMode.HTML);
         ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalCorrection) + "</b>");
+        ttlCorrectionLab.setValue("<b>" + myUI.getMessage(Messages.TotalCorrection) + "</b>");
 
         Label ttlDebtLab = new Label();
         ttlDebtLab.setContentMode(ContentMode.HTML);
         ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDebtLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalDebt) + "</b>");
+        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
 
         Label ttlPaymentLab = new Label();
         ttlPaymentLab.setContentMode(ContentMode.HTML);
         ttlPaymentLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlPaymentLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalPayment) + "</b>");
+        ttlPaymentLab.setValue("<b>" + myUI.getMessage(Messages.TotalPayment) + "</b>");
 
         Label ttlLeftLab = new Label();
         ttlLeftLab.setContentMode(ContentMode.HTML);
         ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlLeftLab.setValue("<b>" + myUI.getMessage(SptMessages.TotalLeft) + "</b>");
+        ttlLeftLab.setValue("<b>" + myUI.getMessage(Messages.TotalLeft) + "</b>");
 
         try {
             DbStudentContract dbsc = new DbStudentContract();
@@ -447,7 +447,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logTableCaption = new Label();
         logTableCaption.setContentMode(ContentMode.HTML);
         logTableCaption.setStyleName("tableCpt");
-        logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
+        logTableCaption.setValue(myUI.getMessage(Messages.Last7DaysLogs));
 
         logTable = new Table();
         logTable.setStyleName(ValoTheme.TABLE_SMALL);
@@ -465,26 +465,26 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logsTypeSelect.setNullSelectionAllowed(false);
         logsTypeSelect.setWidth(Settings.PERCENTS100);
         logsTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
-        logsTypeSelect.addItem(myUI.getMessage(SptMessages.SystemLogs));
+        logsTypeSelect.addItem(myUI.getMessage(Messages.SystemLogs));
         if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmAccountingLogsSelect)) {
-            logsTypeSelect.addItem(myUI.getMessage(SptMessages.AccountingLogs));
+            logsTypeSelect.addItem(myUI.getMessage(Messages.AccountingLogs));
         }
-        logsTypeSelect.setValue(myUI.getMessage(SptMessages.SystemLogs));
+        logsTypeSelect.setValue(myUI.getMessage(Messages.SystemLogs));
         logsTypeSelect.addValueChangeListener(this);
 
-        weekLogBtn = new Button(myUI.getMessage(SptMessages.WeekLogs));
+        weekLogBtn = new Button(myUI.getMessage(Messages.WeekLogs));
         weekLogBtn.setWidth(Settings.PERCENTS100);
         weekLogBtn.addClickListener(this);
 
-        monthLogBtn = new Button(myUI.getMessage(SptMessages.MonthLogs));
+        monthLogBtn = new Button(myUI.getMessage(Messages.MonthLogs));
         monthLogBtn.setWidth(Settings.PERCENTS100);
         monthLogBtn.addClickListener(this);
 
-        allLogBtn = new Button(myUI.getMessage(SptMessages.AllLogs));
+        allLogBtn = new Button(myUI.getMessage(Messages.AllLogs));
         allLogBtn.setWidth(Settings.PERCENTS100);
         allLogBtn.addClickListener(this);
 
-        excelBtn = new Button(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn = new Button(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
@@ -497,7 +497,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         logButtonsLayout.addComponent(allLogBtn);
         logButtonsLayout.addComponent(excelBtn);
 
-        logTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Action), 1);
+        logTable.setColumnExpandRatio(myUI.getMessage(Messages.Action), 1);
         layout.addComponent(logTableCaption);
         layout.addComponent(logTable);
         layout.addComponent(logButtonsLayout);
@@ -527,7 +527,7 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
                 dblo.connect();
                 logTable.setContainerDataSource(dblo.execSQL(myUI, myUI.getUser().getSchool().getId(), 6,
                         logsTypeSelect.getValue().toString()));
-                logTableCaption.setValue(myUI.getMessage(SptMessages.Last7DaysLogs));
+                logTableCaption.setValue(myUI.getMessage(Messages.Last7DaysLogs));
                 dblo.close();
             } catch (Exception e) {
                 logger.error(e);

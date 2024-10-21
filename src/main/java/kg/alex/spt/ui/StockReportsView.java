@@ -10,7 +10,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.stock.ProductMovementsReport;
 import kg.alex.spt.reports.stock.StockGeneralReport;
 import org.apache.shiro.SecurityUtils;
@@ -46,20 +46,20 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         rightGrid.setSpacing(true);
         rightGrid.setWidth(Settings.PERCENTS100);
 
-        repTypeSelect = new ComboBox(myUI.getMessage(SptMessages.ReportType));
+        repTypeSelect = new ComboBox(myUI.getMessage(Messages.ReportType));
         repTypeSelect.setNullSelectionAllowed(false);
         repTypeSelect.setRequired(true);
-        repTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        repTypeSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         repTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         repTypeSelect.setWidth(Settings.PERCENTS100);
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
 
         if (currentUser.isPermitted(Settings.cnStockReportsView + ":" + Settings.prmProductMovementsReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.ProductMovementsReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.ProductMovementsReport));
         }
         if (currentUser.isPermitted(Settings.cnStockReportsView + ":" + Settings.prmStockGeneralReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.StockGeneralReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.StockGeneralReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);
     }
@@ -70,9 +70,9 @@ public class StockReportsView extends HorizontalSplitPanel implements Property.V
         if (property == repTypeSelect) {
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
-            if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.StockGeneralReport))) {
+            if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.StockGeneralReport))) {
                 new StockGeneralReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ProductMovementsReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.ProductMovementsReport))) {
                 new ProductMovementsReport(myUI, this);
             }
         }

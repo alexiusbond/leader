@@ -15,7 +15,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentCorrection;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.StudentDefinitionView;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -45,21 +45,21 @@ public class DbStudentCorrection extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            Button b = dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+            Button b = dw.createButton(myUI.getMessage(Messages.DeleteButton), id,
                     Settings.dbStudentCorrection, FontAwesome.MINUS_SQUARE);
             if (!currentUser.isPermitted(Settings.correctionsTable + ":" + Settings.actDelete)) {
                 b.setEnabled(false);
             }
             item.getItemProperty(Settings.button).setValue(b);
             ComboBox cb = dw.createComboboxCorr(result.getInt("t.correction_type_id"),
-                    myUI.getMessage(SptMessages.Title), id);
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(cb);
+                    myUI.getMessage(Messages.Title), id);
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(cb);
             TextField discTf = dw.createTextFieldDouble(result.getDouble("t.amount"), 2,
-                    myUI.getMessage(SptMessages.CorrectionAmount), id);
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(discTf);
+                    myUI.getMessage(Messages.CorrectionAmount), id);
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(discTf);
             TextField tf = dw.createTextField(result.getString("t.note"),
-                    myUI.getMessage(SptMessages.Note), id, true, false);
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
+                    myUI.getMessage(Messages.Note), id, true, false);
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(tf);
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
             if (!currentUser.isPermitted(Settings.correctionsTable + ":" + Settings.actModify)) {
@@ -68,7 +68,7 @@ public class DbStudentCorrection extends BaseDb {
                 cb.setEnabled(false);
                 discTf.setEnabled(false);
             }
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }

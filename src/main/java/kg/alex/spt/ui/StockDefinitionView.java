@@ -15,7 +15,7 @@ import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbStock;
 import kg.alex.spt.domain.Stock;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -40,7 +40,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
     public StockDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Status)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title), myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -89,7 +89,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -97,7 +97,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -105,43 +105,43 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 150, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 150, false));
         settingsLay.addComponent(nameTF);
 
-        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
-        statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -173,10 +173,10 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
             nameTF.focus();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -191,10 +191,10 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
                         int id = dbCon.exec_insert(getStock(0));
                         if (id != 0) {
                             addDataContainerItem(id);
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -209,17 +209,17 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
                         }
                         if (status != 0) {
                             updateDataContainer();
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbCon.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -274,7 +274,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue());
     }
@@ -286,14 +286,14 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect
                 .getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
+                myUI.getMessage(Messages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.school_id).setValue(
                 myUI.getUser().getSchool().getId());
@@ -302,11 +302,11 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
         item.getItemProperty(Settings.school_id).setValue(
@@ -342,7 +342,7 @@ public class StockDefinitionView extends HorizontalSplitPanel implements Button.
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

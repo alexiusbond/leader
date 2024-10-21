@@ -15,7 +15,7 @@ import com.vaadin.ui.*;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.SchoolAccounting;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.accounting.SchoolsReport;
 import kg.alex.spt.ui.CashBoxView;
 import kg.alex.spt.ui.PayoutsView;
@@ -57,8 +57,8 @@ public class DbAccTransactions extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    pav.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbAcc_transactions));
-            ComboBox cb = pav.createCombobox(0, myUi.getMessage(SptMessages.Category), null, true, true);
+                    pav.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbAcc_transactions));
+            ComboBox cb = pav.createCombobox(0, myUi.getMessage(Messages.Category), null, true, true);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -68,31 +68,31 @@ public class DbAccTransactions extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.FullName));
+            cb.setItemCaptionPropertyId(myUi.getMessage(Messages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Category)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            cb = pav.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(SptMessages.Currency),
+            cb = pav.createCombobox(result.getInt("t.acc_currency_id"), myUi.getMessage(Messages.Currency),
                     Settings.dbAcc_currency, true, false);
             cb.addValueChangeListener(pav);
-            item.getItemProperty(myUi.getMessage(SptMessages.Currency)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Currency)).setValue(cb);
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             TextField tf = pav.createTextFieldWithProperty(
-                    result.getDouble("t.amount"), myUi.getMessage(SptMessages.Amount),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("t.amount"), myUi.getMessage(Messages.Amount),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
             tf.addValueChangeListener(pav);
-            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(tf);
             tf = pav.createTextFieldWithProperty(
-                    result.getDouble("t.currency_rate"), myUi.getMessage(SptMessages.Rate),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("t.currency_rate"), myUi.getMessage(Messages.Rate),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4),
                     currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
             tf.addValueChangeListener(pav);
-            item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(pav.createTextField(
-                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, 250, true), true));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(myUi.getMessage(Messages.Rate)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(pav.createTextField(
+                    result.getString("t.note"), id, new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 250, true), true));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             if (result.getInt("t.acc_currency_id") == 1) {
                 totalUsd += result.getDouble("t.amount") / result.getDouble("t.currency_rate");
                 totalKgs += result.getDouble("t.amount");
@@ -140,18 +140,18 @@ public class DbAccTransactions extends BaseDb {
         while (result.next()) {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(result.getTimestamp("t.date_time"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(result.getInt("t.acc_category_id"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(result.getTimestamp("t.date_time"));
+            item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(result.getInt("t.acc_category_id"));
             if (result.getInt("t.acc_currency_id") == 1) {
-                item.getItemProperty(myUI.getMessage(SptMessages.AmountKGS)).setValue(result.getDouble("t.amount"));
+                item.getItemProperty(myUI.getMessage(Messages.AmountKGS)).setValue(result.getDouble("t.amount"));
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.AmountUSD)).setValue(result.getDouble("t.amount"));
+                item.getItemProperty(myUI.getMessage(Messages.AmountUSD)).setValue(result.getDouble("t.amount"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("note"));
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(result.getDouble("t.currency_rate"));
             item.getItemProperty(Settings.acc_currency_id).setValue(result.getInt("t.acc_currency_id"));
             if (incOrOut == 2) {
-                item.getItemProperty(myUI.getMessage(SptMessages.ToEmployee)).setValue(result.getInt("t.from_to_employee_id"));
+                item.getItemProperty(myUI.getMessage(Messages.ToEmployee)).setValue(result.getInt("t.from_to_employee_id"));
             }
             boolean isDisabled = result.getBoolean("isDisabled");
             if (!isDisabled) {
@@ -161,7 +161,7 @@ public class DbAccTransactions extends BaseDb {
             item.getItemProperty(Settings.is_disabled).setValue(isDisabled);
             item.getItemProperty(Settings.from_employee_id).setValue(result.getString("fullname"));
             if (result.getInt("t.order_number") != 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.InvoiceNumber)).setValue(
                         String.format("%07d", result.getInt("t.order_number")));
             }
         }
@@ -170,11 +170,11 @@ public class DbAccTransactions extends BaseDb {
             public Component getValue(Item item, Object itemId, Object propertyId) {
                 HorizontalLayout hl = new HorizontalLayout();
                 hl.setWidth("52px");
-                hl.addComponent(cbv.createButton(myUI.getMessage(SptMessages.DeleteButton), itemId,
-                        myUI.getMessage(SptMessages.DeleteButton),
+                hl.addComponent(cbv.createButton(myUI.getMessage(Messages.DeleteButton), itemId,
+                        myUI.getMessage(Messages.DeleteButton),
                         (Boolean) item.getItemProperty(Settings.is_disabled).getValue(), FontAwesome.MINUS_SQUARE, "min-padding"));
-                hl.addComponent(cbv.createButton(myUI.getMessage(SptMessages.Print), itemId,
-                        myUI.getMessage(SptMessages.Print), false, FontAwesome.FILE_PDF_O, "min-padding"));
+                hl.addComponent(cbv.createButton(myUI.getMessage(Messages.Print), itemId,
+                        myUI.getMessage(Messages.Print), false, FontAwesome.FILE_PDF_O, "min-padding"));
                 hl.addLayoutClickListener((LayoutEvents.LayoutClickListener) layoutClickEvent -> grid.setEditorEnabled(false));
                 return hl;
             }
@@ -335,29 +335,29 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, school_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Category), String.class, null);
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         while (current.before(till)) {
             container.addContainerProperty(Settings.ymdf.format(current.getTime()), Double.class, 0.0);
             current.add(Calendar.MONTH, 1);
         }
-        container.addContainerProperty(myUI.getMessage(SptMessages.Total), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Total), Double.class, 0.0);
         t.setContainerDataSource(container);
         current.setTime(from.getTime());
         while (current.before(till)) {
             t.setColumnFooter(Settings.ymdf.format(current.getTime()), "0.00");
             current.add(Calendar.MONTH, 1);
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Total), "0.00");
+        t.setColumnFooter(myUI.getMessage(Messages.Total), "0.00");
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Code))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Code)).getValue().toString());
-                item.getItemProperty(myUI.getMessage(SptMessages.Category))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Category)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Code))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Code)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Category))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Category)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = (categoriesTable.getContainerDataSource()).getParent(catNext);
                 if (parent != null) {
@@ -374,8 +374,8 @@ public class DbAccTransactions extends BaseDb {
             String month = Settings.ymdf.format(result.getDate("dt"));
             item.getItemProperty(month).setValue(result.getDouble("amount"));
             try {
-                t.setColumnFooter(myUI.getMessage(SptMessages.Total), Settings.dFormat2.format(
-                        Settings.dFormat2.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
+                t.setColumnFooter(myUI.getMessage(Messages.Total), Settings.dFormat2.format(
+                        Settings.dFormat2.parse(t.getColumnFooter(myUI.getMessage(Messages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(month, Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(month)).doubleValue()
                         + result.getDouble("amount")));
@@ -383,7 +383,7 @@ public class DbAccTransactions extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Total)).getValue()
+            item.getItemProperty(myUI.getMessage(Messages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Total)).getValue()
                     + result.getDouble("amount"));
             Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
             while (parent_id != null) {
@@ -391,7 +391,7 @@ public class DbAccTransactions extends BaseDb {
                 item.getItemProperty(month).setValue(
                         (Double) item.getItemProperty(month).getValue()
                                 + result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Total)).getValue()
+                item.getItemProperty(myUI.getMessage(Messages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Total)).getValue()
                         + result.getDouble("amount"));
                 parent_id = (Integer) container.getParent(parent_id);
             }
@@ -420,8 +420,8 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(3, type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Category), String.class, null);
         Calendar current = Calendar.getInstance();
         current.setTime(from.getTime());
         Set<Integer> selectedSchools = (Set<Integer>) schoolsTable.getValue();
@@ -431,7 +431,7 @@ public class DbAccTransactions extends BaseDb {
             while (schools_iter.hasNext()) {
                 Object nextSchool = schools_iter.next();
                 if (selectedSchools.contains((Integer) nextSchool)) {
-                    container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
+                    container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - "
                             + Settings.ymdf.format(current.getTime()), Double.class, 0.0);
                 }
             }
@@ -441,11 +441,11 @@ public class DbAccTransactions extends BaseDb {
         while (schools_iter.hasNext()) {
             Object nextSchool = schools_iter.next();
             if (selectedSchools.contains((Integer) nextSchool)) {
-                container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
-                        + myUI.getMessage(SptMessages.Total), Double.class, 0.0);
+                container.addContainerProperty(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - "
+                        + myUI.getMessage(Messages.Total), Double.class, 0.0);
             }
         }
-        container.addContainerProperty(myUI.getMessage(SptMessages.Total), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Total), Double.class, 0.0);
         t.setContainerDataSource(container);
 
         current.setTime(from.getTime());
@@ -453,20 +453,20 @@ public class DbAccTransactions extends BaseDb {
             schools_iter = ((Set<?>) schoolsTable.getValue()).iterator();
             while (schools_iter.hasNext()) {
                 Object nextSchool = schools_iter.next();
-                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - "
+                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - "
                         + Settings.ymdf.format(current.getTime()), "0.00");
-                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(SptMessages.Title)).getValue() + " - " + myUI.getMessage(SptMessages.Total), "0.00");
+                t.setColumnFooter(schoolsTable.getContainerProperty(nextSchool, myUI.getMessage(Messages.Title)).getValue() + " - " + myUI.getMessage(Messages.Total), "0.00");
             }
             current.add(Calendar.MONTH, 1);
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Total), "0.00");
+        t.setColumnFooter(myUI.getMessage(Messages.Total), "0.00");
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Code))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Code)).getValue().toString());
-                item.getItemProperty(myUI.getMessage(SptMessages.Category))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Category)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Code))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Code)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Category))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Category)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
@@ -481,15 +481,15 @@ public class DbAccTransactions extends BaseDb {
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
             Object month = Settings.ymdf.format(result.getDate("dt"));
-            Object school = schoolsTable.getContainerProperty(result.getInt("tr.school_id"), myUI.getMessage(SptMessages.Title)).getValue();
+            Object school = schoolsTable.getContainerProperty(result.getInt("tr.school_id"), myUI.getMessage(Messages.Title)).getValue();
             item.getItemProperty(school + " - " + month).setValue(result.getDouble("amount"));
             try {
-                t.setColumnFooter(myUI.getMessage(SptMessages.Total),
-                        Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(myUI.getMessage(SptMessages.Total))).doubleValue()
+                t.setColumnFooter(myUI.getMessage(Messages.Total),
+                        Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(myUI.getMessage(Messages.Total))).doubleValue()
                                 + result.getDouble("amount")));
-                t.setColumnFooter(school + " - " + myUI.getMessage(SptMessages.Total),
+                t.setColumnFooter(school + " - " + myUI.getMessage(Messages.Total),
                         Settings.dFormat2.format(Settings.dFormat2.parse(t.getColumnFooter(school
-                                + " - " + myUI.getMessage(SptMessages.Total))).doubleValue()
+                                + " - " + myUI.getMessage(Messages.Total))).doubleValue()
                                 + result.getDouble("amount")));
                 t.setColumnFooter(school + " - " + month,
                         Settings.dFormat2.format(
@@ -499,9 +499,9 @@ public class DbAccTransactions extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            item.getItemProperty(school + " - " + myUI.getMessage(SptMessages.Total)).setValue((Double) item.getItemProperty(school + " - " + myUI.getMessage(SptMessages.Total)).getValue()
+            item.getItemProperty(school + " - " + myUI.getMessage(Messages.Total)).setValue((Double) item.getItemProperty(school + " - " + myUI.getMessage(Messages.Total)).getValue()
                     + result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Total)).getValue()
+            item.getItemProperty(myUI.getMessage(Messages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Total)).getValue()
                     + result.getDouble("amount"));
             Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
             while (parent_id != null) {
@@ -509,9 +509,9 @@ public class DbAccTransactions extends BaseDb {
                 item.getItemProperty(school + " - " + month).setValue(
                         (Double) item.getItemProperty(school + " - " + month).getValue()
                                 + result.getDouble("amount"));
-                item.getItemProperty(school + " - " + myUI.getMessage(SptMessages.Total)).setValue((Double) item.getItemProperty(school + " - " + myUI.getMessage(SptMessages.Total)).getValue()
+                item.getItemProperty(school + " - " + myUI.getMessage(Messages.Total)).setValue((Double) item.getItemProperty(school + " - " + myUI.getMessage(Messages.Total)).getValue()
                         + result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Total)).getValue()
+                item.getItemProperty(myUI.getMessage(Messages.Total)).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Total)).getValue()
                         + result.getDouble("amount"));
                 parent_id = (Integer) container.getParent(parent_id);
             }
@@ -583,51 +583,51 @@ public class DbAccTransactions extends BaseDb {
         Calendar c = Calendar.getInstance();
         c.setTime(from_date);
         c.add(Calendar.DAY_OF_MONTH, -1);
-        container.addContainerProperty(myUI.getMessage(SptMessages.School), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.IncomesTotal), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastIncomeDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ExpensesTotal), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastExpenseDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")", Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.CashBox), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.School), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.IncomesTotal), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.LastIncomeDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExpensesTotal), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.LastExpenseDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")", Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.CashBox), Double.class, 0.0);
         double ttlInc = 0;
         double ttlExp = 0;
         double ttlPrev = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("sch.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.School)).setValue(
                     result.getString("sch.name_ru"));
-            item.getItemProperty(myUI.getMessage(SptMessages.IncomesTotal)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.IncomesTotal)).setValue(
                     result.getDouble("incTtl"));
             ttlInc += result.getDouble("incTtl");
-            item.getItemProperty(myUI.getMessage(SptMessages.ExpensesTotal)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ExpensesTotal)).setValue(
                     result.getDouble("expTtl"));
             ttlExp += result.getDouble("expTtl");
             if (result.getDate("max_inc") != null) {
-                item.getItemProperty(myUI.getMessage(SptMessages.LastIncomeDate)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.LastIncomeDate)).setValue(
                         Settings.df.format(result.getDate("max_inc")));
             }
             if (result.getDate("max_exp") != null) {
-                item.getItemProperty(myUI.getMessage(SptMessages.LastExpenseDate)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.LastExpenseDate)).setValue(
                         Settings.df.format(result.getDate("max_exp")));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.CashBox)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.CashBox)).setValue(
                     result.getDouble("incTtl") + result.getDouble("prev_balance") - result.getDouble("expTtl"));
-            item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")").setValue(
+            item.getItemProperty(myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")").setValue(
                     result.getDouble("prev_balance"));
             ttlPrev += result.getDouble("prev_balance");
         }
         sar.dataTable.setContainerDataSource(container);
 
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.School),
-                myUI.getMessage(SptMessages.Total));
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.IncomesTotal),
+        sar.dataTable.setColumnFooter(myUI.getMessage(Messages.School),
+                myUI.getMessage(Messages.Total));
+        sar.dataTable.setColumnFooter(myUI.getMessage(Messages.IncomesTotal),
                 Settings.dFormat2.format(ttlInc));
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.ExpensesTotal),
+        sar.dataTable.setColumnFooter(myUI.getMessage(Messages.ExpensesTotal),
                 Settings.dFormat2.format(ttlExp));
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")",
+        sar.dataTable.setColumnFooter(myUI.getMessage(Messages.PreviousBalance) + " (" + Settings.df.format(c.getTime()) + ")",
                 Settings.dFormat2.format(ttlPrev));
-        sar.dataTable.setColumnFooter(myUI.getMessage(SptMessages.CashBox),
+        sar.dataTable.setColumnFooter(myUI.getMessage(Messages.CashBox),
                 Settings.dFormat2.format(ttlInc - ttlExp));
     }
 
@@ -711,26 +711,26 @@ public class DbAccTransactions extends BaseDb {
                 + "ORDER BY creation_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, currency_id);
-        stat.setString(2, myUI.getMessage(SptMessages.Accrual));
+        stat.setString(2, myUI.getMessage(Messages.Accrual));
         stat.setInt(3, acc_category_id);
         stat.setDate(4, new java.sql.Date(from.getTime()));
         stat.setDate(5, new java.sql.Date(till.getTime()));
         stat.setInt(6, school_id);
         stat.setInt(7, currency_id);
-        stat.setString(8, myUI.getMessage(SptMessages.Payout));
+        stat.setString(8, myUI.getMessage(Messages.Payout));
         stat.setInt(9, acc_category_id);
         stat.setDate(10, new java.sql.Date(from.getTime()));
         stat.setDate(11, new java.sql.Date(till.getTime()));
         stat.setInt(12, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Accrual), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Payout), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Type), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Accrual), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Payout), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Balance), String.class, "0.00");
         int i = 0;
         double currentBalance = exec_salary_balance(school_id, acc_category_id, currency_id, from), totalAccruals = 0.0;
         double prevBalance = currentBalance;
@@ -738,48 +738,48 @@ public class DbAccTransactions extends BaseDb {
 
         while (result.next()) {
             item = container.addItem(++i);
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.rate"));
-            if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payout))) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(result.getDouble("t.amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(result.getString("t.type"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("t.note"));
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(result.getDouble("t.rate"));
+            if (result.getString("t.type").equals(myUI.getMessage(Messages.Payout))) {
+                item.getItemProperty(myUI.getMessage(Messages.Payout)).setValue(result.getDouble("t.amount"));
                 currentBalance -= result.getDouble("t.amount");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(result.getDouble("t.amount"));
+                item.getItemProperty(myUI.getMessage(Messages.Accrual)).setValue(result.getDouble("t.amount"));
                 currentBalance += result.getDouble("t.amount");
                 totalAccruals += result.getDouble("t.amount");
             }
             if (currentBalance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(currentBalance * -1))
-                        + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue((Settings.dFormat2.format(currentBalance * -1))
+                        + " (" + myUI.getMessage(Messages.Payout).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
-                        + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
+                        + " (" + myUI.getMessage(Messages.Accrual).charAt(0) + ")");
             }
-            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
-                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
+            t.setColumnFooter(myUI.getMessage(Messages.Balance),
+                    item.getItemProperty(myUI.getMessage(Messages.Balance)).getValue().toString());
         }
         if (container.size() > 0) {
             item = container.addItemAt(0, 0);
 
-            String type = myUI.getMessage(SptMessages.Accrual);
+            String type = myUI.getMessage(Messages.Accrual);
             if (prevBalance < 0) {
-                type = myUI.getMessage(SptMessages.Payout);
-                item.getItemProperty(myUI.getMessage(SptMessages.Payout)).setValue(prevBalance * -1);
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(prevBalance * -1))
-                        + " (" + myUI.getMessage(SptMessages.Payout).charAt(0) + ")");
+                type = myUI.getMessage(Messages.Payout);
+                item.getItemProperty(myUI.getMessage(Messages.Payout)).setValue(prevBalance * -1);
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue((Settings.dFormat2.format(prevBalance * -1))
+                        + " (" + myUI.getMessage(Messages.Payout).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Accrual)).setValue(prevBalance);
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(prevBalance)
-                        + " (" + myUI.getMessage(SptMessages.Accrual).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Accrual)).setValue(prevBalance);
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(Settings.dFormat2.format(prevBalance)
+                        + " (" + myUI.getMessage(Messages.Accrual).charAt(0) + ")");
                 totalAccruals += prevBalance;
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(type);
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(myUI.getMessage(SptMessages.PreviousBalance));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(type);
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(myUI.getMessage(Messages.PreviousBalance));
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Accrual), Settings.dFormat2.format(totalAccruals));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payout), Settings.dFormat2.format(totalAccruals - currentBalance));
+        t.setColumnFooter(myUI.getMessage(Messages.Accrual), Settings.dFormat2.format(totalAccruals));
+        t.setColumnFooter(myUI.getMessage(Messages.Payout), Settings.dFormat2.format(totalAccruals - currentBalance));
         t.setContainerDataSource(container);
     }
 
@@ -797,21 +797,21 @@ public class DbAccTransactions extends BaseDb {
                 + "ORDER BY t.date_time";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, currency_id);
-        stat.setString(2, myUI.getMessage(SptMessages.Income));
-        stat.setString(3, myUI.getMessage(SptMessages.Expense));
+        stat.setString(2, myUI.getMessage(Messages.Income));
+        stat.setString(3, myUI.getMessage(Messages.Expense));
         stat.setInt(4, acc_category_id);
         stat.setDate(5, new java.sql.Date(from.getTime()));
         stat.setDate(6, new java.sql.Date(till.getTime()));
         stat.setInt(7, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Income), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Expense), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Type), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Income), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Expense), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Balance), String.class, "0.00");
         int i = 0;
         double currentBalance = exec_income_expense_balance(school_id, acc_category_id, currency_id, from), totalIncomes = 0.0;
         double prevBalance = currentBalance;
@@ -819,48 +819,48 @@ public class DbAccTransactions extends BaseDb {
 
         while (result.next()) {
             item = container.addItem(++i);
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("creation_date")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("type"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(result.getDouble("rate"));
-            if (result.getString("type").equals(myUI.getMessage(SptMessages.Expense))) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Expense)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(result.getDate("creation_date")));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(result.getString("type"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("note"));
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(result.getDouble("rate"));
+            if (result.getString("type").equals(myUI.getMessage(Messages.Expense))) {
+                item.getItemProperty(myUI.getMessage(Messages.Expense)).setValue(result.getDouble("amount"));
                 currentBalance -= result.getDouble("amount");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Income)).setValue(result.getDouble("amount"));
+                item.getItemProperty(myUI.getMessage(Messages.Income)).setValue(result.getDouble("amount"));
                 currentBalance += result.getDouble("amount");
                 totalIncomes += result.getDouble("amount");
             }
             if (currentBalance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(currentBalance * -1))
-                        + " (" + myUI.getMessage(SptMessages.Expense).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue((Settings.dFormat2.format(currentBalance * -1))
+                        + " (" + myUI.getMessage(Messages.Expense).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
-                        + " (" + myUI.getMessage(SptMessages.Income).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
+                        + " (" + myUI.getMessage(Messages.Income).charAt(0) + ")");
             }
-            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
-                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
+            t.setColumnFooter(myUI.getMessage(Messages.Balance),
+                    item.getItemProperty(myUI.getMessage(Messages.Balance)).getValue().toString());
         }
         if (container.size() > 0) {
             item = container.addItemAt(0, 0);
 
-            String type = myUI.getMessage(SptMessages.Income);
+            String type = myUI.getMessage(Messages.Income);
             if (prevBalance < 0) {
-                type = myUI.getMessage(SptMessages.Expense);
-                item.getItemProperty(myUI.getMessage(SptMessages.Expense)).setValue(prevBalance * -1);
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue((Settings.dFormat2.format(prevBalance * -1))
-                        + " (" + myUI.getMessage(SptMessages.Expense).charAt(0) + ")");
+                type = myUI.getMessage(Messages.Expense);
+                item.getItemProperty(myUI.getMessage(Messages.Expense)).setValue(prevBalance * -1);
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue((Settings.dFormat2.format(prevBalance * -1))
+                        + " (" + myUI.getMessage(Messages.Expense).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Income)).setValue(prevBalance);
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(prevBalance)
-                        + " (" + myUI.getMessage(SptMessages.Income).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Income)).setValue(prevBalance);
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(Settings.dFormat2.format(prevBalance)
+                        + " (" + myUI.getMessage(Messages.Income).charAt(0) + ")");
                 totalIncomes += prevBalance;
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(type);
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(myUI.getMessage(SptMessages.PreviousBalance));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(type);
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(myUI.getMessage(Messages.PreviousBalance));
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Income), Settings.dFormat2.format(totalIncomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Expense), Settings.dFormat2.format(totalIncomes - currentBalance));
+        t.setColumnFooter(myUI.getMessage(Messages.Income), Settings.dFormat2.format(totalIncomes));
+        t.setColumnFooter(myUI.getMessage(Messages.Expense), Settings.dFormat2.format(totalIncomes - currentBalance));
         t.setContainerDataSource(container);
     }
 
@@ -904,29 +904,29 @@ public class DbAccTransactions extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Incomes), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Expenses), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Category), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Incomes), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Expenses), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Balance), Double.class, 0.0);
         t.setContainerDataSource(container);
         double total_incomes = 0.0, total_expenses = 0.0;
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Code))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Code)).getValue().toString());
-                item.getItemProperty(myUI.getMessage(SptMessages.Category))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Category)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Code))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Code)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Category))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Category)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem(parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Code))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Code)).getValue().toString());
-                        item.getItemProperty(myUI.getMessage(SptMessages.Category))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Category)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Code))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Code)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Category))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Category)).getValue().toString());
                     }
                     container.setParent(catNext, parent);
                 }
@@ -943,31 +943,31 @@ public class DbAccTransactions extends BaseDb {
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
             if (item != null) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Incomes)).setValue(result.getDouble("incomes"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Expenses)).setValue(result.getDouble("expenses"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Incomes)).setValue(result.getDouble("incomes"));
+                item.getItemProperty(myUI.getMessage(Messages.Expenses)).setValue(result.getDouble("expenses"));
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(
                         result.getDouble("incomes") - result.getDouble("expenses"));
                 total_incomes += result.getDouble("incomes");
                 total_expenses += result.getDouble("expenses");
                 Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
                 while (parent_id != null) {
                     item = container.getItem(parent_id);
-                    item.getItemProperty(myUI.getMessage(SptMessages.Incomes)).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Incomes)).getValue()
+                    item.getItemProperty(myUI.getMessage(Messages.Incomes)).setValue(
+                            (Double) item.getItemProperty(myUI.getMessage(Messages.Incomes)).getValue()
                                     + result.getDouble("incomes"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Expenses)).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Expenses)).getValue()
+                    item.getItemProperty(myUI.getMessage(Messages.Expenses)).setValue(
+                            (Double) item.getItemProperty(myUI.getMessage(Messages.Expenses)).getValue()
                                     + result.getDouble("expenses"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue()
+                    item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(
+                            (Double) item.getItemProperty(myUI.getMessage(Messages.Balance)).getValue()
                                     + result.getDouble("incomes") - result.getDouble("expenses"));
                     parent_id = (Integer) container.getParent(parent_id);
                 }
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Incomes), Settings.dFormat2.format(total_incomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Expenses), Settings.dFormat2.format(total_expenses));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Balance), Settings.dFormat2.format(total_incomes - total_expenses));
+        t.setColumnFooter(myUI.getMessage(Messages.Incomes), Settings.dFormat2.format(total_incomes));
+        t.setColumnFooter(myUI.getMessage(Messages.Expenses), Settings.dFormat2.format(total_expenses));
+        t.setColumnFooter(myUI.getMessage(Messages.Balance), Settings.dFormat2.format(total_incomes - total_expenses));
     }
 
     public void exec_account_remains(MyVaadinUI myUI, FilterTreeTable categoriesTable, int currency_id, int school_id,
@@ -1034,29 +1034,29 @@ public class DbAccTransactions extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Remain), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Salary), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Ratio), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Category), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Remain), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Salary), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Ratio), Double.class, null);
         t.setContainerDataSource(container);
         double total_remains = 0.0, total_salaries = 0.0;
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Code))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Code)).getValue().toString());
-                item.getItemProperty(myUI.getMessage(SptMessages.Category))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Category)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Code))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Code)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Category))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Category)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem(parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Code))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Code)).getValue().toString());
-                        item.getItemProperty(myUI.getMessage(SptMessages.Category))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Category)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Code))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Code)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Category))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Category)).getValue().toString());
                     }
                     container.setParent(catNext, parent);
                 }
@@ -1074,57 +1074,57 @@ public class DbAccTransactions extends BaseDb {
             Item item = container.getItem(result.getInt("cat.id"));
             if (item != null) {
                 if (currency_id == 1) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_som"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_som"));
+                    item.getItemProperty(myUI.getMessage(Messages.Remain)).setValue(result.getDouble("remain_som"));
+                    item.getItemProperty(myUI.getMessage(Messages.Salary)).setValue(result.getDouble("salary_som"));
                     total_remains += result.getDouble("remain_som");
                     total_salaries += result.getDouble("salary_som");
                     if (result.getDouble("salary_som") != 0.0) {
-                        item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(result.getDouble("remain_som") / result.getDouble("salary_som"));
+                        item.getItemProperty(myUI.getMessage(Messages.Ratio)).setValue(result.getDouble("remain_som") / result.getDouble("salary_som"));
                     }
                     Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
                     while (parent_id != null) {
                         item = container.getItem(parent_id);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(
-                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue() + result.getDouble("remain_som"));
-                        item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(
-                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() + result.getDouble("salary_som"));
-                        if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() != 0.0) {
-                            item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
-                                    (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue()
-                                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue());
+                        item.getItemProperty(myUI.getMessage(Messages.Remain)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(Messages.Remain)).getValue() + result.getDouble("remain_som"));
+                        item.getItemProperty(myUI.getMessage(Messages.Salary)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(Messages.Salary)).getValue() + result.getDouble("salary_som"));
+                        if ((Double) item.getItemProperty(myUI.getMessage(Messages.Salary)).getValue() != 0.0) {
+                            item.getItemProperty(myUI.getMessage(Messages.Ratio)).setValue(
+                                    (Double) item.getItemProperty(myUI.getMessage(Messages.Remain)).getValue()
+                                            / (Double) item.getItemProperty(myUI.getMessage(Messages.Salary)).getValue());
                         }
                         parent_id = (Integer) container.getParent(parent_id);
                     }
                 } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain_usd"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(result.getDouble("salary_usd"));
+                    item.getItemProperty(myUI.getMessage(Messages.Remain)).setValue(result.getDouble("remain_usd"));
+                    item.getItemProperty(myUI.getMessage(Messages.Salary)).setValue(result.getDouble("salary_usd"));
                     total_remains += result.getDouble("remain_usd");
                     total_salaries += result.getDouble("salary_usd");
                     if (result.getDouble("salary_usd") != 0.0) {
-                        item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
+                        item.getItemProperty(myUI.getMessage(Messages.Ratio)).setValue(
                                 result.getDouble("remain_usd") / result.getDouble("salary_usd"));
                     }
                     Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
                     while (parent_id != null) {
                         item = container.getItem(parent_id);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Remain)).setValue(
-                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue() + result.getDouble("remain_usd"));
-                        item.getItemProperty(myUI.getMessage(SptMessages.Salary)).setValue(
-                                (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() + result.getDouble("salary_usd"));
-                        if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue() != 0.0) {
-                            item.getItemProperty(myUI.getMessage(SptMessages.Ratio)).setValue(
-                                    (Double) item.getItemProperty(myUI.getMessage(SptMessages.Remain)).getValue()
-                                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Salary)).getValue());
+                        item.getItemProperty(myUI.getMessage(Messages.Remain)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(Messages.Remain)).getValue() + result.getDouble("remain_usd"));
+                        item.getItemProperty(myUI.getMessage(Messages.Salary)).setValue(
+                                (Double) item.getItemProperty(myUI.getMessage(Messages.Salary)).getValue() + result.getDouble("salary_usd"));
+                        if ((Double) item.getItemProperty(myUI.getMessage(Messages.Salary)).getValue() != 0.0) {
+                            item.getItemProperty(myUI.getMessage(Messages.Ratio)).setValue(
+                                    (Double) item.getItemProperty(myUI.getMessage(Messages.Remain)).getValue()
+                                            / (Double) item.getItemProperty(myUI.getMessage(Messages.Salary)).getValue());
                         }
                         parent_id = (Integer) container.getParent(parent_id);
                     }
                 }
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Remain), Settings.dFormat2.format(total_remains));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Salary), Settings.dFormat2.format(total_salaries));
+        t.setColumnFooter(myUI.getMessage(Messages.Remain), Settings.dFormat2.format(total_remains));
+        t.setColumnFooter(myUI.getMessage(Messages.Salary), Settings.dFormat2.format(total_salaries));
         if (total_salaries != 0.0) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.Ratio), Settings.dFormat2.format(total_remains / total_salaries));
+            t.setColumnFooter(myUI.getMessage(Messages.Ratio), Settings.dFormat2.format(total_remains / total_salaries));
         }
     }
 
@@ -1154,31 +1154,31 @@ public class DbAccTransactions extends BaseDb {
         stat.setInt(4, type_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Category), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Currency), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Accountant), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Category), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Currency), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Accountant), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(
                     result.getDate("date(t.date_time)")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(
                     result.getString("code"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(
                     result.getString("category"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(
                     result.getString("acu.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(
                     result.getDouble("t.currency_rate"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                     result.getString("t.note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Accountant)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Accountant)).setValue(
                     result.getString("fullname"));
         }
         return container;
@@ -1228,45 +1228,45 @@ public class DbAccTransactions extends BaseDb {
         stat.setDate(12, new java.sql.Date(academic_year_end_date.getTime()));
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Month), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.InstallmentPlan), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Payments), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Incomes), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Expenses), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Difference), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Month), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.InstallmentPlan), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Payments), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Debt), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Incomes), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Expenses), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Difference), Double.class, 0.0);
         t.setContainerDataSource(container);
         double totalInst = 0.0, totalPayments = 0.0, totalDebt = 0.0, totalIncomes = 0.0, totalOutcomes = 0.0, totalTransactions = 0.0;
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("months.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Month)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Month)).setValue(
                     result.getString("month_name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.InstallmentPlan)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.InstallmentPlan)).setValue(
                     result.getDouble("inst"));
             totalInst += result.getDouble("inst");
-            item.getItemProperty(myUI.getMessage(SptMessages.Payments)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Payments)).setValue(
                     result.getDouble("payments"));
             totalPayments += result.getDouble("payments");
-            item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(
                     result.getDouble("inst") - result.getDouble("payments"));
             totalDebt += (result.getDouble("inst") - result.getDouble("payments"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Incomes)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Incomes)).setValue(
                     result.getDouble("income"));
             totalIncomes += result.getDouble("income");
-            item.getItemProperty(myUI.getMessage(SptMessages.Expenses)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Expenses)).setValue(
                     result.getDouble("outcome"));
             totalOutcomes += result.getDouble("outcome");
-            item.getItemProperty(myUI.getMessage(SptMessages.Difference)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Difference)).setValue(
                     result.getDouble("income") - result.getDouble("outcome"));
             totalTransactions += (result.getDouble("income") - result.getDouble("outcome"));
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.InstallmentPlan), Settings.dFormat2.format(totalInst));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Payments), Settings.dFormat2.format(totalPayments));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(totalDebt));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Incomes), Settings.dFormat2.format(totalIncomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Expenses), Settings.dFormat2.format(totalOutcomes));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Difference), Settings.dFormat2.format(totalTransactions));
+        t.setColumnFooter(myUI.getMessage(Messages.InstallmentPlan), Settings.dFormat2.format(totalInst));
+        t.setColumnFooter(myUI.getMessage(Messages.Payments), Settings.dFormat2.format(totalPayments));
+        t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(Messages.Incomes), Settings.dFormat2.format(totalIncomes));
+        t.setColumnFooter(myUI.getMessage(Messages.Expenses), Settings.dFormat2.format(totalOutcomes));
+        t.setColumnFooter(myUI.getMessage(Messages.Difference), Settings.dFormat2.format(totalTransactions));
     }
 
     public AccTransaction exec_low_balance(Connection conn, int school_id, Date date, double old_amount,

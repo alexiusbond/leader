@@ -8,7 +8,7 @@ package kg.alex.spt.dao;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,12 +28,12 @@ public class DbAccType extends BaseDb {
         ResultSet result = stat.executeQuery();
 
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Code), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Code), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(result.getString("c.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Code)).setValue(result.getString("code"));
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Code)).setValue(result.getString("code"));
         }
         return container;
     }

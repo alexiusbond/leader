@@ -23,7 +23,7 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbInvoice;
 import kg.alex.spt.domain.AccTransaction;
 import kg.alex.spt.domain.Invoice;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.ExistsValidator;
 import kg.alex.spt.utils.FormattedFilterTable;
@@ -79,16 +79,16 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     public PayoutsView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(SptMessages.InvoiceNumber),
-                myUI.getMessage(SptMessages.Date), myUI.getMessage(SptMessages.Amount),
-                myUI.getMessage(SptMessages.Note)};
+        NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(Messages.InvoiceNumber),
+                myUI.getMessage(Messages.Date), myUI.getMessage(Messages.Amount),
+                myUI.getMessage(Messages.Note)};
 
         rightLay = new GridLayout(2, 2);
         rightLay.setSpacing(true);
         rightLay.setSizeFull();
         rightLay.setMargin(true);
 
-        addBtn = new Button(myUI.getMessage(SptMessages.AddRecord));
+        addBtn = new Button(myUI.getMessage(Messages.AddRecord));
         addBtn.setStyleName(ValoTheme.BUTTON_SMALL);
         addBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         addBtn.setIcon(FontAwesome.PLUS_SQUARE);
@@ -126,7 +126,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -134,7 +134,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -142,21 +142,21 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
@@ -164,21 +164,21 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
         copyBtn = new Button();
         copyBtn.setEnabled(false);
-        copyBtn.setDescription(myUI.getMessage(SptMessages.Copy));
+        copyBtn.setDescription(myUI.getMessage(Messages.Copy));
         copyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         copyBtn.setIcon(FontAwesome.COPY);
         copyBtn.addClickListener(this);
         buttonsLay.addComponent(copyBtn);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.Print));
+        excelBtn.setDescription(myUI.getMessage(Messages.Print));
         excelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
         buttonsLay.addComponent(excelBtn);
 
         confirmBtn = new Button();
-        confirmBtn.setDescription(myUI.getMessage(SptMessages.Confirm));
+        confirmBtn.setDescription(myUI.getMessage(Messages.Confirm));
         confirmBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         confirmBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         confirmBtn.setIcon(FontAwesome.CHECK);
@@ -187,14 +187,14 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         buttonsLay.addComponent(confirmBtn);
         settingsLay.addComponent(buttonsLay, 0, 0, 1, 0);
 
-        invoiceNumberTF = new TextField(myUI.getMessage(SptMessages.InvoiceNumber));
+        invoiceNumberTF = new TextField(myUI.getMessage(Messages.InvoiceNumber));
         invoiceNumberTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         invoiceNumberTF.setWidth(Settings.PERCENTS100);
         invoiceNumberTF.addValueChangeListener(this);
         settingsLay.addComponent(invoiceNumberTF);
 
         searchBtn = new PopupButton();
-        searchBtn.setDescription(myUI.getMessage(SptMessages.Search));
+        searchBtn.setDescription(myUI.getMessage(Messages.Search));
         searchBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         searchBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         searchBtn.setIcon(FontAwesome.BINOCULARS);
@@ -202,18 +202,18 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         settingsLay.addComponent(searchBtn);
         settingsLay.setComponentAlignment(searchBtn, Alignment.BOTTOM_RIGHT);
 
-        dateDF = new DateField(myUI.getMessage(SptMessages.Date));
+        dateDF = new DateField(myUI.getMessage(Messages.Date));
         dateDF.setResolution(Resolution.MINUTE);
         dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
-        dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        dateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         dateDF.setDateFormat(Settings.dateTimeMinPattern);
         dateDF.setValue(new Date());
         dateDF.setRangeEnd(new Date());
         settingsLay.addComponent(dateDF, 0, 2, 1, 2);
 
-        noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
+        noteTF = new TextArea(myUI.getMessage(Messages.Note));
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setRows(3);
@@ -246,7 +246,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         }
         invoicesTable.setPageLength(5);
         invoicesTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-        invoicesTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), CustomTable.Align.RIGHT);
+        invoicesTable.setColumnAlignment(myUI.getMessage(Messages.Amount), CustomTable.Align.RIGHT);
     }
 
     @Override
@@ -261,7 +261,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 prepareModificationMode();
                 invoiceNumberTF.focus();
             } else {
-                Notification.show(myUI.getMessage(SptMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+                Notification.show(myUI.getMessage(Messages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == createBtn) {
             isNew = true;
@@ -271,17 +271,17 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             if (currentUser.isPermitted(Settings.cnPayoutsView + ":" + Settings.prmConfirmationControl) ||
                     invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue() != null &&
                             !((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue()) {
-                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                        myUI.getMessage(SptMessages.ConfirmDeletion),
-                        myUI.getMessage(SptMessages.Yes),
-                        myUI.getMessage(SptMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmDeletion),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 execDelete();
                             }
                         });
             } else {
-                Notification.show(myUI.getMessage(SptMessages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
+                Notification.show(myUI.getMessage(Messages.YouCanNotModifyOrDeleteConfirmed), Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == saveBtn) {
             try {
@@ -294,18 +294,18 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         Invoice inv = getInvoice(0);
                         AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), 0, totalAmountUsd, 2);
                         if (tr != null) {
-                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                         } else {
                             int id = dbCon.exec_insert(inv);
                             if (id != 0) {
                                 insertPayouts(id, dbAt);
                                 addDataContainerItem(id, Settings.dtmf.format(dateDF.getValue()));
-                                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
                                 prepareNormalMode();
                             } else {
-                                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                         Notification.Type.WARNING_MESSAGE);
                             }
                         }
@@ -314,7 +314,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         Invoice inv = getInvoice(invID);
                         AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), oldTotalAmountUsd, totalAmountUsd, 2);
                         if (tr != null) {
-                            Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                            Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                                     + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                         } else {
                             try {
@@ -327,11 +327,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 insertPayouts(invID, dbAt);
                                 updateDataContainer();
                                 setPayoutsTable();
-                                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
                                 prepareNormalMode();
                             } else {
-                                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                         Notification.Type.WARNING_MESSAGE);
                             }
                         }
@@ -339,7 +339,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     dbAt.close();
                     dbCon.close();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -349,10 +349,10 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         } else if (source == copyBtn && invoicesTable.getValue() != null) {
             try {
                 if (Settings.validate(settingsLay) && Settings.validateTable(myUI, payoutsTable)) {
-                    ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                            myUI.getMessage(SptMessages.ConfirmCopy),
-                            myUI.getMessage(SptMessages.Yes),
-                            myUI.getMessage(SptMessages.No),
+                    ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                            myUI.getMessage(Messages.ConfirmCopy),
+                            myUI.getMessage(Messages.Yes),
+                            myUI.getMessage(Messages.No),
                             (ConfirmDialog.Listener) dialog -> {
                                 if (dialog.isConfirmed()) {
                                     exec_copy();
@@ -360,7 +360,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                             });
 
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -382,10 +382,10 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 ckb.setValue(true);
                 confirmBtn.setEnabled(false);
             } else {
-                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                        myUI.getMessage(SptMessages.ConfirmConfirmation),
-                        myUI.getMessage(SptMessages.Yes),
-                        myUI.getMessage(SptMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmConfirmation),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 CheckBox ckb = (CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue();
@@ -396,7 +396,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                     int status = dbInvoice.exec_update(invID, 1);
                                     dbInvoice.close();
                                     if (status == 1) {
-                                        Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                                        Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                                         confirmBtn.setEnabled(false);
                                     }
                                 } catch (Exception e) {
@@ -408,17 +408,17 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
         } else if (source == excelBtn) {
             if (payoutsTable.getContainerDataSource().size() != 0) {
-                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(payoutsTable, myUI.getMessage(SptMessages.Payouts));
-                excelReport.setReportTitle(myUI.getMessage(SptMessages.Payouts) + " (№" + invoiceNumberTF.getValue() + " - " + Settings.df.format(dateDF.getValue()) + ")");
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(payoutsTable, myUI.getMessage(Messages.Payouts));
+                excelReport.setReportTitle(myUI.getMessage(Messages.Payouts) + " (№" + invoiceNumberTF.getValue() + " - " + Settings.df.format(dateDF.getValue()) + ")");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(4).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(4).setCellValue(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Rate)));
+                excelReport.getTotalsRow().getCell(4).setCellValue(payoutsTable.getColumnFooter(myUI.getMessage(Messages.Rate)));
                 excelReport.getTotalsRow().getCell(5).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(5).setCellValue(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
+                excelReport.getTotalsRow().getCell(5).setCellValue(payoutsTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
 
                 for (int i = 0; i < payoutsTable.size(); i++) {
-                    Row row = excelReport.getWorkbook().getSheet(myUI.getMessage(SptMessages.Payouts)).getRow(i + 2);
+                    Row row = excelReport.getWorkbook().getSheet(myUI.getMessage(Messages.Payouts)).getRow(i + 2);
 
                     for (int k = 0; k < NATURAL_COL_ORDER_PAYOUTS.length; k++) {
                         String propName = NATURAL_COL_ORDER_PAYOUTS[k];
@@ -468,7 +468,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             Object next;
             while (iter.hasNext()) {
                 next = iter.next();
-                if (invoicesTable.getContainerProperty(next, myUI.getMessage(SptMessages.InvoiceNumber)).getValue().equals(property.getValue())) {
+                if (invoicesTable.getContainerProperty(next, myUI.getMessage(Messages.InvoiceNumber)).getValue().equals(property.getValue())) {
                     invoicesTable.setValue(next);
                     isFound = true;
                     break;
@@ -476,7 +476,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
             if (!isFound) {
                 invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                        myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString());
+                        myUI.getMessage(Messages.InvoiceNumber)).getValue().toString());
             }
             invoiceNumberTF.addValueChangeListener(this);
         } else if (event.getProperty() instanceof CheckBox) {
@@ -490,7 +490,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 int status = dbInvoice.exec_update((Integer) ((CheckBox) event.getProperty()).getData(), value);
                 dbInvoice.close();
                 if (status == 1) {
-                    Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                    Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                     if ((int) ((CheckBox) event.getProperty()).getData() == (int) invoicesTable.getValue()) {
                         confirmBtn.setEnabled(value != 1);
                     }
@@ -501,7 +501,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
         } else if (event.getProperty() instanceof ComboBox && ((ComboBox) event.getProperty()).getId() != null) {
             ComboBox catCb = (ComboBox) event.getProperty();
-            ((ComboBox) payoutsTable.getContainerProperty(catCb.getId(), myUI.getMessage(SptMessages.Currency)).getValue()).setValue(
+            ((ComboBox) payoutsTable.getContainerProperty(catCb.getId(), myUI.getMessage(Messages.Currency)).getValue()).setValue(
                     catCb.getContainerProperty(catCb.getValue(), Settings.acc_currency_id).getValue());
             repaintPayoutsFooter();
         } else if (event.getProperty().getType() != null) {
@@ -558,18 +558,18 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             confirmBtn.setEnabled(!((CheckBox) invoicesTable.getContainerProperty(invoicesTable.getValue(), Settings.button).getValue()).getValue());
         }
         invoiceNumberTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                myUI.getMessage(SptMessages.InvoiceNumber)).getValue().toString());
+                myUI.getMessage(Messages.InvoiceNumber)).getValue().toString());
         try {
             dateDF.setValue(Settings.dtmf.parse(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                    myUI.getMessage(SptMessages.Date)).getValue().toString()));
+                    myUI.getMessage(Messages.Date)).getValue().toString()));
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
         if (invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                myUI.getMessage(SptMessages.Note)).getValue() != null) {
+                myUI.getMessage(Messages.Note)).getValue() != null) {
             noteTF.setValue(invoicesTable.getContainerProperty(invoicesTable.getValue(),
-                    myUI.getMessage(SptMessages.Note)).getValue().toString());
+                    myUI.getMessage(Messages.Note)).getValue().toString());
         } else {
             noteTF.setValue("");
         }
@@ -585,36 +585,36 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     }
 
     private void updateDataContainer() {
-        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Date)).setValue(
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Date)).setValue(
                 Settings.dtmf.format(dateDF.getValue()));
         try {
-            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+            invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Amount)).setValue(
+                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(Messages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(SptMessages.Note)).setValue(
+        invoicesTable.getContainerProperty(invoicesTable.getValue(), myUI.getMessage(Messages.Note)).setValue(
                 noteTF.getValue());
     }
 
     private void addDataContainerItem(int id, String date) {
         Item item = ((IndexedContainer) invoicesTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(date);
+        item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(date);
         try {
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(SptMessages.Amount))).doubleValue());
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
+                    Settings.dFormat2.parse(payoutsTable.getColumnFooter(myUI.getMessage(Messages.Amount))).doubleValue());
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
         }
-        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                 noteTF.getValue());
         try {
             DbInvoice dbCon = new DbInvoice();
             dbCon.connect();
-            item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
+            item.getItemProperty(myUI.getMessage(Messages.InvoiceNumber)).setValue(dbCon.execSQL_invoice_number(id));
             dbCon.close();
             CheckBox cb = new CheckBox();
             cb.setData(id);
@@ -675,7 +675,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
@@ -695,11 +695,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         cb.setDescription(description);
         cb.setStyleName(ValoTheme.COMBOBOX_TINY);
         cb.setWidth(Settings.PERCENTS100);
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        cb.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         cb.setFilteringMode(FilteringMode.CONTAINS);
         if (isRequired) {
             cb.setRequired(true);
-            cb.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+            cb.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         try {
             if (db_table != null) {
@@ -735,7 +735,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         tf.setDescription(description);
         tf.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         tf.setRequired(true);
-        tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tf.setNullRepresentation("");
         tf.setConverter(conv);
         tf.setWidth(Settings.PERCENTS100);
@@ -753,7 +753,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         tf.addValidator(validator);
         if (isRequired) {
             tf.setRequired(true);
-            tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+            tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         if (value != null) {
             tf.setValue(value);
@@ -765,13 +765,13 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         if (payoutsCont == null) {
             payoutsCont = new IndexedContainer();
             payoutsCont.addContainerProperty(Settings.button, Button.class, null);
-            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Category), ComboBox.class, null);
-            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
+            payoutsCont.addContainerProperty(myUI.getMessage(Messages.Category), ComboBox.class, null);
+            payoutsCont.addContainerProperty(myUI.getMessage(Messages.Note), TextField.class, null);
             payoutsCont.addContainerProperty(Settings.acc_category_id, Integer.class, 0);
-            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Currency), ComboBox.class, null);
+            payoutsCont.addContainerProperty(myUI.getMessage(Messages.Currency), ComboBox.class, null);
             payoutsCont.addContainerProperty(Settings.acc_currency_id, Integer.class, 0);
-            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Rate), TextField.class, 0.0);
-            payoutsCont.addContainerProperty(myUI.getMessage(SptMessages.Amount), TextField.class, 0.0);
+            payoutsCont.addContainerProperty(myUI.getMessage(Messages.Rate), TextField.class, 0.0);
+            payoutsCont.addContainerProperty(myUI.getMessage(Messages.Amount), TextField.class, 0.0);
             payoutsCont.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             payoutsCont.removeAllItems();
@@ -781,11 +781,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
 
     private void addPayoutsItem() {
         NATURAL_COL_ORDER_PAYOUTS = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Category),
-                myUI.getMessage(SptMessages.Note),
-                myUI.getMessage(SptMessages.Currency),
-                myUI.getMessage(SptMessages.Rate),
-                myUI.getMessage(SptMessages.Amount)};
+                myUI.getMessage(Messages.Category),
+                myUI.getMessage(Messages.Note),
+                myUI.getMessage(Messages.Currency),
+                myUI.getMessage(Messages.Rate),
+                myUI.getMessage(Messages.Amount)};
         String id = Settings.FreshItem + (--r_table_counter);
         if (payoutsTable.getContainerDataSource().size() == 0) {
             payoutsTable.setContainerDataSource(preparePayoutsContainer());
@@ -794,8 +794,8 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         item = ((IndexedContainer) payoutsTable.getContainerDataSource()).addItemAt(
                 payoutsTable.getContainerDataSource().size(), id);
         item.getItemProperty(Settings.button).setValue(
-                createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbAcc_transactions));
-        ComboBox cb = createCombobox(0, myUI.getMessage(SptMessages.Category), null, true, true);
+                createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbAcc_transactions));
+        ComboBox cb = createCombobox(0, myUI.getMessage(Messages.Category), null, true, true);
         try {
             DbAccCategory dbCon = new DbAccCategory();
             dbCon.connect();
@@ -805,50 +805,50 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             logger.error(e);
             logger.catching(e);
         }
-        cb.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
+        cb.setItemCaptionPropertyId(myUI.getMessage(Messages.FullName));
         cb.setId(id);
         cb.addValueChangeListener(this);
-        item.getItemProperty(myUI.getMessage(SptMessages.Category)).setValue(cb);
-        cb = createCombobox(0, myUI.getMessage(SptMessages.Currency), Settings.dbAcc_currency, true, false);
+        item.getItemProperty(myUI.getMessage(Messages.Category)).setValue(cb);
+        cb = createCombobox(0, myUI.getMessage(Messages.Currency), Settings.dbAcc_currency, true, false);
         cb.addValueChangeListener(this);
-        item.getItemProperty(myUI.getMessage(SptMessages.Currency)).setValue(cb);
-        TextField tf = createTextFieldWithProperty(null, myUI.getMessage(SptMessages.Amount),
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, null),
+        item.getItemProperty(myUI.getMessage(Messages.Currency)).setValue(cb);
+        TextField tf = createTextFieldWithProperty(null, myUI.getMessage(Messages.Amount),
+                new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), null, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
         tf.addValueChangeListener(this);
-        item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(tf);
-        tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(SptMessages.Rate),
-                new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+        item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(tf);
+        tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(Messages.Rate),
+                new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4),
                 currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);
-        item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(tf);
-        item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(createTextField(
-                noteTF.getValue(), id, new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 250, true), true));
-        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Insert));
+        item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(tf);
+        item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(createTextField(
+                noteTF.getValue(), id, new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 250, true), true));
+        item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         payoutsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PAYOUTS);
-        payoutsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Category), 1);
-        payoutsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
-        payoutsTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
+        payoutsTable.setColumnExpandRatio(myUI.getMessage(Messages.Category), 1);
+        payoutsTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+        payoutsTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
 
     }
 
     private void setPayoutsTable() {
         try {
             NATURAL_COL_ORDER_PAYOUTS = new String[]{Settings.button,
-                    myUI.getMessage(SptMessages.Category),
-                    myUI.getMessage(SptMessages.Note),
-                    myUI.getMessage(SptMessages.Currency),
-                    myUI.getMessage(SptMessages.Rate),
-                    myUI.getMessage(SptMessages.Amount)};
+                    myUI.getMessage(Messages.Category),
+                    myUI.getMessage(Messages.Note),
+                    myUI.getMessage(Messages.Currency),
+                    myUI.getMessage(Messages.Rate),
+                    myUI.getMessage(Messages.Amount)};
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             payoutsTable.setContainerDataSource(dbCon.execSQL(myUI, invID, myUI.getUser().getSchool().getId(), this));
             dbCon.close();
             payoutsTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER_PAYOUTS);
-            payoutsTable.setColumnExpandRatio(myUI.getMessage(SptMessages.Category), 1);
-            payoutsTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
-            payoutsTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
+            payoutsTable.setColumnExpandRatio(myUI.getMessage(Messages.Category), 1);
+            payoutsTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+            payoutsTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
         } catch (Exception e) {
             logger.error(e);
             logger.catching(e);
@@ -861,33 +861,33 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         if (payoutsTable.getContainerDataSource().size() > 0) {
             for (Object next : payoutsTable.getItemIds()) {
                 if (((TextField) payoutsTable.getItem(next).getItemProperty(
-                        myUI.getMessage(SptMessages.Amount)).getValue()).isValid()
+                        myUI.getMessage(Messages.Amount)).getValue()).isValid()
                         && ((TextField) payoutsTable.getItem(next).getItemProperty(
-                        myUI.getMessage(SptMessages.Rate)).getValue()).isValid()
+                        myUI.getMessage(Messages.Rate)).getValue()).isValid()
                         && ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                        myUI.getMessage(SptMessages.Currency)).getValue()).isValid()) {
+                        myUI.getMessage(Messages.Currency)).getValue()).isValid()) {
                     if ((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Currency)).getValue()).getValue() == 2) {
+                            myUI.getMessage(Messages.Currency)).getValue()).getValue() == 2) {
                         totalAmountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                         totalAmountKGS += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue()
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
                                 * (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
                     } else {
                         totalAmountUsd += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue()
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue()
                                 / (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue();
                         totalAmountKGS += (Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue();
+                                myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue();
                     }
                 }
             }
         }
-        payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
+        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
                 Settings.dFormat2.format(totalAmountUsd) + " " + Settings.USD);
-        payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
+        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),
                 Settings.dFormat2.format(totalAmountKGS) + " " + Settings.KGS);
     }
 
@@ -902,7 +902,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
             }
             if (payoutsTable.getContainerDataSource().size() > 0) {
                 for (Object next : payoutsTable.getItemIds()) {
-                    ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
+                    ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(Messages.Category)).getValue();
                     AccTransaction tr = new AccTransaction();
                     tr.setAcc_invoice_id(invoice_id);
                     tr.setDate(dateDF.getValue());
@@ -910,20 +910,20 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     tr.setSchool_id(myUI.getUser().getSchool().getId());
                     tr.setAcc_invoice_id(invoice_id);
                     tr.setCurrency_rate((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Rate)).getValue()).getPropertyDataSource().getValue());
+                            myUI.getMessage(Messages.Rate)).getValue()).getPropertyDataSource().getValue());
                     tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Note)).getValue()).getValue());
+                            myUI.getMessage(Messages.Note)).getValue()).getValue());
                     tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+                            myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
                     tr.setCategory_id((Integer) cb.getValue());
                     tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
                     tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                            myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                            myUI.getMessage(Messages.Currency)).getValue()).getValue());
                     tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
-                    if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Update))) {
+                    if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(Messages.Update))) {
                         tr.setId(next.toString());
                         dbAt.exec_update(tr);
-                    } else if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Insert))) {
+                    } else if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(Messages.Insert))) {
                         dbAt.exec_insert(tr, dbAt.getConnection());
                     }
                 }
@@ -953,11 +953,11 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                 inv.setCreation_date(current.getTime());
             }
             if (rate == 0.0) {
-                Notification.show(myUI.getMessage(SptMessages.CantGetFromNBKR), Notification.Type.ERROR_MESSAGE);
+                Notification.show(myUI.getMessage(Messages.CantGetFromNBKR), Notification.Type.ERROR_MESSAGE);
             } else {
                 AccTransaction tr = dbAt.exec_low_balance(dbAt.getConnection(), myUI.getUser().getSchool().getId(), inv.getCreation_date(), 0, totalAmountUsd, 2);
                 if (tr != null) {
-                    Notification.show(myUI.getMessage(SptMessages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
+                    Notification.show(myUI.getMessage(Messages.LowBalance) + Settings.dFormat2.format(tr.getOverLimit())
                             + " $ (" + Settings.df.format(tr.getDate()) + ")", Notification.Type.ERROR_MESSAGE);
                 } else {
                     int id = dbCon.exec_insert(inv);
@@ -966,7 +966,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                         dbTr.connect();
                         if (payoutsTable.getContainerDataSource().size() > 0) {
                             for (Object next : payoutsTable.getItemIds()) {
-                                ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(SptMessages.Category)).getValue();
+                                ComboBox cb = (ComboBox) payoutsTable.getItem(next).getItemProperty(myUI.getMessage(Messages.Category)).getValue();
                                 tr = new AccTransaction();
                                 tr.setAcc_invoice_id(id);
                                 tr.setDate(inv.getCreation_date());
@@ -974,22 +974,22 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 tr.setSchool_id(myUI.getUser().getSchool().getId());
                                 tr.setCurrency_rate(rate);
                                 tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(SptMessages.Amount)).getValue()).getPropertyDataSource().getValue());
+                                        myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
                                 tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(SptMessages.Amount)).getValue()).getValue());
+                                        myUI.getMessage(Messages.Amount)).getValue()).getValue());
                                 tr.setCategory_id((Integer) cb.getValue());
                                 tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
                                 tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
+                                        myUI.getMessage(Messages.Currency)).getValue()).getValue());
                                 tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
                                 dbTr.exec_insert(tr, dbTr.getConnection());
                             }
                         }
                         dbTr.close();
                         addDataContainerItem(id, Settings.dtmf.format(inv.getCreation_date()));
-                        Notification.show(myUI.getMessage(SptMessages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
+                        Notification.show(myUI.getMessage(Messages.ValueSaved), Notification.Type.HUMANIZED_MESSAGE);
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
+                        Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved), Notification.Type.WARNING_MESSAGE);
                     }
                     dbCon.close();
                     prepareNormalMode();
@@ -1005,9 +1005,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
     public void setPayoutsFooter(double amountUsd, double amountKgs) {
         totalAmountUsd = amountUsd;
         oldTotalAmountUsd = amountUsd;
-        payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Amount),
+        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Amount),
                 Settings.dFormat2.format(totalAmountUsd) + " " + Settings.USD);
-        payoutsTable.setColumnFooter(myUI.getMessage(SptMessages.Rate),
+        payoutsTable.setColumnFooter(myUI.getMessage(Messages.Rate),
                 Settings.dFormat2.format(amountKgs) + " " + Settings.KGS);
     }
 

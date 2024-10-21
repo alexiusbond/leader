@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Position;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,13 +34,13 @@ public class DbPosition extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.activity_status_id, Integer.class, 0);
         container.addContainerProperty(Settings.hr_position_category_id, Integer.class, 0);
         container.addContainerProperty(Settings.position_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Category), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Permissions), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Category), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Permissions), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
@@ -48,13 +48,13 @@ public class DbPosition extends BaseDb {
 
             item.getItemProperty(Settings.activity_status_id).setValue(
                     result.getInt("st.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("p.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Category)).setValue(
                     result.getString("pc.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Permissions)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Permissions)).setValue(
                     result.getString("p.default_permissions"));
             item.getItemProperty(Settings.hr_position_category_id).setValue(
                     result.getInt("pc.id"));

@@ -17,7 +17,7 @@ import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbStudentContract;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -54,25 +54,25 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -90,29 +90,29 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
 
-        fromDateDF = new PopupDateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        fromDateDF = new PopupDateField(myUI.getMessage(Messages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setResolution(Resolution.DAY);
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new PopupDateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        tillDateDF = new PopupDateField(myUI.getMessage(Messages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setResolution(Resolution.DAY);
         tillDateDF.addValueChangeListener(this);
 
-        selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -139,16 +139,16 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -195,11 +195,11 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
                             Settings.convertCollectionToStr((Set<?>) classTable.getValue()),
                             Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()),
                             fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Repayment), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
-                    dataTable.setColumnWidth(myUI.getMessage(SptMessages.ClassName), 80);
-                    dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 200);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Debt), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Repayment), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Balance), Table.Align.RIGHT);
+                    dataTable.setColumnWidth(myUI.getMessage(Messages.ClassName), 80);
+                    dataTable.setColumnWidth(myUI.getMessage(Messages.Note), 200);
                     if (dataTable.size() != 0) {
                         excelBtn.setEnabled(true);
                     }
@@ -209,18 +209,18 @@ public class DebtsAndRepaymentsReport implements Button.ClickListener,
                     logger.catching(e);
                 }
             } else {
-                Notification.show(myUI.getMessage(SptMessages.NotificationNothingIsSelected),
+                Notification.show(myUI.getMessage(Messages.NotificationNothingIsSelected),
                         Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == excelBtn) {
             if (dataTable.getContainerDataSource().size() != 0) {
                 EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                excelReport.setReportTitle(myUI.getMessage(SptMessages.DebtsAndRepaymentsReport));
+                excelReport.setReportTitle(myUI.getMessage(Messages.DebtsAndRepaymentsReport));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(9).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(9).setCellValue(
-                        dataTable.getColumnFooter(myUI.getMessage(SptMessages.Balance)));
+                        dataTable.getColumnFooter(myUI.getMessage(Messages.Balance)));
                 excelReport.sendConverted();
             }
         } else if (source == selectAllBtn) {

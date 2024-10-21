@@ -17,7 +17,7 @@ import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbAccTransactions;
 import kg.alex.spt.dao.DbDefinition;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTreeTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -74,45 +74,45 @@ public class PayoutsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new PopupDateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        fromDateDF = new PopupDateField(myUI.getMessage(Messages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setResolution(Resolution.DAY);
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new PopupDateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        tillDateDF = new PopupDateField(myUI.getMessage(Messages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setResolution(Resolution.DAY);
         tillDateDF.addValueChangeListener(this);
 
-        currencySelect = new ComboBox(myUI.getMessage(SptMessages.Currency));
+        currencySelect = new ComboBox(myUI.getMessage(Messages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        currencySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        currencySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         currencySelect.setWidth(Settings.PERCENTS100);
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
         try {
@@ -126,13 +126,13 @@ public class PayoutsReport implements Button.ClickListener,
         }
         currencySelect.setValue(2);
 
-        selectAllBtn = new Button(myUI.getMessage(SptMessages.AllCategories));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllCategories));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -175,9 +175,9 @@ public class PayoutsReport implements Button.ClickListener,
                     dbat.connect();
                     dbat.exec_account_remains(myUI, employeeCategoriesTable, (Integer) currencySelect.getValue(),
                             myUI.getUser().getSchool().getId(), fromDateDF.getValue(), tillDateDF.getValue(), dataTable);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Salary), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Ratio), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Remain), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Salary), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Ratio), Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -190,15 +190,15 @@ public class PayoutsReport implements Button.ClickListener,
             }
         } else if (source == excelBtn) {
             try {
-                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(SptMessages.SalariesReport) + " ("
+                EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, myUI.getMessage(Messages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ")");
-                excelReport.setReportTitle(myUI.getMessage(SptMessages.SalariesReport) + " ("
+                excelReport.setReportTitle(myUI.getMessage(Messages.SalariesReport) + " ("
                         + currencySelect.getItemCaption(currencySelect.getValue()) + ") ");
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(excelReport.getTotalsRow().getLastCellNum() - 1).setCellValue(
-                        dataTable.getColumnFooter(myUI.getMessage(SptMessages.Ratio)));
+                        dataTable.getColumnFooter(myUI.getMessage(Messages.Ratio)));
                 excelReport.sendConverted();
             } catch (Exception e) {
                 logger.error(e);

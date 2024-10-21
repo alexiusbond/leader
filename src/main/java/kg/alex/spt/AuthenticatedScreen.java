@@ -13,7 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbStudentOrder;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.students.BankPaymentsByDateReport;
 import kg.alex.spt.ui.*;
 import kg.alex.spt.utils.Settings;
@@ -43,134 +43,134 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     myUI.repaintMessagesButton();
                 }
                 String eventPressed = selectedItem.getText();
-                if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNumberDefinition))) {
+                if (eventPressed.equals(myUI.getMessage(Messages.ClassNumberDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.YearDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.YearDefinition))) {
                     verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LanguageDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.LanguageDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, Settings.dbLanguageTable, null, null, false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExamDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ExamDefinition))) {
                     verticalPanel.setSecondComponent(new ExamDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.UniversityDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.UniversityDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, Settings.dbUniversityTable, Settings.dbEmployeeEducation, Settings.dbColumnUniversityId,
                             false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.CertificateDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.CertificateDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, Settings.dbCertificateTable, Settings.dbEmployeeCertificate, Settings.dbColumnCertificateId,
                             false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.WorkPlacesDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.WorkPlacesDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, Settings.dbWork_placeTable, Settings.dbEmployeeWork, Settings.dbColumnEmployeeWorkId, false, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.QuestionDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.QuestionDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, Settings.dbQuestion, null, null, true, Settings.cnHRDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeTransfer))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.EmployeeTransfer))) {
                     verticalPanel.setSecondComponent(new EmployeeTransferView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LessonAssessment))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.LessonAssessment))) {
                     verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BranchDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.BranchDefinition))) {
                     verticalPanel.setSecondComponent(new BranchDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryCategoryDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.InventoryCategoryDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
                             myUI, Settings.dbInventoryCategoryTable, null, null, false, Settings.cnInventoryDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ClassNameDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ClassNameDefinition))) {
                     verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BlockDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.BlockDefinition))) {
                     verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.RoomDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.RoomDefinition))) {
                     verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.PositionDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.PositionDefinition))) {
                     verticalPanel.setSecondComponent(new PositionDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.DiscountDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.DiscountDefinition))) {
                     verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccessoriesDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.AccessoriesDefinition))) {
                     verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.LeavingReasonsDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.LeavingReasonsDefinition))) {
                     verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ContractDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ContractDefinition))) {
                     verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.SchoolDefinition))) {
                     verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.EmployeeDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.EmployeeDefinition))) {
                     verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.MyInfo))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.MyInfo))) {
                     verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SchoolModification))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.SchoolModification))) {
                     verticalPanel.setSecondComponent(new SchoolModificationView(
                             myUI, myUI.getUser().getSchool().getId()));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StudentDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.StudentDefinition))) {
                     verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IssueStudentOrder))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.IssueStudentOrder))) {
                     verticalPanel.setSecondComponent(new IssueOrderView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ImportBranchesFromExcel))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ImportBranchesFromExcel))) {
                     verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.SendOrders))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.SendOrders))) {
                     verticalPanel.setSecondComponent(new SendOrderView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Reports))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.Reports))) {
                     if (currentUser.hasRole(Settings.rnBank)) {
                         verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
                     } else {
                         verticalPanel.setSecondComponent(new StudentReportsView(myUI));
                     }
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingReports))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.AccountingReports))) {
                     verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.AccountingBankReport))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.AccountingBankReport))) {
                     verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockReports))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.StockReports))) {
                     verticalPanel.setSecondComponent(new StockReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.HRReports))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.HRReports))) {
                     verticalPanel.setSecondComponent(new HRReportsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Templates))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.Templates))) {
                     verticalPanel.setSecondComponent(new TemplatesView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Backup))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.Backup))) {
                     verticalPanel.setSecondComponent(new BackupView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Calls))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.Calls))) {
                     verticalPanel.setSecondComponent(new CallsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.HomePage))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.HomePage))) {
                     verticalPanel.setSecondComponent(new HomePageView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.CashBox))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.CashBox))) {
                     verticalPanel.setSecondComponent(new CashBoxView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Accruals))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
+                } else if (eventPressed.equals(myUI.getMessage(Messages.Accruals))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(Messages.Accruals),
                             Settings.cnAccrualsView, 2, 1));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebts))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ShortTermDebts))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(Messages.ShortTermDebts),
                             Settings.cnShortTermDebtsView, 4, 4));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssets))) {
-                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ReturnableAssets))) {
+                    verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(Messages.ReturnableAssets),
                             Settings.cnReturnableAssetsView, 3, 3));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.BalanceAccounts))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.BalanceAccounts))) {
                     verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Payouts))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.Payouts))) {
                     verticalPanel.setSecondComponent(new PayoutsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StocksDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.StocksDefinition))) {
                     verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockIncome))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.StockIncome))) {
                     verticalPanel.setSecondComponent(new StockIncomeView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryOrganization))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.InventoryOrganization))) {
                     verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.InventoryLiquidation))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.InventoryLiquidation))) {
                     verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.StockOutcome))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.StockOutcome))) {
                     verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.Settings))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.Settings))) {
                     verticalPanel.setSecondComponent(new SettingsView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.IncomesDefinition))) {
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
                             1, Settings.cnIncomesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ExpensesDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ExpensesDefinition))) {
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
                             2, Settings.cnExpensesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.IncomesExpensesDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.IncomesExpensesDefinition))) {
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
                             5, Settings.cnIncomesExpensesDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ReturnableAssetsDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ReturnableAssetsDefinition))) {
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
                             3, Settings.cnReturnableAssetsDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(SptMessages.ShortTermDebtsDefinition))) {
+                } else if (eventPressed.equals(myUI.getMessage(Messages.ShortTermDebtsDefinition))) {
                     verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
                             4, Settings.cnShortTermDebtsDefinitionView));
                 }
@@ -209,16 +209,16 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         header.setSizeUndefined();
         header.setStyleName("mylabel");
         header.setImmediate(true);
-        header.setValue((myUI.getMessage(SptMessages.Welcome)).toUpperCase());
+        header.setValue((myUI.getMessage(Messages.Welcome)).toUpperCase());
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
 
-        myUI.setMessagesBtn(new Button(myUI.getMessage(SptMessages.Messages)));
+        myUI.setMessagesBtn(new Button(myUI.getMessage(Messages.Messages)));
         myUI.getMessagesBtn().setImmediate(true);
         myUI.getMessagesBtn().addClickListener(this);
 
-        changePassBtn = new Button(myUI.getMessage(SptMessages.ChangePasswordButton));
+        changePassBtn = new Button(myUI.getMessage(Messages.ChangePasswordButton));
         changePassBtn.setStyleName(ValoTheme.BUTTON_LINK);
         changePassBtn.setIcon(FontAwesome.KEY);
         changePassBtn.addClickListener(this);
@@ -228,7 +228,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             hl.addComponent(changePassBtn);
         }
 
-        Button logout = new Button(myUi.getMessage(SptMessages.LogoutButton));
+        Button logout = new Button(myUi.getMessage(Messages.LogoutButton));
         logout.addClickListener(new MyVaadinUI.LogoutListener(this.myUI));
         logout.setStyleName(ValoTheme.BUTTON_PRIMARY);
         logout.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -254,7 +254,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         Label warning;
         if (myUi.getUser() != null && myUi.getUser().getWorking_status_id() == 1) {
-            warning = new Label(myUI.getMessage(SptMessages.SystemClosedNotification));
+            warning = new Label(myUI.getMessage(Messages.SystemClosedNotification));
             warning.setSizeUndefined();
             warning.setStyleName("mylabel");
             changePassBtn.setEnabled(false);
@@ -279,14 +279,14 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         schoolLabel.setContentMode(ContentMode.HTML);
         schoolLabel.setStyleName("labelInfo");
         schoolLabel.setValue("<i class=\"fa fa-university fa-inverse\"></i><b> "
-                + myUI.getMessage(SptMessages.School) + ": </b>");
+                + myUI.getMessage(Messages.School) + ": </b>");
 
         schoolSelect = new ComboBox();
         schoolSelect.setWidth(Settings.PERCENTS100);
         schoolSelect.setImmediate(true);
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         schoolSelect.setContainerDataSource(myUI.getSchoolCont());
         schoolSelect.setValue(myUI.getUser().getSchool().getId());
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
@@ -304,14 +304,14 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         yearLabel.setContentMode(ContentMode.HTML);
         yearLabel.setStyleName("labelInfo");
         yearLabel.setValue("<i class=\"fa fa-calendar fa-inverse\"></i><b> "
-                + myUI.getMessage(SptMessages.Year) + ": </b>");
+                + myUI.getMessage(Messages.Year) + ": </b>");
 
         yearSelect = new ComboBox();
         yearSelect.setWidth("65%");
         yearSelect.setEnabled(currentUser.isPermitted(Settings.prmChangeYear + ":" + Settings.actModify));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         setYearSel(myUI.getUser().getCurrent_year().getId());
 
         HorizontalLayout yearHl = new HorizontalLayout();
@@ -334,7 +334,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
     public void updateInfo() {
         infoLabel.setValue("<i class=\"fa fa-user fa-inverse\"></i><b> "
-                + myUI.getMessage(SptMessages.LogInAsLabel) + ": </b>"
+                + myUI.getMessage(Messages.LogInAsLabel) + ": </b>"
                 + myUI.getUser().getFullName());
     }
 
@@ -346,104 +346,104 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
 
         MenuBar.MenuItem mi;
         if (currentUser.isPermitted(Settings.cnHomePageView + ":" + Settings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.HomePage), menuCommand);
+            menubar.addItem(myUI.getMessage(Messages.HomePage), menuCommand);
         }
         if (!currentUser.hasRole(Settings.rnBank)) {
-            menubar.addItem(myUI.getMessage(SptMessages.MyInfo), menuCommand);
+            menubar.addItem(myUI.getMessage(Messages.MyInfo), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnEmployeeDefinitionView + ":" + Settings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.EmployeeDefinition), menuCommand);
+            menubar.addItem(myUI.getMessage(Messages.EmployeeDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.StudentDefinition), menuCommand);
+            menubar.addItem(myUI.getMessage(Messages.StudentDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.CashBox), menuCommand);
+            menubar.addItem(myUI.getMessage(Messages.CashBox), menuCommand);
         }
 
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmMenu) ||
                 currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmPaymentsByDates)) {
-            menubar.addItem(myUI.getMessage(SptMessages.Reports), menuCommand);
+            menubar.addItem(myUI.getMessage(Messages.Reports), menuCommand);
         }
 
-        mi = menubar.addItem(myUI.getMessage(SptMessages.Salaries), null);
+        mi = menubar.addItem(myUI.getMessage(Messages.Salaries), null);
         if (currentUser.isPermitted(Settings.cnAccrualsView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.Accruals), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.Accruals), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnPayoutsView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.Payouts), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.Payouts), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
 
-        mi = menubar.addItem(myUI.getMessage(SptMessages.Definitions), null);
+        mi = menubar.addItem(myUI.getMessage(Messages.Definitions), null);
         if (currentUser.isPermitted(Settings.cnDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.YearDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.ClassNumberDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.YearDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ClassNumberDefinition), menuCommand);
 
         }
         if (currentUser.isPermitted(Settings.cnClassNameDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ClassNameDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ClassNameDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnDiscountDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.DiscountDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.DiscountDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnContractDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ContractDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ContractDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnSchoolDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.SchoolDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.SchoolDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnAccessoriesDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.AccessoriesDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.AccessoriesDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnLeavingReasonsDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.LeavingReasonsDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.LeavingReasonsDefinition), menuCommand);
         }
 
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
 
-        mi = menubar.addItem(myUI.getMessage(SptMessages.OtherFunctions), null);
+        mi = menubar.addItem(myUI.getMessage(Messages.OtherFunctions), null);
         if (currentUser.isPermitted(Settings.cnIssueOrderView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.IssueStudentOrder), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.IssueStudentOrder), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnCallsView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.Calls), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.Calls), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnSchoolModificationView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.SchoolModification), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.SchoolModification), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnTemplatesView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.Templates), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.Templates), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnBackupView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.Backup), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.Backup), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnSettingsView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.Settings), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.Settings), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
 
-        mi = menubar.addItem(myUI.getMessage(SptMessages.Accounting), null);
+        mi = menubar.addItem(myUI.getMessage(Messages.Accounting), null);
         if (currentUser.isPermitted(Settings.cnIncomesDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.IncomesDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.IncomesDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnExpensesDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ExpensesDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ExpensesDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnIncomesExpensesDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.IncomesExpensesDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.IncomesExpensesDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnReturnableAssetsDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ReturnableAssetsDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ReturnableAssetsDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnShortTermDebtsDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ShortTermDebtsDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ShortTermDebtsDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnShortTermDebtsView + ":" + Settings.prmMenu)
                 || currentUser.isPermitted(Settings.cnReturnableAssetsView + ":" + Settings.prmMenu)
@@ -452,13 +452,13 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 mi.addSeparator();
             }
             if (currentUser.isPermitted(Settings.cnReturnableAssetsView + ":" + Settings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.ReturnableAssets), menuCommand);
+                mi.addItem(myUI.getMessage(Messages.ReturnableAssets), menuCommand);
             }
             if (currentUser.isPermitted(Settings.cnShortTermDebtsView + ":" + Settings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.ShortTermDebts), menuCommand);
+                mi.addItem(myUI.getMessage(Messages.ShortTermDebts), menuCommand);
             }
             if (currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.BalanceAccounts), menuCommand);
+                mi.addItem(myUI.getMessage(Messages.BalanceAccounts), menuCommand);
             }
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMenu)
@@ -468,40 +468,40 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             }
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.AccountingReports), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.AccountingReports), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmAccountingBankReport)) {
-            mi.addItem(myUI.getMessage(SptMessages.AccountingBankReport), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.AccountingBankReport), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
 
-        mi = menubar.addItem(myUI.getMessage(SptMessages.Stock), null);
+        mi = menubar.addItem(myUI.getMessage(Messages.Stock), null);
         if (currentUser.isPermitted(Settings.cnStockDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.StocksDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.StocksDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnStockIncomeView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.StockIncome), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.StockIncome), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnStockOutcomeView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.StockOutcome), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.StockOutcome), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnStockReportsView + ":" + Settings.prmMenu)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
                 mi.addSeparator();
             }
-            mi.addItem(myUI.getMessage(SptMessages.StockReports), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.StockReports), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
 
-        mi = menubar.addItem(myUI.getMessage(SptMessages.Inventory), null);
+        mi = menubar.addItem(myUI.getMessage(Messages.Inventory), null);
         if (currentUser.isPermitted(Settings.cnInventoryDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.InventoryCategoryDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.BlockDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.RoomDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.InventoryCategoryDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.BlockDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.RoomDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnInventoryOrganizationView + ":" + Settings.prmMenu)
                 || currentUser.isPermitted(Settings.cnInventoryLiquidationView + ":" + Settings.prmMenu)) {
@@ -509,32 +509,32 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 mi.addSeparator();
             }
             if (currentUser.isPermitted(Settings.cnInventoryOrganizationView + ":" + Settings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.InventoryOrganization), menuCommand);
+                mi.addItem(myUI.getMessage(Messages.InventoryOrganization), menuCommand);
             }
             if (currentUser.isPermitted(Settings.cnInventoryLiquidationView + ":" + Settings.prmMenu)) {
-                mi.addItem(myUI.getMessage(SptMessages.InventoryLiquidation), menuCommand);
+                mi.addItem(myUI.getMessage(Messages.InventoryLiquidation), menuCommand);
             }
         }
         if (currentUser.isPermitted(Settings.cnInventoryReportsView + ":" + Settings.prmMenu)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
                 mi.addSeparator();
             }
-            mi.addItem(myUI.getMessage(SptMessages.InventoryReports), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.InventoryReports), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
 
-        mi = menubar.addItem(myUI.getMessage(SptMessages.HR), null);
+        mi = menubar.addItem(myUI.getMessage(Messages.HR), null);
         if (currentUser.isPermitted(Settings.cnHRDefinitionView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.PositionDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.BranchDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.LanguageDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.ExamDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.CertificateDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.UniversityDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.WorkPlacesDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(SptMessages.QuestionDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.PositionDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.BranchDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.LanguageDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ExamDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.CertificateDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.UniversityDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.WorkPlacesDefinition), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.QuestionDefinition), menuCommand);
         }
         if (mi.getChildren() != null && !mi.getChildren().isEmpty() && (currentUser.isPermitted(Settings.cnEmployeeTransferView + ":" + Settings.prmMenu)
                 || currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmMenu)
@@ -542,23 +542,23 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             mi.addSeparator();
         }
         if (currentUser.isPermitted(Settings.cnEmployeeTransferView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.EmployeeTransfer), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.EmployeeTransfer), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnLessonAssessmentView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.LessonAssessment), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.LessonAssessment), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnImportBranchesFromExcelView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.ImportBranchesFromExcel), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.ImportBranchesFromExcel), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmMenu)) {
-            mi.addItem(myUI.getMessage(SptMessages.HRReports), menuCommand);
+            mi.addItem(myUI.getMessage(Messages.HRReports), menuCommand);
         }
         if (mi.getChildren() == null || mi.getChildren().isEmpty()) {
             menubar.removeItem(mi);
         }
 
         if (currentUser.isPermitted(Settings.cnSendOrderView + ":" + Settings.prmMenu)) {
-            menubar.addItem(myUI.getMessage(SptMessages.SendOrders), menuCommand);
+            menubar.addItem(myUI.getMessage(Messages.SendOrders), menuCommand);
         }
         return menubar;
 
@@ -569,12 +569,12 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         final Button source = event.getButton();
         if (source == changePassBtn) {
             this.verticalPanel.setSecondComponent(new ChangeUserData(myUI));
-            header.setValue(myUI.getMessage(SptMessages.ChangeUserDataHeader)
+            header.setValue(myUI.getMessage(Messages.ChangeUserDataHeader)
                     .toUpperCase());
         } else if (source == myUI.getMessagesBtn()) {
             myUI.repaintMessagesButton();
             this.verticalPanel.setSecondComponent(new MessagesView(myUI));
-            header.setValue(myUI.getMessage(SptMessages.Messages).toUpperCase());
+            header.setValue(myUI.getMessage(Messages.Messages).toUpperCase());
         }
     }
 
@@ -583,10 +583,10 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         Property property = event.getProperty();
         if (property == yearSelect) {
             if (yearSelect.getValue() != null) {
-                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                        myUI.getMessage(SptMessages.ConfirmChangeYear),
-                        myUI.getMessage(SptMessages.Yes),
-                        myUI.getMessage(SptMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmChangeYear),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 try {
@@ -605,7 +605,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                                         yearSelect.getValue(), Settings.is_last).getValue());
                                 myUI.getUser().getCurrent_year().setInstallment_date_limit((Long) yearSelect.getContainerProperty(
                                         yearSelect.getValue(), Settings.installmentDateLimit).getValue());
-                                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
                                 insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
                                         myUI.getUser().getId());
@@ -628,15 +628,15 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     myUI.getUser().getSchool().setId((Integer) schoolSelect.getValue());
                     myUI.getUser().getSchool().setName_ru(schoolSelect.getItemCaption(schoolSelect.getValue()));
                     if (schoolSelect.getContainerProperty(schoolSelect.getValue(),
-                            myUI.getMessage(SptMessages.Logo)).getValue() != null) {
+                            myUI.getMessage(Messages.Logo)).getValue() != null) {
                         myUI.getUser().getSchool().setPhoto(schoolSelect.getContainerProperty(schoolSelect.getValue(),
-                                myUI.getMessage(SptMessages.Logo)).getValue().toString());
+                                myUI.getMessage(Messages.Logo)).getValue().toString());
                     }
                     insertPre_regOrders((Integer) yearSelect.getValue(), (Integer) schoolSelect.getValue(),
                             myUI.getUser().getId());
                     updatePage();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                    Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                             Notification.Type.WARNING_MESSAGE);
                 }
             }
@@ -647,115 +647,115 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private void updatePage() {
         if (header.getValue() != null) {
             if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.ClassNumberDefinition)).toUpperCase())) {
+                    Messages.ClassNumberDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DefinitionView(
                         myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.YearDefinition)).toUpperCase())) {
+                    Messages.YearDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.BranchDefinition)).toUpperCase())) {
+                    Messages.BranchDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DefinitionView(
                         myUI, Settings.dbBranchTable, null, null, true, Settings.cnHRDefinitionView));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.ClassNameDefinition)).toUpperCase())) {
+                    Messages.ClassNameDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ClassNameDefinitionView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Messages)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Messages)).toUpperCase())) {
                 myUI.repaintMessagesButton();
                 verticalPanel.setSecondComponent(new MessagesView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.BlockDefinition)).toUpperCase())) {
+                    Messages.BlockDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BlockDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.RoomDefinition)).toUpperCase())) {
+                    Messages.RoomDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new RoomDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.DiscountDefinition)).toUpperCase())) {
+                    Messages.DiscountDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new DiscountDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.ContractDefinition)).toUpperCase())) {
+                    Messages.ContractDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ContractDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.AccessoriesDefinition)).toUpperCase())) {
+                    Messages.AccessoriesDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccessoriesDefinitionView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.LeavingReasonsDefinition)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.LeavingReasonsDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new LeavingReasonsDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.SchoolDefinition)).toUpperCase())) {
+                    Messages.SchoolDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SchoolDefinitionView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.EmployeeDefinition)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.EmployeeDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, false));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.MyInfo)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.MyInfo)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new EmployeeDefinitionView(myUI, true));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.SchoolModification)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.SchoolModification)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SchoolModificationView(myUI, myUI.getUser().getSchool().getId()));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.StudentDefinition)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.StudentDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StudentDefinitionView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Reports)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Reports)).toUpperCase())) {
                 if (currentUser.hasRole(Settings.rnBank)) {
                     verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
                 } else {
                     verticalPanel.setSecondComponent(new StudentReportsView(myUI));
                 }
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.AccountingReports)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.AccountingReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccountingReportsView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.AccountingBankReport)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.AccountingBankReport)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BankPaymentsByDateReport(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.StockReports)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.StockReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockReportsView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.LessonAssessment)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.LessonAssessment)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new LessonAssessmentView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.HRReports)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.HRReports)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HRReportsView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.ImportBranchesFromExcel)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.ImportBranchesFromExcel)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new ImportBranchesFromExcelView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.IssueStudentOrder)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.IssueStudentOrder)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new IssueOrderView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Templates)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Templates)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TemplatesView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Backup)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Backup)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BackupView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Calls)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Calls)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new CallsView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.HomePage)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.HomePage)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HomePageView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Welcome)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Welcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new HomePageView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.CashBox)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.CashBox)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new CashBoxView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Accruals)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.Accruals),
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Accruals)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(Messages.Accruals),
                         Settings.cnAccrualsView, 2, 1));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.ShortTermDebts)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ShortTermDebts),
+            } else if (header.getValue().equals((myUI.getMessage(Messages.ShortTermDebts)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(Messages.ShortTermDebts),
                         Settings.cnShortTermDebtsView, 4, 4));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.ReturnableAssets)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(SptMessages.ReturnableAssets),
+            } else if (header.getValue().equals((myUI.getMessage(Messages.ReturnableAssets)).toUpperCase())) {
+                verticalPanel.setSecondComponent(new TransfersView(myUI, myUI.getMessage(Messages.ReturnableAssets),
                         Settings.cnReturnableAssetsView, 3, 3));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.BalanceAccounts)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.BalanceAccounts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new BalanceAccountsView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Payouts)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Payouts)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new PayoutsView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.IncomesExpensesDefinition)).toUpperCase())) {
+                    Messages.IncomesExpensesDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new AccCategoriesDefinitionView(myUI,
                         5, Settings.cnIncomesExpensesDefinitionView));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.StocksDefinition)).toUpperCase())) {
+                    Messages.StocksDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockDefinitionView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.StockIncome)).toUpperCase())) {
+                    Messages.StockIncome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockIncomeView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.InventoryOrganization)).toUpperCase())) {
+                    Messages.InventoryOrganization)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new InventoryOrganizationView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.InventoryLiquidation)).toUpperCase())) {
+                    Messages.InventoryLiquidation)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new InventoryLiquidationView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(
-                    SptMessages.StockOutcome)).toUpperCase())) {
+                    Messages.StockOutcome)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new StockOutcomeView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(SptMessages.Settings)).toUpperCase())) {
+            } else if (header.getValue().equals((myUI.getMessage(Messages.Settings)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new SettingsView(myUI));
             }
 

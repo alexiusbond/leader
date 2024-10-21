@@ -14,7 +14,7 @@ import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -68,7 +68,7 @@ public class AccountingByDatesPdf {
 
                     document.open();
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ByDateReport)
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.ByDateReport)
                             + " " + datesInterval, fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(15, " "));
@@ -76,7 +76,7 @@ public class AccountingByDatesPdf {
                     document.add(new Paragraph(10, " "));
 
                     if (incomesContainer != null && incomesContainer.size() > 0) {
-                        spr = new Paragraph(myUI.getMessage(SptMessages.Incomes), fontSubheader);
+                        spr = new Paragraph(myUI.getMessage(Messages.Incomes), fontSubheader);
                         spr.setIndentationLeft(40);
                         spr.setFirstLineIndent(40);
                         document.add(spr);
@@ -87,13 +87,13 @@ public class AccountingByDatesPdf {
                         table_payments.setWidths(table_payments_colsWidth);
                         table_payments.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
                         table_payments.addCell(new Phrase(" №", ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Code), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Category), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Currency), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Rate), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
-                        table_payments.addCell(new Phrase(myUI.getMessage(SptMessages.Note), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Code), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Category), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Currency), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Rate), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
+                        table_payments.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
 
                         int i = 0;
                         Iterator<?> iterator = incomesContainer.getItemIds().iterator();
@@ -102,23 +102,23 @@ public class AccountingByDatesPdf {
                             Object next = iterator.next();
                             table_payments.addCell(new Phrase(new Phrase((++i) + "", tableFont)));
                             table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
                             table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Code)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Code)).getValue().toString(), tableFont));
                             table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Category)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Category)).getValue().toString(), tableFont));
                             table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Currency)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Currency)).getValue().toString(), tableFont));
                             table_payments.addCell(new Phrase(Settings.dFormat4.format(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Rate)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Rate)).getValue()), tableFont));
                             table_payments.addCell(new Phrase(Settings.dFormat2.format(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Amount)).getValue()), tableFont));
                             table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             table_payments.addCell(new Phrase(incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Note)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Note)).getValue().toString(), tableFont));
                             total += (Double) incomesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Amount)).getValue();
+                                    myUI.getMessage(Messages.Amount)).getValue();
                         }
                         table_payments.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         table_payments.addCell(new Phrase(" "));
@@ -132,7 +132,7 @@ public class AccountingByDatesPdf {
                         document.add(table_payments);
                     }
                     if (expensesContainer != null && expensesContainer.size() > 0) {
-                        spr = new Paragraph(myUI.getMessage(SptMessages.Expenses), fontSubheader);
+                        spr = new Paragraph(myUI.getMessage(Messages.Expenses), fontSubheader);
                         spr.setIndentationLeft(40);
                         spr.setFirstLineIndent(40);
                         document.add(spr);
@@ -143,13 +143,13 @@ public class AccountingByDatesPdf {
                         table.setWidths(table_colsWidth);
                         table.getDefaultCell().setVerticalAlignment(Element.ALIGN_BOTTOM);
                         table.addCell(new Phrase(" №", ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(SptMessages.Code), ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(SptMessages.Category), ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(SptMessages.Currency), ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(SptMessages.Rate), ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
-                        table.addCell(new Phrase(myUI.getMessage(SptMessages.Note), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Code), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Category), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Currency), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Rate), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
+                        table.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
 
                         int i = 0;
                         Iterator<?> iterator = expensesContainer.getItemIds().iterator();
@@ -158,23 +158,23 @@ public class AccountingByDatesPdf {
                             Object next = iterator.next();
                             table.addCell(new Phrase(new Phrase((++i) + "", tableFont)));
                             table.addCell(new Phrase(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
                             table.addCell(new Phrase(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Code)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Code)).getValue().toString(), tableFont));
                             table.addCell(new Phrase(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Category)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Category)).getValue().toString(), tableFont));
                             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             table.addCell(new Phrase(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Currency)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Currency)).getValue().toString(), tableFont));
                             table.addCell(new Phrase(Settings.dFormat4.format(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Rate)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Rate)).getValue()), tableFont));
                             table.addCell(new Phrase(Settings.dFormat2.format(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Amount)).getValue()), tableFont));
                             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             table.addCell(new Phrase(expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Note)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Note)).getValue().toString(), tableFont));
                             total += (Double) expensesContainer.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Amount)).getValue();
+                                    myUI.getMessage(Messages.Amount)).getValue();
                         }
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         table.addCell(new Phrase(" "));
@@ -196,8 +196,8 @@ public class AccountingByDatesPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
                             + studentInfo.getAccountant().getName() + " " +
                             (studentInfo.getAccountant().getMiddle_name() == null ?

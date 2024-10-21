@@ -17,7 +17,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StockMovement;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.StockIncomeView;
 import kg.alex.spt.ui.StockOutcomeView;
 import kg.alex.spt.utils.FormattedTreeTable;
@@ -61,8 +61,8 @@ public class DbStockMovements extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbStockMovement, is_modifyable));
-            ComboBox cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true, is_modifyable);
+                    v.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbStockMovement, is_modifyable));
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(Messages.Product), null, true, is_modifyable);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -72,47 +72,47 @@ public class DbStockMovements extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.FullName));
+            cb.setItemCaptionPropertyId(myUi.getMessage(Messages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(SptMessages.Product)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Product)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextField(
-                    result.getString("t.note"), myUi.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, 250, false), true));
-            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(SptMessages.Measurement),
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(v.createTextField(
+                    result.getString("t.note"), myUi.getMessage(Messages.Note),
+                    new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 250, false), true));
+            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(Messages.Measurement),
                     Settings.dbMeasurement, true, is_modifyable);
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(SptMessages.Measurement)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Measurement)).setValue(cb);
             item.getItemProperty(Settings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
             double minVal = 0.01;
             if (result.getDouble("t.remain") < result.getDouble("t.amount")) {
                 minVal = result.getDouble("t.amount") - result.getDouble("t.remain");
             }
             TextField tf = v.createTextFieldWithProperty(
-                    result.getDouble("t.amount"), myUi.getMessage(SptMessages.Quantity),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), minVal, null),
+                    result.getDouble("t.amount"), myUi.getMessage(Messages.Quantity),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), minVal, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), (result.getDouble("t.remain") > 0));
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(SptMessages.Quantity));
-            item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
+            tf.setData(myUi.getMessage(Messages.Quantity));
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(tf);
             item.getItemProperty(Settings.quantity_id).setValue(result.getDouble("t.amount"));
             tf = v.createTextFieldWithProperty(
-                    result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("t.price"), myUi.getMessage(Messages.Price),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), is_modifyable);
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(SptMessages.Price));
-            item.getItemProperty(myUi.getMessage(SptMessages.Price)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(result.getDouble("t.currency_rate"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
+            tf.setData(myUi.getMessage(Messages.Price));
+            item.getItemProperty(myUi.getMessage(Messages.Price)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Rate)).setValue(result.getDouble("t.currency_rate"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount") * result.getDouble("t.price"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getDouble("rmn.remain"));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(result.getDouble("rmn.remain"));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             item.getItemProperty(Settings.is_modifiable).setValue(is_modifyable);
             total += result.getDouble("t.amount") * result.getDouble("t.price");
 
@@ -171,8 +171,8 @@ public class DbStockMovements extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbStockMovement));
-            ComboBox cb = v.createCombobox(0, myUi.getMessage(SptMessages.Product), null, true);
+                    v.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbStockMovement));
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(Messages.Product), null, true);
             try {
                 DbAccCategory dbCon = new DbAccCategory();
                 dbCon.connect();
@@ -182,34 +182,34 @@ public class DbStockMovements extends BaseDb {
                 logger.error(e);
                 logger.catching(e);
             }
-            cb.setItemCaptionPropertyId(myUi.getMessage(SptMessages.FullName));
+            cb.setItemCaptionPropertyId(myUi.getMessage(Messages.FullName));
             cb.setValue(result.getInt("t.acc_category_id"));
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(SptMessages.Product)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Product)).setValue(cb);
             item.getItemProperty(Settings.acc_category_id).setValue(result.getInt("t.acc_category_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(v.createTextField(
-                    result.getString("t.note"), myUi.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUi.getMessage(SptMessages.NotificationWrongValue), null, 250, false), true));
-            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(SptMessages.Measurement), Settings.dbMeasurement, true);
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(v.createTextField(
+                    result.getString("t.note"), myUi.getMessage(Messages.Note),
+                    new StringLengthValidator(myUi.getMessage(Messages.NotificationWrongValue), null, 250, false), true));
+            cb = v.createCombobox(result.getInt("t.dp_measurement_id"), myUi.getMessage(Messages.Measurement), Settings.dbMeasurement, true);
             cb.setId(id);
             cb.addValueChangeListener(v);
-            item.getItemProperty(myUi.getMessage(SptMessages.Measurement)).setValue(cb);
+            item.getItemProperty(myUi.getMessage(Messages.Measurement)).setValue(cb);
             item.getItemProperty(Settings.measurement_id).setValue(result.getInt("t.dp_measurement_id"));
             TextField tf = v.createTextFieldWithProperty(
-                    result.getDouble("amount"), myUi.getMessage(SptMessages.Quantity),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("amount"), myUi.getMessage(Messages.Quantity),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2));
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(SptMessages.Quantity));
-            item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
+            tf.setData(myUi.getMessage(Messages.Quantity));
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(tf);
             item.getItemProperty(Settings.quantity_id).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Price)).setValue(result.getDouble("total") / result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Rate)).setValue(result.getDouble("currency_rate") / result.getDouble("amount"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(result.getDouble("total"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getDouble("rmn.remain"));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(myUi.getMessage(Messages.Price)).setValue(result.getDouble("total") / result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.Rate)).setValue(result.getDouble("currency_rate") / result.getDouble("amount"));
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(result.getDouble("total"));
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(result.getDouble("rmn.remain"));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             total += result.getDouble("total");
 
             item = v.getOriginalCont().addItem(id);
@@ -410,30 +410,30 @@ public class DbStockMovements extends BaseDb {
         stat.setInt(3, service_type_id);
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Quantity), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Measurement), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.AveragePrice), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.AverageRate), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Measurement), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.AveragePrice), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.AverageRate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
         t.setContainerDataSource(container);
         double total_amount = 0.0;
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem(parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Title))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Title)).getValue().toString());
                     } else {
-                        item.getItemProperty(myUI.getMessage(SptMessages.AverageRate)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(SptMessages.AveragePrice)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.AverageRate)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.AveragePrice)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
                 }
@@ -449,26 +449,26 @@ public class DbStockMovements extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Quantity)).setValue(result.getDouble("amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Measurement)).setValue(result.getString("measurement"));
+            item.getItemProperty(myUI.getMessage(Messages.Quantity)).setValue(result.getDouble("amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Measurement)).setValue(result.getString("measurement"));
             total_amount += result.getDouble("total");
             if (result.getDouble("amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.AveragePrice)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.AveragePrice)).setValue(
                         result.getDouble("total") / result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(SptMessages.AverageRate)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.AverageRate)).setValue(
                         result.getDouble("currency_rate") / result.getDouble("amount"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("total"));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("total"));
 
             Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
             while (parent_id != null) {
                 item = container.getItem(parent_id);
-                item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.Amount)).getValue() + result.getDouble("total"));
+                item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.Amount)).getValue() + result.getDouble("total"));
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total_amount));
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total_amount));
     }
 
     public void exec_stock_balance(MyVaadinUI myUI, FilterTreeTable categoriesTable, Date from, Date till,
@@ -504,32 +504,32 @@ public class DbStockMovements extends BaseDb {
         stat.setDate(10, new java.sql.Date(from.getTime()));
         ResultSet result = stat.executeQuery();
         HierarchicalContainer container = new HierarchicalContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousBalance) + " " +
-                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(till), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Quantity), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousBalance) + " " +
+                myUI.getMessage(Messages.ToThe).toLowerCase() + " " + Settings.df.format(till), Double.class, null);
         t.setContainerDataSource(container);
         double total_in_amount = 0.0, total_out_amount = 0.0;
         for (Object catNext : categoriesTable.getContainerDataSource().getItemIds()) {
             if (selectedCategoryIds.contains(catNext)) {
                 Item item = container.addItem(catNext);
-                item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                item.getItemProperty(myUI.getMessage(Messages.Title))
+                        .setValue(categoriesTable.getContainerProperty(catNext, myUI.getMessage(Messages.Title)).getValue().toString());
                 container.setChildrenAllowed(catNext, false);
                 Object parent = categoriesTable.getContainerDataSource().getParent(catNext);
                 if (parent != null) {
                     if (container.getItem(parent) == null) {
                         item = container.addItem(parent);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Title))
-                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        item.getItemProperty(myUI.getMessage(Messages.Title))
+                                .setValue(categoriesTable.getContainerProperty(parent, myUI.getMessage(Messages.Title)).getValue().toString());
                     } else {
-                        item.getItemProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(0.0);
-                        item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance) + " " +
-                                myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Quantity)).setValue(0.0);
+                        item.getItemProperty(myUI.getMessage(Messages.PreviousBalance) + " " +
+                                myUI.getMessage(Messages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(0.0);
                     }
                     container.setParent(catNext, parent);
                 }
@@ -545,16 +545,16 @@ public class DbStockMovements extends BaseDb {
         }
         while (result.next()) {
             Item item = container.getItem(result.getInt("cat.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)
-                    + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(result.getDouble("in_amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
-                    + " - " + myUI.getMessage(SptMessages.Quantity)).setValue(result.getDouble("out_amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)
-                    + " - " + myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("in_total"));
-            item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
-                    + " - " + myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("out_total"));
-            item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance) + " " +
-                    myUI.getMessage(SptMessages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(result.getDouble("balance")
+            item.getItemProperty(myUI.getMessage(Messages.StockIncome)
+                    + " - " + myUI.getMessage(Messages.Quantity)).setValue(result.getDouble("in_amount"));
+            item.getItemProperty(myUI.getMessage(Messages.StockOutcome)
+                    + " - " + myUI.getMessage(Messages.Quantity)).setValue(result.getDouble("out_amount"));
+            item.getItemProperty(myUI.getMessage(Messages.StockIncome)
+                    + " - " + myUI.getMessage(Messages.Amount)).setValue(result.getDouble("in_total"));
+            item.getItemProperty(myUI.getMessage(Messages.StockOutcome)
+                    + " - " + myUI.getMessage(Messages.Amount)).setValue(result.getDouble("out_total"));
+            item.getItemProperty(myUI.getMessage(Messages.PreviousBalance) + " " +
+                    myUI.getMessage(Messages.ToThe).toLowerCase() + " " + Settings.df.format(till)).setValue(result.getDouble("balance")
                     + result.getDouble("in_amount") - result.getDouble("out_amount"));
 
             total_in_amount += result.getDouble("in_total");
@@ -563,17 +563,17 @@ public class DbStockMovements extends BaseDb {
             Integer parent_id = (Integer) container.getParent(result.getInt("cat.id"));
             while (parent_id != null) {
                 item = container.getItem(parent_id);
-                item.getItemProperty(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)
-                                + " - " + myUI.getMessage(SptMessages.Amount)).getValue() + result.getDouble("in_total"));
-                item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)
-                                + " - " + myUI.getMessage(SptMessages.Amount)).getValue() + result.getDouble("out_total"));
+                item.getItemProperty(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.StockIncome)
+                                + " - " + myUI.getMessage(Messages.Amount)).getValue() + result.getDouble("in_total"));
+                item.getItemProperty(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Amount)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.StockOutcome)
+                                + " - " + myUI.getMessage(Messages.Amount)).getValue() + result.getDouble("out_total"));
                 parent_id = (Integer) container.getParent(parent_id);
             }
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome) + " - " + myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total_in_amount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome) + " - " + myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(total_out_amount));
+        t.setColumnFooter(myUI.getMessage(Messages.StockIncome) + " - " + myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total_in_amount));
+        t.setColumnFooter(myUI.getMessage(Messages.StockOutcome) + " - " + myUI.getMessage(Messages.Amount), Settings.dFormat2.format(total_out_amount));
     }
 
     public void exec_product_movements(MyVaadinUI myUI, int acc_category_id, Date from, Date till,
@@ -598,52 +598,52 @@ public class DbStockMovements extends BaseDb {
         stat.setInt(5, stock_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.InvoiceNumber), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.MovementType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Measurement), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Price), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Rate), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.StockIncome), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.StockOutcome), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousBalance), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.InvoiceNumber), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.MovementType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Measurement), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Price), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Rate), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockIncome), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.StockOutcome), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousBalance), Double.class, 0.0);
         int i = 0;
         double balance = execSQL_category_balance(acc_category_id, stock_id + "", from),
                 totalOut = 0.0, totalIn = 0.0, netAmount = 0.0;
         while (result.next()) {
             Item item = container.addItem(++i);
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("inv.creation_date")));
-            item.getItemProperty(myUI.getMessage(SptMessages.InvoiceNumber)).setValue(result.getString("invoice_number"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("sm.note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.MovementType)).setValue(result.getString("tp.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Measurement)).setValue(result.getString("m.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(result.getDate("inv.creation_date")));
+            item.getItemProperty(myUI.getMessage(Messages.InvoiceNumber)).setValue(result.getString("invoice_number"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("sm.note"));
+            item.getItemProperty(myUI.getMessage(Messages.MovementType)).setValue(result.getString("tp.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Measurement)).setValue(result.getString("m.name"));
             if (result.getDouble("amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Price)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Price)).setValue(
                         result.getDouble("total") / result.getDouble("amount"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Rate)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(
                         result.getDouble("currency_rate") / result.getDouble("amount"));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("total"));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("total"));
 
             if (result.getInt("inv.service_type_id") == 2) {
-                item.getItemProperty(myUI.getMessage(SptMessages.StockOutcome)).setValue(result.getDouble("amount"));
+                item.getItemProperty(myUI.getMessage(Messages.StockOutcome)).setValue(result.getDouble("amount"));
                 balance -= result.getDouble("amount");
                 totalOut += result.getDouble("amount");
                 netAmount -= result.getDouble("total");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.StockIncome)).setValue(result.getDouble("amount"));
+                item.getItemProperty(myUI.getMessage(Messages.StockIncome)).setValue(result.getDouble("amount"));
                 balance += result.getDouble("amount");
                 totalIn += result.getDouble("amount");
                 netAmount += result.getDouble("total");
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.PreviousBalance)).setValue(balance);
+            item.getItemProperty(myUI.getMessage(Messages.PreviousBalance)).setValue(balance);
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockIncome), Settings.dFormat2.format(totalIn));
-        t.setColumnFooter(myUI.getMessage(SptMessages.StockOutcome), Settings.dFormat2.format(totalOut));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Amount), Settings.dFormat2.format(netAmount));
-        t.setColumnFooter(myUI.getMessage(SptMessages.PreviousBalance), Settings.dFormat2.format(balance));
+        t.setColumnFooter(myUI.getMessage(Messages.StockIncome), Settings.dFormat2.format(totalIn));
+        t.setColumnFooter(myUI.getMessage(Messages.StockOutcome), Settings.dFormat2.format(totalOut));
+        t.setColumnFooter(myUI.getMessage(Messages.Amount), Settings.dFormat2.format(netAmount));
+        t.setColumnFooter(myUI.getMessage(Messages.PreviousBalance), Settings.dFormat2.format(balance));
         t.setContainerDataSource(container);
     }
 

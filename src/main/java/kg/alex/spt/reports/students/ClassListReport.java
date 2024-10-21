@@ -17,7 +17,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.pdf.ClassListPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.DefinitionsFilterGenerator;
@@ -59,25 +59,25 @@ public class ClassListReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -95,29 +95,29 @@ public class ClassListReport implements Button.ClickListener,
         yearSelect.setValue(myUI.getUser().getCurrent_year().getId());
         yearSelect.addValueChangeListener(this);
 
-        fromDateDF = new PopupDateField(myUI.getMessage(SptMessages.FromDate));
-        fromDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        fromDateDF = new PopupDateField(myUI.getMessage(Messages.FromDate));
+        fromDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setResolution(Resolution.DAY);
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new PopupDateField(myUI.getMessage(SptMessages.TillDate));
-        tillDateDF.setInputPrompt(myUI.getMessage(SptMessages.AnyDate));
+        tillDateDF = new PopupDateField(myUI.getMessage(Messages.TillDate));
+        tillDateDF.setInputPrompt(myUI.getMessage(Messages.AnyDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setResolution(Resolution.DAY);
         tillDateDF.addValueChangeListener(this);
 
-        selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -144,16 +144,16 @@ public class ClassListReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         makePdfBtn = new Button();
-        makePdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        makePdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -161,7 +161,7 @@ public class ClassListReport implements Button.ClickListener,
         makePdfBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -212,43 +212,43 @@ public class ClassListReport implements Button.ClickListener,
                             (Integer) yearSelect.getValue(), fromDateDF.getValue(), tillDateDF.getValue(),
                             Settings.convertCollectionToStr((Set<?>) educationStatusMCB.getValue()), this);
                     dataTable.setContainerDataSource(dataCont);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearOverpay), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), CustomTable.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.OverPay), CustomTable.Align.RIGHT);
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
-                            myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
-                            myUI.getMessage(SptMessages.Active) + activeStudents);
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Contract), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Discount), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Correction), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousYearDebt), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousYearOverpay), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Net), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Paid), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Debt), CustomTable.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.OverPay), CustomTable.Align.RIGHT);
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Id),
+                            myUI.getMessage(Messages.Students) + ": " + dataCont.size());
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.EducationStatus),
+                            myUI.getMessage(Messages.Active) + activeStudents);
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Contract),
                             Settings.dFormat2.format(contracts));
                     if (contracts != 0) {
-                        dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
+                        dataTable.setColumnFooter(myUI.getMessage(Messages.Discount),
                                 Settings.dFormat2.format(discounts) + " (" +
                                         Settings.dFormat2.format(discounts * 100 / contracts) + "%)");
                     }
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Correction),
                             Settings.dFormat2.format(corrections));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
                             Settings.dFormat2.format(prevYearDebts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.PreviousYearOverpay),
                             Settings.dFormat2.format(prevYearOverpays));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Net),
                             Settings.dFormat2.format(nets));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Paid),
                             Settings.dFormat2.format(paid_amounts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Debt),
                             Settings.dFormat2.format(debts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.OverPay),
                             Settings.dFormat2.format(overPays));
                     if (dataCont.size() != 0) {
-                        dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
-                                + discountedStudents + " " + myUI.getMessage(SptMessages.StudentsPossessive) + " ("
+                        dataTable.setColumnFooter(myUI.getMessage(Messages.DiscountType), myUI.getMessage(Messages.Discounted)
+                                + discountedStudents + " " + myUI.getMessage(Messages.StudentsPossessive) + " ("
                                 + discountedStudents * 100 / dataCont.size() + "%)");
                         makePdfBtn.setEnabled(true);
                         excelBtn.setEnabled(true);
@@ -259,7 +259,7 @@ public class ClassListReport implements Button.ClickListener,
                     logger.catching(e);
                 }
             } else {
-                Notification.show(myUI.getMessage(SptMessages.NotificationNothingIsSelected),
+                Notification.show(myUI.getMessage(Messages.NotificationNothingIsSelected),
                         Notification.Type.WARNING_MESSAGE);
             }
         } else if (source == makePdfBtn) {
@@ -278,11 +278,11 @@ public class ClassListReport implements Button.ClickListener,
                     if (studentInfo.getSchool().getAddress() != null) {
                         new ClassListPdf(myUI, dataCont, studentInfo, this);
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
+                        Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
+                    Notification.show(myUI.getMessage(Messages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -300,15 +300,15 @@ public class ClassListReport implements Button.ClickListener,
                 w.setContent(t);
 
                 EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(t);
-                excelReport.setReportTitle(myUI.getMessage(SptMessages.ClassList));
+                excelReport.setReportTitle(myUI.getMessage(Messages.ClassList));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(0).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(3).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(8).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Id)));
-                excelReport.getTotalsRow().getCell(3).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.EducationStatus)));
-                excelReport.getTotalsRow().getCell(8).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.DiscountType)));
+                excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Id)));
+                excelReport.getTotalsRow().getCell(3).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.EducationStatus)));
+                excelReport.getTotalsRow().getCell(8).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.DiscountType)));
                 excelReport.sendConverted();
                 w.close();
             }

@@ -18,7 +18,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.pdf.CallsPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
@@ -73,19 +73,19 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                 logger.error(e);
                 logger.catching(e);
             }
-            dataTable.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), "Total "
+            dataTable.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt), "Total "
                     + Settings.dFormat2.format(total));
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Note), 220);
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Id), 80);
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.FirstName), 100);
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastName), 120);
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.Phone), 100);
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.PlanDebtDate), 85);
-            dataTable.setColumnWidth(myUI.getMessage(SptMessages.LastPayment), 95);
-            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.InstPlanDebt), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.LastPayment), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Remain), Table.Align.RIGHT);
-            dataTable.setColumnExpandRatio(myUI.getMessage(SptMessages.LastCall), 1);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.Note), 220);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.Id), 80);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.FirstName), 100);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.LastName), 120);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.Phone), 100);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.PlanDebtDate), 85);
+            dataTable.setColumnWidth(myUI.getMessage(Messages.LastPayment), 95);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.InstPlanDebt), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.LastPayment), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Remain), Table.Align.RIGHT);
+            dataTable.setColumnExpandRatio(myUI.getMessage(Messages.LastCall), 1);
             if (dataTable.size() != 0) {
                 excelBtn.setEnabled(true);
                 makePdfBtn.setEnabled(true);
@@ -106,11 +106,11 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                     if (studentInfo.getSchool().getAddress() != null) {
                         new CallsPdf(myUI, dataTable, studentInfo);
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
+                        Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NoAccountant),
+                    Notification.show(myUI.getMessage(Messages.NoAccountant),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -122,14 +122,14 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                 if (dataTable.getContainerDataSource().size() != 0) {
                     dataTable.setColumnCollapsingAllowed(true);
                     dataTable.setColumnCollapsed(Settings.button, true);
-                    dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), true);
+                    dataTable.setColumnCollapsed(myUI.getMessage(Messages.Note), true);
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable, "sheet1");
                     excelReport.excludeCollapsedColumns();
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.Calls));
+                    excelReport.setReportTitle(myUI.getMessage(Messages.Calls));
                     excelReport.setDisplayTotals(true);
                     excelReport.export();
                     dataTable.setColumnCollapsed(Settings.button, false);
-                    dataTable.setColumnCollapsed(myUI.getMessage(SptMessages.Note), false);
+                    dataTable.setColumnCollapsed(myUI.getMessage(Messages.Note), false);
                     dataTable.setColumnCollapsingAllowed(false);
                 }
             } catch (Exception e) {
@@ -149,12 +149,12 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
                         myUI.getUser().getCurrent_year().getId(),
                         myUI.getUser().getId(),
                         ((TextField) dataTable.getContainerProperty(source.getData(),
-                                myUI.getMessage(SptMessages.Note)).getValue()).getValue());
+                                myUI.getMessage(Messages.Note)).getValue()).getValue());
                 if (i != 0) {
-                    dataTable.getContainerProperty(source.getData(), myUI.getMessage(SptMessages.LastCall))
+                    dataTable.getContainerProperty(source.getData(), myUI.getMessage(Messages.LastCall))
                             .setValue(dbsc.exec_getLastCall((Integer) source.getData()));
                     ((TextField) dataTable.getContainerProperty(source.getData(),
-                            myUI.getMessage(SptMessages.Note)).getValue()).setValue("");
+                            myUI.getMessage(Messages.Note)).getValue()).setValue("");
                 }
                 dbsc.close();
             } catch (Exception e) {
@@ -178,25 +178,25 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         leftLay.setSpacing(true);
         leftLay.setSizeFull();
 
-        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -236,28 +236,28 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+        classTable.setVisibleColumns(myUI.getMessage(Messages.Title));
 
-        selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
         deselectAllBtn.addClickListener(this);
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -265,7 +265,7 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
         excelBtn.addClickListener(this);
 
         makePdfBtn = new Button();
-        makePdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        makePdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         makePdfBtn.setWidth(Settings.PERCENTS100);
         makePdfBtn.setEnabled(false);
         makePdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -322,17 +322,17 @@ public class CallsView extends HorizontalSplitPanel implements Button.ClickListe
 
     public IndexedContainer prepareContainer() {
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.InstPlanDebt), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Remain), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PlanDebtDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastCall), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastPayment), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), TextField.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Phone), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.InstPlanDebt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Remain), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PlanDebtDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastCall), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastPayment), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), TextField.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         return container;
     }

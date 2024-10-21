@@ -13,7 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.domain.EmployeeMessage;
 import kg.alex.spt.domain.OrderMessage;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.pdf.OrderPdf;
 import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
@@ -77,24 +77,24 @@ public class DbEmployeeMessage extends BaseDb {
         stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.OrderNumber), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Student), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Discount), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.OrderNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Student), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Discount), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
         int unread = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("om.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Date)).setValue(Settings.df.format(
+            item.getItemProperty(myUi.getMessage(Messages.Date)).setValue(Settings.df.format(
                     result.getDate("om.creation_date")));
-            item.getItemProperty(myUi.getMessage(SptMessages.Student)).setValue(result.getString("student"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Discount)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Student)).setValue(result.getString("student"));
+            item.getItemProperty(myUi.getMessage(Messages.Discount)).setValue(
                     Settings.round(result.getDouble("om.discount"), 2) + " "
                             + result.getString("du.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.OrderNumber)).setValue(result.getString("om.order_number"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(result.getString("mst.name"));
+            item.getItemProperty(myUi.getMessage(Messages.OrderNumber)).setValue(result.getString("om.order_number"));
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(result.getString("mst.name"));
             item.getItemProperty(Settings.status_id).setValue(result.getInt("mst.id"));
             OrderMessage orderMessage = new OrderMessage();
             orderMessage.setId(result.getInt("om.id"));
@@ -104,7 +104,7 @@ public class DbEmployeeMessage extends BaseDb {
             orderMessage.setOrder_number(result.getString("om.order_number"));
             orderMessage.setDate(result.getDate("om.creation_date"));
             Button btn = new Button();
-            btn.setDescription(myUi.getMessage(SptMessages.ViewDocument));
+            btn.setDescription(myUi.getMessage(Messages.ViewDocument));
             btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
             btn.addStyleName(ValoTheme.BUTTON_TINY);
             btn.setIcon(FontAwesome.FILE_PDF_O);
@@ -117,13 +117,13 @@ public class DbEmployeeMessage extends BaseDb {
                     dbCon.exec_update(om.getId(), om.getEmployee_id(), 1);
                     dbCon.close();
                     t.getContainerProperty(om.getId(), Settings.status_id).setValue(1);
-                    t.getContainerProperty(om.getId(), myUi.getMessage(SptMessages.Status))
-                            .setValue(myUi.getMessage(SptMessages.UnRead));
+                    t.getContainerProperty(om.getId(), myUi.getMessage(Messages.Status))
+                            .setValue(myUi.getMessage(Messages.UnRead));
                     int unread1 = Integer.parseInt(t.getColumnFooter(Settings.status_id));
                     if (unread1 > 0) {
                         t.setColumnFooter(Settings.status_id, (--unread1) + "");
-                        t.setColumnFooter(myUi.getMessage(SptMessages.Status),
-                                myUi.getMessage(SptMessages.UnRead) + ": " + unread1);
+                        t.setColumnFooter(myUi.getMessage(Messages.Status),
+                                myUi.getMessage(Messages.UnRead) + ": " + unread1);
                     }
                     myUi.repaintMessagesButton();
                 } catch (Exception e) {
@@ -139,10 +139,10 @@ public class DbEmployeeMessage extends BaseDb {
         }
         t.setContainerDataSource(container);
         t.setColumnFooter(Settings.status_id, unread + "");
-        t.setColumnFooter(myUi.getMessage(SptMessages.Status),
-                myUi.getMessage(SptMessages.UnRead) + ": " + unread);
-        t.setColumnFooter(myUi.getMessage(SptMessages.Student),
-                myUi.getMessage(SptMessages.Total) + ": " + container.size());
+        t.setColumnFooter(myUi.getMessage(Messages.Status),
+                myUi.getMessage(Messages.UnRead) + ": " + unread);
+        t.setColumnFooter(myUi.getMessage(Messages.Student),
+                myUi.getMessage(Messages.Total) + ": " + container.size());
     }
 
     public boolean isUnread(int employee_id, int school_id) throws SQLException {

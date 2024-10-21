@@ -14,7 +14,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.InventoryLiquidation;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.InventoryLiquidationView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,8 +50,8 @@ public class DbInventoryLiquidation extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbInventoryLiquidation, true));
-            ComboBox cb = v.createCombobox(0, myUi.getMessage(SptMessages.InventoryItem),
+                    v.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbInventoryLiquidation, true));
+            ComboBox cb = v.createCombobox(0, myUi.getMessage(Messages.InventoryItem),
                     null, true, true, true);
             try {
                 DbInventoryOrganization dbCon = new DbInventoryOrganization();
@@ -65,19 +65,19 @@ public class DbInventoryLiquidation extends BaseDb {
             cb.setValue(result.getString("io.code").toLowerCase());
             cb.addValueChangeListener(v);
             cb.setId(id);
-            cb.setData(myUi.getMessage(SptMessages.InventoryItem));
-            item.getItemProperty(myUi.getMessage(SptMessages.InventoryItem)).setValue(cb);
+            cb.setData(myUi.getMessage(Messages.InventoryItem));
+            item.getItemProperty(myUi.getMessage(Messages.InventoryItem)).setValue(cb);
             TextField tf = v.createTextFieldWithProperty(
-                    result.getInt("t.quantity"), myUi.getMessage(SptMessages.Quantity),
-                    new IntegerRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue),
+                    result.getInt("t.quantity"), myUi.getMessage(Messages.Quantity),
+                    new IntegerRangeValidator(myUi.getMessage(Messages.NotificationWrongValue),
                             1, result.getInt("r.remain") + result.getInt("t.quantity")),
                     new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true);
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(SptMessages.Quantity));
-            item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getInt("r.remain"));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            tf.setData(myUi.getMessage(Messages.Quantity));
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(result.getInt("r.remain"));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             totalQuantity += result.getInt("t.quantity");
         }
         v.setInventoriesFooter(totalQuantity);

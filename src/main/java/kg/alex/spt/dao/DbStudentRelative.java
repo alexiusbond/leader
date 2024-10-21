@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentRelative;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.StudentDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -42,50 +42,50 @@ public class DbStudentRelative extends BaseDb {
             String id = result.getString("sr.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id,
+                    dw.createButton(myUi.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentRelatives, FontAwesome.MINUS_SQUARE));
             if (result.getInt("sr.is_main") == 1) {
-                item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                         dw.createTextField(result.getString("sr.fullname"),
-                                myUi.getMessage(SptMessages.FullName), id, false, true));
-                item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
+                                myUi.getMessage(Messages.FullName), id, false, true));
+                item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                         dw.createTextField(result.getString("sr.address"),
-                                myUi.getMessage(SptMessages.Address), id, true, true));
-                item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+                                myUi.getMessage(Messages.Address), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
-                                myUi.getMessage(SptMessages.Phone), id, true, true));
-                item.getItemProperty(myUi.getMessage(SptMessages.WorkPlace)).setValue(
+                                myUi.getMessage(Messages.Phone), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
                         dw.createTextField(result.getString("sr.work_place"),
-                                myUi.getMessage(SptMessages.WorkPlace), id, true, true));
-                item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
+                                myUi.getMessage(Messages.WorkPlace), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                         dw.createTextField(result.getString("sr.passport"),
-                                myUi.getMessage(SptMessages.Passport), id, true, true));
-                item.getItemProperty(myUi.getMessage(SptMessages.Responsible)).setValue(
-                        dw.createCheckBox(true, myUi.getMessage(SptMessages.Responsible), id));
+                                myUi.getMessage(Messages.Passport), id, true, true));
+                item.getItemProperty(myUi.getMessage(Messages.Responsible)).setValue(
+                        dw.createCheckBox(true, myUi.getMessage(Messages.Responsible), id));
             } else {
-                item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                         dw.createTextField(result.getString("sr.fullname"),
-                                myUi.getMessage(SptMessages.FullName), id, false, false));
-                item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
+                                myUi.getMessage(Messages.FullName), id, false, false));
+                item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                         dw.createTextField(result.getString("sr.address"),
-                                myUi.getMessage(SptMessages.Address), id, true, false));
-                item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+                                myUi.getMessage(Messages.Address), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         dw.createTextField(result.getString("sr.phone"),
-                                myUi.getMessage(SptMessages.Phone), id, true, false));
-                item.getItemProperty(myUi.getMessage(SptMessages.WorkPlace)).setValue(
+                                myUi.getMessage(Messages.Phone), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
                         dw.createTextField(result.getString("sr.work_place"),
-                                myUi.getMessage(SptMessages.WorkPlace), id, true, false));
-                item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
+                                myUi.getMessage(Messages.WorkPlace), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                         dw.createTextField(result.getString("sr.passport"),
-                                myUi.getMessage(SptMessages.Passport), id, true, false));
-                item.getItemProperty(myUi.getMessage(SptMessages.Responsible)).setValue(
-                        dw.createCheckBox(false, myUi.getMessage(SptMessages.Responsible), id));
+                                myUi.getMessage(Messages.Passport), id, true, false));
+                item.getItemProperty(myUi.getMessage(Messages.Responsible)).setValue(
+                        dw.createCheckBox(false, myUi.getMessage(Messages.Responsible), id));
             }
-            item.getItemProperty(myUi.getMessage(SptMessages.RelativeType)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.RelativeType)).setValue(
                     dw.createCombobox(result.getInt("sr.relatives_id"),
-                            myUi.getMessage(SptMessages.RelativeType),
+                            myUi.getMessage(Messages.RelativeType),
                             id, Settings.dbRelatives, false, false, false, false));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
         }
         return container;
     }

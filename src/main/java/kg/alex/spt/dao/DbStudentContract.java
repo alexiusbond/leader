@@ -12,7 +12,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.ContractInfo;
 import kg.alex.spt.domain.StudentContract;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.students.ClassListReport;
 import kg.alex.spt.reports.students.DebtReport;
 import kg.alex.spt.reports.students.DiscountsReport;
@@ -379,91 +379,91 @@ public class DbStudentContract extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Discount), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.CorrectionType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearOverpay), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.OverPay), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Relative), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Address), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.WorkPlace), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Contract), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.DiscountType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Discount), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.CorrectionType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Correction), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousYearDebt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousYearOverpay), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Net), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Paid), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Debt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.OverPay), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Relative), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Phone), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Address), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WorkPlace), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.EducationStatus)).setValue(
                     result.getString("edu.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(result.getString("st.name"));
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(result.getString("st.surname"));
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("class"));
             if (result.getString("rel.name") != null) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Relative)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Relative)).setValue(
                         result.getString("rel.name") + " - " + result.getString("sr.fullname"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(
                         result.getString("sr.phone"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Address)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Address)).setValue(
                         result.getString("sr.address"));
-                item.getItemProperty(myUI.getMessage(SptMessages.WorkPlace)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(
                         result.getString("sr.work_place"));
             }
             double prevYearDebt = result.getDouble("prev_debt");
             if (prevYearDebt >= 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(prevYearDebt);
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(0.0);
+                item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).setValue(prevYearDebt);
+                item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).setValue(0.0);
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(0.0);
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(prevYearDebt);
+                item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).setValue(0.0);
+                item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).setValue(prevYearDebt);
             }
-            clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-            clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
+            clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).getValue();
+            clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).getValue();
             if (result.getDouble("contract_amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(result.getDouble("contract_amount"));
-                clr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Contract)).setValue(result.getDouble("contract_amount"));
+                clr.contracts += (Double) item.getItemProperty(myUI.getMessage(Messages.Contract)).getValue();
                 if (result.getString("disc") != null) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.DiscountType)).setValue(result.getString("disc"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
+                    item.getItemProperty(myUI.getMessage(Messages.DiscountType)).setValue(result.getString("disc"));
+                    item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(
                             result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
-                    clr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
+                    clr.discounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Discount)).getValue();
                     clr.discountedStudents++;
                 } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(0.0);
+                    item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(0.0);
                 }
-                item.getItemProperty(myUI.getMessage(SptMessages.CorrectionType)).setValue(result.getString("vc.full_details"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(result.getDouble("vc.amount"));
-                clr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("contr_with_disc")
+                item.getItemProperty(myUI.getMessage(Messages.CorrectionType)).setValue(result.getString("vc.full_details"));
+                item.getItemProperty(myUI.getMessage(Messages.Correction)).setValue(result.getDouble("vc.amount"));
+                clr.corrections += (Double) item.getItemProperty(myUI.getMessage(Messages.Correction)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(result.getDouble("contr_with_disc")
                         + result.getDouble("prev_debt") + result.getDouble("vc.amount"));
-                clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
+                clr.nets += (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue();
             } else if (result.getDouble("prev_debt") != 0.0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("prev_debt"));
-                clr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(result.getDouble("prev_debt"));
+                clr.nets += (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue();
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(result.getDouble("net_payments"));
-            clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-            double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
+            item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(result.getDouble("net_payments"));
+            clr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
+            double debt = (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue()
                     - result.getDouble("net_payments");
             if (debt >= 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
-                item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);
+                item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(debt);
+                item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(0.0);
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(0.0);
-                item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(debt);
+                item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(0.0);
+                item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(debt);
             }
-            clr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
-            clr.overPays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+            clr.debts += (Double) item.getItemProperty(myUI.getMessage(Messages.Debt)).getValue();
+            clr.overPays += (Double) item.getItemProperty(myUI.getMessage(Messages.OverPay)).getValue();
             if (result.getInt("edu.id") == 2) {
                 clr.activeStudents++;
             }
@@ -509,69 +509,69 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Contract), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.DiscountType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Discount), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.CorrectionType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Correction), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.PreviousYearDebt), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Net), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Left), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Contract), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.DiscountType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Discount), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.CorrectionType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Correction), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.PreviousYearDebt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Net), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Paid), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Left), Double.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.EducationStatus)).setValue(
                     result.getString("vcs.education_status"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Id)).setValue(
                     result.getString("st.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(
                     result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("vcs.class_name"));
             if (result.getDouble("c.amount") != 0.0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Contract)).setValue(
                         result.getDouble("c.amount"));
                 dr.contracts += (Double) item.getItemProperty(
-                        myUI.getMessage(SptMessages.Contract)).getValue();
+                        myUI.getMessage(Messages.Contract)).getValue();
                 if (result.getString("disc") != null) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.DiscountType)).setValue(
+                    item.getItemProperty(myUI.getMessage(Messages.DiscountType)).setValue(
                             result.getString("disc"));
-                    item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
+                    item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(
                             result.getDouble("c.amount") - result.getDouble("sc.contr_with_disc"));
-                    dr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
+                    dr.discounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Discount)).getValue();
                     dr.discountedStudents++;
                 } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(0.0);
+                    item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(0.0);
                 }
-                item.getItemProperty(myUI.getMessage(SptMessages.CorrectionType)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.CorrectionType)).setValue(
                         result.getString("vc.full_details"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Correction)).setValue(
                         result.getDouble("vc.amount"));
-                dr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
+                dr.corrections += (Double) item.getItemProperty(myUI.getMessage(Messages.Correction)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).setValue(
                         result.getDouble("sc.debt"));
                 dr.debts += (Double) item.getItemProperty(
-                        myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(
+                        myUI.getMessage(Messages.PreviousYearDebt)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(
                         result.getDouble("sc.contr_with_disc") + result.getDouble("sc.debt")
                                 + result.getDouble("vc.amount"));
-                dr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+                dr.nets += (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                         result.getDouble("sc.net_payments"));
                 dr.paid_amounts += (Double) item.getItemProperty(
-                        myUI.getMessage(SptMessages.Paid)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Left)).setValue(
-                        (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue()
+                        myUI.getMessage(Messages.Paid)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Left)).setValue(
+                        (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue()
                                 - result.getDouble("sc.net_payments"));
                 dr.lefts += (Double) item.getItemProperty(
-                        myUI.getMessage(SptMessages.Left)).getValue();
+                        myUI.getMessage(Messages.Left)).getValue();
             }
             if (result.getInt("vcs.education_status_id") == 2) {
                 dr.activeStudents++;
@@ -767,29 +767,29 @@ public class DbStudentContract extends BaseDb {
         while (result.next()) {
             if (school_id != result.getInt("t.school_id")) {
                 if (t != null) {
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
+                    t.setColumnFooter(myUI.getMessage(Messages.Total_Active),
                             ymr.totalStudents + "/" + ymr.totalActive);
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
+                    t.setColumnFooter(myUI.getMessage(Messages.Contract),
                             Settings.dFormat2.format(ymr.contracts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
+                    t.setColumnFooter(myUI.getMessage(Messages.Discount),
                             Settings.dFormat2.format(ymr.discounts));
                     if (ymr.contracts != 0) {
-                        t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
+                        t.setColumnFooter(myUI.getMessage(Messages.DiscountPercentage),
                                 Settings.dFormat2.format((100 * ymr.discounts) / ymr.contracts));
                     }
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                    t.setColumnFooter(myUI.getMessage(Messages.Correction),
                             Settings.dFormat2.format(ymr.corrections));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
+                    t.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
                             Settings.dFormat2.format(ymr.prevYearDebts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+                    t.setColumnFooter(myUI.getMessage(Messages.PreviousYearOverpay),
                             Settings.dFormat2.format(ymr.prevYearOverpays));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Net),
+                    t.setColumnFooter(myUI.getMessage(Messages.Net),
                             Settings.dFormat2.format(ymr.nets));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+                    t.setColumnFooter(myUI.getMessage(Messages.Paid),
                             Settings.dFormat2.format(ymr.paid_amounts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+                    t.setColumnFooter(myUI.getMessage(Messages.Debt),
                             Settings.dFormat2.format(ymr.debts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
+                    t.setColumnFooter(myUI.getMessage(Messages.OverPay),
                             Settings.dFormat2.format(ymr.overpays));
                     if (ymr.nets != 0.0) {
                         t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(ymr.paid_amounts * 100 / ymr.nets));
@@ -813,70 +813,70 @@ public class DbStudentContract extends BaseDb {
             }
             if (t != null) {
                 Item item = t.getContainerDataSource().addItem(i++);
-                item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                         result.getString("cl"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Total_Active)).setValue(
                         result.getInt("total_studs") + "/" + result.getInt("active_studs"));
                 ymr.totalStudents += result.getInt("total_studs");
                 ymr.totalActive += result.getInt("active_studs");
-                item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Contract)).setValue(
                         result.getDouble("contract_amount"));
-                ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
+                ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(Messages.Contract)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(
                         result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
                 if (result.getDouble("contract_amount") != 0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue((100 *
+                    item.getItemProperty(myUI.getMessage(Messages.DiscountPercentage)).setValue((100 *
                             (result.getDouble("contract_amount") - result.getDouble("contr_with_disc")))
                             / result.getDouble("contract_amount"));
                 }
-                ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+                ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Discount)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Correction)).setValue(
                         result.getDouble("correction"));
-                ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
+                ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(Messages.Correction)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).setValue(
                         result.getDouble("prev_debt"));
-                ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(
+                ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).setValue(
                         result.getDouble("prev_overpay"));
-                ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("net"));
-                ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+                ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(result.getDouble("net"));
+                ymr.nets += (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                         result.getDouble("net_payments"));
-                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("debt"));
-                ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(result.getDouble("overpay"));
-                ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
-                if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                    item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                            / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(result.getDouble("debt"));
+                ymr.debts += (Double) item.getItemProperty(myUI.getMessage(Messages.Debt)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(result.getDouble("overpay"));
+                ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(Messages.OverPay)).getValue();
+                if ((Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue() != 0.0) {
+                    item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue() * 100
+                            / (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue());
                 }
             }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
+            t.setColumnFooter(myUI.getMessage(Messages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
-            t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
+            t.setColumnFooter(myUI.getMessage(Messages.Contract),
                     Settings.dFormat2.format(ymr.contracts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
+            t.setColumnFooter(myUI.getMessage(Messages.Discount),
                     Settings.dFormat2.format(ymr.discounts));
             if (ymr.contracts != 0) {
-                t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
+                t.setColumnFooter(myUI.getMessage(Messages.DiscountPercentage),
                         Settings.dFormat2.format((100 * ymr.discounts) / ymr.contracts));
             }
-            t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
+            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
                     Settings.dFormat2.format(ymr.prevYearDebts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearOverpay),
                     Settings.dFormat2.format(ymr.prevYearOverpays));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+            t.setColumnFooter(myUI.getMessage(Messages.Correction),
                     Settings.dFormat2.format(ymr.corrections));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Net),
+            t.setColumnFooter(myUI.getMessage(Messages.Net),
                     Settings.dFormat2.format(ymr.nets));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+            t.setColumnFooter(myUI.getMessage(Messages.Paid),
                     Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debts), Settings.dFormat2.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
+            t.setColumnFooter(myUI.getMessage(Messages.Debts), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(Messages.OverPay), Settings.dFormat2.format(ymr.overpays));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                         ymr.paid_amounts * 100 / ymr.nets));
@@ -932,10 +932,10 @@ public class DbStudentContract extends BaseDb {
         while (result.next()) {
             if (school_id != result.getInt("s_temp.id")) {
                 if (t != null) {
-                    t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat2.format(ymr.inst_plans));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(ymr.debts));
-                    t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
+                    t.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt), Settings.dFormat2.format(ymr.inst_plans));
+                    t.setColumnFooter(myUI.getMessage(Messages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
+                    t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(ymr.debts));
+                    t.setColumnFooter(myUI.getMessage(Messages.OverPay), Settings.dFormat2.format(ymr.overpays));
                     if (ymr.inst_plans != 0.0) {
                         t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                                 ymr.paid_amounts * 100 / ymr.inst_plans));
@@ -951,38 +951,38 @@ public class DbStudentContract extends BaseDb {
             }
             if (t != null) {
                 Item item = t.getContainerDataSource().addItem(i++);
-                item.getItemProperty(myUI.getMessage(SptMessages.Month)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Month)).setValue(
                         result.getString("months.name"));
-                item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).setValue(
                         result.getDouble("i_temp.amn"));
                 ymr.inst_plans += (Double) item.getItemProperty(
-                        myUI.getMessage(SptMessages.InstPlanDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+                        myUI.getMessage(Messages.InstPlanDebt)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                         result.getDouble("p_temp.amn"));
-                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
-                        - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
+                double debt = (Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).getValue()
+                        - (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
                 if (debt > 0.0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
-                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);
-                    ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+                    item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(debt);
+                    item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(0.0);
+                    ymr.debts += (Double) item.getItemProperty(myUI.getMessage(Messages.Debt)).getValue();
                 } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(0.0);
-                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(debt);
-                    ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+                    item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(0.0);
+                    item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(debt);
+                    ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(Messages.OverPay)).getValue();
                 }
-                if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
+                if ((Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).getValue() != 0.0) {
                     item.getItemProperty(Settings.percentage).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100.0
-                                    / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
+                            (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue() * 100.0
+                                    / (Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).getValue());
                 }
             }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt), Settings.dFormat2.format(ymr.inst_plans));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
+            t.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt), Settings.dFormat2.format(ymr.inst_plans));
+            t.setColumnFooter(myUI.getMessage(Messages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
+            t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(Messages.OverPay), Settings.dFormat2.format(ymr.overpays));
             if (ymr.inst_plans != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(ymr.paid_amounts * 100 / ymr.inst_plans));
             }
@@ -1177,66 +1177,66 @@ public class DbStudentContract extends BaseDb {
         ResultSet result = stat.executeQuery();
         Table t;
         int i = 0;
-        t = ymr.createTable(myUI.getMessage(SptMessages.Total));
+        t = ymr.createTable(myUI.getMessage(Messages.Total));
         ymr.rightLay.addComponent(t);
         while (result.next()) {
             Item item = t.getContainerDataSource().addItem(i++);
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("cl"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Total_Active)).setValue(
                     result.getInt("total_studs") + "/" + result.getInt("active_studs"));
             ymr.totalStudents += result.getInt("total_studs");
             ymr.totalActive += result.getInt("active_studs");
-            item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Contract)).setValue(
                     result.getDouble("contract_amount"));
-            ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
+            ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(Messages.Contract)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(
                     result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
             if (result.getDouble("contract_amount") != 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue((100 *
+                item.getItemProperty(myUI.getMessage(Messages.DiscountPercentage)).setValue((100 *
                         (result.getDouble("contract_amount") - result.getDouble("contr_with_disc")))
                         / result.getDouble("contract_amount"));
             }
-            ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+            ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Discount)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Correction)).setValue(
                     result.getDouble("correction"));
-            ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
+            ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(Messages.Correction)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).setValue(
                     result.getDouble("prev_debt"));
-            ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(
+            ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).setValue(
                     result.getDouble("prev_overpay"));
-            ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("net"));
-            ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+            ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(result.getDouble("net"));
+            ymr.nets += (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                     result.getDouble("net_payments"));
-            ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("debt"));
-            ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(result.getDouble("overpay"));
-            ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
-            if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                        / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
+            ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(result.getDouble("debt"));
+            ymr.debts += (Double) item.getItemProperty(myUI.getMessage(Messages.Debt)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(result.getDouble("overpay"));
+            ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(Messages.OverPay)).getValue();
+            if ((Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue() != 0.0) {
+                item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue() * 100
+                        / (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue());
             }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
+            t.setColumnFooter(myUI.getMessage(Messages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
-            t.setColumnFooter(myUI.getMessage(SptMessages.Contract), Settings.dFormat2.format(ymr.contracts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Correction), Settings.dFormat2.format(ymr.corrections));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Discount), Settings.dFormat2.format(ymr.discounts));
+            t.setColumnFooter(myUI.getMessage(Messages.Contract), Settings.dFormat2.format(ymr.contracts));
+            t.setColumnFooter(myUI.getMessage(Messages.Correction), Settings.dFormat2.format(ymr.corrections));
+            t.setColumnFooter(myUI.getMessage(Messages.Discount), Settings.dFormat2.format(ymr.discounts));
             if (ymr.contracts != 0) {
-                t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
+                t.setColumnFooter(myUI.getMessage(Messages.DiscountPercentage),
                         Settings.dFormat2.format((100 * ymr.discounts) / ymr.contracts));
             }
-            t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
+            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
                     Settings.dFormat2.format(ymr.prevYearDebts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Net), Settings.dFormat2.format(ymr.nets));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay), Settings.dFormat2.format(ymr.overpays));
+            t.setColumnFooter(myUI.getMessage(Messages.Net), Settings.dFormat2.format(ymr.nets));
+            t.setColumnFooter(myUI.getMessage(Messages.Paid), Settings.dFormat2.format(ymr.paid_amounts));
+            t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(Messages.OverPay), Settings.dFormat2.format(ymr.overpays));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
                         ymr.paid_amounts * 100 / ymr.nets));
@@ -1436,74 +1436,74 @@ public class DbStudentContract extends BaseDb {
         Table t;
         int i = 0;
         ymr.clearLayout();
-        t = ymr.createTable(myUI.getMessage(SptMessages.Total));
+        t = ymr.createTable(myUI.getMessage(Messages.Total));
         ymr.rightLay.addComponent(t);
         while (result.next()) {
             Item item = t.getContainerDataSource().addItem(i++);
-            item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.School)).setValue(
                     result.getString("school"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Total_Active)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Total_Active)).setValue(
                     result.getInt("total_studs") + "/" + result.getInt("active_studs"));
             ymr.totalStudents += result.getInt("total_studs");
             ymr.totalActive += result.getInt("active_studs");
-            item.getItemProperty(myUI.getMessage(SptMessages.Contract)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Contract)).setValue(
                     result.getDouble("contract_amount"));
-            ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Contract)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Discount)).setValue(
+            ymr.contracts += (Double) item.getItemProperty(myUI.getMessage(Messages.Contract)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Discount)).setValue(
                     result.getDouble("contract_amount") - result.getDouble("contr_with_disc"));
             if (result.getDouble("contract_amount") != 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.DiscountPercentage)).setValue((100 *
+                item.getItemProperty(myUI.getMessage(Messages.DiscountPercentage)).setValue((100 *
                         (result.getDouble("contract_amount") - result.getDouble("contr_with_disc")))
                         / result.getDouble("contract_amount"));
             }
-            ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Discount)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Correction)).setValue(
+            ymr.discounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Discount)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Correction)).setValue(
                     result.getDouble("correction"));
-            ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Correction)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).setValue(
+            ymr.corrections += (Double) item.getItemProperty(myUI.getMessage(Messages.Correction)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).setValue(
                     result.getDouble("prev_debt"));
-            ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearDebt)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).setValue(
+            ymr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).setValue(
                     result.getDouble("prev_overpay"));
-            ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.PreviousYearOverpay)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Net)).setValue(result.getDouble("net"));
-            ymr.nets += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+            ymr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Net)).setValue(result.getDouble("net"));
+            ymr.nets += (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                     result.getDouble("net_payments"));
-            ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("debt"));
-            ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
-            item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(result.getDouble("overpay"));
-            ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
-            if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue() != 0.0) {
-                item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                        / (Double) item.getItemProperty(myUI.getMessage(SptMessages.Net)).getValue());
+            ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(result.getDouble("debt"));
+            ymr.debts += (Double) item.getItemProperty(myUI.getMessage(Messages.Debt)).getValue();
+            item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(result.getDouble("overpay"));
+            ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(Messages.OverPay)).getValue();
+            if ((Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue() != 0.0) {
+                item.getItemProperty(Settings.percentage).setValue((Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue() * 100
+                        / (Double) item.getItemProperty(myUI.getMessage(Messages.Net)).getValue());
             }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.Total_Active),
+            t.setColumnFooter(myUI.getMessage(Messages.Total_Active),
                     ymr.totalStudents + "/" + ymr.totalActive);
-            t.setColumnFooter(myUI.getMessage(SptMessages.Contract),
+            t.setColumnFooter(myUI.getMessage(Messages.Contract),
                     Settings.dFormat2.format(ymr.contracts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+            t.setColumnFooter(myUI.getMessage(Messages.Correction),
                     Settings.dFormat2.format(ymr.corrections));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Discount),
+            t.setColumnFooter(myUI.getMessage(Messages.Discount),
                     Settings.dFormat2.format(ymr.discounts));
             if (ymr.contracts != 0) {
-                t.setColumnFooter(myUI.getMessage(SptMessages.DiscountPercentage),
+                t.setColumnFooter(myUI.getMessage(Messages.DiscountPercentage),
                         Settings.dFormat2.format(ymr.discounts * 100 / ymr.contracts));
             }
-            t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
+            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
                     Settings.dFormat2.format(ymr.prevYearDebts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearOverpay),
+            t.setColumnFooter(myUI.getMessage(Messages.PreviousYearOverpay),
                     Settings.dFormat2.format(ymr.prevYearOverpays));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Net),
+            t.setColumnFooter(myUI.getMessage(Messages.Net),
                     Settings.dFormat2.format(ymr.nets));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+            t.setColumnFooter(myUI.getMessage(Messages.Paid),
                     Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+            t.setColumnFooter(myUI.getMessage(Messages.Debt),
                     Settings.dFormat2.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
+            t.setColumnFooter(myUI.getMessage(Messages.OverPay),
                     Settings.dFormat2.format(ymr.overpays));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
@@ -1554,48 +1554,48 @@ public class DbStudentContract extends BaseDb {
         ResultSet result = stat.executeQuery();
         Table t;
         int i = 0;
-        t = ymr.createTable(myUI.getMessage(SptMessages.Total));
+        t = ymr.createTable(myUI.getMessage(Messages.Total));
         ymr.rightLay.addComponent(t);
         while (result.next()) {
             if (t != null) {
                 Item item = t.getContainerDataSource().addItem(i++);
-                item.getItemProperty(myUI.getMessage(SptMessages.Month)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Month)).setValue(
                         result.getString("months.name"));
-                item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).setValue(
                         result.getDouble("i_temp.amn"));
                 ymr.inst_plans += (Double) item.getItemProperty(
-                        myUI.getMessage(SptMessages.InstPlanDebt)).getValue();
-                item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+                        myUI.getMessage(Messages.InstPlanDebt)).getValue();
+                item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                         result.getDouble("p_temp.amn"));
-                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
-                double debt = (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue()
-                        - (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue();
+                ymr.paid_amounts += (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
+                double debt = (Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).getValue()
+                        - (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue();
                 if (debt > 0.0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(debt);
-                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(0.0);
-                    ymr.debts += (Double) item.getItemProperty(myUI.getMessage(SptMessages.Debt)).getValue();
+                    item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(debt);
+                    item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(0.0);
+                    ymr.debts += (Double) item.getItemProperty(myUI.getMessage(Messages.Debt)).getValue();
                 } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(0.0);
-                    item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).setValue(debt);
-                    ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(SptMessages.OverPay)).getValue();
+                    item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(0.0);
+                    item.getItemProperty(myUI.getMessage(Messages.OverPay)).setValue(debt);
+                    ymr.overpays += (Double) item.getItemProperty(myUI.getMessage(Messages.OverPay)).getValue();
                 }
-                if ((Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue() != 0.0) {
+                if ((Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).getValue() != 0.0) {
                     item.getItemProperty(Settings.percentage).setValue(
-                            (Double) item.getItemProperty(myUI.getMessage(SptMessages.Paid)).getValue() * 100
-                                    / (Double) item.getItemProperty(myUI.getMessage(SptMessages.InstPlanDebt)).getValue());
+                            (Double) item.getItemProperty(myUI.getMessage(Messages.Paid)).getValue() * 100
+                                    / (Double) item.getItemProperty(myUI.getMessage(Messages.InstPlanDebt)).getValue());
                 }
             }
         }
         if (t != null) {
-            t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
+            t.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt),
                     Settings.dFormat2.format(ymr.nets));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+            t.setColumnFooter(myUI.getMessage(Messages.Paid),
                     Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.Debt),
+            t.setColumnFooter(myUI.getMessage(Messages.Debt),
                     Settings.dFormat2.format(ymr.debts));
-            t.setColumnFooter(myUI.getMessage(SptMessages.OverPay),
+            t.setColumnFooter(myUI.getMessage(Messages.OverPay),
                     Settings.dFormat2.format(ymr.overpays));
-            t.setColumnFooter(myUI.getMessage(SptMessages.InstPlanDebt),
+            t.setColumnFooter(myUI.getMessage(Messages.InstPlanDebt),
                     Settings.dFormat2.format(ymr.inst_plans));
             if (ymr.inst_plans != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
@@ -1682,25 +1682,25 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(8, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.InstallmentPlan), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Paid), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.InstallmentPlan), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Paid), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Debt), Double.class, 0.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(
                     result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("class_name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.InstallmentPlan)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.InstallmentPlan)).setValue(
                     result.getDouble("inst_plan"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Paid)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Paid)).setValue(
                     result.getDouble("paid"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(
                     result.getDouble("inst_plan") - result.getDouble("paid"));
             dr.inst_total += result.getDouble("inst_plan");
             dr.paid_total += result.getDouble("paid");
@@ -1729,7 +1729,7 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Total), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Total), Double.class, 0.0);
         ContractInfo ct = new ContractInfo();
         while (result.next()) {
             ct.setStudents(result.getInt("ttl_students"));
@@ -1799,53 +1799,53 @@ public class DbStudentContract extends BaseDb {
         stat.setInt(4, studentId);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.AcademicYear), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Repayment), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
+        container.addContainerProperty(myUI.getMessage(Messages.AcademicYear), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Type), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Debt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Repayment), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Balance), String.class, "0.00");
         double currentBalance = 0.0, totalDebt = 0.0;
         Item item;
 
         while (result.next()) {
             item = container.addItem(result.getString("t.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.AcademicYear)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.AcademicYear)).setValue(
                     result.getString("t.academic_year"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
-            if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payment)) ||
-                    result.getString("t.type").equals(myUI.getMessage(SptMessages.Discount)) ||
-                    (result.getString("t.type").equals(myUI.getMessage(SptMessages.Correction))
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(result.getString("t.type"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("t.note"));
+            if (result.getString("t.type").equals(myUI.getMessage(Messages.Payment)) ||
+                    result.getString("t.type").equals(myUI.getMessage(Messages.Discount)) ||
+                    (result.getString("t.type").equals(myUI.getMessage(Messages.Correction))
                             && result.getDouble("t.amount") < 0.0)) {
                 if (result.getDouble("t.amount") < 0.0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(-1 * result.getDouble("t.amount"));
+                    item.getItemProperty(myUI.getMessage(Messages.Repayment)).setValue(-1 * result.getDouble("t.amount"));
                     currentBalance -= (-1 * result.getDouble("t.amount"));
                 } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(result.getDouble("t.amount"));
+                    item.getItemProperty(myUI.getMessage(Messages.Repayment)).setValue(result.getDouble("t.amount"));
                     currentBalance -= result.getDouble("t.amount");
                 }
 
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("t.amount"));
+                item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(result.getDouble("t.amount"));
                 currentBalance += result.getDouble("t.amount");
                 totalDebt += result.getDouble("t.amount");
             }
             if (currentBalance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(
                         (Settings.dFormat2.format(currentBalance * -1))
-                                + " (" + myUI.getMessage(SptMessages.Repayment).charAt(0) + ")");
+                                + " (" + myUI.getMessage(Messages.Repayment).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
-                        + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
+                        + " (" + myUI.getMessage(Messages.Debt).charAt(0) + ")");
             }
-            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
-                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
+            t.setColumnFooter(myUI.getMessage(Messages.Balance),
+                    item.getItemProperty(myUI.getMessage(Messages.Balance)).getValue().toString());
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(totalDebt));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat2.format(totalDebt - currentBalance));
+        t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(Messages.Repayment), Settings.dFormat2.format(totalDebt - currentBalance));
         t.setContainerDataSource(container);
     }
 
@@ -1921,62 +1921,62 @@ public class DbStudentContract extends BaseDb {
         }
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FullName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Type), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Debt), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Repayment), Double.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Balance), String.class, "0.00");
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Type), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Debt), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Repayment), Double.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Balance), String.class, "0.00");
         double currentBalance = 0.0, totalDebt = 0.0;
         Item item;
 
         while (result.next()) {
             item = container.addItem(result.getString("t.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("t.class"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Id)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Id)).setValue(
                     result.getString("t.login"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FullName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(
                     result.getString("t.fullname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.EducationStatus)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.EducationStatus)).setValue(
                     result.getString("t.education_status"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Type)).setValue(result.getString("t.type"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("t.note"));
-            if (result.getString("t.type").equals(myUI.getMessage(SptMessages.Payment)) ||
-                    result.getString("t.type").equals(myUI.getMessage(SptMessages.Discount)) ||
-                    (result.getString("t.type").equals(myUI.getMessage(SptMessages.Correction))
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format(result.getDate("t.creation_date")));
+            item.getItemProperty(myUI.getMessage(Messages.Type)).setValue(result.getString("t.type"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("t.note"));
+            if (result.getString("t.type").equals(myUI.getMessage(Messages.Payment)) ||
+                    result.getString("t.type").equals(myUI.getMessage(Messages.Discount)) ||
+                    (result.getString("t.type").equals(myUI.getMessage(Messages.Correction))
                             && result.getDouble("t.amount") < 0.0)) {
                 if (result.getDouble("t.amount") < 0.0) {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(-1 * result.getDouble("t.amount"));
+                    item.getItemProperty(myUI.getMessage(Messages.Repayment)).setValue(-1 * result.getDouble("t.amount"));
                     currentBalance -= (-1 * result.getDouble("t.amount"));
                 } else {
-                    item.getItemProperty(myUI.getMessage(SptMessages.Repayment)).setValue(result.getDouble("t.amount"));
+                    item.getItemProperty(myUI.getMessage(Messages.Repayment)).setValue(result.getDouble("t.amount"));
                     currentBalance -= result.getDouble("t.amount");
                 }
 
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Debt)).setValue(result.getDouble("t.amount"));
+                item.getItemProperty(myUI.getMessage(Messages.Debt)).setValue(result.getDouble("t.amount"));
                 currentBalance += result.getDouble("t.amount");
                 totalDebt += result.getDouble("t.amount");
             }
             if (currentBalance < 0) {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(
                         (Settings.dFormat2.format(currentBalance * -1))
-                                + " (" + myUI.getMessage(SptMessages.Repayment).charAt(0) + ")");
+                                + " (" + myUI.getMessage(Messages.Repayment).charAt(0) + ")");
             } else {
-                item.getItemProperty(myUI.getMessage(SptMessages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
-                        + " (" + myUI.getMessage(SptMessages.Debt).charAt(0) + ")");
+                item.getItemProperty(myUI.getMessage(Messages.Balance)).setValue(Settings.dFormat2.format(currentBalance)
+                        + " (" + myUI.getMessage(Messages.Debt).charAt(0) + ")");
             }
-            t.setColumnFooter(myUI.getMessage(SptMessages.Balance),
-                    item.getItemProperty(myUI.getMessage(SptMessages.Balance)).getValue().toString());
+            t.setColumnFooter(myUI.getMessage(Messages.Balance),
+                    item.getItemProperty(myUI.getMessage(Messages.Balance)).getValue().toString());
         }
-        t.setColumnFooter(myUI.getMessage(SptMessages.Debt), Settings.dFormat2.format(totalDebt));
-        t.setColumnFooter(myUI.getMessage(SptMessages.Repayment), Settings.dFormat2.format(totalDebt - currentBalance));
+        t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(totalDebt));
+        t.setColumnFooter(myUI.getMessage(Messages.Repayment), Settings.dFormat2.format(totalDebt - currentBalance));
         t.setContainerDataSource(container);
     }
 }

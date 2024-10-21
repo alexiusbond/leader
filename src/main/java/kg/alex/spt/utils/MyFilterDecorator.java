@@ -3,7 +3,7 @@ package kg.alex.spt.utils;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.datefield.Resolution;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.tepi.filtertable.FilterDecorator;
 import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
 
@@ -42,24 +42,24 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
 
     @Override
     public String getFromCaption() {
-        return myUI.getMessage(SptMessages.StartDate);
+        return myUI.getMessage(Messages.StartDate);
     }
 
     @Override
     public String getToCaption() {
-        return myUI.getMessage(SptMessages.EndDate);
+        return myUI.getMessage(Messages.EndDate);
     }
 
     @Override
     public String getSetCaption() {
         // use default caption
-        return myUI.getMessage(SptMessages.Set);
+        return myUI.getMessage(Messages.Set);
     }
 
     @Override
     public String getClearCaption() {
         // use default caption
-        return myUI.getMessage(SptMessages.Clear);
+        return myUI.getMessage(Messages.Clear);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class MyFilterDecorator implements FilterDecorator, Serializable {
 
     @Override
     public String getAllItemsVisibleString() {
-        return myUI.getMessage(SptMessages.Search);
+        return myUI.getMessage(Messages.Search);
     }
 
     @Override

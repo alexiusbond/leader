@@ -14,7 +14,7 @@ import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +80,7 @@ public class ClassPaymentsPdf {
                     table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.ClassPayments) + ": "
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.ClassPayments) + ": "
                             + year + " (" + Settings.df.format(fDate) + " - " + Settings.df.format(tDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
@@ -95,13 +95,13 @@ public class ClassPaymentsPdf {
                     infoTable.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     infoTable.addCell(new Phrase(" №", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.LastName), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.PaymentCategoryType), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.WhoPaid), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Amount), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.FirstName), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.LastName), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.ClassName), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.PaymentCategoryType), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.WhoPaid), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
 
                     Iterator<?> iter = planCont.getItemIds().iterator();
                     int i = 0;
@@ -112,20 +112,20 @@ public class ClassPaymentsPdf {
                         Object next = iter.next();
                         infoTable.addCell(new Phrase(i + "", tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.FirstName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.FirstName)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.LastName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.LastName)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.ClassName)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.PaymentCategoryType)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.PaymentCategoryType)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.WhoPaid)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.WhoPaid)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         infoTable.addCell(new Phrase(Settings.dFormat2.format(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Amount)).getValue()), tableFont));
+                                myUI.getMessage(Messages.Amount)).getValue()), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;
                     }
@@ -136,7 +136,7 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": "
                             + Settings.dFormat2.format(total), ordFontBold));
 
                     document.add(infoTable);
@@ -149,8 +149,8 @@ public class ClassPaymentsPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
                             + studentInfo.getAccountant().getName() + " " +
                             (studentInfo.getAccountant().getMiddle_name() == null ?

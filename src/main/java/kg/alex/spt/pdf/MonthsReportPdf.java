@@ -16,7 +16,7 @@ import com.vaadin.ui.Table;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,8 +80,8 @@ public class MonthsReportPdf {
                     table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.Monthly)
-                            + " " + myUI.getMessage(SptMessages.Report), fontBold);
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.Monthly)
+                            + " " + myUI.getMessage(Messages.Report), fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
                     document.add(spr);
@@ -103,10 +103,10 @@ public class MonthsReportPdf {
                                 setVerticalAlignment(Element.ALIGN_BOTTOM);
                         pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         pdfTable.addCell(new Phrase(" №", tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Month), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.InstPlanDebt), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Paid), tableFontBold));
-                        pdfTable.addCell(new Phrase(myUI.getMessage(SptMessages.Left), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Month), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.InstPlanDebt), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Paid), tableFontBold));
+                        pdfTable.addCell(new Phrase(myUI.getMessage(Messages.Left), tableFontBold));
                         pdfTable.addCell(new Phrase(Settings.percentage, tableFontBold));
 
                         Iterator<?> iter = dataTable.getContainerDataSource().getItemIds().iterator();
@@ -119,14 +119,14 @@ public class MonthsReportPdf {
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             pdfTable.addCell(new Phrase(j + "", tableFont));
                             pdfTable.addCell(new Phrase(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Month)).getValue().toString(), tableFont));
+                                    myUI.getMessage(Messages.Month)).getValue().toString(), tableFont));
                             pdfTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.InstPlanDebt)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.InstPlanDebt)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Paid)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Paid)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Left)).getValue()), tableFont));
+                                    myUI.getMessage(Messages.Left)).getValue()), tableFont));
                             pdfTable.addCell(new Phrase(Settings.dFormat2.format(dataTable.getContainerProperty(next,
                                     Settings.percentage).getValue()), tableFont));
                             j++;
@@ -134,11 +134,11 @@ public class MonthsReportPdf {
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(" ", tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.InstPlanDebt)), tableFontBold));
+                                myUI.getMessage(Messages.InstPlanDebt)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.Paid)), tableFontBold));
+                                myUI.getMessage(Messages.Paid)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
-                                myUI.getMessage(SptMessages.Left)), tableFontBold));
+                                myUI.getMessage(Messages.Left)), tableFontBold));
                         pdfTable.addCell(new Phrase(dataTable.getColumnFooter(
                                 Settings.percentage), tableFontBold));
 
@@ -153,8 +153,8 @@ public class MonthsReportPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Accountant), ordFontBold));
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Accountant), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell(new Phrase(studentInfo.getAccountant().getSurname() + " "
                             + studentInfo.getAccountant().getName() + " " +
                             (studentInfo.getAccountant().getMiddle_name() == null ?

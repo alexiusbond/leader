@@ -10,7 +10,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -669,9 +669,9 @@ public class ContractCambridgePdf_en {
                 for (Object obj : instPlanCont.getItemIds()) {
                     TContract.addCell(new Phrase(n + "", ordFont));
                     TContract.addCell(new Phrase(((DateField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(SptMessages.Date)).getValue()).getValue().toString(), ordFont));
+                            myUI.getMessage(Messages.Date)).getValue()).getValue().toString(), ordFont));
                     TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(SptMessages.Amount)).getValue()).getValue(), ordFont));
+                            myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("", ordFont));
                     n += 1;

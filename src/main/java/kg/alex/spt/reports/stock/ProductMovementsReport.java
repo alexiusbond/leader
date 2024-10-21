@@ -13,7 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -60,67 +60,67 @@ public class ProductMovementsReport implements Button.ClickListener,
         productsTable.setNullSelectionAllowed(false);
         productsTable.addValueChangeListener(this);
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
         tillDateDF.addValueChangeListener(this);
 
-        stockSelect = new ComboBox(myUI.getMessage(SptMessages.Stocks));
+        stockSelect = new ComboBox(myUI.getMessage(Messages.Stocks));
         stockSelect.setNullSelectionAllowed(false);
         stockSelect.setRequired(true);
         stockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        stockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        stockSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         stockSelect.setWidth(Settings.PERCENTS100);
-        stockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        stockSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         stockSelect.setFilteringMode(FilteringMode.CONTAINS);
         stockSelect.addValueChangeListener(this);
 
-        categorySelect = new ComboBox(myUI.getMessage(SptMessages.ProductCategory));
+        categorySelect = new ComboBox(myUI.getMessage(Messages.ProductCategory));
         categorySelect.setNullSelectionAllowed(false);
         categorySelect.setRequired(true);
         categorySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        categorySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        categorySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         categorySelect.setWidth(Settings.PERCENTS100);
-        categorySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        categorySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         categorySelect.setFilteringMode(FilteringMode.CONTAINS);
         categorySelect.addValueChangeListener(this);
 
 
-        schoolSelect = new ComboBox(myUI.getMessage(SptMessages.School));
+        schoolSelect = new ComboBox(myUI.getMessage(Messages.School));
         schoolSelect.setNullSelectionAllowed(false);
         schoolSelect.setRequired(true);
         schoolSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        schoolSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        schoolSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         schoolSelect.setWidth(Settings.PERCENTS100);
-        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        schoolSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         schoolSelect.setFilteringMode(FilteringMode.CONTAINS);
         schoolSelect.addValueChangeListener(this);
         try {
@@ -183,12 +183,12 @@ public class ProductMovementsReport implements Button.ClickListener,
                     dbCon.exec_product_movements(myUI, (Integer) productsTable.getValue(), fromDateDF.getValue(),
                             tillDateDF.getValue(), dataTable, (Integer) stockSelect.getValue());
 
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockOutcome), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.StockIncome), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Price), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousBalance), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.StockOutcome), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.StockIncome), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Price), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousBalance), Table.Align.RIGHT);
 
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
@@ -203,9 +203,9 @@ public class ProductMovementsReport implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.ProductMovementsReport) + " "
+                    excelReport.setReportTitle(myUI.getMessage(Messages.ProductMovementsReport) + " "
                             + productsTable.getContainerProperty(productsTable.getValue(),
-                            myUI.getMessage(SptMessages.Title)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
+                            myUI.getMessage(Messages.Title)).getValue() + " [" + fromDateDF.getCaption().toLowerCase() + " "
                             + Settings.df.format(fromDateDF.getValue())
                             + " " + tillDateDF.getCaption().toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
@@ -214,9 +214,9 @@ public class ProductMovementsReport implements Button.ClickListener,
                     excelReport.getTotalsRow().getCell(5).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(6).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(7).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(7).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Amount)));
+                    excelReport.getTotalsRow().getCell(7).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
                     excelReport.getTotalsRow().getCell(10).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(10).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.PreviousBalance)));
+                    excelReport.getTotalsRow().getCell(10).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.PreviousBalance)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {

@@ -18,7 +18,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.InventoryOrganization;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.InventoryOrganizationView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,18 +56,18 @@ public class DbInventoryOrganization extends BaseDb {
         stat.setInt(2, room_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Remain), Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Quantity), Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Remain), Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(Messages.Quantity), Integer.class, 0);
         container.addContainerProperty(Settings.id, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getString("io.code").toLowerCase());
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("title"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(
                     result.getInt("r.remain"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(
                     result.getInt("quantity"));
             item.getItemProperty(Settings.id).setValue(result.getInt("io.id"));
         }
@@ -94,12 +94,12 @@ public class DbInventoryOrganization extends BaseDb {
             String id = result.getString("t.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    v.createButton(myUi.getMessage(SptMessages.DeleteButton), id, Settings.dbInventoryOrganization, true));
-            item.getItemProperty(myUi.getMessage(SptMessages.Category)).setValue(
+                    v.createButton(myUi.getMessage(Messages.DeleteButton), id, Settings.dbInventoryOrganization, true));
+            item.getItemProperty(myUi.getMessage(Messages.Category)).setValue(
                     v.createCombobox(result.getInt("t.inventory_category_id"),
-                            myUi.getMessage(SptMessages.Category),
+                            myUi.getMessage(Messages.Category),
                             Settings.dbInventoryCategoryTable, true, true));
-            final ComboBox cb = v.createCombobox(result.getInt("t.brand_id"), myUi.getMessage(SptMessages.Brand),
+            final ComboBox cb = v.createCombobox(result.getInt("t.brand_id"), myUi.getMessage(Messages.Brand),
                     Settings.dbInventoryBrandTable, true, true);
             cb.setNewItemsAllowed(true);
             cb.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
@@ -111,8 +111,8 @@ public class DbInventoryOrganization extends BaseDb {
                     if (id1 != 0) {
                         for (Object next : container.getItemIds()) {
                             Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                    myUi.getMessage(SptMessages.Brand)).getValue()).getContainerDataSource()).addItem(id1);
-                            item1.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                                    myUi.getMessage(Messages.Brand)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUi.getMessage(Messages.Title)).setValue(newItemCaption);
                             cb.setValue(id1);
                         }
                     }
@@ -121,8 +121,8 @@ public class DbInventoryOrganization extends BaseDb {
                     logger.catching(e);
                 }
             });
-            item.getItemProperty(myUi.getMessage(SptMessages.Brand)).setValue(cb);
-            final ComboBox cb2 = v.createCombobox(result.getInt("t.title_id"), myUi.getMessage(SptMessages.Title),
+            item.getItemProperty(myUi.getMessage(Messages.Brand)).setValue(cb);
+            final ComboBox cb2 = v.createCombobox(result.getInt("t.title_id"), myUi.getMessage(Messages.Title),
                     Settings.dbInventoryTitleTable, true, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
@@ -134,8 +134,8 @@ public class DbInventoryOrganization extends BaseDb {
                     if (id12 != 0) {
                         for (Object next : container.getItemIds()) {
                             Item item12 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                    myUi.getMessage(SptMessages.Title)).getValue()).getContainerDataSource()).addItem(id12);
-                            item12.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                                    myUi.getMessage(Messages.Title)).getValue()).getContainerDataSource()).addItem(id12);
+                            item12.getItemProperty(myUi.getMessage(Messages.Title)).setValue(newItemCaption);
                             cb2.setValue(id12);
                         }
                     }
@@ -144,41 +144,41 @@ public class DbInventoryOrganization extends BaseDb {
                     logger.catching(e);
                 }
             });
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(cb2);
-            item.getItemProperty(myUi.getMessage(SptMessages.PurchaseYear)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(cb2);
+            item.getItemProperty(myUi.getMessage(Messages.PurchaseYear)).setValue(
                     v.createDateFiled(result.getDate("t.purchase_date"),
-                            myUi.getMessage(SptMessages.PurchaseYear), null, Resolution.YEAR, Settings.yearPattern));
-            item.getItemProperty(myUi.getMessage(SptMessages.LifeTime)).setValue(
+                            myUi.getMessage(Messages.PurchaseYear), null, Resolution.YEAR, Settings.yearPattern));
+            item.getItemProperty(myUi.getMessage(Messages.LifeTime)).setValue(
                     v.createTextFieldWithProperty(
-                            result.getInt("t.life_time"), myUi.getMessage(SptMessages.LifeTime),
-                            new IntegerRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 1, null),
+                            result.getInt("t.life_time"), myUi.getMessage(Messages.LifeTime),
+                            new IntegerRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 1, null),
                             new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true));
             int minVal = 1;
             if (result.getInt("r.remain") < result.getInt("t.quantity")) {
                 minVal = result.getInt("t.quantity") - result.getInt("r.remain");
             }
             TextField tf = v.createTextFieldWithProperty(
-                    result.getInt("t.quantity"), myUi.getMessage(SptMessages.Quantity),
-                    new IntegerRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), minVal, null),
+                    result.getInt("t.quantity"), myUi.getMessage(Messages.Quantity),
+                    new IntegerRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), minVal, null),
                     new ObjectProperty<>(0), Settings.getStringToIntegerConverter(), true);
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(SptMessages.Quantity));
-            item.getItemProperty(myUi.getMessage(SptMessages.Quantity)).setValue(tf);
+            tf.setData(myUi.getMessage(Messages.Quantity));
+            item.getItemProperty(myUi.getMessage(Messages.Quantity)).setValue(tf);
             item.getItemProperty(Settings.quantity_id).setValue(result.getInt("t.quantity"));
             tf = v.createTextFieldWithProperty(
-                    result.getDouble("t.price"), myUi.getMessage(SptMessages.Price),
-                    new DoubleRangeValidator(myUi.getMessage(SptMessages.NotificationWrongValue), 0.01, null),
+                    result.getDouble("t.price"), myUi.getMessage(Messages.Price),
+                    new DoubleRangeValidator(myUi.getMessage(Messages.NotificationWrongValue), 0.01, null),
                     new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(2), true);
             tf.addValueChangeListener(v);
             tf.setId(id);
-            tf.setData(myUi.getMessage(SptMessages.Price));
-            item.getItemProperty(myUi.getMessage(SptMessages.Price)).setValue(tf);
-            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
+            tf.setData(myUi.getMessage(Messages.Price));
+            item.getItemProperty(myUi.getMessage(Messages.Price)).setValue(tf);
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getInt("t.quantity") * result.getDouble("t.price"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getInt("r.remain"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Code)).setValue(result.getString("t.code"));
-            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(SptMessages.Update));
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(result.getInt("r.remain"));
+            item.getItemProperty(myUi.getMessage(Messages.Code)).setValue(result.getString("t.code"));
+            item.getItemProperty(Settings.crud_status).setValue(myUi.getMessage(Messages.Update));
             totalAmount += result.getInt("t.quantity") * result.getDouble("t.price");
             totalQuantity += result.getInt("t.quantity");
         }

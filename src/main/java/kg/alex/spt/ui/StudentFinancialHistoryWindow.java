@@ -8,7 +8,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.dao.DbStudentContract;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +33,7 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
         mainLay.setMargin(true);
         this.setContent(mainLay);
 
-        excelBtn = new Button(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn = new Button(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
@@ -52,9 +52,9 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
             DbStudentContract dbCon = new DbStudentContract();
             dbCon.connect();
             dbCon.execFinancialHistory(myUI, studentId, dataTable);
-            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Debt), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Repayment), Table.Align.RIGHT);
-            dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Debt), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Repayment), Table.Align.RIGHT);
+            dataTable.setColumnAlignment(myUI.getMessage(Messages.Balance), Table.Align.RIGHT);
 
             if (dataTable.getContainerDataSource().size() != 0) {
                 excelBtn.setEnabled(true);
@@ -77,7 +77,7 @@ public class StudentFinancialHistoryWindow extends Window implements Button.Clic
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(3).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Balance)));
+                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Balance)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {

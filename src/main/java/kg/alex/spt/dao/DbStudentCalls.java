@@ -10,7 +10,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.students.CallsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
 
@@ -53,17 +53,17 @@ public class DbStudentCalls extends BaseDb {
             String id = result.getString("sc.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                    dw.createButton(myUI.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format(result.getDate("sc.modification_date")));
-            item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoCalled)).setValue(
                     result.getString("fullname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                     dw.createTextFieldNote(result.getString("sc.note"),
-                            myUI.getMessage(SptMessages.Note), id));
+                            myUI.getMessage(Messages.Note), id));
             item.getItemProperty(Settings.crud_status)
-                    .setValue(myUI.getMessage(SptMessages.Update));
+                    .setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -104,25 +104,25 @@ public class DbStudentCalls extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.WhoCalled), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WhoCalled), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("sc.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(
                     result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(
                     result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     result.getString("vcs.class_name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                     result.getString("sc.note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.WhoCalled)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WhoCalled)).setValue(
                     result.getString("fullname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("date"))));
             cr.total++;
         }

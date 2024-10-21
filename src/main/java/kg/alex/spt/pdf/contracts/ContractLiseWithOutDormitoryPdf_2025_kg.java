@@ -9,7 +9,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.dao.DbRelative;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -474,30 +474,30 @@ public class ContractLiseWithOutDormitoryPdf_2025_kg {
                     Object obj = iter.next();
                     if ((Integer) obj == 1) {
                         f_name = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.FullName)).getValue().toString();
+                                myUI.getMessage(Messages.FullName)).getValue().toString();
                         f_work_place = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.WorkPlace)).getValue().toString();
+                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
                     }
                     if ((Integer) obj == 2) {
                         m_name = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.FullName)).getValue().toString();
+                                myUI.getMessage(Messages.FullName)).getValue().toString();
                         m_work_place = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.WorkPlace)).getValue().toString();
+                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
 
                     }
                     if ((Integer) relativeCont.getContainerProperty(obj,
                             Settings.is_main).getValue() == 1) {
                         text18.add(new Phrase("Тел номери: ", ordFont));
                         text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.Phone)).getValue().toString(), ordFont));
+                                myUI.getMessage(Messages.Phone)).getValue().toString(), ordFont));
                         text18.add(Chunk.NEWLINE);
                         text18.add(new Phrase("Жашаган жери: ", ordFont));
                         text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.Address)).getValue().toString(), ordFont));
+                                myUI.getMessage(Messages.Address)).getValue().toString(), ordFont));
                         text18.add(Chunk.NEWLINE);
                         text18.add(new Phrase("Паспорт маалыматы: ", ordFont));
                         text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(SptMessages.Passport)).getValue().toString(), ordFont));
+                                myUI.getMessage(Messages.Passport)).getValue().toString(), ordFont));
                     }
                 }
                 text11.add(new Phrase("Атасынын аты, жөнү: " + f_name, ordFont));
@@ -589,9 +589,9 @@ public class ContractLiseWithOutDormitoryPdf_2025_kg {
                 for (Object obj : instPlanCont.getItemIds()) {
                     TContract.addCell(new Phrase(n + "", ordFont));
                     TContract.addCell(new Phrase(((DateField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(SptMessages.Date)).getValue()).getValue().toString(), ordFont));
+                            myUI.getMessage(Messages.Date)).getValue()).getValue().toString(), ordFont));
                     TContract.addCell(new Phrase(((TextField) instPlanCont.getContainerProperty(obj,
-                            myUI.getMessage(SptMessages.Amount)).getValue()).getValue(), ordFont));
+                            myUI.getMessage(Messages.Amount)).getValue()).getValue(), ordFont));
                     TContract.addCell(new Phrase("", ordFont));
                     TContract.addCell(new Phrase("", ordFont));
                     n += 1;

@@ -11,7 +11,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +31,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
     public BackupView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        takeBakup = new Button(myUI.getMessage(SptMessages.TakeBackupButton));
+        takeBakup = new Button(myUI.getMessage(Messages.TakeBackupButton));
         takeBakup.setWidth(Settings.PERCENTS100);
         takeBakup.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         takeBakup.setIcon(FontAwesome.DATABASE);
@@ -76,7 +76,7 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
     }
 
     private Button createButton(String itemId) {
-        Button btn = new Button(myUI.getMessage(SptMessages.DownloadBackupButton));
+        Button btn = new Button(myUI.getMessage(Messages.DownloadBackupButton));
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.setIcon(FontAwesome.DOWNLOAD);
         btn.setData(itemId);
@@ -86,8 +86,8 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
 
     private void setDataTable() {
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), Date.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         try {
             File folder = new File("/home/logo/backups");
@@ -98,16 +98,16 @@ public class BackupView extends HorizontalSplitPanel implements Button.ClickList
                     if (basicFileAttributes.isRegularFile()) {
                         String id = listOfFile.getName();
                         Item item = container.addItem(id);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+                        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                                 listOfFile.getName());
-                        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                        item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                                 new Date(basicFileAttributes.lastModifiedTime().toMillis()));
                         item.getItemProperty(Settings.button).setValue(createButton(id));
                     }
                 }
             }
             dataTable.clear();
-            container.sort(new String[]{myUI.getMessage(SptMessages.Date)},
+            container.sort(new String[]{myUI.getMessage(Messages.Date)},
                     new boolean[]{false});
             dataTable.setContainerDataSource(container);
         } catch (Exception e) {

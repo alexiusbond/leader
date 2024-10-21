@@ -13,7 +13,7 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbEmployeeLessons;
 import kg.alex.spt.domain.EmployeeLessons;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.utils.MyFilterDecorator;
 import kg.alex.spt.utils.ResetableFilterGenerator;
 import org.apache.logging.log4j.LogManager;
@@ -58,7 +58,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             logger.error(e);
             logger.catching(e);
         }
-        employeesTable.setColumnWidth(myUI.getMessage(SptMessages.TotalHours), 10);
+        employeesTable.setColumnWidth(myUI.getMessage(Messages.TotalHours), 10);
         employeesTable.setFilterGenerator(new ResetableFilterGenerator(employeesTable));
 
         VerticalLayout vl2 = new VerticalLayout();
@@ -72,13 +72,13 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         vl.setSpacing(true);
         vl.setSizeFull();
 
-        classNumberSelect = new ComboBox(myUI.getMessage(SptMessages.ClassNumber));
+        classNumberSelect = new ComboBox(myUI.getMessage(Messages.ClassNumber));
         classNumberSelect.setNullSelectionAllowed(false);
         classNumberSelect.setRequired(true);
         classNumberSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        classNumberSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        classNumberSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         classNumberSelect.setWidth(Settings.PERCENTS100);
-        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        classNumberSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         classNumberSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbDef = new DbDefinition();
@@ -97,7 +97,7 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
         lessonsTable.setSizeFull();
         lessonsTable.setSelectable(false);
 
-        saveBtn = new Button(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn = new Button(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_HUGE);
         saveBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
@@ -134,27 +134,27 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
                             el.setSchool_id(myUI.getUser().getSchool().getId());
                             el.setClass_number_id((Integer) classNumberSelect.getValue());
                             el.setEmployee_id((Integer) employeesTable.getValue());
-                            el.setHours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Hours))
+                            el.setHours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(Messages.Hours))
                                     .getValue()).getPropertyDataSource().getValue());
-                            el.setExtra_hours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(SptMessages.ExtraHours))
+                            el.setExtra_hours((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(Messages.ExtraHours))
                                     .getValue()).getPropertyDataSource().getValue());
                             int id = dbel.exec_insert(el);
                             if (id == 0) {
-                                el.setId((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(SptMessages.Hours))
+                                el.setId((Integer) ((TextField) lessonsTable.getContainerProperty(next, myUI.getMessage(Messages.Hours))
                                         .getValue()).getData());
                                 dbel.exec_update(el);
                             }
                         }
                     }
-                    employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(SptMessages.TotalHours)
+                    employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(Messages.TotalHours)
                             + myUI.getUser().getCurrent_year().getName()).setValue(dbel.execSQLTotalHours(myUI,
                             (Integer) employeesTable.getValue(), myUI.getUser().getSchool().getId()));
-                    Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                    Notification.show(myUI.getMessage(Messages.ValueSaved),
                             Notification.Type.HUMANIZED_MESSAGE);
                     dbel.close();
 
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -184,20 +184,20 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             }
         } else {
             final Integer branch_id = (Integer) ((CheckBox) property).getData();
-            TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(SptMessages.Hours)).getValue();
-            TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(SptMessages.ExtraHours)).getValue();
+            TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.Hours)).getValue();
+            TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.ExtraHours)).getValue();
             if (((CheckBox) property).getValue()) {
                 tfHours.setEnabled(true);
                 tfHours.setRequired(true);
-                tfHours.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+                tfHours.setRequiredError(myUI.getMessage(Messages.RequiredField));
                 tfExtra.setEnabled(true);
                 tfExtra.setRequired(true);
-                tfExtra.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+                tfExtra.setRequiredError(myUI.getMessage(Messages.RequiredField));
             } else {
-                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                        myUI.getMessage(SptMessages.ConfirmDeletion),
-                        myUI.getMessage(SptMessages.Yes),
-                        myUI.getMessage(SptMessages.No),
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmDeletion),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 execDelete(branch_id);
@@ -209,8 +209,8 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
     }
 
     private void execDelete(Integer branch_id) {
-        TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(SptMessages.Hours)).getValue();
-        TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(SptMessages.ExtraHours)).getValue();
+        TextField tfHours = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.Hours)).getValue();
+        TextField tfExtra = (TextField) lessonsTable.getContainerProperty(branch_id, myUI.getMessage(Messages.ExtraHours)).getValue();
         tfHours.setEnabled(false);
         tfHours.setRequired(false);
         tfHours.setValue("");
@@ -223,15 +223,15 @@ public class LessonAssessmentView extends HorizontalSplitPanel implements Button
             int st = dbel.exec_delete((Integer) employeesTable.getValue(), branch_id, myUI.getUser().getSchool().getId(),
                     (Integer) classNumberSelect.getValue(), myUI.getUser().getCurrent_year().getId());
             if (st != 0) {
-                Notification.show(myUI.getMessage(SptMessages.ValueDeleted),
+                Notification.show(myUI.getMessage(Messages.ValueDeleted),
                         Notification.Type.HUMANIZED_MESSAGE);
-                employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(SptMessages.TotalHours)
+                employeesTable.getContainerProperty(employeesTable.getValue(), myUI.getMessage(Messages.TotalHours)
                         + myUI.getUser().getCurrent_year().getName()).setValue(dbel.execSQLTotalHours(myUI,
                         (Integer) employeesTable.getValue(), myUI.getUser().getSchool().getId()));
             }
             dbel.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

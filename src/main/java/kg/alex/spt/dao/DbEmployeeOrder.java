@@ -17,7 +17,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.EmployeeOrder;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -162,20 +162,20 @@ public class DbEmployeeOrder extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.working_status_id, Integer.class, 0);
         container.addContainerProperty(Settings.visible_hr_orders, String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.WorkingStatus), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("o.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                     result.getString("o.name"));
             item.getItemProperty(Settings.working_status_id).setValue(
                     result.getInt("o.working_status_id"));
             item.getItemProperty(Settings.visible_hr_orders).setValue(
                     result.getString("o.visible_hr_orders"));
-            item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).setValue(
                     result.getString("ws.name"));
         }
         return container;
@@ -198,11 +198,11 @@ public class DbEmployeeOrder extends BaseDb {
             String id = result.getString("eo.id");
             Item item = container.addItem(id);
 
-            item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
+            item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(Messages.DeleteButton),
                     id, Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
             ComboBox cb = null;
             try {
-                cb = edv.createCombobox(0, myUI.getMessage(SptMessages.ClassName), null, true);
+                cb = edv.createCombobox(0, myUI.getMessage(Messages.ClassName), null, true);
                 DbClassName dbcn = new DbClassName();
                 dbcn.connect();
                 cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
@@ -213,29 +213,29 @@ public class DbEmployeeOrder extends BaseDb {
             }
             if (cb != null) {
                 cb.setValue(result.getInt("details_id"));
-                item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(cb);
+                item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(cb);
             }
             DateField df = edv.createDateField(result.getDate("eo.from_date"),
-                    myUI.getMessage(SptMessages.FromDate), null, true, Settings.datePattern, Resolution.DAY);
+                    myUI.getMessage(Messages.FromDate), null, true, Settings.datePattern, Resolution.DAY);
             df.setRangeEnd(new Date());
             if (result.getInt("o.id") == 8) {
                 df.setEnabled(false);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
+            item.getItemProperty(myUI.getMessage(Messages.FromDate)).setValue(df);
             df = edv.createDateField(result.getDate("eo.to_date"),
-                    myUI.getMessage(SptMessages.TillDate), null, false, Settings.datePattern, Resolution.DAY);
+                    myUI.getMessage(Messages.TillDate), null, false, Settings.datePattern, Resolution.DAY);
             if (result.getInt("o.id") != 3 && result.getInt("o.id") != 2) {
                 df.setEnabled(false);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
+            item.getItemProperty(myUI.getMessage(Messages.TillDate)).setValue(df);
             TextField tf = edv.createTextField(result.getString("eo.Note"),
-                    myUI.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 300, true), false);
+                    myUI.getMessage(Messages.Note),
+                    new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false);
             if (result.getInt("o.id") == 8) {
                 tf.setEnabled(false);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(tf);
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -265,26 +265,26 @@ public class DbEmployeeOrder extends BaseDb {
             Button b = null;
 
             if (result.getInt("o.id") == 2 || result.getInt("o.id") == 3) {
-                b = edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE);
+                b = edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE);
             } else if (result.getInt("eo.can_not_delete") != 1) {
                 last_id = result.getString("eo.id");
             }
             item.getItemProperty(Settings.button).setValue(b);
-            ComboBox cb = edv.createCombobox(0, myUI.getMessage(SptMessages.OrderType), null, true);
+            ComboBox cb = edv.createCombobox(0, myUI.getMessage(Messages.OrderType), null, true);
             cb.setEnabled(false);
             cb.setContainerDataSource(execOrderTypesSel(myUI, result.getString("o.id")));
             cb.setValue(result.getInt("o.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).setValue(cb);
+            item.getItemProperty(myUI.getMessage(Messages.OrderType)).setValue(cb);
             cb = null;
             try {
                 if (result.getInt("o.id") == 3) {
-                    cb = edv.createCombobox(0, myUI.getMessage(SptMessages.ClassName), null, true);
+                    cb = edv.createCombobox(0, myUI.getMessage(Messages.ClassName), null, true);
                     DbClassName dbcn = new DbClassName();
                     dbcn.connect();
                     cb.setContainerDataSource(dbcn.execClass_sel(myUI, myUI.getUser().getSchool().getId()));
                     dbcn.close();
                 } else if (result.getInt("o.id") == 5 || result.getInt("o.id") == 8) {
-                    cb = edv.createCombobox(0, myUI.getMessage(SptMessages.School), null, true);
+                    cb = edv.createCombobox(0, myUI.getMessage(Messages.School), null, true);
                     if (result.getInt("o.id") == 8) {
                         cb.setEnabled(false);
                     }
@@ -293,7 +293,7 @@ public class DbEmployeeOrder extends BaseDb {
                     cb.setContainerDataSource(dbs.execSchoolSel(myUI, myUI.getUser().getSchool().getId()));
                     dbs.close();
                 } else if (result.getInt("o.id") == 1 || result.getInt("o.id") == 2 || result.getInt("o.id") == 7) {
-                    cb = edv.createCombobox(0, myUI.getMessage(SptMessages.Position), null, true);
+                    cb = edv.createCombobox(0, myUI.getMessage(Messages.Position), null, true);
                     DbDefinition dbd = new DbDefinition();
                     dbd.connect();
                     cb.setContainerDataSource(dbd.exec_positions_for_select(myUI, isAdmin, isHR));
@@ -305,41 +305,41 @@ public class DbEmployeeOrder extends BaseDb {
             }
             if (cb != null) {
                 cb.setValue(result.getInt("details_id"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(cb);
+                item.getItemProperty(myUI.getMessage(Messages.Details)).setValue(cb);
             }
             DateField df = edv.createDateField(result.getDate("eo.from_date"),
-                    myUI.getMessage(SptMessages.FromDate), null, true, Settings.datePattern, Resolution.DAY);
+                    myUI.getMessage(Messages.FromDate), null, true, Settings.datePattern, Resolution.DAY);
             df.setRangeEnd(new Date());
             if (result.getInt("o.id") == 8) {
                 df.setEnabled(false);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(df);
+            item.getItemProperty(myUI.getMessage(Messages.FromDate)).setValue(df);
             df = edv.createDateField(result.getDate("eo.to_date"),
-                    myUI.getMessage(SptMessages.TillDate), null, false, Settings.datePattern, Resolution.DAY);
+                    myUI.getMessage(Messages.TillDate), null, false, Settings.datePattern, Resolution.DAY);
             if (result.getInt("o.id") != 3 && result.getInt("o.id") != 2) {
                 df.setEnabled(false);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(df);
+            item.getItemProperty(myUI.getMessage(Messages.TillDate)).setValue(df);
             TextField tf = edv.createTextField(result.getString("eo.Note"),
-                    myUI.getMessage(SptMessages.Note),
-                    new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 300, true), false);
+                    myUI.getMessage(Messages.Note),
+                    new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 300, true), false);
             if (result.getInt("o.id") == 8) {
                 tf.setEnabled(false);
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(tf);
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(tf);
             item.getItemProperty(Settings.effected_by_id).setValue(result.getString("eo.effected_by_id"));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         if (last_id != null) {
             Item item = container.getItem(last_id);
             if (item != null) {
-                if ((Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() == 8) {
+                if ((Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(Messages.OrderType)).getValue()).getValue() == 8) {
                     last_id = "_" + last_id;
                 }
-                if (((Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != 8
-                        && (Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).getValue()).getValue() != 5)
+                if (((Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(Messages.OrderType)).getValue()).getValue() != 8
+                        && (Integer) ((ComboBox) item.getItemProperty(myUI.getMessage(Messages.OrderType)).getValue()).getValue() != 5)
                         || currentUser.isPermitted(Settings.cnEmployeeTransferView + ":" + Settings.actDelete)) {
-                    item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(SptMessages.DeleteButton),
+                    item.getItemProperty(Settings.button).setValue(edv.createButton(myUI.getMessage(Messages.DeleteButton),
                             last_id, Settings.dbEmployeeOrder, FontAwesome.MINUS_SQUARE));
                 }
             }
@@ -361,20 +361,20 @@ public class DbEmployeeOrder extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.OrderType), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Details), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FromDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.TillDate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.OrderType), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Details), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FromDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.TillDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getString("eo.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.OrderType)).setValue(result.getString("o.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Details)).setValue(result.getString("details"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FromDate)).setValue(Settings.df.format(result.getDate("eo.from_date")));
+            item.getItemProperty(myUI.getMessage(Messages.OrderType)).setValue(result.getString("o.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Details)).setValue(result.getString("details"));
+            item.getItemProperty(myUI.getMessage(Messages.FromDate)).setValue(Settings.df.format(result.getDate("eo.from_date")));
             if (result.getDate("eo.to_date") != null) {
-                item.getItemProperty(myUI.getMessage(SptMessages.TillDate)).setValue(Settings.df.format(result.getDate("eo.to_date")));
+                item.getItemProperty(myUI.getMessage(Messages.TillDate)).setValue(Settings.df.format(result.getDate("eo.to_date")));
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getDate("eo.note"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getDate("eo.note"));
         }
         return container;
     }

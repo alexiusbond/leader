@@ -12,7 +12,7 @@ import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.Employee;
 import kg.alex.spt.domain.EmployeeExtraInfo;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.pdf.CVPdf;
 import kg.alex.spt.utils.FormattedTable;
 import org.apache.logging.log4j.LogManager;
@@ -88,7 +88,7 @@ public class EmployeeCvWindow extends Window {
         }
         photoEmb.setImmediate(true);
         photoEmb.setHeight("200px");
-        photoEmb.setId(myUI.getMessage(SptMessages.Photo));
+        photoEmb.setId(myUI.getMessage(Messages.Photo));
         photoEmb.setData(Settings.PATH_TO_UPLOADS_HR + employee.getPhoto());
         rowNum++;
         rightGl.addComponent(photoEmb, 0, rowNum, 1, rowNum);
@@ -98,7 +98,7 @@ public class EmployeeCvWindow extends Window {
         rightGl.addComponent(createLabel("<br>", null), 0, rowNum, 1, rowNum);
 
         rowNum++;
-        rightGl.addComponent(createLabel("<b>" + myUI.getMessage(SptMessages.ModificationDate) + ": </b>"
+        rightGl.addComponent(createLabel("<b>" + myUI.getMessage(Messages.ModificationDate) + ": </b>"
                 + (employeeExtraInfo.getModificationDate() == null ? "" :
                 Settings.df.format(employeeExtraInfo.getModificationDate())), null), 0, rowNum, 1, rowNum);
 
@@ -122,53 +122,53 @@ public class EmployeeCvWindow extends Window {
 
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.WorkingStatus) + ": </b>" + employeeExtraInfo.getWorkingStatus(), null),
+                        myUI.getMessage(Messages.WorkingStatus) + ": </b>" + employeeExtraInfo.getWorkingStatus(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.MainPosition) + ": </b>" + employeeExtraInfo.getMainPosition(), null),
+                        myUI.getMessage(Messages.MainPosition) + ": </b>" + employeeExtraInfo.getMainPosition(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.ExtraPositions) + ": </b>" + employeeExtraInfo.getExtraPositions(), null),
+                        myUI.getMessage(Messages.ExtraPositions) + ": </b>" + employeeExtraInfo.getExtraPositions(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.TotalWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperience(), null),
+                        myUI.getMessage(Messages.TotalWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperience(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.SapatWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperienceSapat(), null),
+                        myUI.getMessage(Messages.SapatWorkExperience) + ": </b>" + employeeExtraInfo.getWorkExperienceSapat(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.MainBranch) + ": </b>" + employeeExtraInfo.getMainBranch(), null),
+                        myUI.getMessage(Messages.MainBranch) + ": </b>" + employeeExtraInfo.getMainBranch(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.ExtraBranches) + ": </b>" + employeeExtraInfo.getExtraBranches(), null),
+                        myUI.getMessage(Messages.ExtraBranches) + ": </b>" + employeeExtraInfo.getExtraBranches(), null),
                 0, rowNum, 1, rowNum);
         rowNum++;
-        rightGl.addComponent(createLabel("<b>" + myUI.getMessage(SptMessages.TotalHours) + year + ": </b>"
-                        + employeeExtraInfo.getHours() + ", <b>" + myUI.getMessage(SptMessages.ExtraHours) + ": </b>"
+        rightGl.addComponent(createLabel("<b>" + myUI.getMessage(Messages.TotalHours) + year + ": </b>"
+                        + employeeExtraInfo.getHours() + ", <b>" + myUI.getMessage(Messages.ExtraHours) + ": </b>"
                         + employeeExtraInfo.getExtraHours(), null),
                 0, rowNum, 1, rowNum);
 
         if (currentUser.isPermitted(Settings.cnCV_Window + ":" + Settings.contract_info)) {
             rowNum++;
             rightGl.addComponent(createLabel("<b>" +
-                            myUI.getMessage(SptMessages.CanBeAdvisor) + ": </b>" + employeeExtraInfo.getCanBeAdvisor(), null),
+                            myUI.getMessage(Messages.CanBeAdvisor) + ": </b>" + employeeExtraInfo.getCanBeAdvisor(), null),
                     0, rowNum, 1, rowNum);
             rowNum++;
             rightGl.addComponent(createLabel("<b>" +
-                            myUI.getMessage(SptMessages.ContractType) + ": </b>" + employeeExtraInfo.getSalaryCategory(), null),
+                            myUI.getMessage(Messages.ContractType) + ": </b>" + employeeExtraInfo.getSalaryCategory(), null),
                     0, rowNum, 1, rowNum);
         }
         rowNum++;
         rightGl.addComponent(createLabel("<b>" +
-                        myUI.getMessage(SptMessages.Languages) + ": </b>" + employeeExtraInfo.getLanguages(), null),
+                        myUI.getMessage(Messages.Languages) + ": </b>" + employeeExtraInfo.getLanguages(), null),
                 0, rowNum, 1, rowNum);
-        l = createLabel(myUI.getMessage(SptMessages.MainInfo),
+        l = createLabel(myUI.getMessage(Messages.MainInfo),
                 new String[]{ValoTheme.LABEL_BOLD, ValoTheme.LABEL_LARGE});
         l.setWidthUndefined();
         gl.addComponent(l, 1, 0, 2, 0);
@@ -182,22 +182,22 @@ public class EmployeeCvWindow extends Window {
         infoTable.addStyleName(ValoTheme.TABLE_NO_VERTICAL_LINES);
         infoTable.addStyleName(ValoTheme.TABLE_BORDERLESS);
         infoTable.addStyleName(ValoTheme.TABLE_COMPACT);
-        infoTable.setColumnAlignment(myUI.getMessage(SptMessages.ClassCaption), Table.Align.RIGHT);
+        infoTable.setColumnAlignment(myUI.getMessage(Messages.ClassCaption), Table.Align.RIGHT);
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassCaption), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Content), String.class, null);
-        addInfoItem(container, myUI.getMessage(SptMessages.Id), employee.getLogin());
-        addInfoItem(container, myUI.getMessage(SptMessages.LastName), employee.getSurname());
-        addInfoItem(container, myUI.getMessage(SptMessages.FirstName), employee.getName());
-        addInfoItem(container, myUI.getMessage(SptMessages.MiddleName), employee.getMiddle_name());
-        addInfoItem(container, myUI.getMessage(SptMessages.Gender), employeeExtraInfo.getGender());
-        addInfoItem(container, myUI.getMessage(SptMessages.DateAndPlaceOfBirth),
+        container.addContainerProperty(myUI.getMessage(Messages.ClassCaption), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Content), String.class, null);
+        addInfoItem(container, myUI.getMessage(Messages.Id), employee.getLogin());
+        addInfoItem(container, myUI.getMessage(Messages.LastName), employee.getSurname());
+        addInfoItem(container, myUI.getMessage(Messages.FirstName), employee.getName());
+        addInfoItem(container, myUI.getMessage(Messages.MiddleName), employee.getMiddle_name());
+        addInfoItem(container, myUI.getMessage(Messages.Gender), employeeExtraInfo.getGender());
+        addInfoItem(container, myUI.getMessage(Messages.DateAndPlaceOfBirth),
                 Settings.df.format(employee.getBirth_date()) + (employeeExtraInfo.getBirth_place() == null ?
                         "" : ", " + employeeExtraInfo.getBirth_place()));
-        addInfoItem(container, myUI.getMessage(SptMessages.Nationality), employeeExtraInfo.getNationality());
-        addInfoItem(container, myUI.getMessage(SptMessages.Citizenship), employeeExtraInfo.getCitizenship());
-        addInfoItem(container, myUI.getMessage(SptMessages.MartialStatus), employeeExtraInfo.getMartialStatus());
-        addInfoItem(container, myUI.getMessage(SptMessages.HealthStatus), employeeExtraInfo.getHealth_notes());
+        addInfoItem(container, myUI.getMessage(Messages.Nationality), employeeExtraInfo.getNationality());
+        addInfoItem(container, myUI.getMessage(Messages.Citizenship), employeeExtraInfo.getCitizenship());
+        addInfoItem(container, myUI.getMessage(Messages.MartialStatus), employeeExtraInfo.getMartialStatus());
+        addInfoItem(container, myUI.getMessage(Messages.HealthStatus), employeeExtraInfo.getHealth_notes());
         infoTable.setContainerDataSource(container);
         infoTable.setPageLength(container.size());
         gl.addComponent(infoTable, 1, 1, 2, 1);
@@ -208,40 +208,40 @@ public class EmployeeCvWindow extends Window {
         contactsVl.setSpacing(true);
 
         contactsVl.addComponent(createLabel("<i class=\"fa fa-university\"></i><b> "
-                + myUI.getMessage(SptMessages.School) + ": </b>" + employeeExtraInfo.getSchool(), null));
+                + myUI.getMessage(Messages.School) + ": </b>" + employeeExtraInfo.getSchool(), null));
         contactsVl.addComponent(createLabel("<i class=\"fa fa-envelope\"></i><b> Email: </b>"
                 + employeeExtraInfo.getEmail(), null));
         contactsVl.addComponent(createLabel("<i class=\"fa fa-phone-square\"></i><b> "
-                + myUI.getMessage(SptMessages.PhoneNumbers) + ": </b>"
+                + myUI.getMessage(Messages.PhoneNumbers) + ": </b>"
                 + employeeExtraInfo.getPhones(), null));
         contactsVl.addComponent(createLabel("<i class=\"fa fa-map-marker\"></i><b> "
-                + myUI.getMessage(SptMessages.Address) + ": </b>"
+                + myUI.getMessage(Messages.Address) + ": </b>"
                 + employeeExtraInfo.getAddress(), null));
         contactsVl.addComponent(createLabel("<i class=\"fa fa-users\"></i><b> "
-                + myUI.getMessage(SptMessages.SpouseInfo) + ": </b>"
+                + myUI.getMessage(Messages.SpouseInfo) + ": </b>"
                 + employeeExtraInfo.getFamilyInfo(), null));
         contactsVl.addComponent(createLabel("<i class=\"fa fa-child\"></i><b> "
-                + myUI.getMessage(SptMessages.Children) + ": </b>"
+                + myUI.getMessage(Messages.Children) + ": </b>"
                 + employeeExtraInfo.getChildren(), null));
-        Button pdfBtn = new Button(myUI.getMessage(SptMessages.ExportToPdf));
+        Button pdfBtn = new Button(myUI.getMessage(Messages.ExportToPdf));
         pdfBtn.setStyleName(ValoTheme.BUTTON_FRIENDLY);
         pdfBtn.addClickListener((Button.ClickListener) event -> {
             List<Table> tableList = new ArrayList<>();
-            educationTable.setData(myUI.getMessage(SptMessages.Education));
+            educationTable.setData(myUI.getMessage(Messages.Education));
             tableList.add(educationTable);
-            workPlacesTable.setData(myUI.getMessage(SptMessages.WorkPlaces));
+            workPlacesTable.setData(myUI.getMessage(Messages.WorkPlaces));
             tableList.add(workPlacesTable);
-            examsTable.setData(myUI.getMessage(SptMessages.Exams));
+            examsTable.setData(myUI.getMessage(Messages.Exams));
             tableList.add(examsTable);
-            seminarsTable.setData(myUI.getMessage(SptMessages.Seminars));
+            seminarsTable.setData(myUI.getMessage(Messages.Seminars));
             tableList.add(seminarsTable);
-            certificatesTable.setData(myUI.getMessage(SptMessages.Certificates));
+            certificatesTable.setData(myUI.getMessage(Messages.Certificates));
             tableList.add(certificatesTable);
-            spouseEducationTable.setData(myUI.getMessage(SptMessages.SpouseEducation));
+            spouseEducationTable.setData(myUI.getMessage(Messages.SpouseEducation));
             tableList.add(spouseEducationTable);
-            spouseWorkPlacesTable.setData(myUI.getMessage(SptMessages.SpouseWorkPlaces));
+            spouseWorkPlacesTable.setData(myUI.getMessage(Messages.SpouseWorkPlaces));
             tableList.add(spouseWorkPlacesTable);
-            childrenTable.setData(myUI.getMessage(SptMessages.Children));
+            childrenTable.setData(myUI.getMessage(Messages.Children));
             tableList.add(childrenTable);
             new CVPdf(myUI, employee, employeeExtraInfo, year, tableList);
         });
@@ -249,7 +249,7 @@ public class EmployeeCvWindow extends Window {
         contactsVl.setComponentAlignment(pdfBtn, Alignment.BOTTOM_RIGHT);
         gl.addComponent(contactsVl, 3, 1);
 
-        l = createLabel(myUI.getMessage(SptMessages.Education),
+        l = createLabel(myUI.getMessage(Messages.Education),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 1, 2, 3, 2);
@@ -275,7 +275,7 @@ public class EmployeeCvWindow extends Window {
         gl.addComponent(educationTable, 1, 3, 3, 3);
         gl.setRowExpandRatio(3, 1);
 
-        l = createLabel(myUI.getMessage(SptMessages.WorkPlaces),
+        l = createLabel(myUI.getMessage(Messages.WorkPlaces),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 1, 4, 3, 4);
@@ -288,7 +288,7 @@ public class EmployeeCvWindow extends Window {
         workPlacesTable.setStyleName(ValoTheme.TABLE_COMPACT);
         workPlacesTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         workPlacesTable.addStyleName("noWrap");
-        workPlacesTable.setColumnWidth(myUI.getMessage(SptMessages.ExtraPositions), 250);
+        workPlacesTable.setColumnWidth(myUI.getMessage(Messages.ExtraPositions), 250);
         try {
             DbEmployeeWork dbCon = new DbEmployeeWork();
             dbCon.connect();
@@ -301,7 +301,7 @@ public class EmployeeCvWindow extends Window {
         workPlacesTable.setPageLength(workPlacesTable.size());
         gl.addComponent(workPlacesTable, 0, 5, 3, 5);
 
-        l = createLabel(myUI.getMessage(SptMessages.Exams),
+        l = createLabel(myUI.getMessage(Messages.Exams),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 0, 6, 1, 6);
@@ -326,7 +326,7 @@ public class EmployeeCvWindow extends Window {
         examsTable.setPageLength(examsTable.size());
         gl.addComponent(examsTable, 0, 7, 1, 7);
 
-        l = createLabel(myUI.getMessage(SptMessages.Seminars),
+        l = createLabel(myUI.getMessage(Messages.Seminars),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 2, 6, 3, 6);
@@ -339,7 +339,7 @@ public class EmployeeCvWindow extends Window {
         seminarsTable.setStyleName(ValoTheme.TABLE_COMPACT);
         seminarsTable.addStyleName(ValoTheme.TABLE_NO_STRIPES);
         seminarsTable.addStyleName("noWrap");
-        seminarsTable.setColumnWidth(myUI.getMessage(SptMessages.Title), 200);
+        seminarsTable.setColumnWidth(myUI.getMessage(Messages.Title), 200);
         try {
             DbEmployeeSeminar dbCon = new DbEmployeeSeminar();
             dbCon.connect();
@@ -352,7 +352,7 @@ public class EmployeeCvWindow extends Window {
         seminarsTable.setPageLength(seminarsTable.size());
         gl.addComponent(seminarsTable, 2, 7, 3, 7);
 
-        l = createLabel(myUI.getMessage(SptMessages.Certificates),
+        l = createLabel(myUI.getMessage(Messages.Certificates),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 0, 8, 1, 8);
@@ -377,7 +377,7 @@ public class EmployeeCvWindow extends Window {
         certificatesTable.setPageLength(certificatesTable.size());
         gl.addComponent(certificatesTable, 0, 9, 1, 9);
 
-        l = createLabel(myUI.getMessage(SptMessages.SpouseEducation),
+        l = createLabel(myUI.getMessage(Messages.SpouseEducation),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 0, 10, 3, 10);
@@ -402,7 +402,7 @@ public class EmployeeCvWindow extends Window {
         spouseEducationTable.setPageLength(spouseEducationTable.size());
         gl.addComponent(spouseEducationTable, 0, 11, 3, 11);
 
-        l = createLabel(myUI.getMessage(SptMessages.SpouseWorkPlaces),
+        l = createLabel(myUI.getMessage(Messages.SpouseWorkPlaces),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 0, 12, 3, 12);
@@ -427,7 +427,7 @@ public class EmployeeCvWindow extends Window {
         spouseWorkPlacesTable.setPageLength(spouseWorkPlacesTable.size());
         gl.addComponent(spouseWorkPlacesTable, 0, 13, 3, 13);
 
-        l = createLabel(myUI.getMessage(SptMessages.Children),
+        l = createLabel(myUI.getMessage(Messages.Children),
                 new String[]{ValoTheme.LABEL_LARGE, ValoTheme.LABEL_BOLD});
         l.setWidthUndefined();
         gl.addComponent(l, 0, 14, 3, 14);
@@ -456,8 +456,8 @@ public class EmployeeCvWindow extends Window {
 
     private void addInfoItem(IndexedContainer container, String caption, String content) {
         Item item = container.addItem(container.size() + 1);
-        item.getItemProperty(myUI.getMessage(SptMessages.ClassCaption)).setValue(caption);
-        item.getItemProperty(myUI.getMessage(SptMessages.Content)).setValue(content);
+        item.getItemProperty(myUI.getMessage(Messages.ClassCaption)).setValue(caption);
+        item.getItemProperty(myUI.getMessage(Messages.Content)).setValue(content);
     }
 
     private Label createLabel(String value, String[] styles) {

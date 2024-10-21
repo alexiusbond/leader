@@ -10,7 +10,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.accounting.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -45,40 +45,40 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         rightGrid.setSpacing(true);
         rightGrid.setWidth(Settings.PERCENTS100);
 
-        repTypeSelect = new ComboBox(myUI.getMessage(SptMessages.ReportType));
+        repTypeSelect = new ComboBox(myUI.getMessage(Messages.ReportType));
         repTypeSelect.setNullSelectionAllowed(false);
         repTypeSelect.setRequired(true);
-        repTypeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        repTypeSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         repTypeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         repTypeSelect.setWidth(Settings.PERCENTS100);
         repTypeSelect.setFilteringMode(FilteringMode.CONTAINS);
         repTypeSelect.addValueChangeListener(this);
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMonthReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.MonthReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.MonthReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmByDateReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.ByDateReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.ByDateReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmSchoolAccountingReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.SchoolAccountingReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.SchoolAccountingReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmGeneralReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.GeneralAccountingReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.GeneralAccountingReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmCurrentAccountStatement)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.CurrentAccountStatementReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.CurrentAccountStatementReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmIncomeExpenseAccountStatement)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.IncomeExpenseAccountStatementReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.IncomeExpenseAccountStatementReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmSalariesReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.SalariesReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.SalariesReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmIncomesExpensesReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.IncomesExpensesReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.IncomesExpensesReport));
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmAccountingBalanceReport)) {
-            repTypeSelect.addItem(myUI.getMessage(SptMessages.AccountingBalanceReport));
+            repTypeSelect.addItem(myUI.getMessage(Messages.AccountingBalanceReport));
         }
         leftGrid.addComponent(repTypeSelect, 0, 0);
     }
@@ -89,23 +89,23 @@ public class AccountingReportsView extends HorizontalSplitPanel implements Prope
         if (property == repTypeSelect) {
             this.setSecondComponent(null);
             leftGrid.removeComponent(0, 1);
-            if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.MonthReport))) {
+            if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.MonthReport))) {
                 new MonthReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SchoolAccountingReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.SchoolAccountingReport))) {
                 new SchoolsReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.ByDateReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.ByDateReport))) {
                 new DateReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.GeneralAccountingReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.GeneralAccountingReport))) {
                 new GeneralReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.CurrentAccountStatementReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.CurrentAccountStatementReport))) {
                 new CurrentAccountStatementReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.IncomeExpenseAccountStatementReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.IncomeExpenseAccountStatementReport))) {
                 new IncomeExpenseAccountStatementReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.SalariesReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.SalariesReport))) {
                 new PayoutsReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.IncomesExpensesReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.IncomesExpensesReport))) {
                 new IncomesExpensesReport(myUI, this);
-            } else if (repTypeSelect.getValue().equals(myUI.getMessage(SptMessages.AccountingBalanceReport))) {
+            } else if (repTypeSelect.getValue().equals(myUI.getMessage(Messages.AccountingBalanceReport))) {
                 new BalanceReport(myUI, this);
             }
         }

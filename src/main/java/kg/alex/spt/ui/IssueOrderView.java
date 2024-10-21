@@ -12,7 +12,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.StudentOrder;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,14 +42,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         this.myUI = myUI;
 
         String[] STUDENTS_NATURAL_COL_ORDER = new String[]{Settings.button,
-                myUI.getMessage(SptMessages.Id), myUI.getMessage(SptMessages.FirstName),
-                myUI.getMessage(SptMessages.LastName), myUI.getMessage(SptMessages.ClassName),
-                myUI.getMessage(SptMessages.EducationStatus)};
-        HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(SptMessages.Date),
-                myUI.getMessage(SptMessages.OrderType), myUI.getMessage(SptMessages.FromClass),
-                myUI.getMessage(SptMessages.ToClass), myUI.getMessage(SptMessages.FromEducationStatus),
-                myUI.getMessage(SptMessages.ToEducationStatus), myUI.getMessage(SptMessages.Year),
-                myUI.getMessage(SptMessages.Reasons)};
+                myUI.getMessage(Messages.Id), myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.LastName), myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.EducationStatus)};
+        HISTORY_NATURAL_COL_ORDER = new String[]{Settings.button, myUI.getMessage(Messages.Date),
+                myUI.getMessage(Messages.OrderType), myUI.getMessage(Messages.FromClass),
+                myUI.getMessage(Messages.ToClass), myUI.getMessage(Messages.FromEducationStatus),
+                myUI.getMessage(Messages.ToEducationStatus), myUI.getMessage(Messages.Year),
+                myUI.getMessage(Messages.Reasons)};
         buildSettingsLayout();
 
         VerticalLayout tablesLay = new VerticalLayout();
@@ -60,7 +60,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         studentsTable = new FilterTable();
         studentsTable.setFilterDecorator(new MyFilterDecorator(myUI));
         studentsTable.setStyleName(ValoTheme.TABLE_COMPACT);
-        studentsTable.setCaption(myUI.getMessage(SptMessages.AllStudents));
+        studentsTable.setCaption(myUI.getMessage(Messages.AllStudents));
         studentsTable.setSizeFull();
         studentsTable.setNullSelectionAllowed(false);
         studentsTable.setMultiSelect(true);
@@ -79,13 +79,13 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
             logger.catching(e);
         }
         studentsTable.setVisibleColumns((Object[]) STUDENTS_NATURAL_COL_ORDER);
-        studentsTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
+        studentsTable.setColumnFooter(myUI.getMessage(Messages.EducationStatus),
                 "total  " + studentsTable.size());
         tablesLay.addComponent(studentsTable);
 
         historyTable = new Table();
         historyTable.setStyleName(ValoTheme.TABLE_COMPACT);
-        historyTable.setCaption(myUI.getMessage(SptMessages.OrdersHistory));
+        historyTable.setCaption(myUI.getMessage(Messages.OrdersHistory));
         historyTable.setSizeFull();
         historyTable.setSelectable(false);
         tablesLay.addComponent(historyTable);
@@ -107,32 +107,32 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         settingsLay.setSpacing(true);
         settingsLay.setWidth(Settings.PERCENTS100);
 
-        DateField dateDF = new DateField(myUI.getMessage(SptMessages.Date));
+        DateField dateDF = new DateField(myUI.getMessage(Messages.Date));
         dateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         dateDF.setRequired(true);
-        dateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        dateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         dateDF.setWidth(Settings.PERCENTS100);
         dateDF.setValue(new Date());
         dateDF.setDateFormat(Settings.datePattern);
         settingsLay.addComponent(dateDF);
 
-        orderSelect = new ComboBox(myUI.getMessage(SptMessages.OrderType));
+        orderSelect = new ComboBox(myUI.getMessage(Messages.OrderType));
         orderSelect.setNullSelectionAllowed(false);
         orderSelect.setRequired(true);
-        orderSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        orderSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         orderSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         orderSelect.setWidth(Settings.PERCENTS100);
-        orderSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        orderSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         orderSelect.setFilteringMode(FilteringMode.CONTAINS);
         settingsLay.addComponent(orderSelect);
 
-        classSelect = new ComboBox(myUI.getMessage(SptMessages.ClassName));
+        classSelect = new ComboBox(myUI.getMessage(Messages.ClassName));
         classSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         classSelect.setWidth(Settings.PERCENTS100);
-        classSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        classSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         classSelect.setFilteringMode(FilteringMode.CONTAINS);
         classSelect.setRequired(true);
-        classSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        classSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         try {
             DbClassName dbcn = new DbClassName();
             dbcn.connect();
@@ -145,14 +145,14 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
         }
         settingsLay.addComponent(classSelect);
 
-        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Reasons));
+        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         reasonsMCB.setWidth(Settings.PERCENTS100);
-        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
-        reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        reasonsMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         reasonsMCB.setShowSelectAllButton((filter, page) -> true);
-        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         settingsLay.addComponent(reasonsMCB);
 
         try {
@@ -170,7 +170,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
             logger.error(e);
             logger.catching(e);
         }
-        saveBtn = new Button(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn = new Button(myUI.getMessage(Messages.SaveButton));
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         settingsLay.addComponent(saveBtn);
@@ -246,53 +246,53 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                                             .setValue(so.getTo_class_id());
                                     studentsTable.getContainerProperty(next, Settings.education_status_id)
                                             .setValue(so.getTo_education_status_id());
-                                    Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
-                                    Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
+                                    Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.ClassName));
+                                    Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.EducationStatus));
                                     if (cl_filled != null && !cl_filled.equals("")) {
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), null);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), null);
                                         studentsTable.getContainerProperty(next,
-                                                        myUI.getMessage(SptMessages.ClassName))
+                                                        myUI.getMessage(Messages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
-                                                            myUI.getMessage(SptMessages.EducationStatus)).getValue());
+                                                            myUI.getMessage(Messages.EducationStatus)).getValue());
                                         }
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), cl_filled);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), cl_filled);
                                     } else if (edu_filled != null && !edu_filled.equals("")) {
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), null);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), null);
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
-                                                            myUI.getMessage(SptMessages.EducationStatus)).getValue());
+                                                            myUI.getMessage(Messages.EducationStatus)).getValue());
                                         }
                                         studentsTable.getContainerProperty(next,
-                                                        myUI.getMessage(SptMessages.ClassName))
+                                                        myUI.getMessage(Messages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
-                                        studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filled);
+                                        studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), edu_filled);
                                     } else {
                                         studentsTable.getContainerProperty(next,
-                                                        myUI.getMessage(SptMessages.ClassName))
+                                                        myUI.getMessage(Messages.ClassName))
                                                 .setValue(classSelect.getItemCaption(classSelect.getValue()));
                                         if (contr_status == 1) {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(Settings.activeStatus);
                                         } else {
                                             studentsTable.getContainerDataSource().getContainerProperty(next,
-                                                            myUI.getMessage(SptMessages.EducationStatus))
+                                                            myUI.getMessage(Messages.EducationStatus))
                                                     .setValue(orderSelect.getContainerProperty(orderSelect.getValue(),
-                                                            myUI.getMessage(SptMessages.EducationStatus)).getValue());
+                                                            myUI.getMessage(Messages.EducationStatus)).getValue());
                                         }
                                     }
                                     dbsc.exec_update_status(so.getStudent_id(), 1, myUI.getUser().getId());
@@ -301,7 +301,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                             }
                         }
                         if (counter != 0) {
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved) + " " + counter,
+                            Notification.show(myUI.getMessage(Messages.ValueSaved) + " " + counter,
                                     Notification.Type.WARNING_MESSAGE);
                             studentsTable.setValue(null);
                             historyTable.setContainerDataSource(null);
@@ -309,11 +309,11 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                         dbso.close();
                         dbsc.close();
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                        Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationNothingIsSelected),
+                    Notification.show(myUI.getMessage(Messages.NotificationNothingIsSelected),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -321,7 +321,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 logger.catching(e);
             }
         } else if (source.getDescription()
-                .equals(myUI.getMessage(SptMessages.Details))) {
+                .equals(myUI.getMessage(Messages.Details))) {
             try {
                 selected_student_id = Integer.parseInt(source.getData().toString());
                 DbStudentOrder dbso = new DbStudentOrder();
@@ -329,21 +329,21 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 historyTable.setContainerDataSource(dbso.execSQL(myUI, selected_student_id, this));
                 dbso.close();
                 historyTable.setVisibleColumns((Object[]) HISTORY_NATURAL_COL_ORDER);
-                historyTable.setCaption(myUI.getMessage(SptMessages.OrdersHistory) + " - "
+                historyTable.setCaption(myUI.getMessage(Messages.OrdersHistory) + " - "
                         + studentsTable.getContainerProperty(selected_student_id,
-                        myUI.getMessage(SptMessages.FirstName)).getValue() + " "
+                        myUI.getMessage(Messages.FirstName)).getValue() + " "
                         + studentsTable.getContainerProperty(selected_student_id,
-                        myUI.getMessage(SptMessages.LastName)).getValue());
+                        myUI.getMessage(Messages.LastName)).getValue());
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);
             }
         } else if (source.getDescription()
-                .equals(myUI.getMessage(SptMessages.DeleteButton))) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
+                .equals(myUI.getMessage(Messages.DeleteButton))) {
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete(Integer.parseInt(source.getData().toString()));
@@ -400,52 +400,52 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                 studentsTable.getContainerProperty(selected_student_id, Settings.education_status_id)
                         .setValue(historyTable.getContainerProperty(
                                 id, Settings.from_education_status_id).getValue());
-                Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.ClassName));
-                Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus));
+                Object cl_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.ClassName));
+                Object edu_filled = studentsTable.getFilterFieldValue(myUI.getMessage(Messages.EducationStatus));
                 if (cl_filled != null && !cl_filled.equals("")) {
-                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), null);
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), null);
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(SptMessages.ClassName))
+                                    myUI.getMessage(Messages.ClassName))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(SptMessages.FromClass)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(SptMessages.EducationStatus))
+                                    myUI.getMessage(Messages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
-                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.ClassName), cl_filled);
+                                    id, myUI.getMessage(Messages.FromEducationStatus)).getValue().toString());
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.ClassName), cl_filled);
                 } else if (edu_filled != null && !edu_filled.equals("")) {
-                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), null);
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), null);
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(SptMessages.ClassName))
+                                    myUI.getMessage(Messages.ClassName))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(SptMessages.FromClass)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(SptMessages.EducationStatus))
+                                    myUI.getMessage(Messages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
-                    studentsTable.setFilterFieldValue(myUI.getMessage(SptMessages.EducationStatus), edu_filled);
+                                    id, myUI.getMessage(Messages.FromEducationStatus)).getValue().toString());
+                    studentsTable.setFilterFieldValue(myUI.getMessage(Messages.EducationStatus), edu_filled);
                 } else {
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(SptMessages.ClassName))
+                                    myUI.getMessage(Messages.ClassName))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(SptMessages.FromClass)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromClass)).getValue().toString());
                     studentsTable.getContainerProperty(selected_student_id,
-                                    myUI.getMessage(SptMessages.EducationStatus))
+                                    myUI.getMessage(Messages.EducationStatus))
                             .setValue(historyTable.getContainerProperty(
-                                    id, myUI.getMessage(SptMessages.FromEducationStatus)).getValue().toString());
+                                    id, myUI.getMessage(Messages.FromEducationStatus)).getValue().toString());
                 }
 
                 historyTable.getContainerDataSource().removeItem(id);
                 if (historyTable.getContainerDataSource().size() != 0) {
                     historyTable.getContainerProperty(((IndexedContainer) historyTable.getContainerDataSource()).firstItemId(), Settings.button)
-                            .setValue(createButton(myUI.getMessage(SptMessages.DeleteButton),
+                            .setValue(createButton(myUI.getMessage(Messages.DeleteButton),
                                     ((IndexedContainer) historyTable.getContainerDataSource())
                                             .firstItemId().toString(), FontAwesome.MINUS));
                 }
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
@@ -481,7 +481,7 @@ public class IssueOrderView extends HorizontalSplitPanel implements Button.Click
                     reasons.append(", ");
                 }
                 reasons.append(reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Title)).getValue());
+                        myUI.getMessage(Messages.Title)).getValue());
                 isFirst = false;
             }
             return reasons.toString();

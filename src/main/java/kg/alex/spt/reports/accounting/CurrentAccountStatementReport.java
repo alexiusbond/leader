@@ -18,7 +18,7 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.domain.School;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.pdf.CurrentAccountStatementPdf;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
@@ -76,16 +76,16 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+        employeeCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         pdfBtn = new Button();
-        pdfBtn.setDescription(myUI.getMessage(SptMessages.ExportToPdf));
+        pdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
         pdfBtn.setWidth(Settings.PERCENTS100);
         pdfBtn.setEnabled(false);
         pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -93,38 +93,38 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
         pdfBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
         excelBtn.addClickListener(this);
 
-        fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setDateFormat(Settings.datePattern);
         fromDateDF.setValue(new Date());
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setDateFormat(Settings.datePattern);
         tillDateDF.setValue(new Date());
         tillDateDF.addValueChangeListener(this);
 
-        currencySelect = new ComboBox(myUI.getMessage(SptMessages.Currency));
+        currencySelect = new ComboBox(myUI.getMessage(Messages.Currency));
         currencySelect.setNullSelectionAllowed(false);
         currencySelect.setRequired(true);
         currencySelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        currencySelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        currencySelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         currencySelect.setWidth(Settings.PERCENTS100);
-        currencySelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        currencySelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         currencySelect.setFilteringMode(FilteringMode.CONTAINS);
         currencySelect.addValueChangeListener(this);
         try {
@@ -175,10 +175,10 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                     dbat.exec_current_account_statement(myUI, (Integer) employeeCategoriesTable.getValue(), fromDateDF.getValue(),
                             tillDateDF.getValue(), dataTable, (Integer) currencySelect.getValue(), myUI.getUser().getSchool().getId());
 
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Accrual), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Payout), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Balance), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Accrual), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Payout), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Balance), Table.Align.RIGHT);
                     if (dataTable.getContainerDataSource().size() != 0) {
                         pdfBtn.setEnabled(true);
                         excelBtn.setEnabled(true);
@@ -199,11 +199,11 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 if (school != null && school.getAddress() != null) {
                     new CurrentAccountStatementPdf(myUI, dataTable,
                             employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
-                                    myUI.getMessage(SptMessages.Title)).getValue().toString(),
+                                    myUI.getMessage(Messages.Title)).getValue().toString(),
                             currencySelect.getItemCaption(currencySelect.getValue()),
                             fromDateDF.getValue(), tillDateDF.getValue(), school);
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.FillSchoolInfo),
+                    Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -215,15 +215,15 @@ public class CurrentAccountStatementReport implements Button.ClickListener,
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
                     excelReport.setReportTitle(employeeCategoriesTable.getContainerProperty(employeeCategoriesTable.getValue(),
-                            myUI.getMessage(SptMessages.Title)).getValue()
+                            myUI.getMessage(Messages.Title)).getValue()
                             + "( " + currencySelect.getItemCaption(currencySelect.getValue()) + ") "
-                            + myUI.getMessage(SptMessages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
-                            + myUI.getMessage(SptMessages.To) + " " + Settings.df.format(tillDateDF.getValue()));
+                            + myUI.getMessage(Messages.From) + " " + Settings.df.format(fromDateDF.getValue()) + " "
+                            + myUI.getMessage(Messages.To) + " " + Settings.df.format(tillDateDF.getValue()));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
                     excelReport.getTotalsRow().getCell(3).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Balance)));
+                    excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Balance)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {

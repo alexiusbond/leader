@@ -15,7 +15,7 @@ import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.domain.AccCategory;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -48,9 +48,9 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         this.movement_type_id = movement_type_id;
         this.permission = permission;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Code),
-                myUI.getMessage(SptMessages.Title), myUI.getMessage(SptMessages.Parent),
-                myUI.getMessage(SptMessages.Status), myUI.getMessage(SptMessages.Note)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Code),
+                myUI.getMessage(Messages.Title), myUI.getMessage(Messages.Parent),
+                myUI.getMessage(Messages.Status), myUI.getMessage(Messages.Note)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -107,7 +107,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -115,7 +115,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -123,49 +123,49 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        parentSelect = new ComboBox(myUI.getMessage(SptMessages.Parent));
+        parentSelect = new ComboBox(myUI.getMessage(Messages.Parent));
         parentSelect.setNullSelectionAllowed(true);
         parentSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         parentSelect.setWidth(Settings.PERCENTS100);
-        parentSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.FullName));
+        parentSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.FullName));
         parentSelect.setFilteringMode(FilteringMode.CONTAINS);
         if (movement_type_id == 5) {
             parentSelect.setNullSelectionAllowed(false);
             parentSelect.setRequired(true);
-            parentSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+            parentSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         }
         setParentCombo();
         parentSelect.addValueChangeListener(this);
         settingsLay.addComponent(parentSelect);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 350, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 350, false));
         settingsLay.addComponent(nameTF);
 
         parent_code_label = new Label();
@@ -174,33 +174,33 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         codeLay.addComponent(parent_code_label, 0, 0);
         codeLay.setComponentAlignment(parent_code_label, Alignment.BOTTOM_LEFT);
 
-        codeTF = new TextField(myUI.getMessage(SptMessages.Code));
+        codeTF = new TextField(myUI.getMessage(Messages.Code));
         codeTF.setRequired(true);
         codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        codeTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         codeTF.setWidth(Settings.PERCENTS100);
         codeTF.addValidator(new RegexpValidator("[0-9]{1,20}", true,
-                myUI.getMessage(SptMessages.NotificationWrongValue)));
+                myUI.getMessage(Messages.NotificationWrongValue)));
         codeLay.addComponent(codeTF, 1, 0);
         codeLay.setColumnExpandRatio(1, 1);
         settingsLay.addComponent(codeLay);
 
-        noteTF = new TextArea(myUI.getMessage(SptMessages.Note));
+        noteTF = new TextArea(myUI.getMessage(Messages.Note));
         noteTF.setWidth(Settings.PERCENTS100);
         noteTF.setImmediate(true);
         noteTF.setRows(3);
         noteTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         noteTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 0, 200, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 0, 200, false));
         settingsLay.addComponent(noteTF);
 
-        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
-        statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -229,10 +229,10 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             prepareModificationMode();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -248,11 +248,11 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
                         if (id != 0) {
                             setTableOptions();
                             setParentCombo();
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                             prepareNormalMode();
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -268,17 +268,17 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
                             dbac.exec_update_all_parent_codes(acc_category.getId(), acc_category.getCode(), true);
                             setTableOptions();
                             setParentCombo();
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                             prepareNormalMode();
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbac.close();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -303,7 +303,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
         } else if (property == parentSelect) {
             if (parentSelect.getValue() != null) {
                 parent_code = parentSelect.getContainerProperty(parentSelect.getValue(),
-                        myUI.getMessage(SptMessages.Code)).getValue().toString();
+                        myUI.getMessage(Messages.Code)).getValue().toString();
                 parent_code_label.setValue(parent_code + ".");
 
             } else {
@@ -356,24 +356,24 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             parentSelect.setValue(null);
         }
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         if (dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Note)).getValue() != null) {
+                myUI.getMessage(Messages.Note)).getValue() != null) {
             noteTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                    myUI.getMessage(SptMessages.Note)).getValue().toString());
+                    myUI.getMessage(Messages.Note)).getValue().toString());
         } else {
             noteTF.setValue("");
         }
         if (parentSelect.getValue() != null) {
             parent_code = parentSelect.getContainerProperty(parentSelect.getValue(),
-                    myUI.getMessage(SptMessages.Code)).getValue().toString();
+                    myUI.getMessage(Messages.Code)).getValue().toString();
             parent_code_label.setValue(parent_code + ".");
         } else {
             parent_code = "";
             parent_code_label.setValue("");
         }
         codeTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Code)).getValue().toString().replace((parent_code + "."), ""));
+                myUI.getMessage(Messages.Code)).getValue().toString().replace((parent_code + "."), ""));
         statusSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue());
     }
@@ -424,7 +424,7 @@ public class AccCategoriesDefinitionView extends HorizontalSplitPanel implements
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

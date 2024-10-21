@@ -2,7 +2,7 @@ package kg.alex.spt;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.utils.Settings;
 
 public class LoginScreen extends VerticalLayout {
@@ -12,7 +12,7 @@ public class LoginScreen extends VerticalLayout {
         setSizeFull();
         setStyleName("mainLayout");
 
-        Label captionLbl = new Label(myUI.getMessage(SptMessages.AppTitle));
+        Label captionLbl = new Label(myUI.getMessage(Messages.AppTitle));
         captionLbl.setStyleName("mainPage");
         captionLbl.setSizeUndefined();
 
@@ -26,7 +26,7 @@ public class LoginScreen extends VerticalLayout {
         hl.setSpacing(true);
         hl.addStyleName("loginLayout");
 
-        Panel loginPanel = new Panel(myUI.getMessage(SptMessages.Login));
+        Panel loginPanel = new Panel(myUI.getMessage(Messages.Login));
         loginPanel.setStyleName("well");
         loginPanel.addStyleName("loginPanel");
         loginPanel.setHeight("25%");

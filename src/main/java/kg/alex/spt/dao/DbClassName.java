@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.ClassName;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,29 +36,29 @@ public class DbClassName extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Number), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Number), String.class, null);
         container.addContainerProperty(Settings.number_id, Integer.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Language), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Type), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Language), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Type), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(Settings.class_type_id, Integer.class, 0);
         container.addContainerProperty(Settings.school_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.School), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.School), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("cn.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Number)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Number)).setValue(
                     result.getString("cnum.name"));
             item.getItemProperty(Settings.number_id).setValue(
                     result.getInt("cnum.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Type)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Type)).setValue(
                     result.getString("class_type.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("cn.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("cn.activity_status_id"));
@@ -66,7 +66,7 @@ public class DbClassName extends BaseDb {
                     result.getInt("cn.class_type_id"));
             item.getItemProperty(Settings.school_id).setValue(
                     result.getInt("cn.school_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.School)).setValue(
                     result.getString("sc.name_ru"));
             item.getItemProperty(Settings.id).setValue(result.getInt("cn.id"));
         }
@@ -115,19 +115,19 @@ public class DbClassName extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         container.addContainerProperty(Settings.class_order_number, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassNumber), Integer.class, 0);
+        container.addContainerProperty(myUi.getMessage(Messages.ClassNumber), Integer.class, 0);
         container.addContainerProperty(Settings.max, Integer.class, 0);
         container.addContainerProperty(Settings.min, Integer.class, 0);
         container.addContainerProperty(Settings.class_type_id, Integer.class, 0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("cn.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("cl_name"));
             item.getItemProperty(Settings.class_order_number).setValue(
                     result.getInt("cnu.order_num"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassNumber)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ClassNumber)).setValue(
                     result.getInt("cnu.name"));
             item.getItemProperty(Settings.max).setValue(
                     result.getInt("el.order_number_max"));

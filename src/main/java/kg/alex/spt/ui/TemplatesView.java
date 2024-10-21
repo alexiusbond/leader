@@ -10,7 +10,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,7 +50,7 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
     }
 
     private Button createButton(String itemId) {
-        Button btn = new Button(myUI.getMessage(SptMessages.DownloadButton));
+        Button btn = new Button(myUI.getMessage(Messages.DownloadButton));
         btn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         btn.setIcon(FontAwesome.DOWNLOAD);
         btn.setData(itemId);
@@ -60,8 +60,8 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
 
     private void setDataTable() {
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), Date.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), Date.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
         try {
             File folder = new File("/home/logo/docs");
@@ -72,15 +72,15 @@ public class TemplatesView extends VerticalLayout implements Button.ClickListene
                     if (basicFileAttributes.isRegularFile()) {
                         String id = listOfFile.getName();
                         Item item = container.addItem(id);
-                        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(listOfFile.getName());
-                        item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+                        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(listOfFile.getName());
+                        item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                                 new Date(basicFileAttributes.lastModifiedTime().toMillis()));
                         item.getItemProperty(Settings.button).setValue(createButton(id));
                     }
                 }
             }
             dataTable.clear();
-            container.sort(new String[]{myUI.getMessage(SptMessages.Date)}, new boolean[]{false});
+            container.sort(new String[]{myUI.getMessage(Messages.Date)}, new boolean[]{false});
             dataTable.setContainerDataSource(container);
         } catch (Exception e) {
             logger.error(e);

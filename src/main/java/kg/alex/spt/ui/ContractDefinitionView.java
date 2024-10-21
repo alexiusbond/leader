@@ -18,7 +18,7 @@ import kg.alex.spt.dao.DbContract;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbStudentContract;
 import kg.alex.spt.domain.Contract;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.utils.DefinitionsFilterGenerator;
 import kg.alex.spt.utils.FormattedFilterTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -49,9 +49,9 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
     public ContractDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Title),
-                myUI.getMessage(SptMessages.Value), myUI.getMessage(SptMessages.School),
-                myUI.getMessage(SptMessages.Year), myUI.getMessage(SptMessages.Status)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Title),
+                myUI.getMessage(Messages.Value), myUI.getMessage(Messages.School),
+                myUI.getMessage(Messages.Year), myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -65,7 +65,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         dataTable.setFilterBarVisible(true);
         dataTable.addValueChangeListener(this);
         setTable_options();
-        dataTable.setFilterFieldValue(myUI.getMessage(SptMessages.Year),
+        dataTable.setFilterFieldValue(myUI.getMessage(Messages.Year),
                 myUI.getUser().getCurrent_year().getName());
         dataTable.setNullSelectionAllowed(false);
         dataTable.setFilterGenerator(new DefinitionsFilterGenerator(dataTable));
@@ -93,7 +93,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -101,7 +101,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -109,37 +109,37 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_TINY);
         yearSelect.addValueChangeListener(this);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        copyButton = new PopupButton(myUI.getMessage(SptMessages.Copy));
+        copyButton = new PopupButton(myUI.getMessage(Messages.Copy));
         copyButton.setWidth(Settings.PERCENTS100);
-        copyButton.setDescription(myUI.getMessage(SptMessages.Copy));
+        copyButton.setDescription(myUI.getMessage(Messages.Copy));
         copyButton.setIcon(FontAwesome.COPY);
         copyButton.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         copyButton.setImmediate(true);
@@ -149,33 +149,33 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         buttonsLay.addComponent(copyButton);
         buttonsLay.setExpandRatio(copyButton, 1);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 250, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 250, false));
         settingsLay.addComponent(nameTF);
 
         ObjectProperty<Double> property = new ObjectProperty<>(0.0);
-        valueTF = new TextField(myUI.getMessage(SptMessages.Value), property);
+        valueTF = new TextField(myUI.getMessage(Messages.Value), property);
         valueTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         valueTF.setRequired(true);
-        valueTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        valueTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         valueTF.setNullRepresentation("");
         valueTF.setConverter(Settings.getStringToDoubleConverter(2));
         valueTF.setWidth(Settings.PERCENTS100);
-        valueTF.addValidator(new DoubleRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0.01, null));
+        valueTF.addValidator(new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.01, null));
         settingsLay.addComponent(valueTF);
 
-        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
         try {
             DbDefinition dbDef = new DbDefinition();
@@ -215,10 +215,10 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
             prepareModificationMode();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -235,10 +235,10 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                         if (id != 0) {
                             removeTableFilters();
                             addDataContainerItem(id);
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -254,17 +254,17 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
                         if (status != 0) {
                             removeTableFilters();
                             updateDataContainer();
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     }
                     dbDis.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -303,13 +303,13 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         } else if (property == yearSelect && yearSelect.getValue() != null
                 && dataTable.getValue() != null) {
             try {
-                ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                        myUI.getMessage(SptMessages.ConfirmContractCopy)
+                ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                        myUI.getMessage(Messages.ConfirmContractCopy)
                                 + yearSelect.getContainerProperty(yearSelect.getValue(),
-                                        myUI.getMessage(SptMessages.Title))
+                                        myUI.getMessage(Messages.Title))
                                 .getValue().toString() + " года?",
-                        myUI.getMessage(SptMessages.Yes),
-                        myUI.getMessage(SptMessages.No),
+                        myUI.getMessage(Messages.Yes),
+                        myUI.getMessage(Messages.No),
                         (ConfirmDialog.Listener) dialog -> {
                             if (dialog.isConfirmed()) {
                                 copyContracts();
@@ -359,9 +359,9 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         valueTF.getPropertyDataSource().setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Value)).getValue());
+                myUI.getMessage(Messages.Value)).getValue());
         statusSelect.setValue(Integer.parseInt(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).getValue().toString()));
 
@@ -375,38 +375,38 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Value)).setValue(
+                myUI.getMessage(Messages.Value)).setValue(
                 valueTF.getPropertyDataSource().getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Status)).setValue(
+                myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.school_id).setValue(myUI.getUser().getSchool().getId());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.School)).setValue(myUI.getUser().getSchool().getName_ru());
+                myUI.getMessage(Messages.School)).setValue(myUI.getUser().getSchool().getName_ru());
     }
 
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Value)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Value)).setValue(
                 valueTF.getPropertyDataSource().getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(statusSelect.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Year)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Year)).setValue(
                 myUI.getUser().getCurrent_year().getName());
         item.getItemProperty(Settings.year_id).setValue(
                 myUI.getUser().getCurrent_year().getId());
-        item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.School)).setValue(
                 myUI.getUser().getSchool().getName_ru());
         item.getItemProperty(Settings.school_id).setValue(
                 myUI.getUser().getSchool().getId());
@@ -445,7 +445,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);
@@ -466,7 +466,7 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
             logger.catching(e);
         }
         dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-        dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Value), CustomTable.Align.RIGHT);
+        dataTable.setColumnAlignment(myUI.getMessage(Messages.Value), CustomTable.Align.RIGHT);
         if (dataTable.getContainerDataSource().size() != 0) {
             dataTable.setValue(((IndexedContainer) dataTable.getContainerDataSource()).firstItemId());
         }
@@ -485,10 +485,10 @@ public class ContractDefinitionView extends HorizontalSplitPanel implements Butt
         }
         if (status != 0) {
             setTable_options();
-            Notification.show(myUI.getMessage(SptMessages.ValuesCopied),
+            Notification.show(myUI.getMessage(Messages.ValuesCopied),
                     Notification.Type.HUMANIZED_MESSAGE);
         } else {
-            Notification.show(myUI.getMessage(SptMessages.ValuesCanNotBeCopied),
+            Notification.show(myUI.getMessage(Messages.ValuesCanNotBeCopied),
                     Notification.Type.WARNING_MESSAGE);
         }
     }

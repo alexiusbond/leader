@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Contract;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,33 +41,33 @@ public class DbContract extends BaseDb {
         stat.setInt(1, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Value), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Value), Double.class, 0.0);
         container.addContainerProperty(Settings.year_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Year), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Year), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.school_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.School), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.School), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("c.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("c.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Value)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Value)).setValue(
                     result.getDouble("c.amount"));
             item.getItemProperty(Settings.year_id).setValue(
                     result.getInt("c.year_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Year)).setValue(
                     result.getString("y.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("c.activity_status_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(Settings.school_id).setValue(
                     result.getInt("c.school_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.School)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.School)).setValue(
                     result.getString("sc.name_ru"));
             item.getItemProperty(Settings.id).setValue(result.getInt("c.id"));
         }
@@ -115,10 +115,10 @@ public class DbContract extends BaseDb {
         stat.setInt(2, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("d.year_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("y.name"));
         }
         return container;
@@ -149,15 +149,15 @@ public class DbContract extends BaseDb {
         stat.setInt(3, contr_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Amount), Double.class, 0.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("t.name") + " - "
                             + Settings.dFormat2.format(result.getDouble("t.amount"))
                             + "$ (" + result.getString("y.name") + ")");
-            item.getItemProperty(myUi.getMessage(SptMessages.Amount)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Amount)).setValue(
                     result.getDouble("t.amount"));
         }
         return container;

@@ -16,7 +16,7 @@ import com.vaadin.ui.TextField;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.domain.InventoryInvoice;
 import kg.alex.spt.domain.School;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,23 +83,23 @@ public class InventoryLiquidationPdf {
                     Thead.getDefaultCell().setBorder(0);
                     Thead.getDefaultCell().setFixedHeight(15f);
                     Phrase p = new Phrase();
-                    p.add(new Phrase(myUI.getMessage(SptMessages.Date) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Date) + ": ", ordFontBold));
                     p.add(new Phrase(df.format(invoice.getCreation_date()), ordFont));
                     Thead.addCell(p);
                     p = new Phrase();
-                    p.add(new Phrase(myUI.getMessage(SptMessages.InvoiceNumber) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.InvoiceNumber) + ": ", ordFontBold));
                     p.add(new Phrase(invoice.getInvoiceNumberStr(), ordFont));
                     Thead.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(SptMessages.Block) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Block) + ": ", ordFontBold));
                     p.add(new Phrase(invoice.getBlock(), ordFont));
                     Thead.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(SptMessages.Floor) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Floor) + ": ", ordFontBold));
                     p.add(new Phrase(invoice.getFloor(), ordFont));
                     Thead.addCell(p);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(SptMessages.Room) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.Room) + ": ", ordFontBold));
                     p.add(new Phrase(invoice.getRoom(), ordFont));
                     Thead.addCell(p);
                     Thead.addCell(new Phrase(""));
@@ -114,8 +114,8 @@ public class InventoryLiquidationPdf {
                     table.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     table.addCell(new Phrase(" №", ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.InventoryItem), ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Quantity), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.InventoryItem), ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Quantity), ordFontBold));
 
                     Iterator<?> iter1 = inventoriesCont.getItemIds().iterator();
                     int y = 0;
@@ -126,11 +126,11 @@ public class InventoryLiquidationPdf {
                         Object next = iter1.next();
                         table.addCell(new Phrase(y + "", tableFont));
                         ComboBox cb = (ComboBox) inventoriesCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.InventoryItem)).getValue();
+                                myUI.getMessage(Messages.InventoryItem)).getValue();
                         table.addCell(new Phrase(cb.getItemCaption(cb.getValue()), tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         TextField tf = (TextField) inventoriesCont.getContainerProperty(
-                                next, myUI.getMessage(SptMessages.Quantity)).getValue();
+                                next, myUI.getMessage(Messages.Quantity)).getValue();
                         table.addCell(new Phrase(
                                 tf.getPropertyDataSource().getValue() + "", tableFont));
                         table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -139,7 +139,7 @@ public class InventoryLiquidationPdf {
 
                     table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                     table.addCell(new Phrase(" ", ordFontBold));
-                    table.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": " + totalQuantity, ordFontBold));
+                    table.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": " + totalQuantity, ordFontBold));
                     document.add(table);
 
                     document.add(new Paragraph(30, " "));
@@ -151,7 +151,7 @@ public class InventoryLiquidationPdf {
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
                     p = new Paragraph();
-                    p.add(new Phrase(myUI.getMessage(SptMessages.FromEmployee) + ": ", ordFontBold));
+                    p.add(new Phrase(myUI.getMessage(Messages.FromEmployee) + ": ", ordFontBold));
                     p.add(new Phrase(invoice.getEmployee(), ordFont));
                     T2.addCell(p);
                     T2.addCell(new Phrase(""));

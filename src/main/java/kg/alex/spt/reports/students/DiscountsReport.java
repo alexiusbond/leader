@@ -18,7 +18,7 @@ import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbDiscount;
 import kg.alex.spt.dao.DbStudentContract;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -50,20 +50,20 @@ public class DiscountsReport implements Button.ClickListener,
         this.splitPanel = splitPanel;
         buildLeftPanel();
         buildRightLayout();
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Id),
-                myUI.getMessage(SptMessages.EducationStatus),
-                myUI.getMessage(SptMessages.FirstName),
-                myUI.getMessage(SptMessages.LastName),
-                myUI.getMessage(SptMessages.ClassName),
-                myUI.getMessage(SptMessages.Contract),
-                myUI.getMessage(SptMessages.DiscountType),
-                myUI.getMessage(SptMessages.Discount),
-                myUI.getMessage(SptMessages.CorrectionType),
-                myUI.getMessage(SptMessages.Correction),
-                myUI.getMessage(SptMessages.PreviousYearDebt),
-                myUI.getMessage(SptMessages.Net),
-                myUI.getMessage(SptMessages.Paid),
-                myUI.getMessage(SptMessages.Left)};
+        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Id),
+                myUI.getMessage(Messages.EducationStatus),
+                myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.LastName),
+                myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.Contract),
+                myUI.getMessage(Messages.DiscountType),
+                myUI.getMessage(Messages.Discount),
+                myUI.getMessage(Messages.CorrectionType),
+                myUI.getMessage(Messages.Correction),
+                myUI.getMessage(Messages.PreviousYearDebt),
+                myUI.getMessage(Messages.Net),
+                myUI.getMessage(Messages.Paid),
+                myUI.getMessage(Messages.Left)};
     }
 
     private void buildLeftPanel() {
@@ -72,25 +72,25 @@ public class DiscountsReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelect = new ComboBox(myUI.getMessage(SptMessages.Year));
+        yearSelect = new ComboBox(myUI.getMessage(Messages.Year));
         yearSelect.setNullSelectionAllowed(false);
         yearSelect.setRequired(true);
         yearSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelect.setWidth(Settings.PERCENTS100);
-        yearSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.EducationStatus));
+        educationStatusMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.EducationStatus));
         educationStatusMCB.setRequired(true);
         educationStatusMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        educationStatusMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        educationStatusMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         educationStatusMCB.setWidth(Settings.PERCENTS100);
-        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        educationStatusMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         educationStatusMCB.setFilteringMode(FilteringMode.CONTAINS);
-        educationStatusMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        educationStatusMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         educationStatusMCB.setShowSelectAllButton((filter, page) -> true);
-        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        educationStatusMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
         try {
             DbDefinition dbd = new DbDefinition();
             dbd.connect();
@@ -105,13 +105,13 @@ public class DiscountsReport implements Button.ClickListener,
         educationStatusMCB.setValue(Settings.convertToSet(
                 educationStatusMCB.getContainerDataSource().getItemIds()));
 
-        selectAllDiscountsBtn = new Button(myUI.getMessage(SptMessages.AllDiscounts));
+        selectAllDiscountsBtn = new Button(myUI.getMessage(Messages.AllDiscounts));
         selectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
         selectAllDiscountsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllDiscountsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllDiscountsBtn.addClickListener(this);
 
-        deselectAllDiscountsBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllDiscountsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllDiscountsBtn.setWidth(Settings.PERCENTS100);
         deselectAllDiscountsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllDiscountsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -130,13 +130,13 @@ public class DiscountsReport implements Button.ClickListener,
         discountsTable.setSelectable(true);
         discountsTable.addValueChangeListener(this);
 
-        selectAllClassesBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
+        selectAllClassesBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllClassesBtn.setWidth(Settings.PERCENTS100);
         selectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllClassesBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllClassesBtn.addClickListener(this);
 
-        deselectAllClassesBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllClassesBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllClassesBtn.setWidth(Settings.PERCENTS100);
         deselectAllClassesBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllClassesBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -163,16 +163,16 @@ public class DiscountsReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
+        classTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -229,33 +229,33 @@ public class DiscountsReport implements Button.ClickListener,
                             this);
                     dataTable.setContainerDataSource(dataCont);
                     dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Contract), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Discount), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Correction), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.PreviousYearDebt), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Left), Table.Align.RIGHT);
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
-                            myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.EducationStatus),
-                            myUI.getMessage(SptMessages.Active) + activeStudents);
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Contract),
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Contract), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Discount), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Correction), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.PreviousYearDebt), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Net), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Paid), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Left), Table.Align.RIGHT);
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Id),
+                            myUI.getMessage(Messages.Students) + ": " + dataCont.size());
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.EducationStatus),
+                            myUI.getMessage(Messages.Active) + activeStudents);
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Contract),
                             Settings.dFormat2.format(contracts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Discount),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Discount),
                             Settings.dFormat2.format(discounts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Correction),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Correction),
                             Settings.dFormat2.format(corrections));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.PreviousYearDebt),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.PreviousYearDebt),
                             Settings.dFormat2.format(debts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Net),
                             Settings.dFormat2.format(nets));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Paid),
                             Settings.dFormat2.format(paid_amounts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Left),
                             Settings.dFormat2.format(lefts));
                     if (dataCont.size() != 0) {
-                        dataTable.setColumnFooter(myUI.getMessage(SptMessages.DiscountType), myUI.getMessage(SptMessages.Discounted)
+                        dataTable.setColumnFooter(myUI.getMessage(Messages.DiscountType), myUI.getMessage(Messages.Discounted)
                                 + discountedStudents + " (" + discountedStudents * 100 / dataCont.size() + "%)");
                         excelBtn.setEnabled(true);
                     }
@@ -268,15 +268,15 @@ public class DiscountsReport implements Button.ClickListener,
         } else if (source == excelBtn) {
             if (dataTable.getContainerDataSource().size() != 0) {
                 EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                excelReport.setReportTitle(myUI.getMessage(SptMessages.DiscountsReport));
+                excelReport.setReportTitle(myUI.getMessage(Messages.DiscountsReport));
                 excelReport.setDisplayTotals(true);
                 excelReport.convertTable();
                 excelReport.getTotalsRow().getCell(0).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(1).setCellFormula(null);
                 excelReport.getTotalsRow().getCell(6).setCellFormula(null);
-                excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Id)));
-                excelReport.getTotalsRow().getCell(1).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.EducationStatus)));
-                excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.DiscountType)));
+                excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Id)));
+                excelReport.getTotalsRow().getCell(1).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.EducationStatus)));
+                excelReport.getTotalsRow().getCell(6).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.DiscountType)));
                 excelReport.sendConverted();
             }
         } else if (source == selectAllClassesBtn) {
@@ -304,7 +304,7 @@ public class DiscountsReport implements Button.ClickListener,
                 discountsTable.setContainerDataSource(
                         dbd.exec_disc_select(myUI, (Integer) yearSelect.getValue()));
                 dbd.close();
-                discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
+                discountsTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
             } catch (Exception e) {
                 logger.error(e);
                 logger.catching(e);

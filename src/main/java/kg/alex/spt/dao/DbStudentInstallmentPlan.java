@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentInstallmentPlan;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.students.ClassInstPlanReport;
 import kg.alex.spt.reports.students.InstallmentPlanPaymentsReport;
 import kg.alex.spt.ui.StudentDefinitionView;
@@ -44,13 +44,13 @@ public class DbStudentInstallmentPlan extends BaseDb {
             String id = result.getString("ip.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    dw.createButton(myUI.getMessage(SptMessages.DeleteButton), id,
+                    dw.createButton(myUI.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentInstallment, FontAwesome.MINUS_SQUARE));
             java.util.Date date = result.getDate("ip.date_of_payment");
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
-                    dw.createDateField(date, myUI.getMessage(SptMessages.Date), id, false, true));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
-                    dw.createTextFieldDouble(result.getDouble("ip.amount"), 2, myUI.getMessage(SptMessages.Amount), id));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
+                    dw.createDateField(date, myUI.getMessage(Messages.Date), id, false, true));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
+                    dw.createTextFieldDouble(result.getDouble("ip.amount"), 2, myUI.getMessage(Messages.Amount), id));
             item.getItemProperty(Settings.status_id)
                     .setValue(result.getInt("ip.is_visible"));
         }
@@ -104,13 +104,13 @@ public class DbStudentInstallmentPlan extends BaseDb {
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("ip.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(
                     Settings.df.format((result.getDate("ip.date_of_payment"))));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(
                     result.getDouble("ip.amount"));
             ip.total_inst += result.getDouble("ip.amount");
         }
@@ -138,20 +138,20 @@ public class DbStudentInstallmentPlan extends BaseDb {
         stat.setInt(4, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Date), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Amount), Double.class, 0.0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Phone), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Date), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Amount), Double.class, 0.0);
+        container.addContainerProperty(myUI.getMessage(Messages.Phone), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("ip.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.FirstName)).setValue(result.getString("st.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.LastName)).setValue(result.getString("st.surname"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(result.getString("vcs.class_name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Amount)).setValue(result.getDouble("ip.amount"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Phone)).setValue(result.getString("phone"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Date)).setValue(Settings.df.format((result.getDate("ip.date_of_payment"))));
+            item.getItemProperty(myUI.getMessage(Messages.FirstName)).setValue(result.getString("st.name"));
+            item.getItemProperty(myUI.getMessage(Messages.LastName)).setValue(result.getString("st.surname"));
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(result.getString("vcs.class_name"));
+            item.getItemProperty(myUI.getMessage(Messages.Amount)).setValue(result.getDouble("ip.amount"));
+            item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(result.getString("phone"));
+            item.getItemProperty(myUI.getMessage(Messages.Date)).setValue(Settings.df.format((result.getDate("ip.date_of_payment"))));
             cip.total += result.getDouble("ip.amount");
         }
         return container;

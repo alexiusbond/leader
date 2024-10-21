@@ -17,7 +17,7 @@ import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Attachment;
 import kg.alex.spt.domain.Definition;
 import kg.alex.spt.domain.EmployeeCertificate;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,21 +86,21 @@ public class DbEmployeeCertificate extends BaseDb {
             String id = result.getString("ec.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeCertificate, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(
                     edv.createTextField(result.getString("ec.note"),
-                            myUI.getMessage(SptMessages.Note),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 250, true), false));
-            item.getItemProperty(myUI.getMessage(SptMessages.GivenBy)).setValue(
+                            myUI.getMessage(Messages.Note),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 250, true), false));
+            item.getItemProperty(myUI.getMessage(Messages.GivenBy)).setValue(
                     edv.createTextField(result.getString("ec.given_by"),
-                            myUI.getMessage(SptMessages.GivenBy),
-                            new StringLengthValidator(myUI.getMessage(SptMessages.NotificationWrongValue), null, 200, true), true));
-            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(
+                            myUI.getMessage(Messages.GivenBy),
+                            new StringLengthValidator(myUI.getMessage(Messages.NotificationWrongValue), null, 200, true), true));
+            item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(
                     edv.createDateField(result.getDate("ec.date_of_issue"),
-                            myUI.getMessage(SptMessages.IssueDate), null,
+                            myUI.getMessage(Messages.IssueDate), null,
                             true, Settings.datePattern, Resolution.DAY));
             final ComboBox cb2 = edv.createCombobox(result.getInt("ec.certificate_id"),
-                    myUI.getMessage(SptMessages.Certificate), Settings.dbCertificateTable, true);
+                    myUI.getMessage(Messages.Certificate), Settings.dbCertificateTable, true);
             cb2.setNewItemsAllowed(true);
             cb2.setNewItemHandler((AbstractSelect.NewItemHandler) newItemCaption -> {
                 try {
@@ -111,8 +111,8 @@ public class DbEmployeeCertificate extends BaseDb {
                     if (id1 != 0) {
                         for (Object next : container.getItemIds()) {
                             Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                    myUI.getMessage(SptMessages.Certificate)).getValue()).getContainerDataSource()).addItem(id1);
-                            item1.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(newItemCaption);
+                                    myUI.getMessage(Messages.Certificate)).getValue()).getContainerDataSource()).addItem(id1);
+                            item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                             cb2.setValue(id1);
                         }
                     }
@@ -121,7 +121,7 @@ public class DbEmployeeCertificate extends BaseDb {
                     logger.catching(e);
                 }
             });
-            item.getItemProperty(myUI.getMessage(SptMessages.Certificate)).setValue(cb2);
+            item.getItemProperty(myUI.getMessage(Messages.Certificate)).setValue(cb2);
 
             HorizontalLayout hl = new HorizontalLayout();
             hl.setSpacing(true);
@@ -131,7 +131,7 @@ public class DbEmployeeCertificate extends BaseDb {
             a.setUnique_name(result.getString("a.unique_name"));
             a.setExtension(result.getString("a.extension"));
             a.setName(result.getString("a.name"));
-            Button b = edv.createButton(myUI.getMessage(SptMessages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
+            Button b = edv.createButton(myUI.getMessage(Messages.DownLoad), id, Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);
             hl.addComponent(b);
@@ -140,8 +140,8 @@ public class DbEmployeeCertificate extends BaseDb {
             upload.setId(id);
             upload.setData(b);
             hl.addComponent(upload);
-            item.getItemProperty(myUI.getMessage(SptMessages.Document)).setValue(hl);
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(myUI.getMessage(Messages.Document)).setValue(hl);
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -154,17 +154,17 @@ public class DbEmployeeCertificate extends BaseDb {
         stat.setInt(1, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Certificate), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.GivenBy), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Note), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.IssueDate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Certificate), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.GivenBy), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Note), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.IssueDate), String.class, null);
         while (result.next()) {
             String id = result.getString("ec.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(SptMessages.Note)).setValue(result.getString("ec.note"));
-            item.getItemProperty(myUI.getMessage(SptMessages.GivenBy)).setValue(result.getString("ec.given_by"));
-            item.getItemProperty(myUI.getMessage(SptMessages.IssueDate)).setValue(Settings.df.format(result.getDate("ec.date_of_issue")));
-            item.getItemProperty(myUI.getMessage(SptMessages.Certificate)).setValue(result.getString("c.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(result.getString("ec.note"));
+            item.getItemProperty(myUI.getMessage(Messages.GivenBy)).setValue(result.getString("ec.given_by"));
+            item.getItemProperty(myUI.getMessage(Messages.IssueDate)).setValue(Settings.df.format(result.getDate("ec.date_of_issue")));
+            item.getItemProperty(myUI.getMessage(Messages.Certificate)).setValue(result.getString("c.name"));
         }
         return container;
     }

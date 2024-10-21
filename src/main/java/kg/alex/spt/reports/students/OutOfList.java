@@ -18,7 +18,7 @@ import kg.alex.spt.dao.DbClassName;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbLeavingReasons;
 import kg.alex.spt.dao.DbStudentOrder;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.tableexport.EnhancedFormatExcelExport;
 import kg.alex.spt.utils.FormattedTable;
 import kg.alex.spt.utils.MyFilterDecorator;
@@ -49,17 +49,17 @@ public class OutOfList implements Button.ClickListener,
         buildLeftPanel();
         buildRightLayout();
         NATURAL_COL_ORDER = new String[]{
-                myUI.getMessage(SptMessages.Id),
-                myUI.getMessage(SptMessages.FirstName),
-                myUI.getMessage(SptMessages.LastName),
-                myUI.getMessage(SptMessages.Year),
-                myUI.getMessage(SptMessages.Reasons),
-                myUI.getMessage(SptMessages.FromClass),
-                myUI.getMessage(SptMessages.ToClass),
-                myUI.getMessage(SptMessages.Date),
-                myUI.getMessage(SptMessages.Net),
-                myUI.getMessage(SptMessages.Paid),
-                myUI.getMessage(SptMessages.Left)};
+                myUI.getMessage(Messages.Id),
+                myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.LastName),
+                myUI.getMessage(Messages.Year),
+                myUI.getMessage(Messages.Reasons),
+                myUI.getMessage(Messages.FromClass),
+                myUI.getMessage(Messages.ToClass),
+                myUI.getMessage(Messages.Date),
+                myUI.getMessage(Messages.Net),
+                myUI.getMessage(Messages.Paid),
+                myUI.getMessage(Messages.Left)};
     }
 
     private void buildLeftPanel() {
@@ -68,25 +68,25 @@ public class OutOfList implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        yearSelectMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Year));
+        yearSelectMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.Year));
         yearSelectMCB.setRequired(true);
         yearSelectMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
-        yearSelectMCB.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        yearSelectMCB.setRequiredError(myUI.getMessage(Messages.RequiredField));
         yearSelectMCB.setWidth(Settings.PERCENTS100);
-        yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        yearSelectMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         yearSelectMCB.setFilteringMode(FilteringMode.CONTAINS);
-        yearSelectMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        yearSelectMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         yearSelectMCB.setShowSelectAllButton((filter, page) -> true);
-        yearSelectMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        yearSelectMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
 
-        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(SptMessages.Reasons));
+        reasonsMCB = new ComboBoxMultiselect(myUI.getMessage(Messages.Reasons));
         reasonsMCB.setStyleName(ValoTheme.COMBOBOX_SMALL);
         reasonsMCB.setWidth(Settings.PERCENTS100);
-        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        reasonsMCB.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         reasonsMCB.setFilteringMode(FilteringMode.CONTAINS);
-        reasonsMCB.setClearButtonCaption(myUI.getMessage(SptMessages.Clear));
+        reasonsMCB.setClearButtonCaption(myUI.getMessage(Messages.Clear));
         reasonsMCB.setShowSelectAllButton((filter, page) -> true);
-        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(SptMessages.SelectAll));
+        reasonsMCB.setSelectAllButtonCaption(myUI.getMessage(Messages.SelectAll));
 
         try {
             DbDefinition dbd = new DbDefinition();
@@ -104,13 +104,13 @@ public class OutOfList implements Button.ClickListener,
         }
         yearSelectMCB.addValueChangeListener(this);
 
-        selectAllBtn = new Button(myUI.getMessage(SptMessages.AllClasses));
+        selectAllBtn = new Button(myUI.getMessage(Messages.AllClasses));
         selectAllBtn.setWidth(Settings.PERCENTS100);
         selectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllBtn.addClickListener(this);
 
-        deselectAllBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllBtn.setWidth(Settings.PERCENTS100);
         deselectAllBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -137,16 +137,16 @@ public class OutOfList implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        fromClassTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(SptMessages.Title)});
+        fromClassTable.setVisibleColumns((Object[]) new String[]{myUI.getMessage(Messages.Title)});
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -194,17 +194,17 @@ public class OutOfList implements Button.ClickListener,
                             myUI.getUser().getSchool().getId(), this);
                     dataTable.setContainerDataSource(dataCont);
                     dataTable.setVisibleColumns((Object[]) NATURAL_COL_ORDER);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Net), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Paid), Table.Align.RIGHT);
-                    dataTable.setColumnAlignment(myUI.getMessage(SptMessages.Left), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Net), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Paid), Table.Align.RIGHT);
+                    dataTable.setColumnAlignment(myUI.getMessage(Messages.Left), Table.Align.RIGHT);
 
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Id),
-                            myUI.getMessage(SptMessages.Students) + ": " + dataCont.size());
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Net),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Id),
+                            myUI.getMessage(Messages.Students) + ": " + dataCont.size());
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Net),
                             Settings.dFormat2.format(nets));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Paid),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Paid),
                             Settings.dFormat2.format(paid_amounts));
-                    dataTable.setColumnFooter(myUI.getMessage(SptMessages.Left),
+                    dataTable.setColumnFooter(myUI.getMessage(Messages.Left),
                             Settings.dFormat2.format(nets - paid_amounts));
                     if (dataCont.size() != 0) {
                         excelBtn.setEnabled(true);
@@ -219,11 +219,11 @@ public class OutOfList implements Button.ClickListener,
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     EnhancedFormatExcelExport excelReport = new EnhancedFormatExcelExport(dataTable);
-                    excelReport.setReportTitle(myUI.getMessage(SptMessages.OutOfReport));
+                    excelReport.setReportTitle(myUI.getMessage(Messages.OutOfReport));
                     excelReport.setDisplayTotals(true);
                     excelReport.convertTable();
                     excelReport.getTotalsRow().getCell(0).setCellFormula(null);
-                    excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(SptMessages.Id)));
+                    excelReport.getTotalsRow().getCell(0).setCellValue(dataTable.getColumnFooter(myUI.getMessage(Messages.Id)));
                     excelReport.sendConverted();
                 }
             } catch (Exception e) {
@@ -258,7 +258,7 @@ public class OutOfList implements Button.ClickListener,
                     reasons.append(", ");
                 }
                 reasons.append(reasonsMCB.getContainerProperty(next,
-                        myUI.getMessage(SptMessages.Title)).getValue());
+                        myUI.getMessage(Messages.Title)).getValue());
                 isFirst = false;
             }
             return reasons.toString();

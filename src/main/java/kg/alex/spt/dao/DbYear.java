@@ -5,7 +5,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Year;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,24 +25,24 @@ public class DbYear extends BaseDb {
         PreparedStatement stat = dbCon.prepareStatement(sql);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Period), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.PeriodKg), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.StartDate), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.EndDate), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Period), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.PeriodKg), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.StartDate), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.EndDate), String.class, null);
         container.addContainerProperty(Settings.id, Integer.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("y.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("y.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Period)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Period)).setValue(
                     result.getString("y.period"));
-            item.getItemProperty(myUi.getMessage(SptMessages.PeriodKg)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.PeriodKg)).setValue(
                     result.getString("y.period_kg"));
-            item.getItemProperty(myUi.getMessage(SptMessages.StartDate)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.StartDate)).setValue(
                     Settings.df.format(result.getDate("y.start_date")));
-            item.getItemProperty(myUi.getMessage(SptMessages.EndDate)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.EndDate)).setValue(
                     Settings.df.format(result.getDate("y.end_date")));
             item.getItemProperty(Settings.id).setValue(result.getInt("y.id"));
         }

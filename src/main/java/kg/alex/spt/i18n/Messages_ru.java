@@ -1,6 +1,6 @@
 package kg.alex.spt.i18n;
 
-public class SptMessages_ru extends SptMessages {
+public class Messages_ru extends kg.alex.spt.i18n.Messages {
 
     static final Object[][] contents_ru = {
             // Application

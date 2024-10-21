@@ -10,7 +10,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Room;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,11 +36,11 @@ public class DbRoom extends BaseDb {
         stat.setInt(1, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Block), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Floor), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Description), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Status), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Block), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Floor), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Description), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Status), String.class, null);
         container.addContainerProperty(Settings.status_id, Integer.class, 0);
         container.addContainerProperty(Settings.block_id, Integer.class, 0);
         container.addContainerProperty(Settings.floor_id, Integer.class, 0);
@@ -48,15 +48,15 @@ public class DbRoom extends BaseDb {
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("r.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Block)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Block)).setValue(
                     result.getString("b.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Floor)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Floor)).setValue(
                     result.getString("f.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("r.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Description)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Description)).setValue(
                     result.getString("r.description"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Status)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Status)).setValue(
                     result.getString("ac.name"));
             item.getItemProperty(Settings.status_id).setValue(
                     result.getInt("r.activity_status_id"));
@@ -114,13 +114,13 @@ public class DbRoom extends BaseDb {
         stat.setInt(2, floor_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Room), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Room), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("t.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("room"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Room)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Room)).setValue(
                     result.getString("t.name"));
         }
         return container;

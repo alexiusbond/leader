@@ -20,7 +20,7 @@ import kg.alex.spt.dao.DbAccCategory;
 import kg.alex.spt.dao.DbInvoice;
 import kg.alex.spt.dao.DbTransfers;
 import kg.alex.spt.domain.SchoolAccounting;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.utils.FormattedTreeTable;
 import kg.alex.spt.utils.MyFilterDecorator;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -78,13 +78,13 @@ public class BalanceReport implements Button.ClickListener,
         leftGrid.setSizeFull();
         leftGrid.setSpacing(true);
 
-        selectAllAssertsBtn = new Button(myUI.getMessage(SptMessages.AllAsserts));
+        selectAllAssertsBtn = new Button(myUI.getMessage(Messages.AllAsserts));
         selectAllAssertsBtn.setWidth(Settings.PERCENTS100);
         selectAllAssertsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllAssertsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllAssertsBtn.addClickListener(this);
 
-        deselectAllAssertsBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllAssertsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllAssertsBtn.setWidth(Settings.PERCENTS100);
         deselectAllAssertsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllAssertsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -104,13 +104,13 @@ public class BalanceReport implements Button.ClickListener,
         assertsCategoriesTable.setMultiSelectMode(MultiSelectMode.SIMPLE);
         assertsCategoriesTable.addValueChangeListener(this);
 
-        selectAllDebtsBtn = new Button(myUI.getMessage(SptMessages.AllDebts));
+        selectAllDebtsBtn = new Button(myUI.getMessage(Messages.AllDebts));
         selectAllDebtsBtn.setWidth(Settings.PERCENTS100);
         selectAllDebtsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         selectAllDebtsBtn.setIcon(FontAwesome.CHECK_SQUARE);
         selectAllDebtsBtn.addClickListener(this);
 
-        deselectAllDebtsBtn = new Button(myUI.getMessage(SptMessages.Clear));
+        deselectAllDebtsBtn = new Button(myUI.getMessage(Messages.Clear));
         deselectAllDebtsBtn.setWidth(Settings.PERCENTS100);
         deselectAllDebtsBtn.addStyleName(ValoTheme.BUTTON_TINY);
         deselectAllDebtsBtn.setIcon(FontAwesome.MINUS_SQUARE);
@@ -139,37 +139,37 @@ public class BalanceReport implements Button.ClickListener,
             logger.error(e);
             logger.catching(e);
         }
-        assertsCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
-        debtsCategoriesTable.setVisibleColumns(myUI.getMessage(SptMessages.Title));
+        assertsCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
+        debtsCategoriesTable.setVisibleColumns(myUI.getMessage(Messages.Title));
 
-        generateBtn = new Button(myUI.getMessage(SptMessages.ShowButton));
+        generateBtn = new Button(myUI.getMessage(Messages.ShowButton));
         generateBtn.setWidth(Settings.PERCENTS100);
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
 
         excelBtn = new Button();
-        excelBtn.setDescription(myUI.getMessage(SptMessages.ExportToExcel));
+        excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
         excelBtn.setWidth(Settings.PERCENTS100);
         excelBtn.setEnabled(false);
         excelBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         excelBtn.setIcon(FontAwesome.FILE_EXCEL_O);
 
-        fromDateDF = new DateField(myUI.getMessage(SptMessages.FromDate));
+        fromDateDF = new DateField(myUI.getMessage(Messages.FromDate));
         fromDateDF.setWidth(Settings.PERCENTS100);
         fromDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         fromDateDF.setRequired(true);
-        fromDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        fromDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         fromDateDF.setResolution(Resolution.MONTH);
         fromDateDF.setDateFormat(Settings.yearMonthPattern);
         fromDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
         fromDateDF.addValueChangeListener(this);
 
-        tillDateDF = new DateField(myUI.getMessage(SptMessages.TillDate));
+        tillDateDF = new DateField(myUI.getMessage(Messages.TillDate));
         tillDateDF.setWidth(Settings.PERCENTS100);
         tillDateDF.setStyleName(ValoTheme.DATEFIELD_SMALL);
         tillDateDF.setRequired(true);
-        tillDateDF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        tillDateDF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         tillDateDF.setResolution(Resolution.MONTH);
         tillDateDF.setDateFormat(Settings.yearMonthPattern);
         tillDateDF.setValue(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
@@ -202,13 +202,13 @@ public class BalanceReport implements Button.ClickListener,
         vl.setSizeFull();
 
         assertsDataTable = new FormattedTreeTable(myUI);
-        assertsDataTable.setCaption(myUI.getMessage(SptMessages.Asserts));
+        assertsDataTable.setCaption(myUI.getMessage(Messages.Asserts));
         assertsDataTable.setSizeFull();
         assertsDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         assertsDataTable.addStyleName("noWrapHeader");
 
         debtsDataTable = new FormattedTreeTable(myUI);
-        debtsDataTable.setCaption(myUI.getMessage(SptMessages.Debts));
+        debtsDataTable.setCaption(myUI.getMessage(Messages.Debts));
         debtsDataTable.setSizeFull();
         debtsDataTable.setStyleName(ValoTheme.TABLE_COMPACT);
         debtsDataTable.addStyleName("noWrapHeader");
@@ -266,8 +266,8 @@ public class BalanceReport implements Button.ClickListener,
                                 dbCon.connect();
                                 dbCon.exec_report_by_date(myUI, "3,5", myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
                                         assertsDataTable, Settings.convertCollectionToStr(catIds));
-                                assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
-                                assertsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
+                                assertsDataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), FormattedTreeTable.Align.RIGHT);
+                                assertsDataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (assertsDataTable.getContainerDataSource().size() != 0) {
                                     excelBtn.setEnabled(true);
                                 }
@@ -295,8 +295,8 @@ public class BalanceReport implements Button.ClickListener,
                                 dbsc.connect();
                                 dbsc.exec_report_by_date(myUI, "4,5", myUI.getUser().getSchool().getId(), current.getTime(), end_date.getTime(),
                                         debtsDataTable, Settings.convertCollectionToStr(catIds));
-                                debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Amount), FormattedTreeTable.Align.RIGHT);
-                                debtsDataTable.setColumnAlignment(myUI.getMessage(SptMessages.Rate), FormattedTreeTable.Align.RIGHT);
+                                debtsDataTable.setColumnAlignment(myUI.getMessage(Messages.Amount), FormattedTreeTable.Align.RIGHT);
+                                debtsDataTable.setColumnAlignment(myUI.getMessage(Messages.Rate), FormattedTreeTable.Align.RIGHT);
                                 if (debtsDataTable.getContainerDataSource().size() != 0) {
                                     excelBtn.setEnabled(true);
                                 }
@@ -320,16 +320,16 @@ public class BalanceReport implements Button.ClickListener,
                             dbtr.connect();
                             SchoolAccounting schoolAcc = dbtr.exec_get_ttls(myUI.getUser().getSchool().getId(), current.getTime(),
                                     end_date.getTime(), Settings.convertCollectionToStr(catIds));
-                            assertsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.AssertsTotal) + ": " +
+                            assertsTtlLab.setValue("<b>" + myUI.getMessage(Messages.AssertsTotal) + ": " +
                                     Settings.dFormat2.format(schoolAcc.getTotal_income()) + "$</b>");
-                            debtsTtlLab.setValue("<b>" + myUI.getMessage(SptMessages.DebtsTotal) + ": "
+                            debtsTtlLab.setValue("<b>" + myUI.getMessage(Messages.DebtsTotal) + ": "
                                     + Settings.dFormat2.format(schoolAcc.getTotal_outcome()) + "$</b>");
-                            ttlLab.setValue("<b>" + myUI.getMessage(SptMessages.Total) + ": " + Settings.dFormat2.format(
+                            ttlLab.setValue("<b>" + myUI.getMessage(Messages.Total) + ": " + Settings.dFormat2.format(
                                     (schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome())) + "$</b>");
                             assertsDataTable.setData(schoolAcc.getTotal_income());
                             debtsDataTable.setData(schoolAcc.getTotal_outcome());
                             ttlLab.setData(schoolAcc.getTotal_income() - schoolAcc.getTotal_outcome());
-                            ttlLab.setId(myUI.getMessage(SptMessages.Total));
+                            ttlLab.setId(myUI.getMessage(Messages.Total));
                             dbtr.close();
                         } catch (Exception e) {
                             logger.error(e);
@@ -408,9 +408,9 @@ public class BalanceReport implements Button.ClickListener,
                         Object nextProp = propIter.next();
                         cell = row.createCell(colNum);
                         cell.setCellStyle(cellStyleGreen);
-                        if (nextProp.equals(myUI.getMessage(SptMessages.Title))) {
+                        if (nextProp.equals(myUI.getMessage(Messages.Title))) {
                             cell.setCellValue(tables.get(k).getCaption());
-                        } else if (nextProp.equals(myUI.getMessage(SptMessages.Amount))) {
+                        } else if (nextProp.equals(myUI.getMessage(Messages.Amount))) {
                             cell.setCellValue((Double) tables.get(k).getData());
                         }
                         sheet.autoSizeColumn(colNum);
@@ -512,7 +512,7 @@ public class BalanceReport implements Button.ClickListener,
                     excelBtn.removeExtension(fd);
                 }
                 fd = new FileDownloader(new StreamResource(() -> new ByteArrayInputStream(baos.toByteArray()),
-                        myUI.getMessage(SptMessages.AccountingBalanceReport) + System.currentTimeMillis() + ".xls"));
+                        myUI.getMessage(Messages.AccountingBalanceReport) + System.currentTimeMillis() + ".xls"));
                 fd.extend(excelBtn);
             } catch (IOException e) {
                 logger.error(e);

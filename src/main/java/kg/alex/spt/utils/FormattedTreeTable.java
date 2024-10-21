@@ -8,7 +8,7 @@ package kg.alex.spt.utils;
 import com.vaadin.data.Property;
 import com.vaadin.ui.TreeTable;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 
 /**
  * @author alex
@@ -26,7 +26,7 @@ public class FormattedTreeTable extends TreeTable {
     protected String formatPropertyValue(Object rowId, Object colId, Property property) {
         if (property.getType() == Double.class) {
             if (property.getValue() != null) {
-                if (colId.equals(myUI.getMessage(SptMessages.Rate))) {
+                if (colId.equals(myUI.getMessage(Messages.Rate))) {
                     return Settings.dFormat4.format(property.getValue());
                 } else {
                     return Settings.dFormat2.format(property.getValue());

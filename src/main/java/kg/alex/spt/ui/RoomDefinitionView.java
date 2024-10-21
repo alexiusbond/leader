@@ -15,7 +15,7 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbInventoryInvoice;
 import kg.alex.spt.dao.DbRoom;
 import kg.alex.spt.domain.Room;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -40,9 +40,9 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
     public RoomDefinitionView(MyVaadinUI myUI) {
         this.myUI = myUI;
 
-        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(SptMessages.Block),
-                myUI.getMessage(SptMessages.Floor), myUI.getMessage(SptMessages.Title),
-                myUI.getMessage(SptMessages.Description), myUI.getMessage(SptMessages.Status)};
+        String[] NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Block),
+                myUI.getMessage(Messages.Floor), myUI.getMessage(Messages.Title),
+                myUI.getMessage(Messages.Description), myUI.getMessage(Messages.Status)};
         buildSettingsLayout();
 
         VerticalLayout vl = new VerticalLayout();
@@ -90,7 +90,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -98,7 +98,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -106,70 +106,70 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
         settingsLay.addComponent(buttonsLay);
 
-        nameTF = new TextField(myUI.getMessage(SptMessages.Title));
+        nameTF = new TextField(myUI.getMessage(Messages.Title));
         nameTF.setRequired(true);
         nameTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        nameTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameTF.setWidth(Settings.PERCENTS100);
         nameTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 50, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 50, false));
         settingsLay.addComponent(nameTF);
 
-        descriptionTF = new TextField(myUI.getMessage(SptMessages.Description));
+        descriptionTF = new TextField(myUI.getMessage(Messages.Description));
         descriptionTF.setRequired(true);
         descriptionTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        descriptionTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        descriptionTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         descriptionTF.setWidth(Settings.PERCENTS100);
         descriptionTF.addValidator(new StringLengthValidator(
-                myUI.getMessage(SptMessages.NotificationWrongValue), 1, 150, false));
+                myUI.getMessage(Messages.NotificationWrongValue), 1, 150, false));
         settingsLay.addComponent(descriptionTF);
 
-        blockSelect = new ComboBox(myUI.getMessage(SptMessages.Block));
+        blockSelect = new ComboBox(myUI.getMessage(Messages.Block));
         blockSelect.setNullSelectionAllowed(false);
         blockSelect.setRequired(true);
-        blockSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        blockSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         blockSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         blockSelect.setWidth(Settings.PERCENTS100);
-        blockSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        blockSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         blockSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        floorSelect = new ComboBox(myUI.getMessage(SptMessages.Floor));
+        floorSelect = new ComboBox(myUI.getMessage(Messages.Floor));
         floorSelect.setNullSelectionAllowed(false);
         floorSelect.setRequired(true);
-        floorSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        floorSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         floorSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         floorSelect.setWidth(Settings.PERCENTS100);
-        floorSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        floorSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         floorSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setRequired(true);
-        statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -207,10 +207,10 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
             nameTF.focus();
             statusSelect.setValue(2);
         } else if (source == deleteBtn && dataTable.getValue() != null) {
-            ConfirmDialog.show(myUI, myUI.getMessage(SptMessages.Question),
-                    myUI.getMessage(SptMessages.ConfirmDeletion),
-                    myUI.getMessage(SptMessages.Yes),
-                    myUI.getMessage(SptMessages.No),
+            ConfirmDialog.show(myUI, myUI.getMessage(Messages.Question),
+                    myUI.getMessage(Messages.ConfirmDeletion),
+                    myUI.getMessage(Messages.Yes),
+                    myUI.getMessage(Messages.No),
                     (ConfirmDialog.Listener) dialog -> {
                         if (dialog.isConfirmed()) {
                             execDelete();
@@ -225,10 +225,10 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
                         int id = dbCon.exec_insert(getRoom(0));
                         if (id != 0) {
                             addDataContainerItem(id);
-                            Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueSaved),
                                     Notification.Type.HUMANIZED_MESSAGE);
                         } else {
-                            Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                            Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                     Notification.Type.WARNING_MESSAGE);
                         }
                     } else {
@@ -244,7 +244,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
                             logger.catching(e);
                         }
                         if (isUsed) {
-                            Notification.show(myUI.getMessage(SptMessages.ValueIsUsed),
+                            Notification.show(myUI.getMessage(Messages.ValueIsUsed),
                                     Notification.Type.WARNING_MESSAGE);
                         } else {
                             int status = 0;
@@ -258,10 +258,10 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
                             }
                             if (status != 0) {
                                 updateDataContainer();
-                                Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueSaved),
                                         Notification.Type.HUMANIZED_MESSAGE);
                             } else {
-                                Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                                Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                         Notification.Type.WARNING_MESSAGE);
                             }
                         }
@@ -269,7 +269,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
                     dbCon.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -330,9 +330,9 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private void fillFields() {
         nameTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).getValue().toString());
+                myUI.getMessage(Messages.Title)).getValue().toString());
         descriptionTF.setValue(dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Description)).getValue().toString());
+                myUI.getMessage(Messages.Description)).getValue().toString());
         blockSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.block_id).getValue());
         floorSelect.setValue(dataTable.getContainerProperty(dataTable.getValue(),
@@ -351,49 +351,49 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
 
     private void updateDataContainer() {
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Title)).setValue(nameTF.getValue());
+                myUI.getMessage(Messages.Title)).setValue(nameTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Description)).setValue(descriptionTF.getValue());
+                myUI.getMessage(Messages.Description)).setValue(descriptionTF.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.block_id).setValue(blockSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Block)).setValue(blockSelect.
+                myUI.getMessage(Messages.Block)).setValue(blockSelect.
                 getContainerProperty(blockSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.floor_id).setValue(floorSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Floor)).setValue(floorSelect.
+                myUI.getMessage(Messages.Floor)).setValue(floorSelect.
                 getContainerProperty(floorSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         dataTable.getContainerProperty(dataTable.getValue(),
                 Settings.status_id).setValue(statusSelect.getValue());
         dataTable.getContainerProperty(dataTable.getValue(),
-                myUI.getMessage(SptMessages.Status)).setValue(statusSelect.
+                myUI.getMessage(Messages.Status)).setValue(statusSelect.
                 getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
     }
 
     private void addDataContainerItem(int id) {
         Item item = ((IndexedContainer) dataTable.getContainerDataSource())
                 .addItemAt(0, id);
-        item.getItemProperty(myUI.getMessage(SptMessages.Title)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Title)).setValue(
                 nameTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Description)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Description)).setValue(
                 descriptionTF.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Status)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Status)).setValue(
                 statusSelect.getContainerProperty(statusSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.status_id).setValue(
                 statusSelect.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Block)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Block)).setValue(
                 blockSelect.getContainerProperty(blockSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.block_id).setValue(
                 blockSelect.getValue());
-        item.getItemProperty(myUI.getMessage(SptMessages.Floor)).setValue(
+        item.getItemProperty(myUI.getMessage(Messages.Floor)).setValue(
                 floorSelect.getContainerProperty(floorSelect.getValue(),
-                        myUI.getMessage(SptMessages.Title)).getValue().toString());
+                        myUI.getMessage(Messages.Title)).getValue().toString());
         item.getItemProperty(Settings.floor_id).setValue(
                 floorSelect.getValue());
         item.getItemProperty(Settings.id).setValue(id);
@@ -428,7 +428,7 @@ public class RoomDefinitionView extends HorizontalSplitPanel implements Button.C
             }
             dbDef.close();
         } catch (SQLIntegrityConstraintViolationException e) {
-            Notification.show(myUI.getMessage(SptMessages.CanNotDelete),
+            Notification.show(myUI.getMessage(Messages.CanNotDelete),
                     Notification.Type.WARNING_MESSAGE);
             logger.error(e);
             logger.catching(e);

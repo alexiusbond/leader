@@ -13,7 +13,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.EducationStatus;
 import kg.alex.spt.domain.Student;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.reports.students.StatusesReport;
 import kg.alex.spt.ui.CallsView;
 import kg.alex.spt.ui.IssueOrderView;
@@ -60,21 +60,21 @@ public class DbStudent extends BaseDb {
         stat.setInt(3, myUi.getUser().getCurrent_year().getId());
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Relative), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.MiddleName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.DateOfBirth), Date.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Photo), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Relative), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.MiddleName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.DateOfBirth), Date.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Photo), String.class, null);
         container.addContainerProperty(Settings.gender_id, Integer.class, 0);
         container.addContainerProperty(Settings.education_status_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.EducationStatus), String.class, null);
         container.addContainerProperty(Settings.class_name_id, Integer.class, 0);
         container.addContainerProperty(Settings.entering_year_id, Integer.class, 0);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.EnteringYear), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.EnteringYear), String.class, null);
         int total = 0;
         sdv.eduStatCont.getContainerProperty(1, Settings.count).setValue(0);
         sdv.eduStatCont.getContainerProperty(2, Settings.count).setValue(0);
@@ -84,35 +84,35 @@ public class DbStudent extends BaseDb {
         sdv.eduStatCont.getContainerProperty(6, Settings.count).setValue(0);
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Id)).setValue(
                     result.getString("s.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FirstName)).setValue(
                     result.getString("s.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.LastName)).setValue(
                     result.getString("s.surname"));
             if (result.getString("rel.name") != null) {
-                item.getItemProperty(myUi.getMessage(SptMessages.Relative)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Relative)).setValue(
                         result.getString("rel.name") + " - " + result.getString("sr.fullname"));
-                item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         result.getString("sr.phone"));
             }
-            item.getItemProperty(myUi.getMessage(SptMessages.MiddleName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.MiddleName)).setValue(
                     result.getString("s.middle_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.DateOfBirth)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.DateOfBirth)).setValue(
                     result.getDate("s.date_of_birth"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Photo)).setValue(result.getString("s.photo"));
+            item.getItemProperty(myUi.getMessage(Messages.Photo)).setValue(result.getString("s.photo"));
             item.getItemProperty(Settings.gender_id).setValue(result.getInt("s.gender_id"));
             item.getItemProperty(Settings.education_status_id).setValue(result.getInt("education_status_id"));
             sdv.eduStatCont.getContainerProperty(result.getInt("education_status_id"), Settings.count)
                     .setValue(((Integer) sdv.eduStatCont.getContainerProperty(
                             result.getInt("education_status_id"), Settings.count).getValue()) + 1);
-            item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.EducationStatus)).setValue(
                     result.getString("education_status"));
             item.getItemProperty(Settings.class_name_id).setValue(
                     result.getInt("class_name_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ClassName)).setValue(
                     result.getString("class_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.EnteringYear)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.EnteringYear)).setValue(
                     result.getString("y.name"));
             item.getItemProperty(Settings.entering_year_id).setValue(
                     result.getInt("s.entering_year_id"));
@@ -138,18 +138,18 @@ public class DbStudent extends BaseDb {
         stat.setInt(2, scl_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.FullName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassNumber), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ClassNumber), String.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                     result.getString("s.surname")
                             + " " + result.getString("s.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassNumber)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ClassNumber)).setValue(
                     result.getString("class_number"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
                     result.getString("s.surname") + " " +
                             result.getString("s.name") + " - " +
                             result.getString("class_name"));
@@ -177,11 +177,11 @@ public class DbStudent extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(Settings.button, Button.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Id), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.FirstName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.LastName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.EducationStatus), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.ClassName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Id), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FirstName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.LastName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.EducationStatus), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.ClassName), String.class, null);
         container.addContainerProperty(Settings.class_id, Integer.class, 0);
         container.addContainerProperty(Settings.education_status_id, Integer.class, 0);
         container.addContainerProperty(Settings.entering_year_id, Integer.class, 0);
@@ -190,17 +190,17 @@ public class DbStudent extends BaseDb {
         while (result.next()) {
             Item item = container.addItem(result.getInt("s.id"));
             item.getItemProperty(Settings.button).setValue(
-                    iv.createButton(myUi.getMessage(SptMessages.Details),
+                    iv.createButton(myUi.getMessage(Messages.Details),
                             result.getString("s.id"), FontAwesome.INFO));
-            item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Id)).setValue(
                     result.getString("s.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FirstName)).setValue(
                     result.getString("s.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.LastName)).setValue(
                     result.getString("s.surname"));
-            item.getItemProperty(myUi.getMessage(SptMessages.EducationStatus)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.EducationStatus)).setValue(
                     result.getString("education_status"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.ClassName)).setValue(
                     result.getString("class_name"));
             item.getItemProperty(Settings.class_id).setValue(
                     result.getInt("class_name_id"));
@@ -285,12 +285,12 @@ public class DbStudent extends BaseDb {
 
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
             String fullname;
             fullname = result.getString("st.name") + " " + result.getString("st.surname");
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(fullname);
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(fullname);
         }
         return container;
     }
@@ -341,28 +341,28 @@ public class DbStudent extends BaseDb {
         IndexedContainer container = cv.prepareContainer();
         while (result.next()) {
             Item item = container.addItem(result.getInt("st.id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Id)).setValue(result.getString("st.login"));
-            item.getItemProperty(myUi.getMessage(SptMessages.FirstName)).setValue(result.getString("st.name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.LastName)).setValue(result.getString("st.surname"));
-            item.getItemProperty(myUi.getMessage(SptMessages.ClassName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Id)).setValue(result.getString("st.login"));
+            item.getItemProperty(myUi.getMessage(Messages.FirstName)).setValue(result.getString("st.name"));
+            item.getItemProperty(myUi.getMessage(Messages.LastName)).setValue(result.getString("st.surname"));
+            item.getItemProperty(myUi.getMessage(Messages.ClassName)).setValue(
                     result.getString("vcs.class_name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("is_main"));
             if (result.getDate("plan_debt_date") != null) {
-                item.getItemProperty(myUi.getMessage(SptMessages.PlanDebtDate)).setValue(
+                item.getItemProperty(myUi.getMessage(Messages.PlanDebtDate)).setValue(
                         Settings.df.format(result.getDate("plan_debt_date")));
             }
-            item.getItemProperty(myUi.getMessage(SptMessages.InstPlanDebt)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.InstPlanDebt)).setValue(
                     result.getDouble("plan_debt"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Remain)).setValue(result.getDouble("remain"));
+            item.getItemProperty(myUi.getMessage(Messages.Remain)).setValue(result.getDouble("remain"));
             cv.total += result.getDouble("plan_debt");
             if (result.getString("last_call") != null) {
-                item.getItemProperty(myUi.getMessage(SptMessages.LastCall)).setValue(result.getString("last_call"));
+                item.getItemProperty(myUi.getMessage(Messages.LastCall)).setValue(result.getString("last_call"));
             }
             if (result.getString("last_payment") != null) {
-                item.getItemProperty(myUi.getMessage(SptMessages.LastPayment)).setValue(result.getString("last_payment"));
+                item.getItemProperty(myUi.getMessage(Messages.LastPayment)).setValue(result.getString("last_payment"));
             }
-            item.getItemProperty(myUi.getMessage(SptMessages.Note)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Note)).setValue(
                     cv.createTextField(result.getInt("st.id")));
             item.getItemProperty(Settings.button).setValue(cv.createButton(result.getInt("st.id")));
         }
@@ -429,7 +429,7 @@ public class DbStudent extends BaseDb {
         stat.setInt(1, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.School), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.School), String.class, null);
         class_iter = ((Set<?>) sr.classTable.getValue()).iterator();
         while (class_iter.hasNext()) {
             Object nextClass = class_iter.next();
@@ -438,22 +438,22 @@ public class DbStudent extends BaseDb {
                 Object nextStatus = status_iter.next();
                 {
                     container.addContainerProperty(sr.classTable.getContainerProperty(
-                                    nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
-                                    + myUI.getMessage(SptMessages.ClassName) + " "
+                                    nextClass, myUI.getMessage(Messages.Title)).getValue() + " "
+                                    + myUI.getMessage(Messages.ClassName) + " "
                                     + sr.statusMS.getContainerProperty(
-                                    nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
+                                    nextStatus, myUI.getMessage(Messages.Title)).getValue(),
                             Integer.class, 0);
                 }
             }
         }
-        container.addContainerProperty(myUI.getMessage(SptMessages.Total), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.Total), Integer.class, 0);
         sr.dataTable.setContainerDataSource(container);
-        sr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.School),
-                myUI.getMessage(SptMessages.Total));
+        sr.dataTable.setColumnFooter(myUI.getMessage(Messages.School),
+                myUI.getMessage(Messages.Total));
         int counter = 0;
         while (result.next()) {
             Item item = container.addItem(result.getInt("sch.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.School)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.School)).setValue(
                     result.getString("sch.name_ru"));
             class_iter = ((Set<?>) sr.classTable.getValue()).iterator();
             String footerVal;
@@ -463,44 +463,44 @@ public class DbStudent extends BaseDb {
                 while (status_iter.hasNext()) {
                     Object nextStatus = status_iter.next();
                     item.getItemProperty(sr.classTable.getContainerProperty(
-                            nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
-                            + myUI.getMessage(SptMessages.ClassName) + " "
+                            nextClass, myUI.getMessage(Messages.Title)).getValue() + " "
+                            + myUI.getMessage(Messages.ClassName) + " "
                             + sr.statusMS.getContainerProperty(
-                            nextStatus, myUI.getMessage(SptMessages.Title)).getValue()).setValue(
+                            nextStatus, myUI.getMessage(Messages.Title)).getValue()).setValue(
                             result.getInt("quantity" + nextClass + "_" + nextStatus));
                     footerVal = sr.dataTable.getColumnFooter(sr.classTable.getContainerProperty(
-                            nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
-                            + myUI.getMessage(SptMessages.ClassName) + " "
+                            nextClass, myUI.getMessage(Messages.Title)).getValue() + " "
+                            + myUI.getMessage(Messages.ClassName) + " "
                             + sr.statusMS.getContainerProperty(
-                            nextStatus, myUI.getMessage(SptMessages.Title)).getValue());
+                            nextStatus, myUI.getMessage(Messages.Title)).getValue());
                     if (counter != 0) {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
-                                        nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
-                                        + myUI.getMessage(SptMessages.ClassName) + " "
+                                        nextClass, myUI.getMessage(Messages.Title)).getValue() + " "
+                                        + myUI.getMessage(Messages.ClassName) + " "
                                         + sr.statusMS.getContainerProperty(
-                                        nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
+                                        nextStatus, myUI.getMessage(Messages.Title)).getValue(),
                                 (Integer.parseInt(footerVal)
                                         + result.getInt("quantity" + nextClass + "_" + nextStatus)) + "");
                     } else {
                         sr.dataTable.setColumnFooter(sr.classTable.getContainerProperty(
-                                        nextClass, myUI.getMessage(SptMessages.Title)).getValue() + " "
-                                        + myUI.getMessage(SptMessages.ClassName) + " "
+                                        nextClass, myUI.getMessage(Messages.Title)).getValue() + " "
+                                        + myUI.getMessage(Messages.ClassName) + " "
                                         + sr.statusMS.getContainerProperty(
-                                        nextStatus, myUI.getMessage(SptMessages.Title)).getValue(),
+                                        nextStatus, myUI.getMessage(Messages.Title)).getValue(),
                                 result.getInt("quantity" + nextClass + "_" + nextStatus) + "");
                     }
                 }
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.Total)).setValue(
+            item.getItemProperty(myUI.getMessage(Messages.Total)).setValue(
                     result.getInt("quantity"));
             footerVal = sr.dataTable.getColumnFooter(
-                    myUI.getMessage(SptMessages.Total));
+                    myUI.getMessage(Messages.Total));
             if (counter != 0) {
-                sr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total),
+                sr.dataTable.setColumnFooter(myUI.getMessage(Messages.Total),
                         (Integer.parseInt(footerVal)
                                 + result.getInt("quantity")) + "");
             } else {
-                sr.dataTable.setColumnFooter(myUI.getMessage(SptMessages.Total),
+                sr.dataTable.setColumnFooter(myUI.getMessage(Messages.Total),
                         result.getInt("quantity") + "");
             }
             counter++;
@@ -516,9 +516,9 @@ public class DbStudent extends BaseDb {
                 "LEFT JOIN class_number AS cnu ON cnu.id = cn.class_number_id " +
                 "WHERE st.entering_year_id = ? AND st.school_id = ? AND cn.class_type_id = ? " +
                 "AND LENGTH(st.login) = 8 AND CAST(RIGHT(st.login, 3) AS UNSIGNED) BETWEEN ? AND ? ";
-        if (school_level != null && school_level.equals(myUi.getMessage(SptMessages.PrimaryCode))) {
+        if (school_level != null && school_level.equals(myUi.getMessage(Messages.PrimaryCode))) {
             sql += "AND cnu.name < 7";
-        } else if (school_level != null && school_level.equals(myUi.getMessage(SptMessages.SecondaryCode))) {
+        } else if (school_level != null && school_level.equals(myUi.getMessage(Messages.SecondaryCode))) {
             sql += "AND cnu.name >= 7";
         }
         PreparedStatement stat = dbCon.prepareStatement(sql);

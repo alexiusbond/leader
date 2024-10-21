@@ -14,7 +14,7 @@ import com.vaadin.server.StreamResource;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentInfoPdf;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +80,7 @@ public class ClassCallsPdf {
                     table_date.addCell(new Phrase("Дата: " + Settings.df.format(aDate), tableFont));
                     document.add(table_date);
 
-                    Paragraph spr = new Paragraph(myUI.getMessage(SptMessages.CallsReport) + ": "
+                    Paragraph spr = new Paragraph(myUI.getMessage(Messages.CallsReport) + ": "
                             + year + " (" + Settings.df.format(fromDate) + " - " + Settings.df.format(tillDate) + ")", fontBold);
                     spr.setAlignment(Element.ALIGN_CENTER);
                     document.add(new Paragraph(12, " "));
@@ -95,12 +95,12 @@ public class ClassCallsPdf {
                     infoTable.getDefaultCell().
                             setVerticalAlignment(Element.ALIGN_BOTTOM);
                     infoTable.addCell(new Phrase(" №", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.FirstName), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.LastName), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.ClassName), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Date), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Note), ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.WhoCalled), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.FirstName), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.LastName), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.ClassName), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.WhoCalled), ordFontBold));
 
                     Iterator<?> iter = planCont.getItemIds().iterator();
                     int i = 0;
@@ -111,17 +111,17 @@ public class ClassCallsPdf {
                         Object next = iter.next();
                         infoTable.addCell(new Phrase(i + "", tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.FirstName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.FirstName)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.LastName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.LastName)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.ClassName)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.ClassName)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Date)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.Note)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.Note)).getValue().toString(), tableFont));
                         infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
-                                myUI.getMessage(SptMessages.WhoCalled)).getValue().toString(), tableFont));
+                                myUI.getMessage(Messages.WhoCalled)).getValue().toString(), tableFont));
                         i++;
                     }
                     infoTable.addCell(new Phrase(" ", ordFontBold));
@@ -130,7 +130,7 @@ public class ClassCallsPdf {
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
                     infoTable.addCell(new Phrase(" ", ordFontBold));
-                    infoTable.addCell(new Phrase(myUI.getMessage(SptMessages.Total) + ": "
+                    infoTable.addCell(new Phrase(myUI.getMessage(Messages.Total) + ": "
                             + total, ordFontBold));
 
                     document.add(infoTable);
@@ -143,7 +143,7 @@ public class ClassCallsPdf {
                     T2.getDefaultCell().setBorder(0);
                     T2.getDefaultCell().
                             setHorizontalAlignment(Element.ALIGN_LEFT);
-                    T2.addCell(new Phrase(myUI.getMessage(SptMessages.Director), ordFontBold));
+                    T2.addCell(new Phrase(myUI.getMessage(Messages.Director), ordFontBold));
                     T2.addCell("");
                     T2.addCell(new Phrase(studentInfo.getDirector().getSurname() + " "
                             + studentInfo.getDirector().getName() + " " +

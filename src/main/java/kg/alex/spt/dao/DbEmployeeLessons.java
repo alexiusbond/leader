@@ -19,7 +19,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.EmployeeLessons;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -80,28 +80,28 @@ public class DbEmployeeLessons extends BaseDb {
             String id = result.getString("ex.id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    edv.createButton(myUI.getMessage(SptMessages.DeleteButton), id, Settings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
+                    edv.createButton(myUI.getMessage(Messages.DeleteButton), id, Settings.dbEmployeeBranchHours, FontAwesome.MINUS_SQUARE));
+            item.getItemProperty(myUI.getMessage(Messages.Lesson)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Lesson), Settings.dbBranchTable, true));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(
+                            myUI.getMessage(Messages.Lesson), Settings.dbBranchTable, true));
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(
                     edv.createCombobox(result.getInt("ex.class_number_id"),
-                            myUI.getMessage(SptMessages.ClassName), Settings.classTable, true));
-            item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
+                            myUI.getMessage(Messages.ClassName), Settings.classTable, true));
+            item.getItemProperty(myUI.getMessage(Messages.Lesson)).setValue(
                     edv.createCombobox(result.getInt("ex.hr_branch_id"),
-                            myUI.getMessage(SptMessages.Lesson), Settings.dbBranchTable, true));
-            item.getItemProperty(myUI.getMessage(SptMessages.AcademicYear)).setValue(
+                            myUI.getMessage(Messages.Lesson), Settings.dbBranchTable, true));
+            item.getItemProperty(myUI.getMessage(Messages.AcademicYear)).setValue(
                     edv.createCombobox(result.getInt("ex.year_id"),
-                            myUI.getMessage(SptMessages.AcademicYear), Settings.dbYear, true));
-            item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
-                    edv.createTextFieldWithProperty(result.getInt("ex.hours"), myUI.getMessage(SptMessages.Hours),
-                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 999),
+                            myUI.getMessage(Messages.AcademicYear), Settings.dbYear, true));
+            item.getItemProperty(myUI.getMessage(Messages.Hours)).setValue(
+                    edv.createTextFieldWithProperty(result.getInt("ex.hours"), myUI.getMessage(Messages.Hours),
+                            new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 999),
                             new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
-            item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
-                    edv.createTextFieldWithProperty(result.getInt("ex.extra_hours"), myUI.getMessage(SptMessages.ExtraHours),
-                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0, 999),
+            item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(
+                    edv.createTextFieldWithProperty(result.getInt("ex.extra_hours"), myUI.getMessage(Messages.ExtraHours),
+                            new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0, 999),
                             new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
-            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(SptMessages.Update));
+            item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Update));
         }
         return container;
     }
@@ -120,19 +120,19 @@ public class DbEmployeeLessons extends BaseDb {
         stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Lecturer), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Lesson), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ClassName), Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Hours), Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.Lecturer), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Lesson), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ClassName), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.Hours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraHours), Integer.class, 0);
         while (result.next()) {
             int id = result.getInt("bh.id");
             Item item = container.addItem(id);
-            item.getItemProperty(myUI.getMessage(SptMessages.Lecturer)).setValue(result.getString("empl"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(result.getString("branch"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ClassName)).setValue(result.getInt("cn.name"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(result.getInt("bh.hours"));
-            item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(result.getInt("bh.extra_hours"));
+            item.getItemProperty(myUI.getMessage(Messages.Lecturer)).setValue(result.getString("empl"));
+            item.getItemProperty(myUI.getMessage(Messages.Lesson)).setValue(result.getString("branch"));
+            item.getItemProperty(myUI.getMessage(Messages.ClassName)).setValue(result.getInt("cn.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Hours)).setValue(result.getInt("bh.hours"));
+            item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(result.getInt("bh.extra_hours"));
         }
         return container;
     }
@@ -165,9 +165,9 @@ public class DbEmployeeLessons extends BaseDb {
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(Settings.button, CheckBox.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Lesson), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Hours), TextField.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), TextField.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Lesson), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Hours), TextField.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraHours), TextField.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("br.id"));
@@ -176,23 +176,23 @@ public class DbEmployeeLessons extends BaseDb {
             ch.addValueChangeListener(vll);
             ch.setData(result.getInt("br.id"));
             item.getItemProperty(Settings.button).setValue(ch);
-            item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(result.getString("br.name"));
+            item.getItemProperty(myUI.getMessage(Messages.Lesson)).setValue(result.getString("br.name"));
             Integer hours = null;
             if (result.getInt("ebr.id") != 0) {
                 hours = result.getInt("ebr.hours");
             }
-            TextField tf = createTextfieldWithProperty(myUI, hours, myUI.getMessage(SptMessages.Hours),
-                    new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 1, 999),
+            TextField tf = createTextfieldWithProperty(myUI, hours, myUI.getMessage(Messages.Hours),
+                    new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 1, 999),
                     new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter());
             tf.setData(result.getInt("ebr.id"));
-            item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(tf);
+            item.getItemProperty(myUI.getMessage(Messages.Hours)).setValue(tf);
             Integer extra_hours = null;
             if (result.getInt("ebr.id") != 0) {
                 extra_hours = result.getInt("ebr.extra_hours");
             }
-            item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
-                    createTextfieldWithProperty(myUI, extra_hours, myUI.getMessage(SptMessages.ExtraHours),
-                            new IntegerRangeValidator(myUI.getMessage(SptMessages.NotificationWrongValue), 0, 999),
+            item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(
+                    createTextfieldWithProperty(myUI, extra_hours, myUI.getMessage(Messages.ExtraHours),
+                            new IntegerRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0, 999),
                             new ObjectProperty<Integer>(0), Settings.getStringToIntegerConverter()));
         }
         return container;
@@ -205,7 +205,7 @@ public class DbEmployeeLessons extends BaseDb {
         tf.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         if (value != null) {
             tf.setRequired(true);
-            tf.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+            tf.setRequiredError(myUI.getMessage(Messages.RequiredField));
         } else {
             tf.setEnabled(false);
         }
@@ -252,15 +252,15 @@ public class DbEmployeeLessons extends BaseDb {
         stat.setInt(2, school_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUI.getMessage(SptMessages.Lesson), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Employee), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Hours), Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraHours), Integer.class, 0);
-        container.addContainerProperty(myUI.getMessage(SptMessages.WorkingStatus), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.MainBranch), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraBranches), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.Position), String.class, null);
-        container.addContainerProperty(myUI.getMessage(SptMessages.ExtraPosition), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Lesson), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Employee), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Hours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraHours), Integer.class, 0);
+        container.addContainerProperty(myUI.getMessage(Messages.WorkingStatus), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.MainBranch), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraBranches), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.Position), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ExtraPosition), String.class, null);
         int i = 0;
         int branch_id = 0;
         int totalLessons = 0;
@@ -271,78 +271,78 @@ public class DbEmployeeLessons extends BaseDb {
         int grandTotalAsExtraBranch = 0;
         TreeSet<Integer> empCount = new TreeSet<>();
         container.addItem("t");
-        container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(
-                myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch) + ": 0");
-        container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
-                myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + ": 0");
+        container.getItem("t").getItemProperty(myUI.getMessage(Messages.ExtraBranches)).setValue(
+                myUI.getMessage(Messages.TotalEmployeesAsExtraBranch) + ": 0");
+        container.getItem("t").getItemProperty(myUI.getMessage(Messages.MainBranch)).setValue(
+                myUI.getMessage(Messages.TotalEmployeesAsMainBranch) + ": 0");
         while (result.next()) {
             if (branch_id != result.getInt("br.id")) {
                 Item item = container.addItem("s" + result.getInt("br.id"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(result.getString("br.name"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(myUI.getMessage(SptMessages.TotalEmployees) + "0");
-                item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch)
+                item.getItemProperty(myUI.getMessage(Messages.Lesson)).setValue(result.getString("br.name"));
+                item.getItemProperty(myUI.getMessage(Messages.Employee)).setValue(myUI.getMessage(Messages.TotalEmployees) + "0");
+                item.getItemProperty(myUI.getMessage(Messages.MainBranch)).setValue(myUI.getMessage(Messages.TotalEmployeesAsMainBranch)
                         + result.getString("br.name") + ": 0");
-                item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch)
+                item.getItemProperty(myUI.getMessage(Messages.ExtraBranches)).setValue(myUI.getMessage(Messages.TotalEmployeesAsExtraBranch)
                         + result.getString("br.name") + ": 0");
                 totalEmpl = 0;
                 totalAsMainBranch = 0;
                 totalAsExtraBranch = 0;
-                container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.Lesson)).setValue(
-                        myUI.getMessage(SptMessages.TotalBranches) + (++totalLessons));
+                container.getItem("t").getItemProperty(myUI.getMessage(Messages.Lesson)).setValue(
+                        myUI.getMessage(Messages.TotalBranches) + (++totalLessons));
             }
             branch_id = result.getInt("br.id");
             if (result.getInt("empl_t.br_id") != 0) {
                 Item item = container.addItem("" + (++i));
-                item.getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Employee)).setValue(
                         result.getString("empl_t.fullname"));
                 empCount.add(result.getInt("empl_t.emp_id"));
-                item.getItemProperty(myUI.getMessage(SptMessages.WorkingStatus)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.WorkingStatus)).setValue(
                         result.getString("empl_t.work_status"));
-                item.getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.MainBranch)).setValue(
                         result.getString("empl_t.main_branch"));
-                item.getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.ExtraBranches)).setValue(
                         result.getString("empl_t.extra_branch"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Position)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Position)).setValue(
                         result.getString("empl_t.position"));
-                item.getItemProperty(myUI.getMessage(SptMessages.ExtraPosition)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.ExtraPosition)).setValue(
                         result.getString("empl_t.extra_positions"));
-                item.getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.Hours)).setValue(
                         result.getInt("empl_t.hours"));
-                item.getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
+                item.getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(
                         result.getInt("empl_t.extra_hours"));
 
-                container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
-                        myUI.getMessage(SptMessages.TotalEmployees) + (++totalEmpl));
+                container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(Messages.Employee)).setValue(
+                        myUI.getMessage(Messages.TotalEmployees) + (++totalEmpl));
 
-                container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
-                        ((Integer) container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue())
+                container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(Messages.Hours)).setValue(
+                        ((Integer) container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(Messages.Hours)).getValue())
                                 + result.getInt("empl_t.hours"));
-                container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
-                        ((Integer) container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue())
+                container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(
+                        ((Integer) container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(Messages.ExtraHours)).getValue())
                                 + result.getInt("empl_t.extra_hours"));
-                container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.Hours)).setValue(
-                        ((Integer) container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.Hours)).getValue())
+                container.getItem("t").getItemProperty(myUI.getMessage(Messages.Hours)).setValue(
+                        ((Integer) container.getItem("t").getItemProperty(myUI.getMessage(Messages.Hours)).getValue())
                                 + result.getInt("empl_t.hours"));
-                container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).setValue(
-                        ((Integer) container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.ExtraHours)).getValue())
+                container.getItem("t").getItemProperty(myUI.getMessage(Messages.ExtraHours)).setValue(
+                        ((Integer) container.getItem("t").getItemProperty(myUI.getMessage(Messages.ExtraHours)).getValue())
                                 + result.getInt("empl_t.extra_hours"));
                 if (result.getInt("br.id") == result.getInt("empl_t.main_branch_id")) {
-                    container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
-                            myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + result.getString("br.name") + ": " + (++totalAsMainBranch));
-                    container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.MainBranch)).setValue(
-                            myUI.getMessage(SptMessages.TotalEmployeesAsMainBranch) + ": " + (++grandTotalAsMainBranch));
+                    container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(Messages.MainBranch)).setValue(
+                            myUI.getMessage(Messages.TotalEmployeesAsMainBranch) + result.getString("br.name") + ": " + (++totalAsMainBranch));
+                    container.getItem("t").getItemProperty(myUI.getMessage(Messages.MainBranch)).setValue(
+                            myUI.getMessage(Messages.TotalEmployeesAsMainBranch) + ": " + (++grandTotalAsMainBranch));
                 }
                 if (result.getString("empl_t.extra_branch_ids") != null
                         && Arrays.asList(result.getString("empl_t.extra_branch_ids").split(", ")).contains(result.getString("br.id"))) {
-                    container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(
-                            myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch) + result.getString("br.name") + ": " + (++totalAsExtraBranch));
-                    container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.ExtraBranches)).setValue(
-                            myUI.getMessage(SptMessages.TotalEmployeesAsExtraBranch) + ": " + (++grandTotalAsExtraBranch));
+                    container.getItem("s" + result.getInt("br.id")).getItemProperty(myUI.getMessage(Messages.ExtraBranches)).setValue(
+                            myUI.getMessage(Messages.TotalEmployeesAsExtraBranch) + result.getString("br.name") + ": " + (++totalAsExtraBranch));
+                    container.getItem("t").getItemProperty(myUI.getMessage(Messages.ExtraBranches)).setValue(
+                            myUI.getMessage(Messages.TotalEmployeesAsExtraBranch) + ": " + (++grandTotalAsExtraBranch));
                 }
             }
 
-            container.getItem("t").getItemProperty(myUI.getMessage(SptMessages.Employee)).setValue(
-                    myUI.getMessage(SptMessages.TotalEmployees) + empCount.size());
+            container.getItem("t").getItemProperty(myUI.getMessage(Messages.Employee)).setValue(
+                    myUI.getMessage(Messages.TotalEmployees) + empCount.size());
         }
         return container;
     }

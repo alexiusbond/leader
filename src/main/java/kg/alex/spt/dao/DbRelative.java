@@ -9,7 +9,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.domain.StudentRelative;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.utils.Settings;
 
 import java.sql.PreparedStatement;
@@ -33,26 +33,26 @@ public class DbRelative extends BaseDb {
         stat.setInt(1, stud_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.FullName), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.WorkPlace), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Phone), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Address), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Passport), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.FullName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.WorkPlace), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Passport), String.class, null);
         container.addContainerProperty(Settings.is_main, Integer.class, 0);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("sr.relatives_id"));
-            item.getItemProperty(myUi.getMessage(SptMessages.FullName)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                     result.getString("sr.fullname"));
-            item.getItemProperty(myUi.getMessage(SptMessages.WorkPlace)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
                     result.getString("sr.work_place"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Address)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
                     result.getString("sr.address"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Passport)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                     result.getString("sr.passport"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Phone)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(Settings.is_main).setValue(
                     result.getInt("sr.is_main"));

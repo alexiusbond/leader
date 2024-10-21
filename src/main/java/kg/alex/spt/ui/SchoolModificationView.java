@@ -10,7 +10,7 @@ import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.*;
 import kg.alex.spt.domain.School;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,7 +60,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
 
         modifyBtn = new Button();
         modifyBtn.setEnabled(false);
-        modifyBtn.setDescription(myUI.getMessage(SptMessages.ModifyButton));
+        modifyBtn.setDescription(myUI.getMessage(Messages.ModifyButton));
         modifyBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         modifyBtn.setIcon(FontAwesome.PENCIL);
         modifyBtn.addClickListener(this);
@@ -68,7 +68,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
 
         createBtn = new Button();
         createBtn.setEnabled(false);
-        createBtn.setDescription(myUI.getMessage(SptMessages.CreateButton));
+        createBtn.setDescription(myUI.getMessage(Messages.CreateButton));
         createBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         createBtn.setIcon(FontAwesome.FILE_O);
         createBtn.addClickListener(this);
@@ -76,101 +76,101 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
 
         deleteBtn = new Button();
         deleteBtn.setEnabled(false);
-        deleteBtn.setDescription(myUI.getMessage(SptMessages.DeleteButton));
+        deleteBtn.setDescription(myUI.getMessage(Messages.DeleteButton));
         deleteBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         deleteBtn.setIcon(FontAwesome.TRASH_O);
         deleteBtn.addClickListener(this);
         buttonsLay.addComponent(deleteBtn);
 
         saveBtn = new Button();
-        saveBtn.setDescription(myUI.getMessage(SptMessages.SaveButton));
+        saveBtn.setDescription(myUI.getMessage(Messages.SaveButton));
         saveBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         saveBtn.setIcon(FontAwesome.FLOPPY_O);
         saveBtn.addClickListener(this);
         buttonsLay.addComponent(saveBtn);
 
         cancelBtn = new Button();
-        cancelBtn.setDescription(myUI.getMessage(SptMessages.CancelButton));
+        cancelBtn.setDescription(myUI.getMessage(Messages.CancelButton));
         cancelBtn.setStyleName(ValoTheme.BUTTON_ICON_ONLY);
         cancelBtn.setIcon(FontAwesome.BAN);
         cancelBtn.addClickListener(this);
         buttonsLay.addComponent(cancelBtn);
 
-        codeTF = new TextField(myUI.getMessage(SptMessages.Code));
+        codeTF = new TextField(myUI.getMessage(Messages.Code));
         codeTF.setRequired(true);
         codeTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
-        codeTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        codeTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         codeTF.setWidth(Settings.PERCENTS100);
 
-        nameRuTF = new TextField(myUI.getMessage(SptMessages.TitleRu));
-        nameRuTF.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        nameRuTF = new TextField(myUI.getMessage(Messages.TitleRu));
+        nameRuTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
         nameRuTF.setRequired(true);
         nameRuTF.setNullRepresentation("");
         nameRuTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameRuTF.setWidth(Settings.PERCENTS100);
 
-        nameKgTF = new TextField(myUI.getMessage(SptMessages.TitleKg));
+        nameKgTF = new TextField(myUI.getMessage(Messages.TitleKg));
         nameKgTF.setNullRepresentation("");
         nameKgTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameKgTF.setWidth(Settings.PERCENTS100);
 
-        nameEnTF = new TextField(myUI.getMessage(SptMessages.TitleEn));
+        nameEnTF = new TextField(myUI.getMessage(Messages.TitleEn));
         nameEnTF.setNullRepresentation("");
         nameEnTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         nameEnTF.setWidth(Settings.PERCENTS100);
 
-        cityTF = new TextField(myUI.getMessage(SptMessages.City) + " (Ru/Kg)");
+        cityTF = new TextField(myUI.getMessage(Messages.City) + " (Ru/Kg)");
         cityTF.setRequired(false);
         cityTF.setNullRepresentation("");
         cityTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         cityTF.setWidth(Settings.PERCENTS100);
 
-        addressTF = new TextField(myUI.getMessage(SptMessages.Address) + " (Ru/Kg)");
+        addressTF = new TextField(myUI.getMessage(Messages.Address) + " (Ru/Kg)");
         addressTF.setRequired(false);
         addressTF.setNullRepresentation("");
         addressTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         addressTF.setWidth(Settings.PERCENTS100);
 
-        innTF = new TextField(myUI.getMessage(SptMessages.INN));
+        innTF = new TextField(myUI.getMessage(Messages.INN));
         innTF.setRequired(false);
         innTF.setNullRepresentation("");
         innTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         innTF.setWidth(Settings.PERCENTS100);
 
-        bankTF = new TextField(myUI.getMessage(SptMessages.Bank) + " (Ru/Kg)");
+        bankTF = new TextField(myUI.getMessage(Messages.Bank) + " (Ru/Kg)");
         bankTF.setRequired(false);
         bankTF.setNullRepresentation("");
         bankTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         bankTF.setWidth(Settings.PERCENTS100);
 
-        bankAccountTF = new TextField(myUI.getMessage(SptMessages.BankAccount));
+        bankAccountTF = new TextField(myUI.getMessage(Messages.BankAccount));
         bankAccountTF.setRequired(false);
         bankAccountTF.setNullRepresentation("");
         bankAccountTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         bankAccountTF.setWidth(Settings.PERCENTS100);
 
-        phoneTF = new TextField(myUI.getMessage(SptMessages.Phone));
+        phoneTF = new TextField(myUI.getMessage(Messages.Phone));
         phoneTF.setRequired(false);
         phoneTF.setNullRepresentation("");
         phoneTF.setStyleName(ValoTheme.TEXTFIELD_SMALL);
         phoneTF.setWidth(Settings.PERCENTS100);
 
-        typeSelect = new ComboBox(myUI.getMessage(SptMessages.SchoolType));
+        typeSelect = new ComboBox(myUI.getMessage(Messages.SchoolType));
         typeSelect.setNullSelectionAllowed(false);
         typeSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         typeSelect.setRequired(true);
-        typeSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        typeSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         typeSelect.setWidth(Settings.PERCENTS100);
-        typeSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        typeSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         typeSelect.setFilteringMode(FilteringMode.CONTAINS);
 
-        statusSelect = new ComboBox(myUI.getMessage(SptMessages.Status));
+        statusSelect = new ComboBox(myUI.getMessage(Messages.Status));
         statusSelect.setNullSelectionAllowed(false);
         statusSelect.setStyleName(ValoTheme.COMBOBOX_SMALL);
         statusSelect.setRequired(true);
-        statusSelect.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
+        statusSelect.setRequiredError(myUI.getMessage(Messages.RequiredField));
         statusSelect.setWidth(Settings.PERCENTS100);
-        statusSelect.setItemCaptionPropertyId(myUI.getMessage(SptMessages.Title));
+        statusSelect.setItemCaptionPropertyId(myUI.getMessage(Messages.Title));
         statusSelect.setFilteringMode(FilteringMode.CONTAINS);
 
         try {
@@ -250,33 +250,33 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
                             for (Object next : salCont.getItemIds()) {
                                 int id = dba.exec_id((Integer) next, sch.getId());
                                 dba.exec_update_code(id, sch.getCode(), salCont.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
+                                        myUI.getMessage(Messages.Title)).getValue() + " - " + sch.getName_ru());
                                 dba.exec_update_all_parent_codes(id, salCont.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Code)).getValue() + "." + sch.getCode(), false);
+                                        myUI.getMessage(Messages.Code)).getValue() + "." + sch.getCode(), false);
                             }
                             for (Object next : typesContainer.getItemIds()) {
                                 int id = dba.exec_id((Integer) next, sch.getId());
                                 dba.exec_update_code(id, sch.getCode(), typesContainer.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Title)).getValue() + " - " + sch.getName_ru());
+                                        myUI.getMessage(Messages.Title)).getValue() + " - " + sch.getName_ru());
                                 dba.exec_update_all_parent_codes(id, typesContainer.getContainerProperty(next,
-                                        myUI.getMessage(SptMessages.Code)).getValue() + "." + sch.getCode(), false);
+                                        myUI.getMessage(Messages.Code)).getValue() + "." + sch.getCode(), false);
                             }
                             dba.close();
                         }
-                        Notification.show(myUI.getMessage(SptMessages.ValueSaved),
+                        Notification.show(myUI.getMessage(Messages.ValueSaved),
                                 Notification.Type.HUMANIZED_MESSAGE);
                         myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                                myUI.getMessage(SptMessages.Title)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
+                                myUI.getMessage(Messages.Title)).setValue(codeTF.getValue() + " - " + nameRuTF.getValue());
                         myUI.getSchoolCont().getContainerProperty(myUI.getUser().getSchool().getId(),
-                                myUI.getMessage(SptMessages.Logo)).setValue(sch.getPhoto());
+                                myUI.getMessage(Messages.Logo)).setValue(sch.getPhoto());
                     } else {
-                        Notification.show(myUI.getMessage(SptMessages.ValueCanNotBeSaved),
+                        Notification.show(myUI.getMessage(Messages.ValueCanNotBeSaved),
                                 Notification.Type.WARNING_MESSAGE);
                     }
                     dbScl.close();
                     prepareNormalMode();
                 } else {
-                    Notification.show(myUI.getMessage(SptMessages.NotificationWrongValue),
+                    Notification.show(myUI.getMessage(Messages.NotificationWrongValue),
                             Notification.Type.WARNING_MESSAGE);
                 }
             } catch (Exception e) {
@@ -393,7 +393,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         uploadProgressBar = new ProgressBar();
         uploadProgressBar.setWidth("90%");
 
-        statusWindow = new Window(myUI.getMessage(SptMessages.UploadStatus));
+        statusWindow = new Window(myUI.getMessage(Messages.UploadStatus));
         statusWindow.setResizable(false);
         statusWindow.setDraggable(false);
         statusWindow.setModal(true);
@@ -416,7 +416,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         l.addComponent(cancelButton);
         l.setComponentAlignment(cancelButton, Alignment.MIDDLE_LEFT);
 
-        uploadProgressBar.setCaption(myUI.getMessage(SptMessages.Progress));
+        uploadProgressBar.setCaption(myUI.getMessage(Messages.Progress));
         uploadProgressBar.setVisible(false);
         l.addComponent(uploadProgressBar);
         l.setExpandRatio(uploadProgressBar, 1);
@@ -427,7 +427,7 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
         photoUpl = new Upload(null, receiver);
         photoUpl.setImmediate(true);
         photoUpl.setStyleName(ValoTheme.BUTTON_SMALL);
-        photoUpl.setButtonCaption(myUI.getMessage(SptMessages.Upload));
+        photoUpl.setButtonCaption(myUI.getMessage(Messages.Upload));
         photoUpl.setWidth(Settings.PERCENTS100);
 
         photoUpl.addStartedListener((Upload.StartedListener) event -> {
@@ -448,12 +448,12 @@ public class SchoolModificationView extends GridLayout implements Button.ClickLi
             if (!mimeType.equals("image/jpeg")) {
                 photoUpl.interruptUpload();
                 photoName = null;
-                Notification.show(myUI.getMessage(SptMessages.OnlyJpg),
+                Notification.show(myUI.getMessage(Messages.OnlyJpg),
                         Notification.Type.WARNING_MESSAGE);
             } else if (contentLength >= 5000000) {
                 photoUpl.interruptUpload();
                 photoName = null;
-                Notification.show(myUI.getMessage(SptMessages.Maxsize),
+                Notification.show(myUI.getMessage(Messages.Maxsize),
                         Notification.Type.WARNING_MESSAGE);
             } else {
                 uploadProgressBar.setValue(readBytes / (float) contentLength);

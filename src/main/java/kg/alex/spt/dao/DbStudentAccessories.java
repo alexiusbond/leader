@@ -11,7 +11,7 @@ import com.vaadin.data.util.IndexedContainer;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.StudentAccessories;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.StudentDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -90,13 +90,13 @@ public class DbStudentAccessories extends BaseDb {
             String id = result.getString("sa.year_id");
             Item item = container.addItem(id);
             item.getItemProperty(Settings.button).setValue(
-                    dw.createButton(myUi.getMessage(SptMessages.DeleteButton), id,
+                    dw.createButton(myUi.getMessage(Messages.DeleteButton), id,
                             Settings.dbStudentCalls, FontAwesome.MINUS_SQUARE));
-            item.getItemProperty(myUi.getMessage(SptMessages.Year)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Year)).setValue(
                     dw.createCombobox(result.getInt("sa.year_id"),
-                            myUi.getMessage(SptMessages.Year), id, Settings.dbYear,
+                            myUi.getMessage(Messages.Year), id, Settings.dbYear,
                             false, false, false, false));
-            item.getItemProperty(myUi.getMessage(SptMessages.Materials)).setValue(
+            item.getItemProperty(myUi.getMessage(Messages.Materials)).setValue(
                     dw.createComboboxMultiAcs(result.getString("accessories"), cat_id));
         }
         return container;

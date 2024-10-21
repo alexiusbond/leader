@@ -13,7 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
 import kg.alex.spt.utils.Settings;
 import kg.alex.spt.domain.Attachment;
-import kg.alex.spt.i18n.SptMessages;
+import kg.alex.spt.i18n.Messages;
 import kg.alex.spt.ui.EmployeeDefinitionView;
 
 import java.sql.PreparedStatement;
@@ -64,22 +64,22 @@ public class DbAttachment extends BaseDb {
         stat.setInt(3, employee_id);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty(myUi.getMessage(SptMessages.Title), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Details), String.class, null);
-        container.addContainerProperty(myUi.getMessage(SptMessages.Type), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Details), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.Type), String.class, null);
         container.addContainerProperty(Settings.button, Button.class, null);
 
         while (result.next()) {
             Item item = container.addItem(result.getInt("id"));
 
-            item.getItemProperty(myUi.getMessage(SptMessages.Title)).setValue(result.getString("name"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Type)).setValue(result.getString("type"));
-            item.getItemProperty(myUi.getMessage(SptMessages.Details)).setValue(result.getString("details"));
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(result.getString("name"));
+            item.getItemProperty(myUi.getMessage(Messages.Type)).setValue(result.getString("type"));
+            item.getItemProperty(myUi.getMessage(Messages.Details)).setValue(result.getString("details"));
             Attachment a = new Attachment();
             a.setId(result.getInt("id"));
             a.setUnique_name(result.getString("unique_name"));
             a.setName(result.getString("name"));
-            com.vaadin.ui.Button b = edv.createButton(myUi.getMessage(SptMessages.DownLoad), a.getId() + "",
+            com.vaadin.ui.Button b = edv.createButton(myUi.getMessage(Messages.DownLoad), a.getId() + "",
                     Settings.download_button, FontAwesome.DOWNLOAD);
             b.setStyleName(ValoTheme.BUTTON_SMALL);
             b.setData(a);
