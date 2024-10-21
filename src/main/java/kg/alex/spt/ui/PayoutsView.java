@@ -922,9 +922,9 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                     tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
                     if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Update))) {
                         tr.setId(next.toString());
-                        dbAt.exec_update_new(tr);
+                        dbAt.exec_update(tr);
                     } else if (payoutsTable.getContainerProperty(next, Settings.crud_status).getValue().toString().equals(myUI.getMessage(SptMessages.Insert))) {
-                        dbAt.exec_insert_new(tr, dbAt.getConnection());
+                        dbAt.exec_insert(tr, dbAt.getConnection());
                     }
                 }
             }
@@ -982,7 +982,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(SptMessages.Currency)).getValue()).getValue());
                                 tr.setFrom_to_employee_id((Integer) cb.getContainerProperty(cb.getValue(), Settings.employee_id).getValue());
-                                dbTr.exec_insert_new(tr, dbTr.getConnection());
+                                dbTr.exec_insert(tr, dbTr.getConnection());
                             }
                         }
                         dbTr.close();

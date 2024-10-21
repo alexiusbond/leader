@@ -2692,10 +2692,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     if (status != 0) {
                         if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                 || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                            int update_status = dbat.exec_update_new(tr, Settings.dbColumnStudent_payments_id,
+                            int update_status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
                                     tr.getStudent_payments_id(), dbsp.getConnection());//update transaction normal
                             if (update_status == 0) {
-                                dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
+                                dbat.exec_insert(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
                             }
                         } else if (sp.getModification_date().before(myUI.getUser().getTransactions_start_date())) {
                             dbat.exec_delete(Settings.dbColumnStudent_payments_id, Integer.toString(sp.getId()), dbsp.getConnection()); //delete transaction on payment update if payment date is before transactions start date
@@ -2707,7 +2707,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     tr.setStudent_payments_id(payment_id);
                     if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                             || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                        dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction
+                        dbat.exec_insert(tr, dbsp.getConnection());//insert transaction
                     }
                     initialPaymentTF.setData(dbsp.exec_get_init_payment(student_id, myUI.getUser().getCurrent_year().getId()));
                 }
@@ -4387,10 +4387,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         dbsp.exec_update(sp);
                         if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                 || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                            int update_status = dbat.exec_update_new(tr, Settings.dbColumnStudent_payments_id,
+                            int update_status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
                                     tr.getStudent_payments_id(), dbsp.getConnection());//update transaction normal
                             if (update_status == 0) {
-                                dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
+                                dbat.exec_insert(tr, dbsp.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
                             }
                         } else if (sp.getModification_date().before(myUI.getUser().getTransactions_start_date())) {
                             dbat.exec_delete(Settings.dbColumnStudent_payments_id, (String) next, dbsp.getConnection()); //delete transaction on payment update if payment date is before transactions start date
@@ -4418,7 +4418,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         tr.setStudent_payments_id(sp.getId());
                         if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                 || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                            dbat.exec_insert_new(tr, dbsp.getConnection());//insert transaction
+                            dbat.exec_insert(tr, dbsp.getConnection());//insert transaction
                         }
                     }
                 }
@@ -4466,10 +4466,10 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                             tr.setStudent_payments_id(Integer.parseInt(next.toString()));
                             if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                     || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                                int update_status = dbat.exec_update_new(tr, Settings.dbColumnStudent_payments_id,
+                                int update_status = dbat.exec_update(tr, Settings.dbColumnStudent_payments_id,
                                         tr.getStudent_payments_id(), dbat.getConnection());//update transaction normal
                                 if (update_status == 0) {
-                                    dbat.exec_insert_new(tr, dbat.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
+                                    dbat.exec_insert(tr, dbat.getConnection());//insert transaction if it doesn't exist, on payment update if payment date is after transactions start date
                                 }
                             } else if (sp.getModification_date().before(myUI.getUser().getTransactions_start_date())) {
                                 dbat.exec_delete(Settings.dbColumnStudent_payments_id, (String) next, dbat.getConnection()); //delete transaction on payment update if payment date is before transactions start date
@@ -4478,7 +4478,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                                 .equals(myUI.getMessage(SptMessages.Insert))) {
                             if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
                                     || sp.getModification_date().equals(myUI.getUser().getTransactions_start_date())) {
-                                dbat.exec_insert_new(tr, dbat.getConnection());//insert transaction
+                                dbat.exec_insert(tr, dbat.getConnection());//insert transaction
                             }
                         }
                     }

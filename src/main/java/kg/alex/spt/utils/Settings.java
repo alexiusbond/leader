@@ -130,8 +130,6 @@ public class Settings implements Serializable {
     public static final String dbEmployeeWorkExtraPosition = "hr_employee_work_extra_positions";
     public static final String dbEmployeeSpouse = "hr_employee_spouse";
     public static final String dbCertificateTable = "hr_certificate";
-    public static final String dbAttachmentsTable = "attachments";
-    public static final String dbEmployeeMessageTable = "employee_message";
     public static final String dbQuestion = "hr_question";
     public static final String dbActivity_status = "activity_status";
     public static final String dbSchoolType = "school_type";
@@ -287,7 +285,6 @@ public class Settings implements Serializable {
     public static final String prmFinancialHistoryInfo = "информация о финансовой истории";
     public static final String prmContractInfoLeftDebt = "информация о задолженностях";
     public static final String prmMenu = "показ в меню";
-    public static final String prmIncomesExpensesDefinition = "определение двусторонних категорий";
     public static final String prmContractVisible = "видимость контракта";
     public static final String prmOrganizeLessons = "организация уроков";
     public static final String prmOrganizeSupervision = "назначение кураторства";
@@ -323,7 +320,6 @@ public class Settings implements Serializable {
     public static final String prmTabOrders = "вкладка приказов";
     public static final String prmTabSearch = "вкладка поиска";
     public static final String prmTabContacts = "вкладка контактной информации";
-    public static final String prmTabContracts = "вкладка договоров";
     public static final String prmTabProfInfo = "вкладка профессиональной информации";
     public static final String prmTabAchievements = "вкладка достижений";
     public static final String prmTabFamilyInfo = "вкладка информации о семье";

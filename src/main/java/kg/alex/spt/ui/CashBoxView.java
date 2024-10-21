@@ -47,6 +47,9 @@ import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.grid.cellrenderers.view.RowIndexRenderer;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -242,7 +245,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.setId(in_out_id + "");
         setGridData(in_out_id);
         grid.setSizeFull();
-        grid.setEditorEnabled(true);
         grid.setEditorBuffered(true);
         grid.addItemClickListener((ItemClickEvent.ItemClickListener) event -> {
             if (!(Boolean) event.getItem().getItemProperty(Settings.is_disabled).getValue()) {
@@ -404,7 +406,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(Settings.button).setWidth(52);
         grid.getColumn(Settings.hashTags).setWidth(40);
         grid.getColumn(myUI.getMessage(SptMessages.InvoiceNumber)).setWidth(60);
-        grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(120);
+        grid.getColumn(myUI.getMessage(SptMessages.Date)).setWidth(133);
         grid.getColumn(myUI.getMessage(SptMessages.Rate)).setWidth(100);
         grid.getColumn(myUI.getMessage(SptMessages.AmountUSD)).setWidth(105);
         grid.getColumn(myUI.getMessage(SptMessages.AmountKGS)).setWidth(105);
@@ -846,7 +848,10 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
 
     public DateField createDateField(Property.ValueChangeListener valueChangeListener) {
         DateField df = new DateField();
-        df.setRangeEnd(new Date());
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endOfDay = now.with(LocalTime.of(23, 59));
+        Date date = Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+        df.setRangeEnd(date);
         df.setRequired(true);
         df.setRequiredError(myUI.getMessage(SptMessages.RequiredField));
         df.setStyleName(ValoTheme.DATEFIELD_TINY);
@@ -1106,11 +1111,11 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
             DbAccTransactions dbCon = new DbAccTransactions();
             dbCon.connect();
             if (itemId.contains(Settings.FreshItem)) {
-                status = dbCon.exec_insert_new(tr, dbCon.getConnection());
+                status = dbCon.exec_insert(tr, dbCon.getConnection());
                 copyItemAndDelete(itemId, status + "");
                 itemId = status + "";
             } else {
-                status = dbCon.exec_update_new(tr);
+                status = dbCon.exec_update(tr);
             }
 
             if (status != 0) {
