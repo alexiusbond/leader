@@ -94,7 +94,6 @@ public class MonthsReportPdf {
                         p.setSpacingAfter(7);
                         document.add(p);
 
-                        //installment plan table
                         float[] table_plan_colsWidth = {0.07f, 1.0f, 0.3f, 0.3f, 0.3f, 0.2f};
                         PdfPTable pdfTable = new PdfPTable(6);
                         pdfTable.setWidthPercentage(90f);

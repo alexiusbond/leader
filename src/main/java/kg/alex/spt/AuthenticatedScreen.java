@@ -14,7 +14,7 @@ import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbEmployee;
 import kg.alex.spt.dao.DbStudentOrder;
 import kg.alex.spt.i18n.Messages;
-import kg.alex.spt.reports.students.BankPaymentsByDateReport;
+import kg.alex.spt.reports.accounting.BankPaymentsByDateReport;
 import kg.alex.spt.ui.*;
 import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;

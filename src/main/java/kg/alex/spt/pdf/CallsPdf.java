@@ -82,7 +82,6 @@ public class CallsPdf {
                     document.add(spr);
                     document.add(new Paragraph(20, " "));
 
-                    //installment plan table
                     float[] plan_table_colsWidth = {0.1f, 0.2f, 0.3f, 0.3f, 0.15f, 0.5f, 0.23f, 0.23f, 0.26f, 0.76f, 0.25f};
                     PdfPTable t = new PdfPTable(11);
                     t.setWidthPercentage(90f);

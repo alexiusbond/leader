@@ -63,7 +63,6 @@ public class BranchCodesPdf {
                     document.add(spr);
                     document.add(new Paragraph(24, " "));
 
-                    //installment plan table
                     float[] table_plan_colsWidth = {0.2f, 0.4f, 3f};
                     PdfPTable infoTable = new PdfPTable(3);
                     infoTable.setWidthPercentage(90f);

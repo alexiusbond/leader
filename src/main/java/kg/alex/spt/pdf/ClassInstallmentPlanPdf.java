@@ -35,7 +35,7 @@ public class ClassInstallmentPlanPdf {
     private Document document = null;
 
 
-    public ClassInstallmentPlanPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
+    public ClassInstallmentPlanPdf(final MyVaadinUI myUI, final IndexedContainer dataCont, final String year,
                                    final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final double ttl_plan) {
         this.fromDate = fDate;
         this.tillDate = tDate;
@@ -87,7 +87,6 @@ public class ClassInstallmentPlanPdf {
                     document.add(spr);
                     document.add(new Paragraph(24, " "));
 
-                    //installment plan table
                     float[] table_plan_colsWidth = {1f, 4f, 4f, 4f, 4f, 4f};
                     PdfPTable table_plan = new PdfPTable(6);
                     table_plan.setWidthPercentage(90f);
@@ -100,25 +99,25 @@ public class ClassInstallmentPlanPdf {
                     table_plan.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
                     table_plan.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
 
-                    Iterator<?> iter = planCont.getItemIds().iterator();
+                    Iterator<?> iter = dataCont.getItemIds().iterator();
                     int i = 0;
-                    if (planCont.size() > 0) {
+                    if (dataCont.size() > 0) {
                         i = 1;
                     }
                     while (iter.hasNext()) {
                         Object next = iter.next();
                         table_plan.addCell(new Phrase(i + "", tableFont));
-                        table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
+                        table_plan.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.FirstName)).getValue().toString(), tableFont));
-                        table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
+                        table_plan.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.LastName)).getValue().toString(), tableFont));
-                        table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
+                        table_plan.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.ClassName)).getValue().toString(), tableFont));
-                        table_plan.addCell(new Phrase(planCont.getContainerProperty(next,
+                        table_plan.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
                         table_plan.addCell(new Phrase(Settings.dFormat2.format(
-                                planCont.getContainerProperty(next,
+                                dataCont.getContainerProperty(next,
                                         myUI.getMessage(Messages.Amount)).getValue()), tableFont));
                         table_plan.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;

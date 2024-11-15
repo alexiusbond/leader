@@ -88,7 +88,6 @@ public class IncomeExpenseAccountStatementPdf {
                     document.add(spr);
                     document.add(new Paragraph(20, " "));
 
-                    //installment plan table
                     float[] table_plan_colsWidth = {0.1f, 0.4f, 0.4f, 1.2f, 0.4f, 0.4f, 0.4f};
                     PdfPTable dataTable = new PdfPTable(7);
                     dataTable.setWidthPercentage(90f);

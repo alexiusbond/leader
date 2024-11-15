@@ -84,7 +84,6 @@ public class ClassListPdf {
                     document.add(spr);
                     document.add(new Paragraph(20, " "));
 
-                    //installment plan table
                     float[] table_plan_colsWidth = {
                             0.1f, 0.24f, 0.23f, 0.28f, 0.35f, 0.15f, 0.25f, 0.43f, 0.25f,
                             0.21f, 0.21f, 0.21f, 0.25f, 0.25f, 0.25f, 0.25f,};

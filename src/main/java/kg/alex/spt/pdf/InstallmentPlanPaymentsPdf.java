@@ -173,7 +173,7 @@ public class InstallmentPlanPaymentsPdf {
                         document.add(table_payments);
                     }
                     if (paymentsCont == null && planCont != null) {
-                        //installment plan table
+
                         float[] table_plan_colsWidth = {0.75f, 3f, 3f};
                         PdfPTable table_plan = new PdfPTable(3);
                         table_plan.setWidthPercentage(90f);
@@ -215,7 +215,7 @@ public class InstallmentPlanPaymentsPdf {
                         Tbody.getDefaultCell().setBorder(0);
                         Tbody.addCell(new Phrase(myUI.getMessage(Messages.InstallmentPlan), ordFontBold));
                         Tbody.addCell(new Phrase(myUI.getMessage(Messages.Payments), ordFontBold));
-                        //installment plan table
+
                         float[] table_plan_colsWidth = {0.75f, 3f, 3f};
                         PdfPTable table_plan = new PdfPTable(3);
                         table_plan.setWidthPercentage(100f);

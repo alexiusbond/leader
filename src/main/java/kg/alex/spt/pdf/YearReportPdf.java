@@ -94,7 +94,6 @@ public class YearReportPdf {
                         p.setSpacingAfter(7);
                         document.add(p);
 
-                        //installment plan table
                         float[] table_plan_colsWidth = {0.07f, 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0.15f, 0.2f, 0.2f, 0.2f, 0.11f};
                         PdfPTable pdfTable = new PdfPTable(11);
                         pdfTable.setWidthPercentage(90f);

@@ -35,7 +35,7 @@ public class ClassCallsPdf {
     private Document document = null;
 
 
-    public ClassCallsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
+    public ClassCallsPdf(final MyVaadinUI myUI, final IndexedContainer dataCont, final String year,
                          final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final int total) {
         this.fromDate = fDate;
         this.tillDate = tDate;
@@ -87,7 +87,6 @@ public class ClassCallsPdf {
                     document.add(spr);
                     document.add(new Paragraph(24, " "));
 
-                    //installment plan table
                     float[] table_plan_colsWidth = {0.1f, 0.4f, 0.4f, 0.17f, 0.4f, 0.4f, 0.4f};
                     PdfPTable infoTable = new PdfPTable(7);
                     infoTable.setWidthPercentage(90f);
@@ -102,25 +101,25 @@ public class ClassCallsPdf {
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Note), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.WhoCalled), ordFontBold));
 
-                    Iterator<?> iter = planCont.getItemIds().iterator();
+                    Iterator<?> iter = dataCont.getItemIds().iterator();
                     int i = 0;
-                    if (planCont.size() > 0) {
+                    if (dataCont.size() > 0) {
                         i = 1;
                     }
                     while (iter.hasNext()) {
                         Object next = iter.next();
                         infoTable.addCell(new Phrase(i + "", tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.FirstName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.LastName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.ClassName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.Note)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.WhoCalled)).getValue().toString(), tableFont));
                         i++;
                     }

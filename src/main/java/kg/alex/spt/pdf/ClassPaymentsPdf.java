@@ -33,9 +33,8 @@ public class ClassPaymentsPdf {
     private Document document = null;
 
 
-    public ClassPaymentsPdf(final MyVaadinUI myUI, final IndexedContainer planCont, final String year,
+    public ClassPaymentsPdf(final MyVaadinUI myUI, final IndexedContainer dataCont, final String year,
                             final Date fDate, final Date tDate, final StudentInfoPdf studentInfo, final double total) {
-        //installment plan table
         StreamResource.StreamSource source1 = new StreamResource.StreamSource() {
 
             /**
@@ -87,7 +86,6 @@ public class ClassPaymentsPdf {
                     document.add(spr);
                     document.add(new Paragraph(24, " "));
 
-                    //installment plan table
                     float[] table_plan_colsWidth = {0.1f, 0.4f, 0.4f, 0.17f, 0.4f, 0.4f, 0.3f, 0.25f};
                     PdfPTable infoTable = new PdfPTable(8);
                     infoTable.setWidthPercentage(90f);
@@ -103,28 +101,28 @@ public class ClassPaymentsPdf {
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Date), ordFontBold));
                     infoTable.addCell(new Phrase(myUI.getMessage(Messages.Amount), ordFontBold));
 
-                    Iterator<?> iter = planCont.getItemIds().iterator();
+                    Iterator<?> iter = dataCont.getItemIds().iterator();
                     int i = 0;
-                    if (planCont.size() > 0) {
+                    if (dataCont.size() > 0) {
                         i = 1;
                     }
                     while (iter.hasNext()) {
                         Object next = iter.next();
                         infoTable.addCell(new Phrase(i + "", tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.FirstName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.LastName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.ClassName)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.PaymentCategoryType)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.WhoPaid)).getValue().toString(), tableFont));
-                        infoTable.addCell(new Phrase(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.Date)).getValue().toString(), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        infoTable.addCell(new Phrase(Settings.dFormat2.format(planCont.getContainerProperty(next,
+                        infoTable.addCell(new Phrase(Settings.dFormat2.format(dataCont.getContainerProperty(next,
                                 myUI.getMessage(Messages.Amount)).getValue()), tableFont));
                         infoTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                         i++;

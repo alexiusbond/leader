@@ -1,19 +1,23 @@
-package kg.alex.spt.reports.students;
+package kg.alex.spt.reports.accounting;
 
 import com.kbdunn.vaadin.addons.fontawesome.FontAwesome;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.spt.MyVaadinUI;
-import kg.alex.spt.utils.Settings;
 import kg.alex.spt.dao.DbDefinition;
 import kg.alex.spt.dao.DbSchool;
 import kg.alex.spt.dao.DbStudentPayment;
+import kg.alex.spt.domain.StudentInfoPdf;
 import kg.alex.spt.i18n.Messages;
+import kg.alex.spt.pdf.BankDetailedPaymentsPdf;
+import kg.alex.spt.pdf.BankGroupPaymentsPdf;
 import kg.alex.spt.tableexport.ExcelExport;
 import kg.alex.spt.utils.FormattedTable;
+import kg.alex.spt.utils.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -27,7 +31,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
     static final Logger logger = LogManager.getLogger(BankPaymentsByDateReport.class);
     private final MyVaadinUI myUI;
     private final Subject currentUser = SecurityUtils.getSubject();
-    private Button generateBtn, excelBtn;
+    private Button generateBtn, excelBtn, pdfBtn;
     private OptionGroup typeOG;
     private ComboBox schoolSelect, currencySelect;
     private DateField fromDateDF, tillDateDF;
@@ -55,6 +59,14 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         generateBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         generateBtn.setIcon(FontAwesome.PLUS_SQUARE);
         generateBtn.addClickListener(this);
+
+        pdfBtn = new Button();
+        pdfBtn.setDescription(myUI.getMessage(Messages.ExportToPdf));
+        pdfBtn.setWidth(Settings.PERCENTS100);
+        pdfBtn.setEnabled(false);
+        pdfBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        pdfBtn.setIcon(FontAwesome.FILE_PDF_O);
+        pdfBtn.addClickListener(this);
 
         excelBtn = new Button();
         excelBtn.setDescription(myUI.getMessage(Messages.ExportToExcel));
@@ -139,8 +151,9 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         leftGrid.addComponent(tillDateDF, 2, 1, 3, 1);
         leftGrid.addComponent(schoolSelect, 0, 2, 3, 2);
         leftGrid.addComponent(currencySelect, 0, 3, 3, 3);
-        leftGrid.addComponent(generateBtn, 0, 4, 2, 4);
-        leftGrid.addComponent(excelBtn, 3, 4);
+        leftGrid.addComponent(generateBtn, 0, 4, 1, 4);
+        leftGrid.addComponent(excelBtn, 2, 4);
+        leftGrid.addComponent(pdfBtn, 3, 4);
 
         this.setFirstComponent(leftGrid);
     }
@@ -181,6 +194,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
                     }
                     if (dataTable.getContainerDataSource().size() != 0) {
                         excelBtn.setEnabled(true);
+                        pdfBtn.setEnabled(true);
                     }
                     dbCon.close();
                 } catch (Exception e) {
@@ -192,7 +206,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
             try {
                 if (dataTable.getContainerDataSource().size() != 0) {
                     ExcelExport excelReport = new ExcelExport(dataTable);
-                    excelReport.setReportTitle(typeOG.getValue() + " - [" + myUI.getMessage(Messages.From).toLowerCase() + " "
+                    excelReport.setReportTitle("Optima Bank " + typeOG.getValue() + " - [" + myUI.getMessage(Messages.From).toLowerCase() + " "
                             + Settings.df.format(fromDateDF.getValue())
                             + " " + myUI.getMessage(Messages.To).toLowerCase() + " " + Settings.df.format(tillDateDF.getValue()) + "]");
                     excelReport.setDisplayTotals(true);
@@ -217,6 +231,51 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
                 logger.error(e);
                 logger.catching(e);
             }
+        } else if (source == pdfBtn) {
+            try {
+                if (dataTable.getContainerDataSource().size() != 0) {
+                    StudentInfoPdf studentInfo = new StudentInfoPdf();
+                    try {
+                        DbSchool dbsc = new DbSchool();
+                        dbsc.connect();
+                        studentInfo.setSchool(dbsc.execSchool(myUI.getUser().getSchool().getId()));
+                        dbsc.close();
+                        if (studentInfo.getSchool().getAddress() != null) {
+                            if (typeOG.getValue().equals(myUI.getMessage(Messages.DetailedReport))) {
+                                new BankDetailedPaymentsPdf(myUI,
+                                        (IndexedContainer) dataTable.getContainerDataSource(),
+                                        "Optima Bank " + typeOG.getValue() + " - ["
+                                                + myUI.getMessage(Messages.From).toLowerCase() + " "
+                                                + Settings.df.format(fromDateDF.getValue())
+                                                + " " + myUI.getMessage(Messages.To).toLowerCase()
+                                                + " " + Settings.df.format(tillDateDF.getValue()) + "]",
+                                        studentInfo,
+                                        dataTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
+                            } else {
+                                new BankGroupPaymentsPdf(myUI,
+                                        (IndexedContainer) dataTable.getContainerDataSource(),
+                                        "Optima Bank " + typeOG.getValue() + " - ["
+                                                + myUI.getMessage(Messages.From).toLowerCase() + " "
+                                                + Settings.df.format(fromDateDF.getValue())
+                                                + " " + myUI.getMessage(Messages.To).toLowerCase()
+                                                + " " + Settings.df.format(tillDateDF.getValue()) + "]",
+                                        studentInfo,
+                                        dataTable.getColumnFooter(myUI.getMessage(Messages.Amount)));
+                            }
+                        } else {
+
+                            Notification.show(myUI.getMessage(Messages.FillSchoolInfo),
+                                    Notification.Type.WARNING_MESSAGE);
+                        }
+                    } catch (Exception e) {
+                        logger.error(e);
+                        logger.catching(e);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error(e);
+                logger.catching(e);
+            }
         }
     }
 
@@ -226,6 +285,7 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
         if (excelBtn.isEnabled()) {
             if (property == tillDateDF || property == fromDateDF || property == typeOG || property == currencySelect || property == schoolSelect) {
                 excelBtn.setEnabled(false);
+                pdfBtn.setEnabled(false);
                 dataTable.setContainerDataSource(null);
             }
         }
