@@ -127,10 +127,10 @@ public class DbEmployee extends BaseDb {
         if (!withAdmin) {
             sql += " and (pos.id IS NULL or pos.id != 5) ";
         } else if (!withAdmin && !withHr) {
-            sql += " and (pos.id IS NULL or (pos.id != 5 and pos.id !=25) ";
+            sql += " and (pos.id IS NULL or (pos.id != 5 and pos.id != 25) ";
         }
         if (employee_id != 0) {
-            sql += " and e.id= " + employee_id + " ";
+            sql += " and e.id = " + employee_id + " ";
         } else {
             sql += " AND ord.working_status_id IS NOT NULL and ws.id in (" + working_statuses + ") ";
             if (branch_id != 0) {

@@ -15,7 +15,6 @@ public class BaseDb {
     protected Connection dbCon;
     protected DataSource pool;
 
-    /* Creates a new instance of BaseDb */
     public BaseDb() throws Exception {
         Context env;
         try {
