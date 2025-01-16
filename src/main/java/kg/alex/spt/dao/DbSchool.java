@@ -270,11 +270,11 @@ public class DbSchool extends BaseDb {
 
     public IndexedContainer execSchoolSel(MyVaadinUI myUI, int school_id, int employee_id) throws SQLException {
         String sql = "SELECT s.id, concat(s.code, ' - ', s.name_ru) as name, s.name_kg, " +
-                "s.photo, s.code, s.primary_code, s.secondary_code from school as s ";
+                "s.photo, s.code, s.primary_code, s.secondary_code from school as s where s.is_visible = 1 ";
         if (school_id != 0) {
-            sql += "where s.id = ? ";
+            sql += "and s.id = ? ";
         } else {
-            sql += "where s.id not in (select school_id from employee_hide_school where employee_id = ?) ";
+            sql += "and s.id not in (select school_id from employee_hide_school where employee_id = ?) ";
         }
         sql += " order by CAST(s.code AS UNSIGNED)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
