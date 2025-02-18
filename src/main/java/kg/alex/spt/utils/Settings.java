@@ -28,6 +28,7 @@ import java.util.*;
  */
 public class Settings implements Serializable {
 
+    public static final int MAIN_OFFICE_ID = 1;
     public static final String PATH_TO_UPLOADS = "/home/logo/";
     public static final String PATH_TO_UPLOADS_HR = "/home/logo/hr/";
     public static final DecimalFormat dFormat2 = new DecimalFormat("#,##0.00");
