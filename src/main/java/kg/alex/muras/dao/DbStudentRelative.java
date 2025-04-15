@@ -106,13 +106,6 @@ public class DbStudentRelative extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int exec_delete(String id) throws SQLException {
-        String sql = "DELETE FROM student_relatives WHERE id = ?";
-        PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setString(1, id);
-        return stat.executeUpdate();
-    }
-
     public int exec_update(StudentRelative sr) throws SQLException {
         String sql = "Update student_relatives set student_id = ?, "
                 + "fullname = ?, work_place = ?, phone = ?, address = ?, "

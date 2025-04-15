@@ -4321,13 +4321,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     private Item saveRelatives(int student_id) {
         Item mainRelativeItem = null;
         try {
+            if (delRelIds.size() > 0) {
+                DbDefinition dbCon = new DbDefinition();
+                dbCon.connect();
+                for (int i = 0; i < delRelIds.size(); i++) {
+                    dbCon.exec_delete(delRelIds.get(i), Settings.dbStudentRelatives);
+                }
+                dbCon.close();
+            }
             DbStudentRelative dbsr = new DbStudentRelative();
             dbsr.connect();
-            if (delRelIds.size() > 0) {
-                for (int i = 0; i < delRelIds.size(); i++) {
-                    dbsr.exec_delete(delRelIds.get(i));
-                }
-            }
             if (relativesTable.getContainerDataSource().size() > 0) {
                 for (Object next : relativesTable.getItemIds()) {
                     StudentRelative relative = null;
