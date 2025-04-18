@@ -362,7 +362,7 @@ public class Messages_ru extends kg.alex.muras.i18n.Messages {
             {FillRelativeInfo, "Заполните информацию о родителях"},
             {WhoPaid, "Кто оплатил"},
             {Invoice, "Квитанция"},
-            {Accountant, "Бухгалтер"},
+            {Accountant, "Финансовый менеджер"},
             {NoSchoolLogo, "Добавьте логотип школы"},
             {Difference, "Разница"},
             {Note, "Заметка"},
