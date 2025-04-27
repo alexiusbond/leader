@@ -95,13 +95,34 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         buildGrid(incomesGrid);
         expensesGrid = new Grid();
         buildGrid(expensesGrid);
-        TabSheet.Tab tab = accordion.addTab(incomesGrid, myUI.getMessage(Messages.Incomes));
-        tab.setId("1");
-        tab = accordion.addTab(expensesGrid, myUI.getMessage(Messages.Expenses));
-        tab.setId("2");
-        accordion.setSelectedTab(expensesGrid);
+        TabSheet.Tab tab;
+        if (currentUser.isPermitted(Settings.cnCashBoxIncomesAccordion
+                                    + ":" + Settings.prmMenu)) {
+            tab = accordion.addTab(incomesGrid, myUI.getMessage(Messages.Incomes));
+            tab.setId("1");
+        }
+        if (currentUser.isPermitted(Settings.cnCashBoxExpensesAccordion
+                                    + ":" + Settings.prmMenu)) {
+            tab = accordion.addTab(expensesGrid, myUI.getMessage(Messages.Expenses));
+            tab.setId("2");
+        }
         accordion.addSelectedTabChangeListener((TabSheet.SelectedTabChangeListener)
-                event -> setGridData(Integer.parseInt(accordion.getSelectedTab().getId())));
+                event -> {
+                    setGridData(Integer.parseInt(accordion.getSelectedTab().getId()));
+                    switch (accordion.getSelectedTab().getId()) {
+                        case "1":
+                            addButton.setEnabled(currentUser.isPermitted(Settings.cnCashBoxIncomesAccordion
+                                                                         + ":" + Settings.actAdd));
+                            break;
+                        case "2":
+                            addButton.setEnabled(currentUser.isPermitted(Settings.cnCashBoxExpensesAccordion
+                                                                         + ":" + Settings.actAdd));
+                            break;
+                        default:
+                            addButton.setEnabled(false);
+                            break;
+                    }
+                });
         addComponent(accordion, 0, 2, 3, 2);
         setRowExpandRatio(2, 1);
         getTotals();
@@ -167,12 +188,14 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         addButton.setIcon(FontAwesome.PLUS_SQUARE);
         addButton.setWidth(Settings.PERCENTS100);
         addButton.addClickListener(this);
+        addButton.setEnabled(
+                currentUser.isPermitted(Settings.cnCashBoxIncomesAccordion + ":" + Settings.actAdd)
+                || currentUser.isPermitted(Settings.cnCashBoxExpensesAccordion + ":" + Settings.actAdd));
 
         currencyHl = new HorizontalLayout();
         currencyHl.setWidth(Settings.PERCENTS100);
         currencyHl.setSpacing(true);
-        currencyHl.setEnabled((currentUser.hasRole(Settings.rnAdmin) || myUI.getUser().getId() == 3294)
-                              && myUI.isManualRate());
+        currencyHl.setEnabled(currentUser.hasRole(Settings.rnAdmin) && myUI.isManualRate());
 
         Label currencyLab = new Label();
         currencyLab.setStyleName(ValoTheme.LABEL_SUCCESS);
@@ -198,7 +221,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         HorizontalLayout currencySettingsHl = new HorizontalLayout();
         currencySettingsHl.setWidth(Settings.PERCENTS100);
         currencySettingsHl.setSpacing(true);
-        currencySettingsHl.setEnabled(currentUser.hasRole(Settings.rnAdmin) || myUI.getUser().getId() == 3294);
+        currencySettingsHl.setEnabled(currentUser.hasRole(Settings.rnAdmin));
 
         currencySettingsOG = new OptionGroup();
         currencySettingsOG.setWidth(Settings.PERCENTS100);
@@ -242,9 +265,19 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     }
 
     private void buildGrid(Grid grid) {
-        int in_out_id = grid == expensesGrid ? 2 : 1;
-        grid.setId(in_out_id + "");
-        setGridData(in_out_id);
+        final String cnCashBoxView;
+        int movement_type_id = 0;
+        if (grid == incomesGrid) {
+            cnCashBoxView = Settings.cnCashBoxIncomesAccordion;
+            movement_type_id = 1;
+        } else if (grid == expensesGrid) {
+            cnCashBoxView = Settings.cnCashBoxExpensesAccordion;
+            movement_type_id = 2;
+        } else {
+            cnCashBoxView = null;
+        }
+        grid.setId(movement_type_id + "");
+        setGridData(movement_type_id);
         grid.setSizeFull();
         grid.setEditorEnabled(false);
         grid.setEditorBuffered(true);
@@ -259,8 +292,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                 }
 
                 DateField dateDf = (DateField) grid.getColumn(myUI.getMessage(Messages.Date)).getEditorField();
-                if (!currentUser.isPermitted(Settings.cnTransactionsView + ":"
-                                             + Settings.prmChangeOldTransactions)) {
+                if (!currentUser.isPermitted(cnCashBoxView + ":" + Settings.prmChangeOldTransactions)) {
                     if (grid.getContainerDataSource().getContainerProperty(event.getItemId(),
                             myUI.getMessage(Messages.Date)).getValue() != null) {
                         dateDf.setRangeStart((Date) grid.getContainerDataSource().getContainerProperty(event.getItemId(),
@@ -359,7 +391,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         grid.getColumn(Settings.from_employee_id).setEditable(false);
         grid.getColumn(Settings.is_disabled).setEditable(false);
         grid.getColumn(myUI.getMessage(Messages.Rate)).setEditable(
-                currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
+                currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate));
         grid.setEditorSaveCaption(myUI.getMessage(Messages.SaveButton));
         grid.setEditorCancelCaption(myUI.getMessage(Messages.Cancel));
 
@@ -619,24 +651,24 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                         amountUSDTf.setRequired(true);
                     }
                 }
-                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
+                if (currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate)) {
                     rateTf = (TextField) grid.getEditorFieldGroup().getField(myUI.getMessage(Messages.Rate));
                 }
                 DateField dateDf = (DateField) grid.getEditorFieldGroup().getField(myUI.getMessage(Messages.Date));
 
                 if (accordion.getSelectedTab() == expensesGrid) {
                     if ((amountUSDTf.getValue() != null || amountKGSTf.getValue() != null)
-                        && (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
+                        && (!currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate) ||
                             rateTf.getValue() != null) && dateDf.getValue() != null) {
                         try {
                             double amount;
-                            double rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
+                            double rate = currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate) ?
                                     Settings.dFormat2.parse(rateTf.getValue()).doubleValue() :
                                     (Double) item.getItemProperty(myUI.getMessage(Messages.Rate)).getValue();
                             boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
                             if (isKGS) {
                                 amount = Settings.dFormat2.parse(amountKGSTf.getValue()).doubleValue();
-                                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
+                                if (currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate)) {
                                     amount = Settings.round(amount / rate, 2);
                                 } else {
                                     amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(Messages.Rate)).getValue(), 2);
@@ -694,18 +726,18 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     }
                 } else if (accordion.getSelectedTab() == incomesGrid && !itemId.contains(Settings.FreshItem)) {
                     if ((amountUSDTf.getValue() != null || amountKGSTf.getValue() != null) &&
-                        (!currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ||
+                        (!currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate) ||
                          rateTf.getValue() != null) && dateDf.getValue() != null) {
                         try {
                             double amount;
                             double rate;
-                            rate = currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate) ?
+                            rate = currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate) ?
                                     Settings.dFormat2.parse(rateTf.getValue()).doubleValue() :
                                     (Double) item.getItemProperty(myUI.getMessage(Messages.Rate)).getValue();
                             boolean isKGS = (Integer) item.getItemProperty(Settings.acc_currency_id).getValue() == 1;
                             if (isKGS) {
                                 amount = Settings.dFormat2.parse(amountKGSTf.getValue()).doubleValue();
-                                if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)) {
+                                if (currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate)) {
                                     amount = Settings.round(amount / rate, 2);
                                 } else {
                                     amount = Settings.round(amount / (Double) item.getItemProperty(myUI.getMessage(Messages.Rate)).getValue(), 2);
@@ -791,7 +823,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                     Notification.Type.ERROR_MESSAGE);
             amountKGSTf.setValue(null);
         }
-        if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate)
+        if (currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate)
             && rateTf.getValue() != null && !rateTf.isValid()) {
             Notification.show(myUI.getMessage(Messages.NotificationWrongValue) + ": " + myUI.getMessage(Messages.Rate) + " - "
                               + rateTf.getValue(), Notification.Type.ERROR_MESSAGE);
@@ -981,6 +1013,17 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
         for (Object propId : container.getContainerPropertyIds()) {
             item.getItemProperty(propId).setValue(container.getItem(oldItemId).getItemProperty(propId).getValue());
         }
+        final String cnCashBoxView;
+        if (accordion.getSelectedTab() == incomesGrid) {
+            cnCashBoxView = Settings.cnCashBoxIncomesAccordion;
+        } else if (accordion.getSelectedTab() == expensesGrid) {
+            cnCashBoxView = Settings.cnCashBoxExpensesAccordion;
+        } else {
+            cnCashBoxView = null;
+        }
+        if (!currentUser.isPermitted(cnCashBoxView + ":" + Settings.actModify)) {
+            item.getItemProperty(Settings.is_disabled).setValue(true);
+        }
         container.removeItem(oldItemId);
     }
 
@@ -1044,9 +1087,6 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
     }
 
     private AccTransaction getTransaction(Item item, String id, int acc_type_id) {
-        System.out.println("Item: " + item);
-        System.out.println("id: " + id);
-        System.out.println("acc_type_id: " + acc_type_id);
         AccTransaction t = new AccTransaction();
         t.setId(id);
         t.setDate((Date) item.getItemProperty(myUI.getMessage(Messages.Date)).getValue());

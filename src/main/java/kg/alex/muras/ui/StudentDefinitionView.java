@@ -1539,7 +1539,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             classCB.setEnabled(true);
         }
         contractCB.setEnabled(true);
-        if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)
+        if (currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.prmChangeOldTransactions)
                 || initialPaymentTF.getData() == null
                 || DateUtils.truncate(((StudentPayment) initialPaymentTF.getData()).getModification_date(),
                 java.util.Calendar.DAY_OF_MONTH).compareTo(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)) == 0) {
@@ -3225,7 +3225,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 createTextField(wh_paid, myUI.getMessage(Messages.WhoPaid), id, false, false));
         DateField df = createDateField(null, myUI.getMessage(Messages.Date), id, true, false);
         df.setId(myUI.getMessage(Messages.Payments));
-        if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeOldTransactions)) {
+        if (currentUser.isPermitted(Settings.paymentsTab + ":" + Settings.prmChangeOldTransactions)) {
             df.setRangeStart(myUI.getUser().getTransactions_start_date());
         } else {
             Calendar calendar = Calendar.getInstance();

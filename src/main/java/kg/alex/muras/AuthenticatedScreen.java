@@ -365,7 +365,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(Messages.StudentDefinition), menuCommand);
         }
-        if (currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmMenu)) {
+        if (currentUser.isPermitted(Settings.cnCashBoxIncomesAccordion + ":" + Settings.prmMenu) ||
+            currentUser.isPermitted(Settings.cnCashBoxExpensesAccordion + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(Messages.CashBox), menuCommand);
         }
 

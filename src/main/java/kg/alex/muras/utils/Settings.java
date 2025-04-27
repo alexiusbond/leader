@@ -236,7 +236,9 @@ public class Settings implements Serializable {
     public static final String cnStockOutcomeView = "StockOutcomeView";
     public static final String cnInventoryOrganizationView = "InventoryOrganizationView";
     public static final String cnInventoryLiquidationView = "InventoryLiquidationView";
-    public static final String cnTransactionsView = "TransactionsView";
+    public static final String cnCashBoxIncomesAccordion = "CashBoxIncomesAccordion";
+    public static final String cnCashBoxExpensesAccordion = "CashBoxExpensesAccordion";
+    public static final String cnCashBoxView = "CashBoxView";
     public static final String cnMessagesView = "MessagesView";
     public static final String cnAccrualsView = "AccrualsView";
     public static final String cnShortTermDebtsView = "ShortTermDebtsView";

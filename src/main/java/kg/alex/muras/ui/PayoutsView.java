@@ -820,7 +820,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
         tf = createTextFieldWithProperty(myUI.getDb_currency_rate(), myUI.getMessage(Messages.Rate),
                 new DoubleRangeValidator(myUI.getMessage(Messages.NotificationWrongValue), 0.01, null),
                 new ObjectProperty<>(0.0), Settings.getStringToDoubleConverter(4),
-                currentUser.isPermitted(Settings.cnTransactionsView + ":" + Settings.prmChangeCurrencyRate));
+                currentUser.isPermitted(Settings.cnCashBoxView + ":" + Settings.prmChangeCurrencyRate));
         tf.addValueChangeListener(this);
         item.getItemProperty(myUI.getMessage(Messages.Rate)).setValue(tf);
         item.getItemProperty(myUI.getMessage(Messages.Note)).setValue(createTextField(
