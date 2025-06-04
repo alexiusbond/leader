@@ -1267,7 +1267,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         try {
             NATURAL_COL_ORDER_WORK = new String[]{Settings.button,
                     myUI.getMessage(Messages.WorkPlace),
-                    myUI.getMessage(Messages.Sapat),
+                    myUI.getMessage(Messages.AltynMuras),
                     myUI.getMessage(Messages.MainPosition),
                     myUI.getMessage(Messages.ExtraPositions),
                     myUI.getMessage(Messages.WorkingStatus),
@@ -3512,7 +3512,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                     ew.setEnd(((DateField) t.getItem(next).getItemProperty(
                             myUI.getMessage(Messages.End)).getValue()).getValue());
                     ew.setSapat(((CheckBox) t.getItem(next).getItemProperty(
-                            myUI.getMessage(Messages.Sapat)).getValue()).getValue());
+                            myUI.getMessage(Messages.AltynMuras)).getValue()).getValue());
                     if (t.getContainerProperty(next, Settings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(Messages.Update))) {
                         ew.setId(Integer.parseInt(next.toString()));
@@ -4302,7 +4302,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         }
         NATURAL_COL_ORDER_WORK = new String[]{Settings.button,
                 myUI.getMessage(Messages.WorkPlace),
-                myUI.getMessage(Messages.Sapat),
+                myUI.getMessage(Messages.AltynMuras),
                 myUI.getMessage(Messages.MainPosition),
                 myUI.getMessage(Messages.ExtraPositions),
                 myUI.getMessage(Messages.WorkingStatus),
@@ -4372,8 +4372,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
         item.getItemProperty(myUI.getMessage(Messages.End)).setValue(
                 createDateField(null, myUI.getMessage(Messages.End), null,
                         false, Settings.datePattern, Resolution.DAY));
-        item.getItemProperty(myUI.getMessage(Messages.Sapat)).setValue(
-                createCheckBox(false, myUI.getMessage(Messages.Sapat)));
+        item.getItemProperty(myUI.getMessage(Messages.AltynMuras)).setValue(
+                createCheckBox(false, myUI.getMessage(Messages.AltynMuras)));
         item.getItemProperty(Settings.crud_status).setValue(myUI.getMessage(Messages.Insert));
         t.setVisibleColumns((Object[]) NATURAL_COL_ORDER_WORK);
         t.setPageLength(t.size());
@@ -4910,7 +4910,7 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
             c.addContainerProperty(myUI.getMessage(Messages.WorkingStatus), ComboBox.class, null);
             c.addContainerProperty(myUI.getMessage(Messages.Start), DateField.class, null);
             c.addContainerProperty(myUI.getMessage(Messages.End), DateField.class, null);
-            c.addContainerProperty(myUI.getMessage(Messages.Sapat), CheckBox.class, null);
+            c.addContainerProperty(myUI.getMessage(Messages.AltynMuras), CheckBox.class, null);
             c.addContainerProperty(Settings.crud_status, String.class, null);
         } else {
             c.removeAllItems();

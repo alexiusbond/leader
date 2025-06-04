@@ -338,14 +338,14 @@ public class ContractUWIS_Pdf_2025 {
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.3. Школа имеет право ежегодно изменять размер предоставленной скидки в оплате, при этом предоставленные скидки действуют только в течении данного учебного года. Установленные скидки (за успеваемость, призер олимпиады, скидка за высший балл при поступлении, в том числе скидки, предоставленные Генеральной дирекцией МОУ «Сапат» и др.) ", ordFont));
+                paragraph.add(new Phrase("2.2.3. Школа имеет право ежегодно изменять размер предоставленной скидки в оплате, при этом предоставленные скидки действуют только в течении данного учебного года. Установленные скидки (за успеваемость, призер олимпиады, скидка за высший балл при поступлении, в том числе скидки, предоставленные Генеральной дирекцией МОУ «Алтын Мурас» и др.) ", ordFont));
                 paragraph.add(new Phrase("аннулируются без предупреждения в случае несвоевременной оплаты за обучение и нарушения графика оплаты Родителем 3 раза.", ordBoldFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
 
                 paragraph = new Paragraph();
                 paragraph.setTabSettings(new TabSettings(15f));
                 paragraph.add(Chunk.TABBING);
-                paragraph.add(new Phrase("2.2.3. The school has the right to change the amount of the discount provided annually, while the discounts provided are valid only during this academic year. The granted discount (for academic excellence, Olympiad medalists, discounts based on the results of admission exams and discounts granted by general management of Sapat) ", ordFont));
+                paragraph.add(new Phrase("2.2.3. The school has the right to change the amount of the discount provided annually, while the discounts provided are valid only during this academic year. The granted discount (for academic excellence, Olympiad medalists, discounts based on the results of admission exams and discounts granted by general management of Altyn Muras) ", ordFont));
                 paragraph.add(new Phrase("may be cancelled ", ordBoldFont));
                 paragraph.add(new Phrase("without further notice in case of late payment or disciplinary issues of the student and violation of the Parent's payment schedule 3 times.", ordFont));
                 mainTable.addCell(createCell(paragraph, Element.ALIGN_JUSTIFIED, 0));
