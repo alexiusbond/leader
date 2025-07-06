@@ -4,7 +4,7 @@ public class Messages_ru extends kg.alex.sky.i18n.Messages {
 
     static final Object[][] contents_ru = {
             // Application
-            {AppTitle, "Алтын Мурас"},
+            {AppTitle, "Sky International School"},
             // Login Form
             {Language, "Язык"},
             {Level, "Уровень"},
@@ -47,7 +47,7 @@ public class Messages_ru extends kg.alex.sky.i18n.Messages {
             {Number, "Номер"},
             {Status, "Статус"},
             {NotificationWrongValue, "Неверное значение!"},
-            {NotificationOrderDiscountLimit, "Вы ввели недопустимое значение, данный тип скидки ограничивается приказом генерального офиса Алтын Мурас"},
+            {NotificationOrderDiscountLimit, "Вы ввели недопустимое значение, данный тип скидки ограничивается приказом генерального офиса Скай"},
             {NotificationEmptyAmount, "Введите сумму KGS или сумму USD!"},
             {NotificationCommitFailed, "Невозможно сохранить значения!"},
             {NotificationDateRageExceeds, "Диапазон дат не может превышать 10 дней!"},

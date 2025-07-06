@@ -118,7 +118,7 @@ public class OrderPdf {
                     if (!currentUser.hasRole(Settings.rnSapatSecretary)) {
                         ct = new ColumnText(pageContentByte);
                         ct.setSimpleColumn(-195, 380, 550, 50);
-                        Image stamp = Image.getInstance(Settings.PATH_TO_UPLOADS + "sapat_muhur.png");
+                        Image stamp = Image.getInstance(Settings.PATH_TO_UPLOADS + "sky_muhur.png");
                         stamp.setAlignment(Image.MIDDLE);
                         stamp.scaleAbsolute(100, 100);
                         stamp.setAbsolutePosition(320, 100);

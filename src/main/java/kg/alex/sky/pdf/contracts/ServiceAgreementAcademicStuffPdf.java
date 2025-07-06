@@ -375,7 +375,7 @@ public class ServiceAgreementAcademicStuffPdf {
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
                 paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
-                paragraph.add(new Phrase("3.20. не давать интервью журналистам СМИ о деятельности учреждения и МОУ “Алтын Мурас”.", ordFont));
+                paragraph.add(new Phrase("3.20. не давать интервью журналистам СМИ о деятельности учреждения и МОУ “Скай”.", ordFont));
                 document.add(paragraph);
 
                 paragraph = new Paragraph();
