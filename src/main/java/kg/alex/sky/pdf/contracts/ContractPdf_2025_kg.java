@@ -18,9 +18,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 
-public class ContractLisePdf_2025_kg {
+public class ContractPdf_2025_kg {
 
-    static final Logger logger = LogManager.getLogger(ContractLisePdf_2025_kg.class);
+    static final Logger logger = LogManager.getLogger(ContractPdf_2025_kg.class);
     private final static String FONT_LOCATION = "/home/sky/TimesNewRomanRegular.ttf";
     private final static String FONT_LOCATION2 = "/home/sky/TimesNewRomanBold.ttf";
     private final MyVaadinUI myUI;
@@ -29,7 +29,7 @@ public class ContractLisePdf_2025_kg {
     private ByteArrayOutputStream buffer = null;
     private Document document = null;
 
-    public ContractLisePdf_2025_kg(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
+    public ContractPdf_2025_kg(final MyVaadinUI ui, StudentInfoPdf st_info, final IndexedContainer instPlanCont) {
         this.myUI = ui;
         this.studentInfo = st_info;
 

@@ -25,7 +25,7 @@ import kg.alex.sky.domain.*;
 import kg.alex.sky.i18n.Messages;
 import kg.alex.sky.pdf.InvoicePDF;
 import kg.alex.sky.pdf.OutOfAgreementPdf;
-import kg.alex.sky.pdf.contracts.*;
+import kg.alex.sky.pdf.contracts.ContractPdf_2025_kg;
 import kg.alex.sky.utils.*;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.lang3.time.DateUtils;
@@ -500,19 +500,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         contractTypeOG = new OptionGroup();
         contractTypeOG.setNullSelectionAllowed(true);
         contractTypeOG.addValueChangeListener(this);
-        contractTypeOG.addItem(myUI.getMessage(Messages.LiseContrRu));
-        contractTypeOG.addItem(myUI.getMessage(Messages.LiseContrWithOutDormitoryRu));
-        contractTypeOG.addItem(myUI.getMessage(Messages.LiseContrKg));
-        contractTypeOG.addItem(myUI.getMessage(Messages.LiseContrWithOutDormitoryKg));
-        contractTypeOG.addItem(myUI.getMessage(Messages.SchoolContrRu));
-        contractTypeOG.addItem(myUI.getMessage(Messages.SchoolContrKg));
-        contractTypeOG.addItem(myUI.getMessage(Messages.CambridgeOshContrRu));
-        contractTypeOG.addItem(myUI.getMessage(Messages.CambridgeContrRu));
-        contractTypeOG.addItem(myUI.getMessage(Messages.CambridgeContrEn));
-        contractTypeOG.addItem(myUI.getMessage(Messages.UWIS_Contract));
-        contractTypeOG.addItem(myUI.getMessage(Messages.STEM_Contract));
-        contractTypeOG.addItem(myUI.getMessage(Messages.AychurekContrRu));
-        contractTypeOG.addItem(myUI.getMessage(Messages.KindergartenContrRu));
+        contractTypeOG.addItem(myUI.getMessage(Messages.Contract));
         contractTypeOG.addItem(myUI.getMessage(Messages.OutOfAgreement));
 
         printButton = new PopupButton(myUI.getMessage(Messages.Print));
@@ -1404,59 +1392,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         if (studInfo.getSchool() != null && studInfo.getSchool().getAddress() != null) {
                             if (studInfo.getDirector() != null) {
                                 saveBtn.click();
-                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.LiseContrRu))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
-                                        new ContractLisePdf_2025_ru(myUI, studInfo, instPlanCont);
-                                    } else if (myUI.getUser().getCurrent_year().getId() == 9) {
-                                        new ContractLisePdf_2024_ru(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractLisePdf_2023_ru(myUI, studInfo, instPlanCont);
-                                    }
-                                }
-                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.LiseContrWithOutDormitoryRu))) {
-                                    new ContractLiseWithOutDormitoryPdf_2025_ru(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.LiseContrKg))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
-                                        new ContractLisePdf_2025_kg(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractLisePdf_2024_kg(myUI, studInfo, instPlanCont);
-                                    }
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.LiseContrWithOutDormitoryKg))) {
-                                    new ContractLiseWithOutDormitoryPdf_2025_kg(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.SchoolContrRu))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 9) {
-                                        new ContractSchoolPdf_2024_ru(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractSchoolPdf_2023_ru(myUI, studInfo, instPlanCont);
-                                    }
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.SchoolContrKg))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
-                                        new ContractSchoolPdf_2025_kg(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractSchoolPdf_2024_kg(myUI, studInfo, instPlanCont);
-                                    }
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.CambridgeOshContrRu))) {
-                                    new ContractCambridgeOshPdf_ru(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.CambridgeContrRu))) {
-                                    new ContractCambridgePdf_ru(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.CambridgeContrEn))) {
-                                    new ContractCambridgePdf_en(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.UWIS_Contract))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
-                                        new ContractUWIS_Pdf_2025(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractUWIS_Pdf_2024(myUI, studInfo, instPlanCont);
-                                    }
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.STEM_Contract))) {
-                                    if (myUI.getUser().getCurrent_year().getId() == 10) {
-                                        new ContractSTEM_2025_Pdf(myUI, studInfo, instPlanCont);
-                                    } else {
-                                        new ContractSTEM_2024_Pdf(myUI, studInfo, instPlanCont);
-                                    }
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.AychurekContrRu))) {
-                                    new ContractAychurekPdf_2023_ru(myUI, studInfo, instPlanCont);
-                                } else if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.KindergartenContrRu))) {
-                                    new ContractKindergartenPdf_2025_ru(myUI, studInfo, instPlanCont);
+                                if (contractTypeOG.getValue().toString().equals(myUI.getMessage(Messages.Contract))) {
+                                    new ContractPdf_2025_kg(myUI, studInfo, instPlanCont);
                                 } else if (contractTypeOG.getValue().toString().equals(
                                         myUI.getMessage(Messages.OutOfAgreement))) {
                                     if (studDataTable.getValue() != null && (Integer) studDataTable.getContainerProperty(studDataTable.getValue(),
