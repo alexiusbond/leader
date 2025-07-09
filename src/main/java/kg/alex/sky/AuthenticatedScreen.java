@@ -124,8 +124,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     verticalPanel.setSecondComponent(new HRReportsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(Messages.Templates))) {
                     verticalPanel.setSecondComponent(new TemplatesView(myUI));
-                } else if (eventPressed.equals(myUI.getMessage(Messages.Backup))) {
-                    verticalPanel.setSecondComponent(new BackupView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(Messages.Calls))) {
                     verticalPanel.setSecondComponent(new CallsView(myUI));
                 } else if (eventPressed.equals(myUI.getMessage(Messages.HomePage))) {
@@ -719,8 +717,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 verticalPanel.setSecondComponent(new IssueOrderView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(Messages.Templates)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new TemplatesView(myUI));
-            } else if (header.getValue().equals((myUI.getMessage(Messages.Backup)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new BackupView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(Messages.Calls)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new CallsView(myUI));
             } else if (header.getValue().equals((myUI.getMessage(Messages.HomePage)).toUpperCase())) {

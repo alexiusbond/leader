@@ -1760,43 +1760,52 @@ public class DbStudentContract extends BaseDb {
     public void execFinancialHistory(MyVaadinUI myUI, int studentId, Table t) throws SQLException {
 
         String sql = "SELECT * FROM (" +
-                "(SELECT concat('sc', sc.id) as  id, y.name AS academic_year, sc.creation_date AS creation_date, " +
-                "'Контракт' AS type, c.name AS note, c.amount AS amount FROM student_contract AS sc " +
-                "LEFT JOIN year AS y ON sc.year_id = y.id " +
-                "LEFT JOIN contract AS c ON sc.contract_id = c.id WHERE sc.student_id = ? " +
-                "ORDER BY sc.year_id, sc.creation_date) " +
-                "UNION " +
-                "(SELECT concat('sd', sd.id) as  id, y.name AS academic_year, sd.creation_date AS creation_date, " +
-                "'Скидка' AS type, " +
-                "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') " +
-                "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') " +
-                "WHEN 3 THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
-                "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$') END AS note, " +
-                "sd.discount_value AS amount FROM student_discount AS sd " +
-                "LEFT JOIN year AS y ON sd.year_id = y.id " +
-                "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
-                "WHERE sd.student_id = ? ORDER BY sd.year_id, sd.creation_date) " +
-                "UNION " +
-                "(SELECT concat('scc', scc.id) as  id, y.name AS academic_year, scc.creation_date AS creation_date, " +
-                "'Корректировка' AS type, CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, " +
-                "IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` " +
-                "FROM student_correction AS scc LEFT JOIN year AS y ON scc.year_id = y.id " +
-                "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
-                "WHERE scc.student_id = ? ORDER BY scc.year_id, scc.creation_date) " +
-                "UNION " +
-                "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
-                "'Оплата' AS type, CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
-                "IF(sp.acc_currency_id = 2 or sp.payment_type_id = 9, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
-                "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
-                "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
-                "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
-                "WHERE sp.student_id = ? ORDER BY sp.year_id, DATE(sp.modification_date))) AS t " +
-                "ORDER BY t.academic_year, t.creation_date";
+                     "(SELECT concat('sc', sc.id) as  id, y.name AS academic_year, sc.creation_date AS creation_date, " +
+                     "'Контракт' AS type, c.name AS note, c.amount AS amount FROM student_contract AS sc " +
+                     "LEFT JOIN year AS y ON sc.year_id = y.id " +
+                     "LEFT JOIN contract AS c ON sc.contract_id = c.id WHERE sc.student_id = ? " +
+                     "ORDER BY sc.year_id, sc.creation_date) " +
+                     "UNION " +
+                     "(SELECT concat('sd', sd.id) as  id, y.name AS academic_year, sd.creation_date AS creation_date, " +
+                     "'Скидка' AS type, " +
+                     "CASE d.discount_type_id WHEN 1 THEN CONCAT(d.name, ' - ', d.amount, '%') " +
+                     "WHEN 2 THEN CONCAT(d.name, ' - ', d.amount, '$') " +
+                     "WHEN 3 THEN CONCAT(d.name, ' - ', sd.free_entry_amount, '%') " +
+                     "ELSE CONCAT(d.name, ' - ', sd.free_entry_amount, '$') END AS note, " +
+                     "sd.discount_value AS amount FROM student_discount AS sd " +
+                     "LEFT JOIN year AS y ON sd.year_id = y.id " +
+                     "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
+                     "WHERE sd.student_id = ? ORDER BY sd.year_id, sd.creation_date) " +
+                     "UNION " +
+                     "(SELECT concat('scc', scc.id) as  id, y.name AS academic_year, scc.creation_date AS creation_date, " +
+                     "'Корректировка' AS type, CONCAT('(', amr_t.type, ') ', amr_t.name) AS note, " +
+                     "IF(amr_t.type = '+', scc.amount, - scc.amount) AS `amount` " +
+                     "FROM student_correction AS scc LEFT JOIN year AS y ON scc.year_id = y.id " +
+                     "LEFT JOIN correction_type AS amr_t ON scc.correction_type_id = amr_t.id " +
+                     "WHERE scc.student_id = ? ORDER BY scc.year_id, scc.creation_date) " +
+                     "UNION " +
+                     "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
+                     "'Оплата' AS type, CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
+                     "IF(sp.acc_currency_id = 2 or sp.payment_type_id = 9, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
+                     "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
+                     "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
+                     "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
+                     "WHERE sp.student_id = ? and sp.payment_category_id != 3 ORDER BY sp.year_id, DATE(sp.modification_date)) " +
+                     "UNION " +
+                     "(SELECT concat('sp', sp.id) as  id, y.name AS academic_year, DATE(sp.modification_date) AS creation_date, " +
+                     "'Возврат' AS type, CONCAT(pc.name, '; ', pt.name, '; ', 'Курс - ', sp.dollar_rate) AS note, " +
+                     "IF(sp.acc_currency_id = 2 or sp.payment_type_id = 9, sp.amount, ROUND(sp.amount / sp.dollar_rate, 2)) AS amount " +
+                     "FROM student_payments AS sp LEFT JOIN year AS y ON sp.year_id = y.id " +
+                     "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
+                     "LEFT JOIN payment_category AS pc ON sp.payment_category_id = pc.id " +
+                     "WHERE sp.student_id = ? and sp.payment_category_id = 3 ORDER BY sp.year_id, DATE(sp.modification_date))) AS t " +
+                     "ORDER BY t.academic_year, t.creation_date";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, studentId);
         stat.setInt(2, studentId);
         stat.setInt(3, studentId);
         stat.setInt(4, studentId);
+        stat.setInt(5, studentId);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.AcademicYear), String.class, null);
