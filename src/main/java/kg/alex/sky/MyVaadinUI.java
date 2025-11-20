@@ -32,9 +32,9 @@ import org.w3c.dom.NodeList;
 import javax.servlet.annotation.WebServlet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -50,14 +50,18 @@ public class MyVaadinUI extends UI {
     private ResourceBundle i18nBundle;
     private UserDetails user;
     private IndexedContainer schoolCont;
-    private double nbkr_currency_rate;
-    private Date nbkr_time = new Date();
+    private double currency_rate;
+    private Date nbkr_time;
     private boolean isManualRate;
     private Button messagesBtn;
 
     public static MyVaadinUI getInstance() {
         return (MyVaadinUI) MyVaadinUI.getCurrent();
     }
+
+    private static final String NBKR_DAILY_URL = "https://www.nbkr.kg/XML/daily.xml";
+    private static final String TARGET_ISO_CODE = "USD";
+    private static final int NBKR_CACHE_TTL_MINUTES = 3000; // как у тебя было
 
     @Override
     protected void init(VaadinRequest request) {
@@ -118,7 +122,7 @@ public class MyVaadinUI extends UI {
             DbSchool dbs = new DbSchool();
             dbs.connect();
             if (currentUser.isPermitted(Settings.prmShowAllSchools + ":" + Settings.prmMenu) ||
-                getUser().getPosition_id() == 116) {
+                    getUser().getPosition_id() == 116) {
                 setSchoolCont(dbs.execSchoolSel(this, 0, this.getUser().getId()));
             } else {
                 setSchoolCont(dbs.execSchoolSel(this, getUser().getSchool().getId(), this.getUser().getId()));
@@ -166,37 +170,94 @@ public class MyVaadinUI extends UI {
     }
 
     public double getCurrencyRateFromBank() {
+        Date now = new Date();
         Calendar c = Calendar.getInstance();
-        c.setTime(nbkr_time);
-        c.add(Calendar.MINUTE, 3000);
-        if (nbkr_currency_rate == 0.00 || c.getTime().before(new Date())) {
-            nbkr_time = new Date();
-            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-            symbols.setDecimalSeparator(',');
-            DecimalFormat format = new DecimalFormat("##.####");
-            format.setDecimalFormatSymbols(symbols);
+
+        boolean cacheExpired = false;
+
+        if (nbkr_time == null || currency_rate == 0.0) {
+            cacheExpired = true;
+        } else {
+            c.setTime(nbkr_time);
+            c.add(Calendar.MINUTE, NBKR_CACHE_TTL_MINUTES);
+            if (c.getTime().before(now)) {
+                cacheExpired = true;
+            }
+        }
+
+        if (cacheExpired) {
+            nbkr_time = now;
+
             try {
-                URL url = new URL("https://www.nbkr.kg/XML/daily.xml");
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                Document doc = db.parse(url.openStream());
-                NodeList nl = doc.getElementsByTagName("Currency");
-                for (int temp = 0; temp < nl.getLength(); temp++) {
-                    Node nNode = nl.item(temp);
-                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                        Element eElement = (Element) nNode;
-                        if (eElement.getAttribute("ISOCode").equals("USD")) {
-                            nbkr_currency_rate = format.parse(eElement.getElementsByTagName("Value")
-                                    .item(0).getTextContent()).doubleValue();
+                URL url = new URL(NBKR_DAILY_URL);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setRequestMethod("GET");
+
+                int status = conn.getResponseCode();
+                if (status != HttpURLConnection.HTTP_OK) {
+                    logger.error("NBKR HTTP error: {}", status);
+                    // оставляем старый currency_rate, если он был
+                } else {
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    try {
+                        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                    } catch (Exception ignored) {
+                        // если фича недоступна - просто пропускаем
+                    }
+
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+
+                    try (InputStream is = conn.getInputStream()) {
+                        Document doc = db.parse(is);
+                        NodeList nl = doc.getElementsByTagName("Currency");
+
+                        for (int i = 0; i < nl.getLength(); i++) {
+                            Node node = nl.item(i);
+                            if (node.getNodeType() != Node.ELEMENT_NODE) {
+                                continue;
+                            }
+                            Element el = (Element) node;
+
+                            if (!TARGET_ISO_CODE.equals(el.getAttribute("ISOCode"))) {
+                                continue;
+                            }
+
+                            String nominalStr = el.getElementsByTagName("Nominal")
+                                    .item(0)
+                                    .getTextContent()
+                                    .trim();
+
+                            String valueStr = el.getElementsByTagName("Value")
+                                    .item(0)
+                                    .getTextContent()
+                                    .trim();
+
+                            // "87,4500" -> "87.4500"
+                            valueStr = valueStr.replace(',', '.');
+
+                            int nominal = Integer.parseInt(nominalStr);
+                            double value = Double.parseDouble(valueStr);
+
+                            if (nominal <= 0) {
+                                currency_rate = value;
+                            } else {
+                                currency_rate = value / nominal;
+                            }
+
+                            break; // нашли USD — выходим
                         }
                     }
                 }
             } catch (Exception e) {
-                logger.error(e);
+                logger.error("Error while fetching currency rate from NBKR", e);
                 logger.catching(e);
             }
         }
-        return Double.parseDouble(Settings.dFormat4.format(nbkr_currency_rate));
+
+        // Сохраняем твою логику округления до 4 знаков
+        return Double.parseDouble(Settings.dFormat4.format(currency_rate));
     }
 
     public double getDb_currency_rate() {

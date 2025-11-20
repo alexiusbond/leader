@@ -875,7 +875,7 @@ public class DbStudentContract extends BaseDb {
                     Settings.dFormat2.format(ymr.nets));
             t.setColumnFooter(myUI.getMessage(Messages.Paid),
                     Settings.dFormat2.format(ymr.paid_amounts));
-            t.setColumnFooter(myUI.getMessage(Messages.Debts), Settings.dFormat2.format(ymr.debts));
+            t.setColumnFooter(myUI.getMessage(Messages.Debt), Settings.dFormat2.format(ymr.debts));
             t.setColumnFooter(myUI.getMessage(Messages.OverPay), Settings.dFormat2.format(ymr.overpays));
             if (ymr.nets != 0.0) {
                 t.setColumnFooter(Settings.percentage, Settings.dFormat2.format(
