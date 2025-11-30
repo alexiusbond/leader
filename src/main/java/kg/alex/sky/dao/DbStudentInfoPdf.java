@@ -23,12 +23,14 @@ public class DbStudentInfoPdf extends BaseDb {
     public StudentInfoPdf execSQL(int year_id, int student_id) throws SQLException {
         StudentInfoPdf sti = new StudentInfoPdf();
         String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.middle_name, s.gender_id, s.date_of_birth, sr.fullname, "
-                + "sr.phone, sr.passport, sr.address, r.name_ru, r.name_ru_dec, "
+                + "sr.phone, sr.passport, CONCAT_WS(', ', ad.name, sr.address_line) as addr, r.name_ru, r.name_ru_dec, "
                 + "y.period, y.period_kg, y.name, sc.contract_number, sc.creation_date, vcs.class_name "
                 + "FROM student as s "
                 + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = s.id and vcs.year_id = ? "
                 + "left join student_relatives as sr on sr.student_id = s.id "
                 + "left join relatives as r on r.id = sr.relatives_id "
+                + "left join address as adr on adr.id = sr.address_id "
+                + "left join addable_titles as ad on ad.id = adr.city_id and ad.addable_types_id = 5 "
                 + "left join year as y on y.id = ? "
                 + "left join student_contract as sc on sc.student_id = s.id and sc.year_id = y.id "
                 + "where s.id = ? and sr.is_main = 1";
@@ -57,7 +59,7 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.getStudent().setClass_name(result.getString("vcs.class_name"));
             sti.getRelative().setFullName(result.getString("sr.fullname"));
             sti.getRelative().setPhone(result.getString("sr.phone"));
-            sti.getRelative().setAddressLine(result.getString("sr.address"));
+            sti.getRelative().setAddressLine(result.getString("addr"));
             sti.getRelative().setPassport(result.getString("sr.passport"));
             sti.getRelative().setRelativeTitle(result.getString("r.name_ru"));
             sti.getRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));

@@ -222,7 +222,7 @@ public class DbStudentContract extends BaseDb {
                 "IFNULL((SELECT SUM(IF(payment_category_id != 3, amount, 0)) - " +
                 "SUM(IF(payment_category_id = 3, amount, 0)) FROM student_payments " +
                 "WHERE student_id = st.id AND year_id < ?), 0.0)) AS prev_debt, vc.amount, vc.full_details, " +
-                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, sr.address, sr.work_place, rel.name, ";
+                "stud_pay.amount AS net_payments, edu.id, sr.fullname, sr.phone, CONCAT_WS(', ', ad.name, sr.address_line) as addr, wp.name as work_place, rel.name, ";
         if (from_date != null && till_date != null) {
             sql += "(select get_contract_with_discounts(c.amount, st.id, ?, ?, ?)) as contr_with_disc, " +
                     "GROUP_CONCAT(DISTINCT " +
@@ -304,6 +304,9 @@ public class DbStudentContract extends BaseDb {
                 "LEFT JOIN discount AS d ON d.id = sd.discount_id " +
                 "LEFT JOIN student_relatives AS sr ON st.id = sr.student_id AND sr.is_main = 1 " +
                 "LEFT JOIN relatives AS rel ON sr.relatives_id = rel.id " +
+                "left join address as adr on adr.id = sr.address_id " +
+                "left join addable_titles as ad on ad.id = adr.city_id and ad.addable_types_id = 5 " +
+                "left join hr_work_place as wp on wp.id = sr.work_place_id " +
                 "WHERE cln.id IN (" + class_ids + ") and st.entering_year_id <= ? " +
                 "AND edu.id IN (" + edu_statuses_ids + ") " +
                 "GROUP BY st.id ORDER BY cl.id, cln.id, st.name, st.surname";
@@ -377,6 +380,7 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
         }
+        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);
@@ -415,9 +419,9 @@ public class DbStudentContract extends BaseDb {
                 item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(
                         result.getString("sr.phone"));
                 item.getItemProperty(myUI.getMessage(Messages.Address)).setValue(
-                        result.getString("sr.address"));
+                        result.getString("addr"));
                 item.getItemProperty(myUI.getMessage(Messages.WorkPlace)).setValue(
-                        result.getString("sr.work_place"));
+                        result.getString("work_place"));
             }
             double prevYearDebt = result.getDouble("prev_debt");
             if (prevYearDebt >= 0) {

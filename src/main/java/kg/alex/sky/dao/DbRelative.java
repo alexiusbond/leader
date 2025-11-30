@@ -24,9 +24,14 @@ public class DbRelative extends BaseDb {
 
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 
-        String sql = "SELECT sr.fullname, sr.work_place, sr.phone, "
-                + "sr.address_line, sr.passport, sr.relatives_id, sr.is_main "
-                + "FROM student_relatives as sr where sr.student_id = ? "
+        String sql = "SELECT sr.fullname, wp.name as work_place, sr.phone, "
+                + "sr.address_line, sr.passport, sr.relatives_id, sr.is_main, "
+                + "CONCAT_WS(', ', ad.name, sr.address_line) as addr "
+                + "FROM student_relatives as sr "
+                + "left join hr_work_place as wp on wp.id = sr.work_place_id "
+                + "left join address as adr on adr.id = sr.address_id "
+                + "left join addable_titles as ad on ad.id = adr.city_id and ad.addable_types_id = 5 "
+                + "where sr.student_id = ? "
                 + "and (sr.relatives_id = 1 or sr.relatives_id = 2) "
                 + "group by sr.relatives_id";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -45,11 +50,11 @@ public class DbRelative extends BaseDb {
             item.getItemProperty(myUi.getMessage(Messages.FullName)).setValue(
                     result.getString("sr.fullname"));
             item.getItemProperty(myUi.getMessage(Messages.WorkPlace)).setValue(
-                    result.getString("sr.work_place"));
+                    result.getString("work_place"));
             item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
-                    result.getString("sr.address_line"));
+                    result.getString("addr"));
             item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                     result.getString("sr.passport"));
             item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
