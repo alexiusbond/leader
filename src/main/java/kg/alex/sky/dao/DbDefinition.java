@@ -436,6 +436,28 @@ public class DbDefinition extends BaseDb {
         return container;
     }
 
+
+    public IndexedContainer execAddresses(MyVaadinUI myUi) throws SQLException {
+        String sql = "SELECT adr.id, " +
+                "CONCAT_WS( ', ', NULLIF(pr.name, ''), NULLIF(r.name, ''), NULLIF(c.name, '') ) AS adr " +
+                "FROM address AS adr " +
+                "LEFT JOIN addable_titles AS pr ON adr.province_id = pr.id AND pr.addable_types_id = 14 " +
+                "LEFT JOIN addable_titles AS r ON adr.region_id = r.id AND r.addable_types_id = 4 " +
+                "LEFT JOIN addable_titles AS c ON adr.city_id = c.id AND c.addable_types_id = 5 " +
+                "WHERE adr.province_id = 18 order by adr";
+
+        PreparedStatement stat = dbCon.prepareStatement(sql);
+        ResultSet result = stat.executeQuery();
+        IndexedContainer container = new IndexedContainer();
+        container.addContainerProperty(myUi.getMessage(Messages.Title), String.class, null);
+        while (result.next()) {
+            Item item = container.addItem(result.getInt("adr.id"));
+            item.getItemProperty(myUi.getMessage(Messages.Title)).setValue(
+                    result.getString("adr"));
+        }
+        return container;
+    }
+
     public List<AccBalanceSettings> exec_balance_settings(int acc_type_id) throws SQLException {
         String sql = "SELECT bs.id, cat.id, cat.name, CASE WHEN bs.year_preferences = 1 THEN " +
                 "CONCAT((SELECT t.name FROM year AS t WHERE t.is_last = 1), ' ', bs.prefix) " +

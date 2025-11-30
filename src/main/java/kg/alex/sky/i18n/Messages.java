@@ -297,6 +297,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String PassportGiven = generateId();
     public static final String PassportDate = generateId();
     public static final String RelativeType = generateId();
+    public static final String Locality = generateId();
     public static final String Relative = generateId();
     public static final String Responsible = generateId();
     public static final String NotificationOnlyOneMain = generateId();

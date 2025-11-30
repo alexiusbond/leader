@@ -146,8 +146,8 @@ public class DbEmployeeWork extends BaseDb {
                     dbd.close();
                     if (id1 != 0) {
                         for (Object next : container.getItemIds()) {
-                            Item item1 = ((IndexedContainer) ((ComboBox) container.getContainerProperty(next,
-                                    myUI.getMessage(Messages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
+                            Item item1 = ((ComboBox) container.getContainerProperty(next,
+                                    myUI.getMessage(Messages.WorkPlace)).getValue()).getContainerDataSource().addItem(id1);
                             item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                             cb2.setValue(id1);
                         }

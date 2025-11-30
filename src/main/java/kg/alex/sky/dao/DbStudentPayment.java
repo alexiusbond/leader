@@ -93,7 +93,7 @@ public class DbStudentPayment extends BaseDb {
             item.getItemProperty(myUI.getMessage(Messages.PaymentCategoryType)).setValue(cb);
             item.getItemProperty(myUI.getMessage(Messages.PaymentType)).setValue(
                     dw.createCombobox(result.getInt("sp.payment_type_id"), myUI.getMessage(Messages.PaymentType), id,
-                            Settings.dbPaymentType, false, false, false, isDisabled));
+                            Settings.dbPaymentType, isDisabled, true));
             TextField tf = dw.createTextFieldDouble(result.getDouble("sp.amount"), 2, myUI.getMessage(Messages.Amount), id);
             tf.setId(myUI.getMessage(Messages.Payments));
             tf.setEnabled(!isDisabled);

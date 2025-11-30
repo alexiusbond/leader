@@ -4247,8 +4247,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 dbd.close();
                 if (id1 != 0) {
                     for (Object next : t.getItemIds()) {
-                        Item item1 = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
-                                myUI.getMessage(Messages.University)).getValue()).getContainerDataSource()).addItem(id1);
+                        Item item1 = ((ComboBox) t.getContainerProperty(next,
+                                myUI.getMessage(Messages.University)).getValue()).getContainerDataSource().addItem(id1);
                         item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                         cb.setValue(id1);
                     }
@@ -4354,8 +4354,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 dbd.close();
                 if (id1 != 0) {
                     for (Object next : t.getContainerDataSource().getItemIds()) {
-                        Item item1 = ((IndexedContainer) ((ComboBox) t.getContainerProperty(next,
-                                myUI.getMessage(Messages.WorkPlace)).getValue()).getContainerDataSource()).addItem(id1);
+                        Item item1 = ((ComboBox) t.getContainerProperty(next,
+                                myUI.getMessage(Messages.WorkPlace)).getValue()).getContainerDataSource().addItem(id1);
                         item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                         cb2.setValue(id1);
                     }
@@ -4439,8 +4439,8 @@ public class EmployeeDefinitionView extends HorizontalSplitPanel
                 dbd.close();
                 if (id1 != 0) {
                     for (Object next : certificatesTable.getContainerDataSource().getItemIds()) {
-                        Item item1 = ((IndexedContainer) ((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
-                                myUI.getMessage(Messages.Certificate)).getValue()).getContainerDataSource()).addItem(id1);
+                        Item item1 = ((ComboBox) certificatesTable.getContainerDataSource().getContainerProperty(next,
+                                myUI.getMessage(Messages.Certificate)).getValue()).getContainerDataSource().addItem(id1);
                         item1.getItemProperty(myUI.getMessage(Messages.Title)).setValue(newItemCaption);
                         cb.setValue(id1);
                     }

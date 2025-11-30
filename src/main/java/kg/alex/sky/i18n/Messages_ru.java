@@ -290,6 +290,7 @@ public class Messages_ru extends kg.alex.sky.i18n.Messages {
             {WorkPlace, "Место работы"},
             {Sky, "Sky International School"},
             {RelativeType, "Кем является"},
+            {Locality, "Населенный пункт"},
             {Relative, "Родственник"},
             {Passport, "Серия и номер паспорта"},
             {PassportGiven, "Выдавший орган"},

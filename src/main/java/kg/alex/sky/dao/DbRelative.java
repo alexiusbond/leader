@@ -25,7 +25,7 @@ public class DbRelative extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 
         String sql = "SELECT sr.fullname, sr.work_place, sr.phone, "
-                + "sr.address, sr.passport, sr.relatives_id, sr.is_main "
+                + "sr.address_line, sr.passport, sr.relatives_id, sr.is_main "
                 + "FROM student_relatives as sr where sr.student_id = ? "
                 + "and (sr.relatives_id = 1 or sr.relatives_id = 2) "
                 + "group by sr.relatives_id";
@@ -49,7 +49,7 @@ public class DbRelative extends BaseDb {
             item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(myUi.getMessage(Messages.Address)).setValue(
-                    result.getString("sr.address"));
+                    result.getString("sr.address_line"));
             item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                     result.getString("sr.passport"));
             item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
@@ -63,7 +63,7 @@ public class DbRelative extends BaseDb {
 
     public StudentRelative execMainSQL(int stud_id) throws SQLException {
 
-        String sql = "SELECT sr.fullname, sr.address, sr.passport " +
+        String sql = "SELECT sr.fullname, sr.address_line, sr.passport " +
                 "FROM student_relatives as sr where sr.student_id = ? " +
                 "AND sr.is_main = 1";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -72,7 +72,7 @@ public class DbRelative extends BaseDb {
         StudentRelative studentRelative = new StudentRelative();
         if (result.next()) {
             studentRelative.setFullName(result.getString("sr.fullname"));
-            studentRelative.setAddress(result.getString("sr.address"));
+            studentRelative.setAddressLine(result.getString("sr.address_line"));
             studentRelative.setPassport(result.getString("sr.passport"));
         }
         return studentRelative;

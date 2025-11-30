@@ -12,14 +12,32 @@ public class StudentRelative implements Serializable {
     private int id;
     private int student_id;
     private String fullName;
-    private String work_place;
+    private int workPlaceId;
     private String phone;
-    private String address;
+    private String addressLine;
+    private int addressId;
     private String passport;
+    private String INN;
     private int is_main;
     private int relative_id;
     private String relativeDeclarative;
     private String relativeTitle;
+
+    public String getINN() {
+        return INN;
+    }
+
+    public void setINN(String INN) {
+        this.INN = INN;
+    }
+
+    public int getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
+    }
 
     public String getRelativeTitle() {
         return relativeTitle;
@@ -61,12 +79,12 @@ public class StudentRelative implements Serializable {
         this.fullName = fullName;
     }
 
-    public String getWork_place() {
-        return work_place;
+    public int getWorkPlaceId() {
+        return workPlaceId;
     }
 
-    public void setWork_place(String work_place) {
-        this.work_place = work_place;
+    public void setWorkPlaceId(int workPlaceId) {
+        this.workPlaceId = workPlaceId;
     }
 
     public String getPhone() {
@@ -77,12 +95,12 @@ public class StudentRelative implements Serializable {
         this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
+    public String getAddressLine() {
+        return addressLine;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddressLine(String addressLine) {
+        this.addressLine = addressLine;
     }
 
     public String getPassport() {

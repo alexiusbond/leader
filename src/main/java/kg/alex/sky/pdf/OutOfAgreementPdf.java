@@ -234,7 +234,7 @@ public class OutOfAgreementPdf {
                 text11.add(new Phrase("паспорт: " + relative.getPassport(), ordFont));
                 text11.add(Chunk.NEWLINE);
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("адрес: " + relative.getAddress(), ordFont));
+                text11.add(new Phrase("адрес: " + relative.getAddressLine(), ordFont));
                 table_info.addCell(text11);
                 table_info.addCell(new Phrase(" (М.П)", ordFont));
                 table_info.addCell(new Phrase("Подпись:", ordFont));

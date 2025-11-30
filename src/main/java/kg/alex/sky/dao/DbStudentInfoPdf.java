@@ -57,7 +57,7 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.getStudent().setClass_name(result.getString("vcs.class_name"));
             sti.getRelative().setFullName(result.getString("sr.fullname"));
             sti.getRelative().setPhone(result.getString("sr.phone"));
-            sti.getRelative().setAddress(result.getString("sr.address"));
+            sti.getRelative().setAddressLine(result.getString("sr.address"));
             sti.getRelative().setPassport(result.getString("sr.passport"));
             sti.getRelative().setRelativeTitle(result.getString("r.name_ru"));
             sti.getRelative().setRelativeDeclarative(result.getString("r.name_ru_dec"));
