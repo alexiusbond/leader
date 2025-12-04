@@ -2578,11 +2578,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         item.getItemProperty(myUI.getMessage(Messages.FullName)).setValue(
                 createTextField(null, myUI.getMessage(Messages.FullName), id, false, false));
         item.getItemProperty(myUI.getMessage(Messages.Passport)).setValue(
-                createTextField(null, myUI.getMessage(Messages.Passport), id, true, false));
+                createTextField("ID", myUI.getMessage(Messages.Passport), id, true, false));
         item.getItemProperty(myUI.getMessage(Messages.INN)).setValue(
                 createTextField(null, myUI.getMessage(Messages.INN), id, true, false));
         item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(
-                createTextField(null, myUI.getMessage(Messages.Phone), id, true, false));
+                createTextField("W:", myUI.getMessage(Messages.Phone), id, true, false));
         final ComboBox cbWP = createCombobox(0, myUI.getMessage(Messages.WorkPlace), id, Settings.dbWork_placeTable,
                 false, false);
         cbWP.setNewItemsAllowed(true);

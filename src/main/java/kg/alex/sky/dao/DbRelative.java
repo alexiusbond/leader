@@ -25,7 +25,7 @@ public class DbRelative extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int stud_id) throws SQLException {
 
         String sql = "SELECT sr.fullname, wp.name as work_place, sr.phone, "
-                + "sr.address_line, sr.passport, sr.relatives_id, sr.is_main, "
+                + "sr.address_line, sr.passport, sr.inn, sr.relatives_id, sr.is_main, "
                 + "CONCAT_WS(', ', ad.name, sr.address_line) as addr "
                 + "FROM student_relatives as sr "
                 + "left join hr_work_place as wp on wp.id = sr.work_place_id "
@@ -43,6 +43,7 @@ public class DbRelative extends BaseDb {
         container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Address), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Passport), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.INN), String.class, null);
         container.addContainerProperty(Settings.is_main, Integer.class, 0);
 
         while (result.next()) {
@@ -57,6 +58,8 @@ public class DbRelative extends BaseDb {
                     result.getString("addr"));
             item.getItemProperty(myUi.getMessage(Messages.Passport)).setValue(
                     result.getString("sr.passport"));
+            item.getItemProperty(myUi.getMessage(Messages.INN)).setValue(
+                    result.getString("sr.inn"));
             item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                     result.getString("sr.phone"));
             item.getItemProperty(Settings.is_main).setValue(

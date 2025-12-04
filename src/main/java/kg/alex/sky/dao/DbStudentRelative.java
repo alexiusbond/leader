@@ -167,7 +167,7 @@ public class DbStudentRelative extends BaseDb {
                     id,
                     null,
                     false,
-                    false
+                    isMain
             );
             try {
                 DbDefinition dbCon = new DbDefinition();

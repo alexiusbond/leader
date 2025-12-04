@@ -64,7 +64,7 @@ public class ContractPdf_2025_kg {
                 spr.add(new Phrase("Акы төлөнүүчү билим берүү кызматтарын көрсөтүү жөнүндө ", font_header));
                 spr.add(Chunk.NEWLINE);
                 spr.add(new Phrase("КЕЛИШИМ №"
-                                   + String.format("%07d", studentInfo.getContractInfo().getContractNumber()), font_header));
+                        + String.format("%07d", studentInfo.getContractInfo().getContractNumber()), font_header));
                 spr.add(Chunk.NEWLINE);
 
                 spr.setAlignment(Element.ALIGN_CENTER);
@@ -84,7 +84,7 @@ public class ContractPdf_2025_kg {
                 document.add(new Paragraph(10, " "));
 
                 Paragraph paragraph = new Paragraph();
-                paragraph.setFirstLineIndent(30);
+                paragraph.setFirstLineIndent(15);
                 paragraph.setIndentationLeft(30);
                 paragraph.setIndentationRight(30);
                 paragraph.setLeading(15);
@@ -340,7 +340,7 @@ public class ContractPdf_2025_kg {
                 document.add(paragraph);
                 document.add(new Paragraph(10, " "));
 
-                float[] table_info_colsWidth = {1.5f, 1f};
+                float[] table_info_colsWidth = {1f, 1.3f};
                 PdfPTable table_info = new PdfPTable(2);
                 table_info.getDefaultCell().setBorder(0);
                 table_info.setWidthPercentage(90f);
@@ -350,28 +350,35 @@ public class ContractPdf_2025_kg {
                 text10.add(new Phrase(studentInfo.getSchool().getName_kg().toUpperCase(), ordBoldFont));
                 text10.add(new Phrase(" мекемеси", ordFont));
                 text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Дареги: ", ordFont));
                 text10.add(new Phrase(studentInfo.getSchool().getAddress().toUpperCase(), ordBoldFont));
                 text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("РЕГИС. НОМЕР 309655-3303-ОФ", ordFont));
                 text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("ИНН: " + studentInfo.getSchool().getInn(), ordFont));
+                text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 String[] banks = studentInfo.getSchool().getBank().split("<br>");
                 String[] bankAccounts = studentInfo.getSchool().getBank_account().split("<br>");
                 for (int i = 0; i < banks.length; i++) {
                     text10.add(new Phrase("ОКПО: " + banks[i], ordFont));
                     text10.add(Chunk.NEWLINE);
+                    text10.add(Chunk.NEWLINE);
                     text10.add(new Phrase("ЭСЕП: " + bankAccounts[i], ordFont));
+                    text10.add(Chunk.NEWLINE);
                     text10.add(Chunk.NEWLINE);
                 }
                 text10.add(new Phrase("Тел.: " + studentInfo.getSchool().getPhone(), ordFont));
                 text10.add(Chunk.NEWLINE);
+                text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Мектептин мүдүрү: ", ordFont));
                 text10.add(new Phrase((studentInfo.getDirector().getSurname() + " "
-                                       + studentInfo.getDirector().getName() + " " +
-                                       (studentInfo.getDirector().getMiddle_name() == null ?
-                                               "" : studentInfo.getDirector().getMiddle_name())).toUpperCase(), ordBoldFont));
+                        + studentInfo.getDirector().getName() + " " +
+                        (studentInfo.getDirector().getMiddle_name() == null ?
+                                "" : studentInfo.getDirector().getMiddle_name())).toUpperCase(), ordBoldFont));
                 text10.add(Chunk.NEWLINE);
 
                 IndexedContainer relativeCont = null;
@@ -392,50 +399,94 @@ public class ContractPdf_2025_kg {
                     iter = relativeCont.getItemIds().iterator();
                 }
                 String f_name = "";
+                StringBuilder f_passport = new StringBuilder();
                 String f_work_place = "";
+                String f_phone = "";
                 String m_name = "";
+                StringBuilder m_passport = new StringBuilder();
+                String m_phone = "";
                 String m_work_place = "";
+                String address = "";
                 while (iter != null && iter.hasNext()) {
                     Object obj = iter.next();
                     if ((Integer) obj == 1) {
                         f_name = relativeCont.getContainerProperty(obj,
                                 myUI.getMessage(Messages.FullName)).getValue().toString();
-                        f_work_place = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.WorkPlace)).getValue() != null) {
+                            f_work_place = relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.WorkPlace)).getValue().toString();
+                        }
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Passport)).getValue() != null) {
+                            f_passport = new StringBuilder(relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.Passport)).getValue().toString());
+                        }
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.INN)).getValue() != null) {
+                            f_passport.append(" / ").append(relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.INN)).getValue().toString());
+                        }
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Phone)).getValue() != null) {
+                            f_phone = relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.Phone)).getValue().toString();
+                        }
                     }
                     if ((Integer) obj == 2) {
                         m_name = relativeCont.getContainerProperty(obj,
                                 myUI.getMessage(Messages.FullName)).getValue().toString();
-                        m_work_place = relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.WorkPlace)).getValue().toString();
-
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.WorkPlace)).getValue() != null) {
+                            m_work_place = relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.WorkPlace)).getValue().toString();
+                        }
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Passport)).getValue() != null) {
+                            m_passport = new StringBuilder(relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.Passport)).getValue().toString());
+                        }
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.INN)).getValue() != null) {
+                            m_passport.append(" / ").append(relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.INN)).getValue().toString());
+                        }
+                        if (relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Phone)).getValue() != null) {
+                            m_phone = relativeCont.getContainerProperty(obj,
+                                    myUI.getMessage(Messages.Phone)).getValue().toString();
+                        }
                     }
                     if ((Integer) relativeCont.getContainerProperty(obj,
                             Settings.is_main).getValue() == 1) {
-                        text18.add(new Phrase("Тел номери: ", ordFont));
-                        text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Phone)).getValue().toString(), ordFont));
-                        text18.add(Chunk.NEWLINE);
-                        text18.add(new Phrase("Жашаган жери: ", ordFont));
-                        text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Address)).getValue().toString(), ordFont));
-                        text18.add(Chunk.NEWLINE);
-                        text18.add(new Phrase("Паспорт маалыматы: ", ordFont));
-                        text18.add(new Phrase(relativeCont.getContainerProperty(obj,
-                                myUI.getMessage(Messages.Passport)).getValue().toString(), ordFont));
+                        address = relativeCont.getContainerProperty(obj,
+                                myUI.getMessage(Messages.Address)).getValue().toString();
                     }
                 }
                 text11.add(new Phrase("Атасынын аты, жөнү: " + f_name, ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Апасынын аты, жөнү: " + m_name, ordFont));
+                text11.add(new Phrase("Паспорт малыматы: " + f_passport, ordFont));
                 text11.add(Chunk.NEWLINE);
-                text11.add(new Phrase("Окуучунун аты, жөнү: ", ordFont));
-                text11.add(new Phrase(studentInfo.getStudent().getSurname() + " "
-                                      + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("Тел номери: " + f_phone, ordFont));
+                text11.add(Chunk.NEWLINE);
                 text11.add(Chunk.NEWLINE);
                 text11.add(new Phrase("Атасынын иштеген жери: " + f_work_place, ordFont));
                 text11.add(Chunk.NEWLINE);
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("Апасынын аты, жөнү: " + m_name, ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("Паспорт малыматы: " + m_passport, ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("Тел номери: " + m_phone, ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(Chunk.NEWLINE);
                 text11.add(new Phrase("Апасынын иштеген жери: " + m_work_place, ordFont));
+                text11.add(Chunk.NEWLINE);
+                text11.add(Chunk.NEWLINE);
+                text11.add(new Phrase("Жашаган жери: " + address, ordFont));
+                text11.add(Chunk.NEWLINE);
                 text11.add(Chunk.NEWLINE);
                 text11.add(text18);
                 table_info.addCell(text11);
@@ -454,7 +505,7 @@ public class ContractPdf_2025_kg {
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Окуучунун аты, жөнү: ", ordFont));
                 text15.add(new Phrase(studentInfo.getStudent().getSurname() + " "
-                                      + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordBoldFont));
+                        + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Классы: ", ordFont));
                 text15.add(new Phrase(studentInfo.getStudent().getClass_name(), ordBoldFont));
@@ -569,7 +620,7 @@ public class ContractPdf_2025_kg {
 
         String nameOf = "Contract";
         StreamResource resource = new StreamResource(source1, nameOf
-                                                              + System.currentTimeMillis() + ".pdf");
+                + System.currentTimeMillis() + ".pdf");
         resource.setMIMEType("application/pdf");
 
         myUI.getPage().open(resource, nameOf, false);
