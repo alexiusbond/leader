@@ -105,6 +105,7 @@ public class CashBoxView extends GridLayout implements Button.ClickListener,
                                     + ":" + Settings.prmMenu)) {
             tab = accordion.addTab(expensesGrid, myUI.getMessage(Messages.Expenses));
             tab.setId("2");
+            accordion.setSelectedTab(expensesGrid);
         }
         accordion.addSelectedTabChangeListener((TabSheet.SelectedTabChangeListener)
                 event -> {

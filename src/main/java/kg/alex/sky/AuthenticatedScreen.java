@@ -42,10 +42,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                     myUI.repaintMessagesButton();
                 }
                 String eventPressed = selectedItem.getText();
-                if (eventPressed.equals(myUI.getMessage(Messages.ClassNumberDefinition))) {
-                    verticalPanel.setSecondComponent(new DefinitionView(
-                            myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
-                } else if (eventPressed.equals(myUI.getMessage(Messages.YearDefinition))) {
+                if (eventPressed.equals(myUI.getMessage(Messages.YearDefinition))) {
                     verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
                 } else if (eventPressed.equals(myUI.getMessage(Messages.LanguageDefinition))) {
                     verticalPanel.setSecondComponent(new DefinitionView(
@@ -270,23 +267,23 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         infoLabel.setContentMode(ContentMode.HTML);
         infoLabel.setStyleName("labelInfo");
         infoLabel.setValue("<i class=\"fa fa-user fa-inverse\"></i><b> "
-                           + myUI.getMessage(Messages.LogInAsLabel) + ": </b>"
-                           + myUI.getUser().getFullName());
+                + myUI.getMessage(Messages.LogInAsLabel) + ": </b>"
+                + myUI.getUser().getFullName());
 
         Label currencyLabel = new Label();
         currencyLabel.setSizeUndefined();
         currencyLabel.setContentMode(ContentMode.HTML);
         currencyLabel.setStyleName("labelInfo");
         currencyLabel.setValue("<i class=\"fa fa-money fa-inverse\"></i><b> "
-                               + myUI.getMessage(Messages.Rate) + ": </b>"
-                               + myUI.getDb_currency_rate());
+                + myUI.getMessage(Messages.Rate) + ": </b>"
+                + myUI.getDb_currency_rate());
 
         Label schoolLabel = new Label();
         schoolLabel.setSizeUndefined();
         schoolLabel.setContentMode(ContentMode.HTML);
         schoolLabel.setStyleName("labelInfo");
         schoolLabel.setValue("<i class=\"fa fa-university fa-inverse\"></i><b> "
-                             + myUI.getMessage(Messages.School) + ": </b>");
+                + myUI.getMessage(Messages.School) + ": </b>");
 
         schoolSelect = new ComboBox();
         schoolSelect.setWidth(Settings.PERCENTS100);
@@ -311,7 +308,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         yearLabel.setContentMode(ContentMode.HTML);
         yearLabel.setStyleName("labelInfo");
         yearLabel.setValue("<i class=\"fa fa-calendar fa-inverse\"></i><b> "
-                           + myUI.getMessage(Messages.Year) + ": </b>");
+                + myUI.getMessage(Messages.Year) + ": </b>");
 
         yearSelect = new ComboBox();
         yearSelect.setWidth("65%");
@@ -364,12 +361,12 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             menubar.addItem(myUI.getMessage(Messages.StudentDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnCashBoxIncomesAccordion + ":" + Settings.prmMenu) ||
-            currentUser.isPermitted(Settings.cnCashBoxExpensesAccordion + ":" + Settings.prmMenu)) {
+                currentUser.isPermitted(Settings.cnCashBoxExpensesAccordion + ":" + Settings.prmMenu)) {
             menubar.addItem(myUI.getMessage(Messages.CashBox), menuCommand);
         }
 
         if (currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmMenu) ||
-            currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmPaymentsByDates)) {
+                currentUser.isPermitted(Settings.cnReportsView + ":" + Settings.prmPaymentsByDates)) {
             menubar.addItem(myUI.getMessage(Messages.Reports), menuCommand);
         }
 
@@ -387,8 +384,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
         mi = menubar.addItem(myUI.getMessage(Messages.Definitions), null);
         if (currentUser.isPermitted(Settings.cnDefinitionView + ":" + Settings.prmMenu)) {
             mi.addItem(myUI.getMessage(Messages.YearDefinition), menuCommand);
-            mi.addItem(myUI.getMessage(Messages.ClassNumberDefinition), menuCommand);
-
         }
         if (currentUser.isPermitted(Settings.cnClassNameDefinitionView + ":" + Settings.prmMenu)) {
             mi.addItem(myUI.getMessage(Messages.ClassNameDefinition), menuCommand);
@@ -450,8 +445,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             mi.addItem(myUI.getMessage(Messages.ShortTermDebtsDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnShortTermDebtsView + ":" + Settings.prmMenu)
-            || currentUser.isPermitted(Settings.cnReturnableAssetsView + ":" + Settings.prmMenu)
-            || currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmMenu)) {
+                || currentUser.isPermitted(Settings.cnReturnableAssetsView + ":" + Settings.prmMenu)
+                || currentUser.isPermitted(Settings.cnBalanceAccountsView + ":" + Settings.prmMenu)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
                 mi.addSeparator();
             }
@@ -466,7 +461,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             }
         }
         if (currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmMenu)
-            || currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmAccountingBankReport)) {
+                || currentUser.isPermitted(Settings.cnAccountingReportsView + ":" + Settings.prmAccountingBankReport)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
                 mi.addSeparator();
             }
@@ -508,7 +503,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             mi.addItem(myUI.getMessage(Messages.RoomDefinition), menuCommand);
         }
         if (currentUser.isPermitted(Settings.cnInventoryOrganizationView + ":" + Settings.prmMenu)
-            || currentUser.isPermitted(Settings.cnInventoryLiquidationView + ":" + Settings.prmMenu)) {
+                || currentUser.isPermitted(Settings.cnInventoryLiquidationView + ":" + Settings.prmMenu)) {
             if (mi.getChildren() != null && !mi.getChildren().isEmpty()) {
                 mi.addSeparator();
             }
@@ -541,8 +536,8 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
             mi.addItem(myUI.getMessage(Messages.QuestionDefinition), menuCommand);
         }
         if (mi.getChildren() != null && !mi.getChildren().isEmpty() && (currentUser.isPermitted(Settings.cnEmployeeTransferView + ":" + Settings.prmMenu)
-                                                                        || currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmMenu)
-                                                                        || currentUser.isPermitted(Settings.cnLessonAssessmentView + ":" + Settings.prmMenu))) {
+                || currentUser.isPermitted(Settings.cnHRReportsView + ":" + Settings.prmMenu)
+                || currentUser.isPermitted(Settings.cnLessonAssessmentView + ":" + Settings.prmMenu))) {
             mi.addSeparator();
         }
         if (currentUser.isPermitted(Settings.cnEmployeeTransferView + ":" + Settings.prmMenu)) {
@@ -628,7 +623,7 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
                 int curSchoolId = myUI.getUser().getSchool().getId();
                 String curSchoolName = myUI.getUser().getSchool().getName_ru();
                 if (curSchoolId != (Integer) schoolSelect.getValue()
-                    && !curSchoolName.equals(schoolSelect.getItemCaption(schoolSelect.getValue()))) {
+                        && !curSchoolName.equals(schoolSelect.getItemCaption(schoolSelect.getValue()))) {
                     myUI.getUser().getSchool().setId((Integer) schoolSelect.getValue());
                     myUI.getUser().getSchool().setName_ru(schoolSelect.getItemCaption(schoolSelect.getValue()));
                     if (schoolSelect.getContainerProperty(schoolSelect.getValue(),
@@ -651,10 +646,6 @@ public class AuthenticatedScreen extends VerticalLayout implements Button.ClickL
     private void updatePage() {
         if (header.getValue() != null) {
             if (header.getValue().equals((myUI.getMessage(
-                    Messages.ClassNumberDefinition)).toUpperCase())) {
-                verticalPanel.setSecondComponent(new DefinitionView(
-                        myUI, Settings.classTable, null, null, false, Settings.cnDefinitionView));
-            } else if (header.getValue().equals((myUI.getMessage(
                     Messages.YearDefinition)).toUpperCase())) {
                 verticalPanel.setSecondComponent(new YearDefinitionView(myUI, AuthenticatedScreen.this));
             } else if (header.getValue().equals((myUI.getMessage(
