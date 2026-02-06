@@ -15,7 +15,7 @@ public class Student implements Serializable {
     private String password;
     private String name;
     private String surname;
-    private String middle_name;
+    private String inn;
     private int gender_id;
     private Date birth_date;
     private String class_name;
@@ -26,6 +26,14 @@ public class Student implements Serializable {
     private int school_id;
     private int entering_year_id;
     private int employee_id;
+
+    public String getInn() {
+        return inn;
+    }
+
+    public void setInn(String inn) {
+        this.inn = inn;
+    }
 
     public int getId() {
         return id;
@@ -65,14 +73,6 @@ public class Student implements Serializable {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getMiddle_name() {
-        return middle_name;
-    }
-
-    public void setMiddle_name(String middle_name) {
-        this.middle_name = middle_name;
     }
 
     public int getGender_id() {

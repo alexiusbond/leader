@@ -113,11 +113,6 @@ public class OutOfAgreementPdf {
                     boolean isFeminine = studentInfo.getStudent().getGender_id() == 2;
                     fullName = dcl.DeclineSurnameGenitive(studentInfo.getStudent().getSurname(), isFeminine) + " "
                             + dcl.DeclineNameGenitive(studentInfo.getStudent().getName(), isFeminine, false);
-                    if (!studentInfo.getStudent().getMiddle_name().equals("")) {
-                        fullName = fullName + " "
-                                + dcl.DeclinePatronymicGenitive(studentInfo.getStudent().getMiddle_name(),
-                                null, isFeminine, false);
-                    }
                 } catch (Exception e) {
                     logger.error(e);
                     logger.catching(e);

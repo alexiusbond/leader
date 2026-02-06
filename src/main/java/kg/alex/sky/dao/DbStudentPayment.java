@@ -401,7 +401,7 @@ public class DbStudentPayment extends BaseDb {
 
         String sql = "SELECT sp.id, sp.bank_transaction_id, sp.modification_date, sp.dollar_rate, " +
                 "if(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount * sp.dollar_rate,  sp.amount) as amount, c.name, st.login, " +
-                "CONCAT(st.surname, ' ', st.name, ' ', IFNULL(st.middle_name, '')) AS fullname " +
+                "CONCAT(st.surname, ' ', st.name) AS fullname " +
                 "FROM student_payments AS sp " +
                 "LEFT JOIN student AS st ON st.id = sp.student_id " +
                 "LEFT JOIN acc_currency AS c ON c.id = sp.acc_currency_id " +

@@ -102,9 +102,6 @@ public class ContractPdf_2025_kg {
                 paragraph.add(new Phrase(" окуучусунун ата-энеси (мындан ары “Ата-эне” деп белгиленет) экинчи тараптан ", ordFont));
 
                 fullName = studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName();
-                if (!studentInfo.getStudent().getMiddle_name().isEmpty()) {
-                    fullName = fullName + " " + studentInfo.getStudent().getMiddle_name();
-                }
                 paragraph.add(new Phrase(fullName.toUpperCase() + " " + studentInfo.getStudent().getClass_name(), ordBoldFont));
                 paragraph.add(new Phrase(" класс окуучунун кызыкчылыгы үчүн Кыргыз Республикасынын \"Билим берүү жөнүндө\" мыйзамынын 4-беренесине ылайык төмөндөгү келишимди түзүштү:", ordFont));
                 document.add(paragraph);
@@ -504,8 +501,7 @@ public class ContractPdf_2025_kg {
                 text15.add(new Phrase(studentInfo.getStudent().getLogin(), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Окуучунун аты, жөнү: ", ordFont));
-                text15.add(new Phrase(studentInfo.getStudent().getSurname() + " "
-                        + studentInfo.getStudent().getName() + " " + studentInfo.getStudent().getMiddle_name(), ordBoldFont));
+                text15.add(new Phrase(studentInfo.getStudent().getSurname() + " " + studentInfo.getStudent().getName(), ordBoldFont));
                 text15.add(Chunk.NEWLINE);
                 text15.add(new Phrase("Классы: ", ordFont));
                 text15.add(new Phrase(studentInfo.getStudent().getClass_name(), ordBoldFont));

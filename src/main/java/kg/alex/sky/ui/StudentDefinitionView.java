@@ -85,7 +85,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
     public IndexedContainer eduStatCont;
     StringBuilder discountsStr = new StringBuilder();
     private Button createBtn, modifyBtn, deleteBtn, saveBtn, cancelBtn, divideBtn;
-    private TextField nameTF, loginTF, surnameTF, middleNameTF, divideTF, initialPaymentTF;
+    private TextField nameTF, loginTF, surnameTF, studentInnTF, divideTF, initialPaymentTF;
     private DateField birthDate, currDate;
     private ComboBox genderCB, classCB, statusCB, contractCB;
     private OptionGroup contractTypeOG;
@@ -170,11 +170,16 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         horSplitPanel.setFirstComponent(gridStudLay);
         horSplitPanel.setSecondComponent(contractLay);
 
-        NATURAL_COL_ORDER = new String[]{myUI.getMessage(Messages.Id),
-                myUI.getMessage(Messages.FirstName), myUI.getMessage(Messages.LastName),
-                myUI.getMessage(Messages.ClassName), myUI.getMessage(Messages.EducationStatus),
+        NATURAL_COL_ORDER = new String[]{
+                myUI.getMessage(Messages.Id),
+                myUI.getMessage(Messages.FirstName),
+                myUI.getMessage(Messages.LastName),
+                myUI.getMessage(Messages.INN),
+                myUI.getMessage(Messages.ClassName),
+                myUI.getMessage(Messages.EducationStatus),
                 myUI.getMessage(Messages.EnteringYear),
-                myUI.getMessage(Messages.Relative), myUI.getMessage(Messages.Phone)};
+                myUI.getMessage(Messages.Relative),
+                myUI.getMessage(Messages.Phone)};
 
         Label eduStatusLab = new Label();
         eduStatusLab.setSizeUndefined();
@@ -551,7 +556,6 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         loginTF = new TextField(myUI.getMessage(Messages.Id));
         loginTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
         loginTF.setWidth(Settings.PERCENTS100);
-        loginTF.setEnabled(false);
         fieldsLay1.addComponent(loginTF);
 
         nameTF = new TextField(myUI.getMessage(Messages.FirstName));
@@ -572,10 +576,12 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 myUI.getMessage(Messages.NotificationWrongValue), 1, 100, false));
         fieldsLay1.addComponent(surnameTF);
 
-        middleNameTF = new TextField(myUI.getMessage(Messages.MiddleName));
-        middleNameTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
-        middleNameTF.setWidth(Settings.PERCENTS100);
-        fieldsLay1.addComponent(middleNameTF);
+        studentInnTF = new TextField(myUI.getMessage(Messages.INN));
+        studentInnTF.setRequired(true);
+        studentInnTF.setStyleName(ValoTheme.TEXTFIELD_TINY);
+        studentInnTF.setRequiredError(myUI.getMessage(Messages.RequiredField));
+        studentInnTF.setWidth(Settings.PERCENTS100);
+        fieldsLay1.addComponent(studentInnTF);
     }
 
     private void buildFieldsLayout2() {
@@ -827,8 +833,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             iip.setLogin(loginTF.getValue());
             iip.setClass_name(classCB.getContainerProperty(classCB.getValue(),
                     myUI.getMessage(Messages.Title)).getValue().toString());
-            iip.setStudentFullName(nameTF.getValue() + " " + surnameTF.getValue()
-                    + " " + middleNameTF.getValue());
+            iip.setStudentFullName(nameTF.getValue() + " " + surnameTF.getValue());
             iip.setWhoPaidFullName(((TextField) paymentsTable.getContainerProperty(source.getData(),
                     myUI.getMessage(Messages.WhoPaid)).getValue()).getValue());
             iip.setPayment_date(((DateField) paymentsTable.getContainerProperty(source.getData(),
@@ -1426,7 +1431,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             contractTypeOG.setValue(null);
         } else if (property instanceof TextField && property != nameTF && property != loginTF
-                && property != surnameTF && property != middleNameTF && property != divideTF
+                && property != surnameTF && property != studentInnTF && property != divideTF
                 && property != initialPaymentTF && ((TextField) property).getDescription()
                 .equals(myUI.getMessage(Messages.Amount))) {
             if (tabs.getSelectedTab() == tabs.getTab(contractTabLay).getComponent()) {
@@ -1435,7 +1440,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 }
             }
         } else if (property instanceof TextField && property != nameTF && property != loginTF
-                && property != surnameTF && property != middleNameTF && property != divideTF
+                && property != surnameTF && property != studentInnTF && property != divideTF
                 && property != initialPaymentTF && (((TextField) property).getDescription()
                 .equals(myUI.getMessage(Messages.DiscountAmount))
                 || ((TextField) property).getDescription().equals(myUI.getMessage(Messages.CorrectionAmount)))) {
@@ -1466,7 +1471,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                 || tabs.getSelectedTab() == tabs.getTab(studSearchLay).getComponent()) {
             nameTF.setEnabled(true);
             surnameTF.setEnabled(true);
-            middleNameTF.setEnabled(true);
+            loginTF.setEnabled(true);
+            studentInnTF.setEnabled(true);
             genderCB.setEnabled(true);
             birthDate.setEnabled(true);
             classCB.setEnabled(true);
@@ -1553,7 +1559,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         studDataTable.setEnabled(true);
         nameTF.setEnabled(false);
         surnameTF.setEnabled(false);
-        middleNameTF.setEnabled(false);
+        loginTF.setEnabled(false);
+        studentInnTF.setEnabled(false);
         genderCB.setEnabled(false);
         birthDate.setEnabled(false);
         classCB.setEnabled(false);
@@ -1626,9 +1633,9 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         surnameTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), myUI.getMessage(Messages.LastName)).getValue().toString());
         if (studDataTable.getContainerDataSource().getContainerProperty(
-                studDataTable.getValue(), myUI.getMessage(Messages.MiddleName)).getValue() != null) {
-            middleNameTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
-                    studDataTable.getValue(), myUI.getMessage(Messages.MiddleName)).getValue().toString());
+                studDataTable.getValue(), myUI.getMessage(Messages.INN)).getValue() != null) {
+            studentInnTF.setValue(studDataTable.getContainerDataSource().getContainerProperty(
+                    studDataTable.getValue(), myUI.getMessage(Messages.INN)).getValue().toString());
         }
         genderCB.setValue(studDataTable.getContainerDataSource().getContainerProperty(
                 studDataTable.getValue(), Settings.gender_id).getValue());
@@ -1673,7 +1680,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         loginTF.setValue("");
         nameTF.setValue("");
         surnameTF.setValue("");
-        middleNameTF.setValue("");
+        studentInnTF.setValue("");
         genderCB.setValue(null);
         birthDate.setValue(null);
         classCB.setValue(null);
@@ -1706,7 +1713,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                     ((TextField) relativeItem.getItemProperty(myUI.getMessage(Messages.Phone)).getValue()).getValue());
         }
         studDataTable.getContainerProperty(studDataTable.getValue(),
-                myUI.getMessage(Messages.MiddleName)).setValue(middleNameTF.getValue());
+                myUI.getMessage(Messages.INN)).setValue(studentInnTF.getValue());
         studDataTable.getContainerProperty(studDataTable.getValue(),
                 myUI.getMessage(Messages.Photo)).setValue(photoName);
         studDataTable.getContainerProperty(studDataTable.getValue(),
@@ -1739,7 +1746,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             item.getItemProperty(myUI.getMessage(Messages.Phone)).setValue(
                     ((TextField) relativeItem.getItemProperty(myUI.getMessage(Messages.Phone)).getValue()).getValue());
         }
-        item.getItemProperty(myUI.getMessage(Messages.MiddleName)).setValue(middleNameTF.getValue());
+        item.getItemProperty(myUI.getMessage(Messages.INN)).setValue(studentInnTF.getValue());
         item.getItemProperty(myUI.getMessage(Messages.DateOfBirth)).setValue(birthDate.getValue());
         item.getItemProperty(myUI.getMessage(Messages.Photo)).setValue(photoName);
         item.getItemProperty(Settings.gender_id).setValue(genderCB.getValue());
@@ -1765,7 +1772,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         s.setPassword(new Sha256Hash(loginTF.getValue()).toString());
         s.setName(nameTF.getValue());
         s.setSurname(surnameTF.getValue());
-        s.setMiddle_name(middleNameTF.getValue());
+        s.setInn(studentInnTF.getValue());
         s.setGender_id((Integer) genderCB.getValue());
         s.setBirth_date(birthDate.getValue());
         s.setClass_name_id((Integer) classCB.getValue());
@@ -4717,7 +4724,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
         clearFields();
         prepareModificationMode();
         statusCB.setValue(1);
-        loginTF.focus();
+        loginTF.setEnabled(false);
         delRelIds.clear();
         plusRelButton.click();
         clearContractInfo();

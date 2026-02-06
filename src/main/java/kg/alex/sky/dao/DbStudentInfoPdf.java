@@ -22,7 +22,7 @@ public class DbStudentInfoPdf extends BaseDb {
 
     public StudentInfoPdf execSQL(int year_id, int student_id) throws SQLException {
         StudentInfoPdf sti = new StudentInfoPdf();
-        String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.middle_name, s.gender_id, s.date_of_birth, sr.fullname, "
+        String sql = "SELECT s.id, s.login, s.photo, s.surname, s.name, s.gender_id, s.date_of_birth, sr.fullname, "
                 + "sr.phone, sr.passport, CONCAT_WS(', ', ad.name, sr.address_line) as addr, r.name_ru, r.name_ru_dec, "
                 + "y.period, y.period_kg, y.name, sc.contract_number, sc.creation_date, vcs.class_name "
                 + "FROM student as s "
@@ -49,12 +49,6 @@ public class DbStudentInfoPdf extends BaseDb {
             sti.getStudent().setPhoto(result.getString("s.photo"));
             sti.getStudent().setName(result.getString("s.name"));
             sti.getStudent().setSurname(result.getString("s.surname"));
-            if (result.getString("s.middle_name") == null
-                    || result.getString("s.middle_name").equals("")) {
-                sti.getStudent().setMiddle_name("");
-            } else {
-                sti.getStudent().setMiddle_name(result.getString("s.middle_name"));
-            }
             sti.getStudent().setGender_id(result.getInt("s.gender_id"));
             sti.getStudent().setClass_name(result.getString("vcs.class_name"));
             sti.getRelative().setFullName(result.getString("sr.fullname"));

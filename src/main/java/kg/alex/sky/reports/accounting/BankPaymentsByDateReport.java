@@ -180,12 +180,6 @@ public class BankPaymentsByDateReport extends HorizontalSplitPanel implements Bu
                 try {
                     DbStudentPayment dbCon = new DbStudentPayment();
                     dbCon.connect();
-                    System.out.println(schoolSelect.getValue());
-                    System.out.println(currencySelect.getValue());
-                    System.out.println(typeOG.getValue());
-                    System.out.println(fromDateDF.getValue());
-                    System.out.println(tillDateDF.getValue());
-                    System.out.println(dataTable);
                     if (typeOG.getValue().equals(myUI.getMessage(Messages.DetailedReport))) {
                         dbCon.execSQL_Payments(myUI, (Integer) currencySelect.getValue(), (Integer) schoolSelect.getValue(),
                                 fromDateDF.getValue(), tillDateDF.getValue(), dataTable);

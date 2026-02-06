@@ -36,10 +36,10 @@ public class DbStudent extends BaseDb {
     public IndexedContainer execSQL(MyVaadinUI myUi, int scl_id, int year_id,
                                     StudentDefinitionView sdv, String edu_sts) throws SQLException {
 
-        if (edu_sts.equals("")) {
+        if (edu_sts.isEmpty()) {
             edu_sts = "-1";
         }
-        String sql = "SELECT s.id, s.login, s.name, s.surname, s.middle_name, s.entering_year_id, " +
+        String sql = "SELECT s.id, s.login, s.name, s.surname, s.inn, s.entering_year_id, " +
                 "s.date_of_birth, s.photo, s.gender_id, y.name, sr.fullname, sr.phone, rel.name, " +
                 "ifnull(vcs.education_status, vlcs.education_status) as education_status, " +
                 "ifnull(vcs.class_name, vlcs.class_name) as class_name, " +
@@ -65,7 +65,7 @@ public class DbStudent extends BaseDb {
         container.addContainerProperty(myUi.getMessage(Messages.LastName), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Relative), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Phone), String.class, null);
-        container.addContainerProperty(myUi.getMessage(Messages.MiddleName), String.class, null);
+        container.addContainerProperty(myUi.getMessage(Messages.INN), String.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.DateOfBirth), Date.class, null);
         container.addContainerProperty(myUi.getMessage(Messages.Photo), String.class, null);
         container.addContainerProperty(Settings.gender_id, Integer.class, 0);
@@ -96,8 +96,8 @@ public class DbStudent extends BaseDb {
                 item.getItemProperty(myUi.getMessage(Messages.Phone)).setValue(
                         result.getString("sr.phone"));
             }
-            item.getItemProperty(myUi.getMessage(Messages.MiddleName)).setValue(
-                    result.getString("s.middle_name"));
+            item.getItemProperty(myUi.getMessage(Messages.INN)).setValue(
+                    result.getString("s.inn"));
             item.getItemProperty(myUi.getMessage(Messages.DateOfBirth)).setValue(
                     result.getDate("s.date_of_birth"));
             item.getItemProperty(myUi.getMessage(Messages.Photo)).setValue(result.getString("s.photo"));
@@ -214,7 +214,7 @@ public class DbStudent extends BaseDb {
 
     public int exec_insert(Student s) throws SQLException {
         String sql = "INSERT ignore INTO student (login, password, name, "
-                + "surname, middle_name, date_of_birth, photo, school_id, gender_id, "
+                + "surname, inn, date_of_birth, photo, school_id, gender_id, "
                 + "entering_year_id, employee_id, modification_date) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,NOW())";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -222,8 +222,8 @@ public class DbStudent extends BaseDb {
         stat.setString(2, s.getPassword());
         stat.setString(3, s.getName().trim());
         stat.setString(4, s.getSurname().trim());
-        if (s.getMiddle_name() != null && !s.getMiddle_name().equals("")) {
-            stat.setString(5, s.getMiddle_name().trim());
+        if (s.getInn() != null && !s.getInn().isEmpty()) {
+            stat.setString(5, s.getInn().trim());
         } else {
             stat.setNull(5, Types.VARCHAR);
         }
@@ -243,15 +243,15 @@ public class DbStudent extends BaseDb {
     }
 
     public int exec_update(Student s) throws SQLException {
-        String sql = "UPDATE student SET login = ?, name = ?, surname = ?, middle_name = ?, " +
+        String sql = "UPDATE student SET login = ?, name = ?, surname = ?, inn = ?, " +
                 "date_of_birth = ?, photo = ?, gender_id = ?, employee_id = ?, modification_date = NOW() " +
                 "WHERE id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, s.getLogin());
         stat.setString(2, s.getName().trim());
         stat.setString(3, s.getSurname().trim());
-        if (s.getMiddle_name() != null && !s.getMiddle_name().equals("")) {
-            stat.setString(4, s.getMiddle_name().trim());
+        if (s.getInn() != null && !s.getInn().isEmpty()) {
+            stat.setString(4, s.getInn().trim());
         } else {
             stat.setNull(4, Types.VARCHAR);
         }
@@ -273,8 +273,7 @@ public class DbStudent extends BaseDb {
 
     public IndexedContainer execStud_sel(MyVaadinUI myUi, int cl_id, int year_id)
             throws SQLException {
-        String sql = "SELECT st.id, st.name, st.surname, st.middle_name "
-                + "FROM student AS st "
+        String sql = "SELECT st.id, st.name, st.surname FROM student AS st "
                 + "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = ? "
                 + "WHERE vcs.class_name_id = ?  and st.entering_year_id <= ? ORDER BY st.name, st.surname";
 

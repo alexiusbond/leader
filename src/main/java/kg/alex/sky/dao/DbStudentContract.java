@@ -380,7 +380,6 @@ public class DbStudentContract extends BaseDb {
             stat.setInt(++counter, year_id);
             stat.setInt(++counter, year_id);
         }
-        System.out.println(stat);
         ResultSet result = stat.executeQuery();
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(myUI.getMessage(Messages.Id), String.class, null);

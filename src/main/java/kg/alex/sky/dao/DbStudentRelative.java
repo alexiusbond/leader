@@ -211,7 +211,6 @@ public class DbStudentRelative extends BaseDb {
             stat.setNull(9, Types.INTEGER);
         }
         stat.setString(10, r.getINN());
-        System.out.println(stat);
         return stat.executeUpdate();
     }
 
@@ -239,7 +238,6 @@ public class DbStudentRelative extends BaseDb {
         }
         stat.setString(10, sr.getINN());
         stat.setInt(11, sr.getId());
-        System.out.println(stat);
         return stat.executeUpdate();
     }
 
