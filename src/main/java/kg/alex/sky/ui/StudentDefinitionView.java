@@ -717,7 +717,8 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             contractLay.setComponentAlignment(debtLab, Alignment.BOTTOM_LEFT);
             contractLay.addComponent(netLab);
             contractLay.setComponentAlignment(netLab, Alignment.BOTTOM_LEFT);
-
+            contractLay.addComponent(paidLab);
+            contractLay.setComponentAlignment(paidLab, Alignment.BOTTOM_LEFT);
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":"
                 + Settings.prmContractInfoLeftDebt)) {
@@ -3944,7 +3945,13 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             }
             debtLab.setValue(myUI.getMessage(Messages.PreviousYearDebt) + ": " + Settings.dFormat2.format(debt) + " $");
             netLab.setValue(myUI.getMessage(Messages.Net) + ": " + Settings.dFormat2.format(studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) + " $");
-            paidLab.setValue(myUI.getMessage(Messages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " $");
+            double paidPercentage = 0.0;
+            if (studentContract.getContr_with_disc() +
+                    studentContract.getCorrection() + debt != 0) {
+                paidPercentage = ttl_payment * 100 / (studentContract.getContr_with_disc() + studentContract.getCorrection() + debt);
+            }
+            paidLab.setValue(myUI.getMessage(Messages.Paid) + ": " + Settings.dFormat2.format(ttl_payment) + " $"
+                    + " (" + Settings.dFormat2.format(paidPercentage) + "%)");
         }
         if (currentUser.isPermitted(Settings.cnStudentDefinitionView + ":" + Settings.prmContractInfoLeftDebt)) {
             leftLab.setValue(myUI.getMessage(Messages.Left) + ": " + Settings.dFormat2.format((studentContract.getContr_with_disc() + studentContract.getCorrection() + debt) - ttl_payment) + " $");
