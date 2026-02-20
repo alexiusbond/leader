@@ -210,14 +210,15 @@ public class DbStudentPayment extends BaseDb {
         return stat.executeUpdate();
     }
 
-    public int getMaxOrderNum(int id) throws SQLException {
+    public int getMaxOrderNum(int student_id, int year_id) throws SQLException {
         int maxValue;
         String sql = "select (max(sp.order_number)+1) as max_plus1 "
                 + "from student_payments as sp "
                 + "left join student as s on s.id = sp.student_id where "
-                + "s.school_id = (SELECT school_id FROM student where id = ?)";
+                + "s.school_id = (SELECT school_id FROM student where id = ?) and sp.year_id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
-        stat.setInt(1, id);
+        stat.setInt(1, student_id);
+        stat.setInt(2, year_id);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
             maxValue = (result.getInt("max_plus1"));
@@ -227,16 +228,16 @@ public class DbStudentPayment extends BaseDb {
         return maxValue;
     }
 
-    public String getOrderNum(String id) throws SQLException {
-        String orderNum;
+    public int getOrderNum(String id) throws SQLException {
+        int orderNum;
         String sql = "select order_number from student_payments where id = ?";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setString(1, id);
         ResultSet result = stat.executeQuery();
         if (result.next()) {
-            orderNum = (result.getString("order_number"));
+            orderNum = (result.getInt("order_number"));
         } else {
-            orderNum = "1";
+            orderNum = 1;
         }
         return orderNum;
     }

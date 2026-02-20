@@ -75,7 +75,7 @@ public class InvoicePDF {
                 dateTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 dateTable.addCell(new Phrase("Номер документа", normal_font));
                 dateTable.addCell(new Phrase("Дата составления", normal_font));
-                dateTable.addCell(new Phrase(" ", normal_font));
+                dateTable.addCell(new Phrase(student.getOrder_number(), normal_font));
                 dateTable.addCell(new Phrase(Settings.dtmf.format(student.getPayment_date()), normal_font));
 
                 float[] orderTableWidth = {0.6f, 0.4f};
@@ -208,9 +208,9 @@ public class InvoicePDF {
                 invoiceTable.addCell(cell);
 
                 if (student.getPaymentCategoryId() == 3) {
-                    cell = new PdfPCell(new Phrase("к расходному кассовому ордеру №__________", bold_font));
+                    cell = new PdfPCell(new Phrase("к расходному кассовому ордеру №" + student.getOrder_number(), bold_font));
                 } else {
-                    cell = new PdfPCell(new Phrase("к приходному кассовому ордеру №__________", bold_font));
+                    cell = new PdfPCell(new Phrase("к приходному кассовому ордеру №" + student.getOrder_number(), bold_font));
                 }
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setBorder(Rectangle.LEFT);

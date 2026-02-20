@@ -854,7 +854,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             try {
                 DbStudentPayment dbsp = new DbStudentPayment();
                 dbsp.connect();
-                iip.setOrder_number(dbsp.getOrderNum((String) source.getData()));
+                iip.setOrder_number(myUI.getUser().getCurrent_year().getName().substring(2, 4) + String.format("%05d", dbsp.getOrderNum((String) source.getData())));
                 dbsp.close();
             } catch (Exception e) {
                 logger.error(e);
@@ -2710,7 +2710,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         }
                     }
                 } else if (initialPaymentTF.getPropertyDataSource().getValue() != null) {
-                    int order_num = dbsp.getMaxOrderNum(student_id);
+                    int order_num = dbsp.getMaxOrderNum(student_id, myUI.getUser().getCurrent_year().getId());
                     int payment_id = dbsp.exec_insert(sp, order_num);
                     tr.setStudent_payments_id(payment_id);
                     if (sp.getModification_date().after(myUI.getUser().getTransactions_start_date())
@@ -4428,7 +4428,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         }
                     } else if (paymentsTable.getContainerProperty(next, Settings.crud_status).getValue().toString()
                             .equals(myUI.getMessage(Messages.Insert))) {
-                        int order_num = dbsp.getMaxOrderNum((Integer) studDataTable.getValue());
+                        int order_num = dbsp.getMaxOrderNum((Integer) studDataTable.getValue(), myUI.getUser().getCurrent_year().getId());
                         StudentPayment sp = getPayment(0, student_id, paymentsTable.getItem(next));
                         int payment_id = dbsp.exec_insert(sp, order_num);
                         sp.setId(payment_id);//payment Id
