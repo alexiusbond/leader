@@ -854,7 +854,11 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
             try {
                 DbStudentPayment dbsp = new DbStudentPayment();
                 dbsp.connect();
-                iip.setOrder_number(myUI.getUser().getCurrent_year().getName().substring(2, 4) + String.format("%05d", dbsp.getOrderNum((String) source.getData())));
+                String yearPrefix = myUI.getUser().getCurrent_year().getName().substring(2, 4);
+                if (iip.getPaymentCategoryId() == 5) {
+                    yearPrefix = (Integer.parseInt(yearPrefix) + 1) + "";
+                }
+                iip.setOrder_number(yearPrefix + String.format("%05d", dbsp.getOrderNum((String) source.getData())));
                 dbsp.close();
             } catch (Exception e) {
                 logger.error(e);
