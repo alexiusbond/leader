@@ -111,7 +111,7 @@ public class DbAccTransactions extends BaseDb {
         Subject currentUser = SecurityUtils.getSubject();
         String sql = "SELECT t.id, t.date_time, t.acc_category_id, t.acc_currency_id, t.order_number, t.currency_rate, " +
                      "t.amount, IF(t.student_payments_id IS NULL, t.note, CONCAT(IFNULL(vcs.class_name, vlcs.class_name), ' ', " +
-                     "st.login, ' ', st.name, ' ', st.surname)) AS note, " +
+                     "st.login, ' ', st.name, ' ', st.surname, ' (', pt.name, ')')) AS note, " +
                      "IF(t.student_payments_id IS NOT NULL OR t.dp_invoice_id IS NOT NULL " +
                      "OR t.acc_invoice_id IS NOT NULL, TRUE, FALSE) AS isDisabled, " +
                      "IF(t.date_time > DATE_SUB(NOW(), INTERVAL 24 HOUR), TRUE, FALSE) AS isNotOld, t.from_to_employee_id, " +
@@ -119,6 +119,7 @@ public class DbAccTransactions extends BaseDb {
                      "FROM acc_transactions AS t " +
                      "LEFT JOIN employee AS e ON t.employee_id = e.id " +
                      "LEFT JOIN student_payments AS sp ON t.student_payments_id = sp.id " +
+                     "LEFT JOIN payment_type AS pt ON sp.payment_type_id = pt.id " +
                      "LEFT JOIN student AS st ON sp.student_id = st.id " +
                      "LEFT JOIN view_student_class_status as vcs on vcs.student_id = st.id and vcs.year_id = sp.year_id " +
                      "LEFT JOIN view_student_last_class_status AS vlcs ON vlcs.student_id = st.id " +
