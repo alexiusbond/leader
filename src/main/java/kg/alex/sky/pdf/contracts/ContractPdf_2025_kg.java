@@ -42,7 +42,6 @@ public class ContractPdf_2025_kg {
             try {
 
                 document = new Document(PageSize.A4, 10, 10, 30, 30);
-                document.setMargins(10, 10, 30, 30);
 
                 PdfWriter writer = PdfWriter.getInstance(document, buffer);
                 writer.setPageEvent(new myPageEvent());
