@@ -355,9 +355,9 @@ public class DbStudentPayment extends BaseDb {
     public String execGetWeeklyPaid(String students, int scl_id, int year_id)
             throws SQLException {
         String sql = "SELECT count(distinct st.id) as st, "
-                + "ifnull(sum(if(sp.payment_category_id = 3, -IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount), "
-                + "IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount))),0.00) as week_paid FROM student_payments as sp "
+                + "ifnull(sum(if(sp.payment_category_id = 3, -sp.amount, sp.amount)),0.00) as week_paid FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
+                + "inner join student_contract as sc on sp.year_id = sc.year_id and sp.student_id = sc.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "
                 + "yearweek(date(sp.modification_date), 1) = YEARWEEK(curdate(),1)";
         PreparedStatement stat = dbCon.prepareStatement(sql);
@@ -375,9 +375,9 @@ public class DbStudentPayment extends BaseDb {
             throws SQLException {
 
         String sql = "SELECT count(distinct st.id) as st, "
-                + "ifnull(sum(if(sp.payment_category_id = 3, -IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount), "
-                + "IF(sp.acc_currency_id = 1 and sp.dollar_rate != 0.0, sp.amount / sp.dollar_rate,  sp.amount))),0.00) as month_paid FROM student_payments as sp "
+                + "ifnull(sum(if(sp.payment_category_id = 3, -sp.amount, sp.amount)),0.00) as month_paid FROM student_payments as sp "
                 + "left join student as st on st.id = sp.student_id "
+                + "inner join student_contract as sc on sp.year_id = sc.year_id and sp.student_id = sc.student_id "
                 + "where st.school_id = ? and sp.year_id = ? and "
                 + "MONTH(sp.modification_date) = MONTH(CURRENT_DATE())";
         PreparedStatement stat = dbCon.prepareStatement(sql);

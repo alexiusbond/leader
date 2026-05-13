@@ -12,8 +12,8 @@ import com.vaadin.addon.charts.model.style.SolidColor;
 import com.vaadin.data.Property;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.*;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 import kg.alex.sky.MyVaadinUI;
 import kg.alex.sky.utils.Settings;
@@ -253,9 +253,9 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         paymentsWeekLab.setValue("<b>" + myUI.getMessage(Messages.Payments) + ":</b>");
 
         layout.addComponent(instPlanWeekLab);
-        layout.addComponent(new Label(week_plan + "$"));
+        layout.addComponent(new Label(week_plan + " " + Settings.USD));
         layout.addComponent(paymentsWeekLab);
-        layout.addComponent(new Label(week_paid + "$"));
+        layout.addComponent(new Label(week_paid + " " + Settings.USD));
         return layout;
     }
 
@@ -300,9 +300,9 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         paymentsMonthLab.setValue("<b>" + myUI.getMessage(Messages.Payments) + ":</b>");
 
         layout.addComponent(instPlanMonthLab);
-        layout.addComponent(new Label(month_plan + "$"));
+        layout.addComponent(new Label(month_plan + " " + Settings.USD));
         layout.addComponent(paymentsMonthLab);
-        layout.addComponent(new Label(month_paid + "$"));
+        layout.addComponent(new Label(month_paid + " " + Settings.USD));
         return layout;
     }
 
@@ -398,10 +398,10 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlCorrectionLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlCorrectionLab.setValue("<b>" + myUI.getMessage(Messages.TotalCorrection) + "</b>");
 
-        Label ttlDebtLab = new Label();
-        ttlDebtLab.setContentMode(ContentMode.HTML);
-        ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
-        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
+        Label ttlNetLab = new Label();
+        ttlNetLab.setContentMode(ContentMode.HTML);
+        ttlNetLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlNetLab.setValue("<b>" + myUI.getMessage(Messages.Net) + "</b>");
 
         Label ttlPaymentLab = new Label();
         ttlPaymentLab.setContentMode(ContentMode.HTML);
@@ -413,27 +413,37 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
         ttlLeftLab.setStyleName(ValoTheme.LABEL_SMALL);
         ttlLeftLab.setValue("<b>" + myUI.getMessage(Messages.TotalLeft) + "</b>");
 
+        Label ttlDebtLab = new Label();
+        ttlDebtLab.setContentMode(ContentMode.HTML);
+        ttlDebtLab.setStyleName(ValoTheme.LABEL_SMALL);
+        ttlDebtLab.setValue("<b>" + myUI.getMessage(Messages.TotalDebt) + "</b>");
+
         try {
             DbStudentContract dbsc = new DbStudentContract();
             dbsc.connect();
             tc = dbsc.execSQLTotals(myUI.getUser().getSchool().getId(),
                     myUI.getUser().getCurrent_year().getId());
             dbsc.close();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            logger.error(e);
+            logger.catching(e);
         }
+
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlContractLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getContract()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getContract()) + " " + Settings.USD));
         layout.addComponent(ttlDiscLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDiscount()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDiscount()) + " " + Settings.USD));
         layout.addComponent(ttlCorrectionLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getCorrection()) + "$"));
-        layout.addComponent(ttlDebtLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getCorrection()) + " " + Settings.USD));
+        layout.addComponent(ttlNetLab);
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getNet()) + " " + Settings.USD));
         layout.addComponent(ttlPaymentLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getPaid()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getPaid()) + " " + Settings.USD));
         layout.addComponent(ttlLeftLab);
-        layout.addComponent(new Label(Settings.dFormat2.format(tc.getLeft()) + "$"));
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getLeft()) + " " + Settings.USD));
+        layout.addComponent(ttlDebtLab);
+        layout.addComponent(new Label(Settings.dFormat2.format(tc.getDebt()) + " " + Settings.USD));
         return layout;
     }
 
