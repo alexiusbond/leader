@@ -3680,7 +3680,7 @@ public class StudentDefinitionView extends VerticalSplitPanel implements Button.
                         Notification.show(myUI.getMessage(Messages.NotificationSameDatesAreNotAllowed),
                                 Notification.Type.WARNING_MESSAGE);
                         return false;
-                    } else {
+                    } else if ((Integer) installmentTable.getItem(obj).getItemProperty(Settings.status_id).getValue() == 1) {
                         dates.add(Settings.df.format(((DateField) installmentTable.getItem(obj).getItemProperty(
                                 myUI.getMessage(Messages.Date)).getValue()).getValue()));
                     }
