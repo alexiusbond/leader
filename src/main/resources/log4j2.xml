@@ -7,8 +7,8 @@
             <PatternLayout pattern="%-5p %c{1} [%t] - %m%n"/>
         </Console>
         #Апендер для вывода логов в файл
-        <RollingFile name="sky" fileName="/home/sky/sky.log"
-                     filePattern="/home/sky/sky-%d{MM-dd-yyyy}-%i.log">
+        <RollingFile name="leader" fileName="/home/leader/leader.log"
+                     filePattern="/home/leader/leader-%d{MM-dd-yyyy}-%i.log">
             <PatternLayout pattern="%d %d{Z} [%t] %-5p (%F:%L) - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -19,8 +19,8 @@
 
     <Loggers>
 
-        <Logger name="kg.alex.sky">
-            <AppenderRef ref="sky"/>
+        <Logger name="kg.alex.leader">
+            <AppenderRef ref="leader"/>
         </Logger>
 
         <Root level="all">

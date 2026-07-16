@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context debug="5" docBase="/sky" path="/sky" reloadable="true">
-    <Resource name="jdbc/sky"
+<Context debug="5" docBase="/leader" path="/leader" reloadable="true">
+    <Resource name="jdbc/leader"
               auth="Container"
               type="javax.sql.DataSource"
               factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
@@ -21,8 +21,8 @@
               jmxEnabled="true"
               jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;
             org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
-              username="sky"
-              password="!kax.%%ON$RZ$w1090l7"
+              username="leader"
+              password="1,_Wf,n][2M0Aaud.XfVBs"
               driverClassName="com.mysql.cj.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/sky?sessionVariables=sql_mode='NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'&amp;jdbcCompliantTruncation=false&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useTimezone=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Asia/Bishkek"/>
+              url="jdbc:mysql://localhost:3306/leader?sessionVariables=sql_mode='NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'&amp;jdbcCompliantTruncation=false&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useTimezone=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Asia/Bishkek"/>
 </Context>
