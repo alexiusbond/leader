@@ -976,7 +976,7 @@ public class PayoutsView extends HorizontalSplitPanel implements Button.ClickLis
                                 tr.setAmount((Double) ((TextField) payoutsTable.getItem(next).getItemProperty(
                                         myUI.getMessage(Messages.Amount)).getValue()).getPropertyDataSource().getValue());
                                 tr.setNote(((TextField) payoutsTable.getItem(next).getItemProperty(
-                                        myUI.getMessage(Messages.Amount)).getValue()).getValue());
+                                        myUI.getMessage(Messages.Note)).getValue()).getValue());
                                 tr.setCategory_id((Integer) cb.getValue());
                                 tr.setAccTypeId((Integer) cb.getContainerProperty(cb.getValue(), Settings.acc_type_id).getValue());
                                 tr.setCurrency_id((Integer) ((ComboBox) payoutsTable.getItem(next).getItemProperty(
