@@ -344,7 +344,6 @@ public class ContractPdf_2025_kg {
                 Paragraph text10 = new Paragraph();
                 text10.add(new Phrase("Мектеп: ", ordFont));
                 text10.add(new Phrase(studentInfo.getSchool().getName_kg().toUpperCase(), ordBoldFont));
-                text10.add(new Phrase(" мекемеси", ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("Дареги: ", ordFont));
@@ -491,6 +490,7 @@ public class ContractPdf_2025_kg {
 
                 document.add(table_info);
 
+                document.newPage();
                 Paragraph text15 = new Paragraph();
                 text15.setIndentationLeft(30);
                 text15.setIndentationRight(30);
