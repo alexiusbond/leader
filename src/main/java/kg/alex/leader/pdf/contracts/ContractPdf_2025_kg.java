@@ -350,7 +350,7 @@ public class ContractPdf_2025_kg {
                 text10.add(new Phrase(studentInfo.getSchool().getAddress().toUpperCase(), ordBoldFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
-                text10.add(new Phrase("РЕГИС. НОМЕР 309655-3303-ОФ", ordFont));
+                text10.add(new Phrase("РЕГИС. НОМЕР 316843-3303-У-е", ordFont));
                 text10.add(Chunk.NEWLINE);
                 text10.add(Chunk.NEWLINE);
                 text10.add(new Phrase("ИНН: " + studentInfo.getSchool().getInn(), ordFont));
