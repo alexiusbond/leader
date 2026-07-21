@@ -51,8 +51,7 @@ public class DbStudent extends BaseDb {
                 "left join view_student_class_status as vcs on s.id = vcs.student_id and vcs.year_id = ? " +
                 "left join view_student_last_class_status as vlcs on s.id = vlcs.student_id " +
                 "left join year as y on s.entering_year_id = y.id " +
-                "WHERE s.school_id = ? and s.entering_year_id <= ? and (vcs.education_status_id in (" + edu_sts + ") " +
-                "or vcs.education_status_id IS NULL and vlcs.education_status_id in (" + edu_sts + ")) " +
+                "WHERE s.school_id = ? and s.entering_year_id <= ? and vcs.education_status_id in (" + edu_sts + ") " +
                 "GROUP BY s.id ORDER BY vcs.education_status_id, s.name, s.surname";
         PreparedStatement stat = dbCon.prepareStatement(sql);
         stat.setInt(1, year_id);
@@ -371,8 +370,7 @@ public class DbStudent extends BaseDb {
 
     public EducationStatus execEduCount(int scl_id, int year_id)
             throws SQLException {
-        String sql = "SELECT count(*) as ttl, "
-                + "count(if(vcs.education_status_id = 1, vcs.education_status_id, null)) as prereg, "
+        String sql = "SELECT count(if(vcs.education_status_id = 1, vcs.education_status_id, null)) as prereg, "
                 + "count(if(vcs.education_status_id = 2, vcs.education_status_id, null)) as active, "
                 + "count(if(vcs.education_status_id = 3, vcs.education_status_id, null)) as notcon, "
                 + "count(if(vcs.education_status_id = 4, vcs.education_status_id, null)) as outof, "
@@ -387,12 +385,16 @@ public class DbStudent extends BaseDb {
         ResultSet result = stat.executeQuery();
         EducationStatus e = new EducationStatus();
         while (result.next()) {
-            e.setPre_registered(result.getString("prereg"));
-            e.setActive(result.getString("active"));
-            e.setNot_confirmed(result.getString("notcon"));
-            e.setOutOf(result.getString("outof"));
-            e.setGraduated(result.getString("graduated"));
-            e.setTotal(result.getString("ttl"));
+            e.setPre_registered(result.getInt("prereg"));
+            e.setActive(result.getInt("active"));
+            e.setNot_confirmed(result.getInt("notcon"));
+            e.setOutOf(result.getInt("outof"));
+            e.setGraduated(result.getInt("graduated"));
+            e.setTotal(result.getInt("prereg")
+                    + result.getInt("active")
+                    + result.getInt("notcon")
+                    + result.getInt("outof")
+                    + result.getInt("graduated"));
         }
         return e;
     }

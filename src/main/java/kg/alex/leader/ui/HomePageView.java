@@ -358,17 +358,17 @@ public class HomePageView extends GridLayout implements Button.ClickListener, Pr
 
         layout.addComponent(caption, 0, 0, 1, 0);
         layout.addComponent(ttlStudLab);
-        layout.addComponent(new Label(ed.getTotal()));
+        layout.addComponent(new Label(String.valueOf(ed.getTotal())));
         layout.addComponent(activeLab);
-        layout.addComponent(new Label(ed.getActive()));
+        layout.addComponent(new Label(String.valueOf(ed.getActive())));
         layout.addComponent(preRegLab);
-        layout.addComponent(new Label(ed.getPre_registered()));
+        layout.addComponent(new Label(String.valueOf(ed.getPre_registered())));
         layout.addComponent(notConfLab);
-        layout.addComponent(new Label(ed.getNot_confirmed()));
+        layout.addComponent(new Label(String.valueOf(ed.getNot_confirmed())));
         layout.addComponent(outOfLab);
-        layout.addComponent(new Label(ed.getOutOf()));
+        layout.addComponent(new Label(String.valueOf(ed.getOutOf())));
         layout.addComponent(graduatedLab);
-        layout.addComponent(new Label(ed.getGraduated()));
+        layout.addComponent(new Label(String.valueOf(ed.getGraduated())));
         layout.setColumnExpandRatio(0, 2);
         layout.setColumnExpandRatio(1, 3);
         return layout;
