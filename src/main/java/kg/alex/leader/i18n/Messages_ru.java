@@ -337,6 +337,7 @@ public class Messages_ru extends kg.alex.leader.i18n.Messages {
             {Search, "Поиск"},
             {ContactInfo, "Контактная информация"},
             {Contracts, "Договоры"},
+            {ContractNumber, "№ Договора"},
             {Clear, "Очистить"},
             {SelectAll, "Все"},
             {OnlyInt, "Only Integers allowed!"},

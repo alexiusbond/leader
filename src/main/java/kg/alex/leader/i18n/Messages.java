@@ -307,6 +307,7 @@ public class Messages extends ListResourceBundle implements Serializable {
     public static final String Search = generateId();
     public static final String ContactInfo = generateId();
     public static final String Contracts = generateId();
+    public static final String ContractNumber = generateId();
     public static final String Id = generateId();
     public static final String PreviousYearDebt = generateId();
     public static final String PreviousYearOverpay = generateId();

@@ -206,13 +206,13 @@ public class DbStudentContract extends BaseDb {
         clr.overPays = 0;
         String sql = "SELECT st.id, st.login, st.name, st.surname, edu.name, ";
         if (from_date != null && till_date != null) {
-            sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+            sql += "IF(sc.creation_date >= ? AND sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, sc.contract_number AS contract_number, ";
         } else if (from_date != null) {
-            sql += "IF(sc.creation_date >= ?, c.amount, 0.0) AS contract_amount, ";
+            sql += "IF(sc.creation_date >= ?, c.amount, 0.0) AS contract_amount, sc.contract_number AS contract_number, ";
         } else if (till_date != null) {
-            sql += "IF(sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, ";
+            sql += "IF(sc.creation_date <= ?, c.amount, 0.0) AS contract_amount, sc.contract_number AS contract_number, ";
         } else {
-            sql += "c.amount AS contract_amount, ";
+            sql += "c.amount AS contract_amount, sc.contract_number AS contract_number, ";
         }
         sql += "IFNULL(sc.debt, " +
                 "IFNULL((SELECT SUM(contr_with_disc) FROM student_contract " +
@@ -387,6 +387,7 @@ public class DbStudentContract extends BaseDb {
         container.addContainerProperty(myUI.getMessage(Messages.FirstName), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.LastName), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.ClassName), String.class, null);
+        container.addContainerProperty(myUI.getMessage(Messages.ContractNumber), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Contract), Double.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.DiscountType), String.class, null);
         container.addContainerProperty(myUI.getMessage(Messages.Discount), Double.class, null);
@@ -432,6 +433,10 @@ public class DbStudentContract extends BaseDb {
             }
             clr.prevYearDebts += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearDebt)).getValue();
             clr.prevYearOverpays += (Double) item.getItemProperty(myUI.getMessage(Messages.PreviousYearOverpay)).getValue();
+            if (result.getString("contract_number") != null) {
+                item.getItemProperty(myUI.getMessage(Messages.ContractNumber)).setValue(
+                        "№" + String.format("%07d", result.getInt("contract_number")));
+            }
             if (result.getDouble("contract_amount") != 0.0) {
                 item.getItemProperty(myUI.getMessage(Messages.Contract)).setValue(result.getDouble("contract_amount"));
                 clr.contracts += (Double) item.getItemProperty(myUI.getMessage(Messages.Contract)).getValue();
